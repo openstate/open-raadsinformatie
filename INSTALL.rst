@@ -1,25 +1,23 @@
-Open Cultuur Data API install notes
+NPO Backstage API install notes
 ###################################
 
-Using Vagrant
+Using Docker
 =============
 
-Using `Vagrant <http://www.vagrantup.com/>`_ is by far the easiest way to spin up a development environment and get started with contributing to the Open Cultuur Data API.
+Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a development environment and get started with contributing to the NPO Backstage API.
 
 1. Clone the OCD git repository::
 
-   $ git clone https://github.com/openstate/open-cultuur-data.git
-   $ cd open-cultuur-data/
+   $ git clone https://github.com/openstate/npo-backstage.git
+   $ cd npo-backstage/
 
-2. Select and link the correct ``Vagrantfile`` (depending on the Vagrant provider you use)::
+2. Build an image using the Dockerfile, i.e. use Ubuntu as base and install all dependencies, and call it open-state/npo-backstage::
 
-   $ ln -s Vagrantfile.virtualbox Vagrantfile
+   $ docker build -t open-state/npo-backstage .
 
-3. Start the Vagrant box and SSH into it::
+3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container. Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200::
 
-   $ vagrant up && vagrant ssh
-
-Vagrant will automatically sync your project directory (the directory with the Vagrantfile) between the host and guest machine. Also, it will run a bootstrap script that will take care of installing project dependencies. In the guest, the project directory can be found under ``/vagrant``. For more information, see the Vagrant documentation on `Synced Folders <http://docs.vagrantup.com/v2/synced-folders/index.html>`_.
+   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 open-state/npo-backstage
 
 Manual setup
 ============
@@ -61,30 +59,30 @@ Installation
 
    $ sudo easy_install pip
 
-6. Create an OCD virtualenv and source it::
+6. Create an NPO Backstage virtualenv and source it::
 
-   $ virtualenv ocd
-   $ source ocd/bin/activate
+   $ virtualenv npo
+   $ source npo/bin/activate
 
-7. Clone the OCD git repository and install the required Python packages::
+7. Clone the NPO Backstage git repository and install the required Python packages::
 
-   $ git clone https://github.com/openstate/open-cultuur-data.git
-   $ cd open-cultuur-data/
+   $ git clone https://github.com/openstate/npo-backstage.git
+   $ cd npo-backstage/
    $ pip install -r requirements.txt
 
 
-Running an OCD extractor
+Running an NPO Backstage extractor
 ========================
 
-1. First, add the OCD template to the running Elasticsearch instance::
+1. First, add the NPO Backstage template to the running Elasticsearch instance::
 
    $ ./manage.py elasticsearch put_template
 
-2. Make the necessary changes to the 'sources' settings file (``ocd_backend/sources.json``). For example, fill out your API key for retrieving data from the Rijksmuseum.
+2. Make the necessary changes to the 'sources' settings file (``ocd_backend/sources.json``). For example, fill out any API keys you might need for specific APIs.
 
 3. Start the extraction process::
 
-   $ ./manage.py extract start openbeelden
+   $ ./manage.py extract start npo-journalistiek
 
    You can get an overview of the available sources by running ``./manage.py extract list_sources``.
 

@@ -153,15 +153,15 @@ RUN git clone --depth 1 git://source.ffmpeg.org/ffmpeg \
     && ldconfig
 ##########
 
-WORKDIR /opt/ocd
+WORKDIR /opt/npo
 # Create a virtualenv project
 RUN echo 'ok'
 RUN virtualenv -q /opt
-RUN echo "source /opt/bin/activate; cd /opt/ocd;" >> ~/.bashrc
+RUN echo "source /opt/bin/activate; cd /opt/npo;" >> ~/.bashrc
 
-# Temporarily add all OCD files on the host to the container as it
-# contains files needed to finish the base installation
-ADD . /opt/ocd
+# Temporarily add all NPO Backstage files on the host to the container
+# as it contains files needed to finish the base installation
+ADD . /opt/npo
 
 # Install Python requirements
 RUN source ../bin/activate \
@@ -175,7 +175,7 @@ RUN source ../bin/activate \
     && ./manage.py elasticsearch create_indexes es_mappings/ \
     && ./manage.py elasticsearch put_template
 
-# Delete all OCD files again
+# Delete all NPO Bastage files again
 RUN find . -delete
 
 # Open up the elasticsearch port to the host
