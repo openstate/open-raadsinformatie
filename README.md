@@ -6,7 +6,7 @@
 
  - [Important links](#important-links)
  - [Bugs and feature requests](#bugs-and-feature-requests)
- - [Install](https://github.com/openstate/open-cultuur-data/blob/master/INSTALL.rst)
+ - [Install](https://github.com/openstate/npo-backstage/blob/master/INSTALL.rst)
  - [Documentation](#documentation)
  - [Contributing](#contributing)
  - [Authors and contributors](#authors-and-contributors)
