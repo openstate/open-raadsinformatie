@@ -48,6 +48,7 @@ class HttpRequestMixin(object):
         created if it doesn't already exist."""
         http_session = getattr(self, '_http_session', None)
         if not http_session:
+            requests.packages.urllib3.disable_warnings()
             session = requests.Session()
             session.headers['User-Agent'] = USER_AGENT
 
