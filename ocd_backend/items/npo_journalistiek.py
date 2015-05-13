@@ -18,6 +18,8 @@ class NPOJournalistiekItem(BaseItem):
     def get_combined_index_data(self):
         combined_index_data = {}
 
+        combined_index_data['hidden'] = self.source_definition['hidden']
+
         if self.original_item['Title']:
             combined_index_data['title'] = self.original_item['Title']
 
