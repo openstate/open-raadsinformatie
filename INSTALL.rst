@@ -15,9 +15,35 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
    $ docker build -t open-state/npo-backstage .
 
-3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container. Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200::
+3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container (so you can just develop on your host machine using your favorite development setup). Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200, the same holds for port 5000 which gives access to the API::
 
-   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 open-state/npo-backstage
+   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 -p 5000:5000 open-state/npo-backstage
+
+4. Once connected to the container the following commands currently still have to be executed manually::
+
+   $ service elasticsearch restart
+   $ redis-server &
+
+
+Some useful Docker commands::
+
+   # Show all docker images on your machine
+   $ docker images
+
+   # List all containers which are currently running
+   $ docker ps
+
+   # List all containers
+   $ docker ps -a
+
+   # Connect another shell to a currently running container (useful during development)
+   $ docker exec -it <CONTAINER ID> bash
+
+   # Start a stopped container and automatically attach to it (-a)
+   $ docker start -a <CONTAINER ID>
+
+   # Attach to a running container (use `exec` though if you want to open a separate shell)
+   $ docker attach <CONTAINER ID>
 
 Manual setup
 ============
@@ -82,10 +108,18 @@ Running an NPO Backstage extractor
 
 3. Start the extraction process::
 
-   $ ./manage.py extract start npo-journalistiek
+   $ ./manage.py extract start npo_journalistiek
 
    You can get an overview of the available sources by running ``./manage.py extract list_sources``.
 
 4. Simultaneously start a worker processes::
 
    $ celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=2
+
+
+Running the API frontend
+========================
+
+Once started, the API can be accessed on port 5000::
+
+   $ ./manage.py frontend runserver
