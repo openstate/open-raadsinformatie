@@ -54,6 +54,9 @@ local_dumps/
 .idea
 *.swp
 
+# logs
+*.log
+
 dumps/*
 local_dumps/*
 ocd_frontend/.thumbnail-cache/*

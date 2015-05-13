@@ -7,6 +7,41 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
         "index_name": "npo_journalistiek"
+    },
+    {
+        "id": "prid",
+        "extractor": "ocd_backend.extractors.prid.PRIDExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.prid.PRIDItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": true,
+        "index_name": "prid",
+        "start_date": "2015-05-10"
+    },
+    {
+        "id": "metadata",
+        "extractor": "ocd_backend.extractors.metadata.MetadataExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.metadata.MetadataItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": true,
+        "index_name": "metadata"
+    },
+    {
+        "id": "tt888",
+        "extractor": "ocd_backend.extractors.tt888.TT888Extractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.tt888.TT888Item",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": true,
+        "index_name": "tt888"
     }
 ]
