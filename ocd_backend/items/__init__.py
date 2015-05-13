@@ -39,6 +39,7 @@ class BaseItem(object):
 
     #: Allowed key-value pairs for the document inserted in the 'combined index'
     combined_index_fields = {
+        'hidden': bool,
         'title': unicode,
         'description': unicode,
         'date': datetime,
@@ -77,7 +78,9 @@ class BaseItem(object):
         self.combined_index_data = StrictMappingDict(self.combined_index_fields)
 
         for field, value in self.get_combined_index_data().iteritems():
-            if value:
+            if type(value) == bool:
+                self.combined_index_data[field] = value
+            elif value:
                 self.combined_index_data[field] = value
 
     def get_combined_index_doc(self):
