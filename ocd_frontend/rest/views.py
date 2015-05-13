@@ -148,6 +148,8 @@ def parse_search_request(data, mlt=False):
 
             filters.append(r_filter)
 
+    filters.append({"bool": {"must": {"term": {"hidden": 1}}}})
+
     return {
         'query': query,
         'n_size': n_size,
@@ -167,6 +169,7 @@ def format_search_results(results):
     for hit in results['hits']['hits']:
         del hit['_index']
         del hit['_type']
+        del hit['_source']['hidden']
         kwargs = {
             'object_id': hit['_id'],
             'source_id': hit['_source']['meta']['source_id'],
