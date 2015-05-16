@@ -3,6 +3,12 @@ from datetime import datetime
 from ocd_backend.items import BaseItem
 
 class PRIDItem(BaseItem):
+    # Overrule the default generating of a hash object id based on the
+    # original object id and object urls, and simply use the object
+    # id/prid.
+    def get_object_id(self):
+        return self.original_item['PRID']
+
     def get_original_object_id(self):
         return self.original_item['PRID']
 
