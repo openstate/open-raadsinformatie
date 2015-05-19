@@ -8,16 +8,16 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
 1. Clone the OCD git repository::
 
-   $ git clone https://github.com/openstate/npo-backstage.git
-   $ cd npo-backstage/
+   $ git clone https://github.com/openstate/open-raadsinformatie.git
+   $ cd open-raadsinformatie/
 
-2. Build an image using the Dockerfile, i.e. use Ubuntu as base and install all dependencies, and call it open-state/npo-backstage::
+2. Build an image using the Dockerfile, i.e. use Ubuntu as base and install all dependencies, and call it open-state/open-raadsinformatie::
 
-   $ docker build -t open-state/npo-backstage .
+   $ docker build -t open-state/nopen-raadsinformatie .
 
-3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container (so you can just develop on your host machine using your favorite development setup). Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200, the same holds for port 5000 which gives access to the API::
+3. Create a container based on the newly created open-state/open-raadsinformatie image. The current folder on the host machine (which should be the root of theopen-raadsinformatie repo!) is mounted on /opt/npo in the container (so you can just develop on your host machine using your favorite development setup). Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200, the same holds for port 5000 which gives access to the API::
 
-   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 -p 5000:5000 open-state/npo-backstage
+   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 -p 5000:5000 open-state/open-raadsinformatie
 
 4. Once connected to the container the following commands currently still have to be executed manually::
 
