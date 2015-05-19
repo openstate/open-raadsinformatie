@@ -41,6 +41,8 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             return json.loads(raw_item)
         elif raw_item_content_type == 'application/xml':
             return etree.XML(raw_item)
+        elif raw_item_content_type == 'application/html':
+            return etree.HTML(raw_item)
         else:
             raise NoDeserializerAvailable('Item with content_type %s'
                                           % raw_item_content_type)
