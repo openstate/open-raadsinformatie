@@ -97,6 +97,50 @@ class StaticXmlExtractor(StaticFileBaseExtractor):
             yield 'application/xml', etree.tostring(item)
 
 
+class StaticHtmlExtractor(StaticFileBaseExtractor):
+    """Extract items from a single static HTML file.
+
+    The XPath expression used to extract items from the retrieved
+    HTML file should be specified in the definition of the source
+    by populating the ``item_xpath`` attribute.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(StaticHtmlExtractor, self).__init__(*args, **kwargs)
+
+        if 'item_xpath' not in self.source_definition:
+            raise ConfigurationError('Missing \'item_xpath\' definition')
+
+        if not self.source_definition['item_xpath']:
+            raise ConfigurationError('The \'item_xpath\' is empty')
+
+        self.item_xpath = self.source_definition['item_xpath']
+
+        self.default_namespace = None
+        if 'default_namespace' in self.source_definition:
+            self.default_namespace = self.source_definition[
+                'default_namespace'
+            ]
+
+    def extract_items(self, static_content):
+        tree = etree.HTML(static_content)
+
+        self.namespaces = None
+        if self.default_namespace is not None:
+            # the namespace map has a key None if there is a default namespace
+            # so the configuration has to specify the default key
+            # xpath queries do not allow an empty default namespace
+            self.namespaces = tree.nsmap
+            try:
+                self.namespaces[self.default_namespace] = self.namespaces[None]
+                del self.namespaces[None]
+            except KeyError as e:
+                pass
+
+        for item in tree.xpath(self.item_xpath, namespaces=self.namespaces):
+            yield 'application/html', etree.tostring(item)
+
+
 class StaticJSONExtractor(StaticFileBaseExtractor):
     """
     Extract items from JSON files.

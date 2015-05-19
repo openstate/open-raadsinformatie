@@ -1,47 +1,15 @@
 [
      {
-        "id": "npo_journalistiek",
-        "extractor": "ocd_backend.extractors.npo-journalistiek.NPOJournalistiekExtractor",
+        "id": "oude_ijsselstreek_council",
+        "extractor": "ocd_backend.extractors.staticfile.StaticHtmlExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.npo_journalistiek.NPOJournalistiekItem",
-        "enrichers": [],
-        "loader": "ocd_backend.loaders.ElasticsearchLoader",
-        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": false,
-        "index_name": "npo_journalistiek"
-    },
-    {
-        "id": "prid",
-        "extractor": "ocd_backend.extractors.prid.PRIDExtractor",
-        "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.prid.PRIDItem",
+        "item": "ocd_backend.items.oude_ijsselstreek.CouncilItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": true,
-        "index_name": "prid",
-        "start_date": "2015-05-10"
-    },
-    {
-        "id": "metadata",
-        "extractor": "ocd_backend.extractors.metadata.MetadataExtractor",
-        "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.metadata.MetadataItem",
-        "enrichers": [],
-        "loader": "ocd_backend.loaders.ElasticsearchLoader",
-        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
-        "index_name": "metadata"
-    },
-    {
-        "id": "tt888",
-        "extractor": "ocd_backend.extractors.tt888.TT888Extractor",
-        "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.tt888.TT888Item",
-        "enrichers": [],
-        "loader": "ocd_backend.loaders.ElasticsearchLoader",
-        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
-        "index_name": "tt888"
+        "index_name": "oude_ijsselstreek",
+        "file_url": "http://www.oude-ijsselstreek.nl/leden-van-de-gemeenteraad",
+        "item_xpath": "//div[class=\"field-item\"]//p"
     }
 ]
