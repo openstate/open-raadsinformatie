@@ -1,4 +1,4 @@
-# Open Raads-informatie API
+# Open Raadsinformatie API
 
 
 
@@ -24,7 +24,7 @@ Have a bug or a feature request? Please first read the [issue guidelines](https:
 
 ## Documentation
 
-The documentation of the NPO Backstage API can be found at [docs.opencultuurdata.nl](http://docs.openraadsinformatie.nl/).
+The documentation of the Open Raadsinformatie API can be found at [docs.openraadsinformatie.nl](http://docs.openraadsinformatie.nl/).
 
 We use [Sphinx](http://sphinx-doc.org/) to create the documentation. The source files are included in this repo under the `docs` directory.  
 
