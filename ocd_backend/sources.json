@@ -10,6 +10,7 @@
         "hidden": true,
         "index_name": "oude_ijsselstreek",
         "file_url": "http://www.oude-ijsselstreek.nl/leden-van-de-gemeenteraad",
-        "item_xpath": "//div[@class=\"field-items\"]//p/img/.."
+        "item_xpath": "//div[@class=\"field-items\"]//p/img/..",
+        "doc_type": "persons"
     }
 ]

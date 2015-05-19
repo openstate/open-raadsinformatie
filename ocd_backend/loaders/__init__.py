@@ -59,6 +59,7 @@ class ElasticsearchLoader(BaseLoader):
         self.current_index_name = kwargs.get('current_index_name')
         self.index_name = kwargs.get('new_index_name')
         self.alias = kwargs.get('index_alias')
+        self.doc_type = kwargs['source_definition'].get('doc_type', 'item')
 
         if not self.index_name:
             raise ConfigurationError('The name of the index is not provided')
@@ -67,12 +68,13 @@ class ElasticsearchLoader(BaseLoader):
 
     def load_item(self, object_id, combined_index_doc, doc):
         log.info('Indexing documents...')
-        elasticsearch.index(index=settings.COMBINED_INDEX, doc_type='item',
-                            id=object_id, body=combined_index_doc)
+        elasticsearch.index(index=settings.COMBINED_INDEX,
+                            doc_type=self.doc_type, id=object_id,
+                            body=combined_index_doc)
 
         # Index documents into new index
-        elasticsearch.index(index=self.index_name, doc_type='item', body=doc,
-                            id=object_id)
+        elasticsearch.index(index=self.index_name, doc_type=self.doc_type,
+                            body=doc, id=object_id)
 
         m_url_content_types = {}
         if 'media_urls' in doc['enrichments']:
