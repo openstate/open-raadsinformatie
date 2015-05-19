@@ -153,15 +153,15 @@ RUN git clone --depth 1 git://source.ffmpeg.org/ffmpeg \
     && ldconfig
 ##########
 
-WORKDIR /opt/npo
+WORKDIR /opt/ori
 # Create a virtualenv project
 RUN echo 'ok'
 RUN virtualenv -q /opt
-RUN echo "source /opt/bin/activate; cd /opt/npo;" >> ~/.bashrc
+RUN echo "source /opt/bin/activate; cd /opt/ori;" >> ~/.bashrc
 
 # Temporarily add all NPO Backstage files on the host to the container
 # as it contains files needed to finish the base installation
-ADD . /opt/npo
+ADD . /opt/ori
 
 # Install Python requirements
 RUN source ../bin/activate \
