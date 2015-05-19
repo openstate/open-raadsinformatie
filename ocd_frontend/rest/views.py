@@ -253,9 +253,10 @@ def list_sources():
     return jsonify(format_sources_results(es_r))
 
 
-@bp.route('/search', methods=['POST'])
+@bp.route('/search', methods=['POST', 'GET'])
+@bp.route('/search/<doc_type>', methods=['POST', 'GET'])
 @decode_json_post_data
-def search():
+def search(doc_type='item'):
     search_req = parse_search_request(request.data)
 
     excluded_fields = validate_included_fields(
@@ -301,7 +302,8 @@ def search():
         }
 
     es_r = current_app.es.search(body=es_q,
-                                 index=current_app.config['COMBINED_INDEX'])
+                                 index=current_app.config['COMBINED_INDEX'],
+                                 doc_type=doc_type)
 
     # Log a 'search' event if usage logging is enabled
     if current_app.config['USAGE_LOGGING_ENABLED']:
@@ -329,8 +331,9 @@ def search():
 
 
 @bp.route('/<source_id>/search', methods=['POST'])
+@bp.route('/<source_id>/search/<doc_type>', methods=['POST'])
 @decode_json_post_data
-def search_source(source_id):
+def search_source(source_id, doc_type='item'):
     # Disallow searching in multiple indexes by providing a wildcard
     if '*' in source_id:
         raise OcdApiError('Invalid \'source_id\'', 400)
@@ -383,7 +386,8 @@ def search_source(source_id):
         }
 
     try:
-        es_r = current_app.es.search(body=es_q, index=index_name)
+        es_r = current_app.es.search(
+            body=es_q, index=index_name, doc_type=doc_type)
     except NotFoundError:
         raise OcdApiError('Source \'%s\' does not exist' % source_id, 404)
 
@@ -414,7 +418,8 @@ def search_source(source_id):
 
 
 @bp.route('/<source_id>/<object_id>', methods=['GET'])
-def get_object(source_id, object_id):
+@bp.route('/<source_id>/<doc_type>/<object_id>', methods=['GET'])
+def get_object(source_id, object_id, doc_type='item'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
@@ -429,6 +434,7 @@ def get_object(source_id, object_id):
 
     try:
         obj = current_app.es.get(index=index_name, id=object_id,
+                                 doc_type=doc_type,
                                  _source_exclude=excluded_fields)
     except NotFoundError, e:
         if e.error.startswith('IndexMissingException'):
