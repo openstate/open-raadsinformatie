@@ -35,12 +35,11 @@ SORTABLE_FIELDS = (
 # ALLOWED_INCLUDE_FIELDS_DEFAULT = ['all_text', 'source_data']
 # ALLOWED_INCLUDE_FIELDS_SEARCH = ['all_text']
 
+EXCLUDED_FIELDS_ALWAYS = [
+    'combined_index_data', 'enrichments', 'meta', 'hidden']
 EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
-                           'media_urls.original_url',
-                           'combined_index_data', 'enrichments', 'meta',
-                           'hidden']
-EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url' 'enrichments',
-                          'meta', 'hidden']
+                           'media_urls.original_url']
+EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
 
 ALLOWED_INCLUDE_FIELDS_DEFAULT = []
 ALLOWED_INCLUDE_FIELDS_SEARCH = []

@@ -169,16 +169,20 @@ def format_search_results(results):
     for hit in results['hits']['hits']:
         del hit['_index']
         del hit['_type']
-        del hit['_source']['hidden']
+        # del hit['_source']['hidden']
         kwargs = {
             'object_id': hit['_id'],
             'source_id': hit['_source']['meta']['source_id'],
             '_external': True
         }
         hit['_source']['meta']['ocd_url'] = url_for('api.get_object', **kwargs)
+        for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
+            del hit['_source'][key]
 
-    return results
-
+    formatted_results = {'persons': []}
+    formatted_results['persons'] = [
+        hit['_source'] for hit in results['hits']['hits']]
+    return formatted_results
 
 def validate_included_fields(include_fields, excluded_fields,
                              allowed_to_include):
@@ -331,8 +335,8 @@ def search(doc_type='item'):
     return jsonify(format_search_results(es_r))
 
 
-@bp.route('/<source_id>/search', methods=['POST'])
-@bp.route('/<source_id>/search/<doc_type>', methods=['POST'])
+@bp.route('/<source_id>/search', methods=['POST', 'GET'])
+@bp.route('/<source_id>/<doc_type>/search', methods=['POST', 'GET'])
 @decode_json_post_data
 def search_source(source_id, doc_type='item'):
     # Disallow searching in multiple indexes by providing a wildcard
@@ -341,7 +345,8 @@ def search_source(source_id, doc_type='item'):
 
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'], source_id)
 
-    search_req = parse_search_request(request.data)
+    data = request.data or request.args
+    search_req = parse_search_request(data)
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
@@ -357,13 +362,14 @@ def search_source(source_id, doc_type='item'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields': [
-                            'title^3',
-                            'authors^2',
-                            'description^2',
-                            'meta.original_object_id',
-                            'all_text'
-                        ]
+                        'fields': ['biography']
+                        # 'fields': [
+                        #     'title^3',
+                        #     'authors^2',
+                        #     'description^2',
+                        #     'meta.original_object_id',
+                        #     'all_text'
+                        # ]
                     }
                 },
                 'filter': {}
