@@ -261,8 +261,8 @@ def search(doc_type='item'):
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
-        excluded_fields=['all_text', 'media_urls.original_url'],
-        allowed_to_include=['all_text']
+        excluded_fields=current_app.config['EXCLUDED_FIELDS_SEARCH'],
+        allowed_to_include=current_app.config['ALLOWED_INCLUDE_FIELDS_SEARCH']
     )
 
     # Construct the query we are going to send to Elasticsearch
@@ -345,9 +345,8 @@ def search_source(source_id, doc_type='item'):
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
-        excluded_fields=['all_text', 'source_data', 'media_urls.original_url',
-                         'combined_index_data'],
-        allowed_to_include=['all_text', 'source_data']
+        excluded_fields=current_app.config['EXCLUDED_FIELDS_DEFAULT'],
+        allowed_to_include=current_app.config['ALLOWED_INCLUDE_FIELDS_DEFAULT']
     )
 
     # Construct the query we are going to send to Elasticsearch
@@ -429,9 +428,8 @@ def get_object(source_id, object_id, doc_type='item'):
 
     excluded_fields = validate_included_fields(
         include_fields=include_fields,
-        excluded_fields=['all_text', 'source_data', 'media_urls.original_url',
-                         'combined_index_data'],
-        allowed_to_include=['all_text', 'source_data']
+        excluded_fields=current_app.config['EXCLUDED_FIELDS_DEFAULT'],
+        allowed_to_include=current_app.config['ALLOWED_INCLUDE_FIELDS_DEFAULT']
     )
 
     try:
@@ -610,9 +608,8 @@ def similar(object_id, source_id=None, doc_type='item'):
 
     excluded_fields = validate_included_fields(
         include_fields=search_params['include_fields'],
-        excluded_fields=['all_text', 'source_data', 'media_urls.original_url',
-                         'combined_index_data'],
-        allowed_to_include=['all_text', 'source_data']
+        excluded_fields=current_app.config['EXCLUDED_FIELDS_DEFAULT'],
+        allowed_to_include=current_app.config['ALLOWED_INCLUDE_FIELDS_DEFAULT']
     )
 
     # FIXME: should do here something with the fields ...

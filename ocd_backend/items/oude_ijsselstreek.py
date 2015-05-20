@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from ocd_backend.items import BaseItem
+from ocd_backend.items.popolo import PersonItem
 
 
-class CouncilItem(BaseItem):
+class CouncilItem(PersonItem):
     def get_original_object_id(self):
         print self.original_item.xpath('.//a//text()')
         return unicode(self.original_item.xpath('.//a//text()')[0])
@@ -22,22 +22,23 @@ class CouncilItem(BaseItem):
 
         combined_index_data['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['title'] = unicode(self.original_item.xpath(
+        combined_index_data['name'] = unicode(self.original_item.xpath(
             './/img/@title')[0])
-        combined_index_data['description'] = u''.join(
+        combined_index_data['biography'] = u''.join(
             self.original_item.xpath('.//text()'))
-        combined_index_data['date'] = datetime.strptime(
+        combined_index_data['created_at'] = datetime.strptime(
             u'2015-05-19', '%Y-%m-%d')
-        combined_index_data['date_granularity'] = 8
-        combined_index_data['authors'] = []
 
-        combined_index_data['media_urls'] = []
-        combined_index_data['media_urls'].append({
-            'original_url': (
-                u'http://www.oude-ijsselstreek.nl' + self.original_item.xpath(
-                    './/img/@src')[0]),
-            'content_type': 'image/jpeg'
-        })
+        # combined_index_data['media_urls'] = []
+        # combined_index_data['media_urls'].append({
+        #     'original_url': (
+        #         u'http://www.oude-ijsselstreek.nl' + self.original_item.xpath(
+        #             './/img/@src')[0]),
+        #     'content_type': 'image/jpeg'
+        # })
+        combined_index_data['image'] = (
+            u'http://www.oude-ijsselstreek.nl' + self.original_item.xpath(
+                './/img/@src')[0])
 
         return combined_index_data
 

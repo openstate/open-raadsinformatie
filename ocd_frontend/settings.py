@@ -27,6 +27,24 @@ SORTABLE_FIELDS = (
     'date', 'date_granularity', 'authors', '_score'
 )
 
+# EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
+#                            'media_urls.original_url',
+#                            'combined_index_data']
+# EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
+#
+# ALLOWED_INCLUDE_FIELDS_DEFAULT = ['all_text', 'source_data']
+# ALLOWED_INCLUDE_FIELDS_SEARCH = ['all_text']
+
+EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
+                           'media_urls.original_url',
+                           'combined_index_data', 'enrichments', 'meta',
+                           'hidden']
+EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url' 'enrichments',
+                          'meta', 'hidden']
+
+ALLOWED_INCLUDE_FIELDS_DEFAULT = []
+ALLOWED_INCLUDE_FIELDS_SEARCH = []
+
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
 AVAILABLE_FACETS = {
