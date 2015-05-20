@@ -162,7 +162,7 @@ def parse_search_request(data, mlt=False):
     }
 
 
-def format_search_results(results):
+def format_search_results(results, doc_type='items'):
     del results['_shards']
     del results['timed_out']
 
@@ -179,8 +179,8 @@ def format_search_results(results):
         for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
             del hit['_source'][key]
 
-    formatted_results = {'persons': []}
-    formatted_results['persons'] = [
+    formatted_results = {doc_type: []}
+    formatted_results[doc_type] = [
         hit['_source'] for hit in results['hits']['hits']]
     return formatted_results
 
@@ -332,7 +332,7 @@ def search(doc_type='item'):
             query_time_ms=es_r['took']
         )
 
-    return jsonify(format_search_results(es_r))
+    return jsonify(format_search_results(es_r, doc_type))
 
 
 @bp.route('/<source_id>/search', methods=['POST', 'GET'])
@@ -421,7 +421,7 @@ def search_source(source_id, doc_type='item'):
             query_time_ms=es_r['took']
         )
 
-    return jsonify(format_search_results(es_r))
+    return jsonify(format_search_results(es_r, doc_type))
 
 
 @bp.route('/<source_id>/<object_id>', methods=['GET'])
@@ -462,6 +462,9 @@ def get_object(source_id, object_id, doc_type='item'):
             doc_type=doc_type,
             object_id=object_id
         )
+
+    for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
+        del obj['_source'][key]
 
     return jsonify(obj['_source'])
 
@@ -688,7 +691,7 @@ def similar(object_id, source_id=None, doc_type='item'):
             query_time_ms=es_r['took']
         )
 
-    return jsonify(format_search_results(es_r))
+    return jsonify(format_search_results(es_r, doc_type))
 
 
 @bp.route('/resolve/<url_id>', methods=['GET'])
