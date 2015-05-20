@@ -44,6 +44,10 @@ EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
 ALLOWED_INCLUDE_FIELDS_DEFAULT = []
 ALLOWED_INCLUDE_FIELDS_SEARCH = []
 
+SIMPLE_QUERY_FIELDS = {
+    'persons': ['biography^4', 'name^3', 'other_names^2']
+}
+
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
 AVAILABLE_FACETS = {

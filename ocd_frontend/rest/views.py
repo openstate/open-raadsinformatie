@@ -36,8 +36,9 @@ def validate_from_and_size(data):
 def parse_search_request(data, mlt=False):
     # Return an error when no query or an empty query string is provied
     query = data.get('query', None)
-    if not query and not mlt:
-        raise OcdApiError('Missing \'query\'', 400)
+
+    # if not query and not mlt:
+    #     raise OcdApiError('Missing \'query\'', 400)
 
     # Additional fields requested to include in the response
     include_fields = [f.strip() for f in data.get('include_fields', []) if f.strip()]
@@ -277,13 +278,8 @@ def search(doc_type='item'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields': [
-                            'title^3',
-                            'authors^2',
-                            'description^2',
-                            'meta.original_object_id',
-                            'all_text'
-                        ]
+                        'fields':current_app.config[
+                            'SIMPLE_QUERY_FIELDS'][doc_type]
                     }
                 },
                 'filter': {}
@@ -299,6 +295,9 @@ def search(doc_type='item'):
             'exclude': excluded_fields
         }
     }
+
+    if not search_req['query']:
+        es_q['query']['filtered']['query'] = {'match_all': {}}
 
     if search_req['filters']:
         es_q['query']['filtered']['filter'] = {
@@ -362,7 +361,8 @@ def search_source(source_id, doc_type='item'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields': ['biography']
+                        'fields': current_app.config[
+                            'SIMPLE_QUERY_FIELDS'][doc_type]
                         # 'fields': [
                         #     'title^3',
                         #     'authors^2',
@@ -385,6 +385,9 @@ def search_source(source_id, doc_type='item'):
             'exclude': excluded_fields
         }
     }
+
+    if not search_req['query']:
+        es_q['query']['filtered']['query'] = {'match_all': {}}
 
     if search_req['filters']:
         es_q['query']['filtered']['filter'] = {
