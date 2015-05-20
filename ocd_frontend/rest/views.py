@@ -321,6 +321,7 @@ def search(doc_type='item'):
             user_ip=request.remote_addr,
             created_at=datetime.utcnow(),
             event_type='search',
+            doc_type=doc_type,
             query=search_req,
             hits=hit_log,
             n_total_hits=es_r['hits']['total'],
@@ -408,6 +409,7 @@ def search_source(source_id, doc_type='item'):
             created_at=datetime.utcnow(),
             event_type='search',
             source_id=source_id,
+            doc_type=doc_type,
             query=search_req,
             hits=hit_log,
             n_total_hits=es_r['hits']['total'],
@@ -453,6 +455,7 @@ def get_object(source_id, object_id, doc_type='item'):
             created_at=datetime.utcnow(),
             event_type='get_object',
             source_id=source_id,
+            doc_type=doc_type,
             object_id=object_id
         )
 
@@ -460,12 +463,14 @@ def get_object(source_id, object_id, doc_type='item'):
 
 
 @bp.route('/<source_id>/<object_id>/source')
-def get_object_source(source_id, object_id):
+@bp.route('/<source_id>/<doc_type>/<object_id>/source')
+def get_object_source(source_id, object_id, doc_type='item'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
     try:
         obj = current_app.es.get(index=index_name, id=object_id,
+                                 doc_type=doc_type,
                                  _source_include=['source_data'])
     except NotFoundError, e:
         if e.error.startswith('IndexMissingException'):
@@ -487,6 +492,7 @@ def get_object_source(source_id, object_id):
             created_at=datetime.utcnow(),
             event_type='get_object_source',
             source_id=source_id,
+            doc_type=doc_type,
             object_id=object_id
         )
 
@@ -494,11 +500,13 @@ def get_object_source(source_id, object_id):
 
 
 @bp.route('/<source_id>/<object_id>/stats')
-def get_object_stats(source_id, object_id):
+@bp.route('/<source_id>/<doc_type>/<object_id>/stats')
+def get_object_stats(source_id, object_id, doc_type='item'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
-    object_exists = current_app.es.exists(index=index_name, id=object_id)
+    object_exists = current_app.es.exists(index=index_name, doc_type=doc_type,
+                                          id=object_id)
     if not object_exists:
         raise OcdApiError('Document or source not found.', 404)
 
@@ -586,8 +594,10 @@ def get_object_stats(source_id, object_id):
 
 @bp.route('/<source_id>/similar/<object_id>', methods=['POST'])
 @bp.route('/similar/<object_id>', methods=['POST'])
+@bp.route('/<source_id>/<doc_type>/similar/<object_id>', methods=['POST'])
+@bp.route('/similar/<doc_type>/<object_id>', methods=['POST'])
 @decode_json_post_data
-def similar(object_id, source_id=None):
+def similar(object_id, source_id=None, doc_type='item'):
     search_params = parse_search_request(request.data, mlt=True)
     # not relevant, as mlt already creates the query for us
     search_params.pop('query')
@@ -605,6 +615,7 @@ def similar(object_id, source_id=None):
         allowed_to_include=['all_text', 'source_data']
     )
 
+    # FIXME: should do here something with the fields ...
     es_q = {
         'query': {
             'filtered': {
@@ -612,7 +623,7 @@ def similar(object_id, source_id=None):
                     'more_like_this': {
                         'docs': [{
                             '_index': index_name,
-                            '_type': 'item',
+                            '_type': doc_type,
                             '_id': object_id
                         }],
                         'fields': [
@@ -667,6 +678,7 @@ def similar(object_id, source_id=None):
             event_type='search_similar',
             similar_to_source_id=source_id,
             similar_to_object_id=object_id,
+            doc_type=doc_type,
             query=search_params,
             hits=hit_log,
             n_total_hits=es_r['hits']['total'],
