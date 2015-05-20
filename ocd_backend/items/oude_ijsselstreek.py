@@ -5,7 +5,6 @@ from ocd_backend.items.popolo import PersonItem
 
 class CouncilItem(PersonItem):
     def get_original_object_id(self):
-        print self.original_item.xpath('.//a//text()')
         return unicode(self.original_item.xpath('.//a//text()')[0])
 
     def get_original_object_urls(self):
@@ -20,6 +19,8 @@ class CouncilItem(PersonItem):
     def get_combined_index_data(self):
         combined_index_data = {}
 
+        combined_index_data['id'] = self.get_original_object_id()
+
         combined_index_data['hidden'] = self.source_definition['hidden']
 
         combined_index_data['name'] = unicode(self.original_item.xpath(
@@ -29,13 +30,7 @@ class CouncilItem(PersonItem):
         combined_index_data['created_at'] = datetime.strptime(
             u'2015-05-19', '%Y-%m-%d')
 
-        # combined_index_data['media_urls'] = []
-        # combined_index_data['media_urls'].append({
-        #     'original_url': (
-        #         u'http://www.oude-ijsselstreek.nl' + self.original_item.xpath(
-        #             './/img/@src')[0]),
-        #     'content_type': 'image/jpeg'
-        # })
+        # TODO: use the thumbnail service for these fields?
         combined_index_data['image'] = (
             u'http://www.oude-ijsselstreek.nl' + self.original_item.xpath(
                 './/img/@src')[0])

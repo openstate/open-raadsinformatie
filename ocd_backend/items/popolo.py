@@ -12,6 +12,7 @@ from ocd_backend.items import BaseItem
 class PersonItem(BaseItem):
     #: Allowed key-value pairs for the document inserted in the 'combined index'
     combined_index_fields = {
+        'id': unicode,
         'hidden': bool,
         'name': unicode,
         'other_names': list,
