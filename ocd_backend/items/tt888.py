@@ -3,11 +3,19 @@ from datetime import datetime
 from ocd_backend.items import BaseItem
 
 class TT888Item(BaseItem):
-    # Overrule the default generating of a hash object id based on the
-    # original object id and object urls, and simply use the object
-    # id/prid.
+    # Override the default generating of a hash object ID based on the
+    # original object id and object urls, and simply use the PRID
     def get_object_id(self):
         return self.original_item['prid']
+
+    # Override the default combined object ID, which is the same as the
+    # hash object ID. Instead use the object ID based on the PRID and
+    # prepend it with the index name.
+    def get_combined_object_id(self):
+        return '%s_%s' % (
+            self.source_definition['index_name'],
+            self.get_object_id()
+        )
 
     def get_original_object_id(self):
         return self.original_item['prid']
@@ -28,6 +36,9 @@ class TT888Item(BaseItem):
 
         combined_index_data['hidden'] = self.source_definition['hidden']
 
+        if self.original_item['prid']:
+            combined_index_data['prid'] = self.original_item['prid']
+
         return combined_index_data
 
     def get_index_data(self):
@@ -41,5 +52,4 @@ class TT888Item(BaseItem):
             # skip the lines with the time information
             text_items = self.original_item['subtitle'].split('\n')[4::4]
 
-        print text_items
         return u' '.join(text_items)
