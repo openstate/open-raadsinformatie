@@ -76,6 +76,7 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         self.add_resolveable_media_urls(item)
 
         return (
+            item.get_combined_object_id(),
             item.get_object_id(),
             item.get_combined_index_doc(),
             item.get_index_doc()
