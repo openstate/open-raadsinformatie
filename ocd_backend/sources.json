@@ -1,14 +1,15 @@
 [
      {
         "id": "npo_journalistiek",
-        "extractor": "ocd_backend.extractors.npo-journalistiek.NPOJournalistiekExtractor",
+        "extractor": "ocd_backend.extractors.npo_journalistiek.NPOJournalistiekExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.npo_journalistiek.NPOJournalistiekItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
-        "index_name": "npo_journalistiek"
+        "index_name": "journalistiek",
+        "keep_index_on_update": false
     },
     {
         "id": "prid",
@@ -18,9 +19,10 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
+        "hidden": false,
         "index_name": "prid",
-        "start_date": "2015-05-10"
+        "start_date": "2015-05-25",
+        "keep_index_on_update": true
     },
     {
         "id": "metadata",
@@ -30,8 +32,9 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
-        "index_name": "metadata"
+        "hidden": false,
+        "index_name": "metadata",
+        "keep_index_on_update": true
     },
     {
         "id": "tt888",
@@ -41,7 +44,8 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
-        "index_name": "tt888"
+        "hidden": false,
+        "index_name": "tt888",
+        "keep_index_on_update": true
     }
 ]
