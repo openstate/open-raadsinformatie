@@ -40,6 +40,7 @@ class BaseItem(object):
     #: Allowed key-value pairs for the document inserted in the 'combined index'
     combined_index_fields = {
         'hidden': bool,
+        'prid': unicode,
         'title': unicode,
         'description': unicode,
         'date': datetime,
@@ -165,6 +166,17 @@ class BaseItem(object):
         hash_content = self.source_definition['id'] + object_id + u''.join(sorted(urls.values()))
 
         return sha1(hash_content.decode('utf8')).hexdigest()
+
+    def get_combined_object_id(self):
+        """Generates a new object ID which is used within OCD to identify
+        the item in the combined index.
+
+        By default the ID is the same as the object ID generated for the
+        source's individual index using (:meth:`~.get_object_id`).
+
+        :rtype: str
+        """
+        return self.get_object_id()
 
     def get_original_object_urls(self):
         """Retrieves the item's original URLs at the source location.

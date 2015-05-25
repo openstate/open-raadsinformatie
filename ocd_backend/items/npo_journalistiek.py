@@ -2,12 +2,21 @@ from datetime import datetime
 
 from ocd_backend.items import BaseItem
 
+
 class NPOJournalistiekItem(BaseItem):
-    # Overrule the default generating of a hash object id based on the
-    # original object id and object urls, and simply use the object
-    # id/prid.
+    # Override the default generating of a hash object ID based on the
+    # original object id and object urls, and simply use the OBEN ID
     def get_object_id(self):
         return self.original_item['Id']
+
+    # Override the default combined object ID, which is the same as the
+    # hash object ID. Instead use the object ID based on the OBEN ID and
+    # prepend it with the index name.
+    def get_combined_object_id(self):
+        return '%s_%s' % (
+            self.source_definition['index_name'],
+            self.get_object_id()
+        )
 
     def get_original_object_id(self):
         return self.original_item['Id']
@@ -25,6 +34,9 @@ class NPOJournalistiekItem(BaseItem):
         combined_index_data = {}
 
         combined_index_data['hidden'] = self.source_definition['hidden']
+
+        if self.original_item['Mid']:
+            combined_index_data['prid'] = self.original_item['Mid']
 
         if self.original_item['Title']:
             combined_index_data['title'] = self.original_item['Title']
@@ -54,25 +66,29 @@ class NPOJournalistiekItem(BaseItem):
         if self.original_item['Image']:
             combined_index_data['media_urls'] = [
                 {
-                    'original_url': 'http://statischecontent.nl/img/16x9/1000x/%s.jpg' % (self.original_item['Image']['Key']),
+                    'original_url': 'http://statischecontent.nl/img/16x9/'
+                        '1000x/%s.jpg' % (self.original_item['Image']['Key']),
                     'content_type': 'image/jpeg',
                     'width': 1000,
                     'height': 563
                 },
                 {
-                    'original_url': 'http://statischecontent.nl/img/1x1/880x/%s.jpg' % (self.original_item['Image']['Key']),
+                    'original_url': 'http://statischecontent.nl/img/1x1/880x/'
+                        '%s.jpg' % (self.original_item['Image']['Key']),
                     'content_type': 'image/jpeg',
                     'width': 880,
                     'height': 880
                 },
                 {
-                    'original_url': 'http://statischecontent.nl/img/4x3/880x/%s.jpg' % (self.original_item['Image']['Key']),
+                    'original_url': 'http://statischecontent.nl/img/4x3/880x/'
+                        '%s.jpg' % (self.original_item['Image']['Key']),
                     'content_type': 'image/jpeg',
                     'width': 880,
                     'height': 660
                 },
                 {
-                    'original_url': 'http://statischecontent.nl/img/3x4/x1600/%s.jpg' % (self.original_item['Image']['Key']),
+                    'original_url': 'http://statischecontent.nl/img/3x4/x1600/'
+                        '%s.jpg' % (self.original_item['Image']['Key']),
                     'content_type': 'image/jpeg',
                     'width': 1200,
                     'height': 1600
