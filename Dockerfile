@@ -16,6 +16,8 @@ RUN apt-get update \
 RUN add-apt-repository -y ppa:rwky/redis > /dev/null \
     && apt-get update \
     && apt-get install -y redis-server
+
+RUN locale-gen nl_NL.UTF-8
     
 # Install elasticsearch
 ENV ES_VERSION 1.4.2
