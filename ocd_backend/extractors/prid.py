@@ -66,12 +66,12 @@ class PRIDExtractor(BaseExtractor, HttpRequestMixin):
             data = {}
             # Retrieve program URLs listed on the webpage and
             # extract the PRID and program slug
-            URL = tree.xpath('//meta[@name="og:url"]/@content')[0]
+            URL = tree.xpath('//meta[@name="og:url"]/@content')
             # If there is no URL, then there is most likely no NPO.nl
             # page for this PRID, so don't continue
             if not URL:
                 continue
-            paths = URL.split('/')
+            paths = URL[0].split('/')
             data['prid'] = paths[-1]
             data['program_slug'] = paths[-3]
 
