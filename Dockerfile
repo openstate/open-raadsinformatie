@@ -179,6 +179,3 @@ RUN source ../bin/activate \
 
 # Delete all NPO Bastage files again
 RUN find . -delete
-
-# Open up the elasticsearch port to the host
-EXPOSE 9200
