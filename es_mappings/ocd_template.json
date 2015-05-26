@@ -1,5 +1,5 @@
 {
-    "template": "ocd_*",
+    "template": "npo_*",
     "settings": {
         "index": {
             "analyzer": "dutch",

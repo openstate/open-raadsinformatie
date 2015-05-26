@@ -24,9 +24,8 @@ class TT888Extractor(BaseExtractor, HttpRequestMixin):
         es = Elasticsearch(
             hosts='%s:%s' % (ELASTICSEARCH_HOST, ELASTICSEARCH_PORT)
         )
-        #TODO change ocd_prid name once ocd is removed from index names
         scroll = es.search(
-            index='ocd_prid',
+            index='npo_prid',
             scroll='5m',
             search_type='scan',
             fields='PRID'
