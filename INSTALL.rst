@@ -15,9 +15,9 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
    $ docker build -t open-state/npo-backstage .
 
-3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container (so you can just develop on your host machine using your favorite development setup). Furthermore port 9200 is mapped from the container to the host machine so you can reach elasticsearch on http://127.0.0.1:9200, the same holds for port 5000 which gives access to the API::
+3. Create a container based on the newly created open-state/npo-backstage image. The current folder on the host machine (which should be the root of the npo-backstage repo!) is mounted on /opt/npo in the container (so you can just develop on your host machine using your favorite development setup)::
 
-   $ docker run -it -v `pwd`:/opt/npo -p 9200:9200 -p 5000:5000 open-state/npo-backstage
+   $ docker run -it -v `pwd`:/opt/npo open-state/npo-backstage
 
 4. Once connected to the container the following commands currently still have to be executed manually::
 
