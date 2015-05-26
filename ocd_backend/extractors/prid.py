@@ -59,7 +59,7 @@ class PRIDExtractor(BaseExtractor, HttpRequestMixin):
         parser = etree.HTMLParser()
         len_prids = len(new_prids)
         for idx, PRID in enumerate(new_prids):
-            print 'Downloading PRID %s/%s: %s' % (idx, len_prids, PRID)
+            print 'Downloading PRID %s/%s: %s' % (idx + 1, len_prids, PRID)
             html = self.call(PRID)
             tree = etree.parse(StringIO(html), parser)
 
