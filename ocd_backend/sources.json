@@ -21,6 +21,7 @@
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
         "index_name": "prid",
+        "extract_type": "by_prid",
         "start_date": "2015-05-25",
         "keep_index_on_update": true
     },

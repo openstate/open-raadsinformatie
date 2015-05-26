@@ -75,14 +75,22 @@ class PRIDItem(BaseItem):
                 match = re.match(
                     '.*/c(\d+)x(\d+)/.*\.png', image
                 )
-                media_urls.append(
-                    {
-                        'original_url': image,
-                        'content_type': 'image/png',
-                        'width': match.group(1),
-                        'height': match.group(2)
-                    }
-                )
+                if match:
+                    media_urls.append(
+                        {
+                            'original_url': image,
+                            'content_type': 'image/png',
+                            'width': match.group(1),
+                            'height': match.group(2)
+                        }
+                    )
+                else:
+                    media_urls.append(
+                        {
+                            'original_url': image,
+                            'content_type': 'image/png'
+                        }
+                    )
 
             combined_index_data['media_urls'] = media_urls
 
@@ -103,7 +111,7 @@ class PRIDItem(BaseItem):
         if self.original_item['prid']:
             text_items.append(self.original_item['prid'])
 
-        if self.original_item['broadcasters']:
+        if 'broadcasters' in self.original_item:
             for broadcaster in self.original_item['broadcasters']:
                 text_items.append(broadcaster)
 
