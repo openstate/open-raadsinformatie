@@ -24,15 +24,13 @@ Have a bug or a feature request? Please first read the [issue guidelines](https:
 
 ## Documentation
 
-The documentation of the NPO Backstage API can be found at [docs.opencultuurdata.nl](http://docs.opencultuurdata.nl/).
+The documentation of the NPO Backstage API can be found at [backstage-docs.openstate.eu](http://backstage-docs.openstate.eu/).
 
 We use [Sphinx](http://sphinx-doc.org/) to create the documentation. The source files are included in this repo under the `docs` directory.  
 
 ## Contributing
 
 Please read through our [contributing guidelines](https://github.com/openstate/npo-backstage/blob/master/docs/dev/getting_started.rst). Included are directions for opening issues, coding standards, and notes on development.
-
-<img src="https://travis-ci.org/openstate/open-cultuur-data.svg?branch=master" />
 
 ## Authors and contributors
 
@@ -52,4 +50,4 @@ Contributors:
 
 ## Copyright and license
 
-The Open Cultuur Data API is distributed under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl.html). The OCD documentation is released under the [Creative Commons Attribution 4.0 International license](http://creativecommons.org/licenses/by/4.0/).
+The Open Cultuur Data API is distributed under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl.html). The Open Cultuur Data and NPO Backstage documentation is released under the [Creative Commons Attribution 4.0 International license](http://creativecommons.org/licenses/by/4.0/).
