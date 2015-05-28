@@ -6,7 +6,7 @@
 
  - [Important links](#important-links)
  - [Bugs and feature requests](#bugs-and-feature-requests)
- - [Install](#install-and-usage)
+ - [Install and usage](#install-and-usage)
  - [Documentation](#documentation)
  - [Contributing](#contributing)
  - [Authors and contributors](#authors-and-contributors)
