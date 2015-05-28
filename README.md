@@ -6,7 +6,7 @@
 
  - [Important links](#important-links)
  - [Bugs and feature requests](#bugs-and-feature-requests)
- - [Install](https://github.com/openstate/npo-backstage/blob/master/INSTALL.rst)
+ - [Install](#install-and-usage)
  - [Documentation](#documentation)
  - [Contributing](#contributing)
  - [Authors and contributors](#authors-and-contributors)
@@ -15,12 +15,16 @@
 ## Important links
  - [NPO Backstage homepage](http://www.npo.nl/specials/backstage)
  - [Official source code repo](https://github.com/openstate/npo-backstage/)
- - [Documentation](http://docs.opencultuurdata.nl/)
+ - [Documentation](http://backstage-docs.openstate.eu/)
  - [Issue tracker](https://github.com/openstate/npo-backstage/issues)
 
 ## Bugs and feature requests
 
 Have a bug or a feature request? Please first read the [issue guidelines](https://github.com/openstate/npo-backstage/blob/master/docs/dev/getting_started.rst) and search for existing and closed issues. If your problem or idea is not addressed yet, [please open a new issue](https://github.com/openstate/npo-backstage/issues/new).
+
+## Install and usage
+
+See this guide to [install the NPO Backstage API](https://github.com/openstate/npo-backstage/blob/master/INSTALL.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started.
 
 ## Documentation
 

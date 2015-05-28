@@ -1,4 +1,4 @@
-NPO Backstage API install notes
+NPO Backstage API installation and usage
 ###################################
 
 .. contents::
@@ -77,10 +77,10 @@ It is also possible to use `Vagrant <http://www.vagrantup.com/>`_  to install th
 
 Vagrant will automatically sync your project directory (the directory with the Vagrantfile) between the host and guest machine. Also, it will run a bootstrap script that will take care of installing project dependencies. In vagrant machine, the project directory can be found under ``/vagrant``. For more information, see the Vagrant documentation on `Synced Folders <http://docs.vagrantup.com/v2/synced-folders/index.html>`_.
 
-Install Manually
+Install manually on Ubuntu
 ------------
 
-Pre-requisites
+Prerequisites
 ~~~~~~~~~~~~
 
 - Redis
@@ -91,7 +91,7 @@ Pre-requisites
 - pip
 - virtualenv (optional)
 
-Installation on Ubuntu
+Installation
 ~~~~~~~~~~~~
 
 Create or go to the directory where you want to place the NPO Backstage files.
