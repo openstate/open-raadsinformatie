@@ -1,14 +1,14 @@
 Contributing to the Open Cultuur Data API
 =========================================
 
-Want to get involved with the Open Cultuur Data API? Here's how you can help!
+Want to get involved with the NPO Backstage API? Here's how you can help!
 
 Please take a moment to review this document in order to make the contribution process easy and effective for everyone involved.
 
 Using the issue tracker
 -----------------------
 
-The `issue tracker <https://github.com/openstate/open-cultuur-data/issues>`_ is the preferred channel for submitting bug reports, feature requests and pull requests.
+The `issue tracker <https://github.com/openstate/npo-backstage/issues>`_ is the preferred channel for submitting bug reports, feature requests and pull requests.
 
 Bug reports
 -----------
@@ -18,8 +18,8 @@ Spot an error in the way data is formatted? Getting unexpected error when making
 Some guidelines when submitting a bug report:
 
 - Check if the issue hasn't already been reported.
-- Be as detailed as possible, people reading the report shouldn't have to chase you up for more information.   Describe the problem thoroughly, so others can try to reproduce it.
-- Verify that the problem only occurs within the Open Cultuur Data API, and not in the original source. You can do this by requesting the original document(s) via the REST API (``/(source_id)/(object_id)/source``). Problems in the source data will not be fixed by us and should be reported to the data publishers.
+- Be as detailed as possible, people reading the report shouldn't have to chase you up for more information. Describe the problem thoroughly, so others can try to reproduce it.
+- Verify that the problem only occurs within the NPO Backstage API, and not in the original source. You can do this by requesting the original document(s) via the REST API (``/(source_id)/(object_id)/source``). Problems in the source data will not be fixed by us and should be reported to the data publishers.
 
 Feature requests
 ----------------
@@ -39,9 +39,9 @@ To submit a pull request, follow this process:
 
 1. `Fork the project <http://help.github.com/fork-a-repo/>`_ and clone your fork::
 
-   $ git clone https://github.com/<your-username>/open-cultuur-data.git
-   $ cd open-cultuur-data
-   $ git remote add upstream https://github.com/openstate/open-cultuur-data.git
+   $ git clone https://github.com/<your-username>/npo-backstage.git
+   $ cd npo-backstage
+   $ git remote add upstream https://github.com/openstate/npo-backstage.git
 
 2. Always make sure you are working with a recent version. To get the latest changes from upstream::
 
@@ -56,7 +56,7 @@ To submit a pull request, follow this process:
 
    $ git push origin <topic-branch-name>
 
-5. When you've finished writing your awesome additions to the OpenCultuurData API, please make sure you merge with the `upstream dev` branch before you submit your pull request, in order to prevent us from running into massive merge conflict resolutions::
+5. When you've finished writing your awesome additions to the NPO Backstage API, please make sure you merge with the `upstream dev` branch before you submit your pull request, in order to prevent us from running into massive merge conflict resolutions::
 
    $ git pull upstream dev
 

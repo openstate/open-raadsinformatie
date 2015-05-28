@@ -21,22 +21,21 @@ sudo /usr/share/elasticsearch/bin/plugin --install mobz/elasticsearch-head
 sudo apt-get install -y make libxml2-dev libxslt1-dev libssl-dev libffi-dev libtiff4-dev libjpeg8-dev liblcms2-dev python-dev python-setuptools python-virtualenv git > /dev/null
 sudo easy_install -q pip
 
+echo "Installing ffmpeg"
+cd /vagrant
+sudo ./install_pyav_deps.sh
+
+cd ~
 virtualenv -q ocd
 chown -R vagrant:vagrant ocd
 echo "source /home/vagrant/ocd/bin/activate; cd /vagrant;" >> ~/.bashrc
 
 echo "Installing requirements"
 source ocd/bin/activate
+
 cd /vagrant
-pip install -q -r requirements.txt
+pip install Cython==0.21.2 && pip install -r requirements.txt
 
 echo "Starting"
 ./manage.py elasticsearch create_indexes /vagrant/es_mappings/
 ./manage.py elasticsearch put_template
-
-
-echo ". ocd/bin/activate"
-echo "python ./manage.py frontend runserver"
-echo "python ./manage.py extract list_sources"
-echo "python ./manage.py extract start rijksmuseum"
-echo "celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=2"
