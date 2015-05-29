@@ -53,7 +53,7 @@ class MetadataExtractor(BaseExtractor, HttpRequestMixin):
 
         len_prids = len(new_prids)
         for idx, PRID in enumerate(new_prids):
-            print 'Downloading PRID %s/%s: %s' % (idx + 1, len_prids, PRID)
+            print 'Downloading metadata %s/%s: %s' % (idx + 1, len_prids, PRID)
             metadata = self.call(PRID)
             # Remove the function call 'parseMetadata(' and its
             # closing parenthesis which are always part of the

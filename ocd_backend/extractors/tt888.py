@@ -67,7 +67,7 @@ class TT888Extractor(BaseExtractor, HttpRequestMixin):
 
         len_prids = len(new_prids)
         for idx, PRID in enumerate(new_prids):
-            print 'Downloading PRID %s/%s: %s' % (idx + 1, len_prids, PRID)
+            print 'Downloading tt888 %s/%s: %s' % (idx + 1, len_prids, PRID)
             subtitle = self.call(PRID)
             # Skip items which don't have subtitles
             if (subtitle.startswith('<')
