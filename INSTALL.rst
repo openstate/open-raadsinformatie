@@ -33,7 +33,6 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
 Elasticsearch is now accessible locally in the Docker container via http://127.0.0.1:9200, or from the host via http://<CONTAINER IP ADDRESS>:9200 (look up the container's IP address using ``docker inspect`` as shown below).
 
-
 Some useful Docker commands::
 
    # Show all docker images on your machine
@@ -51,11 +50,13 @@ Some useful Docker commands::
    # Start a stopped container and automatically attach to it (-a)
    $ docker start -a <CONTAINER ID/NAME>
 
-   # Attach to a running container (use `exec` though if you want to open a separate shell)
+   # Attach to a running container (use `exec` though if you want to open any extra shells beyond this one)
    $ docker attach <CONTAINER ID/NAME>
 
    # Return low-level information on a container or image (e.g., a container's IP address)
    $ docker inspect <CONTAINER/IMAGE ID/NAME>
+
+   Also, if attached to a container, either via run, start -a or attach, you can detach by typing CTRL+p CTRL+q
 
 Install using Vagrant
 ------------
@@ -167,3 +168,14 @@ Running the API frontend
 Once started, the API can be accessed on port 5000 (again either locally or from the host, similar to accessing elasticsearch as described above)::
 
    $ ./manage.py frontend runserver
+
+Automatic updating using cron
+------------
+
+The ``update.sh`` script contains the instructions to update indices. In the case of docker it is the easiest to add this script to the crontab on the host machine. Using ``sudo crontab -e``, add the following line when using ``docker-enter``::
+
+   $ 0 1,7,13,19 * * * sudo docker-enter c-npo-backstage ./opt/npo/update.sh
+
+Or the following line if your docker version has the ``exec`` command::
+
+   $ 0 1,7,13,19 * * * sudo docker exec c-npo-backstage ./opt/npo/update.sh
