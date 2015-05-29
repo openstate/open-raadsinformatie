@@ -12,5 +12,21 @@
         "file_url": "http://www.oude-ijsselstreek.nl/leden-van-de-gemeenteraad",
         "item_xpath": "//div[@class=\"field-items\"]//p/img/..",
         "doc_type": "persons"
+    },
+    {
+        "id": "amstelveen_organisation",
+        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": true,
+        "index_name": "amstelveen",
+        "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
+        "doc_type": "organisations",
+        "filter": {
+          "Title": "Amstelveen"
+        }
     }
 ]
