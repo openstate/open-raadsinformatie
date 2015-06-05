@@ -14,7 +14,7 @@
         "doc_type": "persons"
     },
     {
-        "id": "amstelveen_organisation",
+        "id": "amstelveen_municipality",
         "extractor": "ocd_backend.extractors.odata.ODataExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
@@ -28,5 +28,18 @@
         "filter": {
           "Title": "Amstelveen"
         }
+    },
+    {
+        "id": "amstelveen_organisations",
+        "extractor": "ocd_backend.extractors.almanak.OrganisationsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organisations.organisations.AlmanakOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": true,
+        "index_name": "amstelveen",
+        "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
+        "doc_type": "organisations"
     }
 ]

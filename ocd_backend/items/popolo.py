@@ -9,7 +9,11 @@ from ocd_backend.exceptions import (UnableToGenerateObjectId,
 from ocd_backend.items import BaseItem
 
 
-class PersonItem(BaseItem):
+class PopoloBaseItem(BaseItem):
+    pass
+
+
+class PersonItem(PopoloBaseItem):
     # Allowed key-value pairs for the document inserted in the 'combined index'
     combined_index_fields = {
         'id': unicode,
@@ -42,7 +46,7 @@ class PersonItem(BaseItem):
     }
 
 
-class OrganisationItem(BaseItem):
+class OrganisationItem(PopoloBaseItem):
     combined_index_fields = {
         'id': unicode,
         'hidden': bool,
