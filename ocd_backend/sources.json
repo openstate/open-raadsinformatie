@@ -33,7 +33,7 @@
         "id": "amstelveen_organisations",
         "extractor": "ocd_backend.extractors.almanak.OrganisationsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.organisations.organisations.AlmanakOrganisationItem",
+        "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",

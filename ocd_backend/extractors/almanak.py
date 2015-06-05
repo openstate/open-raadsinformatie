@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 
 from lxml import etree
 
@@ -16,7 +17,7 @@ class OrganisationsExtractor(StaticJSONExtractor):
         of items.
         """
 
-        organisations = []
+        organisations = {}
         html = etree.HTML(static_content)
 
         try:
@@ -25,15 +26,15 @@ class OrganisationsExtractor(StaticJSONExtractor):
                 'cassification': u'Council'}
         except IndexError as e:
             council = {}
-        organisations.append(council)
+        organisations[council['name']] = council
 
         for link in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
             line = u''.join(link.xpath('.//text()'))
             person, party = [l.strip() for l in line.split(u'\xa0', 1)]
-            organisations.append(
+            organisations[party[1:-1]] = (
                 {'name': party[1:-1], 'classification': u'Party'})
 
         pprint(organisations)
 
-        for item in organisations:
+        for item in organisations.values():
             yield 'application/json', json.dumps(item)
