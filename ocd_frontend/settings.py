@@ -121,7 +121,7 @@ LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
 # Should include API version and a trailing slash.
 # Can be overridden in the CLI when required, for instance when the user wants
 # to download dumps from another API instance than the one hosted by OpenState
-API_URL = 'http://api.opencultuurdata.nl/v0/'
+API_URL = 'http://localhost:5000/v0/'
 
 # URL where collection dumps are hosted. This is used for generating full URLs
 # to dumps in the /dumps endpoint
