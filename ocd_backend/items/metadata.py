@@ -3,6 +3,20 @@ from datetime import datetime
 from ocd_backend.items import BaseItem
 
 class MetadataItem(BaseItem):
+    # Override the default generating of a hash object ID based on the
+    # original object id and object urls, and simply use the PRID
+    def get_object_id(self):
+        return self.original_item['prid']
+
+    # Override the default combined object ID, which is the same as the
+    # hash object ID. Instead use the object ID based on the PRID and
+    # prepend it with the index name.
+    def get_combined_object_id(self):
+        return '%s_%s' % (
+            self.source_definition['index_name'],
+            self.get_object_id()
+        )
+
     def get_original_object_id(self):
         return self.original_item['prid']
 
@@ -21,6 +35,9 @@ class MetadataItem(BaseItem):
         combined_index_data = {}
 
         combined_index_data['hidden'] = self.source_definition['hidden']
+
+        if self.original_item['prid']:
+            combined_index_data['prid'] = self.original_item['prid']
 
         if self.original_item['titel']:
             combined_index_data['title'] = self.original_item['titel']

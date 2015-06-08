@@ -37,9 +37,15 @@ def setup_pipeline(source_definition):
                                  'not exist'.format(index_alias=index_alias))
 
     current_index_name = current_index_aliases.keys()[0]
-    new_index_name = '{index_alias}_{now}'.format(
-        index_alias=index_alias, now=datetime.utcnow().strftime('%Y%m%d%H%M%S')
-    )
+    # Check if the source specifies that any update should be added to
+    # the current index instead of a new one
+    if source_definition['keep_index_on_update']:
+        new_index_name = current_index_name
+    else:
+        new_index_name = '{index_alias}_{now}'.format(
+            index_alias=index_alias,
+            now=datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        )
 
     extractor = load_object(source_definition['extractor'])(source_definition)
     transformer = load_object(source_definition['transformer'])()
@@ -93,8 +99,8 @@ def setup_pipeline(source_definition):
             item_chain.delay()
     except:
         logger.error('An exception has occured in the "{extractor}" extractor. '
-                     'Deleting index "{index}" and setting status of run '
-                     'identifier "{run_identifier}" to "error".'
+                     'Setting status of run identifier "{run_identifier}" to '
+                     '"error".'
                      .format(index=new_index_name,
                              run_identifier=params['run_identifier'],
                              extractor=source_definition['extractor']))

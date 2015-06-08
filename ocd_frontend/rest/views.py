@@ -149,7 +149,7 @@ def parse_search_request(data, mlt=False):
 
             filters.append(r_filter)
 
-    filters.append({"bool": {"must": {"term": {"hidden": 1}}}})
+    filters.append({"bool": {"must": {"term": {"hidden": 0}}}})
 
     return {
         'query': query,

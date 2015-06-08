@@ -35,6 +35,7 @@ class NPOJournalistiekExtractor(BaseExtractor, HttpRequestMixin):
     def get_collection_objects(self):
         enough_items = True
         current_page = 0
+        downloaded_items = 0
         while enough_items:
             log.info('Getting collection items page %s', current_page)
             resp = self.api_call('get', params={
@@ -45,7 +46,8 @@ class NPOJournalistiekExtractor(BaseExtractor, HttpRequestMixin):
 
             current_page += 1
 
-            print len(resp)
+            downloaded_items += len(resp)
+            print "Downloaded %s items" % (downloaded_items)
             if len(resp) < self.items_per_page:
                 enough_items = False
 

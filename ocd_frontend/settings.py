@@ -16,10 +16,10 @@ DEFAULT_SEARCH_SIZE = 10
 MAX_SEARCH_SIZE = 100
 
 # The name of the index containing documents from all sources
-COMBINED_INDEX = 'ocd_combined_index'
+COMBINED_INDEX = 'npo_combined_index'
 
-# The default prefix used for all ocd data
-DEFAULT_INDEX_PREFIX = 'ocd'
+# The default prefix used for all data
+DEFAULT_INDEX_PREFIX = 'npo'
 
 # The fields which can be used for sorting results via the REST API
 SORTABLE_FIELDS = (
@@ -106,12 +106,12 @@ AVAILABLE_FACETS = {
 ALLOWED_DATE_INTERVALS = ('day', 'week', 'month', 'quarter', 'year')
 
 # Name of the Elasticsearch index used to store URL resolve documnts
-RESOLVER_URL_INDEX = 'ocd_resolver'
+RESOLVER_URL_INDEX = 'npo_resolver'
 
 # Determines if API usage events should be logged
 USAGE_LOGGING_ENABLED = True
 # Name of the Elasticsearch index used to store logged events
-USAGE_LOGGING_INDEX = 'ocd_usage_logs'
+USAGE_LOGGING_INDEX = 'npo_usage_logs'
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')

@@ -53,6 +53,7 @@ local_dumps/
 # IDE/editor
 .idea
 *.swp
+*.swo
 
 # logs
 *.log

@@ -32,16 +32,19 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
         """
         self.source_definition = kwargs['source_definition']
 
-        object_id, combined_index_doc, doc = args[0]
+        combined_object_id, object_id, combined_index_doc, doc = args[0]
 
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
         combined_index_doc['meta']['processing_finished'] = finished
         doc['meta']['processing_finished'] = finished
 
-        return self.load_item(object_id, combined_index_doc, doc)
+        return self.load_item(combined_object_id, object_id,
+                              combined_index_doc, doc)
 
-    def load_item(self, object_id, combined_index_doc, doc):
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc
+    ):
         raise NotImplemented
 
 
@@ -66,10 +69,12 @@ class ElasticsearchLoader(BaseLoader):
 
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
-    def load_item(self, object_id, combined_index_doc, doc):
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc
+    ):
         log.info('Indexing documents...')
         elasticsearch.index(index=settings.COMBINED_INDEX,
-                            doc_type=self.doc_type, id=object_id,
+                            doc_type=self.doc_type, id=combined_object_id,
                             body=combined_index_doc)
 
         # Index documents into new index
@@ -108,8 +113,12 @@ class DummyLoader(BaseLoader):
     """
     Prints the item to the console, for debugging purposes.
     """
-    def load_item(self, object_id, combined_index_doc, doc, transformer_task_id):
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc,
+        transformer_task_id
+    ):
         print '=' * 50
+        print '%s %s %s' % ('=' * 4, combined_object_id, '=' * 4)
         print '%s %s %s' % ('=' * 4, object_id, '=' * 4)
         print '%s %s %s' % ('-' * 20, 'combined', '-' * 20)
         print combined_index_doc

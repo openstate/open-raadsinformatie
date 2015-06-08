@@ -16,6 +16,13 @@ RUN apt-get update \
 RUN add-apt-repository -y ppa:rwky/redis > /dev/null \
     && apt-get update \
     && apt-get install -y redis-server
+
+# Set Dutch locale, needed to parse Dutch time data
+RUN locale-gen nl_NL.UTF-8
+
+#Set Timezone
+RUN echo "Europe/Amsterdam" > /etc/timezone \
+    && dpkg-reconfigure -f noninteractive tzdata
     
 # Install elasticsearch
 ENV ES_VERSION 1.4.2
@@ -177,6 +184,3 @@ RUN source ../bin/activate \
 
 # Delete all NPO Bastage files again
 RUN find . -delete
-
-# Open up the elasticsearch port to the host
-EXPOSE 9200

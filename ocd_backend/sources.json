@@ -11,7 +11,8 @@
         "index_name": "oude_ijsselstreek",
         "file_url": "http://www.oude-ijsselstreek.nl/leden-van-de-gemeenteraad",
         "item_xpath": "//div[@class=\"field-items\"]//p/img/..",
-        "doc_type": "persons"
+        "doc_type": "persons",
+        "keep_index_on_update": false
     },
     {
         "id": "amstelveen_municipality",
@@ -27,7 +28,8 @@
         "doc_type": "organisations",
         "filter": {
           "Title": "Amstelveen"
-        }
+        },
+        "keep_index_on_update": false
     },
     {
         "id": "amstelveen_organisations",
@@ -41,7 +43,8 @@
         "index_name": "amstelveen",
         "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
         "doc_type": "organisations",
-        "item_xpath": "//"
+        "item_xpath": "//",
+        "keep_index_on_update": true
     },
     {
         "id": "amstelveen_persons",
@@ -56,5 +59,6 @@
         "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
         "doc_type": "persons",
         "item_xpath": "//"
+        "keep_index_on_update": true
     }
 ]
