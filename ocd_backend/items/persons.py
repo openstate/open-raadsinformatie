@@ -36,7 +36,56 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
         combined_index_data['hidden'] = self.source_definition['hidden']
 
         combined_index_data['name'] = u''.join(
-            html.xpath('//div[id=\"content\"]/h2/text()')).strip()
+            html.xpath('//div[@id="content"]/h2//text()')).strip()
+
+        combined_index_data['identifiers'] = [
+            {
+                'identifier': combined_index_data['id'],
+                'scheme': u'ORI'
+            },
+            {
+                'identifier': u''.join(html.xpath(
+                    '//meta[@name="DCTERMS.identifier"]/@content')).replace(
+                        u'.html', u''),
+                'scheme': u'Almanak'
+            }
+
+        ]
+        combined_index_data['email'] = u''.join(html.xpath(
+            '//a[starts-with(@href,"mailto:")]/text()'))
+        # TODO: should explicitly check for female prefixes
+        combined_index_data['gender'] = (
+            u'male' if combined_index_data['name'].startswith(u'Dhr. ') else
+            u'female')
+
+        parties = self.original_item['parties']
+        party = u''.join(
+            html.xpath('//ul[@class="definitie"]/li/ul/li')[0].xpath(
+                './/text()'))
+        party_id = parties[party]['id'] if parties.has_key(party) else None
+        role = u''.join(
+            html.xpath('//div[@id="content"]//h3/text()')).strip()
+        try:
+            council_id = [
+                p for p in parties.values() if (
+                    p['classification'] == u'Council')][0]['id']
+        except IndexError as e:
+            council_id = None
+        combined_index_data['memberships'] = [
+            {
+                'label': role,
+                'role': role,
+                'person_id': combined_index_data['id'],
+                'organisation_id': council_id
+            }
+        ]
+        if party_id is not None:
+            combined_index_data['memberships'].append({
+                'label': role,
+                'role': role,
+                'person_id': combined_index_data['id'],
+                'organisation_id': party_id
+            })
 
         return combined_index_data
 

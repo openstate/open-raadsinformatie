@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from ocd_backend.items.popolo import OrganisationItem
+from ocd_backend.utils.misc import slugify
 
 
 class MunicipalityOrganisationItem(OrganisationItem):
@@ -48,6 +49,9 @@ class MunicipalityOrganisationItem(OrganisationItem):
 
 
 class AlmanakOrganisationItem(OrganisationItem):
+    def get_object_id(self):
+        return slugify(unicode(self.original_item['name']).strip())
+
     def get_original_object_id(self):
         return unicode(self.original_item['name']).strip()
 
@@ -70,7 +74,7 @@ class AlmanakOrganisationItem(OrganisationItem):
         combined_index_data['identifiers'] = [
             {
                 'identifier': self.get_object_id(),
-                'scheme': u'Almanak'
+                'scheme': u'ORI'
             }
         ]
         combined_index_data['classification'] = self.original_item[

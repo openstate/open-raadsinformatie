@@ -22,12 +22,10 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         organisations = {}
         html = etree.HTML(static_content)
 
-        try:
-            council = {
-                'name': html.xpath('//h2/text()')[0],
-                'cassification': u'Council'}
-        except IndexError as e:
-            council = {}
+        council = {
+            'name': u''.join(
+                html.xpath('//div[@id="content"]//h2//text()')).strip(),
+            'classification': u'Council'}
         organisations[council['name']] = council
 
         for link in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
@@ -56,7 +54,10 @@ class PersonsExtractor(StaticHtmlExtractor):
             settings.API_URL, self.source_definition['index_name'],)
         r = self.http_session.get(organisations_url, verify=False)
         r.raise_for_status()
-        return r.json()
+        organisations = r.json()['organisations']
+        return {
+            o['name']: {'id': o['id'], 'classification': o['classification']}
+            for o in organisations if o.has_key('name')}
 
     def extract_items(self, static_content):
         """

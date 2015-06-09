@@ -22,7 +22,7 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
+        "hidden": false,
         "index_name": "amstelveen",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
         "doc_type": "organisations",
@@ -39,7 +39,7 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
+        "hidden": false,
         "index_name": "amstelveen",
         "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
         "doc_type": "organisations",
@@ -54,11 +54,11 @@
         "enrichers": [],
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
+        "hidden": false,
         "index_name": "amstelveen",
         "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
         "doc_type": "persons",
-        "item_xpath": "//"
+        "item_xpath": "//",
         "keep_index_on_update": true
     }
 ]

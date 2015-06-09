@@ -2,6 +2,7 @@ import datetime
 import json
 import re
 
+import translitcodec
 
 def load_sources_config(filename):
     """Loads a JSON file containing the configuration of the available
@@ -17,7 +18,8 @@ def load_sources_config(filename):
         with open(filename) as json_file:
             return json.load(json_file)
     except IOError, e:
-        e.strerror = 'Unable to load sources configuration file (%s)' % e.strerror
+        e.strerror = 'Unable to load sources configuration file (%s)' % (
+            e.strerror,)
         raise
 
 
@@ -43,7 +45,8 @@ def load_object(path):
     try:
         obj = getattr(mod, name)
     except AttributeError:
-        raise NameError, "Module '%s' doesn't define any object named '%s'" % (module, name)
+        raise NameError, "Module '%s' doesn't define any object named '%s'" % (
+            module, name)
 
     return obj
 
@@ -53,6 +56,7 @@ def try_convert(conv, value):
         return conv(value)
     except ValueError:
         return value
+
 
 def parse_date(regexen, date_str):
     """
@@ -69,6 +73,7 @@ def parse_date(regexen, date_str):
                 except ValueError:
                     return 0, None
     return 0, None
+
 
 def parse_date_span(regexen, date1_str, date2_str):
     """
@@ -105,3 +110,15 @@ class DatetimeJSONEncoder(json.JSONEncoder):
             return (datetime.datetime.min + o).time().isoformat()
         else:
             return super(DatetimeJSONEncoder, self).default(o)
+
+_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+
+
+def slugify(text, delim=u'-'):
+    """Generates an ASCII-only slug."""
+    result = []
+    for word in _punct_re.split(text.lower()):
+        word = word.encode('translit/long')
+        if word:
+            result.append(word)
+    return unicode(delim.join(result))
