@@ -12,7 +12,9 @@ RUN apt-get update \
         python-software-properties \
         openjdk-7-jre-headless \
         wget \
-        curl
+        curl \
+        poppler-utils
+
 RUN add-apt-repository -y ppa:rwky/redis > /dev/null \
     && apt-get update \
     && apt-get install -y redis-server
@@ -23,7 +25,7 @@ RUN locale-gen nl_NL.UTF-8
 #Set Timezone
 RUN echo "Europe/Amsterdam" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
-    
+
 # Install elasticsearch
 ENV ES_VERSION 1.4.2
 RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.deb
