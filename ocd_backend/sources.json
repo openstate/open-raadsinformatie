@@ -60,5 +60,19 @@
         "doc_type": "persons",
         "item_xpath": "//",
         "keep_index_on_update": true
+    },
+    {
+        "id": "amstelveen_meetings",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "amstelveen",
+        "doc_type": "events",
+        "sitename": "Amstelveen",
+        "keep_index_on_update": true
     }
 ]

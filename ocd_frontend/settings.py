@@ -47,6 +47,7 @@ ALLOWED_INCLUDE_FIELDS_SEARCH = []
 SIMPLE_QUERY_FIELDS = {
     'persons': ['biography^4', 'name^3', 'other_names^2'],
     'organisations': ['name^4'],
+    'events': ['name^4'],
 }
 
 # Definition of the ES facets (and filters) that are accessible through

@@ -3,12 +3,28 @@ import msgpack
 
 
 def decode_datetime(obj):
+    res = obj
     if b'__datetime__' in obj:
         try:
-            obj = datetime.datetime.strptime(obj['as_str'], '%Y-%m-%dT%H:%M:%S.%f')
+            res = datetime.datetime.strptime(obj['as_str'], '%Y-%m-%dT%H:%M:%S.%f')
         except:
-            obj = datetime.datetime.strptime(obj['as_str'], '%Y-%m-%dT%H:%M:%S')
-    return obj
+            res = None
+
+        if res is not None:
+            return res
+
+        try:
+            res = datetime.datetime.strptime(obj['as_str'], '%Y-%m-%dT%H:%M:%S')
+        except:
+            res = None
+
+        if res is not None:
+            return res
+
+        # may contain time zone info, disregard for now ... (?)
+        res = datetime.datetime.strptime(obj['as_str'][:-6], '%Y-%m-%dT%H:%M:%S')
+
+    return res
 
 
 def encode_datetime(obj):

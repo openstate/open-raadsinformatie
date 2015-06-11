@@ -74,6 +74,9 @@ RESOLVER_URL_INDEX = 'npo_resolver'
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'NPO Backstage/0.1 (+http://www.npo.nl/backstage)'
 
+# The endpoint for the iBabs API
+IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
+
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
 # defined per machine.

@@ -70,3 +70,22 @@ class OrganisationItem(PopoloBaseItem):
         'sources': list,
         'media_urls': list,
     }
+
+
+class EventItem(PopoloBaseItem):
+    combined_index_fields = {
+        'id': unicode,
+        'hidden': bool,
+        'name': unicode,
+        'description': unicode,
+        'start_date': datetime,
+        'end_date': datetime,
+        'status': unicode,
+        'location': unicode,
+        'identifiers': list,
+        'classification': unicode,
+        'organisation_id': unicode,
+        'attendees': list,
+        'parent_id': unicode,
+        'sources': list
+    }

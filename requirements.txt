@@ -5,6 +5,7 @@ click==2.1
 coverage==4.0a1
 Flask==0.10.1
 Flask-Testing==0.4.2
+iso8601==0.1.10
 lxml==3.3.5
 requests==2.5.1
 mock==1.0.1
@@ -16,6 +17,7 @@ pyasn1==0.1.7
 Sphinx==1.2.2
 sphinxcontrib-httpdomain==1.2.1
 sphinx-rtd-theme==0.1.6
+suds==0.4
 translitcodec==0.4.0
 BeautifulSoup==3.2.1
 Pillow==2.7.0
