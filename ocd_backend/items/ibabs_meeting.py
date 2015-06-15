@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 from pprint import pprint
+from hashlib import sha1
 
 import iso8601
 
@@ -8,34 +9,40 @@ from ocd_backend.items.popolo import EventItem
 from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.utils.api import FrontendAPIMixin
 
 
-class IBabsMeetingItem(EventItem, HttpRequestMixin):
+class IBabsMeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
         """
 
-        # TODO: not currently likely that we will have more than 100 orgs.
-        organisations_url = u'%s%s/organisations/search' % (
-            settings.API_URL, self.source_definition['index_name'],)
+        results = self.api_request(
+            self.source_definition['index_name'], 'organisations',
+            classification='council')
+        return results[0]
 
-        # TODO: filter on end date of council organisation
-        organisation_query = {
-            "query": self.source_definition['sitename'],
-            "filters": {
-                "classification": {"terms": ["council"]}
-            },
-            "size": 1
-        }
-        pprint(organisation_query)
-        r = self.http_session.post(
-            organisations_url,
-            data=json.dumps(organisation_query)
-        )
-        r.raise_for_status()
-        pprint(r.json())
-        return r.json()['organisations'][0]
+    def _find_meeting_type_id(self, org):
+        results = [x for x in org['identifiers'] if x['scheme'] == u'iBabs']
+        return results[0]['identifier']
+
+    def _get_committees(self):
+        """
+        Gets the committees that are active for the council.
+        """
+
+        results = self.api_request(
+            self.source_definition['index_name'], 'organisations',
+            classification=['committee', 'subcommittee'])
+        return {self._find_meeting_type_id(c): c['id'] for c in results}
+
+    def _get_meeting_id(self, meeting):
+        hash_content = u'meeting-%s' % (meeting['Id'])
+        return sha1(hash_content.decode('utf8')).hexdigest()
+
+    def get_object_id(self):
+        return self._get_meeting_id(self.original_item)
 
     def get_original_object_id(self):
         return unicode(self.original_item['Id']).strip()
@@ -48,15 +55,15 @@ class IBabsMeetingItem(EventItem, HttpRequestMixin):
         return u'undefined'
 
     def get_collection(self):
-        # FIXME: should be based on meeting type descriptions ...
         meeting = self.original_item
         if self.original_item.has_key('MeetingId'):
             meeting = self.original_item['Meeting']
-        return u'%s %s' % (meeting['Meetingtype'], meeting['MeetingDate'],)
+        return u'%s' % (meeting['Meetingtype'],)
 
     def get_combined_index_data(self):
         combined_index_data = {}
         council = self._get_council()
+        committees = self._get_committees()
 
         meeting = self.original_item
         if self.original_item.has_key('MeetingId'):
@@ -82,8 +89,11 @@ class IBabsMeetingItem(EventItem, HttpRequestMixin):
             }
         ]
 
-        # TODO: should add organisations for commissions
-        combined_index_data['organisation_id'] = council['id']
+        try:
+            combined_index_data['organisation_id'] = committees[
+                meeting['MeetingtypeId']]
+        except KeyError as e:
+            combined_index_data['organisation_id'] = council['id']
 
         combined_index_data['classification'] = (
             u'Meeting Item' if self.original_item.has_key('MeetingId') else
@@ -93,11 +103,12 @@ class IBabsMeetingItem(EventItem, HttpRequestMixin):
             meeting['MeetingDate'],)
         combined_index_data['end_date'] = iso8601.parse_date(
             meeting['MeetingDate'],)
-        combined_index_data['location'] = meeting['Location']
+        combined_index_data['location'] = meeting['Location'].strip()
         combined_index_data['status'] = u'confirmed'
-        # TODO: Get the organization id somehow.. needs stable meeting ids
+
         if self.original_item.has_key('MeetingId'):
-            combined_index_data['parent_id'] = self.original_item['MeetingId']
+            combined_index_data['parent_id'] = unicode(self._get_meeting_id(
+                meeting))
 
         # TODO: documents
 
