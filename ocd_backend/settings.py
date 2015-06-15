@@ -74,6 +74,12 @@ RESOLVER_URL_INDEX = 'npo_resolver'
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'NPO Backstage/0.1 (+http://www.npo.nl/backstage)'
 
+# URL where of the API instance that should be used for management commands
+# Should include API version and a trailing slash.
+# Can be overridden in the CLI when required, for instance when the user wants
+# to download dumps from another API instance than the one hosted by OpenState
+API_URL = 'http://127.0.0.1:5000/v0/'
+
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
 

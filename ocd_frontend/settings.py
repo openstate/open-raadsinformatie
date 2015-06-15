@@ -53,54 +53,75 @@ SIMPLE_QUERY_FIELDS = {
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
 AVAILABLE_FACETS = {
-    # 'retrieved_at': {
-    #     'date_histogram': {
-    #         'field': 'retrieved_at',
-    #         'interval': 'month'
-    #     }
-    # },
-    'rights': {
-        'terms': {
-            'field': 'meta.rights',
-            'size': 10
+    'organisations': {
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
         }
     },
-    'source_id': {
-        'terms': {
-            'field': 'meta.source_id',
-            'size': 10
-        }
+    'persons': {
+
     },
-    'collection': {
-        'terms': {
-            'field': 'meta.collection'
-        }
+    'events': {
+
     },
-    'author': {
-        'terms': {
-            'field': 'authors.untouched',
-            'size': 10
-        }
-    },
-    'date': {
-        'date_histogram': {
-            'field': 'date',
-            'interval': 'month'
-        }
-    },
-    'date_granularity': {
-        'terms': {
-            'field': 'date_granularity',
-            'size': 10
-        }
-    },
-    'media_content_type': {
-        'terms': {
-            'field': 'media_urls.content_type',
-            'size': 10
-        }
+    'item': {
+
     }
 }
+
+
+# AVAILABLE_FACETS = {
+#     # 'retrieved_at': {
+#     #     'date_histogram': {
+#     #         'field': 'retrieved_at',
+#     #         'interval': 'month'
+#     #     }
+#     # },
+#     'rights': {
+#         'terms': {
+#             'field': 'meta.rights',
+#             'size': 10
+#         }
+#     },
+#     'source_id': {
+#         'terms': {
+#             'field': 'meta.source_id',
+#             'size': 10
+#         }
+#     },
+#     'collection': {
+#         'terms': {
+#             'field': 'meta.collection'
+#         }
+#     },
+#     'author': {
+#         'terms': {
+#             'field': 'authors.untouched',
+#             'size': 10
+#         }
+#     },
+#     'date': {
+#         'date_histogram': {
+#             'field': 'date',
+#             'interval': 'month'
+#         }
+#     },
+#     'date_granularity': {
+#         'terms': {
+#             'field': 'date_granularity',
+#             'size': 10
+#         }
+#     },
+#     'media_content_type': {
+#         'terms': {
+#             'field': 'media_urls.content_type',
+#             'size': 10
+#         }
+#     }
+# }
 
 # The allowed date intervals for an ES data_histogram that can be
 # requested via the REST API

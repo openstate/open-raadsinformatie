@@ -1,5 +1,6 @@
 import json
 from pprint import pprint
+import re
 
 from lxml import etree
 from suds.client import Client
@@ -9,7 +10,8 @@ from ocd_backend.exceptions import ConfigurationError
 
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
-    meeting_to_dict, document_to_dict, meeting_item_to_dict)
+    meeting_to_dict, document_to_dict, meeting_item_to_dict,
+    meeting_type_to_dict)
 
 
 class IBabsBaseExtractor(BaseExtractor):
@@ -23,6 +25,21 @@ class IBabsBaseExtractor(BaseExtractor):
 
         self.client = Client(settings.IBABS_WSDL)
         self.client.set_options(port='BasicHttpsBinding_IPublic')
+
+
+class IBabsCommitteesExtractor(IBabsBaseExtractor):
+    """
+    Extracts committees from the iBabs SOAP service. This is done by checking
+    if the meeting type contains the word 'commissie'.
+    """
+
+    def run(self):
+        for mt in self.client.service.GetMeetingtypes(
+            self.source_definition['sitename']
+        ).Meetingtypes[0]:
+            # TODO: should this be configurable?
+            if 'commissie' in mt.Meetingtype.lower():
+                yield 'application/json', json.dumps(meeting_type_to_dict(mt))
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -50,8 +67,6 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             meeting_dict['Meetingtype'] = meeting_types[
                 meeting_dict['MeetingtypeId']]
             yield 'application/json', json.dumps(meeting_dict)
-
-            pprint(meeting)
 
             if meeting.MeetingItems is not None:
                 for meeting_item in meeting.MeetingItems[0]:

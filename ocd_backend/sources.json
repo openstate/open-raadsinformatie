@@ -47,6 +47,20 @@
         "keep_index_on_update": true
     },
     {
+        "id": "amstelveen_committees",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "amstelveen",
+        "doc_type": "organisations",
+        "sitename": "Amstelveen",
+        "keep_index_on_update": true
+    },
+    {
         "id": "amstelveen_persons",
         "extractor": "ocd_backend.extractors.almanak.PersonsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",

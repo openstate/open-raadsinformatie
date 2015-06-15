@@ -70,4 +70,16 @@ def meeting_item_to_dict(m):
     }
     return _ibabs_to_dict(m, fields)
 
+
+def meeting_type_to_dict(mt):
+    """
+    Converts an iBabsMeetingType to a JSON serializable dict
+    """
+    fields = {
+        'Id': None,
+        'Meetingtype': None,
+        'Abbreviation': None,
+    }
+    return _ibabs_to_dict(mt, fields)
+
 # json.dumps(meeting_to_dict(m.Meetings[0][0]))

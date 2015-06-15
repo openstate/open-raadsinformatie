@@ -33,7 +33,7 @@ def validate_from_and_size(data):
     return n_from, n_size
 
 
-def parse_search_request(data, mlt=False):
+def parse_search_request(data, doc_type, mlt=False):
     # Return an error when no query or an empty query string is provied
     query = data.get('query', None)
 
@@ -62,7 +62,7 @@ def parse_search_request(data, mlt=False):
         raise OcdApiError('\'facets\' should be an object', 400)
 
     facets = {}
-    available_facets = current_app.config['AVAILABLE_FACETS']
+    available_facets = current_app.config['AVAILABLE_FACETS'][doc_type]
 
     # Inspect all requested facets and override the default settings
     # where necessary
@@ -262,7 +262,7 @@ def list_sources():
 @bp.route('/search/<doc_type>', methods=['POST', 'GET'])
 @decode_json_post_data
 def search(doc_type='item'):
-    search_req = parse_search_request(request.data)
+    search_req = parse_search_request(request.data, doc_type)
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
@@ -345,7 +345,7 @@ def search_source(source_id, doc_type='item'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'], source_id)
 
     data = request.data or request.args
-    search_req = parse_search_request(data)
+    search_req = parse_search_request(data, doc_type)
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
@@ -608,7 +608,7 @@ def get_object_stats(source_id, object_id, doc_type='item'):
 @bp.route('/similar/<doc_type>/<object_id>', methods=['POST'])
 @decode_json_post_data
 def similar(object_id, source_id=None, doc_type='item'):
-    search_params = parse_search_request(request.data, mlt=True)
+    search_params = parse_search_request(request.data, doc_type, mlt=True)
     # not relevant, as mlt already creates the query for us
     search_params.pop('query')
 

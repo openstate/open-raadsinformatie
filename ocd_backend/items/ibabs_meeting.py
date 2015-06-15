@@ -1,13 +1,42 @@
 from datetime import datetime
+import json
+from pprint import pprint
 
 import iso8601
 
 from ocd_backend.items.popolo import EventItem
 from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
+from ocd_backend.extractors import HttpRequestMixin
 
 
-class IBabsMeetingItem(EventItem):
+class IBabsMeetingItem(EventItem, HttpRequestMixin):
+    def _get_council(self):
+        """
+        Gets the organisation that represents the council.
+        """
+
+        # TODO: not currently likely that we will have more than 100 orgs.
+        organisations_url = u'%s%s/organisations/search' % (
+            settings.API_URL, self.source_definition['index_name'],)
+
+        # TODO: filter on end date of council organisation
+        organisation_query = {
+            "query": self.source_definition['sitename'],
+            "filters": {
+                "classification": {"terms": ["council"]}
+            },
+            "size": 1
+        }
+        pprint(organisation_query)
+        r = self.http_session.post(
+            organisations_url,
+            data=json.dumps(organisation_query)
+        )
+        r.raise_for_status()
+        pprint(r.json())
+        return r.json()['organisations'][0]
+
     def get_original_object_id(self):
         return unicode(self.original_item['Id']).strip()
 
@@ -27,6 +56,7 @@ class IBabsMeetingItem(EventItem):
 
     def get_combined_index_data(self):
         combined_index_data = {}
+        council = self._get_council()
 
         meeting = self.original_item
         if self.original_item.has_key('MeetingId'):
@@ -51,6 +81,9 @@ class IBabsMeetingItem(EventItem):
                 'scheme': u'ORI'
             }
         ]
+
+        # TODO: should add organisations for commissions
+        combined_index_data['organisation_id'] = council['id']
 
         combined_index_data['classification'] = (
             u'Meeting Item' if self.original_item.has_key('MeetingId') else
