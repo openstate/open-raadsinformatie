@@ -88,5 +88,20 @@
         "doc_type": "events",
         "sitename": "Amstelveen",
         "keep_index_on_update": true
+    },
+    {
+        "id": "amstelveen_resolutions",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "amstelveen",
+        "doc_type": "events",
+        "sitename": "Amstelveen",
+        "keep_index_on_update": true,
+        "regex": "besluit"
     }
 ]

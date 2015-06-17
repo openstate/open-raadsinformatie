@@ -75,3 +75,33 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     meeting_item_dict['MeetingId'] = meeting_dict['Id']
                     meeting_item_dict['Meeting'] = meeting_dict
                     yield 'application/json', json.dumps(meeting_item_dict)
+
+
+class IBabsReportsExtractor(IBabsBaseExtractor):
+    """
+    Extracts reports from the iBabs SOAP Service. The source definition should
+    state which kind of reports should be extracted.
+    """
+
+    def run(self):
+        lists = self.client.service.GetLists(
+            Sitename=self.source_definition['sitename'])
+
+        selected_lists = []
+        for l in lists.iBabsKeyValue:
+            if not re.match(self.source_definition['regex'], l.Value.lower()):
+                continue
+            selected_lists.append(l)
+
+        print "Selected lists:"
+        pprint(selected_lists)
+
+        for l in selected_lists:
+            reports = self.client.service.GetListReports(
+                Sitename=self.source_definition['sitename'], ListId=l.Key)
+            if len(reports.iBabsKeyValue) <= 1:
+                report = reports.iBabsKeyValue[0]
+            else:
+                report = [
+                    r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
+            print "Should get report %s now!" % (report,)
