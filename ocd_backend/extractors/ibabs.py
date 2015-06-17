@@ -56,7 +56,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     def run(self):
         meetings = self.client.service.GetMeetingsByDateRange(
             Sitename=self.source_definition['sitename'],
-            StartDate='2015-01-01T00:00:00', EndDate='2016-01-01T00:00:00',
+            StartDate='2015-06-01T00:00:00', EndDate='2016-07-01T00:00:00',
             MetaDataOnly=False)
 
         meeting_types = self._meetingtypes_as_dict()

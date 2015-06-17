@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 from pprint import pprint
 from hashlib import sha1
+from time import sleep
 
 import iso8601
 
@@ -10,9 +11,11 @@ from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.utils.pdf import PDFToTextMixin
 
 
-class IBabsMeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin):
+class IBabsMeetingItem(
+        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -74,7 +77,9 @@ class IBabsMeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin):
         combined_index_data['hidden'] = self.source_definition['hidden']
 
         if self.original_item.has_key('Title'):
-            combined_index_data['name'] = unicode(self.original_item['Title'])
+            combined_index_data['name'] = u'%s: %s' % (
+                unicode(self.original_item['Features']),
+                unicode(self.original_item['Title']),)
         else:
             combined_index_data['name'] = self.get_collection()
 
@@ -110,7 +115,20 @@ class IBabsMeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin):
             combined_index_data['parent_id'] = unicode(self._get_meeting_id(
                 meeting))
 
-        # TODO: documents
+        if self.original_item.has_key('MeetingItems'):
+            combined_index_data['children'] = [
+                self._get_meeting_id(mi) for mi in self.original_item[
+                    'MeetingItems']]
+
+        combined_index_data['sources'] = []
+        for document in meeting['Documents']:
+            # sleep(1)
+            combined_index_data['sources'].append({
+                'url': document['PublicDownloadURL'],
+                'note': document['DisplayName'],
+                # 'description': self.pdf_get_contents(
+                #     document['PublicDownloadURL'])
+            })
 
         return combined_index_data
 

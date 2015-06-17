@@ -49,6 +49,8 @@ def meeting_to_dict(m):
         'Chairman': None,
         'Explanation': None,
         'PublishDate': lambda x: x.isoformat(),
+        'MeetingItems': lambda x: [
+            meeting_item_to_dict(y) if y is not None else [] for y in x[0]],
         'Documents': lambda x: [
             document_to_dict(y) if y is not None else [] for y in x[0]]
     }

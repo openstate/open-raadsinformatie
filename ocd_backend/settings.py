@@ -83,6 +83,9 @@ API_URL = 'http://127.0.0.1:5000/v0/'
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
 
+# define the location of pdftotext
+PDF_TO_TEXT = u'pdftotext'
+
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
 # defined per machine.
