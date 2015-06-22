@@ -84,4 +84,19 @@ def meeting_type_to_dict(mt):
     }
     return _ibabs_to_dict(mt, fields)
 
+
+def _list_response_field_to_val(r):
+    if isinstance(r, list):
+        return [unicode(l) for l in r]
+    else:
+        return unicode(r)
+
+
+def list_report_response_to_dict(r):
+    """
+    Converts the output given by a row in the report to a JSON serializable
+    dict
+    """
+    return {k[0]: _list_response_field_to_val(k[1]) for k in r}
+
 # json.dumps(meeting_to_dict(m.Meetings[0][0]))

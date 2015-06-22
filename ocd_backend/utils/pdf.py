@@ -15,7 +15,8 @@ class PDFToTextMixin(object):
     """
 
     def pdf_clean_text(self, text):
-        return re.sub(r'\s+', u' ', text)
+        return text
+        # return re.sub(r'\s+', u' ', text)
 
     def pdf_get_contents(self, url):
         """

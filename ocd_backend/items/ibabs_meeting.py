@@ -139,3 +139,131 @@ class IBabsMeetingItem(
         text_items = []
 
         return u' '.join(text_items)
+
+
+class IBabsReportItem(
+        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+    def _get_council(self):
+        """
+        Gets the organisation that represents the council.
+        """
+
+        results = self.api_request(
+            self.source_definition['index_name'], 'organisations',
+            classification='council')
+        return results[0]
+
+    def _get_committees(self):
+        """
+        Gets the committees that are active for the council.
+        """
+
+        results = self.api_request(
+            self.source_definition['index_name'], 'organisations',
+            classification=['committee', 'subcommittee'])
+        return {c['name']: c['id'] for c in results}
+
+    def _get_public_url(self, doc_id):
+        return (
+            u'https://www.mijnbabs.nl/babsapi/publicdownload.aspx?'
+            u'site=%s&id=%s' % (self.source_definition['sitename'], doc_id,))
+
+    def get_original_object_id(self):
+        return unicode(self.original_item['id'][0]).strip()
+
+    def get_original_object_urls(self):
+        # FIXME: what to do when there is not an original URL?
+        return {"html": settings.IBABS_WSDL}
+
+    def get_rights(self):
+        return u'undefined'
+
+    def get_collection(self):
+        return u'%s' % (self.original_item['_ReportName'])
+
+    def get_combined_index_data(self):
+        combined_index_data = {}
+        council = self._get_council()
+        committees = self._get_committees()
+
+        combined_index_data['id'] = unicode(self.get_object_id())
+
+        combined_index_data['hidden'] = self.source_definition['hidden']
+
+        name_field = None
+        for field in self.original_item.keys():
+            id_for_field = '%sIds' % (field,)
+            if (
+                self.original_item.has_key(id_for_field) and
+                name_field is None
+            ):
+                name_field = field
+
+        combined_index_data['name'] = unicode(
+            self.original_item[name_field][0])
+
+        combined_index_data['identifiers'] = [
+            {
+                'identifier': unicode(self.original_item['id'][0]),
+                'scheme': u'iBabs'
+            },
+            {
+                'identifier': self.get_object_id(),
+                'scheme': u'ORI'
+            }
+        ]
+
+        combined_index_data['organisation_id'] = council['id']
+        found_committee = False
+        for comm_name, comm_id in committees.iteritems():
+            if (
+                comm_name.lower() in combined_index_data['name'].lower() and
+                not found_committee
+            ):
+                combined_index_data['organisation_id'] = comm_id
+                found_committee = True
+
+        combined_index_data['classification'] = unicode(
+            self.original_item['_ReportName'].split(r'\s+')[0])
+
+        combined_index_data['description'] = combined_index_data['name']
+
+        # FIXME: maybe datum should not be hardcoded?
+        if self.original_item.has_key('datum'):
+            combined_index_data['start_date'] = iso8601.parse_date(
+                self.original_item['datum'][0],)
+            combined_index_data['end_date'] = iso8601.parse_date(
+                self.original_item['datum'][0],)
+        # combined_index_data['location'] = meeting['Location'].strip()
+        combined_index_data['status'] = u'confirmed'
+
+        combined_index_data['sources'] = []
+        for field in self.original_item.keys():
+            id_for_field = '%sIds' % (field,)
+            if not self.original_item.has_key(id_for_field):
+                continue
+            if (
+                self.original_item[field][0] ==
+                self.original_item[id_for_field][0]
+            ):
+                continue
+            field_values = self.original_item[field][0].split(r'\s*;\s*')
+            field_ids = self.original_item[id_for_field][0].split(r'\s*;\s*')
+            documents = map(
+                lambda a, b: {
+                    'url': self._get_public_url(b),
+                    'notes': a,
+                    'description': self.pdf_get_contents(
+                        self._get_public_url(b)),
+                }, field_values, field_ids)
+            combined_index_data['sources'] += documents
+
+        return combined_index_data
+
+    def get_index_data(self):
+        return {}
+
+    def get_all_text(self):
+        text_items = []
+
+        return u' '.join(text_items)

@@ -11,7 +11,7 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, document_to_dict, meeting_item_to_dict,
-    meeting_type_to_dict)
+    meeting_type_to_dict, list_report_response_to_dict)
 
 
 class IBabsBaseExtractor(BaseExtractor):
@@ -93,9 +93,6 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 continue
             selected_lists.append(l)
 
-        print "Selected lists:"
-        pprint(selected_lists)
-
         for l in selected_lists:
             reports = self.client.service.GetListReports(
                 Sitename=self.source_definition['sitename'], ListId=l.Key)
@@ -104,4 +101,13 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             else:
                 report = [
                     r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
-            print "Should get report %s now!" % (report,)
+            # TODO: pagination for this?
+            result = self.client.service.GetListReport(
+                Sitename=self.source_definition['sitename'], ListId=l.Key,
+                ReportId=report.Key, ActivePageNr=0, RecordsPerPage=100
+            )
+            for item in result.Data.diffgram[0].DocumentElement[0].results:
+                dict_item = list_report_response_to_dict(item)
+                dict_item['_ListName'] = result.ListName
+                dict_item['_ReportName'] = result.ReportName
+                yield 'application/json', json.dumps(dict_item)
