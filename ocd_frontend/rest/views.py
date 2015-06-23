@@ -196,7 +196,8 @@ def format_search_results(results, doc_type='items'):
     formatted_results = {}
     for hit in results['hits']['hits']:
         formatted_results.setdefault(hit['_type'], [])
-        formatted_results[hit['_type']].append(hit)
+        formatted_results[hit['_type']].append(hit['_source'])
+        del hit['_type']
 
     if results.has_key('facets'):
         formatted_results['%s-facets' % (doc_type)] = results['facets']
