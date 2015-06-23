@@ -196,6 +196,7 @@ def format_search_results(results, doc_type='items'):
     formatted_results = {}
     for hit in results['hits']['hits']:
         formatted_results.setdefault(hit['_type'], [])
+        hit['_source']['meta']['_score'] = hit['_score']
         formatted_results[hit['_type']].append(hit['_source'])
         del hit['_type']
 
