@@ -202,6 +202,11 @@ def format_search_results(results, doc_type='items'):
     if results.has_key('facets'):
         formatted_results['%s-facets' % (doc_type)] = results['facets']
 
+    formatted_results['meta'] = {
+        'total': results['hits']['total'],
+        'took': results['took']
+    }
+
     return formatted_results
 
 def validate_included_fields(include_fields, excluded_fields,
