@@ -48,7 +48,10 @@ SIMPLE_QUERY_FIELDS = {
     'persons': ['biography^4', 'name^3', 'other_names^2'],
     'organisations': ['name^4'],
     'events': ['name^4'],
+    'items': ['name^4'],
 }
+
+DOC_TYPE_DEFAULT = u'items'
 
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
@@ -90,8 +93,13 @@ AVAILABLE_FACETS = {
             }
         }
     },
-    'item': {
-
+    'items': {
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
+        }
     }
 }
 

@@ -6,6 +6,7 @@ import os
 from urlparse import urljoin
 
 from ocd_frontend import thumbnails
+from ocd_frontend import settings
 from ocd_frontend.rest import OcdApiError, decode_json_post_data
 from ocd_frontend.rest import tasks
 
@@ -178,7 +179,10 @@ def format_search_results(results, doc_type='items'):
         }
         hit['_source']['meta']['ocd_url'] = url_for('api.get_object', **kwargs)
         for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
-            del hit['_source'][key]
+            try:
+                del hit['_source'][key]
+            except KeyError as e:
+                pass
 
     formatted_results = {doc_type: []}
     formatted_results[doc_type] = [
@@ -265,8 +269,9 @@ def list_sources():
 @bp.route('/search', methods=['POST', 'GET'])
 @bp.route('/search/<doc_type>', methods=['POST', 'GET'])
 @decode_json_post_data
-def search(doc_type='item'):
-    search_req = parse_search_request(request.data, doc_type)
+def search(doc_type=u'items'):
+    data = request.data or request.args
+    search_req = parse_search_request(data, doc_type)
 
     excluded_fields = validate_included_fields(
         include_fields=search_req['include_fields'],
@@ -308,9 +313,13 @@ def search(doc_type='item'):
             'bool': {'must': search_req['filters']}
         }
 
+    if doc_type != settings.DOC_TYPE_DEFAULT:
+        request_doc_type = doc_type
+    else:
+        request_doc_type = None
     es_r = current_app.es.search(body=es_q,
                                  index=current_app.config['COMBINED_INDEX'],
-                                 doc_type=doc_type)
+                                 doc_type=request_doc_type)
 
     # Log a 'search' event if usage logging is enabled
     if current_app.config['USAGE_LOGGING_ENABLED']:
