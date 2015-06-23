@@ -1,19 +1,4 @@
 [
-     {
-        "id": "oude_ijsselstreek_council",
-        "extractor": "ocd_backend.extractors.staticfile.StaticHtmlExtractor",
-        "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.oude_ijsselstreek.CouncilItem",
-        "enrichers": [],
-        "loader": "ocd_backend.loaders.ElasticsearchLoader",
-        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": true,
-        "index_name": "oude_ijsselstreek",
-        "file_url": "http://www.oude-ijsselstreek.nl/leden-van-de-gemeenteraad",
-        "item_xpath": "//div[@class=\"field-items\"]//p/img/..",
-        "doc_type": "persons",
-        "keep_index_on_update": false
-    },
     {
         "id": "amstelveen_municipality",
         "extractor": "ocd_backend.extractors.odata.ODataExtractor",
@@ -90,7 +75,7 @@
         "keep_index_on_update": true
     },
     {
-        "id": "amstelveen_resolutions",
+        "id": "amstelveen_reports",
         "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
@@ -101,6 +86,96 @@
         "index_name": "amstelveen",
         "doc_type": "events",
         "sitename": "Amstelveen",
+        "keep_index_on_update": true,
+        "regex": ".*"
+    },
+    {
+        "id": "utrecht_municipality",
+        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
+        "doc_type": "organisations",
+        "filter": {
+          "Title": "Utrecht (gemeente)"
+        },
+        "keep_index_on_update": false
+    },
+    {
+        "id": "utrecht_organisations",
+        "extractor": "ocd_backend.extractors.almanak.OrganisationsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "file_url": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/",
+        "doc_type": "organisations",
+        "item_xpath": "//",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "utrecht_committees",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "doc_type": "organisations",
+        "sitename": "Utrecht",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "utrecht_persons",
+        "extractor": "ocd_backend.extractors.almanak.PersonsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.persons.AlmanakPersonItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "file_url": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/",
+        "doc_type": "persons",
+        "item_xpath": "//",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "utrecht_meetings",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "doc_type": "events",
+        "sitename": "Utrecht",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "utrecht_reports",
+        "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "utrecht",
+        "doc_type": "events",
+        "sitename": "Utrecht",
         "keep_index_on_update": true,
         "regex": ".*"
     }
