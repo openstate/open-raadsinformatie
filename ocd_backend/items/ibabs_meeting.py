@@ -121,13 +121,26 @@ class IBabsMeetingItem(
                     'MeetingItems']]
 
         combined_index_data['sources'] = []
-        for document in meeting['Documents']:
+
+        try:
+            documents = self.original_item['Documents']
+        except KeyError as e:
+            documents = []
+        if documents is None:
+            documents = []
+
+        for document in documents:
             # sleep(1)
+            print u"%s: %s" % (
+                combined_index_data['name'], document['DisplayName'],)
             combined_index_data['sources'].append({
                 'url': document['PublicDownloadURL'],
                 'note': document['DisplayName'],
-                # 'description': self.pdf_get_contents(
-                #     document['PublicDownloadURL'])
+                # FIXME: some attachments are huuuuuge (>1,000 pages)
+                # TODO: what to do about those?
+                # FIXME: we should have resolver URLs for these ...
+                #'description': self.pdf_get_contents(
+                #    document['PublicDownloadURL'])
             })
 
         return combined_index_data
