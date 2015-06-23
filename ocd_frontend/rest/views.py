@@ -183,6 +183,10 @@ def format_search_results(results, doc_type='items'):
     formatted_results = {doc_type: []}
     formatted_results[doc_type] = [
         hit['_source'] for hit in results['hits']['hits']]
+
+    if results.has_key('facets'):
+        formatted_results['%s-facets' % (doc_type)] = results['facets']
+
     return formatted_results
 
 def validate_included_fields(include_fields, excluded_fields,

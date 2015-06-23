@@ -36,7 +36,7 @@ SORTABLE_FIELDS = (
 # ALLOWED_INCLUDE_FIELDS_SEARCH = ['all_text']
 
 EXCLUDED_FIELDS_ALWAYS = [
-    'combined_index_data', 'enrichments', 'meta', 'hidden']
+    'combined_index_data', 'enrichments', 'hidden']
 EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
                            'media_urls.original_url']
 EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
@@ -65,7 +65,30 @@ AVAILABLE_FACETS = {
 
     },
     'events': {
-
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
+        },
+        'organisation_id': {
+            'terms': {
+                'field': 'organisation_id',
+                'size': 10
+            }
+        },
+        'location': {
+            'terms': {
+                'field': 'location',
+                'size': 10
+            }
+        },
+        'status': {
+            'terms': {
+                'field': 'status',
+                'size': 10
+            }
+        }
     },
     'item': {
 

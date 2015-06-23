@@ -110,4 +110,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 dict_item = list_report_response_to_dict(item)
                 dict_item['_ListName'] = result.ListName
                 dict_item['_ReportName'] = result.ReportName
+                print "%s: %s/%s - %s" % (
+                    self.source_definition['sitename'],
+                    dict_item['_ListName'], dict_item['_ReportName'],
+                    dict_item['id'],)
                 yield 'application/json', json.dumps(dict_item)

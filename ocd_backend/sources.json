@@ -102,6 +102,6 @@
         "doc_type": "events",
         "sitename": "Amstelveen",
         "keep_index_on_update": true,
-        "regex": "besluit"
+        "regex": ".*"
     }
 ]
