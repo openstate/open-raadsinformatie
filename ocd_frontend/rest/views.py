@@ -1,6 +1,7 @@
 from datetime import datetime
 import glob
-from flask import (Blueprint, current_app, request, jsonify, redirect, url_for,)
+from flask import (
+    Blueprint, current_app, request, jsonify, redirect, url_for,)
 from elasticsearch import NotFoundError
 import os
 from urlparse import urljoin
@@ -16,7 +17,8 @@ bp = Blueprint('api', __name__)
 def validate_from_and_size(data):
     # Check if 'size' was specified, if not, fallback to default
     try:
-        n_size = int(data.get('size', current_app.config['DEFAULT_SEARCH_SIZE']))
+        n_size = int(
+            data.get('size', current_app.config['DEFAULT_SEARCH_SIZE']))
     except ValueError:
         raise OcdApiError('Invalid value for \'size\'', 400)
     if n_size < 0 or n_size > current_app.config['MAX_SEARCH_SIZE']:
@@ -42,20 +44,23 @@ def parse_search_request(data, doc_type, mlt=False):
     #     raise OcdApiError('Missing \'query\'', 400)
 
     # Additional fields requested to include in the response
-    include_fields = [f.strip() for f in data.get('include_fields', []) if f.strip()]
+    include_fields = [
+        f.strip() for f in data.get('include_fields', []) if f.strip()]
 
     n_from, n_size = validate_from_and_size(data)
 
     # Check if 'sort' was specified, if not, fallback to '_score'
     sort = data.get('sort', '_score')
     if sort not in current_app.config['SORTABLE_FIELDS']:
-        raise OcdApiError('Invalid value for \'sort\', sortable fields are: %s'
-                          % ', '.join(current_app.config['SORTABLE_FIELDS']), 400)
+        raise OcdApiError(
+            'Invalid value for \'sort\', sortable fields are: %s'
+            % ', '.join(current_app.config['SORTABLE_FIELDS']), 400)
 
     # Check if 'order' was specified, if not, fallback to desc
     order = data.get('order', 'desc')
     if order not in ['asc', 'desc']:
-        raise OcdApiError('Invalid value for \'order\', must be asc or desc', 400)
+        raise OcdApiError(
+            'Invalid value for \'order\', must be asc or desc', 400)
 
     # Check which 'facets' are requested
     req_facets = data.get('facets', {})
@@ -94,7 +99,9 @@ def parse_search_request(data, doc_type, mlt=False):
                     raise OcdApiError('\'facets.%s.interval\' should be '
                                       'a string' % facet, 400)
 
-                if interval not in current_app.config['ALLOWED_DATE_INTERVALS']:
+                if interval not in current_app.config[
+                    'ALLOWED_DATE_INTERVALS'
+                ]:
                     raise OcdApiError('\'%s\' is an invalid interval for '
                                       '\'facets.%s.interval\''
                                       % (interval, facet), 400)
@@ -109,14 +116,15 @@ def parse_search_request(data, doc_type, mlt=False):
     filters = []
     # Inspect all requested filters and add them to the list of filters
     for r_filter, filter_opts in requested_filters.iteritems():
-        # Use the facet defenitions to check if the requested filter can be used
+        # Use facet definitions to check if the requested filter can be used
         if r_filter not in available_facets:
             raise OcdApiError('\'%s\' is not a valid filter' % r_filter, 400)
 
         f_type = available_facets[r_filter].keys()[0]
         if f_type == 'terms':
             if 'terms' not in filter_opts:
-                raise OcdApiError('Missing \'filters.%s.terms\'' % r_filter, 400)
+                raise OcdApiError(
+                    'Missing \'filters.%s.terms\'' % r_filter, 400)
 
             if type(filter_opts['terms']) is not list:
                 raise OcdApiError('\'filters.%s.terms\' should be an array'
@@ -131,7 +139,8 @@ def parse_search_request(data, doc_type, mlt=False):
 
             filters.append({
                 'terms': {
-                    available_facets[r_filter]['terms']['field']: filter_opts['terms']
+                    available_facets[r_filter]['terms']['field']: filter_opts[
+                        'terms']
                 }
             })
         elif f_type == 'date_histogram':
@@ -170,7 +179,7 @@ def format_search_results(results, doc_type='items'):
 
     for hit in results['hits']['hits']:
         del hit['_index']
-        del hit['_type']
+        # del hit['_type']
         # del hit['_source']['hidden']
         kwargs = {
             'object_id': hit['_id'],
@@ -184,9 +193,10 @@ def format_search_results(results, doc_type='items'):
             except KeyError as e:
                 pass
 
-    formatted_results = {doc_type: []}
-    formatted_results[doc_type] = [
-        hit['_source'] for hit in results['hits']['hits']]
+    formatted_results = {}
+    for hit in results['hits']['hits']:
+        formatted_results.setdefault(hit['_type'], [])
+        formatted_results[hit['_type']].append(hit)
 
     if results.has_key('facets'):
         formatted_results['%s-facets' % (doc_type)] = results['facets']
