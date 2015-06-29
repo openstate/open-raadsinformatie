@@ -14,7 +14,7 @@
         "filter": {
           "Title": "Amstelveen"
         },
-        "keep_index_on_update": false
+        "keep_index_on_update": true
     },
     {
         "id": "amstelveen_organisations",
@@ -104,7 +104,7 @@
         "filter": {
           "Title": "Utrecht (gemeente)"
         },
-        "keep_index_on_update": false
+        "keep_index_on_update": true
     },
     {
         "id": "utrecht_organisations",
@@ -178,5 +178,95 @@
         "sitename": "Utrecht",
         "keep_index_on_update": true,
         "regex": ".*"
+    },
+    {
+        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "heerde_municipality",
+        "doc_type": "organisations",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
+        "filter": {
+            "Title": "Heerde"
+        },
+        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.almanak.OrganisationsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "item_xpath": "//",
+        "id": "heerde_organisations",
+        "doc_type": "organisations",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "file_url": "https://almanak.overheid.nl/23411/Gemeente_Heerde/",
+        "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.almanak.PersonsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "item_xpath": "//",
+        "id": "heerde_persons",
+        "doc_type": "persons",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "file_url": "https://almanak.overheid.nl/23411/Gemeente_Heerde/",
+        "item": "ocd_backend.items.persons.AlmanakPersonItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "heerde_meetings",
+        "doc_type": "events",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "Heerde",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "heerde_reports",
+        "regex": ".*",
+        "doc_type": "events",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "Heerde",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "heerde",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "heerde_committees",
+        "doc_type": "organisations",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "Heerde",
+        "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
     }
 ]

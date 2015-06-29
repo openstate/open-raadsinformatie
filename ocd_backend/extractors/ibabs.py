@@ -87,6 +87,12 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         lists = self.client.service.GetLists(
             Sitename=self.source_definition['sitename'])
 
+        try:
+            kv = lists.iBabsKeyValue
+        except AttributeError as e:
+            print "No reports defined"
+            return
+
         selected_lists = []
         for l in lists.iBabsKeyValue:
             if not re.match(self.source_definition['regex'], l.Value.lower()):

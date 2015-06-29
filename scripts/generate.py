@@ -167,7 +167,7 @@ def generate_sources_municipality(name, almanak, provider):
         method(name, almanak)
     )
 
-    print json.dumps(sources, indent=2)
+    print json.dumps(sources, indent=4)
 
 sources.add_command(generate_sources_municipality)
 
