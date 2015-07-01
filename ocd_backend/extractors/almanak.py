@@ -56,7 +56,11 @@ class PersonsExtractor(StaticHtmlExtractor):
         r.raise_for_status()
         organisations = r.json()['organisations']
         return {
-            o['name']: {'id': o['id'], 'classification': o['classification']}
+            o['name']: {
+                'id': o['id'],
+                'classification': o['classification'],
+                'name': o['name']
+            }
             for o in organisations if o.has_key('name')}
 
     def extract_items(self, static_content):

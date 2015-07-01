@@ -63,20 +63,25 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
             html.xpath('//ul[@class="definitie"]/li/ul/li')[0].xpath(
                 './/text()'))
         party_id = parties[party]['id'] if parties.has_key(party) else None
+        party_obj = parties[party] if parties.has_key(party) else None
         role = u''.join(
             html.xpath('//div[@id="content"]//h3/text()')).strip()
         try:
-            council_id = [
+            council_obj = [
                 p for p in parties.values() if (
-                    p['classification'] == u'Council')][0]['id']
+                    p['classification'] == u'Council')][0]
+            council_id = council_obj['id']
         except IndexError as e:
+            council_obj = None
             council_id = None
+
         combined_index_data['memberships'] = [
             {
                 'label': role,
                 'role': role,
                 'person_id': combined_index_data['id'],
-                'organisation_id': council_id
+                'organisation_id': council_id,
+                'organisation': council_obj
             }
         ]
         if party_id is not None:
@@ -84,7 +89,8 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
                 'label': role,
                 'role': role,
                 'person_id': combined_index_data['id'],
-                'organisation_id': party_id
+                'organisation_id': party_id,
+                'organisation': party_obj
             })
 
         return combined_index_data
