@@ -85,6 +85,7 @@ class EventItem(PopoloBaseItem):
         'identifiers': list,
         'classification': unicode,
         'organisation_id': unicode,
+        'organisation': dict,
         'attendees': list,
         'parent_id': unicode,
         'sources': list,
