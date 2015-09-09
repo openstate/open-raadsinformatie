@@ -498,7 +498,10 @@ def get_object(source_id, object_id, doc_type=u'items'):
         )
 
     for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
-        del obj['_source'][key]
+        try:
+            del obj['_source'][key]
+        except KeyError as e:
+            pass
 
     return jsonify(obj['_source'])
 

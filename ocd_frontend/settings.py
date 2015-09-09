@@ -16,10 +16,10 @@ DEFAULT_SEARCH_SIZE = 10
 MAX_SEARCH_SIZE = 100
 
 # The name of the index containing documents from all sources
-COMBINED_INDEX = 'npo_combined_index'
+COMBINED_INDEX = 'ori_combined_index'
 
 # The default prefix used for all data
-DEFAULT_INDEX_PREFIX = 'npo'
+DEFAULT_INDEX_PREFIX = 'ori'
 
 # The fields which can be used for sorting results via the REST API
 SORTABLE_FIELDS = (

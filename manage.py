@@ -183,7 +183,7 @@ def dumps():
 
 
 @command('put_template')
-@click.option('--template_file', default='es_mappings/ocd_template.json',
+@click.option('--template_file', default='es_mappings/ori_template.json',
               type=click.File('rb'), help='Path to JSON file containing the template.')
 def es_put_template(template_file):
     """
@@ -198,7 +198,7 @@ def es_put_template(template_file):
     template = json.load(template_file)
     template_file.close()
 
-    es.indices.put_template('ocd_template', template)
+    es.indices.put_template('ori_template', template)
 
 
 @command('put_mapping')

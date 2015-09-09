@@ -1,5 +1,5 @@
 {
-    "template": "npo_*",
+    "template": "ori_*",
     "settings": {
         "index": {
             "analyzer": "dutch",
