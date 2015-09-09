@@ -84,8 +84,8 @@ def parse_search_request(data, doc_type, mlt=False):
         facets[facet] = available_facets[facet]
         f_type = facets[facet].keys()[0]
         if f_type == 'terms':
-            if 'size' in facet_opts.get(f_type, {}):
-                size = facet_opts[f_type]['size']
+            if 'size' in facet_opts.keys():
+                size = facet_opts['size']
                 if type(size) is not int:
                     raise OcdApiError('\'facets.%s.size\' should be an '
                                       'integer' % facet, 400)
@@ -93,8 +93,8 @@ def parse_search_request(data, doc_type, mlt=False):
                 facets[facet][f_type]['size'] = size
 
         elif f_type == 'date_histogram':
-            if 'interval' in facet_opts.get(f_type, {}):
-                interval = facet_opts[f_type]['interval']
+            if 'interval' in facet_opts.keys():
+                interval = facet_opts['interval']
                 if type(interval) is not unicode:
                     raise OcdApiError('\'facets.%s.interval\' should be '
                                       'a string' % facet, 400)
@@ -368,7 +368,7 @@ def search(doc_type=u'items'):
 @bp.route('/<source_id>/search', methods=['POST', 'GET'])
 @bp.route('/<source_id>/<doc_type>/search', methods=['POST', 'GET'])
 @decode_json_post_data
-def search_source(source_id, doc_type='item'):
+def search_source(source_id, doc_type=u'items'):
     # Disallow searching in multiple indexes by providing a wildcard
     if '*' in source_id:
         raise OcdApiError('Invalid \'source_id\'', 400)
@@ -460,7 +460,7 @@ def search_source(source_id, doc_type='item'):
 
 @bp.route('/<source_id>/<object_id>', methods=['GET'])
 @bp.route('/<source_id>/<doc_type>/<object_id>', methods=['GET'])
-def get_object(source_id, object_id, doc_type='item'):
+def get_object(source_id, object_id, doc_type=u'items'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
@@ -505,7 +505,7 @@ def get_object(source_id, object_id, doc_type='item'):
 
 @bp.route('/<source_id>/<object_id>/source')
 @bp.route('/<source_id>/<doc_type>/<object_id>/source')
-def get_object_source(source_id, object_id, doc_type='item'):
+def get_object_source(source_id, object_id, doc_type=u'items'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
@@ -542,7 +542,7 @@ def get_object_source(source_id, object_id, doc_type='item'):
 
 @bp.route('/<source_id>/<object_id>/stats')
 @bp.route('/<source_id>/<doc_type>/<object_id>/stats')
-def get_object_stats(source_id, object_id, doc_type='item'):
+def get_object_stats(source_id, object_id, doc_type=u'items'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
@@ -638,7 +638,7 @@ def get_object_stats(source_id, object_id, doc_type='item'):
 @bp.route('/<source_id>/<doc_type>/similar/<object_id>', methods=['POST'])
 @bp.route('/similar/<doc_type>/<object_id>', methods=['POST'])
 @decode_json_post_data
-def similar(object_id, source_id=None, doc_type='item'):
+def similar(object_id, source_id=None, doc_type=u'items'):
     search_params = parse_search_request(request.data, doc_type, mlt=True)
     # not relevant, as mlt already creates the query for us
     search_params.pop('query')

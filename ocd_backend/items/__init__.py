@@ -40,7 +40,6 @@ class BaseItem(object):
     #: Allowed key-value pairs for the document inserted in the 'combined index'
     combined_index_fields = {
         'hidden': bool,
-        'prid': unicode,
         'title': unicode,
         'description': unicode,
         'date': datetime,

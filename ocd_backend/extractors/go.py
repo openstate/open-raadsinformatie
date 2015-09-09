@@ -74,26 +74,54 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         Gets a list of upcoming meetings from the URL specified.
         """
 
-        resp = self.http_session.get(u'%s/Vergaderingen' % (self.base_url,))
+        resp = self.http_session.get(upcoming_url)
 
         if resp.status_code != 200:
             return []
 
         html = etree.HTML(resp.content)
 
+        committee = u''.join(html.xpath('//h1/text()')).replace(
+            u'Komende vergaderingen ', u'').strip()
+
         return [{
-            'title': a.xpath(
-                './/span[@class="komendevergadering_title"]/text()'),
-            'time': a.xpath(
-                './/span[@class="komendevergadering_aanvang"]/text()'),
-            'url': a.xpath(
-                './/span[@class="komendevergadering_agenda"]/text()')
+            'committee': committee,
+            'title': u''.join(a.xpath(
+                './/span[@class="komendevergadering_title"]/text()')),
+            'time': u''.join(a.xpath(
+                './/span[@class="komendevergadering_aanvang"]/text()')),
+            'url': u'%s%s' % (
+                self.base_url,
+                u''.join(a.xpath(
+                    './/span[@class="komendevergadering_agenda"]/a/@href')),)
         } for a in html.xpath(
             '//div[@class="komendevergadering overview list_arrow"]')]
 
     def run(self):
-        pages = [c['upcoming'] for c in self._get_committees()]
+        pages = [c['upcoming'] for c in self._get_committees()][:1] # for now ...
 
         for page in pages:
-            for meeting in self._get_upcoming_meetings(page):
-                yield 'application/json', json.dumps(meeting)
+            for meeting in self._get_upcoming_meetings(page)[:1]:
+                resp = self.http_session.get(meeting['url'])
+                if resp.status_code == 200:
+                    html = etree.HTML(resp.content)
+
+                    # this is a bit ugly, but saves us from having to scrape
+                    # all the meeting pages twice ...
+
+                    meeting_obj = 'application/json', {
+                        'type': 'meeting',
+                        'content': etree.tostring(html),
+                        'full_content': resp.content
+                    }
+
+                    yield 'application/json', meeting_obj
+
+                    for meeting_item_html in html.xpath(
+                        '//li[contains(@class, "agendaRow")]'):
+                            meeting_item_obj = {
+                                'type': 'meeting-item',
+                                'content': etree.tostring(meeting_item_html),
+                                'full_content': resp.content
+                            }
+                            yield 'application/json', meeting_item_obj
