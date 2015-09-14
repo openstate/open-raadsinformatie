@@ -16,7 +16,7 @@ class MeetingItemTestCase(ItemTestCase):
         super(MeetingItemTestCase, self).setUp()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting.html'))
-        self.print_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_print.html'))
+        print_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_print.html'))
         dump_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item.html'))
 
         self.source_definition = {
@@ -35,10 +35,14 @@ class MeetingItemTestCase(ItemTestCase):
         with open(dump_item_path, 'r') as f:
             self.raw_meeting_item = f.read()
 
+        with open(print_path, 'r') as f:
+            print_raw_item = f.read()
+
         self.meeting = {
             'type': 'meeting',
             'content': self.raw_item,
-            'full_content': self.raw_item
+            'full_content': self.raw_item,
+            'print_content': print_raw_item
         }
 
         self.meeting_item = {
@@ -294,13 +298,3 @@ class MeetingItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
         self.assertEqual(data['sources'], self.meeting_sources)
-
-    def test_get_meeting_item_details(self):
-        item = self._instantiate_meeting()
-
-        with open(self.print_path, 'r') as f:
-            print_contents = f.read()
-
-        data = item._get_meeting_item_details(print_contents)
-        pprint(data)
-        self.assertEqual(len(data), 0)

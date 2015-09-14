@@ -102,26 +102,39 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 
         for page in pages:
             for meeting in self._get_upcoming_meetings(page)[:1]:
+                print meeting['url']
                 resp = self.http_session.get(meeting['url'])
-                if resp.status_code == 200:
-                    html = etree.HTML(resp.content)
+                if resp.status_code != 200:
+                    continue
 
-                    # this is a bit ugly, but saves us from having to scrape
-                    # all the meeting pages twice ...
+                html = etree.HTML(resp.content)
 
-                    meeting_obj = 'application/json', {
-                        'type': 'meeting',
-                        'content': etree.tostring(html),
-                        'full_content': resp.content
-                    }
+                # we need to get the print url too as it contains more info
+                print_url = u'%s/print' % (meeting['url'],)
+                print_resp = self.http_session.get(print_url)
 
-                    yield 'application/json', meeting_obj
+                if print_resp.status_code != 200:
+                    continue
 
-                    for meeting_item_html in html.xpath(
-                        '//li[contains(@class, "agendaRow")]'):
-                            meeting_item_obj = {
-                                'type': 'meeting-item',
-                                'content': etree.tostring(meeting_item_html),
-                                'full_content': resp.content
-                            }
-                            yield 'application/json', meeting_item_obj
+                # this is a bit ugly, but saves us from having to scrape
+                # all the meeting pages twice ...
+
+                meeting_obj = 'application/json', {
+                    'type': 'meeting',
+                    'content': etree.tostring(html),
+                    'full_content': resp.content,
+                    'print_content': print_resp.content
+                }
+
+                yield 'application/json', meeting_obj
+
+                for meeting_item_html in html.xpath(
+                    '//li[contains(@class, "agendaRow")]'):
+                        meeting_item_obj = {
+                            'type': 'meeting-item',
+                            'content': etree.tostring(meeting_item_html),
+                            'full_content': resp.content,
+                            'print_content': print_resp.content
+                        }
+
+                        yield 'application/json', meeting_item_obj

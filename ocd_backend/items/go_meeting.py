@@ -39,6 +39,16 @@ class MeetingItem(
         self._full_html = etree.HTML(self.original_item['full_content'])
         return self._full_html
 
+    @property
+    def print_html(self):
+        _old_html = getattr(self, '_print_html', None)
+
+        if _old_html is not None:
+            return _old_html
+
+        self._print_html = etree.HTML(self.original_item['print_content'])
+        return self._print_html
+
     def _get_council(self):
         """
         Gets the organisation that represents the council.
