@@ -91,7 +91,6 @@ class MeetingItem(
         output = date_str
         for k, v in month_names2int.iteritems():
             output = output.replace(k, v)
-        pprint(output)
         parts = output.split(u' ')
         return u'%s-%s-%s' % (parts[2], parts[1], parts[0],)
 
@@ -115,16 +114,15 @@ class MeetingItem(
 
         return sha1(hash_content.decode('utf8')).hexdigest()
 
-    def _get_meeting_item_details(self, contents):
+    def _get_meeting_item_details(self):
         items = []
-        html = etree.HTML(contents)
-        for row in html.xpath('//table[@id="agenda_print"]//tr'):
+        for row in self.print_html.xpath('//table[@id="agenda_print"]//tr'):
             ap = row.xpath('.//td[@class="print_agendapunt"]')
             if len(ap) <= 0:
                 continue
             cells = row.xpath('.//td')
             item = {
-                'index': u''.join(cells[1].xpath('.//text()')).strip(),
+                'index': int(u''.join(cells[1].xpath('.//text()')).strip()),
                 'title': u'%s. %s' % (
                     u''.join(cells[1].xpath('.//text()')).strip(),
                     u''.join(cells[2].xpath('.//text()')).strip().split(u'\n')[0],),
@@ -141,8 +139,9 @@ class MeetingItem(
             return u''.join(
                 self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
         else:
-            return u'https://gemeenteraad.denhelder.nl%s' % (
-                u''.join(self.html.xpath('.//div[@class="first"]/a/@href')),)
+            return u'https://gemeenteraad.denhelder.nl%s#%s' % (
+                u''.join(self.html.xpath('.//div[@class="first"]/a/@href')),
+                self.html.xpath('.//@id')[0],)
 
     def get_original_object_urls(self):
         # FIXME: what to do when there is not an original URL?
@@ -169,9 +168,11 @@ class MeetingItem(
                 self.full_html.xpath('//title/text()')).strip()
             combined_index_data['classification'] = u'Meeting'
         else:
-            combined_index_data['name'] = u'%s. %s' % (
-                u''.join(self.html.xpath('.//div[@class="first"]//text()')).strip(),
-                u''.join(self.html.xpath('.//div[@class="title"]//text()')).strip(),
+            meeting_item_index = int(
+                u''.join(self.html.xpath('.//div[@class="first"]//text()')).strip())
+            combined_index_data['name'] = u'%d. %s' % (
+                meeting_item_index,
+                u''.join(self.html.xpath('.//div[@class="title"]/h3//text()')).strip(),
             )
             combined_index_data['classification'] = u'Meeting Item'
 
@@ -197,7 +198,11 @@ class MeetingItem(
             combined_index_data['organisation_id'] = council['id']
             combined_index_data['organisation'] = council
 
-        combined_index_data['description'] = u''
+
+        if self.original_item['type'] != 'meeting':
+            combined_index_data['description'] = u''.join(self.html.xpath('.//div[@class="toelichting"]//text()'),)
+        else:
+            combined_index_data['description'] = u''
 
 
         meeting_date = u''.join(

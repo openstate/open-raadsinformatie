@@ -48,22 +48,23 @@ class MeetingItemTestCase(ItemTestCase):
         self.meeting_item = {
             'type': 'meeting-item',
             'content': self.raw_meeting_item,
-            'full_content': self.raw_item
+            'full_content': self.raw_item,
+            'print_content': print_raw_item
         }
 
         self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
-        self.meeting_item_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/Opening-'
+        self.meeting_item_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
         self.meeting_object_urls = {
             'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
         }
         self.meeting_item_object_urls = {
-            'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/Opening-'
+            'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
         }
         self.rights = u'undefined' # for now ...
         self.collection = u'Gemeenteraad 31 augustus 2015 19:30:00'
 
         self.meeting_name = u'Gemeenteraad 31 augustus 2015 19:30:00'
-        self.meeting_item_name = u'1. Opening.'
+        self.meeting_item_name = u'6. Bekrachtigen van de geheimhouding op de daartoe door het college gewaarmerkte exploitatie  van Zeestad per 1 januari 2015.'
 
         self.meeting_identifiers = [
             {
@@ -79,11 +80,11 @@ class MeetingItemTestCase(ItemTestCase):
         self.meeting_item_identifiers = [
             {
                 'scheme': u'GemeenteOplossingen',
-                'identifier': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/Opening-'
+                'identifier': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
             },
             {
                 'scheme': u'ORI',
-                'identifier': 'd244a4068138f8dc9534783eb3659cc57258d553'
+                'identifier': '94d1cd4c80286b0125910a9508a40eebc9358387'
             }
         ]
         self.meeting_classification = u'Meeting'
@@ -119,6 +120,9 @@ class MeetingItemTestCase(ItemTestCase):
         ]
 
         self.organisation = {'id': u'1', 'name': u'Den Helder'}
+
+        self.meeting_description = u''
+        self.meeting_item_description = u'Het college van burgemeester en wethouders heeft onder geheimhouding stukken ter inzage gelegd over de exploitatie van Zeestad. Op grond van artikel 25, lid 3, van de Gemeentewet dient de raad de geheimhouding te bekrachtigen.'
 
 
     def _instantiate_meeting(self):
@@ -280,12 +284,14 @@ class MeetingItemTestCase(ItemTestCase):
         data = item.get_combined_index_data()
         self.assertEqual(data['status'], self.status)
 
+
     def test_get_object_id_for(self):
         item = self._instantiate_meeting()
         self.assertEqual(item._get_object_id_for(
             item.get_original_object_id(),
             item.get_original_object_urls()
         ), item.get_object_id())
+
 
     def test_meeting_item_get_parent_id(self):
         meeting = self._instantiate_meeting()
@@ -298,3 +304,14 @@ class MeetingItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
         self.assertEqual(data['sources'], self.meeting_sources)
+
+    def test_meeting_description(self):
+        item = self._instantiate_meeting()
+        data = item.get_combined_index_data()
+        self.assertEqual(data['description'], self.meeting_description)
+
+
+    def test_meeting_item_description(self):
+        item = self._instantiate_meeting_item()
+        data = item.get_combined_index_data()
+        self.assertEqual(data['description'], self.meeting_item_description)
