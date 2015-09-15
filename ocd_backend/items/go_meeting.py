@@ -107,9 +107,9 @@ class MeetingItem(
 
     def _get_documents_html_for_item(self, item_id):
         url = 'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
-            self.item_id.split('_')[0])
+            item_id.split('_')[0])
 
-        resp = requests.get(url)
+        resp = self.http_session.get(url)
         if resp.status_code == 200:
             return resp.content
 
@@ -209,7 +209,7 @@ class MeetingItem(
             # need to do a separate request:
             # https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=19110
 
-            if (len(self.html.xpath('.//a[contains(@class, bijlage_true)]')) > 0):
+            if (len(self.html.xpath('.//a[contains(@class, "bijlage_true")]')) > 0):
                 docs_html = etree.HTML(self._get_documents_html_for_item(
                     self.html.xpath('.//@id')[0]))
                 for doc in docs_html.xpath('//li/a'):

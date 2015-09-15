@@ -112,13 +112,13 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 # this is a bit ugly, but saves us from having to scrape
                 # all the meeting pages twice ...
 
-                meeting_obj = 'application/json', {
+                meeting_obj = {
                     'type': 'meeting',
                     'content': etree.tostring(html),
                     'full_content': resp.content,
                 }
 
-                yield 'application/json', meeting_obj
+                yield 'application/json', json.dumps(meeting_obj)
 
                 for meeting_item_html in html.xpath(
                     '//li[contains(@class, "agendaRow")]'):
@@ -128,4 +128,4 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                             'full_content': resp.content,
                         }
 
-                        yield 'application/json', meeting_item_obj
+                        yield 'application/json', json.dumps(meeting_item_obj)
