@@ -105,6 +105,16 @@ class MeetingItem(
 
         return sha1(hash_content.decode('utf8')).hexdigest()
 
+    def _get_documents_html_for_item(self, item_id):
+        url = 'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
+            self.item_id.split('_')[0])
+
+        resp = requests.get(url)
+        if resp.status_code == 200:
+            return resp.content
+
+        return u''
+
     def get_original_object_id(self):
         if self.original_item['type'] == 'meeting':
             return u''.join(
@@ -198,6 +208,18 @@ class MeetingItem(
             # FIXME: in order to get the documents for an meeting item you
             # need to do a separate request:
             # https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=19110
+
+            if (len(self.html.xpath('.//a[contains(@class, bijlage_true)]')) > 0):
+                docs_html = etree.HTML(self._get_documents_html_for_item(
+                    self.html.xpath('.//@id')[0]))
+                for doc in docs_html.xpath('//li/a'):
+                    doc_url = u''.join(doc.xpath('.//@href')).strip()
+                    doc_note = u''.join(doc.xpath('.//text()')).strip()
+                    if doc_note != u'notitie':
+                        combined_index_data['sources'].append({
+                            'url': doc_url,
+                            'note': doc_note
+                        })
         else:
             combined_index_data['children'] = [
                 unicode(self._get_object_id_for(

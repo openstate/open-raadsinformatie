@@ -122,7 +122,12 @@ class MeetingItemTestCase(ItemTestCase):
             }
         ]
 
-        self.meeting_item_sources = []
+        self.meeting_item_sources = [
+            {
+                'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
+                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'
+            }
+        ]
 
         self.organisation = {'id': u'1', 'name': u'Den Helder'}
 
@@ -137,6 +142,7 @@ class MeetingItemTestCase(ItemTestCase):
         # # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
+        MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
 
         item = MeetingItem(
             self.source_definition, 'application/json',
