@@ -4,6 +4,7 @@ from pprint import pprint
 from hashlib import sha1
 from time import sleep
 import re
+import urlparse
 
 from lxml import etree
 import iso8601
@@ -38,16 +39,6 @@ class MeetingItem(
 
         self._full_html = etree.HTML(self.original_item['full_content'])
         return self._full_html
-
-    @property
-    def print_html(self):
-        _old_html = getattr(self, '_print_html', None)
-
-        if _old_html is not None:
-            return _old_html
-
-        self._print_html = etree.HTML(self.original_item['print_content'])
-        return self._print_html
 
     def _get_council(self):
         """
@@ -113,26 +104,6 @@ class MeetingItem(
         hash_content = self.source_definition['id'] + object_id + u''.join(sorted(urls.values()))
 
         return sha1(hash_content.decode('utf8')).hexdigest()
-
-    def _get_meeting_item_details(self):
-        items = []
-        for row in self.print_html.xpath('//table[@id="agenda_print"]//tr'):
-            ap = row.xpath('.//td[@class="print_agendapunt"]')
-            if len(ap) <= 0:
-                continue
-            cells = row.xpath('.//td')
-            item = {
-                'index': int(u''.join(cells[1].xpath('.//text()')).strip()),
-                'title': u'%s. %s' % (
-                    u''.join(cells[1].xpath('.//text()')).strip(),
-                    u''.join(cells[2].xpath('.//text()')).strip().split(u'\n')[0],),
-                'description': u''.join(cells[2].xpath('.//text()')).strip(),
-                'documents': int(
-                    u''.join(cells[3].xpath('.//text()')).strip()),
-
-            }
-            items.append(item)
-        return items
 
     def get_original_object_id(self):
         if self.original_item['type'] == 'meeting':
@@ -247,29 +218,17 @@ class MeetingItem(
                         'note': doc_note
                     })
 
-            # FIXME: don't forget the link to the mp3
+            for doc in self.full_html.xpath('//div[@id="downloaden"]/ul//li/a'):
+                doc_url = u''.join(doc.xpath('.//@href')).strip()
+                doc_note = u''.join(doc.xpath('.//text()')).strip()
+                if doc_note != u'notitie':
+                    combined_index_data['sources'].append({
+                        'url': urlparse.urljoin(base_url, doc_url),
+                        'note': doc_note
+                    })
 
-        #
-        # try:
-        #     documents = self.original_item['Documents']
-        # except KeyError as e:
-        #     documents = []
-        # if documents is None:
-        #     documents = []
-        #
-        # for document in documents:
-        #     # sleep(1)
-        #     print u"%s: %s" % (
-        #         combined_index_data['name'], document['DisplayName'],)
-        #     combined_index_data['sources'].append({
-        #         'url': document['PublicDownloadURL'],
-        #         'note': document['DisplayName'],
-        #         # FIXME: some attachments are huuuuuge (>1,000 pages)
-        #         # TODO: what to do about those?
-        #         # FIXME: we should have resolver URLs for these ...
         #         #'description': self.pdf_get_contents(
         #         #    document['PublicDownloadURL'])
-        #     })
 
         return combined_index_data
 

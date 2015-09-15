@@ -109,13 +109,6 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 
                 html = etree.HTML(resp.content)
 
-                # we need to get the print url too as it contains more info
-                print_url = u'%s/print' % (meeting['url'],)
-                print_resp = self.http_session.get(print_url)
-
-                if print_resp.status_code != 200:
-                    continue
-
                 # this is a bit ugly, but saves us from having to scrape
                 # all the meeting pages twice ...
 
@@ -123,7 +116,6 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                     'type': 'meeting',
                     'content': etree.tostring(html),
                     'full_content': resp.content,
-                    'print_content': print_resp.content
                 }
 
                 yield 'application/json', meeting_obj
@@ -134,7 +126,6 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                             'type': 'meeting-item',
                             'content': etree.tostring(meeting_item_html),
                             'full_content': resp.content,
-                            'print_content': print_resp.content
                         }
 
                         yield 'application/json', meeting_item_obj

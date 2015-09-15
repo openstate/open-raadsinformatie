@@ -16,8 +16,8 @@ class MeetingItemTestCase(ItemTestCase):
         super(MeetingItemTestCase, self).setUp()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting.html'))
-        print_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_print.html'))
         dump_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item.html'))
+        dump_item_docs_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item_documents.html'))
 
         self.source_definition = {
             'id': 'test_definition',
@@ -35,21 +35,20 @@ class MeetingItemTestCase(ItemTestCase):
         with open(dump_item_path, 'r') as f:
             self.raw_meeting_item = f.read()
 
-        with open(print_path, 'r') as f:
-            print_raw_item = f.read()
+        self.docs_raw_item = u''
+        with open(dump_item_docs_path, 'r') as f:
+            self.docs_raw_item = f.read()
 
         self.meeting = {
             'type': 'meeting',
             'content': self.raw_item,
-            'full_content': self.raw_item,
-            'print_content': print_raw_item
+            'full_content': self.raw_item
         }
 
         self.meeting_item = {
             'type': 'meeting-item',
             'content': self.raw_meeting_item,
-            'full_content': self.raw_item,
-            'print_content': print_raw_item
+            'full_content': self.raw_item
         }
 
         self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
@@ -116,14 +115,19 @@ class MeetingItemTestCase(ItemTestCase):
             {
                 'note': u'Oproep vergadering gemeenteraad.pdf',
                 'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/Oproep-vergadering-gemeenteraad-7.pdf'
+            },
+            {
+                'note': u'1. 2015-08-31-19-01-19-Gemeenteraad.mp3',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/download/888/mp3'
             }
         ]
+
+        self.meeting_item_sources = []
 
         self.organisation = {'id': u'1', 'name': u'Den Helder'}
 
         self.meeting_description = u''
         self.meeting_item_description = u'Het college van burgemeester en wethouders heeft onder geheimhouding stukken ter inzage gelegd over de exploitatie van Zeestad. Op grond van artikel 25, lid 3, van de Gemeentewet dient de raad de geheimhouding te bekrachtigen.'
-
 
     def _instantiate_meeting(self):
         """
@@ -304,6 +308,13 @@ class MeetingItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
         self.assertEqual(data['sources'], self.meeting_sources)
+
+
+    def test_meeting_item_sources(self):
+        item = self._instantiate_meeting_item()
+        data = item.get_combined_index_data()
+        self.assertEqual(data['sources'], self.meeting_item_sources)
+
 
     def test_meeting_description(self):
         item = self._instantiate_meeting()
