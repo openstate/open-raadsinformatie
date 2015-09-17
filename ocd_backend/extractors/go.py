@@ -180,10 +180,20 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 
                         yield 'application/json', json.dumps(meeting_item_obj)
 
+
 class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtractor):
     def filter_meeting(self, meeting, html):
         for item in html.xpath('//div[@id="documenten"]//li'):
             anchor = u''.join(item.xpath('.//a//text()'))
             if u'Besluitenlijst' in anchor:
+                return True
+        return False
+
+
+class GemeenteOplossingenAudioReportsExtractor(GemeenteOplossingenMeetingsExtractor):
+    def filter_meeting(self, meeting, html):
+        for item in html.xpath('//div[@id="downloaden"]//li'):
+            anchor = u''.join(item.xpath('.//a//@href'))
+            if u'/mp3' in anchor:
                 return True
         return False
