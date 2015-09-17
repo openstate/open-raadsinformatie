@@ -125,19 +125,23 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             field = 'archive'
         return [c[field] for c in self._get_committees()] # for now ...
 
+    def filter_meeting(self, meeting, html):
+        """
+        Should return true if the meeting is to be yielded.
+        """
+
+        return True
+
     def run(self):
         pages = self._get_pages()[:1]
 
         for page in pages:
-            pprint(page)
-
             if self.source_definition.get('upcoming', True):
                 meetings = self._get_upcoming_meetings(page)
             else:
                 meetings = self._get_archived_meetings(page)
 
             for meeting in meetings[:1]:
-                pprint(meeting)
                 sleep(1)
 
                 resp = self.http_session.get(meeting['url'])
@@ -145,6 +149,12 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                     continue
 
                 html = etree.HTML(resp.content)
+
+                if not self.filter_meeting(meeting, html):
+                    print "Skipping item for %s" % (meeting['url'],)
+                    continue
+
+                print "Yielding item for %s" % (meeting['url'],)
 
                 # this is a bit ugly, but saves us from having to scrape
                 # all the meeting pages twice ...
@@ -169,3 +179,11 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                         }
 
                         yield 'application/json', json.dumps(meeting_item_obj)
+
+class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtractor):
+    def filter_meeting(self, meeting, html):
+        for item in html.xpath('//div[@id="documenten"]//li'):
+            anchor = u''.join(item.xpath('.//a//text()'))
+            if u'Besluitenlijst' in anchor:
+                return True
+        return False

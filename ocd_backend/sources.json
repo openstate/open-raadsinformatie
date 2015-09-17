@@ -346,8 +346,8 @@
         "extract_meeting_items": true
     },
     {
-        "id": "den_helder_reports",
-        "extractor": "ocd_backend.extractors.go.GemeenteOplossingenMeetingsExtractor",
+        "id": "den_helder_resolutions",
+        "extractor": "ocd_backend.extractors.go.GemeenteOplossingenResolutionsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.go_meeting.ReportItem",
         "enrichers": [],
