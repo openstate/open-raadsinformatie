@@ -347,7 +347,7 @@
     },
     {
         "id": "den_helder_reports",
-        "extractor": "ocd_backend.extractors.go.GemeenteOplossingennMeetingsExtractor",
+        "extractor": "ocd_backend.extractors.go.GemeenteOplossingenMeetingsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.go_meeting.ReportItem",
         "enrichers": [],

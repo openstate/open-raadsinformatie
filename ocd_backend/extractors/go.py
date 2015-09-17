@@ -98,6 +98,26 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         } for a in html.xpath(
             '//div[@class="komendevergadering overview list_arrow"]')]
 
+    def _get_archived_meetings(self, archive_url):
+        """
+        Gets a list of archived meetings from the URL specified.
+        """
+
+        resp = self.http_session.get(archive_url)
+
+        if resp.status_code != 200:
+            return []
+
+        html = etree.HTML(resp.content)
+
+        committee = u''.join(html.xpath('//div[@id="breadcrumb"]/strong//text()')).strip()
+
+        return [{
+            'committee': committee,
+            'title': u''.join(a.xpath('.//text()')),
+            'url': u'%s%s' % (self.base_url, u''.join(a.xpath('.//@href')),)
+        } for a in html.xpath('//ul[@id="vergaderingen"]//li/a')]
+
     def _get_pages(self):
         if self.source_definition.get('upcoming', True):
             field = 'upcoming'
@@ -106,10 +126,18 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         return [c[field] for c in self._get_committees()] # for now ...
 
     def run(self):
-        pages = self._get_pages()
+        pages = self._get_pages()[:1]
 
         for page in pages:
-            for meeting in self._get_upcoming_meetings(page)[:1]:
+            pprint(page)
+
+            if self.source_definition.get('upcoming', True):
+                meetings = self._get_upcoming_meetings(page)
+            else:
+                meetings = self._get_archived_meetings(page)
+
+            for meeting in meetings[:1]:
+                pprint(meeting)
                 sleep(1)
 
                 resp = self.http_session.get(meeting['url'])
