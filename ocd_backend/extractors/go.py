@@ -1,6 +1,7 @@
 import json
 from pprint import pprint
 import re
+from time import sleep
 
 from lxml import etree
 from suds.client import Client
@@ -97,12 +98,20 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         } for a in html.xpath(
             '//div[@class="komendevergadering overview list_arrow"]')]
 
+    def _get_pages(self):
+        if self.source_definition.get('upcoming', True):
+            field = 'upcoming'
+        else:
+            field = 'archive'
+        return [c[field] for c in self._get_committees()] # for now ...
+
     def run(self):
-        pages = [c['upcoming'] for c in self._get_committees()][:1] # for now ...
+        pages = self._get_pages()
 
         for page in pages:
             for meeting in self._get_upcoming_meetings(page)[:1]:
-                print meeting['url']
+                sleep(1)
+
                 resp = self.http_session.get(meeting['url'])
                 if resp.status_code != 200:
                     continue
@@ -119,6 +128,9 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 }
 
                 yield 'application/json', json.dumps(meeting_obj)
+
+                if not self.source_definition.get('extract_meeting_items', False):
+                    continue
 
                 for meeting_item_html in html.xpath(
                     '//li[contains(@class, "agendaRow")]'):

@@ -210,6 +210,7 @@ class MeetingItem(
             # https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=19110
 
             if (len(self.html.xpath('.//a[contains(@class, "bijlage_true")]')) > 0):
+                # FIXME: this does not always resolve for some reaason
                 docs_html = etree.HTML(self._get_documents_html_for_item(
                     self.html.xpath('.//@id')[0]))
                 for doc in docs_html.xpath('//li/a'):

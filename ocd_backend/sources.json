@@ -342,6 +342,23 @@
         "index_name": "den_helder",
         "doc_type": "events",
         "keep_index_on_update": true,
-        "base_url": "https://gemeenteraad.denhelder.nl"
+        "base_url": "https://gemeenteraad.denhelder.nl",
+        "extract_meeting_items": true
+    },
+    {
+        "id": "den_helder_reports",
+        "extractor": "ocd_backend.extractors.go.GemeenteOplossingennMeetingsExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.go_meeting.ReportItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "den_helder",
+        "doc_type": "events",
+        "keep_index_on_update": true,
+        "base_url": "https://gemeenteraad.denhelder.nl",
+        "extract_meeting_items": false,
+        "upcoming": false
     }
 ]
