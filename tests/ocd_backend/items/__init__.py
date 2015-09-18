@@ -25,3 +25,4 @@ class ItemTestCase(TestCase):
 # ExtractorTestCase is parsed. Add additional testcases when required
 from .localdump import LocalDumpItemTestCase
 from .go_meeting import MeetingItemTestCase
+from .go_resolution import ResolutionItemTestCase
