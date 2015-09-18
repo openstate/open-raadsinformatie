@@ -16,6 +16,7 @@ class ResolutionItemTestCase(ItemTestCase):
         super(ResolutionItemTestCase, self).setUp()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_archived_meeting.html'))
+        self.pdf_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/Besluitenlijst-raadsvergadering-29-juni-2015.pdf'))
 
         self.source_definition = {
             "id": "den_helder_resolutions",
@@ -99,7 +100,7 @@ class ResolutionItemTestCase(ItemTestCase):
         # # FIXME: these need to return some values
         ResolutionItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         ResolutionItem._get_committees = MagicMock(return_value={})
-
+        ResolutionItem.pdf_download = MagicMock(return_value=file(self.pdf_path, 'rb'))
         item = ResolutionItem(
             self.source_definition, 'application/json',
             self.raw_item, self.meeting
@@ -179,4 +180,6 @@ class ResolutionItemTestCase(ItemTestCase):
     def test_meeting_description(self):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
-        self.assertEqual(data['description'], self.meeting_description)
+        result = data['description'].startswith(
+            u'Besluitenlijst raadsvergadering 29 juni 2015 aanvang 17.00 uur')
+        self.assertEqual(result, True)

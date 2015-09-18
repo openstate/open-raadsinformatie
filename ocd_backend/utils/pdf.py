@@ -1,12 +1,37 @@
 import os
 import subprocess
-from StringIO import StringIO
 import tempfile
 import re
+from cStringIO import StringIO
+
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.converter import TextConverter
+from pdfminer.layout import LAParams
+from pdfminer.pdfpage import PDFPage
 
 import requests
 
 from ocd_backend import settings
+
+def convert(fname, pages=None):
+    if not pages:
+        pagenums = set()
+    else:
+        pagenums = set(pages)
+
+    output = StringIO()
+    manager = PDFResourceManager()
+    converter = TextConverter(manager, output, laparams=LAParams())
+    interpreter = PDFPageInterpreter(manager, converter)
+
+    infile = file(fname, 'rb')
+    for page in PDFPage.get_pages(infile, pagenums):
+        interpreter.process_page(page)
+    infile.close()
+    converter.close()
+    text = output.getvalue()
+    output.close()
+    return text
 
 
 class PDFToTextMixin(object):
@@ -43,12 +68,6 @@ class PDFToTextMixin(object):
         Method to convert a given PDF file into text file using a subprocess
         """
 
-        process = subprocess.Popen(
-            [settings.PDF_TO_TEXT, "-layout", "-enc", "UTF-8", path, "-"],
-            shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        content, err = process.communicate()[0:2]
+        content = convert(path)
 
-        if err is not None:
-            raise ValueError
-
-        return self.pdf_clean_text(content.decode('utf-8'))
+        return unicode(self.pdf_clean_text(content.decode('utf-8')))
