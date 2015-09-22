@@ -179,4 +179,5 @@ class ReportItemTestCase(ItemTestCase):
     def test_meeting_description(self):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
-        self.assertEqual(data['description'], u'')
+        result = data['description'].startswith(u'1.  Opening en mededelingen.')
+        self.assertEqual(result, True)

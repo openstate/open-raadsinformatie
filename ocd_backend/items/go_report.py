@@ -15,6 +15,19 @@ class ReportItem(MeetingItem):
             self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
         return urlparse.urljoin(og_url, self._get_report_document())
 
+    def _get_meeting_items(self):
+        items = []
+        for meeting_item_html in self.full_html.xpath(
+            '//li[contains(@class, "agendaRow")]'):
+                meeting_item_obj = {
+                    'index': int(u''.join(meeting_item_html.xpath('.//div[@class="first"]//text()'))),
+                    'title': u''.join(meeting_item_html.xpath('.//div[@class="title"]/h3//text()')),
+                    'description': u''.join(meeting_item_html.xpath('.//div[@class="toelichting"]//text()')),
+                }
+                items.append(meeting_item_obj)
+        return items
+
+
     def get_original_object_id(self):
         og_url = u''.join(
             self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
@@ -37,6 +50,8 @@ class ReportItem(MeetingItem):
         combined_index_data['classification'] = u'Report'
 
         # TODO: get all the descriptive content?
-        combined_index_data['description'] = u''
+        items = self._get_meeting_items()
+        combined_index_data['description'] = u'\n'.join(
+            [u"%s. %s\n\n%s" % (i['index'], i['title'], i['description'],) for i in items])
 
         return combined_index_data
