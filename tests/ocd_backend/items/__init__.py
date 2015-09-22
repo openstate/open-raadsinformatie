@@ -26,3 +26,4 @@ class ItemTestCase(TestCase):
 from .localdump import LocalDumpItemTestCase
 from .go_meeting import MeetingItemTestCase
 from .go_resolution import ResolutionItemTestCase
+from .go_report import ReportItemTestCase
