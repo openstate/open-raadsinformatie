@@ -19,6 +19,9 @@ class MeetingItemTestCase(ItemTestCase):
         dump_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item.html'))
         dump_item_docs_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item_documents.html'))
 
+        faulty_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_faulty_meeting.html'))
+        faulty_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_faulty_meeting_item.html'))
+
         self.source_definition = {
             'id': 'test_definition',
             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
@@ -38,6 +41,12 @@ class MeetingItemTestCase(ItemTestCase):
         self.docs_raw_item = u''
         with open(dump_item_docs_path, 'r') as f:
             self.docs_raw_item = f.read()
+
+        with open(faulty_path, 'r') as f:
+            self.raw_faulty_item = f.read()
+
+        with open(faulty_item_path, 'r') as f:
+            self.raw_faulty_meeting_item = f.read()
 
         self.meeting = {
             'type': 'meeting',
@@ -133,6 +142,9 @@ class MeetingItemTestCase(ItemTestCase):
 
         self.meeting_description = u''
         self.meeting_item_description = u'Het college van burgemeester en wethouders heeft onder geheimhouding stukken ter inzage gelegd over de exploitatie van Zeestad. Op grond van artikel 25, lid 3, van de Gemeentewet dient de raad de geheimhouding te bekrachtigen.'
+
+        self.faulty_meeting_item_id = u'18612'
+        self.faulty_meeting_item_documents_url = u'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=18612'
 
     def _instantiate_meeting(self):
         """
@@ -332,3 +344,27 @@ class MeetingItemTestCase(ItemTestCase):
         item = self._instantiate_meeting_item()
         data = item.get_combined_index_data()
         self.assertEqual(data['description'], self.meeting_item_description)
+
+    def test_faulty_meeting_item(self):
+        # # FIXME: these need to return some values
+        MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
+        MeetingItem._get_committees = MagicMock(return_value={})
+        # MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
+
+        meeting_item = {
+            'type': 'meeting-item',
+            'content': self.raw_faulty_meeting_item,
+            'full_content': self.raw_faulty_item
+        }
+
+        item = MeetingItem(
+            self.source_definition, 'application/json',
+            self.raw_faulty_meeting_item, meeting_item
+        )
+
+        #data = item.get_combined_index_data()
+        meeting_item_id = item._get_meeting_item_id()
+        self.assertEqual(meeting_item_id, self.faulty_meeting_item_id)
+
+        meeting_item_documents_url = item._get_meeting_item_documents_url()
+        self.assertEqual(meeting_item_documents_url, self.faulty_meeting_item_documents_url)

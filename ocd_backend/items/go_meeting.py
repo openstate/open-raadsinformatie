@@ -105,9 +105,15 @@ class MeetingItem(
 
         return sha1(hash_content.decode('utf8')).hexdigest()
 
-    def _get_documents_html_for_item(self, item_id):
-        url = 'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
-            item_id.split('_')[0])
+    def _get_meeting_item_id(self):
+        return self.html.xpath('.//@id')[0].replace(u'agendapunt', '').split(u'_')[0]
+
+    def _get_meeting_item_documents_url(self):
+        return u'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
+            self._get_meeting_item_id(),)
+
+    def _get_documents_html_for_item(self):
+        url = self._get_meeting_item_documents_url()
 
         resp = self.http_session.get(url)
         if resp.status_code == 200:
@@ -210,9 +216,12 @@ class MeetingItem(
             # https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=19110
 
             if (len(self.html.xpath('.//a[contains(@class, "bijlage_true")]')) > 0):
-                # FIXME: this does not always resolve for some reaason
-                docs_html = etree.HTML(self._get_documents_html_for_item(
-                    self.html.xpath('.//@id')[0]))
+                docs_contents = self._get_documents_html_for_item()
+                if docs_contents:
+                    docs_html = etree.HTML(docs_contents)
+                else:
+                    docs_html = etree.HTML('<ul></ul>')
+
                 for doc in docs_html.xpath('//li/a'):
                     doc_url = u''.join(doc.xpath('.//@href')).strip()
                     doc_note = u''.join(doc.xpath('.//text()')).strip()
