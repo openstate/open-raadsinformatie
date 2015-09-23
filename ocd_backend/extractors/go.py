@@ -133,7 +133,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         return True
 
     def run(self):
-        pages = self._get_pages()[:1]
+        pages = self._get_pages()
 
         for page in pages:
             if self.source_definition.get('upcoming', True):
@@ -141,7 +141,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             else:
                 meetings = self._get_archived_meetings(page)
 
-            for meeting in meetings[:1]:
+            for meeting in meetings:
                 sleep(1)
 
                 resp = self.http_session.get(meeting['url'])
@@ -168,10 +168,12 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 yield 'application/json', json.dumps(meeting_obj)
 
                 if not self.source_definition.get('extract_meeting_items', False):
+                    print "Should not extract meeting items"
                     continue
 
                 for meeting_item_html in html.xpath(
                     '//li[contains(@class, "agendaRow")]'):
+
                         meeting_item_obj = {
                             'type': 'meeting-item',
                             'content': etree.tostring(meeting_item_html),
