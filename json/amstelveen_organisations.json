@@ -1,0 +1,411 @@
+{
+  "meta": {
+    "took": 3, 
+    "total": 15
+  }, 
+  "organisations": [
+    {
+      "classification": "Municipality", 
+      "description": "Naamswijziging per 01-01-1964", 
+      "id": "e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+      "identifiers": [
+        {
+          "identifier": "GM0362", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Amstelveen", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_municipality/e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+        "original_object_id": "GM0362", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:07.108440", 
+        "processing_started": "2015-09-28T12:28:07.089629", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_municipality"
+      }, 
+      "name": "Amstelveen"
+    }, 
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/AVATf7odOtzaa2jsv8f9", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.262884", 
+        "processing_started": "2015-09-28T12:29:09.250523", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }
+    }, 
+    {
+      "classification": "Party", 
+      "description": "VVD", 
+      "id": "vvd", 
+      "identifiers": [
+        {
+          "identifier": "vvd", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "VVD", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/vvd", 
+        "original_object_id": "VVD", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.302428", 
+        "processing_started": "2015-09-28T12:29:09.253038", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "VVD"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "SP", 
+      "id": "sp", 
+      "identifiers": [
+        {
+          "identifier": "sp", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "SP", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/sp", 
+        "original_object_id": "SP", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.339130", 
+        "processing_started": "2015-09-28T12:29:09.257984", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "SP"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "ChristenUnie", 
+      "id": "christenunie", 
+      "identifiers": [
+        {
+          "identifier": "christenunie", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "ChristenUnie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/christenunie", 
+        "original_object_id": "ChristenUnie", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.363236", 
+        "processing_started": "2015-09-28T12:29:09.263031", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "ChristenUnie"
+    }, 
+    {
+      "classification": "Council", 
+      "description": "Gemeente Amstelveen (Amstelveen) (NH)", 
+      "id": "gemeente-amstelveen-amstelveen-nh", 
+      "identifiers": [
+        {
+          "identifier": "gemeente-amstelveen-amstelveen-nh", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeente Amstelveen (Amstelveen) (NH)", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/gemeente-amstelveen-amstelveen-nh", 
+        "original_object_id": "Gemeente Amstelveen (Amstelveen) (NH)", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.389380", 
+        "processing_started": "2015-09-28T12:29:09.309748", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "GroenLinks", 
+      "id": "groenlinks", 
+      "identifiers": [
+        {
+          "identifier": "groenlinks", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "GroenLinks", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/groenlinks", 
+        "original_object_id": "GroenLinks", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.406632", 
+        "processing_started": "2015-09-28T12:29:09.333278", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "GroenLinks"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "PvdA", 
+      "id": "pvda", 
+      "identifiers": [
+        {
+          "identifier": "pvda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "PvdA", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/pvda", 
+        "original_object_id": "PvdA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.409055", 
+        "processing_started": "2015-09-28T12:29:09.343924", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "PvdA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "BBA", 
+      "id": "bba", 
+      "identifiers": [
+        {
+          "identifier": "bba", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "BBA", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/bba", 
+        "original_object_id": "BBA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.436110", 
+        "processing_started": "2015-09-28T12:29:09.358318", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "BBA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "OCA", 
+      "id": "oca", 
+      "identifiers": [
+        {
+          "identifier": "oca", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "OCA", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/oca", 
+        "original_object_id": "OCA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.436571", 
+        "processing_started": "2015-09-28T12:29:09.360591", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "OCA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "D66", 
+      "id": "d66", 
+      "identifiers": [
+        {
+          "identifier": "d66", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "D66", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/d66", 
+        "original_object_id": "D66", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.455587", 
+        "processing_started": "2015-09-28T12:29:09.368321", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "D66"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "CDA", 
+      "id": "cda", 
+      "identifiers": [
+        {
+          "identifier": "cda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "CDA", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_organisations/cda", 
+        "original_object_id": "CDA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:09.460501", 
+        "processing_started": "2015-09-28T12:29:09.382436", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_organisations"
+      }, 
+      "name": "CDA"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie RWN", 
+      "id": "raadscommissie-rwn", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-rwn", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "1", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie RWN", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_committees/raadscommissie-rwn", 
+        "original_object_id": "Raadscommissie RWN", 
+        "original_object_urls": {
+          "html": "Raadscommissie RWN"
+        }, 
+        "processing_finished": "2015-09-28T12:33:37.183722", 
+        "processing_started": "2015-09-28T12:33:37.175724", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_committees"
+      }, 
+      "name": "Raadscommissie RWN"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie B&S", 
+      "id": "raadscommissie-b-s", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-b-s", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "2", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie B&S", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_committees/raadscommissie-b-s", 
+        "original_object_id": "Raadscommissie B&S", 
+        "original_object_urls": {
+          "html": "Raadscommissie B&S"
+        }, 
+        "processing_finished": "2015-09-28T12:33:37.190660", 
+        "processing_started": "2015-09-28T12:33:37.177891", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_committees"
+      }, 
+      "name": "Raadscommissie B&S"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie ABM", 
+      "id": "raadscommissie-abm", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-abm", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "3", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie ABM", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_committees/raadscommissie-abm", 
+        "original_object_id": "Raadscommissie ABM", 
+        "original_object_urls": {
+          "html": "Raadscommissie ABM"
+        }, 
+        "processing_finished": "2015-09-28T12:33:37.209283", 
+        "processing_started": "2015-09-28T12:33:37.183606", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_committees"
+      }, 
+      "name": "Raadscommissie ABM"
+    }
+  ]
+}

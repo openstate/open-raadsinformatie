@@ -1,0 +1,30 @@
+   {
+      "classification": "Municipality", 
+      "description": "Naamswijziging per 01-01-1964", 
+      "id": "e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+      "identifiers": [
+        {
+          "identifier": "GM0362", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Amstelveen", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_municipality/e4e4511eb17e93c630eedf04ad6db948f4a06124", 
+        "original_object_id": "GM0362", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:07.108440", 
+        "processing_started": "2015-09-28T12:28:07.089629", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_municipality"
+      }, 
+      "name": "Amstelveen"
+    }

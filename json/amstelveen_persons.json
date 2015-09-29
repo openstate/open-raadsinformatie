@@ -1,0 +1,2859 @@
+{
+  "meta": {
+    "took": 15, 
+    "total": 53
+  }, 
+  "persons": [
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "54f7737c035969a6ed15f59c97842cbe43320508", 
+      "identifiers": [
+        {
+          "identifier": "54f7737c035969a6ed15f59c97842cbe43320508", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129321", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "54f7737c035969a6ed15f59c97842cbe43320508", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "54f7737c035969a6ed15f59c97842cbe43320508", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/54f7737c035969a6ed15f59c97842cbe43320508", 
+        "original_object_id": "https://almanak.overheid.nl/129321/Amstelveen/Dhr._drs._F.P._Berkhout_CMA_CPC/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129321/Amstelveen/Dhr._drs._F.P._Berkhout_CMA_CPC/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.036900", 
+        "processing_started": "2015-09-28T12:34:59.109278", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. F.P. Berkhout CMA CPC"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "51196bd45c913488cb591a00f42dec607eaea01b", 
+      "identifiers": [
+        {
+          "identifier": "51196bd45c913488cb591a00f42dec607eaea01b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120871", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "51196bd45c913488cb591a00f42dec607eaea01b", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "oca", 
+            "name": "OCA"
+          }, 
+          "organisation_id": "oca", 
+          "person_id": "51196bd45c913488cb591a00f42dec607eaea01b", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/51196bd45c913488cb591a00f42dec607eaea01b", 
+        "original_object_id": "https://almanak.overheid.nl/120871/Amstelveen/Dhr._C.A._Spinhoven/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120871/Amstelveen/Dhr._C.A._Spinhoven/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.053575", 
+        "processing_started": "2015-09-28T12:34:59.226617", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. C.A. Spinhoven"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "487d92cf25ea53a226c2dd4541cc84183b580759", 
+      "identifiers": [
+        {
+          "identifier": "487d92cf25ea53a226c2dd4541cc84183b580759", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "79430", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadsgriffier", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "487d92cf25ea53a226c2dd4541cc84183b580759", 
+          "role": "Raadsgriffier"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/487d92cf25ea53a226c2dd4541cc84183b580759", 
+        "original_object_id": "https://almanak.overheid.nl/79430/Amstelveen/Mw._drs._P._Georgopoulou/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/79430/Amstelveen/Mw._drs._P._Georgopoulou/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.088077", 
+        "processing_started": "2015-09-28T12:34:59.525391", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. P. Georgopoulou"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "50e114a2c04d1d038d9e1ea9647651c7d857d7a9", 
+      "identifiers": [
+        {
+          "identifier": "50e114a2c04d1d038d9e1ea9647651c7d857d7a9", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "92431", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Locoburgemeester", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "50e114a2c04d1d038d9e1ea9647651c7d857d7a9", 
+          "role": "Locoburgemeester"
+        }, 
+        {
+          "label": "Locoburgemeester", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "50e114a2c04d1d038d9e1ea9647651c7d857d7a9", 
+          "role": "Locoburgemeester"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/50e114a2c04d1d038d9e1ea9647651c7d857d7a9", 
+        "original_object_id": "https://almanak.overheid.nl/92431/Amstelveen/Dhr._H.J.W._Raat/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/92431/Amstelveen/Dhr._H.J.W._Raat/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.100453", 
+        "processing_started": "2015-09-28T12:34:59.525392", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. H.J.W. Raat"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "1eacac2f29f960dc0adeaea94563fe2c7796948e", 
+      "identifiers": [
+        {
+          "identifier": "1eacac2f29f960dc0adeaea94563fe2c7796948e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126356", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "1eacac2f29f960dc0adeaea94563fe2c7796948e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "1eacac2f29f960dc0adeaea94563fe2c7796948e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/1eacac2f29f960dc0adeaea94563fe2c7796948e", 
+        "original_object_id": "https://almanak.overheid.nl/126356/Amstelveen/Dhr._R.K._Oord/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126356/Amstelveen/Dhr._R.K._Oord/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.100560", 
+        "processing_started": "2015-09-28T12:34:59.649069", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. R.K. Oord"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "25b61f085dbdebd11609e74e3a6d7cab7e38815d", 
+      "identifiers": [
+        {
+          "identifier": "25b61f085dbdebd11609e74e3a6d7cab7e38815d", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129323", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "25b61f085dbdebd11609e74e3a6d7cab7e38815d", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "25b61f085dbdebd11609e74e3a6d7cab7e38815d", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/25b61f085dbdebd11609e74e3a6d7cab7e38815d", 
+        "original_object_id": "https://almanak.overheid.nl/129323/Amstelveen/Dhr._ing._J.W._Bakker/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129323/Amstelveen/Dhr._ing._J.W._Bakker/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.121066", 
+        "processing_started": "2015-09-28T12:34:59.646746", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. ing. J.W. Bakker"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "dafd802b8ab587f920712f055f8d082abf6d536c", 
+      "identifiers": [
+        {
+          "identifier": "dafd802b8ab587f920712f055f8d082abf6d536c", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129324", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "dafd802b8ab587f920712f055f8d082abf6d536c", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "dafd802b8ab587f920712f055f8d082abf6d536c", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/dafd802b8ab587f920712f055f8d082abf6d536c", 
+        "original_object_id": "https://almanak.overheid.nl/129324/Amstelveen/Mw._E.A._Petiet_MSc/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129324/Amstelveen/Mw._E.A._Petiet_MSc/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.131717", 
+        "processing_started": "2015-09-28T12:34:59.762939", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. E.A. Petiet MSc"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "84f95e0687edbf03823520eb1c55bc2998460777", 
+      "identifiers": [
+        {
+          "identifier": "84f95e0687edbf03823520eb1c55bc2998460777", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "76286", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "84f95e0687edbf03823520eb1c55bc2998460777", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "84f95e0687edbf03823520eb1c55bc2998460777", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/84f95e0687edbf03823520eb1c55bc2998460777", 
+        "original_object_id": "https://almanak.overheid.nl/76286/Amstelveen/Mw._L._Roos/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/76286/Amstelveen/Mw._L._Roos/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.144630", 
+        "processing_started": "2015-09-28T12:34:59.764742", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. L. Roos"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "2e07528fc09bfff1e548cc2a8891285cdab3d758", 
+      "identifiers": [
+        {
+          "identifier": "2e07528fc09bfff1e548cc2a8891285cdab3d758", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126184", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "2e07528fc09bfff1e548cc2a8891285cdab3d758", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "2e07528fc09bfff1e548cc2a8891285cdab3d758", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/2e07528fc09bfff1e548cc2a8891285cdab3d758", 
+        "original_object_id": "https://almanak.overheid.nl/126184/Amstelveen/Dhr._drs._J.P.W._Groot/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126184/Amstelveen/Dhr._drs._J.P.W._Groot/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.156613", 
+        "processing_started": "2015-09-28T12:34:59.876999", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. J.P.W. Groot"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "6e01d8ab8b9b2f66aae9e0334bae1427ba3d847e", 
+      "identifiers": [
+        {
+          "identifier": "6e01d8ab8b9b2f66aae9e0334bae1427ba3d847e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120875", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "6e01d8ab8b9b2f66aae9e0334bae1427ba3d847e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "6e01d8ab8b9b2f66aae9e0334bae1427ba3d847e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/6e01d8ab8b9b2f66aae9e0334bae1427ba3d847e", 
+        "original_object_id": "https://almanak.overheid.nl/120875/Amstelveen/Dhr._F.A.M._van_Groeningen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120875/Amstelveen/Dhr._F.A.M._van_Groeningen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.174846", 
+        "processing_started": "2015-09-28T12:34:59.894644", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. F.A.M. van Groeningen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "c4377b1aeef1777faf04b02fc2b77f6db65ea76c", 
+      "identifiers": [
+        {
+          "identifier": "c4377b1aeef1777faf04b02fc2b77f6db65ea76c", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120876", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "c4377b1aeef1777faf04b02fc2b77f6db65ea76c", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "c4377b1aeef1777faf04b02fc2b77f6db65ea76c", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/c4377b1aeef1777faf04b02fc2b77f6db65ea76c", 
+        "original_object_id": "https://almanak.overheid.nl/120876/Amstelveen/Mw._A.A.J._van__Engelen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120876/Amstelveen/Mw._A.A.J._van__Engelen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.178390", 
+        "processing_started": "2015-09-28T12:34:59.986381", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. A.A.J. van  Engelen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "579c4f8eed3ba6ed356028389e86ea46b051886e", 
+      "identifiers": [
+        {
+          "identifier": "579c4f8eed3ba6ed356028389e86ea46b051886e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131137", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "579c4f8eed3ba6ed356028389e86ea46b051886e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "christenunie", 
+            "name": "ChristenUnie"
+          }, 
+          "organisation_id": "christenunie", 
+          "person_id": "579c4f8eed3ba6ed356028389e86ea46b051886e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/579c4f8eed3ba6ed356028389e86ea46b051886e", 
+        "original_object_id": "https://almanak.overheid.nl/131137/Amstelveen/Dhr._B._de_Pijper/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131137/Amstelveen/Dhr._B._de_Pijper/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.189151", 
+        "processing_started": "2015-09-28T12:35:00.032284", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. B. de Pijper"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "5cec30ea970ba6416c9cd8f3a9fb26294db3e4ff", 
+      "identifiers": [
+        {
+          "identifier": "5cec30ea970ba6416c9cd8f3a9fb26294db3e4ff", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129325", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "5cec30ea970ba6416c9cd8f3a9fb26294db3e4ff", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "5cec30ea970ba6416c9cd8f3a9fb26294db3e4ff", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/5cec30ea970ba6416c9cd8f3a9fb26294db3e4ff", 
+        "original_object_id": "https://almanak.overheid.nl/129325/Amstelveen/Dhr._drs._F.P._Berkhout_CMA_CPC/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129325/Amstelveen/Dhr._drs._F.P._Berkhout_CMA_CPC/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.195026", 
+        "processing_started": "2015-09-28T12:35:00.095759", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. F.P. Berkhout CMA CPC"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "9510367a5b6bf1545f13bfb013a642698957a5a0", 
+      "identifiers": [
+        {
+          "identifier": "9510367a5b6bf1545f13bfb013a642698957a5a0", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120877", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "9510367a5b6bf1545f13bfb013a642698957a5a0", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "9510367a5b6bf1545f13bfb013a642698957a5a0", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/9510367a5b6bf1545f13bfb013a642698957a5a0", 
+        "original_object_id": "https://almanak.overheid.nl/120877/Amstelveen/Dhr._drs._P._Meinhardt/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120877/Amstelveen/Dhr._drs._P._Meinhardt/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.203074", 
+        "processing_started": "2015-09-28T12:35:00.154431", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. P. Meinhardt"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "ebba2c2e0a413bbb19f1d5f3180a3e40b1990807", 
+      "identifiers": [
+        {
+          "identifier": "ebba2c2e0a413bbb19f1d5f3180a3e40b1990807", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120878", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "ebba2c2e0a413bbb19f1d5f3180a3e40b1990807", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "ebba2c2e0a413bbb19f1d5f3180a3e40b1990807", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/ebba2c2e0a413bbb19f1d5f3180a3e40b1990807", 
+        "original_object_id": "https://almanak.overheid.nl/120878/Amstelveen/Dhr._H._van_der__Steenhoven/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120878/Amstelveen/Dhr._H._van_der__Steenhoven/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.210325", 
+        "processing_started": "2015-09-28T12:35:00.206854", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. H. van der  Steenhoven"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "85ea5414d7e9babdd101401e4527c42d904ecc8f", 
+      "identifiers": [
+        {
+          "identifier": "85ea5414d7e9babdd101401e4527c42d904ecc8f", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120879", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "85ea5414d7e9babdd101401e4527c42d904ecc8f", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "85ea5414d7e9babdd101401e4527c42d904ecc8f", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/85ea5414d7e9babdd101401e4527c42d904ecc8f", 
+        "original_object_id": "https://almanak.overheid.nl/120879/Amstelveen/Dhr._ing._E._van_der__Waal/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120879/Amstelveen/Dhr._ing._E._van_der__Waal/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.217008", 
+        "processing_started": "2015-09-28T12:35:00.269213", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. ing. E. van der  Waal"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "39436c8a72a9a38226d05ac09938d9e3477d9206", 
+      "identifiers": [
+        {
+          "identifier": "39436c8a72a9a38226d05ac09938d9e3477d9206", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126357", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "39436c8a72a9a38226d05ac09938d9e3477d9206", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "39436c8a72a9a38226d05ac09938d9e3477d9206", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/39436c8a72a9a38226d05ac09938d9e3477d9206", 
+        "original_object_id": "https://almanak.overheid.nl/126357/Amstelveen/Dhr._mr._drs._R._Zuidbroek/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126357/Amstelveen/Dhr._mr._drs._R._Zuidbroek/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.227554", 
+        "processing_started": "2015-09-28T12:35:00.293454", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. mr. drs. R. Zuidbroek"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "125baecbba567ef7124d8908a70b916cd4ddd4f3", 
+      "identifiers": [
+        {
+          "identifier": "125baecbba567ef7124d8908a70b916cd4ddd4f3", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120880", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "125baecbba567ef7124d8908a70b916cd4ddd4f3", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "125baecbba567ef7124d8908a70b916cd4ddd4f3", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/125baecbba567ef7124d8908a70b916cd4ddd4f3", 
+        "original_object_id": "https://almanak.overheid.nl/120880/Amstelveen/Dhr._T._Aslanjan/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120880/Amstelveen/Dhr._T._Aslanjan/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.241035", 
+        "processing_started": "2015-09-28T12:35:00.391515", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. T. Aslanjan"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "4f61905abf58d3c49fc437538144b4c274ef025a", 
+      "identifiers": [
+        {
+          "identifier": "4f61905abf58d3c49fc437538144b4c274ef025a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120881", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "4f61905abf58d3c49fc437538144b4c274ef025a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "4f61905abf58d3c49fc437538144b4c274ef025a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/4f61905abf58d3c49fc437538144b4c274ef025a", 
+        "original_object_id": "https://almanak.overheid.nl/120881/Amstelveen/Mw._drs._F.C._Gordon/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120881/Amstelveen/Mw._drs._F.C._Gordon/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.245344", 
+        "processing_started": "2015-09-28T12:35:00.414153", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. F.C. Gordon"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "d235165db731ac10c742c59a7ab06788d1ed7cbf", 
+      "identifiers": [
+        {
+          "identifier": "d235165db731ac10c742c59a7ab06788d1ed7cbf", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120882", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "d235165db731ac10c742c59a7ab06788d1ed7cbf", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "d235165db731ac10c742c59a7ab06788d1ed7cbf", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/d235165db731ac10c742c59a7ab06788d1ed7cbf", 
+        "original_object_id": "https://almanak.overheid.nl/120882/Amstelveen/Mw._J.M.L._van_der__Vet/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120882/Amstelveen/Mw._J.M.L._van_der__Vet/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.256408", 
+        "processing_started": "2015-09-28T12:35:00.507502", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. J.M.L. van der  Vet"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "c3db738826929bfbff97a7d7dd0b238606ce3496", 
+      "identifiers": [
+        {
+          "identifier": "c3db738826929bfbff97a7d7dd0b238606ce3496", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129326", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "c3db738826929bfbff97a7d7dd0b238606ce3496", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "c3db738826929bfbff97a7d7dd0b238606ce3496", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/c3db738826929bfbff97a7d7dd0b238606ce3496", 
+        "original_object_id": "https://almanak.overheid.nl/129326/Amstelveen/Dhr._A.A.M._Boomgaars_BSC/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129326/Amstelveen/Dhr._A.A.M._Boomgaars_BSC/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.263472", 
+        "processing_started": "2015-09-28T12:35:00.547493", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. A.A.M. Boomgaars BSC"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "9187abc53a970480e7247aaf2a9d032c155c5d09", 
+      "identifiers": [
+        {
+          "identifier": "9187abc53a970480e7247aaf2a9d032c155c5d09", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120884", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "9187abc53a970480e7247aaf2a9d032c155c5d09", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "9187abc53a970480e7247aaf2a9d032c155c5d09", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/9187abc53a970480e7247aaf2a9d032c155c5d09", 
+        "original_object_id": "https://almanak.overheid.nl/120884/Amstelveen/Mw._drs._S.W._Kruijer/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120884/Amstelveen/Mw._drs._S.W._Kruijer/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.277053", 
+        "processing_started": "2015-09-28T12:35:00.653927", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. S.W. Kruijer"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "2f07df28086b7af1369cb81155c85fd9622319e8", 
+      "identifiers": [
+        {
+          "identifier": "2f07df28086b7af1369cb81155c85fd9622319e8", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120883", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "2f07df28086b7af1369cb81155c85fd9622319e8", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "2f07df28086b7af1369cb81155c85fd9622319e8", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/2f07df28086b7af1369cb81155c85fd9622319e8", 
+        "original_object_id": "https://almanak.overheid.nl/120883/Amstelveen/Dhr._M._Kortekaas/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120883/Amstelveen/Dhr._M._Kortekaas/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.286966", 
+        "processing_started": "2015-09-28T12:35:00.628599", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. M. Kortekaas"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "1be83f2eb35a0d3f089e8efa626ee5138827a992", 
+      "identifiers": [
+        {
+          "identifier": "1be83f2eb35a0d3f089e8efa626ee5138827a992", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "110469", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "1be83f2eb35a0d3f089e8efa626ee5138827a992", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "1be83f2eb35a0d3f089e8efa626ee5138827a992", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/1be83f2eb35a0d3f089e8efa626ee5138827a992", 
+        "original_object_id": "https://almanak.overheid.nl/110469/Amstelveen/Mw._drs._T.K._van_Wijnen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/110469/Amstelveen/Mw._drs._T.K._van_Wijnen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.296774", 
+        "processing_started": "2015-09-28T12:35:00.768093", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. T.K. van Wijnen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "ab324e766b6850243979a1ea587a24178f3f15b1", 
+      "identifiers": [
+        {
+          "identifier": "ab324e766b6850243979a1ea587a24178f3f15b1", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120885", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "ab324e766b6850243979a1ea587a24178f3f15b1", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "oca", 
+            "name": "OCA"
+          }, 
+          "organisation_id": "oca", 
+          "person_id": "ab324e766b6850243979a1ea587a24178f3f15b1", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/ab324e766b6850243979a1ea587a24178f3f15b1", 
+        "original_object_id": "https://almanak.overheid.nl/120885/Amstelveen/Dhr._C.A._Spinhoven/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120885/Amstelveen/Dhr._C.A._Spinhoven/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.309563", 
+        "processing_started": "2015-09-28T12:35:00.770399", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. C.A. Spinhoven"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "0d2df1b1673773a0591b2b626519e6e4fd26d523", 
+      "identifiers": [
+        {
+          "identifier": "0d2df1b1673773a0591b2b626519e6e4fd26d523", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128494", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Burgemeester", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "0d2df1b1673773a0591b2b626519e6e4fd26d523", 
+          "role": "Burgemeester"
+        }, 
+        {
+          "label": "Burgemeester", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "0d2df1b1673773a0591b2b626519e6e4fd26d523", 
+          "role": "Burgemeester"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/0d2df1b1673773a0591b2b626519e6e4fd26d523", 
+        "original_object_id": "https://almanak.overheid.nl/128494/Amstelveen/Mw._drs._M.M._van_'t_Veld/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128494/Amstelveen/Mw._drs._M.M._van_'t_Veld/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:01.661062", 
+        "processing_started": "2015-09-28T12:34:58.872932", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. M.M. van 't Veld"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "0348322d844215e8f9bf4f3c487db479ee9ad9d0", 
+      "identifiers": [
+        {
+          "identifier": "0348322d844215e8f9bf4f3c487db479ee9ad9d0", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "130237", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "0348322d844215e8f9bf4f3c487db479ee9ad9d0", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "0348322d844215e8f9bf4f3c487db479ee9ad9d0", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/0348322d844215e8f9bf4f3c487db479ee9ad9d0", 
+        "original_object_id": "https://almanak.overheid.nl/130237/Amstelveen/Dhr._ing._J.W._Bakker/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/130237/Amstelveen/Dhr._ing._J.W._Bakker/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:01.928301", 
+        "processing_started": "2015-09-28T12:34:58.876947", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. ing. J.W. Bakker"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "b67eb52e377a9037bd422c504f403d65ef346e12", 
+      "identifiers": [
+        {
+          "identifier": "b67eb52e377a9037bd422c504f403d65ef346e12", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126183", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "b67eb52e377a9037bd422c504f403d65ef346e12", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "b67eb52e377a9037bd422c504f403d65ef346e12", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/b67eb52e377a9037bd422c504f403d65ef346e12", 
+        "original_object_id": "https://almanak.overheid.nl/126183/Amstelveen/Dhr._drs._J.P.W._Groot/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126183/Amstelveen/Dhr._drs._J.P.W._Groot/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:01.945709", 
+        "processing_started": "2015-09-28T12:34:58.987691", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. J.P.W. Groot"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "e8c3687e1fc45a279289b2b7dba0158293e67a20", 
+      "identifiers": [
+        {
+          "identifier": "e8c3687e1fc45a279289b2b7dba0158293e67a20", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131700", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "e8c3687e1fc45a279289b2b7dba0158293e67a20", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "christenunie", 
+            "name": "ChristenUnie"
+          }, 
+          "organisation_id": "christenunie", 
+          "person_id": "e8c3687e1fc45a279289b2b7dba0158293e67a20", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/e8c3687e1fc45a279289b2b7dba0158293e67a20", 
+        "original_object_id": "https://almanak.overheid.nl/131700/Amstelveen/Dhr._B._de_Pijper/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131700/Amstelveen/Dhr._B._de_Pijper/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.035258", 
+        "processing_started": "2015-09-28T12:34:59.000239", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. B. de Pijper"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "e85863941e35fe74ba20f8774b980264d049bf70", 
+      "identifiers": [
+        {
+          "identifier": "e85863941e35fe74ba20f8774b980264d049bf70", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129322", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "e85863941e35fe74ba20f8774b980264d049bf70", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "e85863941e35fe74ba20f8774b980264d049bf70", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/e85863941e35fe74ba20f8774b980264d049bf70", 
+        "original_object_id": "https://almanak.overheid.nl/129322/Amstelveen/Dhr._A.A.M._Boomgaars_BSC/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129322/Amstelveen/Dhr._A.A.M._Boomgaars_BSC/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.051877", 
+        "processing_started": "2015-09-28T12:34:59.132982", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. A.A.M. Boomgaars BSC"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "efd5b7025080da1688b4ccdb941692e3c6ccfb24", 
+      "identifiers": [
+        {
+          "identifier": "efd5b7025080da1688b4ccdb941692e3c6ccfb24", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87525", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "efd5b7025080da1688b4ccdb941692e3c6ccfb24", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "efd5b7025080da1688b4ccdb941692e3c6ccfb24", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/efd5b7025080da1688b4ccdb941692e3c6ccfb24", 
+        "original_object_id": "https://almanak.overheid.nl/87525/Amstelveen/Dhr._J.L.M._van_Erp/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87525/Amstelveen/Dhr._J.L.M._van_Erp/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.068814", 
+        "processing_started": "2015-09-28T12:34:59.344809", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. J.L.M. van Erp"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "fec2eff11c97b5a6b684614e7edfa50b39452412", 
+      "identifiers": [
+        {
+          "identifier": "fec2eff11c97b5a6b684614e7edfa50b39452412", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127727", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "fec2eff11c97b5a6b684614e7edfa50b39452412", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "fec2eff11c97b5a6b684614e7edfa50b39452412", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/fec2eff11c97b5a6b684614e7edfa50b39452412", 
+        "original_object_id": "https://almanak.overheid.nl/127727/Amstelveen/Mw._mr._E.C._Veenboer/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127727/Amstelveen/Mw._mr._E.C._Veenboer/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.068748", 
+        "processing_started": "2015-09-28T12:34:59.269090", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. mr. E.C. Veenboer"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "6075b32a499e1996c15dc3d1615d81b0f198d48b", 
+      "identifiers": [
+        {
+          "identifier": "6075b32a499e1996c15dc3d1615d81b0f198d48b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87526", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "6075b32a499e1996c15dc3d1615d81b0f198d48b", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "6075b32a499e1996c15dc3d1615d81b0f198d48b", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/6075b32a499e1996c15dc3d1615d81b0f198d48b", 
+        "original_object_id": "https://almanak.overheid.nl/87526/Amstelveen/Dhr._mr._C.J._Noomen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87526/Amstelveen/Dhr._mr._C.J._Noomen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.085705", 
+        "processing_started": "2015-09-28T12:34:59.384397", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. mr. C.J. Noomen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "963eade9392ce92e97a2e4abafdbc8b9405ea29f", 
+      "identifiers": [
+        {
+          "identifier": "963eade9392ce92e97a2e4abafdbc8b9405ea29f", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120887", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "963eade9392ce92e97a2e4abafdbc8b9405ea29f", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "963eade9392ce92e97a2e4abafdbc8b9405ea29f", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/963eade9392ce92e97a2e4abafdbc8b9405ea29f", 
+        "original_object_id": "https://almanak.overheid.nl/120887/Amstelveen/Dhr._drs._H.J._van_den_Bergh/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120887/Amstelveen/Dhr._drs._H.J._van_den_Bergh/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.329217", 
+        "processing_started": "2015-09-28T12:35:00.892274", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. H.J. van den Bergh"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "92f1ca66c7fdb2eb124b0b3c6d480c67c60f2c21", 
+      "identifiers": [
+        {
+          "identifier": "92f1ca66c7fdb2eb124b0b3c6d480c67c60f2c21", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87531", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "92f1ca66c7fdb2eb124b0b3c6d480c67c60f2c21", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "92f1ca66c7fdb2eb124b0b3c6d480c67c60f2c21", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/92f1ca66c7fdb2eb124b0b3c6d480c67c60f2c21", 
+        "original_object_id": "https://almanak.overheid.nl/87531/Amstelveen/Dhr._P.M.J._Adriaans/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87531/Amstelveen/Dhr._P.M.J._Adriaans/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.374799", 
+        "processing_started": "2015-09-28T12:35:01.104676", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. P.M.J. Adriaans"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "017cd76946d9635962d3ef0f622200661febf43d", 
+      "identifiers": [
+        {
+          "identifier": "017cd76946d9635962d3ef0f622200661febf43d", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129328", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "017cd76946d9635962d3ef0f622200661febf43d", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "017cd76946d9635962d3ef0f622200661febf43d", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/017cd76946d9635962d3ef0f622200661febf43d", 
+        "original_object_id": "https://almanak.overheid.nl/129328/Amstelveen/Dhr._mr._V.L.M._Frequin/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129328/Amstelveen/Dhr._mr._V.L.M._Frequin/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.423043", 
+        "processing_started": "2015-09-28T12:35:01.416764", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. mr. V.L.M. Frequin"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "1e8b5ee6519bc2c6cad3dc1bd75bf0302e076d08", 
+      "identifiers": [
+        {
+          "identifier": "1e8b5ee6519bc2c6cad3dc1bd75bf0302e076d08", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129329", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "1e8b5ee6519bc2c6cad3dc1bd75bf0302e076d08", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "1e8b5ee6519bc2c6cad3dc1bd75bf0302e076d08", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/1e8b5ee6519bc2c6cad3dc1bd75bf0302e076d08", 
+        "original_object_id": "https://almanak.overheid.nl/129329/Amstelveen/Dhr._T.P._Ponjee_MSc/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129329/Amstelveen/Dhr._T.P._Ponjee_MSc/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.437473", 
+        "processing_started": "2015-09-28T12:35:01.537045", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. T.P. Ponjee MSc"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "2159c7b06bcb9378e45f5bf9b9ca5021aebb76ea", 
+      "identifiers": [
+        {
+          "identifier": "2159c7b06bcb9378e45f5bf9b9ca5021aebb76ea", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "76315", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "2159c7b06bcb9378e45f5bf9b9ca5021aebb76ea", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "2159c7b06bcb9378e45f5bf9b9ca5021aebb76ea", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/2159c7b06bcb9378e45f5bf9b9ca5021aebb76ea", 
+        "original_object_id": "https://almanak.overheid.nl/76315/Amstelveen/Dhr._W.B._Vervenne/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/76315/Amstelveen/Dhr._W.B._Vervenne/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.451339", 
+        "processing_started": "2015-09-28T12:35:01.606470", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. W.B. Vervenne"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "60c038c24bebcc2c7f439dae498a1c2fc8c52d4b", 
+      "identifiers": [
+        {
+          "identifier": "60c038c24bebcc2c7f439dae498a1c2fc8c52d4b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87536", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "60c038c24bebcc2c7f439dae498a1c2fc8c52d4b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "60c038c24bebcc2c7f439dae498a1c2fc8c52d4b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/60c038c24bebcc2c7f439dae498a1c2fc8c52d4b", 
+        "original_object_id": "https://almanak.overheid.nl/87536/Amstelveen/Mw._I.T._Gast/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87536/Amstelveen/Mw._I.T._Gast/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.457798", 
+        "processing_started": "2015-09-28T12:35:01.707518", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. I.T. Gast"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "a6d5b71aad8a8461204bbaf3e31bbee0f8a02c26", 
+      "identifiers": [
+        {
+          "identifier": "a6d5b71aad8a8461204bbaf3e31bbee0f8a02c26", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123633", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "a6d5b71aad8a8461204bbaf3e31bbee0f8a02c26", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "bba", 
+            "name": "BBA"
+          }, 
+          "organisation_id": "bba", 
+          "person_id": "a6d5b71aad8a8461204bbaf3e31bbee0f8a02c26", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/a6d5b71aad8a8461204bbaf3e31bbee0f8a02c26", 
+        "original_object_id": "https://almanak.overheid.nl/123633/Amstelveen/Dhr._P.A._Bot/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123633/Amstelveen/Dhr._P.A._Bot/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.467818", 
+        "processing_started": "2015-09-28T12:35:01.710494", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. P.A. Bot"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "85854cad7407fa8412263a84dcdbdef10fd72c84", 
+      "identifiers": [
+        {
+          "identifier": "85854cad7407fa8412263a84dcdbdef10fd72c84", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123635", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "85854cad7407fa8412263a84dcdbdef10fd72c84", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "85854cad7407fa8412263a84dcdbdef10fd72c84", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/85854cad7407fa8412263a84dcdbdef10fd72c84", 
+        "original_object_id": "https://almanak.overheid.nl/123635/Amstelveen/Dhr._J.N._Brandes/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123635/Amstelveen/Dhr._J.N._Brandes/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.472430", 
+        "processing_started": "2015-09-28T12:35:01.815316", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. J.N. Brandes"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "1c67f360c2b61fadba0ab4888e42fda3dd8e4897", 
+      "identifiers": [
+        {
+          "identifier": "1c67f360c2b61fadba0ab4888e42fda3dd8e4897", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123634", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "1c67f360c2b61fadba0ab4888e42fda3dd8e4897", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "1c67f360c2b61fadba0ab4888e42fda3dd8e4897", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/1c67f360c2b61fadba0ab4888e42fda3dd8e4897", 
+        "original_object_id": "https://almanak.overheid.nl/123634/Amstelveen/Mw._M._Veeningen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123634/Amstelveen/Mw._M._Veeningen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.482461", 
+        "processing_started": "2015-09-28T12:35:01.804213", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. M. Veeningen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "ef34e7318aa7813e8d99bff03df7824c78530425", 
+      "identifiers": [
+        {
+          "identifier": "ef34e7318aa7813e8d99bff03df7824c78530425", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "84459", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "ef34e7318aa7813e8d99bff03df7824c78530425", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "ef34e7318aa7813e8d99bff03df7824c78530425", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/ef34e7318aa7813e8d99bff03df7824c78530425", 
+        "original_object_id": "https://almanak.overheid.nl/84459/Amstelveen/Dhr._H.J.W._Raat/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/84459/Amstelveen/Dhr._H.J.W._Raat/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.496329", 
+        "processing_started": "2015-09-28T12:35:01.928354", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. H.J.W. Raat"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "c7e46fa1ea55f9f473ba84c684d854d7366031fa", 
+      "identifiers": [
+        {
+          "identifier": "c7e46fa1ea55f9f473ba84c684d854d7366031fa", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120886", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "c7e46fa1ea55f9f473ba84c684d854d7366031fa", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "oca", 
+            "name": "OCA"
+          }, 
+          "organisation_id": "oca", 
+          "person_id": "c7e46fa1ea55f9f473ba84c684d854d7366031fa", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/c7e46fa1ea55f9f473ba84c684d854d7366031fa", 
+        "original_object_id": "https://almanak.overheid.nl/120886/Amstelveen/Mw._J.C.E._Tang/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120886/Amstelveen/Mw._J.C.E._Tang/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.318453", 
+        "processing_started": "2015-09-28T12:35:00.878090", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. J.C.E. Tang"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "6311b3b179687bf707c376c4ec6a222b35c0ab03", 
+      "identifiers": [
+        {
+          "identifier": "6311b3b179687bf707c376c4ec6a222b35c0ab03", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126358", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "6311b3b179687bf707c376c4ec6a222b35c0ab03", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "6311b3b179687bf707c376c4ec6a222b35c0ab03", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/6311b3b179687bf707c376c4ec6a222b35c0ab03", 
+        "original_object_id": "https://almanak.overheid.nl/126358/Amstelveen/Mw._drs._P.A._van__Mourik/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126358/Amstelveen/Mw._drs._P.A._van__Mourik/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.355727", 
+        "processing_started": "2015-09-28T12:35:00.986833", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. drs. P.A. van  Mourik"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "54fcf44985346b3230bef2bdfe4da06e1cca84e8", 
+      "identifiers": [
+        {
+          "identifier": "54fcf44985346b3230bef2bdfe4da06e1cca84e8", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "76308", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "54fcf44985346b3230bef2bdfe4da06e1cca84e8", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "54fcf44985346b3230bef2bdfe4da06e1cca84e8", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/54fcf44985346b3230bef2bdfe4da06e1cca84e8", 
+        "original_object_id": "https://almanak.overheid.nl/76308/Amstelveen/Mw._mr._E.C._Veenboer/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/76308/Amstelveen/Mw._mr._E.C._Veenboer/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.357612", 
+        "processing_started": "2015-09-28T12:35:00.990910", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. mr. E.C. Veenboer"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "d20585b37cb7e3ad9bdb0d020292cacf72b55916", 
+      "identifiers": [
+        {
+          "identifier": "d20585b37cb7e3ad9bdb0d020292cacf72b55916", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87530", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "d20585b37cb7e3ad9bdb0d020292cacf72b55916", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "d20585b37cb7e3ad9bdb0d020292cacf72b55916", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/d20585b37cb7e3ad9bdb0d020292cacf72b55916", 
+        "original_object_id": "https://almanak.overheid.nl/87530/Amstelveen/Dhr._J.L.M._van_Erp/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87530/Amstelveen/Dhr._J.L.M._van_Erp/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.374703", 
+        "processing_started": "2015-09-28T12:35:01.098857", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. J.L.M. van Erp"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "female", 
+      "id": "eb35d2e009e19318e5808972975815b2213c36da", 
+      "identifiers": [
+        {
+          "identifier": "eb35d2e009e19318e5808972975815b2213c36da", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120888", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "eb35d2e009e19318e5808972975815b2213c36da", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "eb35d2e009e19318e5808972975815b2213c36da", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/eb35d2e009e19318e5808972975815b2213c36da", 
+        "original_object_id": "https://almanak.overheid.nl/120888/Amstelveen/Mw._M._Casadei/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120888/Amstelveen/Mw._M._Casadei/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.388935", 
+        "processing_started": "2015-09-28T12:35:01.209843", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Mw. M. Casadei"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "17cbcde77cd61420380dda2113e1e1237fe99867", 
+      "identifiers": [
+        {
+          "identifier": "17cbcde77cd61420380dda2113e1e1237fe99867", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "129327", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "17cbcde77cd61420380dda2113e1e1237fe99867", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "17cbcde77cd61420380dda2113e1e1237fe99867", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/17cbcde77cd61420380dda2113e1e1237fe99867", 
+        "original_object_id": "https://almanak.overheid.nl/129327/Amstelveen/Dhr._drs._P.M._Feenstra/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/129327/Amstelveen/Dhr._drs._P.M._Feenstra/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.389052", 
+        "processing_started": "2015-09-28T12:35:01.211732", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. drs. P.M. Feenstra"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "8c7ba6ef72081c4f15b7350b8256971867245e01", 
+      "identifiers": [
+        {
+          "identifier": "8c7ba6ef72081c4f15b7350b8256971867245e01", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "76317", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "8c7ba6ef72081c4f15b7350b8256971867245e01", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "8c7ba6ef72081c4f15b7350b8256971867245e01", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/8c7ba6ef72081c4f15b7350b8256971867245e01", 
+        "original_object_id": "https://almanak.overheid.nl/76317/Amstelveen/Dhr._mr._J.G._Bulsing/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/76317/Amstelveen/Dhr._mr._J.G._Bulsing/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.405831", 
+        "processing_started": "2015-09-28T12:35:01.312425", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. mr. J.G. Bulsing"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "4de960d6352b9258c4582a7ef725096676d079d2", 
+      "identifiers": [
+        {
+          "identifier": "4de960d6352b9258c4582a7ef725096676d079d2", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "76316", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "4de960d6352b9258c4582a7ef725096676d079d2", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "4de960d6352b9258c4582a7ef725096676d079d2", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/4de960d6352b9258c4582a7ef725096676d079d2", 
+        "original_object_id": "https://almanak.overheid.nl/76316/Amstelveen/Dhr._mr._C.J._Noomen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/76316/Amstelveen/Dhr._mr._C.J._Noomen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.408059", 
+        "processing_started": "2015-09-28T12:35:01.300144", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. mr. C.J. Noomen"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "ba20752ca0201912cbedb9621a55ce7d2c53d46a", 
+      "identifiers": [
+        {
+          "identifier": "ba20752ca0201912cbedb9621a55ce7d2c53d46a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "120889", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "ba20752ca0201912cbedb9621a55ce7d2c53d46a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "ba20752ca0201912cbedb9621a55ce7d2c53d46a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/ba20752ca0201912cbedb9621a55ce7d2c53d46a", 
+        "original_object_id": "https://almanak.overheid.nl/120889/Amstelveen/Dhr._R._Ellermeijer_RA/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/120889/Amstelveen/Dhr._R._Ellermeijer_RA/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.423100", 
+        "processing_started": "2015-09-28T12:35:01.418421", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. R. Ellermeijer RA"
+    }, 
+    {
+      "email": "gemeente@amstelveen.nl", 
+      "gender": "male", 
+      "id": "cd46981dcdfdb8982718ab876e80bf0319fbec2b", 
+      "identifiers": [
+        {
+          "identifier": "cd46981dcdfdb8982718ab876e80bf0319fbec2b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "126359", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-amstelveen-amstelveen-nh", 
+            "name": "Gemeente Amstelveen (Amstelveen) (NH)"
+          }, 
+          "organisation_id": "gemeente-amstelveen-amstelveen-nh", 
+          "person_id": "cd46981dcdfdb8982718ab876e80bf0319fbec2b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "cd46981dcdfdb8982718ab876e80bf0319fbec2b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Amstelveen () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/amstelveen_persons/cd46981dcdfdb8982718ab876e80bf0319fbec2b", 
+        "original_object_id": "https://almanak.overheid.nl/126359/Amstelveen/Dhr._R._Snoek/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/126359/Amstelveen/Dhr._R._Snoek/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:02.437472", 
+        "processing_started": "2015-09-28T12:35:01.516218", 
+        "rights": "undefined", 
+        "source_id": "amstelveen_persons"
+      }, 
+      "name": "Dhr. R. Snoek"
+    }
+  ]
+}

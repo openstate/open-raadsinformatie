@@ -1,0 +1,2632 @@
+{
+  "meta": {
+    "took": 22, 
+    "total": 49
+  }, 
+  "persons": [
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "8e5dd772af1e10094f752af0b2603d7a154567cc", 
+      "identifiers": [
+        {
+          "identifier": "8e5dd772af1e10094f752af0b2603d7a154567cc", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "70973", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Burgemeester", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "8e5dd772af1e10094f752af0b2603d7a154567cc", 
+          "role": "Burgemeester"
+        }, 
+        {
+          "label": "Burgemeester", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "8e5dd772af1e10094f752af0b2603d7a154567cc", 
+          "role": "Burgemeester"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/8e5dd772af1e10094f752af0b2603d7a154567cc", 
+        "original_object_id": "https://almanak.overheid.nl/70973/Den_Helder/Dhr._K.F._Schuiling/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/70973/Den_Helder/Dhr._K.F._Schuiling/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:35.939181", 
+        "processing_started": "2015-09-28T12:35:32.967146", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. K.F. Schuiling"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "95dda1ebd1f73c2e6e1690767964c43afba2ff8f", 
+      "identifiers": [
+        {
+          "identifier": "95dda1ebd1f73c2e6e1690767964c43afba2ff8f", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122706", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "95dda1ebd1f73c2e6e1690767964c43afba2ff8f", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "behoorlijk-bestuur", 
+            "name": "Behoorlijk Bestuur"
+          }, 
+          "organisation_id": "behoorlijk-bestuur", 
+          "person_id": "95dda1ebd1f73c2e6e1690767964c43afba2ff8f", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/95dda1ebd1f73c2e6e1690767964c43afba2ff8f", 
+        "original_object_id": "https://almanak.overheid.nl/122706/Den_Helder/Dhr._M.C._Wouters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122706/Den_Helder/Dhr._M.C._Wouters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.071264", 
+        "processing_started": "2015-09-28T12:35:32.970009", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M.C. Wouters"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "d646ba9bd45cbb9fc2d221eb742c33d95b426e37", 
+      "identifiers": [
+        {
+          "identifier": "d646ba9bd45cbb9fc2d221eb742c33d95b426e37", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122707", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d646ba9bd45cbb9fc2d221eb742c33d95b426e37", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "d646ba9bd45cbb9fc2d221eb742c33d95b426e37", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d646ba9bd45cbb9fc2d221eb742c33d95b426e37", 
+        "original_object_id": "https://almanak.overheid.nl/122707/Den_Helder/Dhr._E.M._Krijns/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122707/Den_Helder/Dhr._E.M._Krijns/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.073878", 
+        "processing_started": "2015-09-28T12:35:33.084530", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. E.M. Krijns"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "a410897b128cfed86b3c8f1d3672199995d7c308", 
+      "identifiers": [
+        {
+          "identifier": "a410897b128cfed86b3c8f1d3672199995d7c308", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122555", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "a410897b128cfed86b3c8f1d3672199995d7c308", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "christenunie", 
+            "name": "ChristenUnie"
+          }, 
+          "organisation_id": "christenunie", 
+          "person_id": "a410897b128cfed86b3c8f1d3672199995d7c308", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/a410897b128cfed86b3c8f1d3672199995d7c308", 
+        "original_object_id": "https://almanak.overheid.nl/122555/Den_Helder/Mw._T._Biersteker/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122555/Den_Helder/Mw._T._Biersteker/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.085673", 
+        "processing_started": "2015-09-28T12:35:33.095761", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. T. Biersteker"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f", 
+      "identifiers": [
+        {
+          "identifier": "ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "87801", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f", 
+        "original_object_id": "https://almanak.overheid.nl/87801/Den_Helder/Dhr._L._Kuipers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/87801/Den_Helder/Dhr._L._Kuipers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.089802", 
+        "processing_started": "2015-09-28T12:35:33.214704", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. L. Kuipers"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f", 
+      "identifiers": [
+        {
+          "identifier": "d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127426", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "fractie-vermooten", 
+            "name": "Fractie Vermooten"
+          }, 
+          "organisation_id": "fractie-vermooten", 
+          "person_id": "d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f", 
+        "original_object_id": "https://almanak.overheid.nl/127426/Den_Helder/Dhr._M._Vermooten/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127426/Den_Helder/Dhr._M._Vermooten/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.097880", 
+        "processing_started": "2015-09-28T12:35:33.227986", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M. Vermooten"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51", 
+      "identifiers": [
+        {
+          "identifier": "cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "77882", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51", 
+        "original_object_id": "https://almanak.overheid.nl/77882/Den_Helder/Mw._C.J._Dol-Cremers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/77882/Den_Helder/Mw._C.J._Dol-Cremers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.103030", 
+        "processing_started": "2015-09-28T12:35:33.346397", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. C.J. Dol-Cremers"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b", 
+      "identifiers": [
+        {
+          "identifier": "c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123281", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "helder-onafhankelijk", 
+            "name": "Helder Onafhankelijk!"
+          }, 
+          "organisation_id": "helder-onafhankelijk", 
+          "person_id": "c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b", 
+        "original_object_id": "https://almanak.overheid.nl/123281/Den_Helder/Mw._R._Post/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123281/Den_Helder/Mw._R._Post/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.114948", 
+        "processing_started": "2015-09-28T12:35:33.351705", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. R. Post"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "16fb10cd464932a7b30018a51238e4241dcca617", 
+      "identifiers": [
+        {
+          "identifier": "16fb10cd464932a7b30018a51238e4241dcca617", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122784", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "16fb10cd464932a7b30018a51238e4241dcca617", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "16fb10cd464932a7b30018a51238e4241dcca617", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/16fb10cd464932a7b30018a51238e4241dcca617", 
+        "original_object_id": "https://almanak.overheid.nl/122784/Den_Helder/Mw._F.F._van_der_Paard/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122784/Den_Helder/Mw._F.F._van_der_Paard/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.119251", 
+        "processing_started": "2015-09-28T12:35:33.447168", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. F.F. van der Paard"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "7c1196b22f51a4d2209b3250b983cc5e3a51e00d", 
+      "identifiers": [
+        {
+          "identifier": "7c1196b22f51a4d2209b3250b983cc5e3a51e00d", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123282", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "7c1196b22f51a4d2209b3250b983cc5e3a51e00d", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "7c1196b22f51a4d2209b3250b983cc5e3a51e00d", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/7c1196b22f51a4d2209b3250b983cc5e3a51e00d", 
+        "original_object_id": "https://almanak.overheid.nl/123282/Den_Helder/Dhr._P.R._Reenders/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123282/Den_Helder/Dhr._P.R._Reenders/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.129306", 
+        "processing_started": "2015-09-28T12:35:33.497270", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P.R. Reenders"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "95a1340b1f85c9cf321d8b457e43d0b4e3c02630", 
+      "identifiers": [
+        {
+          "identifier": "95a1340b1f85c9cf321d8b457e43d0b4e3c02630", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131652", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "95a1340b1f85c9cf321d8b457e43d0b4e3c02630", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vrije-socialisten", 
+            "name": "Vrije Socialisten"
+          }, 
+          "organisation_id": "vrije-socialisten", 
+          "person_id": "95a1340b1f85c9cf321d8b457e43d0b4e3c02630", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/95a1340b1f85c9cf321d8b457e43d0b4e3c02630", 
+        "original_object_id": "https://almanak.overheid.nl/131652/Den_Helder/Mw._K._van_Driesten/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131652/Den_Helder/Mw._K._van_Driesten/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.136914", 
+        "processing_started": "2015-09-28T12:35:33.587976", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. K. van Driesten"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "2733142a65980a4a0b132c4750204517e8f44fd7", 
+      "identifiers": [
+        {
+          "identifier": "2733142a65980a4a0b132c4750204517e8f44fd7", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "118912", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "2733142a65980a4a0b132c4750204517e8f44fd7", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "2733142a65980a4a0b132c4750204517e8f44fd7", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/2733142a65980a4a0b132c4750204517e8f44fd7", 
+        "original_object_id": "https://almanak.overheid.nl/118912/Den_Helder/Dhr._B.O.B._Haitsma/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/118912/Den_Helder/Dhr._B.O.B._Haitsma/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.143402", 
+        "processing_started": "2015-09-28T12:35:33.611701", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. B.O.B. Haitsma"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "d3228dc2e838235efba39cefc1bfa92c12cd7f60", 
+      "identifiers": [
+        {
+          "identifier": "d3228dc2e838235efba39cefc1bfa92c12cd7f60", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "125721", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadsgriffier", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d3228dc2e838235efba39cefc1bfa92c12cd7f60", 
+          "role": "Raadsgriffier"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d3228dc2e838235efba39cefc1bfa92c12cd7f60", 
+        "original_object_id": "https://almanak.overheid.nl/125721/Den_Helder/Dhr._M.E._Huisman/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/125721/Den_Helder/Dhr._M.E._Huisman/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.152623", 
+        "processing_started": "2015-09-28T12:35:33.745316", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M.E. Huisman"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "d0c550bfc092b328b223550a01340732e420e511", 
+      "identifiers": [
+        {
+          "identifier": "d0c550bfc092b328b223550a01340732e420e511", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128363", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Locoburgemeester", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d0c550bfc092b328b223550a01340732e420e511", 
+          "role": "Locoburgemeester"
+        }, 
+        {
+          "label": "Locoburgemeester", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij", 
+            "name": "Stadspartij"
+          }, 
+          "organisation_id": "stadspartij", 
+          "person_id": "d0c550bfc092b328b223550a01340732e420e511", 
+          "role": "Locoburgemeester"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d0c550bfc092b328b223550a01340732e420e511", 
+        "original_object_id": "https://almanak.overheid.nl/128363/Den_Helder/Dhr._P.J.R._Kos/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128363/Den_Helder/Dhr._P.J.R._Kos/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.160016", 
+        "processing_started": "2015-09-28T12:35:33.727826", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P.J.R. Kos"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "1186b8ea893bf87492695965af2f83d709605cd6", 
+      "identifiers": [
+        {
+          "identifier": "1186b8ea893bf87492695965af2f83d709605cd6", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123283", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "1186b8ea893bf87492695965af2f83d709605cd6", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "1186b8ea893bf87492695965af2f83d709605cd6", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/1186b8ea893bf87492695965af2f83d709605cd6", 
+        "original_object_id": "https://almanak.overheid.nl/123283/Den_Helder/Dhr._C.M._Bazen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123283/Den_Helder/Dhr._C.M._Bazen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.167721", 
+        "processing_started": "2015-09-28T12:35:33.877923", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. C.M. Bazen"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "5b3ea136ca3599af6d13477a967f868b4cb490ac", 
+      "identifiers": [
+        {
+          "identifier": "5b3ea136ca3599af6d13477a967f868b4cb490ac", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122709", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "5b3ea136ca3599af6d13477a967f868b4cb490ac", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "behoorlijk-bestuur", 
+            "name": "Behoorlijk Bestuur"
+          }, 
+          "organisation_id": "behoorlijk-bestuur", 
+          "person_id": "5b3ea136ca3599af6d13477a967f868b4cb490ac", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/5b3ea136ca3599af6d13477a967f868b4cb490ac", 
+        "original_object_id": "https://almanak.overheid.nl/122709/Den_Helder/Dhr._M.C._Wouters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122709/Den_Helder/Dhr._M.C._Wouters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.178785", 
+        "processing_started": "2015-09-28T12:35:33.875768", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M.C. Wouters"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "989c5b38878a166c1ef1051d77b03f4e7b23bcda", 
+      "identifiers": [
+        {
+          "identifier": "989c5b38878a166c1ef1051d77b03f4e7b23bcda", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122710", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "989c5b38878a166c1ef1051d77b03f4e7b23bcda", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "989c5b38878a166c1ef1051d77b03f4e7b23bcda", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/989c5b38878a166c1ef1051d77b03f4e7b23bcda", 
+        "original_object_id": "https://almanak.overheid.nl/122710/Den_Helder/Dhr._E.M._Krijns/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122710/Den_Helder/Dhr._E.M._Krijns/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.186761", 
+        "processing_started": "2015-09-28T12:35:33.982879", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. E.M. Krijns"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9", 
+      "identifiers": [
+        {
+          "identifier": "cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122906", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9", 
+        "original_object_id": "https://almanak.overheid.nl/122906/Den_Helder/Dhr._R._Slort/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122906/Den_Helder/Dhr._R._Slort/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.193914", 
+        "processing_started": "2015-09-28T12:35:33.984876", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. R. Slort"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "a5db41e17594e64bfe585fa15875fdb41f743418", 
+      "identifiers": [
+        {
+          "identifier": "a5db41e17594e64bfe585fa15875fdb41f743418", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122786", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "a5db41e17594e64bfe585fa15875fdb41f743418", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "a5db41e17594e64bfe585fa15875fdb41f743418", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/a5db41e17594e64bfe585fa15875fdb41f743418", 
+        "original_object_id": "https://almanak.overheid.nl/122786/Den_Helder/Mw._S.H.M._Houtveen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122786/Den_Helder/Mw._S.H.M._Houtveen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.201057", 
+        "processing_started": "2015-09-28T12:35:34.078735", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. S.H.M. Houtveen"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "0073009b072899483a5bf2256ff78a3d08f1f2ef", 
+      "identifiers": [
+        {
+          "identifier": "0073009b072899483a5bf2256ff78a3d08f1f2ef", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122558", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "0073009b072899483a5bf2256ff78a3d08f1f2ef", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "christenunie", 
+            "name": "ChristenUnie"
+          }, 
+          "organisation_id": "christenunie", 
+          "person_id": "0073009b072899483a5bf2256ff78a3d08f1f2ef", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/0073009b072899483a5bf2256ff78a3d08f1f2ef", 
+        "original_object_id": "https://almanak.overheid.nl/122558/Den_Helder/Mw._T._Biersteker/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122558/Den_Helder/Mw._T._Biersteker/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.206808", 
+        "processing_started": "2015-09-28T12:35:34.117499", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. T. Biersteker"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "f9bb05475fcb46d28dd32510fdf528d7e4095e09", 
+      "identifiers": [
+        {
+          "identifier": "f9bb05475fcb46d28dd32510fdf528d7e4095e09", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "75877", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "f9bb05475fcb46d28dd32510fdf528d7e4095e09", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "f9bb05475fcb46d28dd32510fdf528d7e4095e09", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/f9bb05475fcb46d28dd32510fdf528d7e4095e09", 
+        "original_object_id": "https://almanak.overheid.nl/75877/Den_Helder/Dhr._F.C._Klut/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/75877/Den_Helder/Dhr._F.C._Klut/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.214433", 
+        "processing_started": "2015-09-28T12:35:34.192069", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. F.C. Klut"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "8fb8741f019c064f17e1ae689d94304f72b7df1d", 
+      "identifiers": [
+        {
+          "identifier": "8fb8741f019c064f17e1ae689d94304f72b7df1d", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "77891", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "8fb8741f019c064f17e1ae689d94304f72b7df1d", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "8fb8741f019c064f17e1ae689d94304f72b7df1d", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/8fb8741f019c064f17e1ae689d94304f72b7df1d", 
+        "original_object_id": "https://almanak.overheid.nl/77891/Den_Helder/Dhr._H.C._Baanstra/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/77891/Den_Helder/Dhr._H.C._Baanstra/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.220982", 
+        "processing_started": "2015-09-28T12:35:34.243644", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. H.C. Baanstra"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "821d9d71513879cb284709e9584ada6909ece037", 
+      "identifiers": [
+        {
+          "identifier": "821d9d71513879cb284709e9584ada6909ece037", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131897", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "821d9d71513879cb284709e9584ada6909ece037", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "821d9d71513879cb284709e9584ada6909ece037", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/821d9d71513879cb284709e9584ada6909ece037", 
+        "original_object_id": "https://almanak.overheid.nl/131897/Den_Helder/Dhr._J.P._Verhoef/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131897/Den_Helder/Dhr._J.P._Verhoef/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.228798", 
+        "processing_started": "2015-09-28T12:35:34.330072", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. J.P. Verhoef"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "bd9defc3a37a84efdb691666c2a896370fefae13", 
+      "identifiers": [
+        {
+          "identifier": "bd9defc3a37a84efdb691666c2a896370fefae13", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "83838", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "bd9defc3a37a84efdb691666c2a896370fefae13", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "bd9defc3a37a84efdb691666c2a896370fefae13", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/bd9defc3a37a84efdb691666c2a896370fefae13", 
+        "original_object_id": "https://almanak.overheid.nl/83838/Den_Helder/Dhr._L._Kuipers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/83838/Den_Helder/Dhr._L._Kuipers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.235254", 
+        "processing_started": "2015-09-28T12:35:34.369755", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. L. Kuipers"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "b2ef914e024797639fe06ee3f20b2c815c9a8f36", 
+      "identifiers": [
+        {
+          "identifier": "b2ef914e024797639fe06ee3f20b2c815c9a8f36", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127427", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "b2ef914e024797639fe06ee3f20b2c815c9a8f36", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "fractie-vermooten", 
+            "name": "Fractie Vermooten"
+          }, 
+          "organisation_id": "fractie-vermooten", 
+          "person_id": "b2ef914e024797639fe06ee3f20b2c815c9a8f36", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/b2ef914e024797639fe06ee3f20b2c815c9a8f36", 
+        "original_object_id": "https://almanak.overheid.nl/127427/Den_Helder/Dhr._M._Vermooten/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127427/Den_Helder/Dhr._M._Vermooten/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.242327", 
+        "processing_started": "2015-09-28T12:35:34.456483", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M. Vermooten"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "0e650408bc227c29e14c0ac6f485f3d0f2a52177", 
+      "identifiers": [
+        {
+          "identifier": "0e650408bc227c29e14c0ac6f485f3d0f2a52177", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "75879", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "0e650408bc227c29e14c0ac6f485f3d0f2a52177", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "groenlinks", 
+            "name": "GroenLinks"
+          }, 
+          "organisation_id": "groenlinks", 
+          "person_id": "0e650408bc227c29e14c0ac6f485f3d0f2a52177", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/0e650408bc227c29e14c0ac6f485f3d0f2a52177", 
+        "original_object_id": "https://almanak.overheid.nl/75879/Den_Helder/Mw._C.J._Dol-Cremers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/75879/Den_Helder/Mw._C.J._Dol-Cremers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.247556", 
+        "processing_started": "2015-09-28T12:35:34.486042", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. C.J. Dol-Cremers"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "b2c21c5591b09b5d1a6250ed2366de4c8bfe8f6b", 
+      "identifiers": [
+        {
+          "identifier": "b2c21c5591b09b5d1a6250ed2366de4c8bfe8f6b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "117283", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "b2c21c5591b09b5d1a6250ed2366de4c8bfe8f6b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "helder-onafhankelijk", 
+            "name": "Helder Onafhankelijk!"
+          }, 
+          "organisation_id": "helder-onafhankelijk", 
+          "person_id": "b2c21c5591b09b5d1a6250ed2366de4c8bfe8f6b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/b2c21c5591b09b5d1a6250ed2366de4c8bfe8f6b", 
+        "original_object_id": "https://almanak.overheid.nl/117283/Den_Helder/Mw._R._Post/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/117283/Den_Helder/Mw._R._Post/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.254929", 
+        "processing_started": "2015-09-28T12:35:34.571019", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. R. Post"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "2e74af7852253e2b5a3d5bb314b2105bd69145e7", 
+      "identifiers": [
+        {
+          "identifier": "2e74af7852253e2b5a3d5bb314b2105bd69145e7", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122897", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "2e74af7852253e2b5a3d5bb314b2105bd69145e7", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "2e74af7852253e2b5a3d5bb314b2105bd69145e7", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/2e74af7852253e2b5a3d5bb314b2105bd69145e7", 
+        "original_object_id": "https://almanak.overheid.nl/122897/Den_Helder/Dhr._P._de_Vrij/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122897/Den_Helder/Dhr._P._de_Vrij/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.261065", 
+        "processing_started": "2015-09-28T12:35:34.585573", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P. de Vrij"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "f2a7beba0558d8c5f8cf43ed55b327238ab13c41", 
+      "identifiers": [
+        {
+          "identifier": "f2a7beba0558d8c5f8cf43ed55b327238ab13c41", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "75884", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "f2a7beba0558d8c5f8cf43ed55b327238ab13c41", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "f2a7beba0558d8c5f8cf43ed55b327238ab13c41", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/f2a7beba0558d8c5f8cf43ed55b327238ab13c41", 
+        "original_object_id": "https://almanak.overheid.nl/75884/Den_Helder/Mw._F.F._van_der_Paard/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/75884/Den_Helder/Mw._F.F._van_der_Paard/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.271325", 
+        "processing_started": "2015-09-28T12:35:34.688741", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. F.F. van der Paard"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "6e272921008f8aad0b26f0088857387167906237", 
+      "identifiers": [
+        {
+          "identifier": "6e272921008f8aad0b26f0088857387167906237", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123285", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "6e272921008f8aad0b26f0088857387167906237", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "6e272921008f8aad0b26f0088857387167906237", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/6e272921008f8aad0b26f0088857387167906237", 
+        "original_object_id": "https://almanak.overheid.nl/123285/Den_Helder/Dhr._D.S._Salverda/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123285/Den_Helder/Dhr._D.S._Salverda/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.276102", 
+        "processing_started": "2015-09-28T12:35:34.708785", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. D.S. Salverda"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "e8dcdb5493728496aa50ad9bb97d78fbd1384c48", 
+      "identifiers": [
+        {
+          "identifier": "e8dcdb5493728496aa50ad9bb97d78fbd1384c48", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122711", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "e8dcdb5493728496aa50ad9bb97d78fbd1384c48", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "e8dcdb5493728496aa50ad9bb97d78fbd1384c48", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/e8dcdb5493728496aa50ad9bb97d78fbd1384c48", 
+        "original_object_id": "https://almanak.overheid.nl/122711/Den_Helder/Dhr._H._Nuninga/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122711/Den_Helder/Dhr._H._Nuninga/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.289147", 
+        "processing_started": "2015-09-28T12:35:34.797563", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. H. Nuninga"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "8e11e8fd7d38c7fc576290209f6e11c3a4f80d31", 
+      "identifiers": [
+        {
+          "identifier": "8e11e8fd7d38c7fc576290209f6e11c3a4f80d31", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "123287", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "8e11e8fd7d38c7fc576290209f6e11c3a4f80d31", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "8e11e8fd7d38c7fc576290209f6e11c3a4f80d31", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/8e11e8fd7d38c7fc576290209f6e11c3a4f80d31", 
+        "original_object_id": "https://almanak.overheid.nl/123287/Den_Helder/Dhr._H._van__Dongen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/123287/Den_Helder/Dhr._H._van__Dongen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.294103", 
+        "processing_started": "2015-09-28T12:35:34.823281", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. H. van  Dongen"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "d3636c5af5094f9bcd88376f7233ae77c1947ddd", 
+      "identifiers": [
+        {
+          "identifier": "d3636c5af5094f9bcd88376f7233ae77c1947ddd", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122713", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d3636c5af5094f9bcd88376f7233ae77c1947ddd", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "d3636c5af5094f9bcd88376f7233ae77c1947ddd", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d3636c5af5094f9bcd88376f7233ae77c1947ddd", 
+        "original_object_id": "https://almanak.overheid.nl/122713/Den_Helder/Dhr._M.W.B._Karhof/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122713/Den_Helder/Dhr._M.W.B._Karhof/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.301817", 
+        "processing_started": "2015-09-28T12:35:34.931374", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M.W.B. Karhof"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "c540b876c70fcf3a8e90474842d8221eecf0c78a", 
+      "identifiers": [
+        {
+          "identifier": "c540b876c70fcf3a8e90474842d8221eecf0c78a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122787", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "c540b876c70fcf3a8e90474842d8221eecf0c78a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "c540b876c70fcf3a8e90474842d8221eecf0c78a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/c540b876c70fcf3a8e90474842d8221eecf0c78a", 
+        "original_object_id": "https://almanak.overheid.nl/122787/Den_Helder/Dhr._N._van_Delft/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122787/Den_Helder/Dhr._N._van_Delft/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.307640", 
+        "processing_started": "2015-09-28T12:35:34.938493", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. N. van Delft"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "3f0667aeaa15771196b147d9d42411689e2b30a7", 
+      "identifiers": [
+        {
+          "identifier": "3f0667aeaa15771196b147d9d42411689e2b30a7", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "77895", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "3f0667aeaa15771196b147d9d42411689e2b30a7", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder", 
+            "name": "Stadspartij Den Helder"
+          }, 
+          "organisation_id": "stadspartij-den-helder", 
+          "person_id": "3f0667aeaa15771196b147d9d42411689e2b30a7", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/3f0667aeaa15771196b147d9d42411689e2b30a7", 
+        "original_object_id": "https://almanak.overheid.nl/77895/Den_Helder/Dhr._P.R._Reenders/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/77895/Den_Helder/Dhr._P.R._Reenders/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.316154", 
+        "processing_started": "2015-09-28T12:35:35.029893", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P.R. Reenders"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "02d155142173732db9844c923bc21fa4c2027617", 
+      "identifiers": [
+        {
+          "identifier": "02d155142173732db9844c923bc21fa4c2027617", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131999", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "02d155142173732db9844c923bc21fa4c2027617", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/02d155142173732db9844c923bc21fa4c2027617", 
+        "original_object_id": "https://almanak.overheid.nl/131999/Den_Helder/Dhr._M.L.C._de_Knijf/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131999/Den_Helder/Dhr._M.L.C._de_Knijf/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.321379", 
+        "processing_started": "2015-09-28T12:35:35.077749", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. M.L.C. de Knijf"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045", 
+      "identifiers": [
+        {
+          "identifier": "1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "132000", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder-2-0", 
+            "name": "Stadspartij Den Helder 2.0"
+          }, 
+          "organisation_id": "stadspartij-den-helder-2-0", 
+          "person_id": "1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045", 
+        "original_object_id": "https://almanak.overheid.nl/132000/Den_Helder/Dhr._G._Assorgia/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/132000/Den_Helder/Dhr._G._Assorgia/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.329320", 
+        "processing_started": "2015-09-28T12:35:35.161967", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. G. Assorgia"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "039f7eeba09d957551ec687e23cd7c5c6c3c8813", 
+      "identifiers": [
+        {
+          "identifier": "039f7eeba09d957551ec687e23cd7c5c6c3c8813", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "132001", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "039f7eeba09d957551ec687e23cd7c5c6c3c8813", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder-2-0", 
+            "name": "Stadspartij Den Helder 2.0"
+          }, 
+          "organisation_id": "stadspartij-den-helder-2-0", 
+          "person_id": "039f7eeba09d957551ec687e23cd7c5c6c3c8813", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/039f7eeba09d957551ec687e23cd7c5c6c3c8813", 
+        "original_object_id": "https://almanak.overheid.nl/132001/Den_Helder/Dhr._P._Koopman/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/132001/Den_Helder/Dhr._P._Koopman/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.335283", 
+        "processing_started": "2015-09-28T12:35:35.198940", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P. Koopman"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "a3138426114d33d33437b6d08953f2219fdc2f61", 
+      "identifiers": [
+        {
+          "identifier": "a3138426114d33d33437b6d08953f2219fdc2f61", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "132003", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "a3138426114d33d33437b6d08953f2219fdc2f61", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder-2-0", 
+            "name": "Stadspartij Den Helder 2.0"
+          }, 
+          "organisation_id": "stadspartij-den-helder-2-0", 
+          "person_id": "a3138426114d33d33437b6d08953f2219fdc2f61", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/a3138426114d33d33437b6d08953f2219fdc2f61", 
+        "original_object_id": "https://almanak.overheid.nl/132003/Den_Helder/Mw._J.E._Vorstman-Gorter/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/132003/Den_Helder/Mw._J.E._Vorstman-Gorter/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.342105", 
+        "processing_started": "2015-09-28T12:35:35.309710", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. J.E. Vorstman-Gorter"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "d278efe32f8d9c9af8756e11e452769a0ba313da", 
+      "identifiers": [
+        {
+          "identifier": "d278efe32f8d9c9af8756e11e452769a0ba313da", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "132002", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "d278efe32f8d9c9af8756e11e452769a0ba313da", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij-den-helder-2-0", 
+            "name": "Stadspartij Den Helder 2.0"
+          }, 
+          "organisation_id": "stadspartij-den-helder-2-0", 
+          "person_id": "d278efe32f8d9c9af8756e11e452769a0ba313da", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/d278efe32f8d9c9af8756e11e452769a0ba313da", 
+        "original_object_id": "https://almanak.overheid.nl/132002/Den_Helder/Mw._D.E._Pater/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/132002/Den_Helder/Mw._D.E._Pater/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.351947", 
+        "processing_started": "2015-09-28T12:35:35.290514", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. D.E. Pater"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "3f8bcf7458baa2106e17dc90524c6c34ab20293b", 
+      "identifiers": [
+        {
+          "identifier": "3f8bcf7458baa2106e17dc90524c6c34ab20293b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "77901", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "3f8bcf7458baa2106e17dc90524c6c34ab20293b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "3f8bcf7458baa2106e17dc90524c6c34ab20293b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/3f8bcf7458baa2106e17dc90524c6c34ab20293b", 
+        "original_object_id": "https://almanak.overheid.nl/77901/Den_Helder/Dhr._B.O.B._Haitsma/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/77901/Den_Helder/Dhr._B.O.B._Haitsma/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.357618", 
+        "processing_started": "2015-09-28T12:35:35.423099", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. B.O.B. Haitsma"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "ef74b992dca437eb3328f02ac0ef21e823201b90", 
+      "identifiers": [
+        {
+          "identifier": "ef74b992dca437eb3328f02ac0ef21e823201b90", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131653", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "ef74b992dca437eb3328f02ac0ef21e823201b90", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vrije-socialisten", 
+            "name": "Vrije Socialisten"
+          }, 
+          "organisation_id": "vrije-socialisten", 
+          "person_id": "ef74b992dca437eb3328f02ac0ef21e823201b90", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/ef74b992dca437eb3328f02ac0ef21e823201b90", 
+        "original_object_id": "https://almanak.overheid.nl/131653/Den_Helder/Mw._K._van_Driesten/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131653/Den_Helder/Mw._K._van_Driesten/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.367060", 
+        "processing_started": "2015-09-28T12:35:35.420944", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. K. van Driesten"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "067affd24368c5877cec0d0cab8dd8941647d9e3", 
+      "identifiers": [
+        {
+          "identifier": "067affd24368c5877cec0d0cab8dd8941647d9e3", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122715", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "067affd24368c5877cec0d0cab8dd8941647d9e3", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "067affd24368c5877cec0d0cab8dd8941647d9e3", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/067affd24368c5877cec0d0cab8dd8941647d9e3", 
+        "original_object_id": "https://almanak.overheid.nl/122715/Den_Helder/Dhr._J._Klopstra/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122715/Den_Helder/Dhr._J._Klopstra/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.371533", 
+        "processing_started": "2015-09-28T12:35:35.548897", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. J. Klopstra"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "e20680e9a2482a0448ef2188234fe2c85290c14b", 
+      "identifiers": [
+        {
+          "identifier": "e20680e9a2482a0448ef2188234fe2c85290c14b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128367", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "e20680e9a2482a0448ef2188234fe2c85290c14b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "e20680e9a2482a0448ef2188234fe2c85290c14b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/e20680e9a2482a0448ef2188234fe2c85290c14b", 
+        "original_object_id": "https://almanak.overheid.nl/128367/Den_Helder/Dhr._J.K._Visser/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128367/Den_Helder/Dhr._J.K._Visser/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.380556", 
+        "processing_started": "2015-09-28T12:35:35.551108", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. J.K. Visser"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "559a7ca37aa5db8c4abea33085a471f064da5df9", 
+      "identifiers": [
+        {
+          "identifier": "559a7ca37aa5db8c4abea33085a471f064da5df9", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122716", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "559a7ca37aa5db8c4abea33085a471f064da5df9", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "559a7ca37aa5db8c4abea33085a471f064da5df9", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/559a7ca37aa5db8c4abea33085a471f064da5df9", 
+        "original_object_id": "https://almanak.overheid.nl/122716/Den_Helder/Mw._J._Kostelijk-Schoon/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122716/Den_Helder/Mw._J._Kostelijk-Schoon/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.385348", 
+        "processing_started": "2015-09-28T12:35:35.673470", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. J. Kostelijk-Schoon"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "ca50997d99aaae6a783e1303b8d4893cc873fa95", 
+      "identifiers": [
+        {
+          "identifier": "ca50997d99aaae6a783e1303b8d4893cc873fa95", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127833", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "ca50997d99aaae6a783e1303b8d4893cc873fa95", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "christenunie-behoorlijk-bestuur-groenlinks", 
+            "name": "ChristenUnie/ Behoorlijk bestuur/ GroenLinks"
+          }, 
+          "organisation_id": "christenunie-behoorlijk-bestuur-groenlinks", 
+          "person_id": "ca50997d99aaae6a783e1303b8d4893cc873fa95", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/ca50997d99aaae6a783e1303b8d4893cc873fa95", 
+        "original_object_id": "https://almanak.overheid.nl/127833/Den_Helder/Dhr._O.R._Wagner/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127833/Den_Helder/Dhr._O.R._Wagner/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.393407", 
+        "processing_started": "2015-09-28T12:35:35.675135", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. O.R. Wagner"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "female", 
+      "id": "9189b630d442ec7e48decc50492b8e732b3f4568", 
+      "identifiers": [
+        {
+          "identifier": "9189b630d442ec7e48decc50492b8e732b3f4568", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "131312", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "9189b630d442ec7e48decc50492b8e732b3f4568", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij", 
+            "name": "Stadspartij"
+          }, 
+          "organisation_id": "stadspartij", 
+          "person_id": "9189b630d442ec7e48decc50492b8e732b3f4568", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/9189b630d442ec7e48decc50492b8e732b3f4568", 
+        "original_object_id": "https://almanak.overheid.nl/131312/Den_Helder/Mw._J.E.T.M._van_Dongen/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/131312/Den_Helder/Mw._J.E.T.M._van_Dongen/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.399589", 
+        "processing_started": "2015-09-28T12:35:35.798947", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Mw. J.E.T.M. van Dongen"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "6900935917395e5726212ec1032eff8bb0803955", 
+      "identifiers": [
+        {
+          "identifier": "6900935917395e5726212ec1032eff8bb0803955", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127836", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "6900935917395e5726212ec1032eff8bb0803955", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "stadspartij", 
+            "name": "Stadspartij"
+          }, 
+          "organisation_id": "stadspartij", 
+          "person_id": "6900935917395e5726212ec1032eff8bb0803955", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/6900935917395e5726212ec1032eff8bb0803955", 
+        "original_object_id": "https://almanak.overheid.nl/127836/Den_Helder/Dhr._P.J.R._Kos/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127836/Den_Helder/Dhr._P.J.R._Kos/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.406173", 
+        "processing_started": "2015-09-28T12:35:35.798269", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. P.J.R. Kos"
+    }, 
+    {
+      "email": "info@denhelder.nl", 
+      "gender": "male", 
+      "id": "2b5a390f983a399c125c156941f5e4725ede7b90", 
+      "identifiers": [
+        {
+          "identifier": "2b5a390f983a399c125c156941f5e4725ede7b90", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127837", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-den-helder-den-helder-nh", 
+            "name": "Gemeente Den Helder (Den Helder) (NH)"
+          }, 
+          "organisation_id": "gemeente-den-helder-den-helder-nh", 
+          "person_id": "2b5a390f983a399c125c156941f5e4725ede7b90", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vrije-socialisten-fractie-vermooten", 
+            "name": "Vrije socialisten/ Fractie Vermooten"
+          }, 
+          "organisation_id": "vrije-socialisten-fractie-vermooten", 
+          "person_id": "2b5a390f983a399c125c156941f5e4725ede7b90", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Den Helder () ()ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_persons/2b5a390f983a399c125c156941f5e4725ede7b90", 
+        "original_object_id": "https://almanak.overheid.nl/127837/Den_Helder/Dhr._D.R._Pastoor/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127837/Den_Helder/Dhr._D.R._Pastoor/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:36.424515", 
+        "processing_started": "2015-09-28T12:35:35.935764", 
+        "rights": "undefined", 
+        "source_id": "den_helder_persons"
+      }, 
+      "name": "Dhr. D.R. Pastoor"
+    }
+  ]
+}

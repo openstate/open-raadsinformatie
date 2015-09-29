@@ -1,0 +1,437 @@
+{
+  "meta": {
+    "took": 18, 
+    "total": 16
+  }, 
+  "organisations": [
+    {
+      "classification": "Municipality", 
+      "description": "Gemeentelijke herindeling per 01-01-2001\r\nBegindatum voor 1830", 
+      "id": "d27e62ce1e73f6d96e8f56d6411922155ce93853", 
+      "identifiers": [
+        {
+          "identifier": "GM0344", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "d27e62ce1e73f6d96e8f56d6411922155ce93853", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Utrecht (gemeente)", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_municipality/d27e62ce1e73f6d96e8f56d6411922155ce93853", 
+        "original_object_id": "GM0344", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:10.498980", 
+        "processing_started": "2015-09-28T12:28:10.493796", 
+        "rights": "undefined", 
+        "source_id": "utrecht_municipality"
+      }, 
+      "name": "Utrecht (gemeente)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "VVD", 
+      "id": "vvd", 
+      "identifiers": [
+        {
+          "identifier": "vvd", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "VVD", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/vvd", 
+        "original_object_id": "VVD", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.583172", 
+        "processing_started": "2015-09-28T12:29:20.576329", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "VVD"
+    }, 
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/AVATf-ZaOtzaa2jsv8f_", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.588494", 
+        "processing_started": "2015-09-28T12:29:20.576126", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }
+    }, 
+    {
+      "classification": "Council", 
+      "description": "Gemeente Utrecht (Utrecht) (UT)", 
+      "id": "gemeente-utrecht-utrecht-ut", 
+      "identifiers": [
+        {
+          "identifier": "gemeente-utrecht-utrecht-ut", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeente Utrecht (Utrecht) (UT)", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/gemeente-utrecht-utrecht-ut", 
+        "original_object_id": "Gemeente Utrecht (Utrecht) (UT)", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.633756", 
+        "processing_started": "2015-09-28T12:29:20.583140", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "Gemeente Utrecht (Utrecht) (UT)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "PvdA", 
+      "id": "pvda", 
+      "identifiers": [
+        {
+          "identifier": "pvda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "PvdA", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/pvda", 
+        "original_object_id": "PvdA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.679399", 
+        "processing_started": "2015-09-28T12:29:20.624343", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "PvdA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "D66", 
+      "id": "d66", 
+      "identifiers": [
+        {
+          "identifier": "d66", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "D66", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/d66", 
+        "original_object_id": "D66", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.733446", 
+        "processing_started": "2015-09-28T12:29:20.666616", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "D66"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "ChristenUnie", 
+      "id": "christenunie", 
+      "identifiers": [
+        {
+          "identifier": "christenunie", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "ChristenUnie", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/christenunie", 
+        "original_object_id": "ChristenUnie", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.748207", 
+        "processing_started": "2015-09-28T12:29:20.674776", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "ChristenUnie"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "CDA", 
+      "id": "cda", 
+      "identifiers": [
+        {
+          "identifier": "cda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "CDA", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/cda", 
+        "original_object_id": "CDA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.683483", 
+        "processing_started": "2015-09-28T12:29:20.624259", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "CDA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "GroenLinks", 
+      "id": "groenlinks", 
+      "identifiers": [
+        {
+          "identifier": "groenlinks", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "GroenLinks", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/groenlinks", 
+        "original_object_id": "GroenLinks", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.698983", 
+        "processing_started": "2015-09-28T12:29:20.633570", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "GroenLinks"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Partij voor de Dieren", 
+      "id": "partij-voor-de-dieren", 
+      "identifiers": [
+        {
+          "identifier": "partij-voor-de-dieren", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Partij voor de Dieren", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/partij-voor-de-dieren", 
+        "original_object_id": "Partij voor de Dieren", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.702331", 
+        "processing_started": "2015-09-28T12:29:20.645236", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "Partij voor de Dieren"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "SP", 
+      "id": "sp", 
+      "identifiers": [
+        {
+          "identifier": "sp", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "SP", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/sp", 
+        "original_object_id": "SP", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.718184", 
+        "processing_started": "2015-09-28T12:29:20.663107", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "SP"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Student & Starter", 
+      "id": "student-starter", 
+      "identifiers": [
+        {
+          "identifier": "student-starter", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Student & Starter", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/student-starter", 
+        "original_object_id": "Student & Starter", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.718132", 
+        "processing_started": "2015-09-28T12:29:20.659402", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "Student & Starter"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Stadsbelang Utrecht", 
+      "id": "stadsbelang-utrecht", 
+      "identifiers": [
+        {
+          "identifier": "stadsbelang-utrecht", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Stadsbelang Utrecht", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_organisations/stadsbelang-utrecht", 
+        "original_object_id": "Stadsbelang Utrecht", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:20.733442", 
+        "processing_started": "2015-09-28T12:29:20.670329", 
+        "rights": "undefined", 
+        "source_id": "utrecht_organisations"
+      }, 
+      "name": "Stadsbelang Utrecht"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Commissie Stad en Ruimte", 
+      "id": "commissie-stad-en-ruimte", 
+      "identifiers": [
+        {
+          "identifier": "commissie-stad-en-ruimte", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "4", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Commissie Stad en Ruimte", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_committees/commissie-stad-en-ruimte", 
+        "original_object_id": "Commissie Stad en Ruimte", 
+        "original_object_urls": {
+          "html": "Commissie Stad en Ruimte"
+        }, 
+        "processing_finished": "2015-09-28T12:33:48.853158", 
+        "processing_started": "2015-09-28T12:33:48.846844", 
+        "rights": "undefined", 
+        "source_id": "utrecht_committees"
+      }, 
+      "name": "Commissie Stad en Ruimte"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Commissie Mens en Samenleving", 
+      "id": "commissie-mens-en-samenleving", 
+      "identifiers": [
+        {
+          "identifier": "commissie-mens-en-samenleving", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "5", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Commissie Mens en Samenleving", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_committees/commissie-mens-en-samenleving", 
+        "original_object_id": "Commissie Mens en Samenleving", 
+        "original_object_urls": {
+          "html": "Commissie Mens en Samenleving"
+        }, 
+        "processing_finished": "2015-09-28T12:33:48.870583", 
+        "processing_started": "2015-09-28T12:33:48.850058", 
+        "rights": "undefined", 
+        "source_id": "utrecht_committees"
+      }, 
+      "name": "Commissie Mens en Samenleving"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Subcommissie Controle en Financien", 
+      "id": "subcommissie-controle-en-financien", 
+      "identifiers": [
+        {
+          "identifier": "subcommissie-controle-en-financien", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "6", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Subcommissie Controle en Financien", 
+        "ocd_url": "http://localhost:5000/v0/utrecht_committees/subcommissie-controle-en-financien", 
+        "original_object_id": "Subcommissie Controle en Financien", 
+        "original_object_urls": {
+          "html": "Subcommissie Controle en Financien"
+        }, 
+        "processing_finished": "2015-09-28T12:33:48.874724", 
+        "processing_started": "2015-09-28T12:33:48.858618", 
+        "rights": "undefined", 
+        "source_id": "utrecht_committees"
+      }, 
+      "name": "Subcommissie Controle en Financien"
+    }
+  ]
+}

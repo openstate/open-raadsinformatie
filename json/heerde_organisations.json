@@ -1,0 +1,303 @@
+{
+  "meta": {
+    "took": 5, 
+    "total": 11
+  }, 
+  "organisations": [
+    {
+      "classification": "Municipality", 
+      "description": "Begindatum voor 1830", 
+      "id": "3feabed46e79a2f0e36f87fd11347da05250b657", 
+      "identifiers": [
+        {
+          "identifier": "GM0246", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "3feabed46e79a2f0e36f87fd11347da05250b657", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Heerde", 
+        "ocd_url": "http://localhost:5000/v0/heerde_municipality/3feabed46e79a2f0e36f87fd11347da05250b657", 
+        "original_object_id": "GM0246", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:13.974737", 
+        "processing_started": "2015-09-28T12:28:13.970524", 
+        "rights": "undefined", 
+        "source_id": "heerde_municipality"
+      }, 
+      "name": "Heerde"
+    }, 
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/AVATgBJLOtzaa2jsv8gB", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.842147", 
+        "processing_started": "2015-09-28T12:29:31.836363", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }
+    }, 
+    {
+      "classification": "Party", 
+      "description": "CDA", 
+      "id": "cda", 
+      "identifiers": [
+        {
+          "identifier": "cda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "CDA", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/cda", 
+        "original_object_id": "CDA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.862530", 
+        "processing_started": "2015-09-28T12:29:31.838580", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "CDA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "PvdA", 
+      "id": "pvda", 
+      "identifiers": [
+        {
+          "identifier": "pvda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "PvdA", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/pvda", 
+        "original_object_id": "PvdA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.896429", 
+        "processing_started": "2015-09-28T12:29:31.846915", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "PvdA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "D66/GROENLINKS", 
+      "id": "d66-groenlinks", 
+      "identifiers": [
+        {
+          "identifier": "d66-groenlinks", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "D66/GROENLINKS", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/d66-groenlinks", 
+        "original_object_id": "D66/GROENLINKS", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.940319", 
+        "processing_started": "2015-09-28T12:29:31.870523", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "D66/GROENLINKS"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Gemeentebelang Boerenpartij", 
+      "id": "gemeentebelang-boerenpartij", 
+      "identifiers": [
+        {
+          "identifier": "gemeentebelang-boerenpartij", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeentebelang Boerenpartij", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/gemeentebelang-boerenpartij", 
+        "original_object_id": "Gemeentebelang Boerenpartij", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.953578", 
+        "processing_started": "2015-09-28T12:29:31.890388", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "Gemeentebelang Boerenpartij"
+    }, 
+    {
+      "classification": "Council", 
+      "description": "Gemeente Heerde (Heerde) (GLD)", 
+      "id": "gemeente-heerde-heerde-gld", 
+      "identifiers": [
+        {
+          "identifier": "gemeente-heerde-heerde-gld", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeente Heerde (Heerde) (GLD)", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/gemeente-heerde-heerde-gld", 
+        "original_object_id": "Gemeente Heerde (Heerde) (GLD)", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.958784", 
+        "processing_started": "2015-09-28T12:29:31.892992", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "Gemeente Heerde (Heerde) (GLD)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "VVD", 
+      "id": "vvd", 
+      "identifiers": [
+        {
+          "identifier": "vvd", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "VVD", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/vvd", 
+        "original_object_id": "VVD", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.968867", 
+        "processing_started": "2015-09-28T12:29:31.900574", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "VVD"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "ChristenUnie/SGP", 
+      "id": "christenunie-sgp", 
+      "identifiers": [
+        {
+          "identifier": "christenunie-sgp", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "ChristenUnie/SGP", 
+        "ocd_url": "http://localhost:5000/v0/heerde_organisations/christenunie-sgp", 
+        "original_object_id": "ChristenUnie/SGP", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/23411/Gemeente_Heerde/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:31.982399", 
+        "processing_started": "2015-09-28T12:29:31.934000", 
+        "rights": "undefined", 
+        "source_id": "heerde_organisations"
+      }, 
+      "name": "ChristenUnie/SGP"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Commissie Ruimte", 
+      "id": "commissie-ruimte", 
+      "identifiers": [
+        {
+          "identifier": "commissie-ruimte", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "3", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Commissie Ruimte", 
+        "ocd_url": "http://localhost:5000/v0/heerde_committees/commissie-ruimte", 
+        "original_object_id": "Commissie Ruimte", 
+        "original_object_urls": {
+          "html": "Commissie Ruimte"
+        }, 
+        "processing_finished": "2015-09-28T12:34:00.197380", 
+        "processing_started": "2015-09-28T12:34:00.190072", 
+        "rights": "undefined", 
+        "source_id": "heerde_committees"
+      }, 
+      "name": "Commissie Ruimte"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Commissie Samenleving", 
+      "id": "commissie-samenleving", 
+      "identifiers": [
+        {
+          "identifier": "commissie-samenleving", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "4", 
+          "scheme": "iBabs"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Commissie Samenleving", 
+        "ocd_url": "http://localhost:5000/v0/heerde_committees/commissie-samenleving", 
+        "original_object_id": "Commissie Samenleving", 
+        "original_object_urls": {
+          "html": "Commissie Samenleving"
+        }, 
+        "processing_finished": "2015-09-28T12:34:00.201670", 
+        "processing_started": "2015-09-28T12:34:00.193242", 
+        "rights": "undefined", 
+        "source_id": "heerde_committees"
+      }, 
+      "name": "Commissie Samenleving"
+    }
+  ]
+}

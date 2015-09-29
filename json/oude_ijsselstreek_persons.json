@@ -1,0 +1,1876 @@
+{
+  "meta": {
+    "took": 12, 
+    "total": 35
+  }, 
+  "persons": [
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "a8750e4ebfcc7dfa41ab6054cdc0c2fc6985c07a", 
+      "identifiers": [
+        {
+          "identifier": "a8750e4ebfcc7dfa41ab6054cdc0c2fc6985c07a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122548", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "a8750e4ebfcc7dfa41ab6054cdc0c2fc6985c07a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "a8750e4ebfcc7dfa41ab6054cdc0c2fc6985c07a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/a8750e4ebfcc7dfa41ab6054cdc0c2fc6985c07a", 
+        "original_object_id": "https://almanak.overheid.nl/122548/Oude_IJsselstreek/Mw._J.M._Elstak/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122548/Oude_IJsselstreek/Mw._J.M._Elstak/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.644999", 
+        "processing_started": "2015-09-28T12:35:45.152738", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. J.M. Elstak"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "35d5f1bea787a3a60126b5560f0dc127b3add92b", 
+      "identifiers": [
+        {
+          "identifier": "35d5f1bea787a3a60126b5560f0dc127b3add92b", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81372", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "35d5f1bea787a3a60126b5560f0dc127b3add92b", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "35d5f1bea787a3a60126b5560f0dc127b3add92b", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/35d5f1bea787a3a60126b5560f0dc127b3add92b", 
+        "original_object_id": "https://almanak.overheid.nl/81372/Oude_IJsselstreek/Mw._A.P.F.M._van_de_Meer-Schepers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81372/Oude_IJsselstreek/Mw._A.P.F.M._van_de_Meer-Schepers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.669573", 
+        "processing_started": "2015-09-28T12:35:45.264291", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. A.P.F.M. van de Meer-Schepers"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "1cba52ad493f3fb8a821b52441882c735e159547", 
+      "identifiers": [
+        {
+          "identifier": "1cba52ad493f3fb8a821b52441882c735e159547", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81376", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "1cba52ad493f3fb8a821b52441882c735e159547", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "1cba52ad493f3fb8a821b52441882c735e159547", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/1cba52ad493f3fb8a821b52441882c735e159547", 
+        "original_object_id": "https://almanak.overheid.nl/81376/Oude_IJsselstreek/Dhr._G._Vossers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81376/Oude_IJsselstreek/Dhr._G._Vossers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.671241", 
+        "processing_started": "2015-09-28T12:35:45.329386", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G. Vossers"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "5d11a740f0a6bf060de5fbc971afe736e4da7b68", 
+      "identifiers": [
+        {
+          "identifier": "5d11a740f0a6bf060de5fbc971afe736e4da7b68", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81378", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "5d11a740f0a6bf060de5fbc971afe736e4da7b68", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "5d11a740f0a6bf060de5fbc971afe736e4da7b68", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/5d11a740f0a6bf060de5fbc971afe736e4da7b68", 
+        "original_object_id": "https://almanak.overheid.nl/81378/Oude_IJsselstreek/Dhr._G.L.J.M._Wildenbeest/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81378/Oude_IJsselstreek/Dhr._G.L.J.M._Wildenbeest/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.682920", 
+        "processing_started": "2015-09-28T12:35:45.372105", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G.L.J.M. Wildenbeest"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "727973ea9fb9815ec6ab6fed7597d2d73baf1138", 
+      "identifiers": [
+        {
+          "identifier": "727973ea9fb9815ec6ab6fed7597d2d73baf1138", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "125573", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "727973ea9fb9815ec6ab6fed7597d2d73baf1138", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "727973ea9fb9815ec6ab6fed7597d2d73baf1138", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/727973ea9fb9815ec6ab6fed7597d2d73baf1138", 
+        "original_object_id": "https://almanak.overheid.nl/125573/Oude_IJsselstreek/Dhr._G.T._Colenbrander/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/125573/Oude_IJsselstreek/Dhr._G.T._Colenbrander/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.689336", 
+        "processing_started": "2015-09-28T12:35:45.429127", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G.T. Colenbrander"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "ace7b65213a3d34e7c0c2ff1a5d53b3ec897e69e", 
+      "identifiers": [
+        {
+          "identifier": "ace7b65213a3d34e7c0c2ff1a5d53b3ec897e69e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "118012", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "ace7b65213a3d34e7c0c2ff1a5d53b3ec897e69e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "ace7b65213a3d34e7c0c2ff1a5d53b3ec897e69e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/ace7b65213a3d34e7c0c2ff1a5d53b3ec897e69e", 
+        "original_object_id": "https://almanak.overheid.nl/118012/Oude_IJsselstreek/Dhr._G.W._Schieven/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/118012/Oude_IJsselstreek/Dhr._G.W._Schieven/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.695258", 
+        "processing_started": "2015-09-28T12:35:45.479881", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G.W. Schieven"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "f6a80ba63fbb5a804c5e857de9087e52bc430dcf", 
+      "identifiers": [
+        {
+          "identifier": "f6a80ba63fbb5a804c5e857de9087e52bc430dcf", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "95169", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "f6a80ba63fbb5a804c5e857de9087e52bc430dcf", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "f6a80ba63fbb5a804c5e857de9087e52bc430dcf", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/f6a80ba63fbb5a804c5e857de9087e52bc430dcf", 
+        "original_object_id": "https://almanak.overheid.nl/95169/Oude_IJsselstreek/Dhr._H.J._Hengeveld/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/95169/Oude_IJsselstreek/Dhr._H.J._Hengeveld/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.701588", 
+        "processing_started": "2015-09-28T12:35:45.528621", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. H.J. Hengeveld"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "979f33a857f69e96cc4f247ed61695ca7087208a", 
+      "identifiers": [
+        {
+          "identifier": "979f33a857f69e96cc4f247ed61695ca7087208a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "125574", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "979f33a857f69e96cc4f247ed61695ca7087208a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "979f33a857f69e96cc4f247ed61695ca7087208a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/979f33a857f69e96cc4f247ed61695ca7087208a", 
+        "original_object_id": "https://almanak.overheid.nl/125574/Oude_IJsselstreek/Dhr._S.L._Hiddinga/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/125574/Oude_IJsselstreek/Dhr._S.L._Hiddinga/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.708698", 
+        "processing_started": "2015-09-28T12:35:45.599061", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. S.L. Hiddinga"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "f5a2f9db18692d08fb112d285c0df0efa7afa6c0", 
+      "identifiers": [
+        {
+          "identifier": "f5a2f9db18692d08fb112d285c0df0efa7afa6c0", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "85851", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "f5a2f9db18692d08fb112d285c0df0efa7afa6c0", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "f5a2f9db18692d08fb112d285c0df0efa7afa6c0", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/f5a2f9db18692d08fb112d285c0df0efa7afa6c0", 
+        "original_object_id": "https://almanak.overheid.nl/85851/Oude_IJsselstreek/Mw._G._Siner-Sir/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/85851/Oude_IJsselstreek/Mw._G._Siner-Sir/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.714357", 
+        "processing_started": "2015-09-28T12:35:45.627724", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. G. Siner-Sir"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "4cefd2e89fc8634a50bbdfdc4a227a41b1b25ded", 
+      "identifiers": [
+        {
+          "identifier": "4cefd2e89fc8634a50bbdfdc4a227a41b1b25ded", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81381", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "4cefd2e89fc8634a50bbdfdc4a227a41b1b25ded", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "4cefd2e89fc8634a50bbdfdc4a227a41b1b25ded", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/4cefd2e89fc8634a50bbdfdc4a227a41b1b25ded", 
+        "original_object_id": "https://almanak.overheid.nl/81381/Oude_IJsselstreek/Mw._H.B._Hofs/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81381/Oude_IJsselstreek/Mw._H.B._Hofs/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.724504", 
+        "processing_started": "2015-09-28T12:35:45.708084", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. H.B. Hofs"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "a8a8ae249f7c1e0cfd8eb725934a6398529fc3f6", 
+      "identifiers": [
+        {
+          "identifier": "a8a8ae249f7c1e0cfd8eb725934a6398529fc3f6", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81382", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "a8a8ae249f7c1e0cfd8eb725934a6398529fc3f6", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "a8a8ae249f7c1e0cfd8eb725934a6398529fc3f6", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/a8a8ae249f7c1e0cfd8eb725934a6398529fc3f6", 
+        "original_object_id": "https://almanak.overheid.nl/81382/Oude_IJsselstreek/Mw._M.G.H._Verwaaijen-Roosendaal/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81382/Oude_IJsselstreek/Mw._M.G.H._Verwaaijen-Roosendaal/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.728395", 
+        "processing_started": "2015-09-28T12:35:45.736914", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. M.G.H. Verwaaijen-Roosendaal"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "8562c46ad66345b6a8071c91dec61249920bd73e", 
+      "identifiers": [
+        {
+          "identifier": "8562c46ad66345b6a8071c91dec61249920bd73e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81383", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "8562c46ad66345b6a8071c91dec61249920bd73e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "8562c46ad66345b6a8071c91dec61249920bd73e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/8562c46ad66345b6a8071c91dec61249920bd73e", 
+        "original_object_id": "https://almanak.overheid.nl/81383/Oude_IJsselstreek/Dhr._A.H.M._Menke/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81383/Oude_IJsselstreek/Dhr._A.H.M._Menke/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.738943", 
+        "processing_started": "2015-09-28T12:35:45.805114", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. A.H.M. Menke"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "beb1a33042e9560ddcdbc41116fcc0ba7732b76d", 
+      "identifiers": [
+        {
+          "identifier": "beb1a33042e9560ddcdbc41116fcc0ba7732b76d", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122550", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "beb1a33042e9560ddcdbc41116fcc0ba7732b76d", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "beb1a33042e9560ddcdbc41116fcc0ba7732b76d", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/beb1a33042e9560ddcdbc41116fcc0ba7732b76d", 
+        "original_object_id": "https://almanak.overheid.nl/122550/Oude_IJsselstreek/Dhr._G._van_de__Beek/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122550/Oude_IJsselstreek/Dhr._G._van_de__Beek/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.747005", 
+        "processing_started": "2015-09-28T12:35:45.831928", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G. van de  Beek"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "a08e43ebe79dc5100fc6f2ccb79f2643790edd38", 
+      "identifiers": [
+        {
+          "identifier": "a08e43ebe79dc5100fc6f2ccb79f2643790edd38", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128362", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "a08e43ebe79dc5100fc6f2ccb79f2643790edd38", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "a08e43ebe79dc5100fc6f2ccb79f2643790edd38", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/a08e43ebe79dc5100fc6f2ccb79f2643790edd38", 
+        "original_object_id": "https://almanak.overheid.nl/128362/Oude_IJsselstreek/Dhr._J.W._Haverdil/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128362/Oude_IJsselstreek/Dhr._J.W._Haverdil/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.764542", 
+        "processing_started": "2015-09-28T12:35:45.918316", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J.W. Haverdil"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "e0f17dada7c7757452090739916a2e50c4f3bc52", 
+      "identifiers": [
+        {
+          "identifier": "e0f17dada7c7757452090739916a2e50c4f3bc52", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "125575", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "e0f17dada7c7757452090739916a2e50c4f3bc52", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "e0f17dada7c7757452090739916a2e50c4f3bc52", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/e0f17dada7c7757452090739916a2e50c4f3bc52", 
+        "original_object_id": "https://almanak.overheid.nl/125575/Oude_IJsselstreek/Dhr._H.J.M._Peters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/125575/Oude_IJsselstreek/Dhr._H.J.M._Peters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.780510", 
+        "processing_started": "2015-09-28T12:35:45.948364", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. H.J.M. Peters"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "c519a66cce987bc0c792cedbacba587e044ca24e", 
+      "identifiers": [
+        {
+          "identifier": "c519a66cce987bc0c792cedbacba587e044ca24e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122552", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "c519a66cce987bc0c792cedbacba587e044ca24e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "c519a66cce987bc0c792cedbacba587e044ca24e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/c519a66cce987bc0c792cedbacba587e044ca24e", 
+        "original_object_id": "https://almanak.overheid.nl/122552/Oude_IJsselstreek/Dhr._J.M.G.M._Vesters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122552/Oude_IJsselstreek/Dhr._J.M.G.M._Vesters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.789177", 
+        "processing_started": "2015-09-28T12:35:46.023671", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J.M.G.M. Vesters"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "99abbbbfb787681a6f50e2945c08cfbad0a46f89", 
+      "identifiers": [
+        {
+          "identifier": "99abbbbfb787681a6f50e2945c08cfbad0a46f89", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122553", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "99abbbbfb787681a6f50e2945c08cfbad0a46f89", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "99abbbbfb787681a6f50e2945c08cfbad0a46f89", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/99abbbbfb787681a6f50e2945c08cfbad0a46f89", 
+        "original_object_id": "https://almanak.overheid.nl/122553/Oude_IJsselstreek/Mw._E.H.M._Versteeg/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122553/Oude_IJsselstreek/Mw._E.H.M._Versteeg/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.806818", 
+        "processing_started": "2015-09-28T12:35:46.052220", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. E.H.M. Versteeg"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "8cf7593d72417ce38d9aaaf27f48c49da896670e", 
+      "identifiers": [
+        {
+          "identifier": "8cf7593d72417ce38d9aaaf27f48c49da896670e", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81388", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "8cf7593d72417ce38d9aaaf27f48c49da896670e", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "8cf7593d72417ce38d9aaaf27f48c49da896670e", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/8cf7593d72417ce38d9aaaf27f48c49da896670e", 
+        "original_object_id": "https://almanak.overheid.nl/81388/Oude_IJsselstreek/Dhr._J.M.H.W._Sluiter/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81388/Oude_IJsselstreek/Dhr._J.M.H.W._Sluiter/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.811572", 
+        "processing_started": "2015-09-28T12:35:46.135891", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J.M.H.W. Sluiter"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "6be43c9dc8bf6dac2b8663609f90e5a581367e95", 
+      "identifiers": [
+        {
+          "identifier": "6be43c9dc8bf6dac2b8663609f90e5a581367e95", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122554", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "6be43c9dc8bf6dac2b8663609f90e5a581367e95", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "6be43c9dc8bf6dac2b8663609f90e5a581367e95", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/6be43c9dc8bf6dac2b8663609f90e5a581367e95", 
+        "original_object_id": "https://almanak.overheid.nl/122554/Oude_IJsselstreek/Mw._C._Sloots-Helmink/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122554/Oude_IJsselstreek/Mw._C._Sloots-Helmink/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.822738", 
+        "processing_started": "2015-09-28T12:35:46.182380", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. C. Sloots-Helmink"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "0cffa8d09fa6abb41a03ed7aaae6a2ce2ab784c6", 
+      "identifiers": [
+        {
+          "identifier": "0cffa8d09fa6abb41a03ed7aaae6a2ce2ab784c6", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "86446", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Secretaris", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "0cffa8d09fa6abb41a03ed7aaae6a2ce2ab784c6", 
+          "role": "Secretaris"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/0cffa8d09fa6abb41a03ed7aaae6a2ce2ab784c6", 
+        "original_object_id": "https://almanak.overheid.nl/86446/Oude_IJsselstreek/Mw._drs._G.H._Tamminga/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/86446/Oude_IJsselstreek/Mw._drs._G.H._Tamminga/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.827616", 
+        "processing_started": "2015-09-28T12:35:46.250879", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. drs. G.H. Tamminga"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "f188136a5e0dd56eb951311098c577f396f053f3", 
+      "identifiers": [
+        {
+          "identifier": "f188136a5e0dd56eb951311098c577f396f053f3", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127586", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "f188136a5e0dd56eb951311098c577f396f053f3", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "f188136a5e0dd56eb951311098c577f396f053f3", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/f188136a5e0dd56eb951311098c577f396f053f3", 
+        "original_object_id": "https://almanak.overheid.nl/127586/Oude_IJsselstreek/Dhr._P._van_de_Wardt/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127586/Oude_IJsselstreek/Dhr._P._van_de_Wardt/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.835644", 
+        "processing_started": "2015-09-28T12:35:46.303045", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. P. van de Wardt"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "e75e6a1a77be249f158d570a1da9b3b2b4530f1c", 
+      "identifiers": [
+        {
+          "identifier": "e75e6a1a77be249f158d570a1da9b3b2b4530f1c", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "127588", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "e75e6a1a77be249f158d570a1da9b3b2b4530f1c", 
+          "role": "Wethouder"
+        }, 
+        {
+          "label": "Wethouder", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "e75e6a1a77be249f158d570a1da9b3b2b4530f1c", 
+          "role": "Wethouder"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/e75e6a1a77be249f158d570a1da9b3b2b4530f1c", 
+        "original_object_id": "https://almanak.overheid.nl/127588/Oude_IJsselstreek/Dhr._L.G._Kuster/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/127588/Oude_IJsselstreek/Dhr._L.G._Kuster/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.848560", 
+        "processing_started": "2015-09-28T12:35:46.413688", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. L.G. Kuster"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "4c7466e3af0e94d49588c49863d6063ec7f6a5b5", 
+      "identifiers": [
+        {
+          "identifier": "4c7466e3af0e94d49588c49863d6063ec7f6a5b5", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "130719", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Burgemeester waarnemend", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "4c7466e3af0e94d49588c49863d6063ec7f6a5b5", 
+          "role": "Burgemeester waarnemend"
+        }, 
+        {
+          "label": "Burgemeester waarnemend", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "4c7466e3af0e94d49588c49863d6063ec7f6a5b5", 
+          "role": "Burgemeester waarnemend"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/4c7466e3af0e94d49588c49863d6063ec7f6a5b5", 
+        "original_object_id": "https://almanak.overheid.nl/130719/Oude_IJsselstreek/Dhr._drs._S.P.M._de_Vreeze/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/130719/Oude_IJsselstreek/Dhr._drs._S.P.M._de_Vreeze/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.478621", 
+        "processing_started": "2015-09-28T12:35:44.414841", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. drs. S.P.M. de Vreeze"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "826f266b09eb9687c35ab6fd4876cd562b7dd212", 
+      "identifiers": [
+        {
+          "identifier": "826f266b09eb9687c35ab6fd4876cd562b7dd212", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "122546", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "826f266b09eb9687c35ab6fd4876cd562b7dd212", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "826f266b09eb9687c35ab6fd4876cd562b7dd212", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/826f266b09eb9687c35ab6fd4876cd562b7dd212", 
+        "original_object_id": "https://almanak.overheid.nl/122546/Oude_IJsselstreek/Mw._A.G.M._Ermers-Mulder/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/122546/Oude_IJsselstreek/Mw._A.G.M._Ermers-Mulder/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.512514", 
+        "processing_started": "2015-09-28T12:35:44.420076", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. A.G.M. Ermers-Mulder"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "455a503ed3cd76d2639f03435383d74a3224b75a", 
+      "identifiers": [
+        {
+          "identifier": "455a503ed3cd76d2639f03435383d74a3224b75a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "95112", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "455a503ed3cd76d2639f03435383d74a3224b75a", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "455a503ed3cd76d2639f03435383d74a3224b75a", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/455a503ed3cd76d2639f03435383d74a3224b75a", 
+        "original_object_id": "https://almanak.overheid.nl/95112/Oude_IJsselstreek/Dhr._H.C.J._Canter_Cremers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/95112/Oude_IJsselstreek/Dhr._H.C.J._Canter_Cremers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.516406", 
+        "processing_started": "2015-09-28T12:35:44.512794", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. H.C.J. Canter Cremers"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "3498653b2c5235f01af96b0630b23829bc3135f4", 
+      "identifiers": [
+        {
+          "identifier": "3498653b2c5235f01af96b0630b23829bc3135f4", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128359", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "3498653b2c5235f01af96b0630b23829bc3135f4", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "lokaal-belang-gvs", 
+            "name": "Lokaal Belang GVS"
+          }, 
+          "organisation_id": "lokaal-belang-gvs", 
+          "person_id": "3498653b2c5235f01af96b0630b23829bc3135f4", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/3498653b2c5235f01af96b0630b23829bc3135f4", 
+        "original_object_id": "https://almanak.overheid.nl/128359/Oude_IJsselstreek/Mw._G._Siner-Sir/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128359/Oude_IJsselstreek/Mw._G._Siner-Sir/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.534651", 
+        "processing_started": "2015-09-28T12:35:44.529279", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. G. Siner-Sir"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "522b43370cda6e590dd6889040b98712f1fa27c7", 
+      "identifiers": [
+        {
+          "identifier": "522b43370cda6e590dd6889040b98712f1fa27c7", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "86978", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "522b43370cda6e590dd6889040b98712f1fa27c7", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "pvda", 
+            "name": "PvdA"
+          }, 
+          "organisation_id": "pvda", 
+          "person_id": "522b43370cda6e590dd6889040b98712f1fa27c7", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/522b43370cda6e590dd6889040b98712f1fa27c7", 
+        "original_object_id": "https://almanak.overheid.nl/86978/Oude_IJsselstreek/Dhr._A.H.M._Menke/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/86978/Oude_IJsselstreek/Dhr._A.H.M._Menke/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.535441", 
+        "processing_started": "2015-09-28T12:35:44.631658", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. A.H.M. Menke"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "01a708a45f4783a91f0ca1563801e5217ff1205a", 
+      "identifiers": [
+        {
+          "identifier": "01a708a45f4783a91f0ca1563801e5217ff1205a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128360", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "01a708a45f4783a91f0ca1563801e5217ff1205a", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "sp", 
+            "name": "SP"
+          }, 
+          "organisation_id": "sp", 
+          "person_id": "01a708a45f4783a91f0ca1563801e5217ff1205a", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/01a708a45f4783a91f0ca1563801e5217ff1205a", 
+        "original_object_id": "https://almanak.overheid.nl/128360/Oude_IJsselstreek/Dhr._H.J.M._Peters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128360/Oude_IJsselstreek/Dhr._H.J.M._Peters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.552442", 
+        "processing_started": "2015-09-28T12:35:44.650979", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. H.J.M. Peters"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "9834405af615a8a989806bb365176fc043d12ab7", 
+      "identifiers": [
+        {
+          "identifier": "9834405af615a8a989806bb365176fc043d12ab7", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "86979", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "9834405af615a8a989806bb365176fc043d12ab7", 
+          "role": "Fractievoorzitter"
+        }, 
+        {
+          "label": "Fractievoorzitter", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "vvd", 
+            "name": "VVD"
+          }, 
+          "organisation_id": "vvd", 
+          "person_id": "9834405af615a8a989806bb365176fc043d12ab7", 
+          "role": "Fractievoorzitter"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/9834405af615a8a989806bb365176fc043d12ab7", 
+        "original_object_id": "https://almanak.overheid.nl/86979/Oude_IJsselstreek/Dhr._J.M.H.W._Sluiter/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/86979/Oude_IJsselstreek/Dhr._J.M.H.W._Sluiter/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.559330", 
+        "processing_started": "2015-09-28T12:35:44.727859", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J.M.H.W. Sluiter"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "547a655b3f6e8a15298749f0c55222e69912a53a", 
+      "identifiers": [
+        {
+          "identifier": "547a655b3f6e8a15298749f0c55222e69912a53a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "57522", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadsgriffier", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "547a655b3f6e8a15298749f0c55222e69912a53a", 
+          "role": "Raadsgriffier"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/547a655b3f6e8a15298749f0c55222e69912a53a", 
+        "original_object_id": "https://almanak.overheid.nl/57522/Oude_IJsselstreek/Dhr._J._van_Urk/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/57522/Oude_IJsselstreek/Dhr._J._van_Urk/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.579110", 
+        "processing_started": "2015-09-28T12:35:44.849670", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J. van Urk"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "7f9060ebdf2667e874e3cd85288473f3439ce36a", 
+      "identifiers": [
+        {
+          "identifier": "7f9060ebdf2667e874e3cd85288473f3439ce36a", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81365", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "7f9060ebdf2667e874e3cd85288473f3439ce36a", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "7f9060ebdf2667e874e3cd85288473f3439ce36a", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/7f9060ebdf2667e874e3cd85288473f3439ce36a", 
+        "original_object_id": "https://almanak.overheid.nl/81365/Oude_IJsselstreek/Dhr._G.W.M._Hakvoort/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81365/Oude_IJsselstreek/Dhr._G.W.M._Hakvoort/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.595082", 
+        "processing_started": "2015-09-28T12:35:44.944140", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. G.W.M. Hakvoort"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "0bfdfc622b2574c4e7a3a06c3e5303558c79dbd2", 
+      "identifiers": [
+        {
+          "identifier": "0bfdfc622b2574c4e7a3a06c3e5303558c79dbd2", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "128361", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "0bfdfc622b2574c4e7a3a06c3e5303558c79dbd2", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "0bfdfc622b2574c4e7a3a06c3e5303558c79dbd2", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/0bfdfc622b2574c4e7a3a06c3e5303558c79dbd2", 
+        "original_object_id": "https://almanak.overheid.nl/128361/Oude_IJsselstreek/Dhr._J.P.T._Winters/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/128361/Oude_IJsselstreek/Dhr._J.P.T._Winters/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.598108", 
+        "processing_started": "2015-09-28T12:35:45.019652", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. J.P.T. Winters"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "76f5f485a8c3669348a9acf392b65ec40c1ed942", 
+      "identifiers": [
+        {
+          "identifier": "76f5f485a8c3669348a9acf392b65ec40c1ed942", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81366", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "76f5f485a8c3669348a9acf392b65ec40c1ed942", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "76f5f485a8c3669348a9acf392b65ec40c1ed942", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/76f5f485a8c3669348a9acf392b65ec40c1ed942", 
+        "original_object_id": "https://almanak.overheid.nl/81366/Oude_IJsselstreek/Dhr._M._Tekinderdogan/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81366/Oude_IJsselstreek/Dhr._M._Tekinderdogan/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.621560", 
+        "processing_started": "2015-09-28T12:35:45.046736", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. M. Tekinderdogan"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "female", 
+      "id": "3ab8737b4b7ace36f3184b05b0d3ef95e7b0293c", 
+      "identifiers": [
+        {
+          "identifier": "3ab8737b4b7ace36f3184b05b0d3ef95e7b0293c", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "81370", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "3ab8737b4b7ace36f3184b05b0d3ef95e7b0293c", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "cda", 
+            "name": "CDA"
+          }, 
+          "organisation_id": "cda", 
+          "person_id": "3ab8737b4b7ace36f3184b05b0d3ef95e7b0293c", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/3ab8737b4b7ace36f3184b05b0d3ef95e7b0293c", 
+        "original_object_id": "https://almanak.overheid.nl/81370/Oude_IJsselstreek/Mw._A.G.M._Ermers-Mulder/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/81370/Oude_IJsselstreek/Mw._A.G.M._Ermers-Mulder/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.625431", 
+        "processing_started": "2015-09-28T12:35:45.124771", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Mw. A.G.M. Ermers-Mulder"
+    }, 
+    {
+      "email": "info@oude-ijsselstreek.nl", 
+      "gender": "male", 
+      "id": "046ed708953cee617fa2de253b74c9dbb9f83ca1", 
+      "identifiers": [
+        {
+          "identifier": "046ed708953cee617fa2de253b74c9dbb9f83ca1", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "95114", 
+          "scheme": "Almanak"
+        }
+      ], 
+      "memberships": [
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Council", 
+            "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+            "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+          }, 
+          "organisation_id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "person_id": "046ed708953cee617fa2de253b74c9dbb9f83ca1", 
+          "role": "Raadslid"
+        }, 
+        {
+          "label": "Raadslid", 
+          "organisation": {
+            "classification": "Party", 
+            "id": "d66", 
+            "name": "D66"
+          }, 
+          "organisation_id": "d66", 
+          "person_id": "046ed708953cee617fa2de253b74c9dbb9f83ca1", 
+          "role": "Raadslid"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "persons", 
+        "collection": "OverheidsorganisatiesZoekenGemeente Oude IJsselstreek () (GLD)ActiesSitenavigatieMeta navigatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_persons/046ed708953cee617fa2de253b74c9dbb9f83ca1", 
+        "original_object_id": "https://almanak.overheid.nl/95114/Oude_IJsselstreek/Dhr._H.C.J._Canter_Cremers/", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/95114/Oude_IJsselstreek/Dhr._H.C.J._Canter_Cremers/"
+        }, 
+        "processing_finished": "2015-09-28T12:35:46.655194", 
+        "processing_started": "2015-09-28T12:35:45.222387", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_persons"
+      }, 
+      "name": "Dhr. H.C.J. Canter Cremers"
+    }
+  ]
+}

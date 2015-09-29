@@ -1,0 +1,513 @@
+{
+  "meta": {
+    "took": 4, 
+    "total": 18
+  }, 
+  "organisations": [
+    {
+      "classification": "Municipality", 
+      "description": "Ontstaan per 01-01-2005", 
+      "id": "271303a828e25068b10b91cd6757ea301d61812a", 
+      "identifiers": [
+        {
+          "identifier": "GM1509", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "271303a828e25068b10b91cd6757ea301d61812a", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Oude IJsselstreek", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_municipality/271303a828e25068b10b91cd6757ea301d61812a", 
+        "original_object_id": "GM1509", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:21.032128", 
+        "processing_started": "2015-09-28T12:28:21.027300", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_municipality"
+      }, 
+      "name": "Oude IJsselstreek"
+    }, 
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/AVATgGrfOtzaa2jsv8gF", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.516071", 
+        "processing_started": "2015-09-28T12:29:54.507775", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }
+    }, 
+    {
+      "classification": "Party", 
+      "description": "VVD", 
+      "id": "vvd", 
+      "identifiers": [
+        {
+          "identifier": "vvd", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "VVD", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/vvd", 
+        "original_object_id": "VVD", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.565855", 
+        "processing_started": "2015-09-28T12:29:54.511058", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "VVD"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "CDA", 
+      "id": "cda", 
+      "identifiers": [
+        {
+          "identifier": "cda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "CDA", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/cda", 
+        "original_object_id": "CDA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.621485", 
+        "processing_started": "2015-09-28T12:29:54.521975", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "CDA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "PvdA", 
+      "id": "pvda", 
+      "identifiers": [
+        {
+          "identifier": "pvda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "PvdA", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/pvda", 
+        "original_object_id": "PvdA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.683305", 
+        "processing_started": "2015-09-28T12:29:54.557513", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "PvdA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "SP", 
+      "id": "sp", 
+      "identifiers": [
+        {
+          "identifier": "sp", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "SP", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/sp", 
+        "original_object_id": "SP", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.685151", 
+        "processing_started": "2015-09-28T12:29:54.582692", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "SP"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Lokaal Belang GVS", 
+      "id": "lokaal-belang-gvs", 
+      "identifiers": [
+        {
+          "identifier": "lokaal-belang-gvs", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Lokaal Belang GVS", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/lokaal-belang-gvs", 
+        "original_object_id": "Lokaal Belang GVS", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.736036", 
+        "processing_started": "2015-09-28T12:29:54.616028", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "Lokaal Belang GVS"
+    }, 
+    {
+      "classification": "Council", 
+      "description": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)", 
+      "id": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+      "identifiers": [
+        {
+          "identifier": "gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/gemeente-oude-ijsselstreek-oude-ijsselstreek-gld", 
+        "original_object_id": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.744010", 
+        "processing_started": "2015-09-28T12:29:54.628574", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "Gemeente Oude IJsselstreek (Oude IJsselstreek) (GLD)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "D66", 
+      "id": "d66", 
+      "identifiers": [
+        {
+          "identifier": "d66", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "D66", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_organisations/d66", 
+        "original_object_id": "D66", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:54.779043", 
+        "processing_started": "2015-09-28T12:29:54.657046", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_organisations"
+      }, 
+      "name": "D66"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsrotonde", 
+      "id": "raadsrotonde", 
+      "identifiers": [
+        {
+          "identifier": "raadsrotonde", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsrotonde", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsrotonde", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/raadsrotonde", 
+        "original_object_id": "Raadsrotonde", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Raadsrotonde/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.320563", 
+        "processing_started": "2015-09-28T12:34:24.289578", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Raadsrotonde"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Werkbijeenkomst", 
+      "id": "werkbijeenkomst", 
+      "identifiers": [
+        {
+          "identifier": "werkbijeenkomst", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Werkbijeenkomst", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Werkbijeenkomst", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/werkbijeenkomst", 
+        "original_object_id": "Werkbijeenkomst", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Werkbijeenkomst/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.339025", 
+        "processing_started": "2015-09-28T12:34:24.295346", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Werkbijeenkomst"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsvergadering", 
+      "id": "raadsvergadering", 
+      "identifiers": [
+        {
+          "identifier": "raadsvergadering", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsvergadering", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsvergadering", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/raadsvergadering", 
+        "original_object_id": "Raadsvergadering", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Raadsvergadering/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.366862", 
+        "processing_started": "2015-09-28T12:34:24.316229", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Raadsvergadering"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Voorzittersoverleg", 
+      "id": "voorzittersoverleg", 
+      "identifiers": [
+        {
+          "identifier": "voorzittersoverleg", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Voorzittersoverleg", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Voorzittersoverleg", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/voorzittersoverleg", 
+        "original_object_id": "Voorzittersoverleg", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Voorzittersoverleg/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.366958", 
+        "processing_started": "2015-09-28T12:34:24.325329", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Voorzittersoverleg"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsavond op locatie", 
+      "id": "raadsavond-op-locatie", 
+      "identifiers": [
+        {
+          "identifier": "raadsavond-op-locatie", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsavond op locatie", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsavond op locatie", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/raadsavond-op-locatie", 
+        "original_object_id": "Raadsavond op locatie", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Raadsavond-op-locatie/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.381839", 
+        "processing_started": "2015-09-28T12:34:24.335383", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Raadsavond op locatie"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Voorzitterspool en wethouders", 
+      "id": "voorzitterspool-en-wethouders", 
+      "identifiers": [
+        {
+          "identifier": "voorzitterspool-en-wethouders", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Voorzitterspool en wethouders", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Voorzitterspool en wethouders", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/voorzitterspool-en-wethouders", 
+        "original_object_id": "Voorzitterspool en wethouders", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Voorzitterspool-en-wethouders/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.386000", 
+        "processing_started": "2015-09-28T12:34:24.344948", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Voorzitterspool en wethouders"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsprojectcommissie transitie en transformatie (t&t)", 
+      "id": "raadsprojectcommissie-transitie-en-transformatie-t-t", 
+      "identifiers": [
+        {
+          "identifier": "raadsprojectcommissie-transitie-en-transformatie-t-t", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsprojectcommissie transitie en transformatie (t&t)", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsprojectcommissie transitie en transformatie (t&t)", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/raadsprojectcommissie-transitie-en-transformatie-t-t", 
+        "original_object_id": "Raadsprojectcommissie transitie en transformatie (t&t)", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Raadsprojectcommissie-transitie-en-transformatie-t-t/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.398299", 
+        "processing_started": "2015-09-28T12:34:24.352923", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Raadsprojectcommissie transitie en transformatie (t&t)"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsdelegatie provincie(gesprek)", 
+      "id": "raadsdelegatie-provincie-gesprek", 
+      "identifiers": [
+        {
+          "identifier": "raadsdelegatie-provincie-gesprek", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsdelegatie provincie(gesprek)", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsdelegatie provincie(gesprek)", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/raadsdelegatie-provincie-gesprek", 
+        "original_object_id": "Raadsdelegatie provincie(gesprek)", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/Raadsdelegatie-provincie-gesprek/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.401596", 
+        "processing_started": "2015-09-28T12:34:24.355307", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "Raadsdelegatie provincie(gesprek)"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "(In)formatie bespreking", 
+      "id": "in-formatie-bespreking", 
+      "identifiers": [
+        {
+          "identifier": "in-formatie-bespreking", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "(In)formatie bespreking", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "(In)formatie bespreking", 
+        "ocd_url": "http://localhost:5000/v0/oude_ijsselstreek_committees/in-formatie-bespreking", 
+        "original_object_id": "(In)formatie bespreking", 
+        "original_object_urls": {
+          "html": "http://raad.oude-ijsselstreek.nl/Vergaderingen/In-formatie-bespreking/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:24.413193", 
+        "processing_started": "2015-09-28T12:34:24.358917", 
+        "rights": "undefined", 
+        "source_id": "oude_ijsselstreek_committees"
+      }, 
+      "name": "(In)formatie bespreking"
+    }
+  ]
+}

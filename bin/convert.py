@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# ./convert.py 'http://openri.127.0.0.1.xip.io:5000/api/v0.1' \
+# 46143143cd126fb7d1fe3cba4a2657c15c2d8250 amstelveen_organisations.json \
+# amstelveen_persons.json
+
 import sys
 import os
 import re

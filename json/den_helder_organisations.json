@@ -1,0 +1,770 @@
+{
+  "meta": {
+    "took": 4, 
+    "total": 28
+  }, 
+  "organisations": [
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/AU_RngKnNKi-4DDcFgN8", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-15T17:27:17.664395", 
+        "processing_started": "2015-09-15T17:27:17.551333", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }
+    }, 
+    {
+      "classification": "Municipality", 
+      "description": "Begindatum voor 1830", 
+      "id": "bf6a59f6a2ab7ff71603bfa42943bc3737dfdf34", 
+      "identifiers": [
+        {
+          "identifier": "GM0400", 
+          "scheme": "CBS"
+        }, 
+        {
+          "identifier": "bf6a59f6a2ab7ff71603bfa42943bc3737dfdf34", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Den Helder", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_municipality/bf6a59f6a2ab7ff71603bfa42943bc3737dfdf34", 
+        "original_object_id": "GM0400", 
+        "original_object_urls": {
+          "html": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+        }, 
+        "processing_finished": "2015-09-28T12:28:17.332069", 
+        "processing_started": "2015-09-28T12:28:17.327517", 
+        "rights": "undefined", 
+        "source_id": "den_helder_municipality"
+      }, 
+      "name": "Den Helder"
+    }, 
+    {
+      "classification": "Party", 
+      "identifiers": [
+        {
+          "identifier": "", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/AVATgD61Otzaa2jsv8gD", 
+        "original_object_id": "", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.209449", 
+        "processing_started": "2015-09-28T12:29:43.197308", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Helder Onafhankelijk!", 
+      "id": "helder-onafhankelijk", 
+      "identifiers": [
+        {
+          "identifier": "helder-onafhankelijk", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Helder Onafhankelijk!", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/helder-onafhankelijk", 
+        "original_object_id": "Helder Onafhankelijk!", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.237770", 
+        "processing_started": "2015-09-28T12:29:43.200650", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Helder Onafhankelijk!"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "VVD", 
+      "id": "vvd", 
+      "identifiers": [
+        {
+          "identifier": "vvd", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "VVD", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/vvd", 
+        "original_object_id": "VVD", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.290884", 
+        "processing_started": "2015-09-28T12:29:43.217185", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "VVD"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Stadspartij", 
+      "id": "stadspartij", 
+      "identifiers": [
+        {
+          "identifier": "stadspartij", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Stadspartij", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/stadspartij", 
+        "original_object_id": "Stadspartij", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.315514", 
+        "processing_started": "2015-09-28T12:29:43.239623", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Stadspartij"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "ChristenUnie", 
+      "id": "christenunie", 
+      "identifiers": [
+        {
+          "identifier": "christenunie", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "ChristenUnie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/christenunie", 
+        "original_object_id": "ChristenUnie", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.342143", 
+        "processing_started": "2015-09-28T12:29:43.272482", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "ChristenUnie"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Vrije socialisten/ Fractie Vermooten", 
+      "id": "vrije-socialisten-fractie-vermooten", 
+      "identifiers": [
+        {
+          "identifier": "vrije-socialisten-fractie-vermooten", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Vrije socialisten/ Fractie Vermooten", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/vrije-socialisten-fractie-vermooten", 
+        "original_object_id": "Vrije socialisten/ Fractie Vermooten", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.354227", 
+        "processing_started": "2015-09-28T12:29:43.285270", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Vrije socialisten/ Fractie Vermooten"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Vrije Socialisten", 
+      "id": "vrije-socialisten", 
+      "identifiers": [
+        {
+          "identifier": "vrije-socialisten", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Vrije Socialisten", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/vrije-socialisten", 
+        "original_object_id": "Vrije Socialisten", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.416589", 
+        "processing_started": "2015-09-28T12:29:43.328357", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Vrije Socialisten"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "D66", 
+      "id": "d66", 
+      "identifiers": [
+        {
+          "identifier": "d66", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "D66", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/d66", 
+        "original_object_id": "D66", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.433528", 
+        "processing_started": "2015-09-28T12:29:43.331425", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "D66"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "ChristenUnie/ Behoorlijk bestuur/ GroenLinks", 
+      "id": "christenunie-behoorlijk-bestuur-groenlinks", 
+      "identifiers": [
+        {
+          "identifier": "christenunie-behoorlijk-bestuur-groenlinks", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "ChristenUnie/ Behoorlijk bestuur/ GroenLinks", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/christenunie-behoorlijk-bestuur-groenlinks", 
+        "original_object_id": "ChristenUnie/ Behoorlijk bestuur/ GroenLinks", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.433592", 
+        "processing_started": "2015-09-28T12:29:43.334100", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "ChristenUnie/ Behoorlijk bestuur/ GroenLinks"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "CDA", 
+      "id": "cda", 
+      "identifiers": [
+        {
+          "identifier": "cda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "CDA", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/cda", 
+        "original_object_id": "CDA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.453951", 
+        "processing_started": "2015-09-28T12:29:43.336468", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "CDA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "PvdA", 
+      "id": "pvda", 
+      "identifiers": [
+        {
+          "identifier": "pvda", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "PvdA", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/pvda", 
+        "original_object_id": "PvdA", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.355954", 
+        "processing_started": "2015-09-28T12:29:43.287278", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "PvdA"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "GroenLinks", 
+      "id": "groenlinks", 
+      "identifiers": [
+        {
+          "identifier": "groenlinks", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "GroenLinks", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/groenlinks", 
+        "original_object_id": "GroenLinks", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.368826", 
+        "processing_started": "2015-09-28T12:29:43.294971", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "GroenLinks"
+    }, 
+    {
+      "classification": "Council", 
+      "description": "Gemeente Den Helder (Den Helder) (NH)", 
+      "id": "gemeente-den-helder-den-helder-nh", 
+      "identifiers": [
+        {
+          "identifier": "gemeente-den-helder-den-helder-nh", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeente Den Helder (Den Helder) (NH)", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/gemeente-den-helder-den-helder-nh", 
+        "original_object_id": "Gemeente Den Helder (Den Helder) (NH)", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.380597", 
+        "processing_started": "2015-09-28T12:29:43.304804", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Gemeente Den Helder (Den Helder) (NH)"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Fractie Vermooten", 
+      "id": "fractie-vermooten", 
+      "identifiers": [
+        {
+          "identifier": "fractie-vermooten", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Fractie Vermooten", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/fractie-vermooten", 
+        "original_object_id": "Fractie Vermooten", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.382220", 
+        "processing_started": "2015-09-28T12:29:43.306961", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Fractie Vermooten"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Behoorlijk Bestuur", 
+      "id": "behoorlijk-bestuur", 
+      "identifiers": [
+        {
+          "identifier": "behoorlijk-bestuur", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Behoorlijk Bestuur", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/behoorlijk-bestuur", 
+        "original_object_id": "Behoorlijk Bestuur", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.397047", 
+        "processing_started": "2015-09-28T12:29:43.310425", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Behoorlijk Bestuur"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Stadspartij Den Helder", 
+      "id": "stadspartij-den-helder", 
+      "identifiers": [
+        {
+          "identifier": "stadspartij-den-helder", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Stadspartij Den Helder", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/stadspartij-den-helder", 
+        "original_object_id": "Stadspartij Den Helder", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.402806", 
+        "processing_started": "2015-09-28T12:29:43.315591", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Stadspartij Den Helder"
+    }, 
+    {
+      "classification": "Party", 
+      "description": "Stadspartij Den Helder 2.0", 
+      "id": "stadspartij-den-helder-2-0", 
+      "identifiers": [
+        {
+          "identifier": "stadspartij-den-helder-2-0", 
+          "scheme": "ORI"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Stadspartij Den Helder 2.0", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_organisations/stadspartij-den-helder-2-0", 
+        "original_object_id": "Stadspartij Den Helder 2.0", 
+        "original_object_urls": {
+          "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+        }, 
+        "processing_finished": "2015-09-28T12:29:43.416517", 
+        "processing_started": "2015-09-28T12:29:43.326683", 
+        "rights": "undefined", 
+        "source_id": "den_helder_organisations"
+      }, 
+      "name": "Stadspartij Den Helder 2.0"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Gemeenteraad", 
+      "id": "gemeenteraad", 
+      "identifiers": [
+        {
+          "identifier": "gemeenteraad", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Gemeenteraad", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Gemeenteraad", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/gemeenteraad", 
+        "original_object_id": "Gemeenteraad", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.536230", 
+        "processing_started": "2015-09-28T12:34:12.504478", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Gemeenteraad"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie Bestuur en Middelen", 
+      "id": "raadscommissie-bestuur-en-middelen", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-bestuur-en-middelen", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadscommissie Bestuur en Middelen", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie Bestuur en Middelen", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/raadscommissie-bestuur-en-middelen", 
+        "original_object_id": "Raadscommissie Bestuur en Middelen", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Raadscommissie-Bestuur-en-Middelen/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.557880", 
+        "processing_started": "2015-09-28T12:34:12.512513", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Raadscommissie Bestuur en Middelen"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie Maatschappelijke Ontwikkeling", 
+      "id": "raadscommissie-maatschappelijke-ontwikkeling", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-maatschappelijke-ontwikkeling", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadscommissie Maatschappelijke Ontwikkeling", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie Maatschappelijke Ontwikkeling", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/raadscommissie-maatschappelijke-ontwikkeling", 
+        "original_object_id": "Raadscommissie Maatschappelijke Ontwikkeling", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Raadscommissie-Maatschappelijke-Ontwikkeling/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.562233", 
+        "processing_started": "2015-09-28T12:34:12.515301", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Raadscommissie Maatschappelijke Ontwikkeling"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadscommissie Stadsontwikkeling en -Beheer", 
+      "id": "raadscommissie-stadsontwikkeling-en-beheer", 
+      "identifiers": [
+        {
+          "identifier": "raadscommissie-stadsontwikkeling-en-beheer", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadscommissie Stadsontwikkeling en -Beheer", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadscommissie Stadsontwikkeling en -Beheer", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/raadscommissie-stadsontwikkeling-en-beheer", 
+        "original_object_id": "Raadscommissie Stadsontwikkeling en -Beheer", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Raadscommissie-Stadsontwikkeling-en-Beheer/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.592915", 
+        "processing_started": "2015-09-28T12:34:12.520230", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Raadscommissie Stadsontwikkeling en -Beheer"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Presidium", 
+      "id": "presidium", 
+      "identifiers": [
+        {
+          "identifier": "presidium", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Presidium", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Presidium", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/presidium", 
+        "original_object_id": "Presidium", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Presidium/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.603147", 
+        "processing_started": "2015-09-28T12:34:12.520174", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Presidium"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Auditcommissie", 
+      "id": "auditcommissie", 
+      "identifiers": [
+        {
+          "identifier": "auditcommissie", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Auditcommissie", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Auditcommissie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/auditcommissie", 
+        "original_object_id": "Auditcommissie", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Auditcommissie/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.616845", 
+        "processing_started": "2015-09-28T12:34:12.536125", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Auditcommissie"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Raadsbrede commissie", 
+      "id": "raadsbrede-commissie", 
+      "identifiers": [
+        {
+          "identifier": "raadsbrede-commissie", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Raadsbrede commissie", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Raadsbrede commissie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/raadsbrede-commissie", 
+        "original_object_id": "Raadsbrede commissie", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Raadsbrede-commissie/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.639872", 
+        "processing_started": "2015-09-28T12:34:12.544807", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Raadsbrede commissie"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Agendacommissie", 
+      "id": "agendacommissie", 
+      "identifiers": [
+        {
+          "identifier": "agendacommissie", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Agendacommissie", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Agendacommissie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/agendacommissie", 
+        "original_object_id": "Agendacommissie", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Agendacommissie/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.653054", 
+        "processing_started": "2015-09-28T12:34:12.555848", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Agendacommissie"
+    }, 
+    {
+      "classification": "committee", 
+      "description": "Werkgeverscommissie", 
+      "id": "werkgeverscommissie", 
+      "identifiers": [
+        {
+          "identifier": "werkgeverscommissie", 
+          "scheme": "ORI"
+        }, 
+        {
+          "identifier": "Werkgeverscommissie", 
+          "scheme": "GemeenteOplossingen"
+        }
+      ], 
+      "meta": {
+        "_score": 1.0, 
+        "_type": "organisations", 
+        "collection": "Werkgeverscommissie", 
+        "ocd_url": "http://localhost:5000/v0/den_helder_committees/werkgeverscommissie", 
+        "original_object_id": "Werkgeverscommissie", 
+        "original_object_urls": {
+          "html": "https://gemeenteraad.denhelder.nl/Vergaderingen/Werkgeverscommissie/"
+        }, 
+        "processing_finished": "2015-09-28T12:34:12.669325", 
+        "processing_started": "2015-09-28T12:34:12.592850", 
+        "rights": "undefined", 
+        "source_id": "den_helder_committees"
+      }, 
+      "name": "Werkgeverscommissie"
+    }
+  ]
+}
