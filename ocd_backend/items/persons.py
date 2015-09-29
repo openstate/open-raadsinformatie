@@ -80,8 +80,8 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
                 'label': role,
                 'role': role,
                 'person_id': combined_index_data['id'],
-                'organisation_id': council_id,
-                'organisation': council_obj
+                'organization_id': council_id,
+                'organization': council_obj
             }
         ]
         if party_id is not None:
@@ -89,8 +89,8 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
                 'label': role,
                 'role': role,
                 'person_id': combined_index_data['id'],
-                'organisation_id': party_id,
-                'organisation': party_obj
+                'organization_id': party_id,
+                'organization': party_obj
             })
 
         return combined_index_data

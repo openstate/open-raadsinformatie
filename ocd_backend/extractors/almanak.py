@@ -50,11 +50,11 @@ class PersonsExtractor(StaticHtmlExtractor):
         Gets a list of parties from the frontend API in JSON format.
         """
         # TODO: not currently likely that we will have more than 100 orgs.
-        organisations_url = u'%s%s/organisations/search?size=100' % (
+        organisations_url = u'%s%s/organizations/search?size=100' % (
             settings.API_URL, self.source_definition['index_name'],)
         r = self.http_session.get(organisations_url, verify=False)
         r.raise_for_status()
-        organisations = r.json()['organisations']
+        organisations = r.json()['organizations']
         return {
             o['name']: {
                 'id': o['id'],

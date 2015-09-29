@@ -10,7 +10,7 @@
         "hidden": false,
         "index_name": "amstelveen",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "filter": {
           "Title": "Amstelveen"
         },
@@ -27,7 +27,7 @@
         "hidden": false,
         "index_name": "amstelveen",
         "file_url": "https://almanak.overheid.nl/28270/Gemeente_Amstelveen/",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": true
     },
@@ -41,7 +41,7 @@
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
         "index_name": "amstelveen",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "sitename": "Amstelveen",
         "keep_index_on_update": true
     },
@@ -100,7 +100,7 @@
         "hidden": false,
         "index_name": "utrecht",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "filter": {
           "Title": "Utrecht (gemeente)"
         },
@@ -117,7 +117,7 @@
         "hidden": false,
         "index_name": "utrecht",
         "file_url": "https://almanak.overheid.nl/38122/Gemeente_Utrecht/",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": true
     },
@@ -131,7 +131,7 @@
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
         "index_name": "utrecht",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "sitename": "Utrecht",
         "keep_index_on_update": true
     },
@@ -186,7 +186,7 @@
         "index_name": "heerde",
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "id": "heerde_municipality",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
         "filter": {
@@ -204,7 +204,7 @@
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "item_xpath": "//",
         "id": "heerde_organisations",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "file_url": "https://almanak.overheid.nl/23411/Gemeente_Heerde/",
         "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
@@ -262,7 +262,7 @@
         "index_name": "heerde",
         "loader": "ocd_backend.loaders.ElasticsearchLoader",
         "id": "heerde_committees",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "sitename": "Heerde",
         "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
@@ -280,7 +280,7 @@
         "hidden": false,
         "index_name": "den_helder",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "filter": {
           "Title": "Den Helder"
         },
@@ -297,7 +297,7 @@
         "hidden": false,
         "index_name": "den_helder",
         "file_url": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": true
     },
@@ -326,7 +326,7 @@
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
         "index_name": "den_helder",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "keep_index_on_update": true,
         "base_url": "https://gemeenteraad.denhelder.nl"
     },
@@ -388,7 +388,7 @@
         "hidden": false,
         "index_name": "oude_ijsselstreek",
         "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "filter": {
           "Title": "Oude IJsselstreek"
         },
@@ -405,7 +405,7 @@
         "hidden": false,
         "index_name": "oude_ijsselstreek",
         "file_url": "https://almanak.overheid.nl/36780/Gemeente_Oude_IJsselstreek/",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": true
     },
@@ -434,7 +434,7 @@
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false,
         "index_name": "oude_ijsselstreek",
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "keep_index_on_update": true,
         "base_url": "http://raad.oude-ijsselstreek.nl"
     },

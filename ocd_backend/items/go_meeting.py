@@ -46,7 +46,7 @@ class MeetingItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification='council')
         return results[0]
 
@@ -60,7 +60,7 @@ class MeetingItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification=['committee', 'subcommittee'])
         return {self._find_meeting_type_id(c): c for c in results}
 
@@ -177,13 +177,13 @@ class MeetingItem(
         organisation_name = u''.join(
             self.full_html.xpath('//h2[@class="page_title"]/span//text()'))
         try:
-            combined_index_data['organisation_id'] = committees[
+            combined_index_data['organization_id'] = committees[
                 organisation_name]['id']
-            combined_index_data['organisation'] = committees[
+            combined_index_data['organization'] = committees[
                 organisation_name]
         except KeyError as e:
-            combined_index_data['organisation_id'] = council['id']
-            combined_index_data['organisation'] = council
+            combined_index_data['organization_id'] = council['id']
+            combined_index_data['organization'] = council
 
 
         if self.original_item['type'] != 'meeting':

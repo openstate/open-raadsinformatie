@@ -46,7 +46,7 @@ ALLOWED_INCLUDE_FIELDS_SEARCH = []
 
 SIMPLE_QUERY_FIELDS = {
     'persons': ['biography^4', 'name^3', 'other_names^2'],
-    'organisations': ['name^4'],
+    'organizations': ['name^4'],
     'events': ['name^4'],
     'items': ['name^4'],
 }
@@ -56,7 +56,7 @@ DOC_TYPE_DEFAULT = u'items'
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
 AVAILABLE_FACETS = {
-    'organisations': {
+    'organizations': {
         'classification': {
             'terms': {
                 'field': 'classification',
@@ -74,9 +74,9 @@ AVAILABLE_FACETS = {
                 'size': 10
             }
         },
-        'organisation_id': {
+        'organization_id': {
             'terms': {
-                'field': 'organisation_id',
+                'field': 'organization_id',
                 'size': 10
             }
         },

@@ -142,7 +142,7 @@ class ReportItemTestCase(ItemTestCase):
     def test_meeting_organisation(self):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
-        self.assertDictEqual(data['organisation'], self.organisation)
+        self.assertDictEqual(data['organization'], self.organisation)
 
 
     def test_meeting_classification(self):

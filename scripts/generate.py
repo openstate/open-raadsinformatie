@@ -45,7 +45,7 @@ def _generate_for_organisations(name, almanak):
         "index_name": name.lower(),
         "file_url": (
             "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"),
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "filter": {
             "Title": name.lower()
         },
@@ -61,7 +61,7 @@ def _generate_for_organisations(name, almanak):
         "hidden": False,
         "index_name": name.lower(),
         "file_url": almanak,
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": True
     }]
@@ -125,7 +125,7 @@ def _generate_for_msi(name, almanak):
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": False,
         "index_name": name.lower(),
-        "doc_type": "organisations",
+        "doc_type": "organizations",
         "sitename": name,
         "keep_index_on_update": True
     }]

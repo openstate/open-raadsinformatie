@@ -22,7 +22,7 @@ class IBabsMeetingItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification='council')
         return results[0]
 
@@ -36,7 +36,7 @@ class IBabsMeetingItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification=['committee', 'subcommittee'])
         return {self._find_meeting_type_id(c): c for c in results}
 
@@ -95,13 +95,13 @@ class IBabsMeetingItem(
         ]
 
         try:
-            combined_index_data['organisation_id'] = committees[
+            combined_index_data['organization_id'] = committees[
                 meeting['MeetingtypeId']]['id']
-            combined_index_data['organisation'] = committees[
+            combined_index_data['organization'] = committees[
                 meeting['MeetingtypeId']]
         except KeyError as e:
-            combined_index_data['organisation_id'] = council['id']
-            combined_index_data['organisation'] = council
+            combined_index_data['organization_id'] = council['id']
+            combined_index_data['organization'] = council
 
         combined_index_data['classification'] = (
             u'Meeting Item' if self.original_item.has_key('MeetingId') else
@@ -165,7 +165,7 @@ class IBabsReportItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification='council')
         return results[0]
 
@@ -175,7 +175,7 @@ class IBabsReportItem(
         """
 
         results = self.api_request(
-            self.source_definition['index_name'], 'organisations',
+            self.source_definition['index_name'], 'organizations',
             classification=['committee', 'subcommittee'])
         return {c['name']: c for c in results}
 
@@ -229,16 +229,16 @@ class IBabsReportItem(
             }
         ]
 
-        combined_index_data['organisation_id'] = council['id']
-        combined_index_data['organisation'] = council
+        combined_index_data['organization_id'] = council['id']
+        combined_index_data['organization'] = council
         found_committee = False
         for comm_name, comm in committees.iteritems():
             if (
                 comm_name.lower() in combined_index_data['name'].lower() and
                 not found_committee
             ):
-                combined_index_data['organisation_id'] = comm['id']
-                combined_index_data['organisation'] = comm
+                combined_index_data['organization_id'] = comm['id']
+                combined_index_data['organization'] = comm
                 found_committee = True
 
         combined_index_data['classification'] = unicode(
