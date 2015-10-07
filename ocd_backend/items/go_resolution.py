@@ -16,13 +16,11 @@ class ResolutionItem(MeetingItem):
         return urlparse.urljoin(og_url, self._get_resolution_document())
 
     def get_original_object_id(self):
-        og_url = u''.join(
-            self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
-        return u'%s#documenten' % (og_url,)
+        return u'%s#documenten' % (self._get_stable_permalink(),)
 
     def get_original_object_urls(self):
         return {
-            "html": self.get_original_object_id(),
+            "html": u'%s#documenten' % (self._get_current_permalink(),),
             "pdf": self._get_pdf_link()
         }
 
@@ -38,5 +36,9 @@ class ResolutionItem(MeetingItem):
 
         combined_index_data['description'] = self.pdf_get_contents(
             self.get_original_object_urls()['pdf'])
+
+        for identifier in combined_index_data['identifiers']:
+            if identifier['scheme'] == u'GemeenteOplossingen':
+                identifier['identifier'] += '#documenten'
 
         return combined_index_data

@@ -29,13 +29,11 @@ class ReportItem(MeetingItem):
 
 
     def get_original_object_id(self):
-        og_url = u''.join(
-            self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
-        return u'%s#downloaden' % (og_url,)
+        return u'%s#downloaden' % (self._get_stable_permalink(),)
 
     def get_original_object_urls(self):
         return {
-            "html": self.get_original_object_id(),
+            "html": u'%s#downloaden' % (self._get_current_permalink(),),
             "mp3": self._get_mp3_link()
         }
 
@@ -53,5 +51,9 @@ class ReportItem(MeetingItem):
         items = self._get_meeting_items()
         combined_index_data['description'] = u'\n'.join(
             [u"%s. %s\n\n%s" % (i['index'], i['title'], i['description'],) for i in items])
+
+        for identifier in combined_index_data['identifiers']:
+            if identifier['scheme'] == u'GemeenteOplossingen':
+                identifier['identifier'] += '#downloaden'
 
         return combined_index_data

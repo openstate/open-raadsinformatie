@@ -45,7 +45,7 @@ class ResolutionItemTestCase(ItemTestCase):
             'full_content': self.raw_item
         }
 
-        self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/#documenten'
+        self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/00:00/#documenten'
         self.meeting_object_urls = {
             'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/#documenten',
             'pdf': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/Besluitenlijst-raadsvergadering-29-juni-2015.pdf'
@@ -62,7 +62,7 @@ class ResolutionItemTestCase(ItemTestCase):
                 'scheme': u'GemeenteOplossingen'
             },
             {
-                'identifier': '9051c2167311ef22f6898ad97b8afdd131990da8',
+                'identifier': '062d4a7d1393572a97c1f48ad304b5e8394ba2b2',
                 'scheme': u'ORI'
             }
         ]
@@ -75,6 +75,10 @@ class ResolutionItemTestCase(ItemTestCase):
 
 
         self.meeting_sources = [
+            {
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/',
+                'note': u''
+            },
             {
                 'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/Besluitenlijst-raadsvergadering-29-juni-2015.pdf',
                 'note': u'Besluitenlijst raadsvergadering 29 juni 2015.pdf'

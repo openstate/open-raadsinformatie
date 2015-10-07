@@ -60,8 +60,8 @@ class MeetingItemTestCase(ItemTestCase):
             'full_content': self.raw_item
         }
 
-        self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
-        self.meeting_item_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
+        self.meeting_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/00:00/'
+        self.meeting_item_object_id = u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/00:00/#agendapunt19024_4718'
         self.meeting_object_urls = {
             'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
         }
@@ -80,7 +80,7 @@ class MeetingItemTestCase(ItemTestCase):
                 'scheme': u'GemeenteOplossingen'
             },
             {
-                'identifier': '99cae907404739fad9570d577bf9852391e4fd7b',
+                'identifier': '1ed8f5177778a676d34aadfabcb3992f555807b9',
                 'scheme': u'ORI'
             }
         ]
@@ -92,7 +92,7 @@ class MeetingItemTestCase(ItemTestCase):
             },
             {
                 'scheme': u'ORI',
-                'identifier': '94d1cd4c80286b0125910a9508a40eebc9358387'
+                'identifier': 'd49d31d7d71db616be195bab979ba063e4de9293'
             }
         ]
         self.meeting_classification = u'Meeting'
@@ -122,6 +122,10 @@ class MeetingItemTestCase(ItemTestCase):
 
         self.meeting_sources = [
             {
+                'note': u'',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/'
+            },
+            {
                 'note': u'Oproep vergadering gemeenteraad.pdf',
                 'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/Oproep-vergadering-gemeenteraad-7.pdf'
             },
@@ -132,6 +136,10 @@ class MeetingItemTestCase(ItemTestCase):
         ]
 
         self.meeting_item_sources = [
+            {
+                'note': u'',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
+            },
             {
                 'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
                 'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'

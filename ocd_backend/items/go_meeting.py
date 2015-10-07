@@ -101,7 +101,7 @@ class MeetingItem(
         if not object_id and not urls:
             raise UnableToGenerateObjectId('Both original id and urls missing')
 
-        hash_content = self.source_definition['id'] + object_id + u''.join(sorted(urls.values()))
+        hash_content = self.source_definition['id'] + object_id #+ u''.join(sorted(urls.values()))
 
         return sha1(hash_content.decode('utf8')).hexdigest()
 
@@ -121,18 +121,43 @@ class MeetingItem(
 
         return u''
 
-    def get_original_object_id(self):
+    def _get_current_permalink(self, include_hash=True):
+        """
+        GemeenteOplossing has instable perma links -- The URLs change when
+        the time of the meeting is changed. This accounts for it and returns
+        a the current permalink that is used externally.
+        """
+
+        permalink = u''.join(
+            self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
         if self.original_item['type'] == 'meeting':
-            return u''.join(
-                self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
+            return permalink
         else:
-            return u'https://gemeenteraad.denhelder.nl%s#%s' % (
-                u''.join(self.html.xpath('.//div[@class="first"]/a/@href')),
-                self.html.xpath('.//@id')[0],)
+            if include_hash:
+                return u'%s#%s' % (permalink, self.html.xpath('.//@id')[0],)
+            else:
+                return permalink
+
+    def _get_stable_permalink(self, include_hash=True):
+        """
+        GemeenteOplossing has instable perma links -- The URLs change when
+        the time of the meeting is changed. This accounts for it and returns
+        a stable permalink that is used internally.
+        """
+
+        permalink = self._get_current_permalink(include_hash)
+        return re.sub(r'/\d{2}:\d{2}/', u'/00:00/', permalink)
+
+    def get_object_id(self):
+        hash_content = self.source_definition['id'] + self.get_original_object_id()
+        return sha1(hash_content.decode('utf8')).hexdigest()
+
+    def get_original_object_id(self):
+        return self._get_stable_permalink()
 
     def get_original_object_urls(self):
         # FIXME: what to do when there is not an original URL?
-        return {"html": self.get_original_object_id()}
+        return {"html": self._get_current_permalink()}
 
     def get_rights(self):
         return u'undefined'
@@ -165,7 +190,7 @@ class MeetingItem(
 
         combined_index_data['identifiers'] = [
             {
-                'identifier': unicode(self.get_original_object_id()),
+                'identifier': unicode(self._get_current_permalink()),
                 'scheme': u'GemeenteOplossingen'
             },
             {
@@ -203,11 +228,16 @@ class MeetingItem(
 
         combined_index_data['location'] = u'Gemeentehuis'
         combined_index_data['status'] = u'confirmed'
-        combined_index_data['sources'] = []
+        combined_index_data['sources'] = [
+            {
+                'url': self._get_current_permalink(),
+                'note': u''
+            }
+        ]
 
         if self.original_item['type'] != 'meeting':
-            parent_url = u''.join(
-                self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
+            parent_url = self._get_stable_permalink(False)
+            pprint(parent_url)
             combined_index_data['parent_id'] = unicode(self._get_object_id_for(
                 parent_url, {"html": parent_url}))
 
