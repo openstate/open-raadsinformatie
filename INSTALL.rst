@@ -28,8 +28,11 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
 4. Once connected to the container the following commands currently still have to be executed manually::
 
-   $ service elasticsearch restart
-   $ redis-server &
+   $ ./start.sh
+
+5. Thereafter you can start extract processes, Ie.:
+
+   $ ./manage.py extract start <source_name>
 
 Elasticsearch is now accessible locally in the Docker container via http://127.0.0.1:9200, or from the host via http://<CONTAINER IP ADDRESS>:9200 (look up the container's IP address using ``docker inspect`` as shown below).
 
