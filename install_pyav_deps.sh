@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# NOTE: this is not used for Dockerization -- please see the Dockerfile
+
 apt-get update
 apt-get -y install libfaac-dev libgpac-dev checkinstall libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev librtmp-dev libtheora-dev libvorbis-dev pkg-config yasm zlib1g-dev
 
@@ -31,7 +33,7 @@ checkinstall --pkgname=fdk-aac --pkgversion="0.1.0" --backup=no \
   --deldoc=yes --fstrans=no --default
 
 cd ..
-git clone --depth 1 https://chromium.googlesource.com/webm/libvpx 
+git clone --depth 1 https://chromium.googlesource.com/webm/libvpx
 cd libvpx
 ./configure --enable-shared
 make
@@ -55,8 +57,11 @@ make
 make install
 
 cd ..
-git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+#git clone --depth 1 git://source.ffmpeg.org/ffmpeg
+git clone git://source.ffmpeg.org/ffmpeg.git
 cd ffmpeg
+git checkout release/2.4
+
 ./configure --enable-shared --enable-gpl --enable-libfaac --enable-libmp3lame --enable-libopencore-amrnb \
   --enable-libopencore-amrwb --enable-librtmp --enable-libtheora --enable-libvorbis \
   --enable-libx264 --enable-nonfree --enable-version3  --enable-libxvid

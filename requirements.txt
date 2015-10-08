@@ -22,5 +22,5 @@ suds==0.4
 translitcodec==0.4.0
 BeautifulSoup==3.2.1
 Pillow==2.7.0
--e git+https://github.com/mikeboers/PyAV.git@40b3cb85f1d1b1823fdb24dd0aaa01c14d005d3c#egg=av
+-e git+https://github.com/mikeboers/PyAV.git@34d568f924e7dbb49a6f337e7791204c64fd8c52#egg=av
 spyne==2.11.0

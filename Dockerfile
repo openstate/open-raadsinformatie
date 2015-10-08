@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu:14.04
 MAINTAINER Sicco van Sas <sicco@openstate.eu>
 
 # Use bash as default shell
@@ -7,29 +7,43 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 # Add multiverse to sources
 RUN echo 'deb http://archive.ubuntu.com/ubuntu/ precise multiverse' >> etc/apt/sources.list
 
-RUN apt-get update \
-    && apt-get install -y \
-        python-software-properties \
-        openjdk-7-jre-headless \
-        wget \
-        curl \
-        poppler-utils
-
-RUN add-apt-repository -y ppa:rwky/redis > /dev/null \
-    && apt-get update \
-    && apt-get install -y redis-server
-
-# Set Dutch locale, needed to parse Dutch time data
-RUN locale-gen nl_NL.UTF-8
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 #Set Timezone
 RUN echo "Europe/Amsterdam" > /etc/timezone \
     && dpkg-reconfigure -f noninteractive tzdata
 
+RUN apt-get update \
+    && apt-get install -y \
+        python-dev \
+        python-setuptools \
+        python-software-properties \
+        openjdk-7-jre-headless \
+        wget \
+        curl \
+        poppler-utils \
+        software-properties-common \
+        gettext \
+        git \
+        vim
+
+# according to http://www.monblocnotes.com/node/2057
+RUN sed -i 's/exit 101/exit 0/' /usr/sbin/policy-rc.d
+
+# according to http://www.monblocnotes.com/node/2057
+RUN sed -i 's/exit 101/exit 0/' /usr/sbin/policy-rc.d
+
+RUN apt-get install -y redis-server
+RUN service redis-server start
+
 # Install elasticsearch
 ENV ES_VERSION 1.4.2
 RUN wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.deb
 RUN dpkg -i elasticsearch-${ES_VERSION}.deb > /dev/null
+RUN sed -i 's/#discovery.zen.ping.multicast.enabled: false/discovery.zen.ping.multicast.enabled: false/' /etc/elasticsearch/elasticsearch.yml
 RUN service elasticsearch start
 RUN rm elasticsearch-${ES_VERSION}.deb
 
@@ -48,7 +62,9 @@ RUN apt-get install -y \
         python-dev \
         python-setuptools \
         python-virtualenv \
-        git
+        git \
+        supervisor \
+        vim
 
 RUN easy_install pip
 
@@ -140,8 +156,9 @@ RUN curl -sSL http://mirror.ryansanden.com/ffmpeg-d00bc6a8/xvidcore-${XVIDCORE_V
     && make install
 
 #ENV FFMPEG_COMMIT 580c86925ddf8c85d2e6f57ed55dd75853748b29
-RUN git clone --depth 1 git://source.ffmpeg.org/ffmpeg \
+RUN git clone git://source.ffmpeg.org/ffmpeg.git \
     && cd ffmpeg \
+    && git checkout release/2.4 \
 #&& git checkout -q $FFMPEG_COMMIT \
     && ./configure \
         --enable-shared \
@@ -179,10 +196,16 @@ RUN source ../bin/activate \
 
 # Start
 RUN source ../bin/activate \
-    && service elasticsearch start \
-    && sleep 10 \
+    && service elasticsearch restart \
+    && sleep 20 \
     && ./manage.py elasticsearch create_indexes es_mappings/ \
     && ./manage.py elasticsearch put_template
 
+RUN apt-get install supervisor
+
 # Delete all NPO Bastage files again
 RUN find . -delete
+
+# When the container is created or started run start.sh which starts
+# all required services and supervisor which starts celery and celerycam
+CMD ./start.sh
