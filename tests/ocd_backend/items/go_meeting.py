@@ -144,6 +144,10 @@ class MeetingItemTestCase(ItemTestCase):
             {
                 'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
                 'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'
+            },
+            {
+                'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
+                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'
             }
         ]
 

@@ -254,6 +254,8 @@ class MeetingItem(
 
                 for doc in docs_html.xpath('//li/a'):
                     doc_url = u''.join(doc.xpath('.//@href')).strip()
+                    if not doc_url.startswith('http'):
+                        doc_url = u'%s%s' % (self.source_definition['base_url'], doc_url,)
                     doc_note = u''.join(doc.xpath('.//text()')).strip()
                     if doc_note != u'notitie':
                         combined_index_data['sources'].append({
@@ -273,6 +275,7 @@ class MeetingItem(
 
             for doc in self.full_html.xpath('//div[@id="documenten"]//li/a'):
                 doc_url = u''.join(doc.xpath('.//@href')).strip()
+                doc_note = u''.join(doc.xpath('.//text()')).strip()
                 if doc_note != u'notitie':
                     combined_index_data['sources'].append({
                         'url': u'%s%s' % (base_url, doc_url,),
