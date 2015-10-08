@@ -208,4 +208,4 @@ RUN find . -delete
 
 # When the container is created or started run start.sh which starts
 # all required services and supervisor which starts celery and celerycam
-CMD ./start.sh
+CMD /opt/ori/start.sh
