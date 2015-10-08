@@ -296,6 +296,10 @@ class MeetingItem(
         #         #'description': self.pdf_get_contents(
         #         #    document['PublicDownloadURL'])
 
+        for source in combined_index_data['sources']:
+            if source['url'].lower().endswith('.pdf'):
+                source['description'] = self.pdf_get_contents(doc_url)
+
         return combined_index_data
 
     def get_index_data(self):

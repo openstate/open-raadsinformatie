@@ -68,6 +68,6 @@ class PDFToTextMixin(object):
         Method to convert a given PDF file into text file using a subprocess
         """
 
-        content = convert(path)
+        content = convert(path, range(1, 20))
 
         return unicode(self.pdf_clean_text(content.decode('utf-8')))

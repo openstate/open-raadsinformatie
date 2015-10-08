@@ -128,7 +128,8 @@ class MeetingItemTestCase(ItemTestCase):
             },
             {
                 'note': u'Oproep vergadering gemeenteraad.pdf',
-                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/Oproep-vergadering-gemeenteraad-7.pdf'
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/Oproep-vergadering-gemeenteraad-7.pdf',
+                'description': u'pdf'
             },
             {
                 'note': u'1. 2015-08-31-19-01-19-Gemeenteraad.mp3',
@@ -143,11 +144,13 @@ class MeetingItemTestCase(ItemTestCase):
             },
             {
                 'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
-                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'
+                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf',
+                'description': u'pdf'
             },
             {
                 'note': u'Raadsbesluit bekrachtiging geheimhouding Exploitatie Zeestad..pdf',
-                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf'
+                'url': u'https://gemeenteraad.denhelder.nl/Documenten/Raadsbesluit-bekrachtiging-geheimhouding-Exploitatie-Zeestad.pdf',
+                'description': u'pdf'
             }
         ]
 
@@ -168,7 +171,7 @@ class MeetingItemTestCase(ItemTestCase):
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
         MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
-
+        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
         item = MeetingItem(
             self.source_definition, 'application/json',
             self.raw_item, self.meeting
@@ -187,6 +190,7 @@ class MeetingItemTestCase(ItemTestCase):
         # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
+        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
 
         item = MeetingItem(
             self.source_definition, 'application/json',
@@ -362,6 +366,8 @@ class MeetingItemTestCase(ItemTestCase):
         # # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
+        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
+
         # MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
 
         meeting_item = {
