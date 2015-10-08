@@ -29,7 +29,8 @@ class MeetingItemTestCase(ItemTestCase):
             'item': 'ocd_backend.items.go_meeting.MeetingItem',
             'loader': 'ocd_backend.loaders.ElasticsearchLoader',
             'hidden': False,
-            'index_name': 'den_helder'
+            'index_name': 'den_helder',
+            'base_url': 'https://gemeenteraad.denhelder.nl'
         }
 
         with open(dump_path, 'r') as f:
