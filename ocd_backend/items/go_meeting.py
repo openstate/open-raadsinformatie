@@ -293,12 +293,11 @@ class MeetingItem(
                         'note': doc_note
                     })
 
-        #         #'description': self.pdf_get_contents(
-        #         #    document['PublicDownloadURL'])
-
         for source in combined_index_data['sources']:
-            if source['url'].lower().endswith('.pdf'):
-                source['description'] = self.pdf_get_contents(doc_url)
+            if not source['url'].lower().endswith('.pdf'):
+                continue
+            source['description'] = self.pdf_get_contents(
+                source['url'], self.source_definition.get('pdf_max_pages', 20))
 
         return combined_index_data
 

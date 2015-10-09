@@ -87,7 +87,8 @@
         "doc_type": "events",
         "sitename": "Amstelveen",
         "keep_index_on_update": true,
-        "regex": ".*"
+        "regex": ".*",
+        "pdf_max_pages": 0
     },
     {
         "id": "utrecht_municipality",
@@ -177,7 +178,8 @@
         "doc_type": "events",
         "sitename": "Utrecht",
         "keep_index_on_update": true,
-        "regex": ".*"
+        "regex": ".*",
+        "pdf_max_pages": 0
     },
     {
         "extractor": "ocd_backend.extractors.odata.ODataExtractor",
@@ -253,7 +255,8 @@
         "sitename": "Heerde",
         "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": false
+        "hidden": false,
+        "pdf_max_pages": 0
     },
     {
         "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
@@ -359,7 +362,8 @@
         "keep_index_on_update": true,
         "base_url": "https://gemeenteraad.denhelder.nl",
         "extract_meeting_items": false,
-        "upcoming": false
+        "upcoming": false,
+        "pdf_max_pages": 0
     },
     {
         "id": "den_helder_reports",
@@ -467,7 +471,8 @@
         "keep_index_on_update": true,
         "base_url": "http://raad.oude-ijsselstreek.nl",
         "extract_meeting_items": false,
-        "upcoming": false
+        "upcoming": false,
+        "pdf_max_pages": 0
     },
     {
         "id": "oude_ijsselstreek_reports",

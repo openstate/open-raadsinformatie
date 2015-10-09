@@ -272,7 +272,8 @@ class IBabsReportItem(
                     'url': self._get_public_url(b),
                     'notes': a,
                     'description': self.pdf_get_contents(
-                        self._get_public_url(b)),
+                        self._get_public_url(b),
+                        self.source_definition.get('pdf_max_pages', 20)),
                 }, field_values, field_ids)
             combined_index_data['sources'] += documents
 

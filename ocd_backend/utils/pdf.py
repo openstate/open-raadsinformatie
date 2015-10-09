@@ -43,12 +43,12 @@ class PDFToTextMixin(object):
         return text
         # return re.sub(r'\s+', u' ', text)
 
-    def pdf_get_contents(self, url):
+    def pdf_get_contents(self, url, max_pages=20):
         """
         Convenience method to download a PDF file and converting it to text.
         """
         tf = self.pdf_download(url)
-        return self.pdf_to_text(tf.name)
+        return self.pdf_to_text(tf.name, max_pages)
 
     def pdf_download(self, url):
         """
@@ -63,11 +63,14 @@ class PDFToTextMixin(object):
         tf.seek(0)
         return tf
 
-    def pdf_to_text(self, path):
+    def pdf_to_text(self, path, max_pages=20):
         """
         Method to convert a given PDF file into text file using a subprocess
         """
 
-        content = convert(path, range(1, 20))
+        if max_pages > 0:
+            content = convert(path, range(0, max_pages))
+        else:
+            content = convert(path)
 
         return unicode(self.pdf_clean_text(content.decode('utf-8')))

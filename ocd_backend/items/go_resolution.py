@@ -35,7 +35,8 @@ class ResolutionItem(MeetingItem):
         combined_index_data['classification'] = u'Resolution'
 
         combined_index_data['description'] = self.pdf_get_contents(
-            self.get_original_object_urls()['pdf'])
+            self.get_original_object_urls()['pdf'],
+            self.source_definition.get('pdf_max_pages', 20))
 
         for identifier in combined_index_data['identifiers']:
             if identifier['scheme'] == u'GemeenteOplossingen':
