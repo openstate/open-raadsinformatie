@@ -22,10 +22,21 @@ COMBINED_INDEX = 'ori_combined_index'
 DEFAULT_INDEX_PREFIX = 'ori'
 
 # The fields which can be used for sorting results via the REST API
-SORTABLE_FIELDS = (
-    'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
-    'date', 'date_granularity', 'authors', '_score'
-)
+SORTABLE_FIELDS = {
+    'persons': [
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'gender', 'name'],
+    'organizations': [
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name'],
+    'events' :[
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name', 'start_date',
+        'location'],
+    'items': [
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name']
+}
 
 # EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
 #                            'media_urls.original_url',

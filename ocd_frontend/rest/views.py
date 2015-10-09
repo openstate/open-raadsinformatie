@@ -51,10 +51,10 @@ def parse_search_request(data, doc_type, mlt=False):
 
     # Check if 'sort' was specified, if not, fallback to '_score'
     sort = data.get('sort', '_score')
-    if sort not in current_app.config['SORTABLE_FIELDS']:
+    if sort not in current_app.config['SORTABLE_FIELDS'][doc_type]:
         raise OcdApiError(
             'Invalid value for \'sort\', sortable fields are: %s'
-            % ', '.join(current_app.config['SORTABLE_FIELDS']), 400)
+            % ', '.join(current_app.config['SORTABLE_FIELDS'][doc_type]), 400)
 
     # Check if 'order' was specified, if not, fallback to desc
     order = data.get('order', 'desc')
