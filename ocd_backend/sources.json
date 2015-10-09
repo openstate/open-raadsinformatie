@@ -46,6 +46,34 @@
         "keep_index_on_update": true
     },
     {
+        "id": "amstelveen_popit_organizations",
+        "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.popit.PopitOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "amstelveen",
+        "file_url": "http://amstelveen.openraadsinformatie.nl/api/v0.1/organizations",
+        "doc_type": "organizations",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "amstelveen_popit_persons",
+        "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.popit.PopitPersonItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "amstelveen",
+        "file_url": "http://amstelveen.openraadsinformatie.nl/api/v0.1/persons",
+        "doc_type": "persons",
+        "keep_index_on_update": true
+    },
+    {
         "id": "amstelveen_persons",
         "extractor": "ocd_backend.extractors.almanak.PersonsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
