@@ -65,7 +65,18 @@ AVAILABLE_FACETS = {
         }
     },
     'persons': {
-
+        'gender': {
+            'terms': {
+                'field': 'gender',
+                'size': 2
+            }
+        },
+        'organization': {
+            'terms': {
+                'field': 'memberships.organization_id',
+                'size': 10
+            }
+        }
     },
     'events': {
         'classification': {
@@ -90,6 +101,18 @@ AVAILABLE_FACETS = {
             'terms': {
                 'field': 'status',
                 'size': 10
+            }
+        },
+        'start_date': {
+            'date_histogram': {
+                'field': 'date',
+                'interval': 'month'
+            }
+        },
+        'end_date': {
+            'date_histogram': {
+                'field': 'date',
+                'interval': 'month'
             }
         }
     },
