@@ -2,12 +2,15 @@
 
 cd /opt/ori
 
-SOURCES="ocd_backend/sources/$1.json"
-
-UPDATABLE_SOURCES="$1_committees $1_popit_organizations $1_popit_persons $1_meetings $1_reports $1_resolutions"
-
-for UPDATE_SOURCE in $UPDATABLE_SOURCES
+for JSON_FILE in ocd_backend/sources/*.json
 do
-  echo $UPDATE_SOURCE
-  ./manage.py extract start $UPDATE_SOURCE --sources_config=$SOURCES
+  MUNI=`basename $JSON_FILE .json`
+  UPDATABLE_SOURCES="${MUNI}_committees ${MUNI}_popit_organizations ${MUNI}_popit_persons ${MUNI}_meetings ${MUNI}_reports ${MUNI}_resolutions"
+
+  for UPDATE_SOURCE in $UPDATABLE_SOURCES
+  do
+    # echo $UPDATE_SOURCE
+    ./manage.py extract start $UPDATE_SOURCE --sources_config=$SOURCES
+    sleep 60
+  done
 done
