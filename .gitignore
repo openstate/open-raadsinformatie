@@ -60,3 +60,6 @@ local_dumps/
 dumps/*
 local_dumps/*
 ocd_frontend/.thumbnail-cache/*
+log/*log*
+log/*err*
+log/*.pid
