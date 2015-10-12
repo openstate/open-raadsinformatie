@@ -241,8 +241,13 @@ class IBabsReportItem(
                 combined_index_data['organization'] = comm
                 found_committee = True
 
-        combined_index_data['classification'] = unicode(
+        report_name = unicode(
             self.original_item['_ReportName'].split(r'\s+')[0])
+
+        if u'Besluitenlijsten' in report_name:
+            combined_index_data['classification'] = u'Resolution'
+        else:
+            combined_index_data['classification'] = u'Report'
 
         combined_index_data['description'] = combined_index_data['name']
 
