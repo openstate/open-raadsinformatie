@@ -11,6 +11,8 @@ do
   do
     # echo $UPDATE_SOURCE
     ./manage.py extract start $UPDATE_SOURCE --sources_config=$JSON_FILE
-    sleep 1800
+    sleep 60
   done
+
+  sleep 1800
 done
