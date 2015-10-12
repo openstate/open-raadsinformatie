@@ -232,11 +232,14 @@ def format_sources_results(results):
     sources = []
 
     for bucket in results['aggregations']['index']['buckets']:
-        sources.append({
-            'id': bucket['key'],
-            'name': bucket['collection']['buckets'][0]['key'],
-            'count': bucket['collection']['buckets'][0]['doc_count']
-        })
+        source = {d['key']: d['doc_count'] for d in bucket['doc_type']['buckets']}
+        source['id'] = u'_'.join(bucket['key'].split('_')[1:-1])
+
+        # FIXME: quick hack
+        if source['id'] == u'combined':
+            source['id'] = u'combined_index'
+
+        sources.append(source)
 
     return {
         'sources': sources
@@ -252,13 +255,13 @@ def list_sources():
         'aggregations': {
             'index': {
                 'terms': {
-                    'field': 'meta.source_id',
+                    'field': '_index',
                     'size': 0,
                 },
                 'aggregations': {
-                    'collection': {
+                    'doc_type': {
                         'terms': {
-                            'field': 'meta.collection'
+                            'field': '_type'
                         }
                     }
                 }
@@ -267,8 +270,7 @@ def list_sources():
         "size": 0
     }
 
-    es_r = current_app.es.search(body=es_q,
-                                 index=current_app.config['COMBINED_INDEX'])
+    es_r = current_app.es.search(body=es_q)
 
     # Log a 'sources' event if usage logging is enabled
     if current_app.config['USAGE_LOGGING_ENABLED']:
