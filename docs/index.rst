@@ -1,10 +1,7 @@
-NPO Backstage API Documentation
+Open Raadsinformatie Documentation
 ===================================
 
-.. warning::
-   The URL of this website is currently http://backstage-docs.openstate.eu, but will most likely change soon.
-
-Welcome to the documentation of the NPO Backstage API. The NPO Backstage API is the place where data from the NPO (Nederlandse Publieke Omroep, i.e. the Dutch public broadcaster) is made available for others to reuse. For more general information about the NPO Backstage project, see the main website: http://npo.nl/backstage.
+Welcome to the documentation of the Open Raadsinformatie API. The Open Raadsinformatie API is the place where data from dutch municipalities is made available for others to reuse. For more general information about the Open Raadsinformatie project, see the main website: http://www.openraadsinformatie.nl/.
 
 Background
 ----------
@@ -17,8 +14,8 @@ Background
    changes
 
 
-Using the NPO Backstage API
--------------------------------
+Using the Open Raadsinformatie API
+----------------------------------
 
 .. toctree::
    :maxdepth: 2

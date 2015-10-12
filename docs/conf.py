@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# NPO Backstage API documentation build configuration file, created by
+# Open Raadsinformatie API documentation build configuration file, created by
 # sphinx-quickstart
 
 import sys
@@ -30,8 +30,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'NPO Backstage API'
-copyright = u'2015, Sicco van Sas, Bart de Goede and Justin van Wees; documentation is released under Creative Commons Attribution 4.0'
+project = u'Open Raadsinformatie API'
+copyright = u'2015, Breyten Ernsting, Sicco van Sas, Bart de Goede and Justin van Wees; documentation is released under Creative Commons Attribution 4.0'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -81,7 +81,7 @@ pygments_style = 'sphinx'
 
 
 extlinks = {
-    'rest_api_v0': ('http://backstage-api.openstate.eu/%s', None)
+    'rest_api_v0': ('http://api.openraadsinformatie.nl/%s', None)
 }
 
 # -- Options for HTML output ----------------------------------------------
@@ -158,7 +158,7 @@ html_show_sphinx = False
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'NPOBackstageAPIdoc'
+htmlhelp_basename = 'OpenRaadsinformatieAPIdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -178,7 +178,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'NPOBackstageAPI.tex', u'NPO Backstage API Documentation',
+  ('index', 'OpenRaadsinformatieAPI.tex', u'Open Raadsinformatie API',
    u'Sicco van Sas', 'manual'),
 ]
 
@@ -208,7 +208,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'npobackstageapi', u'NPO Backstage API Documentation',
+    ('index', 'openraadsinformatieapi', u'Open Raadsinformatie API',
      [u'Sicco van Sas'], 1)
 ]
 
@@ -222,8 +222,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'NPOBackstageAPI', u'NPO Backstage API Documentation',
-   u'Sicco van Sas', 'NPOBackstageAPI', 'Documentation of the NPO Backstage API.',
+  ('index', 'OpenRaadsinformatieAPI', u'Open Raadsinformatie API',
+   u'Sicco van Sas', 'OpenRaadsinformatieAPI', 'Documentation of the pen Raadsinformatie API.',
    'documentation'),
 ]
 

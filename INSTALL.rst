@@ -11,7 +11,7 @@ Install either using Docker, Vagrant or manually.
 Install using Docker
 ------------
 
-Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a development environment and get started with contributing to the NPO Backstage API. The following has been tested to work with Docker 1.0.1 and up.
+Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a development environment and get started with contributing to the Open Raadsinformatie API. The following has been tested to work with Docker 1.0.1 and up.
 
 1. Clone the NPO Backstage git repository::
 
@@ -64,7 +64,7 @@ Some useful Docker commands::
 Install using Vagrant
 ------------
 
-It is also possible to use `Vagrant <http://www.vagrantup.com/>`_  to install the NPO Backstage API.
+It is also possible to use `Vagrant <http://www.vagrantup.com/>`_  to install the Open Raadsinformatie API.
 
 1. Clone the NPO Backstage git repository::
 
@@ -148,7 +148,7 @@ Create or go to the directory where you want to place the NPO Backstage files.
 Usage
 ============
 
-Some quick notes on how to use the NPO Backstage API
+Some quick notes on how to use the Open Raadsinformatie API
 
 Running an NPO Backstage extractor
 ------------

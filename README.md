@@ -14,10 +14,10 @@
  - [Copyright and license](#copyright-and-license)
 
 ## Important links
- - [NPO Backstage homepage](http://www.npo.nl/specials/backstage)
- - [Official source code repo](https://github.com/openstate/npo-backstage/)
- - [Documentation](http://backstage-docs.openstate.eu/)
- - [Issue tracker](https://github.com/openstate/npo-backstage/issues)
+ - [Open Raadsinformatie homepage](http://www.openraadsinformatie.nl/)
+ - [Official source code repo](https://github.com/openstate/open-raadsinformatie/)
+ - [Documentation](http://docs.openraadsinformatie.nl/)
+ - [Issue tracker](https://github.com/openstate/open-raadsinformatieissues)
 
 ## Bugs and feature requests
 
@@ -25,7 +25,7 @@ Have a bug or a feature request? Please first read the [issue guidelines](https:
 
 ## Install and usage
 
-See this guide to [install the NPO Backstage API](https://github.com/openstate/npo-backstage/blob/master/INSTALL.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started.
+See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/INSTALL.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started.
 
 ## Documentation
 
@@ -55,4 +55,4 @@ Contributors:
 
 ## Copyright and license
 
-The Open Raadsinformatie API is distributed under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl.html). The Open Cultuur Data and NPO Backstage documentation is released under the [Creative Commons Attribution 4.0 International license](http://creativecommons.org/licenses/by/4.0/).
+The Open Raadsinformatie API is distributed under the [GNU Lesser General Public License v3](https://www.gnu.org/licenses/lgpl.html). The Open Cultuur Data and NOpen Raadsinformatie documentation is released under the [Creative Commons Attribution 4.0 International license](http://creativecommons.org/licenses/by/4.0/).

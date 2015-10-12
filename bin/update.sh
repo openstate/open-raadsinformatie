@@ -11,6 +11,6 @@ do
   do
     # echo $UPDATE_SOURCE
     ./manage.py extract start $UPDATE_SOURCE --sources_config=$SOURCES
-    sleep 60
+    sleep 1800
   done
 done
