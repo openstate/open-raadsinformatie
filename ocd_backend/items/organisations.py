@@ -62,7 +62,7 @@ class AlmanakOrganisationItem(OrganisationItem):
         return u'undefined'
 
     def get_collection(self):
-        return unicode(self.original_item['name'])
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}
