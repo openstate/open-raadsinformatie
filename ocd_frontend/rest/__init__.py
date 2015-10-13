@@ -13,6 +13,8 @@ def create_app(settings_override=None):
 
     def add_cors_headers(resp):
         resp.headers['Access-Control-Allow-Origin'] = '*'
+        # See https://stackoverflow.com/questions/12630231/how-do-cors-and-access-control-allow-headers-work
+        resp.headers['Access-Control-Allow-Headers'] = 'origin, content-type, accept'
         return resp
 
     app.after_request(add_cors_headers)
