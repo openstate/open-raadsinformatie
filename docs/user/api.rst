@@ -116,11 +116,6 @@ Searching within multiple collections
     .. sourcecode:: http
 
       HTTP/1.1 200 OK
-      content-type: application/json
-      content-length: 3082
-      date: Wed, 27 May 2015 12:41:45 GMT
-
-      HTTP/1.1 200 OK
       Server: nginx/1.4.6 (Ubuntu)
       Date: Tue, 13 Oct 2015 08:42:56 GMT
       Content-Type: application/json
