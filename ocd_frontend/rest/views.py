@@ -1,3 +1,4 @@
+import copy
 from datetime import datetime
 import glob
 from flask import (
@@ -68,7 +69,9 @@ def parse_search_request(data, doc_type, mlt=False):
         raise OcdApiError('\'facets\' should be an object', 400)
 
     facets = {}
-    available_facets = current_app.config['AVAILABLE_FACETS'][doc_type]
+    available_facets = copy.deepcopy(
+        current_app.config['AVAILABLE_FACETS'][doc_type])
+    available_facets.update(current_app.config['COMMON_FACETS'])
 
     # Inspect all requested facets and override the default settings
     # where necessary

@@ -145,7 +145,7 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
 
         facets = {
-            'classification': {
+            'source': {
                 'size': 'abc'
             }
         }
@@ -153,7 +153,6 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de',
                                               'facets': facets}))
-        pprint(response)
         self.assert_bad_request_json(response)
 
     # def test_datetime_facet(self):
@@ -456,10 +455,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
 
         facets = {
             'rights': {
-                'terms': {
-                    'field': 'meta.rights',
-                    'size': 'abc'
-                }
+                'size': 'abc'
             }
         }
 

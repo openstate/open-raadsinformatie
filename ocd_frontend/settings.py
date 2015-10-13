@@ -73,6 +73,45 @@ DOC_TYPE_DEFAULT = u'items'
 
 # Definition of the ES facets (and filters) that are accessible through
 # the REST API
+COMMON_FACETS = {
+    'processing_started': {
+        'date_histogram': {
+            'field': 'meta.processing_started',
+            'interval': 'month'
+        }
+    },
+    'processing_finished': {
+        'date_histogram': {
+            'field': 'meta.processing_finished',
+            'interval': 'month'
+        }
+    },
+    'source': {
+        'terms': {
+            'field': 'meta.source_id',
+            'size': 10
+        }
+    },
+    'collection': {
+        'terms': {
+            'field': 'meta.collection',
+            'size': 10
+        }
+    },
+    'rights': {
+        'terms': {
+            'field': 'meta.rights',
+            'size': 10
+        }
+    },
+    'index': {
+        'terms': {
+            'field': '_index',
+            'size': 10
+        }
+    }
+}
+
 AVAILABLE_FACETS = {
     'organizations': {
         'classification': {
