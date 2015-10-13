@@ -38,7 +38,7 @@ class ReportItem(MeetingItem):
         }
 
     def get_collection(self):
-        return u'Verslag %s' % (super(ReportItem, self).get_collection(),)
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = super(ReportItem, self).get_combined_index_data()

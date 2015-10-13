@@ -52,7 +52,7 @@ class ResolutionItemTestCase(ItemTestCase):
         }
 
         self.rights = u'undefined' # for now ...
-        self.collection = u'Besluitenlijst Gemeenteraad 29 juni 2015 17:00:00'
+        self.collection = u'den_helder'
 
         self.meeting_name = u'Besluitenlijst Gemeenteraad 29 juni 2015 17:00:00'
 

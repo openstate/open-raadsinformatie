@@ -70,7 +70,7 @@ class MeetingItemTestCase(ItemTestCase):
             'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
         }
         self.rights = u'undefined' # for now ...
-        self.collection = u'Gemeenteraad 31 augustus 2015 19:30:00'
+        self.collection = u'den_helder'
 
         self.meeting_name = u'Gemeenteraad 31 augustus 2015 19:30:00'
         self.meeting_item_name = u'6. Bekrachtigen van de geheimhouding op de daartoe door het college gewaarmerkte exploitatie  van Zeestad per 1 januari 2015.'

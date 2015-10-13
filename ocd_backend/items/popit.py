@@ -27,7 +27,7 @@ class PopitBaseItem(object):
         return self.original_item['meta']['rights']
 
     def get_collection(self):
-        return self.original_item['meta']['collection']
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {

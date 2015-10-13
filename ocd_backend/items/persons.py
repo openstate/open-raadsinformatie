@@ -19,7 +19,7 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
         return u'undefined'
 
     def get_collection(self):
-        return self.original_item['municipality']
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}

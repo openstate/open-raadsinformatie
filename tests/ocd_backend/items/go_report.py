@@ -51,7 +51,7 @@ class ReportItemTestCase(ItemTestCase):
         }
 
         self.rights = u'undefined' # for now ...
-        self.collection = u'Verslag Gemeenteraad 29 juni 2015 17:00:00'
+        self.collection = u'den_helder'
 
         self.meeting_name = u'Verslag Gemeenteraad 29 juni 2015 17:00:00'
 

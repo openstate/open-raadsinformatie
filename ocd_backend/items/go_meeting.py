@@ -163,7 +163,7 @@ class MeetingItem(
         return u'undefined'
 
     def get_collection(self):
-        return u''.join(self.full_html.xpath('//title/text()')).strip()
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}

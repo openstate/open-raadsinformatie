@@ -25,7 +25,7 @@ class ResolutionItem(MeetingItem):
         }
 
     def get_collection(self):
-        return u'Besluitenlijst %s' % (super(ResolutionItem, self).get_collection(),)
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = super(ResolutionItem, self).get_combined_index_data()

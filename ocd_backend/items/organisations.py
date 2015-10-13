@@ -15,7 +15,7 @@ class MunicipalityOrganisationItem(OrganisationItem):
         return u'undefined'
 
     def get_collection(self):
-        return unicode(self.source_definition['filter']['Title'])
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}

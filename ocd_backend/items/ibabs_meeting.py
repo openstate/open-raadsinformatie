@@ -58,10 +58,7 @@ class IBabsMeetingItem(
         return u'undefined'
 
     def get_collection(self):
-        meeting = self.original_item
-        if self.original_item.has_key('MeetingId'):
-            meeting = self.original_item['Meeting']
-        return u'%s' % (meeting['Meetingtype'],)
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}
