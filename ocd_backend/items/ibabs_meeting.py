@@ -192,7 +192,7 @@ class IBabsReportItem(
         return u'undefined'
 
     def get_collection(self):
-        return u'%s' % (self.original_item['_ReportName'])
+        return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
         combined_index_data = {}
