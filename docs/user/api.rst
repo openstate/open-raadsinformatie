@@ -40,29 +40,44 @@ Collection overview and statistics
       HTTP/1.1 200 OK
       Content-type: application/json
       Content-length: 369
-      Date: Wed, 27 May 2015 12:36:15 GMT
+      Date: Wed, 13 Oct 2015 12:36:15 GMT
 
       {
         "sources": [
           {
-            "count": 24559,
-            "id": "npo_journalistiek",
-            "name": "NPO Journalistiek"
+            "events": 1026,
+            "id": "combined_index",
+            "organizations": 66,
+            "persons": 233
           },
           {
-            "count": 3766,
-            "id": "metadata",
-            "name": "metadata"
+            "events": 607,
+            "id": "amstelveen",
+            "organizations": 15,
+            "persons": 54
           },
           {
-            "count": 3766,
-            "id": "prid",
-            "name": "PRID"
+            "events": 265,
+            "id": "den_helder",
+            "organizations": 27,
+            "persons": 50
           },
           {
-            "count": 2483,
-            "id": "tt888",
-            "name": "tt888"
+            "events": 132,
+            "id": "heerde",
+            "organizations": 11,
+            "persons": 30
+          },
+          {
+            "id": "utrecht",
+            "organizations": 16,
+            "persons": 64
+          },
+          {
+            "events": 22,
+            "id": "oude_ijsselstreek",
+            "organizations": 18,
+            "persons": 35
           }
         ]
       }
@@ -77,7 +92,7 @@ Searching within multiple collections
 .. http:post:: /search
 .. http:post:: /search/(doc_type)
 
-   Search for items through all indexed datasets. The search can be limited on a certain document type. `doc_type` can assume the following values::
+   Search for items through all indexed datasets. The search can be limited on a certain document type. `doc_type` can assume the following values:
 
 * persons
 * organizations
@@ -93,9 +108,6 @@ Searching within multiple collections
             "collection": {},
             "date": {"interval": "day"}
          },
-         "filters": {
-            "media_content_type": {"terms": ["image/jpeg"]}
-         },
          "size": 1
       }'
 
@@ -108,109 +120,145 @@ Searching within multiple collections
       content-length: 3082
       date: Wed, 27 May 2015 12:41:45 GMT
 
+      HTTP/1.1 200 OK
+      Server: nginx/1.4.6 (Ubuntu)
+      Date: Tue, 13 Oct 2015 08:42:56 GMT
+      Content-Type: application/json
+      Content-Length: 12480
+      Connection: keep-alive
+      Access-Control-Allow-Origin: *
+
       {
-        "facets": {
-          "collection": {
-            "_type": "terms",
-            "missing": 0,
-            "other": 0,
-            "terms": [
+        "events": [
+          {
+            "classification": "Besluitenlijsten RWN",
+            "description": "Besluitenlijst vergadering raadscommissie RWN 20 mei 2014",
+            "end_date": "2014-05-20T00:00:00",
+            "id": "3fa41f082e8ff826ed3652fb6f52834bfe1a761a",
+            "identifiers": [
               {
-                "count": 11,
-                "term": "Amstelveen"
+                "identifier": "3f2e7187-09d3-4743-9c3a-5b59dda70f51",
+                "scheme": "iBabs"
+              },
+              {
+                "identifier": "3fa41f082e8ff826ed3652fb6f52834bfe1a761a",
+                "scheme": "ORI"
               }
             ],
-            "total": 11
-          },
-          "date": {
-            "_type": "date_histogram",
-            "entries": [
-              {
-                "count": 1,
-                "time": 1264982400000
+            "meta": {
+              "_score": 0.7127553,
+              "_type": "events",
+              "collection": "Besluitenlijsten RWN",
+              "ocd_url": "http://api.openraadsinformatie.nl/v0/amstelveen_reports/3fa41f082e8ff826ed3652fb6f52834bfe1a761a",
+              "original_object_id": "3f2e7187-09d3-4743-9c3a-5b59dda70f51",
+              "original_object_urls": {
+                "html": "https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl"
               },
-              {
-                "count": 1,
-                "time": 1349049600000
+              "processing_finished": "2015-10-12T14:37:39.174228",
+              "processing_started": "2015-10-12T14:34:09.626675",
+              "rights": "undefined",
+              "source_id": "amstelveen_reports"
+            },
+            "name": "Besluitenlijst vergadering raadscommissie RWN 20 mei 2014",
+            "organization": {
+              "classification": "committee",
+              "description": "Raadscommissie RWN",
+              "id": "raadscommissie-rwn",
+              "identifiers": [
+                {
+                  "id": "560aad90079f6850086db63c",
+                  "identifier": "raadscommissie-rwn",
+                  "scheme": "ORI"
+                },
+                {
+                  "id": "560aad90079f6850086db63b",
+                  "identifier": "1",
+                  "scheme": "iBabs"
+                }
+              ],
+              "meta": {
+                "_score": 1.0,
+                "_type": "organizations",
+                "collection": "Raadscommissie RWN",
+                "ocd_url": "http://127.0.0.1:5000/v0/amstelveen_popit_organizations/raadscommissie-rwn",
+                "original_object_id": "raadscommissie-rwn",
+                "original_object_urls": {
+                  "html": "Raadscommissie RWN"
+                },
+                "processing_finished": "2015-10-12T14:29:14.702629",
+                "processing_started": "2015-10-12T14:29:14.686348",
+                "rights": "undefined",
+                "source_id": "amstelveen_popit_organizations"
               },
+              "name": "Raadscommissie RWN"
+            },
+            "organization_id": "raadscommissie-rwn",
+            "sources": [
               {
-                "count": 1,
-                "time": 1362096000000
-              },
-              {
-                "count": 2,
-                "time": 1398902400000
-              },
-              {
-                "count": 2,
-                "time": 1414800000000
-              },
-              {
-                "count": 4,
-                "time": 1420070400000
+                "description": "BESLUITENLIJST OPENBARE COMMISSIEVERGADERING\n\nRaadscommissie voor Ruimte, wonen en natuur\n\nInza Gast\nBirgit Kersten\n\nTom Ponjee\nFloor Gordon en Edwin van der Waal\n\nDatum 20 mei 2014\nAanwezig\nVoorzitter\nGriffier\nLeden\nVVD:\nD66:\nGroenLinks:  Martin Kortekaas en Tessa van Wijnen\nBBA:\nLinda Roos\nSP:\nPatrick Adriaans\nPvdA:\nHarry van den Bergh\nCDA:               Ferry van Groeningen\nOCA:\nChristenUnie:  Jacqueline Koops en Maria Vlaar\nAfwezig\nMede aanwezig Peter Bot (wethouder)\n\nNora Tang\n\nFrank Berkhout, Paul Feenstra en Walter Vervenne\n\n01. Opening en mededelingen\n\nDe voorzitter opent de vergadering en heet de aanwezigen welkom.\nFrank Berkhout, Paul Feenstra en Walter Vervenne hebben zich afgemeld.\n\n02. Spreekrecht burgers\n\nEr wordt geen gebruik gemaakt van het spreekrecht burgers.\n\n03. Vaststelling van de besluitenlijst van de vergadering van 24 april 2014\n\nDe commissie stelt de besluitenlijst ongewijzigd vast.\n\n04. Rondvraag\n\nEr zijn geen rondvragen.\n\n05. Inventarisatie van de bespreekpunten\n\nDe commissie besluit de agendapunten 6, 7 en 8 te bespreken.\n\n06. Vaststellen startnotitie \u201cAmsterdamseweg 407-409\u201d, hoek Amsterdamseweg-\n\nKeizer Karelweg\n\nMartin Kortekaas geeft aan dat de kavel al jaren braak ligt en daardoor inmiddels\ngoed is voorzien van groen. Veel groen en duurzaam bouwen is wat hem betreft\neen must. Duurzaam bouwen staat echter niet in het plan. De grenzen van de toe-\ngestane bebouwing worden opgezocht en zelfs overschreden. Dit geldt voor de\nhoogte en het inkorten van de waterstrook aan de zijkant. Is het mogelijk dit plan\nnog aan te passen met ruimte voor meer groen zodat het beter past in de lommer-\nrijke omgeving?\n\nTom Ponjee is blij met de positieve invulling die nu wordt gegeven aan dit stuk\ngrond. De voorgevel van de te realiseren appartementen is geheel in de stijl van de\n\n[SLG440649.doc]\n\nBesluitvorming/F060\n\n\fPagina   2 van 4\n\nAmsterdamseweg. Dit is een goede kans om de Amsterdamseweg af te maken.\n\nTegen het plan en de wijziging van bestemming, hotel naar woningen, heeft de\nfractie van D66 geen bezwaar zegt Floor Gordon. De stedenbouwkundige kwaliteit\nvoegt zicht goed in het straatbeeld. In de startnotitie wordt aangegeven dat de\nwoningen voor de ouderen doelgroep zijn. Dit zou de doorstroming op de woning-\nmarkt kunnen bevorderen. Graag hoort zij van de wethouder hoe die doorstroming\nhierdoor op gang komt. Daarnaast merkt zij op dat in het college programma wordt\ngesproken over het realiseren van vijfhonderd woningen met zorgvoorziening. Kan\ndeze zorgvoorziening nieuwe stijl ook bij de ontwikkeling van private projecten\nworden meegenomen?\n\nLinda Roos is blij dat er in deze tijd een eigenaar / ontwikkelaar is die dit project\nwil neerzetten. De fractie van BBA geeft zijn fiat voor deze startnotitie.\n\nFerry van Groeningen geeft aan dat er wordt gesproken over een ontheffing die\nnodig is aangezien er gebouwd gaat worden onder Schiphol. Hij wil graag weten\nwaar de positieve inschatting met betrekking tot deze ontheffing op gestoeld is.\n\nOok Nora Tang geeft aan blij te zijn met de huidige invulling van woningen. De\nOCA fractie geeft dan ook fiat voor deze startnotitie.\n\nJacqueline Koops sluit zich aan bij de voorgaande sprekers. Het enige punt dat zij\nheeft is dat de grenswaarden voor wat betreft weg-, en vliegverkeer worden over-\nschreden. Is het niet mogelijk om iets anders hiervoor te bedenken, bijvoorbeeld\ngeluidsschermen, in plaats van het simpelweg verhogen van de grenswaarden. Zij\nvraagt het college met voorstellen hieromtrent te komen en niet alleen voor dit\nproject maar ook voor toekomstige ruimtelijke projecten.\n\nWethouder Peter Bot zegt dat er om de nieuw te bouwen appartementen zeker\ngroen komt. En dat dit groen van betere kwaliteit zal zijn dan het groen dat er nu\nstaat. Voor wat betreft het inkorten van de waterstrook geeft hij aan dat de oever\nwordt verlegd en er een groene overgang komt van de oever naar het water. Het\nwater is nu op het smalste stuk drie meter en dat zal niet smaller worden. Alleen\nbij de insteekhaven zal het versmallen en komt er een betonnen kade.\nDe verkeersdruk zal nu minder zijn dan bij het voorgaande plan.\nDe woningen worden voorzien van een lift wat de woningen uitermate geschikt\nmaakt voor ouderen. Doorstroming is mogelijk daar de ouderen waarschijnlijk van-\nuit een eengezinswoning komen. Hij geeft aan positief te zijn over de ontheffing\nmet betrekking tot Schiphol omdat het allemaal past binnen de ontheffingscriteria.\nTot slot zegt hij dat de overlast door overschrijding van de grenswaarden slechts\nminimaal is. Het plaatsen van schermen is niet wenselijk en een eventueel andere\noplossing, het opnieuw asfalteren, is een kostbare zaak. Alternatieven voor het\nverhogen van de grenswaarden zal bij toekomstige ruimtelijke projecten zoveel\nmogelijk worden meegenomen.\n\nDe voorzitter concludeert dat het voorstel als hamerstuk aan de raad kan worden\naangeboden ter besluitvorming.\n\n\fPagina   3 van 4\n\n07. Financi\u00eble jaarstukken Groengebied Amstelland\n\nTessa van Wijnen heeft een aantal vragen. Als eerste wil zij graag weten of het\nmogelijk is om een vooroverleg te organiseren voor dit samenwerkingsverband.\nTen tweede stelt zij dat de duurzaamheid waarover wordt gesproken in de stukken\nvooral betrekking heeft op de financi\u00ebn, horeca en evenementen. Zo wordt er na-\ngedacht over een groot reclamebord en een pannenkoekenhuisje bij Elsenhove.\nZij geeft aan graag in dit soort beslissingen meegnomen te worden in een voor-\noverlegje.\n\nFloor Gordon heeft een vraag over de participanten bijdrage. De bijdrage van Am-\nstelveen ligt met circa 16% van de begroting hoger dan de bijdrage van bijvoor-\nbeeld Diemen (5%) of Ouder-Amstel (3%). Kan de wethouder inzicht geven waar-\nop dit verschil in afdracht gebaseerd is?\n\nTom Ponjee heeft een financi\u00eble vraag. Het Groengebied houdt een aantal jaren al\nbudget over. Zo ook dit jaar. Is het gezien de nieuwe manier van bankieren (het\nschatkistbankieren) verstandig om die buffer zo groot te houden of kan de buffer\nook anders gebruikt gaan worden?\n\nWethouder Peter Bot geeft aan niet op de hoogte te zijn van een vooroverleg. Hij\nzal dit voor de toekomst in de staf gaan voorbereiden. De duurzaamheid in Elsen-\nhove vindt al op een andere manier plaats. Zo worden er bij de huidige horecage-\nlegenheid al fair trade producten gebruikt. Het aanbieden van pannenkoeken is een\nuitbreiding op het nu al bestaande assortiment broodjes. Er komt geen groot pan-\nnenkoekenhuis. Als het horeca assortiment wordt uitgebreid zal er ook meer ge-\nbruik gemaakt gaan worden van de horecagelegenheid. De wethouder merkt op\ndat, in het kader van de duurzaamheid, laatst bij Elsenhove het 57e zonnepaneel is\ngeplaatst. Dit is echter nog niet genoeg om energieneuraal te zijn. Dit komt door\nbijvoorbeeld de broedlampen.\nHet verschil in participatie bijdrage is gebaseerd op inwonersaantal.\nTot slot geeft hij aan dat de financi\u00eble buffer groot lijkt en het vervelend is dat door\neen andere manier van bankieren rente-inkomsten worden misgelopen. Rente-\ninkomsten zijn echter nooit het primaire doel geweest van de reserve van het\nGroengebied. Er wordt geld gereserveerd voor nieuwe projecten en jaarlijks onder-\nhoud. Aangezien we nu veel nieuwe projecten hebben is dat jaarlijks onderhoud\nnog laag. Daarnaast is er ook een ontwikkelvisie opgesteld. Voor de uitvoering\nhiervan zijn ook voorzieningen gereserveerd.\n\nDe voorzitter concludeert dat het voorstel als hamerstuk aan de raad kan worden\naangeboden ter besluitvorming.\n\n08. Regionale aangelegenheden\n\nTessa van Wijnen attendeert de commissieleden op de dag \u201cKijk op de regio\u201dop\nvrijdag 23 mei. Zeker interessant met het oog op het feit dat er in de Tweede ka-\nmer nog een wetsvoorstel ligt met betrekking tot het afschaffen van de Stadsregio.\n\nNora Tang merkt op dat onder iedere agenda het punt regionale aangelegenheden\nstaat vermeld. Zij zou hierbij graag ook van de regioraadsleden een verslag ont-\nvangen  van wat er besproken is bij de regioraad.\n\nHarry van den Bergh geeft aan dat in het verleden de vergadering van de regioraad\nterdege werd voorbereid in een aparte vergadering. Hij ziet graag dit vooroverleg\n\n\fPagina   4 van 4\n\nweer terug komen.\n\nDe leden van de commissie stellen voor het regiovooroverleg weer in het leven te\nroepen. Voorgesteld wordt dit onderwerp op de agenda te plaatsen van het presidi-\num.\n\nNiets mee aan de orde zijnde, sluit de voorzitter vervolgens om 20.45 uur de vergade-\nring.\n\nAldus vastgesteld in de openbare commissievergadering van 17 juni 2014.\n\nDe griffier\n\n\f",
+                "notes": "Besluitenlijst vergadering raadscommissie RWN 20 mei 2014",
+                "url": "https://www.mijnbabs.nl/babsapi/publicdownload.aspx?site=Amstelveen&id=654e542b-ce23-4a93-8a42-759d55ac2fa6"
               }
-            ]
+            ],
+            "start_date": "2014-05-20T00:00:00",
+            "status": "confirmed"
+          }
+        ],
+        "facets": {
+          "classification": {
+            "_type": "terms",
+            "missing": 0,
+            "other": 44,
+            "terms": [
+              {
+                "count": 137,
+                "term": "besluitenlijsten"
+              },
+              {
+                "count": 59,
+                "term": "van"
+              },
+              {
+                "count": 59,
+                "term": "raad"
+              },
+              {
+                "count": 59,
+                "term": "de"
+              },
+              {
+                "count": 44,
+                "term": "report"
+              },
+              {
+                "count": 41,
+                "term": "resolution"
+              },
+              {
+                "count": 32,
+                "term": "meeting"
+              },
+              {
+                "count": 28,
+                "term": "rwn"
+              },
+              {
+                "count": 28,
+                "term": "abm"
+              },
+              {
+                "count": 25,
+                "term": "item"
+              }
+            ],
+            "total": 556
           }
         },
-        "hits": {
-          "hits": [
-            {
-              "_id": "journalistiek_Oben_290_40705",
-              "_score": 3.3434153,
-              "_source": {
-                "authors": [
-                  "KRO"
-                ],
-                "date": "2013-03-12T09:30:00",
-                "date_granularity": 14,
-                "description": "<p>Het is na&iuml;ef als minister Jet Bussemaker van Onderwijs nog steeds gelooft dat het leenstelsel voor studenten er komt. Volgens de SP is inmiddels overduidelijk dat er geen meerderheid in de Eerste Kamer komt. En daarom moet Bussemaker stoppen met de voorbereidingen op het leenstelsel. Een gesprek met Tweede Kamerlid Jasper van Dijk van de SP.</p>",
-                "enrichments": {},
-                "media_urls": [
-                  {
-                    "content_type": "image/jpeg",
-                    "height": 563,
-                    "url": "http://localhost:5000/v0/resolve/bfa42ec24cb23047f87cd9633fef34d2af6f3e0d",
-                    "width": 1000
-                  },
-                  {
-                    "content_type": "image/jpeg",
-                    "height": 880,
-                    "url": "http://localhost:5000/v0/resolve/8cea70d75c81d59269093583752a4e08f8fbefda",
-                    "width": 880
-                  },
-                  {
-                    "content_type": "image/jpeg",
-                    "height": 660,
-                    "url": "http://localhost:5000/v0/resolve/460b7a5fd4d320a2b00bfdbd535f6a65afc3cdd5",
-                    "width": 880
-                  },
-                  {
-                    "content_type": "image/jpeg",
-                    "height": 1600,
-                    "url": "http://localhost:5000/v0/resolve/c6eec2fa9f7bb15d8b1df109a01cd8a000075f71",
-                    "width": 1200
-                  }
-                ],
-                "meta": {
-                  "collection": "NPO Journalistiek",
-                  "ocd_url": "http://backstage-api.openstate.eu/v0/npo_journalistiek/journalistiek_Oben_290_40705",
-                  "original_object_id": "Oben_290_40705",
-                  "original_object_urls": {},
-                  "processing_finished": "2015-05-26T16:19:17.874249",
-                  "processing_started": "2015-05-26T16:19:17.708490",
-                  "rights": "undefined",
-                  "source_id": "npo_journalistiek"
-                },
-                "title": "SP: Bussemaker moet stoppen met leenstelsel"
-              }
-            }
-          ],
-          "max_score": 3.3434153,
-          "total": 11
-        },
-        "took": 2
+        "meta": {
+          "took": 5,
+          "total": 254
+        }
       }
-
 
    **Query**
 
@@ -261,8 +309,8 @@ Searching within multiple collections
          "media_content_type": {
             "terms": ['image/jpeg', 'image/png']
          },
-         "author": {
-            "terms": ["KRO"]
+         "classification": {
+            "terms": ["Meeting"]
          }
       }
 
@@ -334,127 +382,542 @@ Retrieving a single object
       date: Wed, 27 May 2015 12:55:04 GMT
 
       {
-        "Ancestors": [
+        "children": [
+          "5995a9ba50baac60f6a7e3ac0c14c1a721f8103d",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "8f48d0c951293094c1168bde1e9e563f05fd419f",
+          "b0a92dd85444b66a9881187c0d48c557d139817b",
+          "fd789cf90f664a69f6ce6a94f9d536dff84e405c",
+          "6e91e7eda058df0d15de6a92ba930947e41c0d4f",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "5f34b92921d733498e31f430d61e6683dfea23d0",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "89f2d80e2da9206ee6b0239ed5255e63be053f32",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "b6bf2d51f5c91a7709573a894ab65845ac1110e4",
+          "6f15e189b3ad8165f3b23520dc61287ae16ac3df"
+        ],
+        "classification": "Meeting",
+        "end_date": "2015-10-12T19:30:00",
+        "id": "4a39c497c7818af9ad6d7d8335a6e951d6a83bd6",
+        "identifiers": [
           {
-            "ItemId": 91162,
-            "ItemType": 30
+            "identifier": "https://gemeenteraad.denhelder.nl/vergaderingen/Gemeenteraad/2015/12-oktober/19:30/",
+            "scheme": "GemeenteOplossingen"
           },
           {
-            "ItemId": 3342,
-            "ItemType": 20
-          },
-          {
-            "ItemId": 578,
-            "ItemType": 10
-          },
-          {
-            "ItemId": 1,
-            "ItemType": 1
+            "identifier": "4a39c497c7818af9ad6d7d8335a6e951d6a83bd6",
+            "scheme": "ORI"
           }
         ],
-        "Audio": null,
-        "Body": "<p>\n\tHet moet een feestdag worden, de inhuldiging van Willem Alexander op 30 April in Amsterdam. Maar Amsterdam en het koningshuis hebben een moeizame relatie.</p>\n",
-        "Broadcasters": [
-          {
-            "Id": 12,
-            "Name": "AVRO"
-          },
-          {
-            "Id": 13,
-            "Name": "TROS"
-          }
-        ],
-        "Broadcasts": null,
-        "Categories": null,
-        "Date": "2013-02-27T18:15:00",
-        "DateCreated": null,
-        "DateIndexed": "2015-05-26T06:34:29",
-        "DateOffline": null,
-        "DateOnline": null,
-        "DomainId": 1,
-        "Dossiers": [
-          {
-            "Id": 30,
-            "Name": "Koningshuis"
-          }
-        ],
-        "Id": "Oben_290_40445",
-        "Image": {
-          "Id": 247337,
-          "Key": "01f358bc-8246-4ab0-93c8-ef13701c1ffc"
-        },
-        "ItemId": 40445,
-        "ItemType": 290,
-        "Keywords": null,
-        "LatestUpdateDate": "2015-05-26T06:00:22.99",
-        "ListTitle": null,
-        "Locations": null,
-        "Mid": "TROS_1331024",
-        "ProgramId": 578,
-        "ProgramImage": {
-          "Id": 247145,
-          "Key": "26dc58ab-ab59-41da-89ab-bb0318f7dfdf"
-        },
-        "ProgramTitle": "EenVandaag",
-        "Summary": null,
-        "Title": "Reconstructie 'Geen woning, geen kroning'",
-        "Url": "http://www.eenvandaag.nl/seizoenen/2013/27-02-2013/reconstructie-geen-woning-geen-kroning",
-        "Video": {
-          "Id": 123055,
-          "Mid": "TROS_1331024",
-          "Offline": null,
-          "Online": null,
-          "Start": 882,
-          "Stop": 1588,
-          "Stream": null,
-          "Type": 1
-        },
-        "authors": [
-          "AVRO",
-          "TROS"
-        ],
-        "date": "2013-02-27T18:15:00",
-        "date_granularity": 14,
-        "description": "<p>\n\tHet moet een feestdag worden, de inhuldiging van Willem Alexander op 30 April in Amsterdam. Maar Amsterdam en het koningshuis hebben een moeizame relatie.</p>\n",
-        "enrichments": {},
-        "hidden": false,
-        "media_urls": [
-          {
-            "content_type": "image/jpeg",
-            "height": 563,
-            "url": "http://localhost:5000/v0/resolve/7c8ac5870b7797bfe93f6d5e9bb6553993ee4c5f",
-            "width": 1000
-          },
-          {
-            "content_type": "image/jpeg",
-            "height": 880,
-            "url": "http://localhost:5000/v0/resolve/ee65549400c539f20c95e0cb3ee6bec9e43043f6",
-            "width": 880
-          },
-          {
-            "content_type": "image/jpeg",
-            "height": 660,
-            "url": "http://localhost:5000/v0/resolve/13925c94b67bdc5e0398971c6676ca2d2cd98fed",
-            "width": 880
-          },
-          {
-            "content_type": "image/jpeg",
-            "height": 1600,
-            "url": "http://localhost:5000/v0/resolve/ad9b5d1c088a0f3f89db3738acf274a2c44f86e0",
-            "width": 1200
-          }
-        ],
+        "location": "Gemeentehuis",
         "meta": {
-          "collection": "NPO Journalistiek",
-          "original_object_id": "Oben_290_40445",
-          "original_object_urls": {},
-          "processing_finished": "2015-05-26T16:19:01.802124",
-          "processing_started": "2015-05-26T16:19:01.797626",
+          "collection": "Gemeenteraad 12 oktober 2015 19:30:00",
+          "original_object_id": "https://gemeenteraad.denhelder.nl/vergaderingen/Gemeenteraad/2015/12-oktober/00:00/",
+          "original_object_urls": {
+            "html": "https://gemeenteraad.denhelder.nl/vergaderingen/Gemeenteraad/2015/12-oktober/19:30/"
+          },
+          "processing_finished": "2015-10-12T15:11:06.400560",
+          "processing_started": "2015-10-12T15:07:26.693176",
           "rights": "undefined",
-          "source_id": "npo_journalistiek"
+          "source_id": "den_helder_meetings"
         },
-        "prid": "TROS_1331024",
-        "title": "Reconstructie 'Geen woning, geen kroning'"
+        "name": "Gemeenteraad 12 oktober 2015 19:30:00",
+        "organization": {
+          "classification": "Council",
+          "description": "Gemeente Den Helder (Den Helder) (NH)",
+          "id": "gemeente-den-helder-den-helder-nh",
+          "identifiers": [
+            {
+              "id": "56166f5b9e5d9edf0065a84d",
+              "identifier": "gemeente-den-helder-den-helder-nh",
+              "scheme": "ORI"
+            }
+          ],
+          "memberships": [
+            {
+              "id": "e71d0389791f617a0318acd65e882e59",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "c540b876c70fcf3a8e90474842d8221eecf0c78a",
+              "role": "Raadslid"
+            },
+            {
+              "id": "87952487de4dc138cd09da0d04be73c2",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "1f02666f7d7a3ad6ea8cf63c429fdff1d6f39045",
+              "role": "Raadslid"
+            },
+            {
+              "id": "c9d325d8d548a3fb3203a851441447b0",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "067affd24368c5877cec0d0cab8dd8941647d9e3",
+              "role": "Raadslid"
+            },
+            {
+              "id": "e57e00b57cddee57558f535364e4860a",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "ab3b30fa8c94b4b616e038069c6a08bf0ba43a1f",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "80fd1c29a80954a0bca704f28452fc6f",
+              "label": "Wethouder",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "9189b630d442ec7e48decc50492b8e732b3f4568",
+              "role": "Wethouder"
+            },
+            {
+              "id": "ecd404f4686a03f44949090a1941670d",
+              "label": "Raadsgriffier",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d3228dc2e838235efba39cefc1bfa92c12cd7f60",
+              "role": "Raadsgriffier"
+            },
+            {
+              "id": "b5f687d322be7f0d4d963830e1cb99ad",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "039f7eeba09d957551ec687e23cd7c5c6c3c8813",
+              "role": "Raadslid"
+            },
+            {
+              "id": "c04c0a57fd78cbfb2bd225aed7e12a8c",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "95a1340b1f85c9cf321d8b457e43d0b4e3c02630",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "2e74c37401f62b822c72c3208da5f10e",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d4d2842da0431de7fcf96d6bff70ca2ab57a6d5f",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "d387e345978c9c56e7e04a1ecc3c2f0d",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d646ba9bd45cbb9fc2d221eb742c33d95b426e37",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "127a64b51da7832890b0ec19bf5d1785",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "a410897b128cfed86b3c8f1d3672199995d7c308",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "03fb396d173032d910856bb239478ecb",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "02d155142173732db9844c923bc21fa4c2027617",
+              "role": "Raadslid"
+            },
+            {
+              "id": "d92afc688cc98881c496a2b78fb6cfaa",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "6e272921008f8aad0b26f0088857387167906237",
+              "role": "Raadslid"
+            },
+            {
+              "id": "eba28f9038c03dce0d9c4703c1a627c9",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "559a7ca37aa5db8c4abea33085a471f064da5df9",
+              "role": "Raadslid"
+            },
+            {
+              "id": "7067d473e6d6846486f71442c997e5c8",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d278efe32f8d9c9af8756e11e452769a0ba313da",
+              "role": "Raadslid"
+            },
+            {
+              "id": "b725f9a5add915db7bd3ddaa6a673cda",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "2733142a65980a4a0b132c4750204517e8f44fd7",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "8e65b86c369165c5f7b5f8c6295b6300",
+              "label": "Burgemeester",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "8e5dd772af1e10094f752af0b2603d7a154567cc",
+              "role": "Burgemeester"
+            },
+            {
+              "id": "7e22bf801394e44955b43001490e11c4",
+              "label": "Wethouder",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "2b5a390f983a399c125c156941f5e4725ede7b90",
+              "role": "Wethouder"
+            },
+            {
+              "id": "31b21ceb295764eb17ec9b8ec681408f",
+              "label": "Locoburgemeester",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d0c550bfc092b328b223550a01340732e420e511",
+              "role": "Locoburgemeester"
+            },
+            {
+              "id": "b52ca6b157cec72e5b7164f01c0ec1a6",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "821d9d71513879cb284709e9584ada6909ece037",
+              "role": "Raadslid"
+            },
+            {
+              "id": "db6ba1f6475fe2256de78a3a147c6d6c",
+              "label": "Wethouder",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "ca50997d99aaae6a783e1303b8d4893cc873fa95",
+              "role": "Wethouder"
+            },
+            {
+              "id": "a8f997d6e261ba78bb83e1c721503ef0",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "c19d4b7a5046aa6e73fd227bd6e3c6f1b66aa44b",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "608f93b32e623e15093ed3cb544a7807",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "1186b8ea893bf87492695965af2f83d709605cd6",
+              "role": "Raadslid"
+            },
+            {
+              "id": "a66276f9027945f9b0f2e59f819c35c2",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "8fb8741f019c064f17e1ae689d94304f72b7df1d",
+              "role": "Raadslid"
+            },
+            {
+              "id": "78d27018efe4863fb5f60178e442c9b4",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "a3138426114d33d33437b6d08953f2219fdc2f61",
+              "role": "Raadslid"
+            },
+            {
+              "id": "34d2dd8af2b5eba0f626e06390148c70",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "cfbfa74d0a3f287c6bb2bc4c69e5593bf9c524d9",
+              "role": "Raadslid"
+            },
+            {
+              "id": "e4c1d40090fcffc8563558ace7058219",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "7c1196b22f51a4d2209b3250b983cc5e3a51e00d",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "011bfe6bc27a38c3416815f5c8e3198c",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "95dda1ebd1f73c2e6e1690767964c43afba2ff8f",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "b9d932d0eeab0d7a840003ac3b2c5a8f",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "cccf0890c3f50ddd3bea5e3fce00b77c5e93bf51",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "5b53b0f9770cc37f4934516f6460964c",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "a5db41e17594e64bfe585fa15875fdb41f743418",
+              "role": "Raadslid"
+            },
+            {
+              "id": "2522b3ee5447b5560747a67618226360",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "e20680e9a2482a0448ef2188234fe2c85290c14b",
+              "role": "Raadslid"
+            },
+            {
+              "id": "166303bda5a9939e74ff2882ff98bcd6",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "2e74af7852253e2b5a3d5bb314b2105bd69145e7",
+              "role": "Raadslid"
+            },
+            {
+              "id": "361e428def7493e95703178a437ff7e2",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "e8dcdb5493728496aa50ad9bb97d78fbd1384c48",
+              "role": "Raadslid"
+            },
+            {
+              "id": "f310fc8d583de9213b4f0f8dad8e3a13",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "d3636c5af5094f9bcd88376f7233ae77c1947ddd",
+              "role": "Raadslid"
+            },
+            {
+              "id": "871d641b4bb0871f07f3ec13db65426e",
+              "label": "Fractievoorzitter",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "16fb10cd464932a7b30018a51238e4241dcca617",
+              "role": "Fractievoorzitter"
+            },
+            {
+              "id": "a14534228eabed8317c7e24df57595fa",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "f9bb05475fcb46d28dd32510fdf528d7e4095e09",
+              "role": "Raadslid"
+            },
+            {
+              "id": "70e03d44e2843cb8b78704ac900b037a",
+              "label": "Raadslid",
+              "organization": {
+                "classification": "Council",
+                "id": "gemeente-den-helder-den-helder-nh",
+                "name": "Gemeente Den Helder (Den Helder) (NH)"
+              },
+              "organization_id": "gemeente-den-helder-den-helder-nh",
+              "person_id": "8e11e8fd7d38c7fc576290209f6e11c3a4f80d31",
+              "role": "Raadslid"
+            }
+          ],
+          "meta": {
+            "_score": 1.0,
+            "_type": "organizations",
+            "collection": "Gemeente Den Helder (Den Helder) (NH)",
+            "ocd_url": "http://127.0.0.1:5000/v0/den_helder_popit_organizations/gemeente-den-helder-den-helder-nh",
+            "original_object_id": "gemeente-den-helder-den-helder-nh",
+            "original_object_urls": {
+              "html": "https://almanak.overheid.nl/24611/Gemeente_Den_Helder/"
+            },
+            "processing_finished": "2015-10-12T15:05:23.665996",
+            "processing_started": "2015-10-12T15:05:23.617484",
+            "rights": "undefined",
+            "source_id": "den_helder_popit_organizations"
+          },
+          "name": "Gemeente Den Helder (Den Helder) (NH)"
+        },
+        "organization_id": "gemeente-den-helder-den-helder-nh",
+        "sources": [
+          {
+            "note": "",
+            "url": "https://gemeenteraad.denhelder.nl/vergaderingen/Gemeenteraad/2015/12-oktober/19:30/"
+          },
+          {
+            "description": "gemeente \nDen Helder \n\nde  R a ad  v an  de  g e m e e n te  D en  H e l d er \nP o s t b us  36 \n1 7 80  AA  D EN  H E L D ER \n\n: 7 oktober 2015 \n\nverzendgegevens \ndatum \nkenmerk  : AU15.10692 \nbijlagen \n: \nonderwerp \nOproep vergadering  gemeenteraad \n\nG e a c h te  r a a d, \n\nbehandeld  door \nGriffie \ndhr.  F. Blok \ntelefoon  (0223) 67  8103 \n\nuw gegevens \nbrief van  : \nkenmerk  : \n\nHierbij  n o d ig  ik  u uit  tot  het  b i j w o n en  v an  de  r a a d s v e r g a d e r i ng  op  maandag 12 oktober 2015  om \n1 9 : 30  u ur  in  de  r a a d z a al  v an  h et  s t a d h u is  v an  D en  H e l d e r.  B i j g e v o e gd  treft  u de  a g e n da  a a n. \nDe  op  de  a g e n da  b e t r e k k i ng  h e b b e n de  s t u k k e n,  v o or  z o v er  d e ze  niet  zijn  m e e g e z o n d en  of  r e e ds  in  uw \nbezit  zijn,  zijn  v o or  u te  r a a d p l e g en  op  h t t p : / / g e m e e n t e r a a d . d e n h e l d e r . nl  en  liggen  o ok  v o or  u ter  i n z a ge in \nde  l e e s k a m er  v an  7 o k t o b er  2 0 15  ( v a n af  1 6 . 00  u u r)  tot  en  m et  12  o k t o b er  2 0 15  (tot  1 6 . 00  u u r ). \n\nI n d i en  u m o t i es  en  a m e n d e m e n t en  hebt,  die  u v o o r af  b e k e nd  w e n st  te  m a k e n,  d an  k u nt  u d e ze  v\u00f3\u00f3r  1 3 . 00 \nu ur  op  de  d ag  v an  de  r a a d s v e r g a d e r i ng  bij  de  raadsgriff\u00ece  k e n b a ar  m a k e n.  De  griffie  z al  d e ze  m o t i es  en \na m e n d e m e n t en  per  o m g a a nd  d o o r m a i l en  n a ar  alle  r a a d s l e d e n. \n\nV r a g en  v o or  het  v r a g e n k w a r t i er  d i e nt  u uiterlijk  24  u ur  v o or  de  a a n v a ng  v an  de  v e r g a d e r i ng  a an  te  m e l d en \nbij  de  raadsgriff\u00ece. \n\nV o or  alle  z a k en  r o nd  de  r a a d s v e r g a d e r i ng  k u nt  u het  v o l g e n de  e - m a i l a d r es  h a n t e r e n: \ng r i f f i e @ d e n h e l d e r . n l. \n\nH o o g a c h t e n d, \nde  v o o r z i t t er  v an  de  g e m e e n t e r a a d, \nn a m e ns  de \n\nmr.  drs \n\nu  s m an \n\nDrs. F. Bijlweg  20 \n1784  MC  D en  Helder \n\nPostbus  36 \n1780 AA  Den  Helder \n\nwww.denhelder.nl \nkcc@denhelder.nl \n\ntelefoon 14  0223 \nfax (0223) 67  1201 \n\n\f",
+            "note": "Oproep vergadering gemeenteraad.pdf",
+            "url": "https://gemeenteraad.denhelder.nl/vergaderingen/Gemeenteraad/2015/12-oktober/Oproep-vergadering-gemeenteraad-9.pdf"
+          }
+        ],
+        "start_date": "2015-10-12T19:30:00",
+        "status": "confirmed"
       }
 
    :statuscode 200: OK, no errors.
@@ -535,17 +998,11 @@ Similar items
 
   .. sourcecode:: http
 
-    $ curl -i -XPOST 'http://backstage-api.openstate.eu/v0/similar/<object_id>' -d '{
+    $ curl -i -XPOST 'http://api.openraadsinformatie.nl/v0/similar/<object_id>' -d '{
        "facets": {
-          "collection": {},
-          "date": {"interval": "day"}
+          "classification": {}
        },
-       "filters": {
-          "media_content_type": {"terms": ["image/jpeg"]}
-       },
-       "size": 10,
-       "from": 30,
-       "sort": "date"
+       "size": 10
     }'
 
   :jsonparameter filters: an object with field and values to filter on (optional).
