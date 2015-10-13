@@ -78,23 +78,22 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
                                               'sort': sort_field}))
         self.assert_bad_request_json(response)
 
-    # def test_facets(self):
-    #     """Test if requesting facets results in a 200 OK, and if the
-    #     facets are actually present in the response."""
-    #     url = url_for(self.endpoint_url, **self.endpoint_url_args)
-    #
-    #     available_facets = current_app.config['AVAILABLE_FACETS']
-    #     facet_keys = random.sample(available_facets['events'].keys(), 3)
-    #     facets = {fk: available_facets['events'][fk] for fk in facet_keys}
-    #
-    #     response = self.post(url, content_type='application/json',
-    #                          data=json.dumps({'query': 'de',
-    #                                           'facets': facets}))
-    #
-    #     self.assert_ok_json(response)
-    #     self.assertIn('facets', response.json)
-    #     for fk in facet_keys:
-    #         self.assertIn(fk, response.json.get('facets', {}))
+    def test_facets(self):
+        """Test if requesting facets results in a 200 OK, and if the
+        facets are actually present in the response."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        available_facets = current_app.config['AVAILABLE_FACETS']
+        facet_keys = random.sample(available_facets['items'].keys(), 1)
+        facets = {fk: available_facets['items'][fk] for fk in facet_keys}
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'query': 'de',
+                                              'facets': facets}))
+
+        self.assert_ok_json(response)
+        self.assertIn(u'facets', response.json)
+        for fk in facet_keys:
+            self.assertIn(fk, response.json.get(u'facets', {}))
 
     def test_invalid_facet_option_value(self):
         """Tests if requesting a facet with invalid value (not dict)

@@ -202,7 +202,7 @@ def format_search_results(results, doc_type='items'):
         del hit['_type']
 
     if results.has_key('facets'):
-        formatted_results['%s-facets' % (doc_type)] = results['facets']
+        formatted_results['facets'] = results['facets']
 
     formatted_results['meta'] = {
         'total': results['hits']['total'],
