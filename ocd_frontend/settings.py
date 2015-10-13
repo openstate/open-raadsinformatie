@@ -35,7 +35,7 @@ SORTABLE_FIELDS = {
         'location'],
     'items': [
         'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
-        'start_date', '_score', 'classification', 'name']
+        '_score']
 }
 
 # EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',

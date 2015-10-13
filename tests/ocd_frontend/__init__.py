@@ -40,7 +40,7 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         """Tests if valid use of the ``sort`` option results in a
         JSON response with a 200 OK."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de',
                                               'sort': sort_field}))
@@ -50,7 +50,7 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         """Test if valid use of the ``sort`` and ``order`` options
         result in a JSON response with a 200 OK."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         sort_order = random.choice(['asc', 'desc'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de',
@@ -71,7 +71,7 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         """Test if supplying an invalid order option results in a
         response with status code 400."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de',
                                               'order': 'upsidedown',
@@ -360,7 +360,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         JSON response with a 200 OK."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'sort': sort_field}))
         self.assert_ok_json(response)
@@ -370,7 +370,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         result in a JSON response with a 200 OK."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         sort_order = random.choice(['asc', 'desc'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'order': sort_order,
@@ -391,7 +391,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         response with status code 400."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS'])
+        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'order': 'upsidedown',
                                               'sort': sort_field}))
@@ -638,8 +638,7 @@ class RestApiSourcesTestCase(OcdRestTestCaseMixin, TestCase):
 
         source_attrs = response.json['sources'][0].keys()
         self.assertIn('id', source_attrs)
-        self.assertIn('name', source_attrs)
-        self.assertIn('count', source_attrs)
+        self.assertIn('organizations', source_attrs)
 
     @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
     def test_logging_called_if_enabled(self, mocked_log_task):
