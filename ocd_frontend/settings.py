@@ -109,6 +109,12 @@ COMMON_FACETS = {
             'field': '_index',
             'size': 10
         }
+    },
+    'types': {
+        'terms': {
+            'field': '_type',
+            'size': 10
+        }
     }
 }
 
