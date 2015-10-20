@@ -9,10 +9,11 @@ do
 
   for UPDATE_SOURCE in $UPDATABLE_SOURCES
   do
-    # echo $UPDATE_SOURCE
+    echo `date` $UPDATE_SOURCE
     ./manage.py extract start $UPDATE_SOURCE --sources_config=$JSON_FILE
     sleep 60
   done
 
   sleep 1800
 done
+echo `date` "All done"
