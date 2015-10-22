@@ -6,7 +6,7 @@ class ResolutionItem(MeetingItem):
     def _get_resolution_document(self):
 
         for item in self.full_html.xpath('//div[@id="documenten"]//li/a[1]'):
-            anchor = u''.join(item.xpath('./@href'))
+            anchor = u''.join(item.xpath('./@href')).strip()
             if u'Besluitenlijst' in anchor:
                 return anchor
 

@@ -6,7 +6,7 @@ class ReportItem(MeetingItem):
     def _get_report_document(self):
 
         for item in self.full_html.xpath('//div[@id="downloaden"]//li/a[1]'):
-            anchor = u''.join(item.xpath('./@href'))
+            anchor = u''.join(item.xpath('./@href')).strip()
             if u'mp3' in anchor:
                 return anchor
 

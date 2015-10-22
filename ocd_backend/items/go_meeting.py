@@ -271,25 +271,25 @@ class MeetingItem(
             )]
 
             base_url = u''.join(
-                self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()[:-6]
+                self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
 
             for doc in self.full_html.xpath('//div[@id="documenten"]//li/a'):
-                doc_url = u''.join(doc.xpath('.//@href')).strip()
+                doc_url = urlparse.urljoin(
+                    base_url, u''.join(doc.xpath('.//@href')).strip())
                 doc_note = u''.join(doc.xpath('.//text()')).strip()
                 if doc_note != u'notitie':
                     combined_index_data['sources'].append({
-                        'url': u'%s%s' % (base_url, doc_url,),
+                        'url': doc_url,
                         'note': doc_note
                     })
 
             for doc in self.full_html.xpath('//div[@id="downloaden"]/ul//li/a'):
-                doc_url = u''.join(doc.xpath('.//@href')).strip()
-                if not doc_url.startswith('http'):
-                    doc_url = u'%s%s' % (self.source_definition['base_url'], doc_url,)
+                doc_url = urlparse.urljoin(
+                    base_url, u''.join(doc.xpath('.//@href')).strip())
                 doc_note = u''.join(doc.xpath('.//text()')).strip()
                 if doc_note != u'notitie':
                     combined_index_data['sources'].append({
-                        'url': doc_url, # urlparse.urljoin(base_url, doc_url),
+                        'url': doc_url,
                         'note': doc_note
                     })
 
