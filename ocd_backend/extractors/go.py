@@ -196,10 +196,10 @@ class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtract
         return False
 
 
-class GemeenteOplossingenAudioReportsExtractor(GemeenteOplossingenMeetingsExtractor):
+class GemeenteOplossingenReportsExtractor(GemeenteOplossingenMeetingsExtractor):
     def filter_meeting(self, meeting, html):
-        for item in html.xpath('//div[@id="downloaden"]//li'):
-            anchor = u''.join(item.xpath('.//a//@href'))
-            if u'/mp3' in anchor:
-                return True
-        return False
+        # for item in html.xpath('//div[@id="downloaden"]//li'):
+        #     anchor = u''.join(item.xpath('.//a//@href'))
+        #     if u'/mp3' in anchor:
+        #         return True
+        return True

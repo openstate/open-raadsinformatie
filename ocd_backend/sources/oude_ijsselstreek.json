@@ -94,7 +94,7 @@
   },
   {
       "id": "oude_ijsselstreek_reports",
-      "extractor": "ocd_backend.extractors.go.GemeenteOplossingenAudioReportsExtractor",
+      "extractor": "ocd_backend.extractors.go.GemeenteOplossingenReportsExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.go_report.ReportItem",
       "enrichers": [],

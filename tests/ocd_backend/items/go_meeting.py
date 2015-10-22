@@ -128,7 +128,7 @@ class MeetingItemTestCase(ItemTestCase):
             },
             {
                 'note': u'Oproep vergadering gemeenteraad.pdf',
-                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/Oproep-vergadering-gemeenteraad-7.pdf',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/Oproep-vergadering-gemeenteraad-7.pdf',
                 'description': u'pdf'
             },
             {

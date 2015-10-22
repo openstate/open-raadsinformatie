@@ -79,12 +79,12 @@ class ReportItemTestCase(ItemTestCase):
                 'note': u''
             },
             {
-                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/Besluitenlijst-raadsvergadering-29-juni-2015.pdf',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/Besluitenlijst-raadsvergadering-29-juni-2015.pdf',
                 'note': u'Besluitenlijst raadsvergadering 29 juni 2015.pdf',
                 'description': u'pdf'
             },
             {
-                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/Oproep-vergadering-gemeenteraad-6.pdf',
+                'url': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/Oproep-vergadering-gemeenteraad-6.pdf',
                 'note': u'Oproep vergadering gemeenteraad.pdf',
                 'description': u'pdf'
             },
@@ -186,4 +186,5 @@ class ReportItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         data = item.get_combined_index_data()
         result = data['description'].startswith(u'1.  Opening en mededelingen.')
+        pprint(data['description'])
         self.assertEqual(result, True)

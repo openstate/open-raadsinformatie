@@ -5,6 +5,8 @@ import re
 from cStringIO import StringIO
 from urllib2 import HTTPError
 
+from OpenSSL.SSL import ZeroReturnError
+
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
 from pdfminer.layout import LAParams
@@ -69,6 +71,8 @@ class PDFToTextMixin(object):
             return tf
         except HTTPError as e:
             print "Something went wrong downloading %s" % (url,)
+        except ZeroReturnError as e:
+            print "SSL Zero return error %s" % (url,)
 
     def pdf_to_text(self, path, max_pages=20):
         """
