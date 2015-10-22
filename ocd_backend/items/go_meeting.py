@@ -109,8 +109,8 @@ class MeetingItem(
         return self.html.xpath('.//@id')[0].replace(u'agendapunt', '').split(u'_')[0]
 
     def _get_meeting_item_documents_url(self):
-        return u'https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
-            self._get_meeting_item_id(),)
+        return u'%s/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=%s' % (
+            self.source_definition['base_url'], self._get_meeting_item_id(),)
 
     def _get_documents_html_for_item(self):
         url = self._get_meeting_item_documents_url()
@@ -180,9 +180,9 @@ class MeetingItem(
                 self.full_html.xpath('//title/text()')).strip()
             combined_index_data['classification'] = u'Meeting'
         else:
-            meeting_item_index = int(
+            meeting_item_index = (
                 u''.join(self.html.xpath('.//div[@class="first"]//text()')).strip())
-            combined_index_data['name'] = u'%d. %s' % (
+            combined_index_data['name'] = u'%s. %s' % (
                 meeting_item_index,
                 u''.join(self.html.xpath('.//div[@class="title"]/h3//text()')).strip(),
             )

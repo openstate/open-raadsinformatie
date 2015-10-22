@@ -180,6 +180,10 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                             'full_content': resp.content,
                         }
 
+                        print "Yielding meeting item %s for %s" % (
+                            u''.join(meeting_item_html.xpath(
+                                './/div[@class="title"]/h3/a/text()')), meeting['url'],)
+
                         yield 'application/json', json.dumps(meeting_item_obj)
 
 

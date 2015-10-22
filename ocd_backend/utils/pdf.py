@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import re
 from cStringIO import StringIO
+from urllib2 import HTTPError
 
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import TextConverter
@@ -48,7 +49,10 @@ class PDFToTextMixin(object):
         Convenience method to download a PDF file and converting it to text.
         """
         tf = self.pdf_download(url)
-        return self.pdf_to_text(tf.name, max_pages)
+        if tf is not None:
+            return self.pdf_to_text(tf.name, max_pages)
+        else:
+            return u'' # FIXME: should be something else ...
 
     def pdf_download(self, url):
         """
@@ -56,12 +60,15 @@ class PDFToTextMixin(object):
         """
 
         print "Downloading %s" % (url,)
-        r = self.http_session.get(url)
-        r.raise_for_status()
-        tf = tempfile.NamedTemporaryFile()
-        tf.write(r.content)
-        tf.seek(0)
-        return tf
+        try:
+            # GO has no wildcard domain for SSL
+            r = self.http_session.get(url, verify=False)
+            tf = tempfile.NamedTemporaryFile()
+            tf.write(r.content)
+            tf.seek(0)
+            return tf
+        except HTTPError as e:
+            print "Something went wrong downloading %s" % (url,)
 
     def pdf_to_text(self, path, max_pages=20):
         """
