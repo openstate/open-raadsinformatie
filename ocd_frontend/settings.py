@@ -168,13 +168,13 @@ AVAILABLE_FACETS = {
         },
         'start_date': {
             'date_histogram': {
-                'field': 'date',
+                'field': 'start_date',
                 'interval': 'month'
             }
         },
         'end_date': {
             'date_histogram': {
-                'field': 'date',
+                'field': 'end_date',
                 'interval': 'month'
             }
         }
