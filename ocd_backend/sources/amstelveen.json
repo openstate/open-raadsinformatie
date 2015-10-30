@@ -100,7 +100,9 @@
         "index_name": "amstelveen",
         "doc_type": "events",
         "sitename": "Amstelveen",
-        "keep_index_on_update": true
+        "keep_index_on_update": true,
+        "start_date": "2015-01-01T00:00:00",
+        "end_date": "2016-06-01T00:00:00"
     },
     {
         "id": "amstelveen_reports",
@@ -116,6 +118,7 @@
         "sitename": "Amstelveen",
         "keep_index_on_update": true,
         "regex": ".*",
-        "pdf_max_pages": 0
+        "pdf_max_pages": 0,
+        "max_pages": 1
     }
 ]
