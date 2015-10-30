@@ -56,17 +56,22 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     def run(self):
         meetings = self.client.service.GetMeetingsByDateRange(
             Sitename=self.source_definition['sitename'],
-            StartDate='2015-06-01T00:00:00', EndDate='2016-07-01T00:00:00',
+            StartDate=self.source_definition.get(
+                'start_date', '2015-06-01T00:00:00'),
+            EndDate=self.source_definition.get(
+                'end_date', '2016-07-01T00:00:00'),
             MetaDataOnly=False)
 
         meeting_types = self._meetingtypes_as_dict()
 
+        meeting_count = 0
+        meeting_item_count = 0
         for meeting in meetings.Meetings[0]:
             meeting_dict = meeting_to_dict(meeting)
             # Getting the meeting type as a string is easier this way ...
             meeting_dict['Meetingtype'] = meeting_types[
                 meeting_dict['MeetingtypeId']]
-            yield 'application/json', json.dumps(meeting_dict)
+            #yield 'application/json', json.dumps(meeting_dict)
 
             if meeting.MeetingItems is not None:
                 for meeting_item in meeting.MeetingItems[0]:
@@ -74,7 +79,11 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     # This is a bit hacky, but we need to know this
                     meeting_item_dict['MeetingId'] = meeting_dict['Id']
                     meeting_item_dict['Meeting'] = meeting_dict
-                    yield 'application/json', json.dumps(meeting_item_dict)
+                    #yield 'application/json', json.dumps(meeting_item_dict)
+                    meeting_item_count += 1
+            meeting_count += 1
+        print "Extracted %d meetings and %d meeting items." % (
+            meeting_count, meeting_item_count,)
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
@@ -107,17 +116,40 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             else:
                 report = [
                     r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
-            # TODO: pagination for this?
-            result = self.client.service.GetListReport(
-                Sitename=self.source_definition['sitename'], ListId=l.Key,
-                ReportId=report.Key, ActivePageNr=0, RecordsPerPage=100
-            )
-            for item in result.Data.diffgram[0].DocumentElement[0].results:
-                dict_item = list_report_response_to_dict(item)
-                dict_item['_ListName'] = result.ListName
-                dict_item['_ReportName'] = result.ReportName
-                print "%s: %s/%s - %s" % (
+
+            active_page_nr = 0
+            max_pages = self.source_definition.get('max_pages', 1)
+            per_page = self.source_definition.get('per_page', 100)
+            result_count = per_page
+            while ((active_page_nr < max_pages) and (result_count == per_page)):
+                result = self.client.service.GetListReport(
+                    Sitename=self.source_definition['sitename'], ListId=l.Key,
+                    ReportId=report.Key, ActivePageNr=active_page_nr,
+                    RecordsPerPage=per_page
+                )
+                result_count = 0
+                print "* %s: %s/%s - %d/%d" % (
                     self.source_definition['sitename'],
-                    dict_item['_ListName'], dict_item['_ReportName'],
-                    dict_item['id'],)
-                yield 'application/json', json.dumps(dict_item)
+                    result.ListName, result.ReportName,
+                    active_page_nr, max_pages,)
+
+                try:
+                    document_element = result.Data.diffgram[0].DocumentElement[0]
+                except AttributeError as e:
+                    document_element = None
+                except IndexError as e:
+                    document_element = None
+
+                if document_element is None:
+                    print "No correct document element for this page!"
+                    continue
+
+                for item in document_element.results:
+                    dict_item = list_report_response_to_dict(item)
+                    dict_item['_ListName'] = result.ListName
+                    dict_item['_ReportName'] = result.ReportName
+                    print ".",
+                    yield 'application/json', json.dumps(dict_item)
+                    result_count += 1
+                print " (%d)" % (result_count,)
+                active_page_nr += 1
