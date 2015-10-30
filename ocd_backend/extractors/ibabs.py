@@ -71,7 +71,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             # Getting the meeting type as a string is easier this way ...
             meeting_dict['Meetingtype'] = meeting_types[
                 meeting_dict['MeetingtypeId']]
-            #yield 'application/json', json.dumps(meeting_dict)
+            yield 'application/json', json.dumps(meeting_dict)
 
             if meeting.MeetingItems is not None:
                 for meeting_item in meeting.MeetingItems[0]:
@@ -79,7 +79,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     # This is a bit hacky, but we need to know this
                     meeting_item_dict['MeetingId'] = meeting_dict['Id']
                     meeting_item_dict['Meeting'] = meeting_dict
-                    #yield 'application/json', json.dumps(meeting_item_dict)
+                    yield 'application/json', json.dumps(meeting_item_dict)
                     meeting_item_count += 1
             meeting_count += 1
         print "Extracted %d meetings and %d meeting items." % (
