@@ -133,14 +133,13 @@ class IBabsMeetingItem(
             # sleep(1)
             print u"%s: %s" % (
                 combined_index_data['name'], document['DisplayName'],)
+            description = self.pdf_get_contents(
+                document['PublicDownloadURL'],
+                self.source_definition.get('pdf_max_pages', 20))
             combined_index_data['sources'].append({
                 'url': document['PublicDownloadURL'],
                 'note': document['DisplayName'],
-                # FIXME: some attachments are huuuuuge (>1,000 pages)
-                # TODO: what to do about those?
-                # FIXME: we should have resolver URLs for these ...
-                #'description': self.pdf_get_contents(
-                #    document['PublicDownloadURL'])
+                'description': description
             })
 
         return combined_index_data
