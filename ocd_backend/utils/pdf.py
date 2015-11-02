@@ -29,6 +29,7 @@ def convert(fname, pages=None):
 
     infile = file(fname, 'rb')
     for page in PDFPage.get_pages(infile, pagenums):
+        print "Processing page %s" % (page,)
         interpreter.process_page(page)
     infile.close()
     converter.close()
