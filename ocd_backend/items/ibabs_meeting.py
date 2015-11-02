@@ -130,7 +130,7 @@ class IBabsMeetingItem(
             documents = []
 
         for document in documents:
-            # sleep(1)
+            sleep(1)
             print u"%s: %s" % (
                 combined_index_data['name'], document['DisplayName'],)
             description = self.pdf_get_contents(
