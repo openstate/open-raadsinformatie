@@ -54,12 +54,15 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def run(self):
+        start_date = self.source_definition.get(
+            'start_date', '2015-06-01T00:00:00')
+        end_date = self.source_definition.get(
+            'end_date', '2016-07-01T00:00:00')
+        print "Getting meetings for %s to %s" % (start_date, end_date,)
         meetings = self.client.service.GetMeetingsByDateRange(
             Sitename=self.source_definition['sitename'],
-            StartDate=self.source_definition.get(
-                'start_date', '2015-06-01T00:00:00'),
-            EndDate=self.source_definition.get(
-                'end_date', '2016-07-01T00:00:00'),
+            StartDate=start_date,
+            EndDate=end_date,
             MetaDataOnly=False)
 
         meeting_types = self._meetingtypes_as_dict()
