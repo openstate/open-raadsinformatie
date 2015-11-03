@@ -74,6 +74,8 @@ class PDFToTextMixin(object):
             print "Something went wrong downloading %s" % (url,)
         except ZeroReturnError as e:
             print "SSL Zero return error %s" % (url,)
+        except Exception as e:
+            print "Some other exception %s" % (url,)
 
     def pdf_to_text(self, path, max_pages=20):
         """
