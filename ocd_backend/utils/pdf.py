@@ -29,8 +29,25 @@ def convert(fname, pages=None):
 
     infile = file(fname, 'rb')
     for page in PDFPage.get_pages(infile, pagenums):
-        print "Processing page %s" % (page,)
-        interpreter.process_page(page)
+        # For some reason PDFMiner chokes on pages that have a single,
+        # but detailed image in them. Work around by skipping pages with
+        # a large media box
+        mediabox = [0, 0, 0, 0]
+        try:
+            mediabox = page.mediabox
+        except AttributeError as e:
+            pass
+        try:
+            media_pixels = media_box[2] * media_box[3]
+        except IndexError as e:
+            media_pixels = 0
+
+        if media_pixels <= settings.PDF_MAX_MEDIABOX_PIXELS:
+            print "Processing page %s" % (page,)
+            interpreter.process_page(page)
+        else:
+            print "Skipped page %s" % (page,)
+
     infile.close()
     converter.close()
     text = output.getvalue()

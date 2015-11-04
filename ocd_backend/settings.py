@@ -85,6 +85,7 @@ IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
 
 # define the location of pdftotext
 PDF_TO_TEXT = u'pdftotext'
+PDF_MAX_MEDIABOX_PIXELS = 5000000
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
