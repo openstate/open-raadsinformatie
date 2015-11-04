@@ -38,11 +38,11 @@ def convert(fname, pages=None):
         except AttributeError as e:
             pass
         try:
-            media_pixels = media_box[2] * media_box[3]
+            mediabox_pixels = mediabox[2] * mediabox[3]
         except IndexError as e:
-            media_pixels = 0
+            mediabox_pixels = 0
 
-        if media_pixels <= settings.PDF_MAX_MEDIABOX_PIXELS:
+        if mediabox_pixels <= settings.PDF_MAX_MEDIABOX_PIXELS:
             print "Processing page %s" % (page,)
             interpreter.process_page(page)
         else:
