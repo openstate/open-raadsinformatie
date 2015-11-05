@@ -1,5 +1,6 @@
 #!/bin/sh
 
+source /opt/bin/activate
 cd /opt/ori
 
 for JSON_FILE in ocd_backend/sources/*.json
