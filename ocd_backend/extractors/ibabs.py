@@ -114,11 +114,13 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         for l in selected_lists:
             reports = self.client.service.GetListReports(
                 Sitename=self.source_definition['sitename'], ListId=l.Key)
-            if len(reports.iBabsKeyValue) <= 1:
-                report = reports.iBabsKeyValue[0]
-            else:
-                report = [
-                    r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
+            report = reports.iBabsKeyValue[0]
+            if len(reports.iBabsKeyValue) > 1:
+                try:
+                    report = [
+                        r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
+                except IndexError as e:
+                    pass
 
             active_page_nr = 0
             max_pages = self.source_definition.get('max_pages', 1)
