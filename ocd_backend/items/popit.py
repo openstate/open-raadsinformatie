@@ -15,7 +15,7 @@ class PopitBaseItem(object):
             'url', 'html_url', 'contact_details', 'images', 'links'
         ],
         # FIXME: start and end dates for memberships borked due to ES configuration (?)
-        'start_date', 'end_date'
+        # 'start_date', 'end_date'
     }
 
     def get_object_id(self):
