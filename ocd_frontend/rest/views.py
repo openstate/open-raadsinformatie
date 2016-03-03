@@ -181,7 +181,7 @@ def format_search_results(results, doc_type='items'):
     del results['timed_out']
 
     for hit in results['hits']['hits']:
-        del hit['_index']
+        # del hit['_index']
         # del hit['_type']
         # del hit['_source']['hidden']
         kwargs = {
@@ -199,10 +199,11 @@ def format_search_results(results, doc_type='items'):
     formatted_results = {}
     for hit in results['hits']['hits']:
         formatted_results.setdefault(hit['_type'], [])
-        for fld in ['_score', '_type']:
+        for fld in ['_score', '_type', '_index']:
             hit['_source']['meta'][fld] = hit[fld]
         formatted_results[hit['_type']].append(hit['_source'])
         del hit['_type']
+        del hit['_index']
 
     if results.has_key('facets'):
         formatted_results['facets'] = results['facets']
