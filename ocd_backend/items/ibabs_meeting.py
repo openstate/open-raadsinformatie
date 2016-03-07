@@ -101,7 +101,7 @@ class IBabsMeetingItem(
             combined_index_data['organization'] = council
 
         combined_index_data['classification'] = (
-            u'Meeting Item' if self.original_item.has_key('MeetingId') else
+            u'Meetingitem' if self.original_item.has_key('MeetingId') else
             u'Meeting')
         combined_index_data['description'] = self.original_item['Explanation']
         combined_index_data['start_date'] = iso8601.parse_date(
@@ -240,10 +240,7 @@ class IBabsReportItem(
         report_name = unicode(
             self.original_item['_ReportName'].split(r'\s+')[0])
 
-        if u'Besluitenlijsten' in report_name:
-            combined_index_data['classification'] = u'Resolution'
-        else:
-            combined_index_data['classification'] = u'Report'
+        combined_index_data['classification'] = report_name
 
         combined_index_data['description'] = combined_index_data['name']
 
