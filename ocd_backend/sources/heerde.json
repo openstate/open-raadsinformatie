@@ -59,8 +59,8 @@
       "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
-      "start_date": "2015-01-01T00:00:00",
-      "end_date": "2016-06-01T00:00:00"
+      "start_date": "2016-03-01T00:00:00",
+      "end_date": "2016-04-01T00:00:00"
   },
   {
       "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",

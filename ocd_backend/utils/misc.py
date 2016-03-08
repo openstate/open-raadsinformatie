@@ -4,6 +4,42 @@ import re
 
 import translitcodec
 
+from elasticsearch.helpers import scan, bulk
+
+
+def reindex(client, source_index, target_index, target_client=None, chunk_size=500, scroll='5m', transformation_callable=None):
+    """
+    Reindex all documents from one index to another, potentially (if
+    `target_client` is specified) on a different cluster.
+
+    .. note::
+
+        This helper doesn't transfer mappings, just the data.
+
+    :arg client: instance of :class:`~elasticsearch.Elasticsearch` to use (for
+        read if `target_client` is specified as well)
+    :arg source_index: index (or list of indices) to read documents from
+    :arg target_index: name of the index in the target cluster to populate
+    :arg target_client: optional, is specified will be used for writing (thus
+        enabling reindex between clusters)
+    :arg chunk_size: number of docs in one chunk sent to es (default: 500)
+    :arg scroll: Specify how long a consistent view of the index should be
+        maintained for scrolled search
+    """
+    target_client = client if target_client is None else target_client
+
+    docs = scan(client, index=source_index, scroll=scroll)
+    def _change_doc_index(hits, index):
+        for h in hits:
+            h['_index'] = index
+            if transformation_callable is not None:
+                h = transformation_callable(h)
+            yield h
+
+    return bulk(target_client, _change_doc_index(docs, target_index),
+        chunk_size=chunk_size, stats_only=True)
+
+
 def load_sources_config(filename):
     """Loads a JSON file containing the configuration of the available
     sources.
