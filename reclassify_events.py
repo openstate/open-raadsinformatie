@@ -39,8 +39,8 @@ def transform_to_new(h):
         sd = h['_source']['source_data']
         if sd[u'content_type'] ==  u'application/json':
             data = json.loads(sd['data'])
-            h['_source']['classification'] = unicode(
-                data['_ReportName'].split(r'\s+')[0])
+            h['_source']['classification'] = unicode(data['_ReportName'].split(r'\s+')[0])
+
     return h
 
 def run(argv):
@@ -54,7 +54,7 @@ def run(argv):
                       help="don't print status messages to stdout")
     (options, args) = parser.parse_args()
     #reindex(es, options.index, options.output, transformation_callable=dummy_transform)
-    reindex(es, options.index, options.output, transformation_callable=transform_to_old)
+    reindex(es, options.index, options.output, transformation_callable=transform_to_new)
     return 0
 
 if __name__ == '__main__':
