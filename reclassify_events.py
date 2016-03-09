@@ -20,7 +20,7 @@ from ocd_backend.utils.misc import reindex
 
 def transform_to_same(h):
     print "Transforming item %s ..." % (h['_id'],)
-    pprint(h)
+    #pprint(h)
     return h
 
 def transform_to_old(h):
@@ -45,7 +45,7 @@ def transform_to_new(h):
 
 def run(argv):
     parser = OptionParser()
-    parser.add_option("-a", "--action", desc="action", default="same",
+    parser.add_option("-a", "--action", dest="action", default="same",
                       help="perform ACTION", metavar="ACTION")
     parser.add_option("-i", "--index", dest="index", default='ori_heerde',
                       help="read from INDEX", metavar="INDEX")
@@ -60,7 +60,7 @@ def run(argv):
     func = None
 
     try:
-        func = locals()["transform_to_%s" % (options.action,)]
+        func = globals()["transform_to_%s" % (options.action,)]
     except KeyError as e:
         pass
 
