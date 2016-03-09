@@ -18,7 +18,7 @@ from ocd_backend.es import elasticsearch as es
 from ocd_backend.utils.misc import reindex
 
 
-def dummy_transform(h):
+def transform_to_same(h):
     print "Transforming item %s ..." % (h['_id'],)
     pprint(h)
     return h
@@ -45,6 +45,8 @@ def transform_to_new(h):
 
 def run(argv):
     parser = OptionParser()
+    parser.add_option("-a", "--action", desc="action", default="same",
+                      help="perform ACTION", metavar="ACTION")
     parser.add_option("-i", "--index", dest="index", default='ori_heerde',
                       help="read from INDEX", metavar="INDEX")
     parser.add_option("-o", "--output", dest="output", default='ori_heerde_goed',
@@ -54,7 +56,21 @@ def run(argv):
                       help="don't print status messages to stdout")
     (options, args) = parser.parse_args()
     #reindex(es, options.index, options.output, transformation_callable=dummy_transform)
-    reindex(es, options.index, options.output, transformation_callable=transform_to_new)
+
+    func = None
+
+    try:
+        func = locals()["transform_to_%s" % (options.action,)]
+    except KeyError as e:
+        pass
+
+    if func is None:
+        return 1
+
+    if not callable(func):
+        return 2
+
+    reindex(es, options.index, options.output, transformation_callable=func)
     return 0
 
 if __name__ == '__main__':
