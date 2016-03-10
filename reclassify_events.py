@@ -43,7 +43,7 @@ def transform_to_new(h):
         sd = h['_source']['source_data']
     else:
         try:
-            doc = es.get(index=u'ori_%s' % (h['_source']['meta']['collection'],)
+            doc = es.get(index=u'ori_%s' % (h['_source']['meta']['collection'],),
                 doc_type=h['_type'], id=h['_id'], _source_include=['*'])
             sd = doc['_source']['source_data']
             h['_source']['source_data'] = sd
@@ -53,7 +53,10 @@ def transform_to_new(h):
     if sd.has_key('content_type') and sd[u'content_type'] ==  u'application/json':
         # FIXME: this is mainly for iBabs, but what about GemeenteOplossingen?
         data = json.loads(sd['data'])
-        h['_source']['classification'] = unicode(data['_ReportName'].split(r'\s+')[0])
+
+        if data.has_key('_ReportName'):
+            h['_source']['classification'] = unicode(
+                data['_ReportName'].split(r'\s+')[0])
 
     return h
 
