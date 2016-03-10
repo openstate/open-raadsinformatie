@@ -98,6 +98,10 @@
                     "type": "string",
                     "analyzer": "text_nl"
                 },
+                "classification": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
                 "date": {
                     "type": "date",
                     "format": "dateOptionalTime"
