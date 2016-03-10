@@ -28,7 +28,7 @@ def reindex(client, source_index, target_index, target_client=None, chunk_size=5
     """
     target_client = client if target_client is None else target_client
 
-    docs = scan(client, index=source_index, scroll=scroll)
+    docs = scan(client, index=source_index, scroll=scroll, _source_include=['*'])
     def _change_doc_index(hits, index):
         for h in hits:
             h['_index'] = index

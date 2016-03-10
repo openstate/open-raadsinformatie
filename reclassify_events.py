@@ -35,11 +35,18 @@ def transform_to_new(h):
     if h['_source']['classification'] == u'Meeting Item':
         h['_source']['classification'] = u'Meetingitem'
 
-    if h['_source'].has_key('source_data') and h['_source']['classification'] == u'Report':
+    if h['_source']['classification'] != u'Report':
+        return h
+
+    if h['_source'].has_key('source_data'):
         sd = h['_source']['source_data']
-        if sd[u'content_type'] ==  u'application/json':
-            data = json.loads(sd['data'])
-            h['_source']['classification'] = unicode(data['_ReportName'].split(r'\s+')[0])
+    else:
+        sd = {}
+
+    if sd.has_key('content_type') and sd[u'content_type'] ==  u'application/json':
+        # FIXME: this is mainly for iBabs, but what about GemeenteOplossingen?
+        data = json.loads(sd['data'])
+        h['_source']['classification'] = unicode(data['_ReportName'].split(r'\s+')[0])
 
     return h
 
