@@ -33,11 +33,11 @@ def transform_to_new(h):
     if h['_type'] != u'events':
         return h
 
+    # This needs to be translated
     if h['_source']['classification'] == u'Meeting Item':
-        h['_source']['classification'] = u'Meetingitem'
-
-    if h['_source']['classification'] != u'Report':
-        return h
+        h['_source']['classification'] = u'Agendapunt'
+    if h['_source']['classification'] == u'Meeting':
+        h['_source']['classification'] = u'Agenda'
 
     if h['_source'].has_key('source_data'):
         sd = h['_source']['source_data']
@@ -49,6 +49,9 @@ def transform_to_new(h):
             h['_source']['source_data'] = sd
         except Exception as e:
             sd = {}
+
+    if h['_source']['classification'] != u'Report':
+        return h
 
     if sd.has_key('content_type') and sd[u'content_type'] ==  u'application/json':
         # FIXME: this is mainly for iBabs, but what about GemeenteOplossingen?
