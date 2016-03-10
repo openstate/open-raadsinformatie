@@ -101,8 +101,8 @@ class IBabsMeetingItem(
             combined_index_data['organization'] = council
 
         combined_index_data['classification'] = (
-            u'Meetingitem' if self.original_item.has_key('MeetingId') else
-            u'Meeting')
+            u'Agendapunt' if self.original_item.has_key('MeetingId') else
+            u'Agenda')
         combined_index_data['description'] = self.original_item['Explanation']
         combined_index_data['start_date'] = iso8601.parse_date(
             meeting['MeetingDate'],)

@@ -36,6 +36,8 @@ def transform_to_new(h):
     # This needs to be translated
     if h['_source']['classification'] == u'Meeting Item':
         h['_source']['classification'] = u'Agendapunt'
+    if h['_source']['classification'] == u'Meetingitem':
+        h['_source']['classification'] = u'Agendapunt'
     if h['_source']['classification'] == u'Meeting':
         h['_source']['classification'] = u'Agenda'
 
