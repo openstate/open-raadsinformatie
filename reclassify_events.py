@@ -9,6 +9,7 @@ from collections import OrderedDict
 from optparse import OptionParser
 
 import redis
+import requests
 
 from elasticsearch import helpers as es_helpers
 from elasticsearch.exceptions import RequestError
@@ -41,7 +42,13 @@ def transform_to_new(h):
     if h['_source'].has_key('source_data'):
         sd = h['_source']['source_data']
     else:
-        sd = {}
+        try:
+            doc = es.get(index=u'ori_%s' % (h['_source']['meta']['collection'],)
+                doc_type=h['_type'], id=h['_id'], _source_include=['*'])
+            sd = doc['_source']['source_data']
+            h['_source']['source_data'] = sd
+        except Exception as e:
+            sd = {}
 
     if sd.has_key('content_type') and sd[u'content_type'] ==  u'application/json':
         # FIXME: this is mainly for iBabs, but what about GemeenteOplossingen?
