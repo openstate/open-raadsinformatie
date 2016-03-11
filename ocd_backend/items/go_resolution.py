@@ -32,7 +32,7 @@ class ResolutionItem(MeetingItem):
 
         combined_index_data['name'] = u'Besluitenlijst %s' % (combined_index_data['name'],)
 
-        combined_index_data['classification'] = u'Resolution'
+        combined_index_data['classification'] = u'Besluitenlijst'
 
         combined_index_data['description'] = self.pdf_get_contents(
             self.get_original_object_urls()['pdf'],

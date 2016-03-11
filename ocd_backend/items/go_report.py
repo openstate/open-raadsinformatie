@@ -49,7 +49,7 @@ class ReportItem(MeetingItem):
 
         combined_index_data['name'] = u'Verslag %s' % (combined_index_data['name'],)
 
-        combined_index_data['classification'] = u'Report'
+        combined_index_data['classification'] = u'Verslag'
 
         # TODO: get all the descriptive content?
         items = self._get_meeting_items()

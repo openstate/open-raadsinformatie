@@ -178,7 +178,7 @@ class MeetingItem(
         if self.original_item['type'] == 'meeting':
             combined_index_data['name'] = u''.join(
                 self.full_html.xpath('//title/text()')).strip()
-            combined_index_data['classification'] = u'Meeting'
+            combined_index_data['classification'] = u'Agenda'
         else:
             meeting_item_index = (
                 u''.join(self.html.xpath('.//div[@class="first"]//text()')).strip())
@@ -186,7 +186,7 @@ class MeetingItem(
                 meeting_item_index,
                 u''.join(self.html.xpath('.//div[@class="title"]/h3//text()')).strip(),
             )
-            combined_index_data['classification'] = u'Meeting Item'
+            combined_index_data['classification'] = u'Agendapunt'
 
         combined_index_data['identifiers'] = [
             {
