@@ -62,6 +62,10 @@ def transform_to_new(h):
         if data.has_key('_ReportName'):
             h['_source']['classification'] = unicode(
                 data['_ReportName'].split(r'\s+')[0])
+        elif h['_source']['classification'] == u'Report':
+            h['_source']['classification'] = u'Verslag'
+        elif h['_source']['classification'] == u'Resolution':
+            h['_source']['classification'] = u'Besluitenlijst'
 
     return h
 
