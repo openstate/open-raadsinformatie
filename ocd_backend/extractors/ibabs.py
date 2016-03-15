@@ -126,6 +126,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             max_pages = self.source_definition.get('max_pages', 1)
             per_page = self.source_definition.get('per_page', 100)
             result_count = per_page
+            total_count = 0
+            yield_count = 0
             while ((active_page_nr < max_pages) and (result_count == per_page)):
                 result = self.client.service.GetListReport(
                     Sitename=self.source_definition['sitename'], ListId=l.Key,
@@ -133,11 +135,10 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     RecordsPerPage=per_page
                 )
                 result_count = 0
-                print "* %s: %s/%s - %d/%d" % (
-                    self.source_definition['sitename'],
-                    result.ListName, result.ReportName,
-                    active_page_nr, max_pages,)
-
+                # print "* %s: %s/%s - %d/%d" % (
+                #     self.source_definition['sitename'],
+                #     result.ListName, result.ReportName,
+                #     active_page_nr, max_pages,)
                 try:
                     document_element = result.Data.diffgram[0].DocumentElement[0]
                 except AttributeError as e:
@@ -147,14 +148,16 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                 if document_element is None:
                     print "No correct document element for this page!"
+                    total_count += per_page
                     continue
 
                 for item in document_element.results:
                     dict_item = list_report_response_to_dict(item)
                     dict_item['_ListName'] = result.ListName
                     dict_item['_ReportName'] = result.ReportName
-                    print ".",
                     yield 'application/json', json.dumps(dict_item)
+                    yield_count += 1
                     result_count += 1
-                print " (%d)" % (result_count,)
+                total_count += result_count
                 active_page_nr += 1
+            print "%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,)

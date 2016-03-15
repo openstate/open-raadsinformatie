@@ -23,7 +23,7 @@ class IBabsMeetingItem(
 
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
-            classification='council')
+            classification='Council')
         return results[0]
 
     def _find_meeting_type_id(self, org):
@@ -162,7 +162,7 @@ class IBabsReportItem(
 
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
-            classification='council')
+            classification='Council')
         return results[0]
 
     def _get_committees(self):
