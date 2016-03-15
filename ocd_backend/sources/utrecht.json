@@ -91,7 +91,13 @@
       "keep_index_on_update": true,
       "regex": ".*",
       "pdf_max_pages": 0,
-      "max_pages": 1
+      "max_pages": 1,
+      "fields": {
+        "Moties": {
+          "name": "onderwerp",
+          "description": "status"
+        }
+      }
   },
   {
       "id": "utrecht_popit_organizations",

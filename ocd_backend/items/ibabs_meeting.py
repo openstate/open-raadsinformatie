@@ -202,14 +202,23 @@ class IBabsReportItem(
 
         combined_index_data['hidden'] = self.source_definition['hidden']
 
+        report_name = unicode(
+            self.original_item['_ReportName'].split(r'\s+')[0])
+
+        combined_index_data['classification'] = report_name
+
+
         name_field = None
-        for field in self.original_item.keys():
-            id_for_field = '%sIds' % (field,)
-            if (
-                self.original_item.has_key(id_for_field) and
-                name_field is None
-            ):
-                name_field = field
+        try:
+            name_field = self.source_definition['fields'][report_name]['name']
+        except KeyError as e:
+            for field in self.original_item.keys():
+                id_for_field = '%sIds' % (field,)
+                if (
+                    self.original_item.has_key(id_for_field) and
+                    name_field is None
+                ):
+                    name_field = field
 
         combined_index_data['name'] = unicode(
             self.original_item[name_field][0])
@@ -237,12 +246,12 @@ class IBabsReportItem(
                 combined_index_data['organization'] = comm
                 found_committee = True
 
-        report_name = unicode(
-            self.original_item['_ReportName'].split(r'\s+')[0])
-
-        combined_index_data['classification'] = report_name
-
-        combined_index_data['description'] = combined_index_data['name']
+        try:
+            name_field = self.source_definition['fields'][report_name]['description']
+            combined_index_data['description'] = unicode(
+                self.original_item[name_field][0])
+        except KeyError as e:
+            combined_index_data['description'] = combined_index_data['name']
 
         # FIXME: maybe datum should not be hardcoded?
         if self.original_item.has_key('datum'):
