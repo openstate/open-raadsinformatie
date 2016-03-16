@@ -253,12 +253,24 @@ class IBabsReportItem(
         except KeyError as e:
             combined_index_data['description'] = combined_index_data['name']
 
-        # FIXME: maybe datum should not be hardcoded?
-        if self.original_item.has_key('datum'):
+        try:
+            datum_field = self.source_definition['fields'][report_name]['start_date']
+        except Exception as e:
+            datum_field = 'datum'
+
+        datum = None
+        if self.original_item.has_key(datum_field):
+            if isinstance(self.original_item[datum_field], list):
+                datum = self.original_item[datum_field][0]
+            else:
+                datum = self.original_item[datum_field]
+
+        if datum is not None:
             combined_index_data['start_date'] = iso8601.parse_date(
-                self.original_item['datum'][0],)
+                datum,)
             combined_index_data['end_date'] = iso8601.parse_date(
-                self.original_item['datum'][0],)
+                datum,)
+
         # combined_index_data['location'] = meeting['Location'].strip()
         combined_index_data['status'] = u'confirmed'
 

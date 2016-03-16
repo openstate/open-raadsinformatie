@@ -95,7 +95,23 @@
       "fields": {
         "Moties": {
           "name": "onderwerp",
-          "description": "status"
+          "description": "status",
+          "start_date": "datuminvoer"
+        },
+        "Commissiebrieven C&F": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datuminvoer"
+        },
+        "Commissiebrieven M&S": {
+          "name": "onderwerp",
+          "description": "onderwerp",
+          "start_date": "datuminvoer"
+        },
+        "Commissiebrieven S&R": {
+          "name": "onderwerp",
+          "description": "onderwerp",
+          "start_date": "datuminvoer"
         }
       }
   },
