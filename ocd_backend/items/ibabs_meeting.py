@@ -3,6 +3,7 @@ import json
 from pprint import pprint
 from hashlib import sha1
 from time import sleep
+import re
 
 import iso8601
 
@@ -267,9 +268,9 @@ class IBabsReportItem(
 
         if datum is not None:
             combined_index_data['start_date'] = iso8601.parse_date(
-                datum,)
+                re.sub(r'\.\d+\+', '+', datum),)
             combined_index_data['end_date'] = iso8601.parse_date(
-                datum,)
+                re.sub(r'\.\d+\+', '+', datum),)
 
         # combined_index_data['location'] = meeting['Location'].strip()
         combined_index_data['status'] = u'confirmed'
