@@ -112,6 +112,11 @@
           "name": "onderwerp",
           "description": "onderwerp",
           "start_date": "datuminvoer"
+        },
+        "Schriftelijke vragen": {
+          "name": "onderwerp",
+          "description": "indieners",
+          "start_date": "datum"
         }
       }
   },

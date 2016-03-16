@@ -267,6 +267,8 @@ class IBabsReportItem(
                 datum = self.original_item[datum_field]
 
         if datum is not None:
+            # msgpack does not like microseconds for some reason.
+            # no biggie if we disregard it, though
             combined_index_data['start_date'] = iso8601.parse_date(
                 re.sub(r'\.\d+\+', '+', datum),)
             combined_index_data['end_date'] = iso8601.parse_date(
