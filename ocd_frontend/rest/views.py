@@ -199,8 +199,11 @@ def format_search_results(results, doc_type='items'):
     formatted_results = {}
     for hit in results['hits']['hits']:
         formatted_results.setdefault(hit['_type'], [])
-        for fld in ['_score', '_type', '_index']:
-            hit['_source']['meta'][fld] = hit[fld]
+        for fld in ['_score', '_type', '_index', 'highlight']:
+            try:
+                hit['_source']['meta'][fld] = hit[fld]
+            except Exception as e:
+                pass 
         formatted_results[hit['_type']].append(hit['_source'])
         del hit['_type']
         del hit['_index']
