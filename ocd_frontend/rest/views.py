@@ -303,6 +303,11 @@ def search(doc_type=u'items'):
         allowed_to_include=current_app.config['ALLOWED_INCLUDE_FIELDS_SEARCH']
     )
 
+    # the fields we want to highlight in the Elasticsearch response
+    highlighted_fields = current_app.config['COMMON_HIGHLIGHTS']
+    highlighted_fields.update(
+        current_app.config['AVAILABLE_HIGHLIGHTS'][doc_type])
+
     # Construct the query we are going to send to Elasticsearch
     es_q = {
         'query': {
@@ -326,6 +331,9 @@ def search(doc_type=u'items'):
         },
         '_source': {
             'exclude': excluded_fields
+        },
+        'highlight': {
+            'fields': highlighted_fields
         }
     }
 
