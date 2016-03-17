@@ -240,6 +240,40 @@ AVAILABLE_FACETS = {
 #     }
 # }
 
+
+# For highlighting
+COMMON_HIGHLIGHTS = {
+    'source': {},
+    'collection': {},
+    'rights': {}
+}
+
+AVAILABLE_HIGHLIGHTS = {
+    'organizations': {
+        'classification': {},
+        'name': {},
+        'description': {}
+    },
+    'persons': {
+        'name': {},
+        'memberships.role': {},
+        'area.name': {}
+    },
+    'events': {
+        'classification': {},
+        'location': {},
+        'organization.name': {},
+        'description': {},
+        'sources.note': {},
+        'sources.description': {}
+    },
+    'items': {
+        'classification': {},
+        'name': {},
+        'description': {}
+    }
+}
+
 # The allowed date intervals for an ES data_histogram that can be
 # requested via the REST API
 ALLOWED_DATE_INTERVALS = ('day', 'week', 'month', 'quarter', 'year')
