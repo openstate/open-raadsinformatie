@@ -100,3 +100,15 @@ def list_report_response_to_dict(r):
     return {k[0]: _list_response_field_to_val(k[1]) for k in r}
 
 # json.dumps(meeting_to_dict(m.Meetings[0][0]))
+
+def list_entry_response_to_dict(m):
+    """
+    Converts an iBabsMeetingItem to a JSON serializable dict
+    """
+    fields = {
+        'Message': None,
+        'Status': None,
+        'Documents': lambda x: [
+            document_to_dict(y) if y is not None else [] for y in x[0]]
+    }
+    return _ibabs_to_dict(m, fields)

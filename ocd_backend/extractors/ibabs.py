@@ -11,7 +11,8 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, document_to_dict, meeting_item_to_dict,
-    meeting_type_to_dict, list_report_response_to_dict)
+    meeting_type_to_dict, list_report_response_to_dict,
+    list_entry_response_to_dict)
 
 
 class IBabsBaseExtractor(BaseExtractor):
@@ -155,6 +156,11 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     dict_item = list_report_response_to_dict(item)
                     dict_item['_ListName'] = result.ListName
                     dict_item['_ReportName'] = result.ReportName
+                    extra_info_item = self.client.service.GetListEntry(
+                        Sitename=self.source_definition['sitename'],
+                        ListId=l.Key, EntryId=dict_item['id'][0])
+                    dict_item['_Extra'] = list_entry_response_to_dict(
+                        extra_info_item)
                     yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
