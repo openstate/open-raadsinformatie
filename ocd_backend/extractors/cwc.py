@@ -73,15 +73,28 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 PageSize=self.source_definition['cwc_pagesize'],
                 PageNumber=current_page)
 
+            if results.WebcastSearchResult != 0:
+                print "Page %s resulted in eror code : %s" % (
+                    current_page, results.WebcastSearchResult,)
+                continue
+
             result_count = 0
             for result in results.WebcastSummaries[0]:
                 full_result = self.client.service.WebcastGet(
                     Username=self.source_definition['cwc_username'],
                     Password=self.source_definition['cwc_password'],
                     Code=result.Code)
+
+                result_count += 1
+                if full_result.WebcastGetResult != 0:
+                    print "Webcast %s resulted in error code : %s" % (
+                        result.Code, full_result.WebcastGetResult,)
+                    continue
+
                 serialized_result = suds_to_json(full_result)
                 yield 'application/json', serialized_result
-                result_count += 1
-            if not self.source_defitinion['cwc_paging']:
+
+            if not self.source_definition['cwc_paging']:
                 result_count = 0
+
             current_page += 1

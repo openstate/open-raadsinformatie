@@ -164,6 +164,6 @@
       "cwc_username": "utrecht_api",
       "cwc_password": "U@nG5rfp",
       "cwc_pagesize": 1,
-      "cwc_paging": true
+      "cwc_paging": false
   }
 ]
