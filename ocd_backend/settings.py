@@ -83,6 +83,9 @@ API_URL = 'http://127.0.0.1:5000/v0/'
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
 
+# The endpoint for the CompanyWebcast API
+CWC_WSDL = u'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
+
 # define the location of pdftotext
 PDF_TO_TEXT = u'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
