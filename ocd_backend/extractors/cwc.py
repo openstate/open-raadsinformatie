@@ -82,4 +82,6 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 serialized_result = suds_to_json(full_result)
                 yield 'application/json', serialized_result
                 result_count += 1
+            if not self.source_defitinion['cwc_paging']:
+                result_count = 0
             current_page += 1
