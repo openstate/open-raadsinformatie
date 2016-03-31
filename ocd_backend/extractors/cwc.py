@@ -67,6 +67,7 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
         result_count = pagesize
 
         while (result_count == pagesize):
+            print "Requesting page %s ..." % (current_page,)
             results = self.client.service.WebcastSearch(
                 Username=self.source_definition['cwc_username'],
                 Password=self.source_definition['cwc_password'],

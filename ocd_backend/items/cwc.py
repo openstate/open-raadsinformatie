@@ -115,32 +115,24 @@ class VideotulenItem(
         combined_index_data['location'] = u'Raadszaal'
         combined_index_data['status'] = u'confirmed'
 
-        # if self.original_item.has_key('MeetingItems'):
-        #     combined_index_data['children'] = [
-        #         self._get_meeting_id(mi) for mi in self.original_item[
-        #             'MeetingItems']]
+        combined_index_data['sources'] = [
+            {'url': a['Location'], 'note': a['Description']} for a in self.original_item['Webcast']['Attachments']['Attachment']]
 
-        combined_index_data['sources'] = []
-
-        # try:
-        #     documents = self.original_item['Documents']
-        # except KeyError as e:
-        #     documents = []
-        # if documents is None:
-        #     documents = []
-        #
-        # for document in documents:
-        #     sleep(1)
-        #     print u"%s: %s" % (
-        #         combined_index_data['name'], document['DisplayName'],)
-        #     description = self.pdf_get_contents(
-        #         document['PublicDownloadURL'],
-        #         self.source_definition.get('pdf_max_pages', 20))
-        #     combined_index_data['sources'].append({
-        #         'url': document['PublicDownloadURL'],
-        #         'note': document['DisplayName'],
-        #         'description': description
-        #     })
+        documents = []
+        for topic in self.original_item['Webcast']['Topics']['Topic']:
+            if topic['Attachments'] is None:
+                continue
+            for a in topic['Attachments']['Attachment']:
+                try:
+                    description = self.pdf_get_contents(
+                        a['Location'],
+                        self.source_definition.get('pdf_max_pages', 20))
+                except Exception as e:
+                    description = u''
+                documents.append({
+                    'url': a['Location'], 'note': a['Description'],
+                    'description': description})
+        combined_index_data['sources'] += documents
 
         return combined_index_data
 
