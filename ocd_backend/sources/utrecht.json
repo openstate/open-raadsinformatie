@@ -147,5 +147,23 @@
       "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons",
       "doc_type": "persons",
       "keep_index_on_update": true
+  },
+  {
+      "id": "utrecht_videotulen",
+      "extractor": "ocd_backend.extractors.cwc.VideotulenExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.cwc.VideotulenItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "index_name": "utrecht",
+      "doc_type": "events",
+      "sitename": "Utrecht",
+      "keep_index_on_update": true,
+      "cwc_username": "utrecht_api",
+      "cwc_password": "U@nG5rfp",
+      "cwc_pagesize": 20,
+      "cwc_paging": true
   }
 ]
