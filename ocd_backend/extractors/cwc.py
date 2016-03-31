@@ -72,7 +72,8 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 Username=self.source_definition['cwc_username'],
                 Password=self.source_definition['cwc_password'],
                 PageSize=self.source_definition['cwc_pagesize'],
-                PageNumber=current_page)
+                PageNumber=current_page,
+                Order='CreatedDesc')
 
             if results.WebcastSearchResult != 0:
                 print "Page %s resulted in eror code : %s" % (
@@ -85,6 +86,10 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                     Username=self.source_definition['cwc_username'],
                     Password=self.source_definition['cwc_password'],
                     Code=result.Code)
+
+                print "%s: %s" % (
+                    full_result['Webcast']['Title'],
+                    full_result['Webcast']['ScheduledStart'],)
 
                 result_count += 1
                 if full_result.WebcastGetResult != 0:

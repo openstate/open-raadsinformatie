@@ -163,7 +163,7 @@
       "keep_index_on_update": true,
       "cwc_username": "utrecht_api",
       "cwc_password": "U@nG5rfp",
-      "cwc_pagesize": 20,
-      "cwc_paging": true
+      "cwc_pagesize": 10,
+      "cwc_paging": false
   }
 ]
