@@ -87,15 +87,16 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                     Password=self.source_definition['cwc_password'],
                     Code=result.Code)
 
-                print "%s: %s" % (
-                    full_result['Webcast']['Title'],
-                    full_result['Webcast']['ScheduledStart'],)
-
                 result_count += 1
                 if full_result.WebcastGetResult != 0:
                     print "Webcast %s resulted in error code : %s" % (
                         result.Code, full_result.WebcastGetResult,)
                     continue
+
+                if full_result is not None and full_result['Webcast'] is not None:
+                    print "%s: %s" % (
+                        full_result['Webcast']['Title'],
+                        full_result['Webcast']['ScheduledStart'],)
 
                 serialized_result = suds_to_json(full_result)
                 yield 'application/json', serialized_result
