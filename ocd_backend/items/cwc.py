@@ -88,12 +88,14 @@ class VideotulenItem(
             combined_index_data['name'],)
 
         topic_descriptions = []
-        for topic in self.original_item['Webcast']['Topics']['Topic']:
-            topic_description = topic.get('Description')
-            if topic_description is None:
-                topic_description = u''
-            topic_descriptions.append(
-                u'<h3>%s</h3>\n<p>%s</p>' % (topic['Title'], topic_description,))
+        if self.original_item['Webcast']['Topics'] is not None:
+            for topic in self.original_item['Webcast']['Topics']['Topic']:
+                topic_description = topic.get('Description')
+                if topic_description is None:
+                    topic_description = u''
+                topic_descriptions.append(
+                    u'<h3>%s</h3>\n<p>%s</p>' % (
+                        topic['Title'], topic_description,))
 
         if len(topic_descriptions) > 0:
             combined_index_data['description'] = u'\n'.join(topic_descriptions)
@@ -119,19 +121,20 @@ class VideotulenItem(
             {'url': a['Location'], 'note': a['Description']} for a in self.original_item['Webcast']['Attachments']['Attachment']]
 
         documents = []
-        for topic in self.original_item['Webcast']['Topics']['Topic']:
-            if topic['Attachments'] is None:
-                continue
-            for a in topic['Attachments']['Attachment']:
-                try:
-                    description = self.pdf_get_contents(
-                        a['Location'],
-                        self.source_definition.get('pdf_max_pages', 20))
-                except Exception as e:
-                    description = u''
-                documents.append({
-                    'url': a['Location'], 'note': a['Description'],
-                    'description': description})
+        if self.original_item['Webcast']['Topics'] is not None:
+            for topic in self.original_item['Webcast']['Topics']['Topic']:
+                if topic['Attachments'] is None:
+                    continue
+                for a in topic['Attachments']['Attachment']:
+                    try:
+                        description = self.pdf_get_contents(
+                            a['Location'],
+                            self.source_definition.get('pdf_max_pages', 20))
+                    except Exception as e:
+                        description = u''
+                    documents.append({
+                        'url': a['Location'], 'note': a['Description'],
+                        'description': description})
         combined_index_data['sources'] += documents
 
         return combined_index_data
