@@ -120,5 +120,23 @@
       "file_url": "http://overbetuwe.openraadsinformatie.nl/api/v0.1/persons",
       "doc_type": "persons",
       "keep_index_on_update": true
+  },
+    {
+      "id": "overbetuwe_videotulen",
+      "extractor": "ocd_backend.extractors.cwc.VideotulenExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.cwc.VideotulenItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "index_name": "overbetuwe",
+      "doc_type": "events",
+      "sitename": "Overbetuwe",
+      "keep_index_on_update": true,
+      "cwc_username": "overbetuwe_read_svc",
+      "cwc_password": "NFd!N39K",
+      "cwc_pagesize": 10,
+      "cwc_paging": false
   }
 ]
