@@ -105,7 +105,7 @@
       "doc_type": "events",
       "keep_index_on_update": true,
       "base_url": "http://raad.oude-ijsselstreek.nl",
-      "extract_meeting_items": false,
+      "extract_meeting_items": true,
       "upcoming": false
   },
   {

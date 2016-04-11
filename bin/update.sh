@@ -15,6 +15,6 @@ do
     sleep 60
   done
 
-  sleep 1800
+  sleep 60
 done
 echo `date` "All done"
