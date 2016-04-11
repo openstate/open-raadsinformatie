@@ -111,6 +111,6 @@ def list_entry_response_to_dict(m):
         'Documents': lambda x: [
             document_to_dict(y) if y is not None else [] for y in x[0]],
         'Values': lambda x: {
-            unicode(y.Key): unicode(y.Value) if y.Value is not None else None for y in x[0].Values}
+            unicode(y.Key): unicode(y.Value) if y.Value is not None else None for y in x}
     }
     return _ibabs_to_dict(m, fields)
