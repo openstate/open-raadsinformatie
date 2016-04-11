@@ -252,7 +252,13 @@ class IBabsReportItem(
             combined_index_data['description'] = unicode(
                 self.original_item[name_field][0])
         except KeyError as e:
-            combined_index_data['description'] = combined_index_data['name']
+            combined_index_data['description'] = u''
+
+        if combined_index_data['description'].strip() == u'':
+            try:
+                ombined_index_data['description'] = self.original_item['_Extra']['Values']['Toelichting']
+            except KeyError as e:
+                combined_index_data['description'] = None
 
         try:
             datum_field = self.source_definition['fields'][report_name]['start_date']
