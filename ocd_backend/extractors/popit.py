@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.exceptions import ConfigurationError
@@ -17,6 +18,7 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
         static_json = json.loads(static_content)
 
         for item in static_json['result']:
+            pprint(item)
             yield 'application/json', json.dumps(item)
 
         while static_json.get('next_url'):
@@ -25,4 +27,5 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
             static_json = result.json()
 
             for item in static_json['result']:
+                pprint(item)
                 yield 'application/json', json.dumps(item)
