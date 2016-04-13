@@ -96,7 +96,12 @@
         "Moties": {
           "name": "onderwerp",
           "description": "status",
-          "start_date": "datuminvoer"
+          "start_date": "datum"
+        },
+        "Amendementen": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datum"
         },
         "Commissiebrieven C&F": {
           "name": "onderwerp",
