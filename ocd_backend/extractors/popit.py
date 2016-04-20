@@ -18,7 +18,7 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
         static_json = json.loads(static_content)
 
         for item in static_json['result']:
-            pprint(item)
+            print "%s - %s" % (item.get('meta', {}).get('_type', '-'), item.get('name', '-'),)
             yield 'application/json', json.dumps(item)
 
         while static_json.get('next_url'):
@@ -27,5 +27,5 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
             static_json = result.json()
 
             for item in static_json['result']:
-                pprint(item)
+                print "%s - %s" % (item.get('meta', {}).get('_type', '-'), item.get('name', '-'),)
                 yield 'application/json', json.dumps(item)
