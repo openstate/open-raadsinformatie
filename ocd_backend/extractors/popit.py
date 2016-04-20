@@ -18,7 +18,11 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
         static_json = json.loads(static_content)
 
         for item in static_json['result']:
-            print "%s - %s" % (item.get('meta', {}).get('_type', '-'), item.get('name', '-'),)
+            print "%s (%s) - %s" % (
+                item.get('id', '-'), item.get('meta', {}).get('_type', '-'),
+                item.get('name', '-'),)
+            for mem in item.get('memberships', []):
+                print "-> %s (%s)" % (mem['organization_id'], mem['person_id'],)
             yield 'application/json', json.dumps(item)
 
         while static_json.get('next_url'):
@@ -27,5 +31,9 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
             static_json = result.json()
 
             for item in static_json['result']:
-                print "%s - %s" % (item.get('meta', {}).get('_type', '-'), item.get('name', '-'),)
+                print "%s (%s) - %s" % (
+                    item.get('id', '-'), item.get('meta', {}).get('_type', '-'),
+                    item.get('name', '-'),)
+                for mem in item.get('memberships', []):
+                    print "-> %s (%s)" % (mem['organization_id'], mem['person_id'],)
                 yield 'application/json', json.dumps(item)
