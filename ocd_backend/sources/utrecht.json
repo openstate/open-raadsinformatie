@@ -89,9 +89,10 @@
       "doc_type": "events",
       "sitename": "Utrecht",
       "keep_index_on_update": true,
-      "regex": ".*",
+      "include": ".*",
+      "exclude": "moties",
       "pdf_max_pages": 0,
-      "max_pages": 100,
+      "max_pages": 1,
       "fields": {
         "Moties": {
           "name": "onderwerp",
@@ -169,6 +170,6 @@
       "cwc_username": "utrecht_api",
       "cwc_password": "U@nG5rfp",
       "cwc_pagesize": 10,
-      "cwc_paging": false 
+      "cwc_paging": false
   }
 ]

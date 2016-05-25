@@ -108,7 +108,11 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         selected_lists = []
         for l in lists.iBabsKeyValue:
-            if not re.match(self.source_definition['regex'], l.Value.lower()):
+            include_regex = self.source_definition.get('include', None) or self.source_definition['regex']
+            if not re.match(include_regex, l.Value.lower()):
+                continue
+            exclude_regex = self.source_definition.get('exclude', None) or r'^$'
+            if re.match(exclude_regex, l.Value.lower()):
                 continue
             selected_lists.append(l)
 
@@ -161,7 +165,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    yield 'application/json', json.dumps(dict_item)
+                    #yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
                 total_count += result_count
