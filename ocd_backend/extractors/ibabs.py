@@ -165,7 +165,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    #yield 'application/json', json.dumps(dict_item)
+                    yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
                 total_count += result_count

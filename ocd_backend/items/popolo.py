@@ -91,3 +91,30 @@ class EventItem(PopoloBaseItem):
         'sources': list,
         'children': list
     }
+
+
+class MotionItem(PopoloBaseItem):
+    combined_index_fields = {
+        'id': unicode,
+        'hidden': bool,
+        'name': unicode,
+        'organization_id': unicode,
+        'organization': dict,
+        'legislative_session_id': unicode,
+        'legislative_session': dict,
+        'creator_id': unicode,
+        'creator': dict,
+        'text': unicode,
+        'identifier': unicode,  # unsure
+        'classification': unicode,
+        'date': datetime,
+        'requirement': unicode,
+        'result': unicode,
+        'vote_events': list
+    }
+
+
+# class VotingEventItem(PopoloBaseItem):
+#     combined_index_fields = {
+#         # fill in later
+#     }
