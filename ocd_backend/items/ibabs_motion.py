@@ -82,8 +82,15 @@ class IBabsMotionItem(
 
         return None
 
+    def _get_motion_id_encoded(self):
+        hash_content = u'motion-%s' % (self._value('Kenmerk').strip())
+        return unicode(sha1(hash_content.decode('utf8')).hexdigest())
+
+    def get_object_id(self):
+        return self._get_motion_id_encoded()
+
     def get_original_object_id(self):
-        return unicode(self._value('Kenmerk'))
+        return self._get_motion_id_encoded()
 
     def get_original_object_urls(self):
         # FIXME: what to do when there is not an original URL?
@@ -133,7 +140,7 @@ class IBabsMotionItem(
         combined_index_data['sources'] = []
 
         # FIXME: something with vote events here ...
-        combined_index_data['vote_events'] = []
+        combined_index_data['vote_events'] = [self.get_original_object_id()]
 
         try:
             documents = self.original_item['Documents']
