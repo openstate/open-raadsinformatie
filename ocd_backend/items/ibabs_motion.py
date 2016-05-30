@@ -102,15 +102,8 @@ class IBabsMotionItem(
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
+    def _get_motion_data(self, council, members, parties):
         combined_index_data = {}
-        council = self._get_council()
-        members = self._get_council_members()
-        parties = self._get_council_parties()
-
-        meeting = self.original_item
-        if self.original_item.has_key('MeetingId'):
-            meeting = self.original_item['Meeting']
 
         combined_index_data['id'] = unicode(self.get_original_object_id())
 
@@ -139,7 +132,6 @@ class IBabsMotionItem(
         combined_index_data['requirement'] = u'majority'
         combined_index_data['sources'] = []
 
-        # FIXME: something with vote events here ...
         combined_index_data['vote_events'] = [self.get_original_object_id()]
 
         try:
@@ -164,6 +156,13 @@ class IBabsMotionItem(
 
         return combined_index_data
 
+    def get_combined_index_data(self):
+        council = self._get_council()
+        members = self._get_council_members()
+        parties = self._get_council_parties()
+
+        return self._get_motion_data(council, members, parties)
+
     def get_index_data(self):
         return {}
 
@@ -171,3 +170,49 @@ class IBabsMotionItem(
         text_items = []
 
         return u' '.join(text_items)
+
+
+class IBabsVoteEventItem(IBabsMotionItem):
+    def get_combined_index_data(self):
+        combined_index_data = {}
+        council = self._get_council()
+        members = self._get_council_members()
+        parties = self._get_council_parties()
+
+        combined_index_data['motion'] = self._get_motion_data(
+            council, members, parties)
+
+        # we can copy some fields from the motion
+        for field in [
+            'id', 'organization_id', 'organization', 'identifier', 'result',
+            'sources'
+        ]:
+            combined_index_data[field] = combined_index_data['motion'][field]
+
+        # FIXME: have actual votes below. Currently assumes everyone votes as
+        # specified in the motion result
+        combined_index_data['counts'] = []
+        for party in parties:
+            combined_index_data['counts'].append({
+                'option': combined_index_data['result'],
+                'value': len(list(set([m['person_id'] for m in party['memberships']]))),
+                'group': {
+                    'name': party['name']
+                }
+            })
+
+        # FIXME: get the actual individual votes, depends on the voting kind
+        party_ids = [p['id'] for p in parties]
+        combined_index_data['votes'] = []
+        for m in members:
+            try:
+                member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
+            except IndexError as e:
+                member_party = {'id': None}
+            combined_index_data['votes'].append({
+                'voter_id' : m['id'],
+                'voter': m,
+                'option': combined_index_data['result'],  # FIXME: actual vote
+                'group_id': member_party['id']
+            })
+        return combined_index_data
