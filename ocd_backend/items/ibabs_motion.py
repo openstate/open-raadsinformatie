@@ -215,4 +215,5 @@ class IBabsVoteEventItem(IBabsMotionItem):
                 'option': combined_index_data['result'],  # FIXME: actual vote
                 'group_id': member_party['id']
             })
+
         return combined_index_data
