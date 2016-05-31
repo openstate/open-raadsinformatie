@@ -33,6 +33,12 @@ SORTABLE_FIELDS = {
         'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'start_date',
         'location'],
+    'motions':[
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name', 'date'],
+    'vote_events': [
+        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name', 'start_date'],
     'items': [
         'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
         '_score']
@@ -63,6 +69,12 @@ SIMPLE_QUERY_FIELDS = {
     'events': [
         'name^4', 'description^3', 'location', 'organization.name',
         'organization.description', 'sources.note^2', 'sources.description'],
+    'motions': [
+        'name^4', 'text^3', 'organization.name', 'sources.note^2',
+        'sources.description'],
+    'vote_events': [
+        'name^4', 'motion.text^3', 'organization.name', 'sources.note^2',
+        'sources.description'],
     'items': [
         'name^4', 'description^3', 'location', 'organization.name',
         'organization.description', 'sources.note^2', 'sources.description',
@@ -179,6 +191,82 @@ AVAILABLE_FACETS = {
             }
         }
     },
+    'motions': {
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
+        },
+        'organization_id': {
+            'terms': {
+                'field': 'organization_id',
+                'size': 10
+            }
+        },
+        'legislative_session_id': {
+            'terms': {
+                'field': 'legislative_session_id',
+                'size': 10
+            }
+        },
+        'creator_id': {
+            'terms': {
+                'field': 'creator_id',
+                'size': 10
+            }
+        },
+        'date': {
+            'date_histogram': {
+                'field': 'date',
+                'interval': 'month'
+            }
+        },
+        'requirement': {
+            'terms': {
+                'field': 'requirement',
+                'size': 10
+            }
+        },
+        'result': {
+            'terms': {
+                'field': 'result',
+                'size': 10
+            }
+        }
+    },
+    'vote_events': {
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
+        },
+        'organization_id': {
+            'terms': {
+                'field': 'organization_id',
+                'size': 10
+            }
+        },
+        'start_date': {
+            'date_histogram': {
+                'field': 'start_date',
+                'interval': 'month'
+            }
+        },
+        'end_date': {
+            'date_histogram': {
+                'field': 'end_date',
+                'interval': 'month'
+            }
+        },
+        'legislative_session_id': {
+            'terms': {
+                'field': 'legislative_session_id',
+                'size': 10
+            }
+        }
+    },
     'items': {
         'classification': {
             'terms': {
@@ -265,6 +353,20 @@ AVAILABLE_HIGHLIGHTS = {
         'organization.name': {},
         'description': {},
         'sources.note': {},
+        'sources.description': {}
+    },
+    'motions': {
+        'classification': {},
+        'organization.name': {},
+        'creator.name': {}
+        'text': {},
+        'sources.description': {}
+    },
+    'vote_events': {
+        'classification': {},
+        'organization.name': {},
+        'creator.name': {}
+        'text': {},
         'sources.description': {}
     },
     'items': {
