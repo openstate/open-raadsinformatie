@@ -109,6 +109,26 @@ class ElasticsearchLoader(BaseLoader):
                     log.debug('Resolver document %s already exists' % url_hash)
 
 
+class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
+    """
+    Updates elasticsearch items using the update method. Use with caution.
+    """
+
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc
+    ):
+        log.info('Indexing documents...')
+        elasticsearch.update(index=settings.COMBINED_INDEX,
+                            doc_type=self.doc_type, id=combined_object_id,
+                            body={'doc': combined_index_doc})
+
+        # Index documents into new index
+        elasticsearch.update(index=self.index_name, doc_type=self.doc_type,
+                            body={'doc': doc}, id=object_id)
+        # remember, resolver URLs are not update here to prevent too complex
+        # things
+
+
 class DummyLoader(BaseLoader):
     """
     Prints the item to the console, for debugging purposes.
