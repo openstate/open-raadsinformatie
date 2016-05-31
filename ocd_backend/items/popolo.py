@@ -110,11 +110,28 @@ class MotionItem(PopoloBaseItem):
         'date': datetime,
         'requirement': unicode,
         'result': unicode,
-        'vote_events': list
+        'vote_events': list,
+        'sources': list
     }
 
 
-# class VotingEventItem(PopoloBaseItem):
-#     combined_index_fields = {
-#         # fill in later
-#     }
+class VotingEventItem(PopoloBaseItem):
+    combined_index_fields = {
+        'id': unicode,
+        'hidden': bool,
+        'name': unicode,
+        'organization_id': unicode,
+        'organization': dict,
+        'legislative_session_id': unicode,
+        'legislative_session': dict,
+        'text': unicode,
+        'identifier': unicode,  # unsure
+        'motion_id': unicode,
+        'motion': dict,
+        'start_date': datetime,
+        'end_date': datetime,
+        'result': unicode,
+        'counts': list,
+        'votes': list,
+        'sources': list
+    }

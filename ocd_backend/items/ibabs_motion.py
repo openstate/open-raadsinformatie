@@ -7,7 +7,7 @@ import re
 
 import iso8601
 
-from ocd_backend.items.popolo import MotionItem
+from ocd_backend.items.popolo import MotionItem, VotingEventItem
 from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
@@ -15,8 +15,8 @@ from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.pdf import PDFToTextMixin
 
 
-class IBabsMotionItem(
-        MotionItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+class IBabsMotionVotingMixin(
+        HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -172,13 +172,17 @@ class IBabsMotionItem(
         return u' '.join(text_items)
 
 
-class IBabsVoteEventItem(IBabsMotionItem):
+class IBabsMotionItem(IBabsMotionVotingMixin, MotionItem):
+    pass
+
+
+class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
     def get_combined_index_data(self):
         combined_index_data = {}
         council = self._get_council()
         members = self._get_council_members()
         parties = self._get_council_parties()
-
+        #pprint(parties)
         combined_index_data['motion'] = self._get_motion_data(
             council, members, parties)
 
@@ -193,27 +197,33 @@ class IBabsVoteEventItem(IBabsMotionItem):
         # specified in the motion result
         combined_index_data['counts'] = []
         for party in parties:
+            if not party.has_key('name'):
+                continue
+            try:
+                num_members = len(list(set([m['person_id'] for m in party['memberships']])))
+            except KeyError as e:
+                num_members = 0
             combined_index_data['counts'].append({
                 'option': combined_index_data['result'],
-                'value': len(list(set([m['person_id'] for m in party['memberships']]))),
+                'value': num_members,
                 'group': {
-                    'name': party['name']
+                    'name': party.get('name', '')
                 }
             })
 
         # FIXME: get the actual individual votes, depends on the voting kind
-        party_ids = [p['id'] for p in parties]
+        party_ids = [p['id'] for p in parties if p.has_key('id')]
         combined_index_data['votes'] = []
         for m in members:
             try:
                 member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
-            except IndexError as e:
-                member_party = {'id': None}
+            except (KeyError, IndexError) as e:
+                member_party = None
             combined_index_data['votes'].append({
                 'voter_id' : m['id'],
                 'voter': m,
                 'option': combined_index_data['result'],  # FIXME: actual vote
-                'group_id': member_party['id']
+                'group_id': member_party
             })
 
         return combined_index_data

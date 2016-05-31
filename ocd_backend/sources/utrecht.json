@@ -156,6 +156,35 @@
       }
   },
   {
+      "id": "utrecht_vote_events",
+      "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.ibabs_motion.IBabsVoteEventItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "index_name": "utrecht",
+      "doc_type": "vote_events",
+      "sitename": "Utrecht",
+      "keep_index_on_update": true,
+      "include": "moties",
+      "pdf_max_pages": 0,
+      "max_pages": 1,
+      "fields": {
+        "Moties": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datum"
+        },
+        "Amendementen": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datum"
+        }
+      }
+  },
+  {
       "id": "utrecht_popit_organizations",
       "extractor": "ocd_backend.extractors.popit.PopItExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
