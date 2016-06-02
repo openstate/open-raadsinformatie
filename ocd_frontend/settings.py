@@ -358,14 +358,14 @@ AVAILABLE_HIGHLIGHTS = {
     'motions': {
         'classification': {},
         'organization.name': {},
-        'creator.name': {}
+        'creator.name': {},
         'text': {},
         'sources.description': {}
     },
     'vote_events': {
         'classification': {},
         'organization.name': {},
-        'creator.name': {}
+        'creator.name': {},
         'text': {},
         'sources.description': {}
     },
