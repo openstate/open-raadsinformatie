@@ -53,8 +53,9 @@ class PopitBaseItem(object):
                 combined_index_data[field] = unicode(
                     self.original_item[field])
             elif self.combined_index_fields[field] == datetime:
-                combined_index_data[field] = iso8601.parse_date(
-                    self.original_item[field])
+                if combined_index_data[field] is not None:
+                    combined_index_data[field] = iso8601.parse_date(
+                        self.original_item[field])
             elif self.combined_index_fields[field] == list:
                 if field in self.ignored_list_fields:
                     combined_index_data[field] = [
