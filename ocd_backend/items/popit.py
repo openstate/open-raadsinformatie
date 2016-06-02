@@ -1,4 +1,5 @@
 from datetime import datetime
+import iso8601
 
 from ocd_backend.items.popolo import PersonItem, OrganisationItem
 
@@ -25,10 +26,16 @@ class PopitBaseItem(object):
         return self.get_object_id()
 
     def get_original_object_urls(self):
-        return self.original_item['meta']['original_object_urls']
+        try:
+            return self.original_item['meta']['original_object_urls']
+        except KeyError as e:
+            return {'html': self.original_item['html_url']}
 
     def get_rights(self):
-        return self.original_item['meta']['rights']
+        try:
+            return self.original_item['meta']['rights']
+        except KeyError as e:
+            return u'undefined'
 
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
@@ -46,8 +53,9 @@ class PopitBaseItem(object):
                 combined_index_data[field] = unicode(
                     self.original_item[field])
             elif self.combined_index_fields[field] == datetime:
-                combined_index_data[field] = iso8601.parse_date(
-                    self.original_item[field])
+                if self.original_item[field] is not None:
+                    combined_index_data[field] = iso8601.parse_date(
+                        self.original_item[field])
             elif self.combined_index_fields[field] == list:
                 if field in self.ignored_list_fields:
                     combined_index_data[field] = [
