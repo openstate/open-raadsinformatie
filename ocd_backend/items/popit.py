@@ -25,10 +25,16 @@ class PopitBaseItem(object):
         return self.get_object_id()
 
     def get_original_object_urls(self):
-        return self.original_item['meta']['original_object_urls']
+        try:
+            return self.original_item['meta']['original_object_urls']
+        except KeyError as e:
+            return {'html': self.original_item['html_url']}
 
     def get_rights(self):
-        return self.original_item['meta']['rights']
+        try:
+            return self.original_item['meta']['rights']
+        except KeyError as e:
+            return u'undefined'
 
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
