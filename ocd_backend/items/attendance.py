@@ -4,8 +4,11 @@ import iso8601
 from ocd_backend.items import BaseItem
 from ocd_backend.items.popolo import EventItem
 
+from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.utils.api import FrontendAPIMixin
 
-class AttendanceForEventItem(BaseItem):
+
+class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     combined_index_fields = {
         'id': unicode,
         'hidden': bool,
@@ -33,14 +36,34 @@ class AttendanceForEventItem(BaseItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
+    def _get_vote_event(self, event_id):
+        try:
+            results = self.api_request(
+                self.source_definition['index_name'], 'vote_events',
+                legislative_session_id=event_id, size=1)  # FIXME: for now, get the first
+            return results[0]
+        except Exception as e:
+            pass
+
+    def _get_voters(self, vote_event):
+        if not vote_event.has_key('votes'):
+            return []
+
+        return [{'id': p['voter']['id']} for p in vote_event['votes']]
+
     def get_combined_index_data(self):
         combined_index_data = {}
 
         combined_index_data['id'] = self.original_item['id']
 
+        vote_event = self._get_vote_event(self.original_item['id'])
+        if vote_event is None:
+            return
+
+
         combined_index_data['hidden'] = self.source_definition['hidden']
         combined_index_data['doc'] = {
-            'attendees': []
+            'attendees': self._get_voters(vote_event)
         }
 
         return combined_index_data

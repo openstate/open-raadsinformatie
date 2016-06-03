@@ -117,6 +117,11 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     def load_item(
         self, combined_object_id, object_id, combined_index_doc, doc
     ):
+
+        if combined_index_doc == {}:
+            log.info('Empty document ....')
+            return
+
         log.info('Indexing documents...')
         elasticsearch.update(index=settings.COMBINED_INDEX,
                             doc_type=self.doc_type, id=combined_object_id,
