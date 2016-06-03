@@ -82,6 +82,25 @@ class IBabsMotionVotingMixin(
 
         return None
 
+    def _find_legislative_session(self, motion_date, council, members, parties):
+        # FIXME: match motions and ev ents when they're closest, not the first you run into
+        motion_day_start = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T00:00:00', motion_date.isoformat())
+        motion_day_end = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T23:59:59', motion_date.isoformat())
+        pprint((motion_date.isoformat(), motion_day_start, motion_day_end))
+        try:
+            results = self.api_request(
+                self.source_definition['index_name'], 'events',
+                classification=u'Agenda',
+                start_date={
+                    'from': motion_day_start, 'to': motion_day_end})
+            # pprint(len(results))
+            # filtered_results = [r for r in results if r['organization_id'] == council['id']]
+            # return filtered_results[0]
+            return results[0]
+        except (KeyError, IndexError) as e:
+            pprint("Error blaat")
+            return None
+
     def _get_motion_id_encoded(self):
         hash_content = u'motion-%s' % (self._value('Kenmerk').strip())
         return unicode(sha1(hash_content.decode('utf8')).hexdigest())
@@ -127,6 +146,13 @@ class IBabsMotionVotingMixin(
         combined_index_data['text'] = self._value('Onderwerp')
 
         combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
+
+        # finding the event where this motion was put to a voting round
+        legislative_session = self._find_legislative_session(
+            combined_index_data['date'], council, members, parties)
+        if legislative_session is not None:
+            combined_index_data['legislative_session_id'] = legislative_session['id']
+            combined_index_data['legislative_session'] = legislative_session
 
         combined_index_data['result'] = self._value('Status')
         combined_index_data['requirement'] = u'majority'
