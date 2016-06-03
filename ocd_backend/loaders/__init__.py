@@ -120,11 +120,11 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
         log.info('Indexing documents...')
         elasticsearch.update(index=settings.COMBINED_INDEX,
                             doc_type=self.doc_type, id=combined_object_id,
-                            body={'doc': combined_index_doc})
+                            body={'doc': combined_index_doc['doc']})
 
         # Index documents into new index
         elasticsearch.update(index=self.index_name, doc_type=self.doc_type,
-                            body={'doc': doc}, id=object_id)
+                            body={'doc': doc['doc']}, id=object_id)
         # remember, resolver URLs are not update here to prevent too complex
         # things
 
@@ -134,8 +134,7 @@ class DummyLoader(BaseLoader):
     Prints the item to the console, for debugging purposes.
     """
     def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc,
-        transformer_task_id
+        self, combined_object_id, object_id, combined_index_doc, doc
     ):
         print '=' * 50
         print '%s %s %s' % ('=' * 4, combined_object_id, '=' * 4)
