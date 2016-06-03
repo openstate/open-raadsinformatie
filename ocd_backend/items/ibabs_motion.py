@@ -215,9 +215,12 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
         # we can copy some fields from the motion
         for field in [
             'id', 'organization_id', 'organization', 'identifier', 'result',
-            'sources'
+            'sources', 'legislative_session_id'
         ]:
-            combined_index_data[field] = combined_index_data['motion'][field]
+            try:
+                combined_index_data[field] = combined_index_data['motion'][field]
+            except KeyError as e:
+                pass
 
         # FIXME: have actual votes below. Currently assumes everyone votes as
         # specified in the motion result
