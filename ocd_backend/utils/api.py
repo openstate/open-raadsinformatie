@@ -21,7 +21,9 @@ class FrontendAPIMixin(object):
             "facets": {},
             "filters": {},
             "from": 0,
-            "size": 10
+            "size": 10,
+            "sort": "_score",
+            "order": "asc"
         }
 
         if query is not None:
@@ -38,6 +40,7 @@ class FrontendAPIMixin(object):
                 else:
                     api_query["filters"][k] = v
 
+        pprint(api_query)
         r = self.http_session.post(
             api_url,
             data=json.dumps(api_query)

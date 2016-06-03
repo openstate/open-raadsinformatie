@@ -185,6 +185,26 @@
       }
   },
   {
+    "id": "utrecht_meeting_attendees",
+    "extractor": "ocd_backend.extractors.api.FrontendAPIExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.ibabs_motion.IBabsVoteEventItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "utrecht",
+    "doc_type": "vote_events",
+    "keep_index_on_update": true,
+    "frontend_type": "events",
+    "frontend_args": {
+      "classification": "Agenda",
+      "sort": "start_date",
+      "order": "desc",
+      "size": 100
+    }
+  },
+  {
       "id": "utrecht_popit_organizations",
       "extractor": "ocd_backend.extractors.popit.PopItExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
