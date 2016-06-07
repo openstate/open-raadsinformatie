@@ -108,6 +108,8 @@ class MotionItem(PopoloBaseItem):
         'identifier': unicode,  # unsure
         'classification': unicode,
         'date': datetime,
+        'start_date': datetime,
+        'end_date': datetime,
         'requirement': unicode,
         'result': unicode,
         'vote_events': list,
