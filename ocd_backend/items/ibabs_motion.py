@@ -217,6 +217,7 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             council, members, parties)
 
         combined_index_data['classification'] = u'Stemmingen'
+        combined_index_data['hidden'] = self.source_definition['hidden']
         combined_index_data['start_date'] = combined_index_data['motion']['date']
         combined_index_data['end_date'] = combined_index_data['motion']['date']
 
