@@ -41,7 +41,7 @@ SORTABLE_FIELDS = {
         'start_date', '_score', 'classification', 'name', 'start_date'],
     'items': [
         'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
-        '_score']
+        'start_date', '_score']
 }
 
 # EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
@@ -127,7 +127,13 @@ COMMON_FACETS = {
             'field': '_type',
             'size': 10
         }
-    }
+    },
+    'start_date': {
+        'date_histogram': {
+            'field': 'start_date',
+            'interval': 'month'
+        }
+     }
 }
 
 AVAILABLE_FACETS = {

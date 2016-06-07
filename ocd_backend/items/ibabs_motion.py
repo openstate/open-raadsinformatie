@@ -140,12 +140,15 @@ class IBabsMotionVotingMixin(
             combined_index_data['creator_id'] = creator['id']
             combined_index_data['creator'] = creator
 
-        combined_index_data['classification'] = u'Motie'
+        combined_index_data['classification'] = u'Moties'
 
         # FIXME: put the correct thing in here once this info is sent along ...
         combined_index_data['text'] = self._value('Onderwerp')
 
         combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
+        # TODO: this is only for searching compatability ...
+        combined_index_data['start_date'] = combined_index_data['date']
+        combined_index_data['end_date'] = combined_index_data['date']
 
         # finding the event where this motion was put to a voting round
         legislative_session = self._find_legislative_session(
@@ -204,6 +207,7 @@ class IBabsMotionItem(IBabsMotionVotingMixin, MotionItem):
 
 class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
     def get_combined_index_data(self):
+        pprint("Starting vote event transformer ....")
         combined_index_data = {}
         council = self._get_council()
         members = self._get_council_members()
@@ -211,6 +215,10 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
         #pprint(parties)
         combined_index_data['motion'] = self._get_motion_data(
             council, members, parties)
+
+        combined_index_data['classification'] = u'Stemmingen'
+        combined_index_data['start_date'] = combined_index_data['motion']['date']
+        combined_index_data['end_date'] = combined_index_data['motion']['date']
 
         # we can copy some fields from the motion
         for field in [

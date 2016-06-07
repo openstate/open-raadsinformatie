@@ -126,6 +126,7 @@ class VotingEventItem(PopoloBaseItem):
         'legislative_session': dict,
         'text': unicode,
         'identifier': unicode,  # unsure
+        'classification': unicode,
         'motion_id': unicode,
         'motion': dict,
         'start_date': datetime,
