@@ -4,6 +4,7 @@ from pprint import pprint
 from hashlib import sha1
 from time import sleep
 import re
+import random
 
 import iso8601
 
@@ -233,7 +234,42 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
 
         # FIXME: have actual votes below. Currently assumes everyone votes as
         # specified in the motion result
+
+        # Not all motions are actually voted on
+        # FIXME: are there more. is every municipality specifying the same?
+        allowed_results = [
+            'Motie aangenomen',
+            'Motie verworpen',
+        ]
+
         combined_index_data['counts'] = []
+        combined_index_data['votes'] = []
+
+        if combined_index_data['result'] not in allowed_results:
+            return combined_index_data
+
+        party_ids = [p['id'] for p in parties if p.has_key('id')]
+
+        # make the vote a bit random, but retain te result by majority vote
+        majority_count = (len(members) // 2) + 1
+        vote_count_to_result = len(members)
+        new_vote_count_to_result = vote_count_to_result
+        current_votes = {p['id']: combined_index_data['result'] for p in parties if p.has_key('name')}
+        party_sizes = {p['id']: len(list(set([m['person_id'] for m in p['memberships']]))) for p in parties if p.has_key('name')}
+        parties_voted = []
+
+        while new_vote_count_to_result >= majority_count:
+            if new_vote_count_to_result != vote_count_to_result:
+                vote_count_to_result = new_vote_count_to_result
+                current_votes[party_id] = random.choice([r for r in allowed_results if r != combined_index_data['result']])
+                parties_voted.append(party_id)
+
+            # pick a random party
+            party_id = random.choice([p for p in party_ids if p not in parties_voted])
+
+            new_vote_count_to_result = new_vote_count_to_result - party_sizes[party_id]
+
+        # now record the votes
         for party in parties:
             if not party.has_key('name'):
                 continue
@@ -242,7 +278,7 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             except KeyError as e:
                 num_members = 0
             combined_index_data['counts'].append({
-                'option': combined_index_data['result'],
+                'option': current_votes[party['id']],  # combined_index_data['result'],
                 'value': num_members,
                 'group': {
                     'name': party.get('name', '')
@@ -250,17 +286,18 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             })
 
         # FIXME: get the actual individual votes, depends on the voting kind
-        party_ids = [p['id'] for p in parties if p.has_key('id')]
-        combined_index_data['votes'] = []
         for m in members:
             try:
                 member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
+                member_vote = current_votes[member_party]
             except (KeyError, IndexError) as e:
                 member_party = None
+                member_vote = combined_index_data['result']
+
             combined_index_data['votes'].append({
                 'voter_id' : m['id'],
                 'voter': m,
-                'option': combined_index_data['result'],  # FIXME: actual vote
+                'option': member_vote,  # FIXME: actual vote
                 'group_id': member_party
             })
 
