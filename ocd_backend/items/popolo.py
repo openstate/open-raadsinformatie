@@ -108,6 +108,8 @@ class MotionItem(PopoloBaseItem):
         'identifier': unicode,  # unsure
         'classification': unicode,
         'date': datetime,
+        'start_date': datetime,
+        'end_date': datetime,
         'requirement': unicode,
         'result': unicode,
         'vote_events': list,
@@ -126,6 +128,7 @@ class VotingEventItem(PopoloBaseItem):
         'legislative_session': dict,
         'text': unicode,
         'identifier': unicode,  # unsure
+        'classification': unicode,
         'motion_id': unicode,
         'motion': dict,
         'start_date': datetime,
