@@ -142,9 +142,6 @@ class IBabsMotionVotingMixin(
 
         combined_index_data['classification'] = u'Motie'
 
-        # FIXME: put the correct thing in here once this info is sent along ...
-        combined_index_data['text'] = self._value('Onderwerp')
-
         combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
 
         # finding the event where this motion was put to a voting round
@@ -161,24 +158,31 @@ class IBabsMotionVotingMixin(
         combined_index_data['vote_events'] = [self.get_original_object_id()]
 
         try:
-            documents = self.original_item['Documents']
+            documents = self.original_item['_Extra']['Documents']
         except KeyError as e:
             documents = []
         if documents is None:
             documents = []
 
+        # Default the text to "-". If a document contains actual text
+        # then that text will be used.
+        combined_index_data['text'] = u"-"
         for document in documents:
             sleep(1)
             print u"%s: %s" % (
                 combined_index_data['name'], document['DisplayName'],)
             description = self.pdf_get_contents(
                 document['PublicDownloadURL'],
-                self.source_definition.get('pdf_max_pages', 20))
+                self.source_definition.get('pdf_max_pages', 20)).strip()
             combined_index_data['sources'].append({
                 'url': document['PublicDownloadURL'],
                 'note': document['DisplayName'],
                 'description': description
             })
+            # FIXME: assumes that there is only one document from which
+            # we can extract text; is that a valid assumption?
+            if len(description) > 0:
+                combined_index_data['text'] = description
 
         return combined_index_data
 
