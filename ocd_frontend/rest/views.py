@@ -253,11 +253,17 @@ def format_sources_results(results):
     }
 
 
+# Retrieve the indices/sources and the total number of documents per
+# type (counting only documents which are not hidden!)
 @bp.route('/sources', methods=['GET'])
 def list_sources():
     es_q = {
         'query': {
-            'match_all': {}
+            "bool": {
+                "must": {
+                    "term": {"hidden": False}
+                }
+            }
         },
         'aggregations': {
             'index': {
