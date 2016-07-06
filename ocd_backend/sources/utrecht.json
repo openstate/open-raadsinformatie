@@ -158,7 +158,7 @@
   },
   {
       "id": "utrecht_vote_events",
-      "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+      "extractor": "ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.ibabs_motion.IBabsVoteEventItem",
       "enrichers": [],
@@ -167,23 +167,14 @@
       "hidden": false,
       "index_name": "utrecht",
       "doc_type": "vote_events",
-      "sitename": "Utrecht",
+      "sitename": "UtrechtTest",
+      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
       "keep_index_on_update": true,
-      "include": "moties",
       "pdf_max_pages": 0,
       "max_pages": 1,
-      "fields": {
-        "Moties": {
-          "name": "onderwerp",
-          "description": "status",
-          "start_date": "datum"
-        },
-        "Amendementen": {
-          "name": "onderwerp",
-          "description": "status",
-          "start_date": "datum"
-        }
-      }
+      "start_date": "2016-04-01T00:00:00",
+      "end_date": "2016-06-01T00:00:00"
+
   },
   {
     "id": "utrecht_meeting_attendees",

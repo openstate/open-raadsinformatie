@@ -24,7 +24,11 @@ class IBabsBaseExtractor(BaseExtractor):
     def __init__(self, *args, **kwargs):
         super(IBabsBaseExtractor, self).__init__(*args, **kwargs)
 
-        self.client = Client(settings.IBABS_WSDL)
+        try:
+            ibabs_wsdl = self.source_definition['wsdl']
+        except Exception as e:
+            ibabs_wsdl = settings.IBABS_WSDL
+        self.client = Client(ibabs_wsdl)
         self.client.set_options(port='BasicHttpsBinding_IPublic')
 
 
@@ -83,8 +87,69 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     # This is a bit hacky, but we need to know this
                     meeting_item_dict['MeetingId'] = meeting_dict['Id']
                     meeting_item_dict['Meeting'] = meeting_dict
+                    pprint(meeting_item_dict)
                     yield 'application/json', json.dumps(meeting_item_dict)
                     meeting_item_count += 1
+            meeting_count += 1
+        print "Extracted %d meetings and %d meeting items." % (
+            meeting_count, meeting_item_count,)
+
+
+class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
+    """
+    Extracts meetings with vote information from the iBabs SOAP service. The
+    source definition should state which kind of meetings should be extracted.
+    """
+
+    def _meetingtypes_as_dict(self):
+        return {
+            o.Id: o.Description for o in self.client.service.GetMeetingtypes(
+                self.source_definition['sitename']).Meetingtypes[0]}
+
+    def run(self):
+        start_date = self.source_definition.get(
+            'start_date', '2015-06-01T00:00:00')
+        end_date = self.source_definition.get(
+            'end_date', '2016-07-01T00:00:00')
+        print "Getting meetings for %s to %s" % (start_date, end_date,)
+        meetings = self.client.service.GetMeetingsByDateRange(
+            Sitename=self.source_definition['sitename'],
+            StartDate=start_date,
+            EndDate=end_date,
+            MetaDataOnly=False)
+
+        meeting_types = self._meetingtypes_as_dict()
+
+        meeting_count = 0
+        meeting_item_count = 0
+        for meeting in meetings.Meetings[0]:
+            meeting_dict = meeting_to_dict(meeting)
+            # Getting the meeting type as a string is easier this way ...
+            pprint(meeting_dict['Id'])
+            meeting_dict['Meetingtype'] = meeting_types[
+                meeting_dict['MeetingtypeId']]
+
+            kv = self.client.factory.create('ns0:iBabsKeyValue')
+            kv.Key = 'IncludeMeetingItems'
+            kv.Value = True
+
+            kv2 = self.client.factory.create('ns0:iBabsKeyValue')
+            kv2.Key = 'IncludeListEntries'
+            kv2.Value = True
+
+            params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
+            params.iBabsKeyValue.append(kv)
+            params.iBabsKeyValue.append(kv2)
+
+            vote_meeting = self.client.service.GetMeetingWithOptions(
+                Sitename=self.source_definition['sitename'],
+                MeetingId=meeting_dict['Id'],
+                Options=params)
+            pprint(vote_meeting.Meeting)
+            meeting_dict = meeting_to_dict(vote_meeting.Meeting)
+            pprint(meeting_dict)
+            #yield 'application/json', json.dumps(meeting_dict)
+
             meeting_count += 1
         print "Extracted %d meetings and %d meeting items." % (
             meeting_count, meeting_item_count,)

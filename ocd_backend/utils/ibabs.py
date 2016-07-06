@@ -2,12 +2,14 @@ import re
 import datetime
 
 
-def _ibabs_to_dict(o, fields):
+def _ibabs_to_dict(o, fields, excludes=[]):
     """
     Converts an iBabs SOAP response to a JSON serializable dict
     """
     output = {}
     for f in fields.keys():
+        if f in excludes:
+            continue
         v = getattr(o, f)
         if fields[f] is not None:
             if v is not None:
@@ -34,7 +36,7 @@ def document_to_dict(d):
     return _ibabs_to_dict(d, fields)
 
 
-def meeting_to_dict(m):
+def meeting_to_dict(m, excludes=[]):
     """
     Converts an iBabsMeeting to a JSON serializable dict
     """
@@ -54,7 +56,24 @@ def meeting_to_dict(m):
         'Documents': lambda x: [
             document_to_dict(y) if y is not None else [] for y in x[0]]
     }
-    return _ibabs_to_dict(m, fields)
+    return _ibabs_to_dict(m, fields, excludes)
+
+
+def list_entry_to_dict(l):
+    """
+    Converts an iBabsListEntryBasic to a JSON serializable dict
+    """
+    fields = {
+        'EntryId': lambda x: unicode(x),
+        'EntryTitle': lambda x: unicode(x),
+        'ListCanVote': None,
+        'ListId': lambda x: unicode(x),
+        'ListName': lambda x: unicode(x),
+        'VoteResult': None,
+        'VotesAgainst': None,
+        'VotesInFavour': None,
+    }
+    return _ibabs_to_dict(l, fields)
 
 
 def meeting_item_to_dict(m):
@@ -67,6 +86,7 @@ def meeting_item_to_dict(m):
         'Title': None,
         'Explanation': None,
         'Confidential': None,
+        'ListEntries': lambda x: [list_entry_to_dict(y) for y in (x[0] or [])],
         'Documents': lambda x: [
             document_to_dict(y) if y is not None else [] for y in x[0]]
     }
