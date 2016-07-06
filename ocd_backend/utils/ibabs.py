@@ -1,6 +1,8 @@
 import re
 import datetime
 
+from pprint import pprint
+
 
 def _ibabs_to_dict(o, fields, excludes=[]):
     """
@@ -19,6 +21,31 @@ def _ibabs_to_dict(o, fields, excludes=[]):
         else:
             output[f] = v
     return output
+
+
+def vote_to_dict(v):
+    """
+    Converts an IBabs vote records to a JSON object.
+    """
+
+    fields = {
+        'EntryId': lambda x: unicode(x),
+        'GroupId': lambda x: unicode(x),
+        'GroupName': lambda x: unicode(x),
+        'UserId': lambda x: unicode(x),
+        'UserName': lambda x: unicode(x),
+        'Vote': None,
+    }
+
+    return _ibabs_to_dict(v, fields)
+
+
+def votes_to_dict(vs):
+    """
+    Converts an array of IBabs votes to json objects.
+    """
+
+    return [vote_to_dict(v) for v in vs]
 
 
 def document_to_dict(d):

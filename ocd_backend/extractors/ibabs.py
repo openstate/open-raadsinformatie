@@ -12,7 +12,7 @@ from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, document_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict)
+    list_entry_response_to_dict, votes_to_dict)
 
 
 class IBabsBaseExtractor(BaseExtractor):
@@ -121,7 +121,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         meeting_types = self._meetingtypes_as_dict()
 
         meeting_count = 0
-        meeting_item_count = 0
+        vote_count = 0
         for meeting in meetings.Meetings[0]:
             meeting_dict = meeting_to_dict(meeting)
             # Getting the meeting type as a string is easier this way ...
@@ -145,14 +145,30 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 Sitename=self.source_definition['sitename'],
                 MeetingId=meeting_dict['Id'],
                 Options=params)
-            pprint(vote_meeting.Meeting)
-            meeting_dict = meeting_to_dict(vote_meeting.Meeting)
-            pprint(meeting_dict)
-            #yield 'application/json', json.dumps(meeting_dict)
+            meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
+
+            for mi in meeting_dict_short['MeetingItems']:
+                if mi['ListEntries'] is None:
+                    continue
+                for le in mi['ListEntries']:
+                    votes = self.client.service.GetListEntryVotes(
+                        Sitename=self.source_definition['sitename'],
+                        EntryId=le['EntryId'])
+                    if votes.ListEntryVotes is None:
+                        votes = []
+                    else:
+                        votes = votes_to_dict(votes.ListEntryVotes[0])
+                    result = {
+                        'meeting': meeting_dict,
+                        'entry': le,
+                        'votes': votes
+                    }
+                    vote_count += 1
+                    yield 'application/json', json.dumps(result)
 
             meeting_count += 1
-        print "Extracted %d meetings and %d meeting items." % (
-            meeting_count, meeting_item_count,)
+        print "Extracted %d meetings and %d voting rounds." % (
+            meeting_count, vote_count,)
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
