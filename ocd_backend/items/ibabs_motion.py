@@ -212,7 +212,6 @@ class IBabsMotionItem(IBabsMotionVotingMixin, MotionItem):
 
 class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
     def get_combined_index_data(self):
-        pprint("Starting vote event transformer ....")
         combined_index_data = {}
         council = self._get_council()
         members = self._get_council_members()
@@ -241,68 +240,70 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
 
         # Not all motions are actually voted on
         # FIXME: are there more. is every municipality specifying the same?
-        allowed_results = [
-            'Motie aangenomen',
-            'Motie verworpen',
-        ]
+        # allowed_results = [
+        #     'Motie aangenomen',
+        #     'Motie verworpen',
+        # ]
 
         combined_index_data['counts'] = []
         combined_index_data['votes'] = []
 
-        if combined_index_data['result'] not in allowed_results:
-            return combined_index_data
+        # TODO: getting voting rounds is done in another item transformer ...
 
-        party_ids = [p['id'] for p in parties if p.has_key('id')]
-
-        # make the vote a bit random, but retain te result by majority vote
-        majority_count = (len(members) // 2) + 1
-        vote_count_to_result = len(members)
-        new_vote_count_to_result = vote_count_to_result
-        current_votes = {p['id']: combined_index_data['result'] for p in parties if p.has_key('name')}
-        party_sizes = {p['id']: len(list(set([m['person_id'] for m in p['memberships']]))) for p in parties if p.has_key('name')}
-        parties_voted = []
-
-        while new_vote_count_to_result >= majority_count:
-            if new_vote_count_to_result != vote_count_to_result:
-                vote_count_to_result = new_vote_count_to_result
-                current_votes[party_id] = random.choice([r for r in allowed_results if r != combined_index_data['result']])
-                parties_voted.append(party_id)
-
-            # pick a random party
-            party_id = random.choice([p for p in party_ids if p not in parties_voted])
-
-            new_vote_count_to_result = new_vote_count_to_result - party_sizes[party_id]
-
-        # now record the votes
-        for party in parties:
-            if not party.has_key('name'):
-                continue
-            try:
-                num_members = len(list(set([m['person_id'] for m in party['memberships']])))
-            except KeyError as e:
-                num_members = 0
-            combined_index_data['counts'].append({
-                'option': current_votes[party['id']],  # combined_index_data['result'],
-                'value': num_members,
-                'group': {
-                    'name': party.get('name', '')
-                }
-            })
-
-        # FIXME: get the actual individual votes, depends on the voting kind
-        for m in members:
-            try:
-                member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
-                member_vote = current_votes[member_party]
-            except (KeyError, IndexError) as e:
-                member_party = None
-                member_vote = combined_index_data['result']
-
-            combined_index_data['votes'].append({
-                'voter_id' : m['id'],
-                'voter': m,
-                'option': member_vote,  # FIXME: actual vote
-                'group_id': member_party
-            })
+        # if combined_index_data['result'] not in allowed_results:
+        #     return combined_index_data
+        #
+        # party_ids = [p['id'] for p in parties if p.has_key('id')]
+        #
+        # # make the vote a bit random, but retain te result by majority vote
+        # majority_count = (len(members) // 2) + 1
+        # vote_count_to_result = len(members)
+        # new_vote_count_to_result = vote_count_to_result
+        # current_votes = {p['id']: combined_index_data['result'] for p in parties if p.has_key('name')}
+        # party_sizes = {p['id']: len(list(set([m['person_id'] for m in p['memberships']]))) for p in parties if p.has_key('name')}
+        # parties_voted = []
+        #
+        # while new_vote_count_to_result >= majority_count:
+        #     if new_vote_count_to_result != vote_count_to_result:
+        #         vote_count_to_result = new_vote_count_to_result
+        #         current_votes[party_id] = random.choice([r for r in allowed_results if r != combined_index_data['result']])
+        #         parties_voted.append(party_id)
+        #
+        #     # pick a random party
+        #     party_id = random.choice([p for p in party_ids if p not in parties_voted])
+        #
+        #     new_vote_count_to_result = new_vote_count_to_result - party_sizes[party_id]
+        #
+        # # now record the votes
+        # for party in parties:
+        #     if not party.has_key('name'):
+        #         continue
+        #     try:
+        #         num_members = len(list(set([m['person_id'] for m in party['memberships']])))
+        #     except KeyError as e:
+        #         num_members = 0
+        #     combined_index_data['counts'].append({
+        #         'option': current_votes[party['id']],  # combined_index_data['result'],
+        #         'value': num_members,
+        #         'group': {
+        #             'name': party.get('name', '')
+        #         }
+        #     })
+        #
+        # # FIXME: get the actual individual votes, depends on the voting kind
+        # for m in members:
+        #     try:
+        #         member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
+        #         member_vote = current_votes[member_party]
+        #     except (KeyError, IndexError) as e:
+        #         member_party = None
+        #         member_vote = combined_index_data['result']
+        #
+        #     combined_index_data['votes'].append({
+        #         'voter_id' : m['id'],
+        #         'voter': m,
+        #         'option': member_vote,  # FIXME: actual vote
+        #         'group_id': member_party
+        #     })
 
         return combined_index_data

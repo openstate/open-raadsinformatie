@@ -28,6 +28,7 @@ class IBabsBaseExtractor(BaseExtractor):
             ibabs_wsdl = self.source_definition['wsdl']
         except Exception as e:
             ibabs_wsdl = settings.IBABS_WSDL
+        pprint(ibabs_wsdl)
         self.client = Client(ibabs_wsdl)
         self.client.set_options(port='BasicHttpsBinding_IPublic')
 
@@ -151,6 +152,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 if mi['ListEntries'] is None:
                     continue
                 for le in mi['ListEntries']:
+                    pprint(le)
                     votes = self.client.service.GetListEntryVotes(
                         Sitename=self.source_definition['sitename'],
                         EntryId=le['EntryId'])

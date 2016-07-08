@@ -135,9 +135,10 @@
       "loader": "ocd_backend.loaders.ElasticsearchLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
+      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
       "index_name": "utrecht",
       "doc_type": "motions",
-      "sitename": "Utrecht",
+      "sitename": "UtrechtTest",
       "keep_index_on_update": true,
       "include": "moties",
       "pdf_max_pages": 20,
@@ -158,20 +159,53 @@
   },
   {
       "id": "utrecht_vote_events",
-      "extractor": "ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor",
+      "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.ibabs_motion.IBabsVoteEventItem",
       "enrichers": [],
       "loader": "ocd_backend.loaders.ElasticsearchLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
+      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
       "index_name": "utrecht",
       "doc_type": "vote_events",
       "sitename": "UtrechtTest",
-      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
       "keep_index_on_update": true,
-      "pdf_max_pages": 0,
+      "include": "moties",
+      "pdf_max_pages": 20,
       "max_pages": 1,
+      "per_page": 100,
+      "fields": {
+        "Moties": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datum"
+        },
+        "Amendementen": {
+          "name": "onderwerp",
+          "description": "status",
+          "start_date": "datum"
+        }
+      }
+  },
+  {
+      "id": "utrecht_voting_rounds",
+      "extractor": "ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.ibabs_motion.IBabsVotingRoundItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchUpdateOnlyLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
+      "index_name": "utrecht",
+      "doc_type": "vote_events",
+      "sitename": "UtrechtTest",
+      "keep_index_on_update": true,
+      "include": "moties",
+      "pdf_max_pages": 20,
+      "max_pages": 1,
+      "per_page": 100,
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00"
 
