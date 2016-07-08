@@ -152,7 +152,9 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 if mi['ListEntries'] is None:
                     continue
                 for le in mi['ListEntries']:
-                    pprint(le)
+                    # motion's unique identifier
+                    motion_id = le['EntryTitle'].split(' ')[0]
+                    pprint(motion_id)
                     votes = self.client.service.GetListEntryVotes(
                         Sitename=self.source_definition['sitename'],
                         EntryId=le['EntryId'])
@@ -248,7 +250,12 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    yield 'application/json', json.dumps(dict_item)
+                    try:
+                        # this should be the motion's unique identifier
+                        pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
+                    except KeyError as e:
+                        pass
+                    #yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
                 total_count += result_count
