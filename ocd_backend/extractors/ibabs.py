@@ -1,6 +1,7 @@
 import json
 from pprint import pprint
 import re
+from hashlib import sha1
 
 from lxml import etree
 from suds.client import Client
@@ -155,6 +156,9 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     # motion's unique identifier
                     motion_id = le['EntryTitle'].split(' ')[0]
                     pprint(motion_id)
+                    hash_content = u'motion-%s' % (motion_id.strip())
+                    pprint(unicode(sha1(hash_content.decode('utf8')).hexdigest()))
+
                     votes = self.client.service.GetListEntryVotes(
                         Sitename=self.source_definition['sitename'],
                         EntryId=le['EntryId'])
@@ -168,7 +172,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                         'votes': votes
                     }
                     vote_count += 1
-                    yield 'application/json', json.dumps(result)
+                    #yield 'application/json', json.dumps(result)
 
             meeting_count += 1
         print "Extracted %d meetings and %d voting rounds." % (
@@ -194,10 +198,10 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         selected_lists = []
         for l in lists.iBabsKeyValue:
             include_regex = self.source_definition.get('include', None) or self.source_definition['regex']
-            if not re.match(include_regex, l.Value.lower()):
+            if not re.search(include_regex, l.Value.lower()):
                 continue
             exclude_regex = self.source_definition.get('exclude', None) or r'^$'
-            if re.match(exclude_regex, l.Value.lower()):
+            if re.search(exclude_regex, l.Value.lower()):
                 continue
             selected_lists.append(l)
 
@@ -255,7 +259,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
                     except KeyError as e:
                         pass
-                    #yield 'application/json', json.dumps(dict_item)
+                    yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
                 total_count += result_count
