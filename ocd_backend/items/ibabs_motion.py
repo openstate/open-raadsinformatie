@@ -38,8 +38,16 @@ class IBabsMotionVotingMixin(
             'organizations', classification='Party', size=100)  # 100 for now ...
         return results
 
+    def _get_classification(self):
+        return u'Moties'
+
     def _value(self, key):
-        return self.original_item['_Extra']['Values'][key]
+        pprint(self.source_definition['fields']['Moties'])
+        try:
+            actual_key = self.source_definition['fields']['Moties']['Extra'][key]
+        except KeyError as e:
+            actual_key = key
+        return self.original_item['_Extra']['Values'][actual_key]
 
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
@@ -87,7 +95,7 @@ class IBabsMotionVotingMixin(
         # FIXME: match motions and ev ents when they're closest, not the first you run into
         motion_day_start = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T00:00:00', motion_date.isoformat())
         motion_day_end = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T23:59:59', motion_date.isoformat())
-        pprint((motion_date.isoformat(), motion_day_start, motion_day_end))
+        #pprint((motion_date.isoformat(), motion_day_start, motion_day_end))
         try:
             results = self.api_request(
                 self.source_definition['index_name'], 'events',
@@ -103,6 +111,7 @@ class IBabsMotionVotingMixin(
             return None
 
     def _get_motion_id_encoded(self):
+        #pprint(self.original_item)
         hash_content = u'motion-%s' % (self._value('Kenmerk').strip())
         return unicode(sha1(hash_content.decode('utf8')).hexdigest())
 

@@ -254,6 +254,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
+                    pprint(dict_item)
                     try:
                         # this should be the motion's unique identifier
                         pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
