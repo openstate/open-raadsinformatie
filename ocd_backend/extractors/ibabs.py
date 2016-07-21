@@ -108,6 +108,12 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             o.Id: o.Description for o in self.client.service.GetMeetingtypes(
                 self.source_definition['sitename']).Meetingtypes[0]}
 
+    def valid_meeting(self, meeting):
+        return True
+
+    def process_meeting(self, meeting):
+        return [meeting]
+
     def run(self):
         start_date = self.source_definition.get(
             'start_date', '2015-06-01T00:00:00')
@@ -124,7 +130,11 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
         meeting_count = 0
         vote_count = 0
-        for meeting in meetings.Meetings[0]:
+
+        meeting_sorting_key = self.source_definition.get('meeting_sorting', 'MeetingDate')
+
+        sorted_meetings = sorted(meetings.Meetings[0], lambda m: getaatr(m, meeting_sorting_key))
+        for meeting in sorted_meetings:
             meeting_dict = meeting_to_dict(meeting)
             # Getting the meeting type as a string is easier this way ...
             pprint(meeting_dict['Id'])
@@ -149,15 +159,17 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 Options=params)
             meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
 
+            processed = []
             for mi in meeting_dict_short['MeetingItems']:
                 if mi['ListEntries'] is None:
                     continue
                 for le in mi['ListEntries']:
                     # motion's unique identifier
-                    motion_id = le['EntryTitle'].split(' ')[0]
-                    pprint(motion_id)
+                    if le['EntryTitle'].startswith('M'):
+                        motion_id = le['EntryTitle'].split(' ')[0][1:].replace('-', ' M')
+                    pprint(motion_id.strip())
                     hash_content = u'motion-%s' % (motion_id.strip())
-                    pprint(unicode(sha1(hash_content.decode('utf8')).hexdigest()))
+                    hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
 
                     votes = self.client.service.GetListEntryVotes(
                         Sitename=self.source_definition['sitename'],
@@ -167,17 +179,49 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     else:
                         votes = votes_to_dict(votes.ListEntryVotes[0])
                     result = {
+                        'motion_id': hashed_motion_id,
                         'meeting': meeting_dict,
                         'entry': le,
                         'votes': votes
                     }
                     vote_count += 1
-                    #yield 'application/json', json.dumps(result)
-
+                    if self.valid_meeting(result):
+                        processed += self.process_meeting(result)
             meeting_count += 1
-        print "Extracted %d meetings and %d voting rounds." % (
-            meeting_count, vote_count,)
 
+        pprint(processed)
+        passed_vote_count = 0
+        for result in processed:
+            #yield 'application/json', json.dumps(result)
+            passed_vote_count += 1
+        print "Extracted %d meetings and passed %s out of %d voting rounds." % (
+            meeting_count, passed_vote_count, vote_count,)
+
+
+class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
+    """
+    Gets a voting record where the number of voters is complete ...
+    """
+
+    def valid_meeting(self, meeting):
+        if meeting['votes'] is not None:
+            try:
+                return (len(meeting['votes']) == self.source_definition['council_members_count'])
+            except ValueError as e:
+                pass
+        return False
+
+    def process_meeting(self, meeting):
+        meeting_count = getattr(self, 'meeting_count', 0)
+
+        if meeting_count == 0:
+            setattr(self, 'meeting_count', 1)
+            return [meeting]
+        else:
+            # TODO: process parties
+            # TODO: process persons
+            # TODO: process memberships
+            return []
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
     """
