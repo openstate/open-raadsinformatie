@@ -216,11 +216,35 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
 
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
-            return [meeting]
+            # process parties
+            parties = {
+                v['GroupId']: {
+                    'id': v['GroupId'],
+                    'name': v['GroupName'],
+                    'meta': {
+                        '_type': 'organizations'
+                    }
+                } for v in meeting['votes']}
+            # process persons
+            persons = [
+                {
+                    'id': v['UserId'],
+                    'name': v['UserName'],
+                    'meta': {
+                        '_type': 'persons'
+                    }
+                } for v in meeting['votes']]
+            # process memberships
+            memberships = [
+                {
+                    'person_id': v['UserId'],
+                    'organization_id': v['GroupId'],
+                    'meta': {
+                        '_type': 'memberships'
+                    }
+                } for v in meeting['votes']]
+            return parties.values() + persons + memberships
         else:
-            # TODO: process parties
-            # TODO: process persons
-            # TODO: process memberships
             return []
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
