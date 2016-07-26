@@ -110,10 +110,22 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def valid_meeting(self, meeting):
+        """
+        Is the meeting valid?
+        """
         return True
 
     def process_meeting(self, meeting):
+        """
+        Process the meeting and return array of objects.
+        """
         return [meeting]
+
+    def filter_out_processed_meeting(self, meeting):
+        """
+        Should the processed result be filtered out? Return false if not.
+        """
+        return False
 
     def run(self):
         start_date = self.source_definition.get(
