@@ -225,6 +225,23 @@
       "council_members_count": 45
   },
   {
+    "id": "data_sync_test",
+    "extractor": "ocd_backend.extractors.data_sync.DataSyncBaseExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.BaseItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.DummyLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "utrecht",
+    "doc_type": "vote_events",
+    "keep_index_on_update": true,
+    "sources_config": "ocd_backend/sources/utrecht.json",
+    "sources": [
+      "utrecht_popit_organizations", "utrecht_popit_persons"
+    ]
+  },
+  {
     "id": "utrecht_meeting_attendees",
     "extractor": "ocd_backend.extractors.api.FrontendAPIExtractor",
     "transformer": "ocd_backend.transformers.BaseTransformer",
