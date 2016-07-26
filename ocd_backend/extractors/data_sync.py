@@ -37,7 +37,6 @@ class DataSyncBaseExtractor(BaseExtractor):
         Match data objects from different datasets. The datasets is a list of
         generators. Expected output is a list of paired up items (a list itself)
         """
-
         raise NotImplementedError
 
     def select_data_item(self, data_items):
@@ -58,6 +57,4 @@ class DataSyncBaseExtractor(BaseExtractor):
 
         for data_items in paired_data:
             content_type, data = self.select_data_item(data_items)
-            # yield content_type, data
-
-        return []
+            yield content_type, data
