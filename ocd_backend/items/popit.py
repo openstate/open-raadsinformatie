@@ -29,7 +29,12 @@ class PopitBaseItem(object):
         try:
             return self.original_item['meta']['original_object_urls']
         except KeyError as e:
+            pass
+        try:
             return {'html': self.original_item['html_url']}
+        except KeyError as e:
+            pass
+        return {}
 
     def get_rights(self):
         try:

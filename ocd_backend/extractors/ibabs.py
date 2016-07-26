@@ -2,6 +2,7 @@ import json
 from pprint import pprint
 import re
 from hashlib import sha1
+import os
 
 from lxml import etree
 from suds.client import Client
@@ -192,7 +193,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         pprint(processed)
         passed_vote_count = 0
         for result in processed:
-            #yield 'application/json', json.dumps(result)
+            yield 'application/json', json.dumps(result)
             passed_vote_count += 1
         print "Extracted %d meetings and passed %s out of %d voting rounds." % (
             meeting_count, passed_vote_count, vote_count,)
@@ -214,36 +215,40 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
     def process_meeting(self, meeting):
         meeting_count = getattr(self, 'meeting_count', 0)
 
+        entity_type = self.source_definition.get('popit_entity', 'organizations')
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
-            # process parties
-            parties = {
-                v['GroupId']: {
-                    'id': v['GroupId'],
-                    'name': v['GroupName'],
-                    'meta': {
-                        '_type': 'organizations'
-                    }
-                } for v in meeting['votes']}
-            # process persons
-            persons = [
-                {
-                    'id': v['UserId'],
-                    'name': v['UserName'],
-                    'meta': {
-                        '_type': 'persons'
-                    }
-                } for v in meeting['votes']]
-            # process memberships
-            memberships = [
-                {
-                    'person_id': v['UserId'],
-                    'organization_id': v['GroupId'],
-                    'meta': {
-                        '_type': 'memberships'
-                    }
-                } for v in meeting['votes']]
-            return parties.values() + persons + memberships
+            if entity_type == 'organizations':
+                # process parties
+                result = {
+                    v['GroupId']: {
+                        'id': v['GroupId'],
+                        'name': v['GroupName'],
+                        'meta': {
+                            '_type': 'organizations'
+                        }
+                    } for v in meeting['votes']}.values()
+            elif entity_type == 'persons':
+                # process persons
+                result = [
+                    {
+                        'id': v['UserId'],
+                        'name': v['UserName'],
+                        'meta': {
+                            '_type': 'persons'
+                        }
+                    } for v in meeting['votes']]
+            else:
+                # process memberships
+                result = [
+                    {
+                        'person_id': v['UserId'],
+                        'organization_id': v['GroupId'],
+                        'meta': {
+                            '_type': 'memberships'
+                        }
+                    } for v in meeting['votes']]
+            return result
         else:
             return []
 

@@ -209,7 +209,7 @@
       "id": "utrecht_voting_persons",
       "extractor": "ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
-      "item": "ocd_backend.items.voting_round.IBabsVotingRoundItem",
+      "item": "ocd_backend.items.popit.PopitOrganisationItem",
       "enrichers": [],
       "loader": "ocd_backend.loaders.DummyLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
