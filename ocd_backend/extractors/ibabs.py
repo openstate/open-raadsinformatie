@@ -8,6 +8,7 @@ from lxml import etree
 from suds.client import Client
 
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors.data_sync import DataSyncBaseExtractor
 from ocd_backend.exceptions import ConfigurationError
 
 from ocd_backend import settings
@@ -351,3 +352,25 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 total_count += result_count
                 active_page_nr += 1
             print "%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,)
+
+
+class IBabsDataSyncExtractor(DataSyncBaseExtractor):
+    def match_data(self, datasets):
+        # assumes json
+        data= {}
+
+        for dataset in datasets:
+            for content_type, item_as_json in dataset['data']:
+                item = json.loads(item_as_json)
+                try:
+                    # let's see if we have a recorded iBabs identifier
+                    item_id = [i['identifier'] for i in item.get('identifiers', []) if i['scheme'] == u'iBabs'][0]
+                except IndexError as e:
+                    # if no recorded, just use the id
+                    item_id = item['id']
+                try:
+                    data[item_id].append((dataset['id'], item))
+                except KeyError as e:
+                    data[item_id] = [(dataset['id'], item)]
+
+        return data

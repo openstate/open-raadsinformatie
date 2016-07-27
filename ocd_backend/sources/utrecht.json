@@ -206,7 +206,7 @@
 
   },
   {
-      "id": "utrecht_voting_persons",
+      "id": "utrecht_ibabs_most_recent_persons",
       "extractor": "ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.popit.PopitOrganisationItem",
@@ -222,11 +222,12 @@
       "pdf_max_pages": 20,
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00",
-      "council_members_count": 45
+      "council_members_count": 45,
+      "popit_entity": "persons"
   },
   {
-    "id": "data_sync_test",
-    "extractor": "ocd_backend.extractors.data_sync.DataSyncBaseExtractor",
+    "id": "utrecht_persons_sync",
+    "extractor": "ocd_backend.extractors.ibabs.IBabsDataSyncExtractor",
     "transformer": "ocd_backend.transformers.BaseTransformer",
     "item": "ocd_backend.items.BaseItem",
     "enrichers": [],
@@ -238,7 +239,7 @@
     "keep_index_on_update": true,
     "sources_config": "ocd_backend/sources/utrecht.json",
     "sources": [
-      "utrecht_popit_organizations", "utrecht_popit_persons"
+      "utrecht_ibabs_most_recent_persons", "utrecht_popit_persons"
     ]
   },
   {

@@ -32,7 +32,7 @@ class DataSyncBaseExtractor(BaseExtractor):
         return extractor_klass(source)
 
 
-    def pair_data(self, datasets):
+    def match_data(self, datasets):
         """
         Match data objects from different datasets. The datasets is a list of
         generators. Expected output is a list of paired up items (a list itself)
@@ -49,12 +49,23 @@ class DataSyncBaseExtractor(BaseExtractor):
 
     def run(self):
         # list comprehension to activate the generators ...
-        datasets = [y for x in self.extractors for y in x.run()]
-        pprint(datasets)
+        datasets = []
+        for x in self.extractors:
+            datasets.append({
+                'id': x.source_definition['id'],
+                'data': [y for y in x.run()]
+            })
+        #pprint(datasets)
 
         # here we need to pair up the datasets (aka matching)
-        paired_data = self.pair_data(datasets)
-
-        for data_items in paired_data:
-            content_type, data = self.select_data_item(data_items)
-            yield content_type, data
+        matched_data = self.match_data(datasets)
+        num_counted = 0
+        num_matched = 0
+        for item_id, data_items in matched_data.iteritems():
+            num_counted += 1
+            if len(data_items) > 1:
+                pprint(data_items)
+                num_matched += 1
+            #content_type, data = self.select_data_item(data_items)
+            #yield content_type, data
+        print "Matched %d out of %d items." % (num_matched, num_counted,)

@@ -36,4 +36,4 @@ class PopItExtractor(StaticJSONExtractor, HttpRequestMixin):
                     item.get('name', '-'),)
                 for mem in item.get('memberships', []):
                     print "-> %s (%s)" % (mem['organization_id'], mem['person_id'],)
-                yield 'application/json', json.dumps(item)
+                #yield 'application/json', json.dumps(item)
