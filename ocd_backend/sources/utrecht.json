@@ -240,7 +240,8 @@
     "sources_config": "ocd_backend/sources/utrecht.json",
     "sources": [
       "utrecht_ibabs_most_recent_persons", "utrecht_popit_persons"
-    ]
+    ],
+    "prefered_source": "utrecht_popit_persons"
   },
   {
     "id": "utrecht_meeting_attendees",

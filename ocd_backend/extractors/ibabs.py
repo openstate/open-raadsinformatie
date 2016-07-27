@@ -369,8 +369,15 @@ class IBabsDataSyncExtractor(DataSyncBaseExtractor):
                     # if no recorded, just use the id
                     item_id = item['id']
                 try:
-                    data[item_id].append((dataset['id'], item))
+                    data[item_id][dataset['id']] = item
                 except KeyError as e:
-                    data[item_id] = [(dataset['id'], item)]
+                    data[item_id] = {dataset['id']: item}
 
         return data
+
+    def select_data_item(self, data_items):
+        try:
+            selected_item = data_items[self.source_definition['prefered_source']]
+        except KeyError as e:
+            selected_item = data_items.values()[0]
+        return 'application/json', json.dumps(selected_item)

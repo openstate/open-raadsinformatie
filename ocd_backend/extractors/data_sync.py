@@ -63,9 +63,9 @@ class DataSyncBaseExtractor(BaseExtractor):
         num_matched = 0
         for item_id, data_items in matched_data.iteritems():
             num_counted += 1
-            if len(data_items) > 1:
-                pprint(data_items)
+            if len(data_items.keys()) > 1:
+                #  pprint(data_items)
                 num_matched += 1
-            #content_type, data = self.select_data_item(data_items)
-            #yield content_type, data
+            content_type, data = self.select_data_item(data_items)
+            yield content_type, data
         print "Matched %d out of %d items." % (num_matched, num_counted,)
