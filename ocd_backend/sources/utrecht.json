@@ -226,6 +226,26 @@
       "popit_entity": "persons"
   },
   {
+      "id": "utrecht_ibabs_most_recent_organizations",
+      "extractor": "ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.popit.PopitOrganisationItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.DummyLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",
+      "index_name": "utrecht",
+      "doc_type": "vote_events",
+      "sitename": "UtrechtTest",
+      "keep_index_on_update": true,
+      "pdf_max_pages": 20,
+      "start_date": "2016-04-01T00:00:00",
+      "end_date": "2016-06-01T00:00:00",
+      "council_members_count": 45,
+      "popit_entity": "organizations"
+  },
+  {
     "id": "utrecht_persons_sync",
     "extractor": "ocd_backend.extractors.ibabs.IBabsDataSyncExtractor",
     "transformer": "ocd_backend.transformers.BaseTransformer",
@@ -240,6 +260,24 @@
     "sources_config": "ocd_backend/sources/utrecht.json",
     "sources": [
       "utrecht_ibabs_most_recent_persons", "utrecht_popit_persons"
+    ],
+    "prefered_source": "utrecht_popit_persons"
+  },
+  {
+    "id": "utrecht_organizations_sync",
+    "extractor": "ocd_backend.extractors.ibabs.IBabsDataSyncExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.BaseItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.DummyLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "utrecht",
+    "doc_type": "vote_events",
+    "keep_index_on_update": true,
+    "sources_config": "ocd_backend/sources/utrecht.json",
+    "sources": [
+      "utrecht_ibabs_most_recent_organizations", "utrecht_popit_organizations"
     ],
     "prefered_source": "utrecht_popit_persons"
   },
@@ -287,7 +325,7 @@
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "utrecht",
-      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons",
+      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons?per_page=100",
       "doc_type": "persons",
       "keep_index_on_update": true
   },

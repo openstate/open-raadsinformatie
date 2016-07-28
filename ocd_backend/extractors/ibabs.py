@@ -206,6 +206,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         pprint(processed)
         passed_vote_count = 0
         for result in processed:
+            print "%s - %s" % (result['id'], result.get('name', '-'),)
             yield 'application/json', json.dumps(result)
             passed_vote_count += 1
         print "Extracted %d meetings and passed %s out of %d voting rounds." % (
@@ -362,12 +363,16 @@ class IBabsDataSyncExtractor(DataSyncBaseExtractor):
         for dataset in datasets:
             for content_type, item_as_json in dataset['data']:
                 item = json.loads(item_as_json)
-                try:
-                    # let's see if we have a recorded iBabs identifier
-                    item_id = [i['identifier'] for i in item.get('identifiers', []) if i['scheme'] == u'iBabs'][0]
-                except IndexError as e:
-                    # if no recorded, just use the id
+
+                if item.has_key('identifiers'):  # we know it's from popit
+                    try:
+                        item_id = [i['identifier'] for i in item['identifiers'] if i['scheme'] == u'iBabs'][0]
+                    except IndexError as e:
+                        item_id = None
+                else:
                     item_id = item['id']
+
+                print "%s - %s - %s" % (dataset['id'], item_id, item['name'],)
                 try:
                     data[item_id][dataset['id']] = item
                 except KeyError as e:
