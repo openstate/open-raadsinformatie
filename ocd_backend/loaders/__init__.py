@@ -208,4 +208,3 @@ class PopitLoader(BaseLoader):
     ):
         resp = self._create_or_update_item(
             combined_index_doc, combined_object_id)
-        print resp.status_code
