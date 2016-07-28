@@ -327,7 +327,7 @@
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "utrecht",
-      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons?per_page=100",
+      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons",
       "doc_type": "persons",
       "keep_index_on_update": true
   },
