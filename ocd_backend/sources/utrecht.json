@@ -267,19 +267,21 @@
     "id": "utrecht_organizations_sync",
     "extractor": "ocd_backend.extractors.ibabs.IBabsDataSyncExtractor",
     "transformer": "ocd_backend.transformers.BaseTransformer",
-    "item": "ocd_backend.items.BaseItem",
+    "item": "ocd_backend.items.popit.PopitOrganisationItem",
     "enrichers": [],
-    "loader": "ocd_backend.loaders.DummyLoader",
+    "loader": "ocd_backend.loaders.PopitLoader",
     "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
     "hidden": false,
     "index_name": "utrecht",
-    "doc_type": "vote_events",
+    "doc_type": "organizations",
     "keep_index_on_update": true,
+    "popit_base_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1",
+    "popit_api_key": "xxxxx",
     "sources_config": "ocd_backend/sources/utrecht.json",
     "sources": [
       "utrecht_ibabs_most_recent_organizations", "utrecht_popit_organizations"
     ],
-    "prefered_source": "utrecht_popit_persons"
+    "prefered_source": "utrecht_popit_organizations"
   },
   {
     "id": "utrecht_meeting_attendees",

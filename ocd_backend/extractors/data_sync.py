@@ -59,6 +59,7 @@ class DataSyncBaseExtractor(BaseExtractor):
 
         # here we need to pair up the datasets (aka matching)
         matched_data = self.match_data(datasets)
+        #pprint(matched_data)
         num_counted = 0
         num_matched = 0
         for item_id, data_items in matched_data.iteritems():

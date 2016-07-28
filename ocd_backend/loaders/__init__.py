@@ -1,8 +1,10 @@
 from datetime import datetime
+import json
 
+import requests
 from elasticsearch import ConflictError
-from ocd_backend import celery_app
 
+from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.es import elasticsearch
 from ocd_backend.exceptions import ConfigurationError
@@ -156,3 +158,54 @@ class DummyLoader(BaseLoader):
         print 'Finished run {}'.format(run_identifier)
         print
         print '*' * 50
+
+
+from datetime import datetime
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, datetime):
+        serial = obj.isoformat()
+        return serial
+    raise TypeError ("Type not serializable")
+
+class PopitLoader(BaseLoader):
+    """
+    Loads data to a Popit instance.
+    """
+
+    def _create_or_update_item(self, item, item_id):
+        """
+        First tries to post (aka create) a new item. If that does not work,
+        do an update (aka put).
+        """
+
+        headers = {
+            "Apikey": self.source_definition['popit_api_key'],
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+
+        resp = requests.post(
+            "%s/%s" % (
+                self.source_definition['popit_base_url'],
+                self.source_definition['doc_type'],),
+            headers=headers, data=json.dumps(item, default=json_serial))
+
+        if resp.status_code != 500:
+            return resp
+
+        return requests.put(
+            "%s/%s/%s" % (
+                self.source_definition['popit_base_url'],
+                self.source_definition['doc_type'],
+                item_id,),
+            headers=headers, data=json.dumps(item, default=json_serial))
+
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc
+    ):
+        resp = self._create_or_update_item(
+            combined_index_doc, combined_object_id)
+        print resp.status_code
