@@ -51,11 +51,15 @@ class DataSyncBaseExtractor(BaseExtractor):
         # list comprehension to activate the generators ...
         datasets = []
         for x in self.extractors:
+            try:
+                data_for_dataset = [y for y in x.run()]
+            except TypeError as e:
+                data_for_dataset = []
             datasets.append({
                 'id': x.source_definition['id'],
-                'data': [y for y in x.run()]
+                'data': data_for_dataset
             })
-        #pprint(datasets)
+        pprint(datasets)
 
         # here we need to pair up the datasets (aka matching)
         matched_data = self.match_data(datasets)

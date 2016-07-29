@@ -1,7 +1,8 @@
 from datetime import datetime
 import iso8601
 
-from ocd_backend.items.popolo import PersonItem, OrganisationItem
+from ocd_backend.items.popolo import (
+    PersonItem, OrganisationItem, MembershipItem)
 
 
 class PopitBaseItem(object):
@@ -17,6 +18,7 @@ class PopitBaseItem(object):
         ],
         # FIXME: start and end dates for memberships borked due to ES configuration (?)
         # 'start_date', 'end_date'
+        'area': ['id', 'name']
     }
 
     def get_object_id(self):
@@ -59,12 +61,21 @@ class PopitBaseItem(object):
                     self.original_item[field])
             elif self.combined_index_fields[field] == datetime:
                 if self.original_item[field] is not None:
-                    combined_index_data[field] = iso8601.parse_date(
-                        self.original_item[field])
+                    try:
+                        combined_index_data[field] = iso8601.parse_date(
+                            self.original_item[field])
+                    except iso8601.ParseError as e:
+                        combined_index_data[field] = None
             elif self.combined_index_fields[field] == list:
                 if field in self.ignored_list_fields:
                     combined_index_data[field] = [
                         {k: v for k, v in l.iteritems() if k not in self.ignored_list_fields[field]} for l in self.original_item[field]]
+                else:
+                    combined_index_data[field] = self.original_item[field]
+            elif self.combined_index_fields[field] == dict:
+                if field in self.ignored_list_fields:
+                    combined_index_data[field] = {
+                        k: v for k, v in self.original_item[field].iteritems() if k not in self.ignored_list_fields[field]}
                 else:
                     combined_index_data[field] = self.original_item[field]
             else:
@@ -91,5 +102,12 @@ class PopitPersonItem(PopitBaseItem, PersonItem):
 class PopitOrganisationItem(PopitBaseItem, OrganisationItem):
     """
     Imports organizations from a popit instance.
+    """
+    pass
+
+
+class PopitMembershipItem(PopitBaseItem, MembershipItem):
+    """
+    Imports a membership from a popit instance.
     """
     pass

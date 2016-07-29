@@ -206,7 +206,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         pprint(processed)
         passed_vote_count = 0
         for result in processed:
-            print "%s - %s" % (result['id'], result.get('name', '-'),)
+            print "%s - %s" % (result.get('id', '-'), result.get('name', '-'),)
             yield 'application/json', json.dumps(result)
             passed_vote_count += 1
         print "Extracted %d meetings and passed %s out of %d voting rounds." % (
@@ -256,6 +256,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                 # process memberships
                 result = [
                     {
+                        'id': u'%s-%s' % (v['UserId'], v['GroupId'],),
                         'person_id': v['UserId'],
                         'organization_id': v['GroupId'],
                         'meta': {
@@ -380,6 +381,36 @@ class IBabsDataSyncExtractor(DataSyncBaseExtractor):
 
         return data
 
+    def select_data_item(self, data_items):
+        try:
+            selected_item = data_items[self.source_definition['prefered_source']]
+        except KeyError as e:
+            selected_item = data_items.values()[0]
+        return 'application/json', json.dumps(selected_item)
+
+class IBabsDataSyncExtractorWithDeleteOptions(DataSyncBaseExtractor):
+    def match_data(self, datasets):
+        # assumes json
+        data= {}
+
+        for dataset in datasets:
+            for content_type, item_as_json in dataset['data']:
+                item = json.loads(item_as_json)
+                item_id = u'%s - %s-%s' % (
+                    dataset['id'], item['person_id'], item['organization_id'],)
+
+                print "%s - %s" % (dataset['id'], item_id,)
+                try:
+                    data[item_id][dataset['id']] = item
+                except KeyError as e:
+                    data[item_id] = {dataset['id']: item}
+
+        return data
+
+    # in select_data_items, check based on conditions which ones need to be deleted
+    # ie when we have data from the popit instance versus ibabs, the memberships
+    # that appear only in the popit data (for the council) should be deleted
+    # deletion is done by a DELETE request to the popit data
     def select_data_item(self, data_items):
         try:
             selected_item = data_items[self.source_definition['prefered_source']]

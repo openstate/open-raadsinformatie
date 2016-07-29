@@ -72,6 +72,34 @@ class OrganisationItem(PopoloBaseItem):
     }
 
 
+class MembershipItem(PopoloBaseItem):
+    combined_index_fields = {
+        'id': unicode,
+        'hidden': bool,
+        'label': unicode,
+        'role': unicode,
+        'member': dict,
+        'person_id': unicode,
+        'person': dict,
+        'organization_id': unicode,
+        'organization': dict,
+        'post_id': unicode,
+        'post': dict,
+        'on_behalf_of_id': unicode,
+        'on_behalf_of': dict,
+        'area_id': unicode,
+        'area': dict,
+        'start_date': datetime,
+        'end_date': datetime,
+        'contact_details': list,
+        'links': list,
+        'created_at': datetime,
+        'updated_at': datetime,
+        'sources': list,
+        'media_urls': list        
+    }
+
+
 class EventItem(PopoloBaseItem):
     combined_index_fields = {
         'id': unicode,
