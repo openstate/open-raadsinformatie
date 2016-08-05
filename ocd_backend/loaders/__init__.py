@@ -194,7 +194,7 @@ class PopitLoader(BaseLoader):
                 self.source_definition['doc_type'],),
             headers=headers, data=json.dumps(item, default=json_serial))
 
-        if resp.status_code != 500:
+        if ((not self.source_definition.get('popit_update', False)) or (resp.status_code != 500)):
             return resp
 
         return requests.put(
