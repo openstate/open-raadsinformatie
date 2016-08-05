@@ -4,6 +4,7 @@ import re
 from hashlib import sha1
 import os
 
+import requests
 from lxml import etree
 from suds.client import Client
 
@@ -238,6 +239,13 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                     v['GroupId']: {
                         'id': v['GroupId'],
                         'name': v['GroupName'],
+                        'identifiers': [
+                            {
+                                'id': u'id-g-%s' % (v['GroupId'],),
+                                'identifier': v['GroupId'],
+                                'scheme': u'iBabs'
+                            }
+                        ],
                         'meta': {
                             '_type': 'organizations'
                         }
@@ -248,6 +256,13 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                     {
                         'id': v['UserId'],
                         'name': v['UserName'],
+                        'identifiers': [
+                            {
+                                'id': u'id-p-%s' % (v['UserId'],),
+                                'identifier': v['UserId'],
+                                'scheme': u'iBabs'
+                            }
+                        ],
                         'meta': {
                             '_type': 'persons'
                         }
@@ -258,7 +273,35 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                     {
                         'id': u'%s-%s' % (v['UserId'], v['GroupId'],),
                         'person_id': v['UserId'],
+                        'person': {
+                            'id': v['UserId'],
+                            'name': v['UserName'],
+                            'identifiers': [
+                                {
+                                    'id': u'id-p-%s' % (v['UserId'],),
+                                    'identifier': v['UserId'],
+                                    'scheme': u'iBabs'
+                                }
+                            ],
+                            'meta': {
+                                '_type': 'persons'
+                            }
+                        },
                         'organization_id': v['GroupId'],
+                        'organization': {
+                            'id': v['GroupId'],
+                            'name': v['GroupName'],
+                            'identifiers': [
+                                {
+                                    'id': u'id-g-%s' % (v['GroupId'],),
+                                    'identifier': v['GroupId'],
+                                    'scheme': u'iBabs'
+                                }
+                            ],
+                            'meta': {
+                                '_type': 'organizations'
+                            }
+                        },
                         'meta': {
                             '_type': 'memberships'
                         }
@@ -354,66 +397,3 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 total_count += result_count
                 active_page_nr += 1
             print "%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,)
-
-
-class IBabsDataSyncExtractor(DataSyncBaseExtractor):
-    def match_data(self, datasets):
-        # assumes json
-        data= {}
-
-        for dataset in datasets:
-            for content_type, item_as_json in dataset['data']:
-                item = json.loads(item_as_json)
-
-                if item.has_key('identifiers'):  # we know it's from popit
-                    try:
-                        item_id = [i['identifier'] for i in item['identifiers'] if i['scheme'] == u'iBabs'][0]
-                    except IndexError as e:
-                        item_id = None
-                else:
-                    item_id = item['id']
-
-                print "%s - %s - %s" % (dataset['id'], item_id, item['name'],)
-                try:
-                    data[item_id][dataset['id']] = item
-                except KeyError as e:
-                    data[item_id] = {dataset['id']: item}
-
-        return data
-
-    def select_data_item(self, data_items):
-        try:
-            selected_item = data_items[self.source_definition['prefered_source']]
-        except KeyError as e:
-            selected_item = data_items.values()[0]
-        return 'application/json', json.dumps(selected_item)
-
-class IBabsDataSyncExtractorWithDeleteOptions(DataSyncBaseExtractor):
-    def match_data(self, datasets):
-        # assumes json
-        data= {}
-
-        for dataset in datasets:
-            for content_type, item_as_json in dataset['data']:
-                item = json.loads(item_as_json)
-                item_id = u'%s - %s-%s' % (
-                    dataset['id'], item['person_id'], item['organization_id'],)
-
-                print "%s - %s" % (dataset['id'], item_id,)
-                try:
-                    data[item_id][dataset['id']] = item
-                except KeyError as e:
-                    data[item_id] = {dataset['id']: item}
-
-        return data
-
-    # in select_data_items, check based on conditions which ones need to be deleted
-    # ie when we have data from the popit instance versus ibabs, the memberships
-    # that appear only in the popit data (for the council) should be deleted
-    # deletion is done by a DELETE request to the popit data
-    def select_data_item(self, data_items):
-        try:
-            selected_item = data_items[self.source_definition['prefered_source']]
-        except KeyError as e:
-            selected_item = data_items.values()[0]
-        return 'application/json', json.dumps(selected_item)
