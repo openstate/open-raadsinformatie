@@ -278,7 +278,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                             'name': v['UserName'],
                             'identifiers': [
                                 {
-                                    'id': u'id-p-%s' % (v['UserId'],),
+                                    'id': u'id-m-%s' % (v['UserId'],),
                                     'identifier': v['UserId'],
                                     'scheme': u'iBabs'
                                 }

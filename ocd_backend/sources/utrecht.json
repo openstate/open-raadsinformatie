@@ -206,10 +206,10 @@
 
   },
   {
-      "id": "utrecht_ibabs_most_recent_popit_data",
+      "id": "utrecht_ibabs_most_recent_popit_persons",
       "extractor": "ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
-      "item": "ocd_backend.items.popit.PopitOrganisationItem",
+      "item": "ocd_backend.items.popit.PopitPersonItem",
       "enrichers": [],
       "loader": "ocd_backend.loaders.DummyLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
