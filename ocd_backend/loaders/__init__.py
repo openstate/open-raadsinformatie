@@ -194,6 +194,8 @@ class PopitLoader(BaseLoader):
                 self.source_definition['doc_type'],),
             headers=headers, data=json.dumps(item, default=json_serial))
 
+        # popit update controls where we should update the data from ibabs (overwriting our own data)
+        # or whether we should only add things when there's new information.
         if ((not self.source_definition.get('popit_update', False)) or (resp.status_code != 500)):
             return resp
 
