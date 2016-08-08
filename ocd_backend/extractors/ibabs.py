@@ -267,6 +267,70 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                             '_type': 'persons'
                         }
                     } for v in meeting['votes']]
+            elif entity_type == 'council-memberships':
+                try:
+                    council = requests.get(self.source_definition['council_url']).json()['result']
+                except Exception as e:
+                    council = None
+
+                if council is not None:
+                    # process council memberships
+                    existing_persons = {m['person_id']: m['id'] for m in council['memberships']}
+                    current_persons = [v['UserId'] for v in meeting['votes']]
+                    old_persons = list(set(existing_persons.keys()) - set(current_persons))
+                    print "Found old persons:"
+                    pprint(old_persons)
+                    headers = {
+                        "Apikey": self.source_definition['popit_api_key'],
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    }
+                    for old_person in old_persons:
+                        requests.delete(
+                            '%s/memberships/%s' % (
+                                self.source_definition['popit_base_url'],
+                                existing_persons[old_person],),
+                            headers=headers)
+
+                    result = [
+                        {
+                            'id': u'%s-%s' % (v['UserId'], council['id'],),
+                            'person_id': v['UserId'],
+                            'person': {
+                                'id': v['UserId'],
+                                'name': v['UserName'],
+                                'identifiers': [
+                                    {
+                                        'id': u'id-m-%s' % (v['UserId'],),
+                                        'identifier': v['UserId'],
+                                        'scheme': u'iBabs'
+                                    }
+                                ],
+                                'meta': {
+                                    '_type': 'persons'
+                                }
+                            },
+                            'organization_id': council['id'],
+                            'organization': {
+                                'id': council['id'],
+                                'name': council['name'],
+                                'identifiers': [
+                                    {
+                                        'id': u'id-g-%s' % (council['id'],),
+                                        'identifier': council['id'],
+                                        'scheme': u'iBabs'
+                                    }
+                                ],
+                                'meta': {
+                                    '_type': 'organizations'
+                                }
+                            },
+                            'meta': {
+                                '_type': 'memberships'
+                            }
+                        } for v in meeting['votes']]
+                else:
+                    result = []
             else:
                 # process memberships
                 result = [
