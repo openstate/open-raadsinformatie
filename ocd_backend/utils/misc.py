@@ -7,6 +7,33 @@ import translitcodec
 from elasticsearch.helpers import scan, bulk
 
 
+def normalize_motion_id(motion_id, date_as_str=None):
+    """
+    Normalizes forms of motion ids
+    """
+
+    regexes = [
+        r'^M(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
+        r'^(?P<year>\d{4})\s*M\s*(?P<id>\d+)',
+        r'^M\s+(?P<id>\d+)'
+    ]
+
+    for regex in regexes:
+        res = re.match(regex, motion_id.upper())
+        if res is not None:
+            try:
+                year = res.group('year')
+            except IndexError as e:
+                year = None
+            if year is None:
+                if date_as_str is None:
+                    date_as_str = datetime.datetime.now().isoformat()
+                year = date_as_str[0:4]
+            mid = res.group('id')
+            return u'%sM%s' % (year, mid,)
+    return None
+
+
 def reindex(client, source_index, target_index, target_client=None, chunk_size=500, scroll='5m', transformation_callable=None):
     """
     Reindex all documents from one index to another, potentially (if
