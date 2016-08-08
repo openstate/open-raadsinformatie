@@ -188,10 +188,11 @@ class PopitLoader(BaseLoader):
             "Content-Type": "application/json"
         }
 
+        popit_url = "%s/%s" % (
+            self.source_definition['popit_base_url'],
+            self.source_definition['doc_type'],)
         resp = requests.post(
-            "%s/%s" % (
-                self.source_definition['popit_base_url'],
-                self.source_definition['doc_type'],),
+            popit_url,
             headers=headers, data=json.dumps(item, default=json_serial))
 
         # popit update controls where we should update the data from ibabs (overwriting our own data)
@@ -200,10 +201,7 @@ class PopitLoader(BaseLoader):
             return resp
 
         return requests.put(
-            "%s/%s/%s" % (
-                self.source_definition['popit_base_url'],
-                self.source_definition['doc_type'],
-                item_id,),
+            "%s/%s" % (popit_url, item_id,),
             headers=headers, data=json.dumps(item, default=json_serial))
 
     def load_item(
@@ -211,4 +209,3 @@ class PopitLoader(BaseLoader):
     ):
         resp = self._create_or_update_item(
             combined_index_doc, combined_object_id)
-        print resp.status_code
