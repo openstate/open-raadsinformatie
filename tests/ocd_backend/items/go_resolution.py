@@ -67,7 +67,7 @@ class ResolutionItemTestCase(ItemTestCase):
             }
         ]
 
-        self.meeting_classification = u'Resolution'
+        self.meeting_classification = u'Besluitenlijst'
 
         self.start_date = iso8601.parse_date(u'2015-06-29T17:00:00')
         self.location = u'Gemeentehuis'

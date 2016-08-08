@@ -96,8 +96,8 @@ class MeetingItemTestCase(ItemTestCase):
                 'identifier': 'd49d31d7d71db616be195bab979ba063e4de9293'
             }
         ]
-        self.meeting_classification = u'Meeting'
-        self.meeting_item_classification = u'Meeting Item'
+        self.meeting_classification = u'Agenda'
+        self.meeting_item_classification = u'Agendapunt'
 
         self.start_date = iso8601.parse_date(u'2015-08-31T19:30:00')
         self.location = u'Gemeentehuis'

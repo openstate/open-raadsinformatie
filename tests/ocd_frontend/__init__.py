@@ -50,7 +50,13 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         """Test if valid use of the ``sort`` and ``order`` options
         result in a JSON response with a 200 OK."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
+        available_sort_fields = current_app.config['SORTABLE_FIELDS']['items']
+        try:
+            available_sort_fields.remove('start_date')
+            available_sort_fields.remove('end_date')
+        except ValueError as e:
+            pass
+        sort_field = random.choice(available_sort_fields)
         sort_order = random.choice(['asc', 'desc'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de',
@@ -358,7 +364,13 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         JSON response with a 200 OK."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
+        available_sort_fields = current_app.config['SORTABLE_FIELDS']['items']
+        try:
+            available_sort_fields.remove('start_date')
+            available_sort_fields.remove('end_date')
+        except ValueError as e:
+            pass
+        sort_field = random.choice(available_sort_fields)
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'sort': sort_field}))
         self.assert_ok_json(response)
@@ -368,7 +380,13 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         result in a JSON response with a 200 OK."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
+        available_sort_fields = current_app.config['SORTABLE_FIELDS']['items']
+        try:
+            available_sort_fields.remove('start_date')
+            available_sort_fields.remove('end_date')
+        except ValueError as e:
+            pass
+        sort_field = random.choice(available_sort_fields)
         sort_order = random.choice(['asc', 'desc'])
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'order': sort_order,
@@ -389,7 +407,13 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
         response with status code 400."""
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        sort_field = random.choice(current_app.config['SORTABLE_FIELDS']['items'])
+        available_sort_fields = current_app.config['SORTABLE_FIELDS']['items']
+        try:
+            available_sort_fields.remove('start_date')
+            available_sort_fields.remove('end_date')
+        except ValueError as e:
+            pass
+        sort_field = random.choice(available_sort_fields)
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'order': 'upsidedown',
                                               'sort': sort_field}))

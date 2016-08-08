@@ -51,9 +51,6 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def _map_ibabs_voters_to_popolo_voters(self, original_votes, council, members, parties):
-        # name matching .... (parts of names?) or just different id's? (another person importer)
-
     def get_combined_index_data(self):
         combined_index_data = {}
 

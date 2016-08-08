@@ -182,7 +182,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     # motion's unique identifier
                     if le['EntryTitle'].startswith('M'):
                         motion_id = le['EntryTitle'].split(' ')[0][1:].replace('-', ' M')
-                    pprint(motion_id.strip())
+                    print "Motie id : %s" % (motion_id.strip(),)
                     hash_content = u'motion-%s' % (motion_id.strip())
                     hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
 
@@ -204,7 +204,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                         processed += self.process_meeting(result)
             meeting_count += 1
 
-        pprint(processed)
+        #pprint(processed)
         passed_vote_count = 0
         for result in processed:
             print "%s - %s" % (result.get('id', '-'), result.get('name', '-'),)
@@ -238,6 +238,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                 result = {
                     v['GroupId']: {
                         'id': v['GroupId'],
+                        'classifcation': 'Party',
                         'name': v['GroupName'],
                         'identifiers': [
                             {

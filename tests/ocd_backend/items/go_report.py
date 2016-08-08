@@ -66,7 +66,7 @@ class ReportItemTestCase(ItemTestCase):
             }
         ]
 
-        self.meeting_classification = u'Report'
+        self.meeting_classification = u'Verslag'
 
         self.start_date = iso8601.parse_date(u'2015-06-29T17:00:00')
         self.location = u'Gemeentehuis'
