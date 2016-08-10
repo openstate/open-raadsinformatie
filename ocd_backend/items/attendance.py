@@ -58,7 +58,8 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
 
         vote_event = self._get_vote_event(self.original_item['id'])
         if vote_event is None:
-            return
+            print "No vote id found for event id %s!" % (self.original_item['id'],)
+            return {}
 
 
         combined_index_data['hidden'] = self.source_definition['hidden']

@@ -75,6 +75,7 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         return [{
             "option": group_info[1],
             "value": num_votes,
+            "group_id": group_info[0],
             "group": {
                 "name": id2names[group_info[0]]
             }
@@ -103,7 +104,14 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def _get_votes(self, council, parties, members):
         if not self.original_item['entry']['ListCanVote']:
             return []
-        return [{'voter_id': v['UserId'], 'option': "yes" if v['Vote'] else "no"} for v in self.original_item['votes']]
+
+        members_by_id = {m['id']: {'name': m['name']} for m in members}
+        return [{
+            'voter_id': v['UserId'],
+            'voter': members_by_id.get(v['UserId'], None),
+            'group_id': v['GroupId'],
+            'option': "yes" if v['Vote'] else "no"
+        } for v in self.original_item['votes']]
 
     def get_combined_index_data(self):
         combined_index_data = {}

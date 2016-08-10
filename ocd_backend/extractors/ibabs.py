@@ -93,7 +93,6 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     # This is a bit hacky, but we need to know this
                     meeting_item_dict['MeetingId'] = meeting_dict['Id']
                     meeting_item_dict['Meeting'] = meeting_dict
-                    pprint(meeting_item_dict)
                     yield 'application/json', json.dumps(meeting_item_dict)
                     meeting_item_count += 1
             meeting_count += 1

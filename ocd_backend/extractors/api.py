@@ -19,5 +19,6 @@ class FrontendAPIExtractor(BaseExtractor, HttpRequestMixin, FrontendAPIMixin):
             **self.source_definition['frontend_args'])  # 100 for now ...
 
         for result in results:
-            # print u"%s - %s (%s)" % (result['start_date'], result['name'], result['id'],)
+            # print "%s - %s" % (result['id'], result['classification'],)
+            print u"%s - %s (%s)" % (result['start_date'], result['name'], result['id'],)
             yield 'application/json', json.dumps(result)
