@@ -11,6 +11,7 @@ from suds.client import Client
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.extractors.data_sync import DataSyncBaseExtractor
 from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.utils.misc import normalize_motion_id
 
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
@@ -180,11 +181,13 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     continue
                 for le in mi['ListEntries']:
                     # motion's unique identifier
-                    if le['EntryTitle'].startswith('M'):
-                        motion_id = le['EntryTitle'].split(' ')[0][1:].replace('-', ' M')
+                    print le['EntryTitle'].split(' ')[0][1:]
+                    motion_id = normalize_motion_id(le['EntryTitle'].split(' ')[0][1:])
+
                     print "Motie id : %s" % (motion_id.strip(),)
                     hash_content = u'motion-%s' % (motion_id.strip())
                     hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
+                    print "Hashedotie id : %s" % (hashed_motion_id.strip(),)
 
                     votes = self.client.service.GetListEntryVotes(
                         Sitename=self.source_definition['sitename'],
@@ -199,6 +202,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                         'entry': le,
                         'votes': votes
                     }
+                    pprint(result)
                     vote_count += 1
                     if self.valid_meeting(result):
                         processed += self.process_meeting(result)

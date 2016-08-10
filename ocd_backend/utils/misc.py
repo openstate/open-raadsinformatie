@@ -15,6 +15,7 @@ def normalize_motion_id(motion_id, date_as_str=None):
     regexes = [
         r'^M(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
         r'^(?P<year>\d{4})\s*M\s*(?P<id>\d+)',
+        r'^(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
         r'^M\s+(?P<id>\d+)'
     ]
 

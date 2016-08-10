@@ -14,7 +14,7 @@ from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.pdf import PDFToTextMixin
-
+from ocd_backend.utils.misc import normalize_motion_id
 
 class IBabsMotionVotingMixin(
         HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
@@ -112,7 +112,11 @@ class IBabsMotionVotingMixin(
 
     def _get_motion_id_encoded(self):
         #pprint(self.original_item)
-        hash_content = u'motion-%s' % (self._value('Kenmerk').strip())
+        normalized_motion_id = normalize_motion_id(
+            self._value('Kenmerk').strip(),
+            self.original_item['datum'][0]
+        )
+        hash_content = u'motion-%s' % (normalized_motion_id,)
         return unicode(sha1(hash_content.decode('utf8')).hexdigest())
 
     def get_object_id(self):

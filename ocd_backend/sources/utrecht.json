@@ -192,7 +192,7 @@
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.voting_round.IBabsVotingRoundItem",
       "enrichers": [],
-      "loader": "ocd_backend.loaders.DummyLoader",
+      "loader": "ocd_backend.loaders.ElasticsearchUpdateOnlyLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "wsdl": "https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl",

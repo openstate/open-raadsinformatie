@@ -1,5 +1,6 @@
 from datetime import datetime
 import iso8601
+from pprint import pprint
 
 from ocd_backend.items import BaseItem
 from ocd_backend.items.popolo import EventItem
@@ -51,6 +52,59 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
+    def _get_result(self):
+        if not self.original_item['entry']['ListCanVote']:
+            return "Motie aangehouden"
+        if self.original_item['entry']['VoteResult']:
+            return "Motie aangenomen"
+        else:
+            return "Motie verworpen"
+
+    def _get_group_results(self, parties):
+        if not self.original_item['entry']['ListCanVote']:
+            return []
+        id2names = dict(list(set(
+            [(v['GroupId'], v['GroupName']) for v in self.original_item['votes']])))
+        counts = {}
+        for v in self.original_item['votes']:
+            vote_as_str = "yes" if v['Vote'] else "no"
+            try:
+                counts[(v['GroupId'], vote_as_str)] += 1
+            except KeyError as e:
+                counts[(v['GroupId'], vote_as_str)] = 1
+        return [{
+            "option": group_info[1],
+            "value": num_votes,
+            "group": {
+                "name": id2names[group_info[0]]
+            }
+        } for group_info, num_votes in counts.iteritems()]
+
+    def _get_counts(self, council, parties, members):
+        if not self.original_item['entry']['ListCanVote']:
+            return []
+        return [
+            {
+                "option": "yes",
+                "value": self.original_item['entry']['VotesInFavour'],
+                "group": {
+                    "name": "Gemeenteraad"
+                }
+            },
+            {
+                "option": "no",
+                "value": self.original_item['entry']['VotesAgainst'],
+                "group": {
+                    "name": "Gemeenteraad"
+                }
+            }
+        ]
+
+    def _get_votes(self, council, parties, members):
+        if not self.original_item['entry']['ListCanVote']:
+            return []
+        return [{'voter_id': v['UserId'], 'option': "yes" if v['Vote'] else "no"} for v in self.original_item['votes']]
+
     def get_combined_index_data(self):
         combined_index_data = {}
 
@@ -62,7 +116,10 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         parties = self._get_council_parties()
 
         combined_index_data['doc'] = {
-            #'attendees': self._get_voters(vote_event)
+            "result": self._get_result(),
+            "group_results": self._get_group_results(parties),
+            "counts": self._get_counts(council, parties, members),
+            "votes": self._get_votes(council, parties, members)
         }
 
         return combined_index_data
