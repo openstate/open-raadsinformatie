@@ -291,7 +291,7 @@
       "popit_base_url": "http://utrecht.openraadsinformatie.nl/api/v0.1",
       "popit_api_key": "d9f780bce2f2e6d6a2101208a40feacabd883522",
       "popit_entity": "council-memberships",
-      "council_url": "http://utrecht.openraadsinformatie.nl/organizations/gemeente-utrecht-utrecht-ut"
+      "council_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/organizations/gemeente-utrecht-utrecht-ut"
   },
   {
     "id": "utrecht_meeting_attendees",

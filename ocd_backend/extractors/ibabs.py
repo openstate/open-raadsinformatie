@@ -201,7 +201,6 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                         'entry': le,
                         'votes': votes
                     }
-                    pprint(result)
                     vote_count += 1
                     if self.valid_meeting(result):
                         processed += self.process_meeting(result)
