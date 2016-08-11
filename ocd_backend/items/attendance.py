@@ -1,5 +1,6 @@
 from datetime import datetime
 import iso8601
+from pprint import pprint
 
 from ocd_backend.items import BaseItem
 from ocd_backend.items.popolo import EventItem
@@ -40,16 +41,22 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         try:
             results = self.api_request(
                 self.source_definition['index_name'], 'vote_events',
-                legislative_session_id=event_id, size=1)  # FIXME: for now, get the first
-            return results[0]
+                legislative_session_id=event_id, size=30)  # FIXME: for now, get the first
+            print "vote events found:"
+            for r in results:
+                print "* %s (%s)" % (r['id'], u','.join(r.keys()),)
+            return [r for r in results if r.has_key('votes')][0]
         except Exception as e:
+            print "Got exception:", e
             pass
 
     def _get_voters(self, vote_event):
         if not vote_event.has_key('votes'):
+            print "No votes found for event id %s (%s)!" % (self.original_item['id'], vote_event['id'],)
             return []
 
-        return [{'id': p['voter']['id']} for p in vote_event['votes']]
+        print "Got votes"
+        return [{'id': p['voter_id']} for p in vote_event['votes']]
 
     def get_combined_index_data(self):
         combined_index_data = {}
