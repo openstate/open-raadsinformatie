@@ -223,7 +223,7 @@
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00",
       "council_members_count": 45,
-      "popit_base_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1",
+      "popit_base_url": "http://utrecht.openraadsinformatie.nl/api/v0.1",
       "popit_api_key": "d9f780bce2f2e6d6a2101208a40feacabd883522",
       "popit_entity": "persons"
   },
@@ -245,7 +245,7 @@
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00",
       "council_members_count": 45,
-      "popit_base_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1",
+      "popit_base_url": "http://utrecht.openraadsinformatie.nl/api/v0.1",
       "popit_api_key": "d9f780bce2f2e6d6a2101208a40feacabd883522",
       "popit_entity": "organizations"
   },
@@ -267,7 +267,7 @@
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00",
       "council_members_count": 45,
-      "popit_base_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1",
+      "popit_base_url": "http://utrecht.openraadsinformatie.nl/api/v0.1",
       "popit_api_key": "d9f780bce2f2e6d6a2101208a40feacabd883522",
       "popit_entity": "memberships"
   },
@@ -289,10 +289,10 @@
       "start_date": "2016-04-01T00:00:00",
       "end_date": "2016-06-01T00:00:00",
       "council_members_count": 45,
-      "popit_base_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1",
+      "popit_base_url": "http://utrecht.openraadsinformatie.nl/api/v0.1",
       "popit_api_key": "d9f780bce2f2e6d6a2101208a40feacabd883522",
       "popit_entity": "council-memberships",
-      "council_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1/organizations/57a8950fbb59056809b918d0"
+      "council_url": "http://utrecht.openraadsinformatie.nl/organizations/gemeente-utrecht-utrecht-ut"
   },
   {
     "id": "utrecht_meeting_attendees",
@@ -324,7 +324,7 @@
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "utrecht",
-      "file_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1/organizations",
+      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/organizations",
       "doc_type": "organizations",
       "keep_index_on_update": true
   },
@@ -338,7 +338,7 @@
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "utrecht",
-      "file_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1/persons",
+      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/persons",
       "doc_type": "persons",
       "keep_index_on_update": true
   },
@@ -352,7 +352,7 @@
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "utrecht",
-      "file_url": "http://utrecht2.openraadsinformatie.nl/api/v0.1/memberships",
+      "file_url": "http://utrecht.openraadsinformatie.nl/api/v0.1/memberships",
       "doc_type": "memberships",
       "keep_index_on_update": true
   },
