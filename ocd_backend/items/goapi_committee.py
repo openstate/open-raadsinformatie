@@ -49,7 +49,7 @@ class CommitteeItem(OrganisationItem):
 
         combined_index_data['sources'] = [
             {
-                'url': self._get_current_permalink,
+                'url': self._get_current_permalink(),
                 'note': u''
             }
         ]
