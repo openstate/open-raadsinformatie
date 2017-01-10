@@ -1,6 +1,7 @@
 import datetime
 import json
 import re
+import glob
 
 import translitcodec
 
@@ -68,24 +69,26 @@ def reindex(client, source_index, target_index, target_client=None, chunk_size=5
         chunk_size=chunk_size, stats_only=True)
 
 
-def load_sources_config(filename):
-    """Loads a JSON file containing the configuration of the available
+def load_sources_config(path):
+    """Loads a JSON file(s) containing the configuration of the available
     sources.
 
-    :param filename: the filename of the JSON file.
-    :type filename: str.
+    :param path: the path of the JSON file(s) wildcards * enabled.
+    :type path: str.
     """
-    if type(filename) == file:
-        # Already an open file
-        return json.load(filename)
-    try:
-        with open(filename) as json_file:
-            return json.load(json_file)
-    except IOError, e:
-        e.strerror = 'Unable to load sources configuration file (%s)' % (
-            e.strerror,)
-        raise
+    result = []
+    for filename in glob.glob(path):
+        try:
+            with open(filename) as json_file:
+                for entry in json.load(json_file):
+                    result.append(entry)
 
+        except IOError, e:
+            e.strerror = 'Unable to load sources configuration file (%s)' % (
+                e.strerror,)
+            raise
+
+    return result
 
 def load_object(path):
     """Load an object given it's absolute object path, and return it.

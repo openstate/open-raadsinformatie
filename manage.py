@@ -301,7 +301,7 @@ def available_indices():
 
 
 @command('list_sources')
-@click.option('--sources_config', default=SOURCES_CONFIG_FILE, type=click.File('rb'))
+@click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 def extract_list_sources(sources_config):
     """
     Show a list of available sources (preconfigured pipelines).
@@ -316,8 +316,7 @@ def extract_list_sources(sources_config):
 
 
 @command('start')
-@click.option('--sources_config', default=SOURCES_CONFIG_FILE,
-              type=click.File('rb'))
+@click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 @click.argument('source_id')
 def extract_start(source_id, sources_config):
     """
