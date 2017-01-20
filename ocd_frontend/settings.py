@@ -69,8 +69,6 @@ SIMPLE_QUERY_FIELDS = {
     'events': [
         'name^4', 'description^3', 'location', 'organization.name',
         'organization.description', 'sources.note^2', 'sources.description'],
-    'event_items': [
-        'name^4', 'description^3', 'sources.note^2', 'sources.description'],
     'motions': [
         'name^4', 'text^3', 'organization.name', 'sources.note^2',
         'sources.description'],

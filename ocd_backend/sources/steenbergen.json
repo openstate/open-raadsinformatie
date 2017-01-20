@@ -23,7 +23,7 @@
     "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
     "hidden": false,
     "index_name": "steenbergen",
-    "doc_type": "event_items",
+    "doc_type": "events",
     "keep_index_on_update": true,
     "base_url": "https://raad.gemeente-steenbergen.nl/api/v1"
   },
