@@ -73,8 +73,8 @@
       "doc_type": "events",
       "sitename": "Utrecht",
       "keep_index_on_update": true,
-      "start_date": "2016-03-01T00:00:00",
-      "end_date": "2016-06-01T00:00:00"
+      "start_date": "2000-03-01T00:00:00",
+      "months_interval": 3
   },
   {
       "id": "utrecht_reports",
