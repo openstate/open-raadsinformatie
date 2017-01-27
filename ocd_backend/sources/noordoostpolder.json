@@ -1,0 +1,72 @@
+[
+  {
+    "id": "noordoostpolder_meetings",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_meeting.Meeting",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "noordoostpolder",
+    "doc_type": "events",
+    "keep_index_on_update": true,
+    "base_url": "https://raad.noordoostpolder.nl/api/v1"
+  },
+  {
+    "id": "noordoostpolder_meetingitems",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_meetingitem.MeetingItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "noordoostpolder",
+    "doc_type": "events",
+    "keep_index_on_update": true,
+    "base_url": "https://raad.noordoostpolder.nl/api/v1"
+  },
+  {
+    "id": "noordoostpolder_committees",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_committee.CommitteeItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "noordoostpolder",
+    "doc_type": "organizations",
+    "keep_index_on_update": true,
+    "base_url": "https://raad.noordoostpolder.nl/api/v1"
+  },
+  {
+      "id": "noordoostpolder_popit_organizations",
+      "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.popit.PopitOrganisationItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "index_name": "noordoostpolder",
+      "file_url": "http://noordoostpolder.openraadsinformatie.nl/api/v0.1/organizations",
+      "doc_type": "organizations",
+      "keep_index_on_update": true
+  },
+  {
+      "id": "noordoostpolder_popit_persons",
+      "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+      "transformer": "ocd_backend.transformers.BaseTransformer",
+      "item": "ocd_backend.items.popit.PopitPersonItem",
+      "enrichers": [],
+      "loader": "ocd_backend.loaders.ElasticsearchLoader",
+      "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+      "hidden": false,
+      "index_name": "noordoostpolder",
+      "file_url": "http://noordoostpolder.openraadsinformatie.nl/api/v0.1/persons",
+      "doc_type": "persons",
+      "keep_index_on_update": true
+  }
+]
