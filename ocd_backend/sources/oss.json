@@ -1,0 +1,62 @@
+[
+    {
+        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "oss",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "oss_municipality",
+        "doc_type": "organizations",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
+        "filter": {
+            "Title": "oss"
+        },
+        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    }, 
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "oss",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "oss_meetings",
+        "doc_type": "events",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "oss",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "oss",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "oss_reports",
+        "regex": ".*",
+        "doc_type": "events",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "oss",
+        "item": "ocd_backend.items.ibabs_meeting.IBabsReportItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    },
+    {
+        "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
+        "keep_index_on_update": true,
+        "enrichers": [],
+        "index_name": "oss",
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "id": "oss_committees",
+        "doc_type": "organizations",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "sitename": "oss",
+        "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false
+    }
+]
