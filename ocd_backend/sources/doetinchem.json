@@ -1,0 +1,44 @@
+[
+  {
+    "id": "doetinchem_meetings",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_meeting.Meeting",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "doetinchem",
+    "doc_type": "events",
+    "keep_index_on_update": true,
+    "base_url": "https://besluitvorming.doetinchem.nl/api/v1"
+  },
+  {
+    "id": "doetinchem_meetingitems",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_meetingitem.MeetingItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "doetinchem",
+    "doc_type": "events",
+    "keep_index_on_update": true,
+    "base_url": "https://besluitvorming.doetinchem.nl/api/v1"
+  },
+  {
+    "id": "doetinchem_committees",
+    "extractor": "ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor",
+    "transformer": "ocd_backend.transformers.BaseTransformer",
+    "item": "ocd_backend.items.goapi_committee.CommitteeItem",
+    "enrichers": [],
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "doetinchem",
+    "doc_type": "organizations",
+    "keep_index_on_update": true,
+    "base_url": "https://besluitvorming.doetinchem.nl/api/v1"
+  }
+]
