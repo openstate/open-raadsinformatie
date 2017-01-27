@@ -24,3 +24,4 @@ BeautifulSoup==3.2.1
 Pillow==2.7.0
 -e git+https://github.com/mikeboers/PyAV.git@34d568f924e7dbb49a6f337e7791204c64fd8c52#egg=av
 spyne==2.11.0
+python-dateutil==2.6.0

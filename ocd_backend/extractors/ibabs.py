@@ -3,6 +3,9 @@ from pprint import pprint
 import re
 from hashlib import sha1
 import os
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
 
 import requests
 from lxml import etree
@@ -65,39 +68,62 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def run(self):
-        start_date = self.source_definition.get(
-            'start_date', '2015-06-01T00:00:00')
-        end_date = self.source_definition.get(
-            'end_date', '2016-07-01T00:00:00')
-        print "Getting meetings for %s to %s" % (start_date, end_date,)
-        meetings = self.client.service.GetMeetingsByDateRange(
-            Sitename=self.source_definition['sitename'],
-            StartDate=start_date,
-            EndDate=end_date,
-            MetaDataOnly=False)
+        current_start = datetime(2000, 1, 1)  # Start somewhere by default
+        if 'start_date' in self.source_definition:
+            current_start = parse(self.source_definition['start_date'])
 
-        meeting_types = self._meetingtypes_as_dict()
+        end_date = datetime.today()  # End today by default
+        if 'end_date' in self.source_definition:
+            end_date = parse(self.source_definition['end_date'])
+
+        months = 6  # Max 6 months intervals by default
+        if 'months_interval' in self.source_definition:
+            months = self.source_definition['months_interval']
+
+        print "Getting all meetings for %s to %s" % (current_start, end_date,)
 
         meeting_count = 0
         meeting_item_count = 0
-        for meeting in meetings.Meetings[0]:
-            meeting_dict = meeting_to_dict(meeting)
-            # Getting the meeting type as a string is easier this way ...
-            meeting_dict['Meetingtype'] = meeting_types[
-                meeting_dict['MeetingtypeId']]
-            yield 'application/json', json.dumps(meeting_dict)
 
-            if meeting.MeetingItems is not None:
-                for meeting_item in meeting.MeetingItems[0]:
-                    meeting_item_dict = meeting_item_to_dict(meeting_item)
-                    # This is a bit hacky, but we need to know this
-                    meeting_item_dict['MeetingId'] = meeting_dict['Id']
-                    meeting_item_dict['Meeting'] = meeting_dict
-                    yield 'application/json', json.dumps(meeting_item_dict)
-                    meeting_item_count += 1
-            meeting_count += 1
-        print "Extracted %d meetings and %d meeting items." % (
-            meeting_count, meeting_item_count,)
+        while True:
+            current_end = current_start + relativedelta(months=months)
+
+            meetings = self.client.service.GetMeetingsByDateRange(
+                Sitename=self.source_definition['sitename'],
+                StartDate=current_start.strftime('%Y-%m-%dT%H:%M:%S'),
+                EndDate=current_end.strftime('%Y-%m-%dT%H:%M:%S'),
+                MetaDataOnly=False)
+
+            meeting_types = self._meetingtypes_as_dict()
+
+            if meetings.Meetings:
+                for meeting in meetings.Meetings[0]:
+                    meeting_dict = meeting_to_dict(meeting)
+
+                    #print meeting_types
+                    # Getting the meeting type as a string is easier this way ...
+                    meeting_dict['Meetingtype'] = meeting_types[
+                        meeting_dict['MeetingtypeId']]
+                    yield 'application/json', json.dumps(meeting_dict)
+
+                    if meeting.MeetingItems is not None:
+                        for meeting_item in meeting.MeetingItems[0]:
+                            meeting_item_dict = meeting_item_to_dict(meeting_item)
+                            # This is a bit hacky, but we need to know this
+                            meeting_item_dict['MeetingId'] = meeting_dict['Id']
+                            meeting_item_dict['Meeting'] = meeting_dict
+                            yield 'application/json', json.dumps(meeting_item_dict)
+                            meeting_item_count += 1
+                    meeting_count += 1
+
+            print "Now processing meetings %s months from %s to %s" % (months, current_start, current_end,)
+            print "Extracted total of %d meetings and %d meeting items." % (
+                meeting_count, meeting_item_count,)
+
+            if current_end > end_date:  # Stop while loop if exceeded end_date
+                break
+
+            current_start = current_end + relativedelta(days=1)
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
