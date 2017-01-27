@@ -256,7 +256,7 @@ class IBabsReportItem(
 
         if combined_index_data['description'].strip() == u'':
             try:
-                ombined_index_data['description'] = self.original_item['_Extra']['Values']['Toelichting']
+                combined_index_data['description'] = self.original_item['_Extra']['Values']['Toelichting']
             except KeyError as e:
                 combined_index_data['description'] = None
 
