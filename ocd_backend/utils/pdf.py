@@ -1,58 +1,28 @@
-import os
-import subprocess
 import tempfile
-import re
-from cStringIO import StringIO
 from urllib2 import HTTPError
-
 from OpenSSL.SSL import ZeroReturnError
 
-from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.converter import TextConverter
-from pdfminer.layout import LAParams
-from pdfminer.pdfpage import PDFPage
+import pdfparser.poppler as pdf
 
-import requests
 
-from ocd_backend import settings
+def pdfparser(fname, pages=None):
+    text_array = []
+    try:
+        d = pdf.Document(fname)
+        for i, p in enumerate(d, start=1):
+            for f in p:
+                for b in f:
+                    for l in b:
+                        text_array.append(l.text.encode('UTF-8'))
 
-def convert(fname, pages=None):
-    if not pages:
-        pagenums = set()
-    else:
-        pagenums = set(pages)
+            if i == 20:  # break after 20 pages
+                break
 
-    output = StringIO()
-    manager = PDFResourceManager()
-    converter = TextConverter(manager, output, laparams=LAParams())
-    interpreter = PDFPageInterpreter(manager, converter)
+        print "Processed %i pages" % (i)
+        return '\n'.join(text_array)
 
-    infile = file(fname, 'rb')
-    for page in PDFPage.get_pages(infile, pagenums):
-        # For some reason PDFMiner chokes on pages that have a single,
-        # but detailed image in them. Work around by skipping pages with
-        # a large media box
-        mediabox = [0, 0, 0, 0]
-        try:
-            mediabox = page.mediabox
-        except AttributeError as e:
-            pass
-        try:
-            mediabox_pixels = mediabox[2] * mediabox[3]
-        except IndexError as e:
-            mediabox_pixels = 0
-
-        if mediabox_pixels <= settings.PDF_MAX_MEDIABOX_PIXELS:
-            print "Processing page %s" % (page,)
-            interpreter.process_page(page)
-        else:
-            print "Skipped page %s" % (page,)
-
-    infile.close()
-    converter.close()
-    text = output.getvalue()
-    output.close()
-    return text
+    except Exception as e:
+        print "Pdfparser Exception: ", e
 
 
 class PDFToTextMixin(object):
@@ -100,8 +70,8 @@ class PDFToTextMixin(object):
         """
 
         if max_pages > 0:
-            content = convert(path, range(0, max_pages))
+            content = pdfparser(path, range(0, max_pages))
         else:
-            content = convert(path)
+            content = pdfparser(path)
 
         return unicode(self.pdf_clean_text(content.decode('utf-8')))
