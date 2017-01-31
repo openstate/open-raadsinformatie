@@ -191,6 +191,7 @@ ADD . /opt/ori
 
 # Install Python requirements
 RUN source ../bin/activate \
+    && python -m pip install -U pip \
     && pip install Cython==0.21.2 \
     && pip install -r requirements.txt
 
