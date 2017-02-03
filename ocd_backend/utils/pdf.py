@@ -15,7 +15,7 @@ def pdfparser(fname, pages=None):
                     for l in b:
                         text_array.append(l.text.encode('UTF-8'))
 
-            if i == 20:  # break after 20 pages
+            if i == pages:  # break after x pages
                 break
 
         print "Processed %i pages" % (i)
