@@ -1,4 +1,5 @@
 from hashlib import sha1
+import iso8601
 
 from ocd_backend.items.goapi_meeting import Meeting
 from ocd_backend.items.popolo import EventItem
@@ -97,6 +98,9 @@ class MeetingItem(
                 'scheme': u'ORI'
             }
         ]
+
+        combined_index_data['start_date'] = iso8601.parse_date(
+            self.original_item['date'])
 
         combined_index_data['status'] = u'confirmed'
         combined_index_data['sources'] = [

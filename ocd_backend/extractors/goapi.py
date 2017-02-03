@@ -124,6 +124,11 @@ class GemeenteOplossingenMeetingItemsExtractor(
                 for meeting in static_json:
                     if 'items' in meeting:
                         for item in meeting['items']:
+
+                            # Temporary hack to inherit meetingitem date from meeting
+                            if 'date' not in item:
+                                item['date'] = meeting['date']
+
                             kv = {meeting['id']: item}
                             yield 'application/json', json.dumps(kv)
                             meeting_count += 1
