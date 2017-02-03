@@ -86,6 +86,18 @@ RUN apt-get install -y \
 # Temporarily use /tmp as workdir for the pyav dependencies
 WORKDIR /tmp
 
+RUN git clone https://github.com/izderadicka/pdfparser.git \
+    && cd pdfparser \
+    && sudo apt-get -y install libtool pkg-config gettext fontconfig libfontconfig1-dev autoconf libzip-dev libtiff5-dev libopenjpeg-dev \
+    && git clone --depth 1 git://git.freedesktop.org/git/poppler/poppler poppler_src \
+    && cd poppler_src/ \
+    && ./autogen.sh \
+    && ./configure --disable-poppler-qt4 --disable-poppler-qt5 --disable-poppler-cpp --disable-gtk-test --disable-splash-output --disable-utils \
+    && make \
+    && make install \
+    && cp poppler/.libs/libpoppler.so.?? ../pdfparser/ \
+    && ldconfig
+
 ENV YASM_VERSION 1.2.0
 RUN curl -sSL http://www.tortall.net/projects/yasm/releases/yasm-${YASM_VERSION}.tar.gz | \
         tar -xz \
@@ -193,7 +205,9 @@ ADD . /opt/ori
 RUN source ../bin/activate \
     && python -m pip install -U pip \
     && pip install Cython==0.21.2 \
-    && pip install -r requirements.txt
+    && pip install -r requirements.txt \
+    && cd /tmp/pdfparser \
+    && python setup.py install
 
 # Start
 RUN source ../bin/activate \
