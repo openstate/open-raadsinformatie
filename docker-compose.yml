@@ -1,0 +1,44 @@
+version: "3"
+services:
+  backend:
+    build: .
+    volumes:
+      - .:/opt/ori
+    links:
+      - celery
+      - elasticsearch
+    #command: "/opt/ori/start.sh"
+    command: "tail -f /dev/null"
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - .:/opt/ori
+    links:
+      - elasticsearch
+    ports:
+      - "5000:5000"
+  redis:
+    image: "redis:${REDIS_VERSION}"
+  elasticsearch:
+    image: "elasticsearch:${ES_VERSION}"
+    environment:
+      es.node.name: "TestNode"
+      node.name: "TestNode"
+      discovery.zen.ping.multicast.enabled: "false"
+  celery:
+    #image: celery:${CELERY_VERSION}
+    build:
+      context: .
+      dockerfile: Dockerfile.celery
+    links:
+      - redis
+    volumes:
+      - ./ocd_backend:/home/user/ocd_backend
+    #  - ./ocd_backend/celeryconfig.py:/home/user/celeryconfig.py
+    command: celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
+    environment:
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_VERSION: "3.1.17"
+      CELERY_APP: "ocd_backend.celery_app"

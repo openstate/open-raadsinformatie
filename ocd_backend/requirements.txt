@@ -1,0 +1,20 @@
+# todo not used yet
+celery[redis]==3.1.17
+elasticsearch==1.3.0
+click==2.1
+coverage==4.0a1
+Flask==0.10.1
+Flask-Testing==0.4.2
+iso8601==0.1.10
+lxml
+requests==2.5.1
+mock==1.0.1
+msgpack-python==0.4.2
+nose==1.3.4
+pyasn1==0.1.7
+Sphinx==1.2.2
+sphinxcontrib-httpdomain==1.2.1
+sphinx-rtd-theme==0.1.6
+translitcodec==0.4.0
+spyne==2.11.0
+python-dateutil==2.6.0

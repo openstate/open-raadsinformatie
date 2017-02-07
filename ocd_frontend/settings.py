@@ -3,10 +3,10 @@ import os.path
 DEBUG = True
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://127.0.0.1:6379/1'
+CELERY_BROKER_URL = 'redis://redis:6379/1'
 
 # Elasticsearch
-ELASTICSEARCH_HOST = '127.0.0.1'
+ELASTICSEARCH_HOST = 'elasticsearch'
 ELASTICSEARCH_PORT = 9200
 
 # The default number of hits to return for a search request via the REST API

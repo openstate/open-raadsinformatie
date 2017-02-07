@@ -196,11 +196,11 @@ RUN source ../bin/activate \
     && pip install -r requirements.txt
 
 # Start
-RUN source ../bin/activate \
-    && service elasticsearch restart \
-    && sleep 20 \
-    && ./manage.py elasticsearch create_indexes es_mappings/ \
-    && ./manage.py elasticsearch put_template
+#RUN source ../bin/activate
+#     && service elasticsearch restart \
+#     && sleep 20 \
+#     && ./manage.py elasticsearch create_indexes es_mappings/ \
+#     && ./manage.py elasticsearch put_template
 
 RUN apt-get install supervisor
 
