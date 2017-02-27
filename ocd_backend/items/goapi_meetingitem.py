@@ -5,11 +5,11 @@ from ocd_backend.items.goapi_meeting import Meeting
 from ocd_backend.items.popolo import EventItem
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class MeetingItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
     def __init__(self, source_definition, data_content_type, data, item,
                  processing_started=None):
@@ -125,7 +125,7 @@ class MeetingItem(
         for document in documents:
             # sleep(1)
             url = u"%s/documents/%s" % (current_permalink, document['id'])
-            description = self.pdf_get_contents(
+            description = self.file_get_contents(
                 url,
                 self.source_definition.get('pdf_max_pages', 20)
             )

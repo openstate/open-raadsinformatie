@@ -14,11 +14,11 @@ from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class MeetingItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
     @property
     def html(self):
@@ -296,7 +296,7 @@ class MeetingItem(
         for source in combined_index_data['sources']:
             if not source['url'].lower().endswith('.pdf'):
                 continue
-            source['description'] = self.pdf_get_contents(
+            source['description'] = self.file_get_contents(
                 source['url'], self.source_definition.get('pdf_max_pages', 20))
 
         return combined_index_data

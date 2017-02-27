@@ -171,7 +171,7 @@ class MeetingItemTestCase(ItemTestCase):
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
         MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
-        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
+        MeetingItem.file_get_contents = MagicMock(return_value=u'pdf')
         item = MeetingItem(
             self.source_definition, 'application/json',
             self.raw_item, self.meeting
@@ -190,7 +190,7 @@ class MeetingItemTestCase(ItemTestCase):
         # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
-        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
+        MeetingItem.file_get_contents = MagicMock(return_value=u'pdf')
 
         item = MeetingItem(
             self.source_definition, 'application/json',
@@ -366,7 +366,7 @@ class MeetingItemTestCase(ItemTestCase):
         # # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         MeetingItem._get_committees = MagicMock(return_value={})
-        MeetingItem.pdf_get_contents = MagicMock(return_value=u'pdf')
+        MeetingItem.file_get_contents = MagicMock(return_value=u'pdf')
 
         # MeetingItem._get_documents_html_for_item = MagicMock(return_value=self.docs_raw_item)
 

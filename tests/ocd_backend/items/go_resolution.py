@@ -7,7 +7,7 @@ from lxml import etree
 import iso8601
 
 from ocd_backend.items.go_resolution import ResolutionItem
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 from . import ItemTestCase
 
@@ -107,7 +107,7 @@ class ResolutionItemTestCase(ItemTestCase):
         # # FIXME: these need to return some values
         ResolutionItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
         ResolutionItem._get_committees = MagicMock(return_value={})
-        PDFToTextMixin.pdf_download = MagicMock(return_value=file(self.pdf_path, 'rb'))
+        FileToTextMixin.file_download = MagicMock(return_value=file(self.pdf_path, 'rb'))
         item = ResolutionItem(
             self.source_definition, 'application/json',
             self.raw_item, self.meeting

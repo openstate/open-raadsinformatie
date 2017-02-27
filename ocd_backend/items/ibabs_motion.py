@@ -13,11 +13,11 @@ from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 from ocd_backend.utils.misc import normalize_motion_id
 
 class IBabsMotionVotingMixin(
-        HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+        HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -188,7 +188,7 @@ class IBabsMotionVotingMixin(
             sleep(1)
             print u"%s: %s" % (
                 combined_index_data['name'], document['DisplayName'],)
-            description = self.pdf_get_contents(
+            description = self.file_get_contents(
                 document['PublicDownloadURL'],
                 self.source_definition.get('pdf_max_pages', 20)).strip()
             combined_index_data['sources'].append({

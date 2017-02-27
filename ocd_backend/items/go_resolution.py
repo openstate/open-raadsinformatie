@@ -34,7 +34,7 @@ class ResolutionItem(MeetingItem):
 
         combined_index_data['classification'] = u'Besluitenlijst'
 
-        combined_index_data['description'] = self.pdf_get_contents(
+        combined_index_data['description'] = self.file_get_contents(
             self.get_original_object_urls()['pdf'],
             self.source_definition.get('pdf_max_pages', 20))
 

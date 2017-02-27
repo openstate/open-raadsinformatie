@@ -4,11 +4,11 @@ import iso8601
 from ocd_backend.items.popolo import EventItem
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class Meeting(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
     def _get_current_permalink(self):
         return u'%s/meetings/%i' % (self.source_definition[
@@ -111,7 +111,7 @@ class Meeting(
         for document in documents:
             # sleep(1)
             url = u"%s/documents/%s" % (current_permalink, document['id'])
-            description = self.pdf_get_contents(
+            description = self.file_get_contents(
                 url,
                 self.source_definition.get('pdf_max_pages', 20)
             )
