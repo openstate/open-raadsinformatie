@@ -68,17 +68,19 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def run(self):
-        current_start = datetime(2000, 1, 1)  # Start somewhere by default
-        if 'start_date' in self.source_definition:
-            current_start = parse(self.source_definition['start_date'])
-
-        end_date = datetime.today()  # End today by default
-        if 'end_date' in self.source_definition:
-            end_date = parse(self.source_definition['end_date'])
-
         months = 6  # Max 6 months intervals by default
         if 'months_interval' in self.source_definition:
             months = self.source_definition['months_interval']
+
+        # current_start = datetime(2000, 1, 1)  # Start somewhere by default
+        current_start = datetime.today() - relativedelta(months=months)
+        if 'start_date' in self.source_definition:
+            current_start = parse(self.source_definition['start_date'])
+
+        end_date = datetime.today()  + relativedelta(months=months)  # End 1M+
+        if 'end_date' in self.source_definition:
+            end_date = parse(self.source_definition['end_date'])
+
 
         print "Getting all meetings for %s to %s" % (current_start, end_date,)
 
