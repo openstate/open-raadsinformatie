@@ -68,7 +68,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def run(self):
-        months = 6  # Max 6 months intervals by default
+        months = 1  # Max 1 months intervals by default
         if 'months_interval' in self.source_definition:
             months = self.source_definition['months_interval']
 
