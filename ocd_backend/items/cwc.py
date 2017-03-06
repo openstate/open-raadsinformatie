@@ -12,11 +12,11 @@ from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.pdf import PDFToTextMixin
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class VideotulenItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, PDFToTextMixin):
+        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -127,7 +127,7 @@ class VideotulenItem(
                     continue
                 for a in topic['Attachments']['Attachment']:
                     try:
-                        description = self.pdf_get_contents(
+                        description = self.file_get_contents(
                             a['Location'],
                             self.source_definition.get('pdf_max_pages', 20))
                     except Exception as e:
