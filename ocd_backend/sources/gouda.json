@@ -1,22 +1,5 @@
 [
     {
-        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
-        "keep_index_on_update": true,
-        "enrichers": [],
-        "index_name": "gouda",
-        "loader": "ocd_backend.loaders.ElasticsearchLoader",
-        "id": "gouda_municipality",
-        "doc_type": "organizations",
-        "transformer": "ocd_backend.transformers.BaseTransformer",
-        "file_url": "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten",
-        "filter": {
-            "Title": "gouda"
-        },
-        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
-        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": false
-    }, 
-    {
         "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
         "keep_index_on_update": true,
         "enrichers": [],
@@ -58,5 +41,33 @@
         "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
         "hidden": false
+    },
+    {
+        "id": "gouda_popit_organizations",
+        "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.popit.PopitOrganisationItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "gouda",
+        "file_url": "http://gouda.openraadsinformatie.nl/api/v0.1/organizations",
+        "doc_type": "organizations",
+        "keep_index_on_update": true
+    },
+    {
+        "id": "gouda_popit_persons",
+        "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.popit.PopitPersonItem",
+        "enrichers": [],
+        "loader": "ocd_backend.loaders.ElasticsearchLoader",
+        "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+        "hidden": false,
+        "index_name": "gouda",
+        "file_url": "http://gouda.openraadsinformatie.nl/api/v0.1/persons",
+        "doc_type": "persons",
+        "keep_index_on_update": true
     }
 ]
