@@ -71,13 +71,21 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         months = 1  # Max 1 months intervals by default
         if 'months_interval' in self.source_definition:
             months = self.source_definition['months_interval']
+        days = (months / 2.0) * 30
+        # current_start = datetime(2000, 1, 1)  # Start somewhere by default
+        if (months / 2.0) < 1.0:
+            interval_delta = relativedelta(days=days)
+        else:
+            interval_delta = relativedelta(months=months)
 
         # current_start = datetime(2000, 1, 1)  # Start somewhere by default
-        current_start = datetime.today() - relativedelta(months=months)
+        current_start = datetime.today() - interval_delta
+
         if 'start_date' in self.source_definition:
             current_start = parse(self.source_definition['start_date'])
 
-        end_date = datetime.today()  + relativedelta(months=months)  # End 1M+
+        end_date = datetime.today() + interval_delta
+
         if 'end_date' in self.source_definition:
             end_date = parse(self.source_definition['end_date'])
 
@@ -88,7 +96,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         meeting_item_count = 0
 
         while True:
-            current_end = current_start + relativedelta(months=months)
+            current_end = current_start + interval_delta
 
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['sitename'],
