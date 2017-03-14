@@ -89,11 +89,11 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         if 'end_date' in self.source_definition:
             end_date = parse(self.source_definition['end_date'])
 
-
         print "Getting all meetings for %s to %s" % (current_start, end_date,)
 
         meeting_count = 0
         meeting_item_count = 0
+        meetings_skipped = 0
 
         while True:
             current_end = current_start + interval_delta
@@ -110,25 +110,34 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 for meeting in meetings.Meetings[0]:
                     meeting_dict = meeting_to_dict(meeting)
 
-                    #print meeting_types
-                    # Getting the meeting type as a string is easier this way ...
+                    # sometimes a meetingtype is actualy a meeting for some
+                    # reason. Let's ignore these for now
+                    if meeting_dict['MeetingtypeId'] not in meeting_types:
+                        meetings_skipped += 1
+                        continue
+
                     meeting_dict['Meetingtype'] = meeting_types[
                         meeting_dict['MeetingtypeId']]
                     yield 'application/json', json.dumps(meeting_dict)
 
                     if meeting.MeetingItems is not None:
                         for meeting_item in meeting.MeetingItems[0]:
-                            meeting_item_dict = meeting_item_to_dict(meeting_item)
+                            meeting_item_dict = meeting_item_to_dict(
+                                meeting_item)
                             # This is a bit hacky, but we need to know this
                             meeting_item_dict['MeetingId'] = meeting_dict['Id']
                             meeting_item_dict['Meeting'] = meeting_dict
-                            yield 'application/json', json.dumps(meeting_item_dict)
+                            yield 'application/json', json.dumps(
+                                meeting_item_dict)
                             meeting_item_count += 1
                     meeting_count += 1
 
-            print "Now processing meetings %s months from %s to %s" % (months, current_start, current_end,)
-            print "Extracted total of %d meetings and %d meeting items." % (
-                meeting_count, meeting_item_count,)
+            print "Now processing meetings %s months from %s to %s" % (
+                months, current_start, current_end,)
+            print (
+                "Extracted total of %d meetings and %d meeting items. Also"
+                "Skipped %d meetings in total.") % (
+                meeting_count, meeting_item_count, meetings_skipped,)
 
             if current_end > end_date:  # Stop while loop if exceeded end_date
                 break
