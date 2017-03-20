@@ -40,7 +40,8 @@
         "sitename": "Gouda",
         "item": "ocd_backend.items.ibabs_committee.CommitteeItem",
         "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
-        "hidden": false
+        "hidden": false,
+        "commitee_designator": "cluster"
     },
     {
         "id": "gouda_popit_organizations",

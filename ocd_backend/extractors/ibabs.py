@@ -48,11 +48,14 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
     """
 
     def run(self):
+        committee_designator = self.source_definition.get(
+            'commitee_designator', 'commissie')
+        print "Getting committees with designator: %s" % (
+            committee_designator,)
         for mt in self.client.service.GetMeetingtypes(
             self.source_definition['sitename']
         ).Meetingtypes[0]:
-            # TODO: should this be configurable?
-            if 'commissie' in mt.Meetingtype.lower():
+            if committee_designator in mt.Meetingtype.lower():
                 yield 'application/json', json.dumps(meeting_type_to_dict(mt))
 
 
