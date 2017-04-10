@@ -47,63 +47,49 @@ def setup_pipeline(source_definition):
             now=datetime.utcnow().strftime('%Y%m%d%H%M%S')
         )
 
-    extractor = load_object(source_definition['extractor'])(source_definition)
-    transformer = load_object(source_definition['transformer'])()
-    enrichers = [(load_object(enricher[0])(), enricher[1]) for enricher in
-                 source_definition['enrichers']]
-    loader = load_object(source_definition['loader'])()
-
     # Parameters that are passed to each task in the chain
     params = {
         'run_identifier': 'pipeline_{}'.format(uuid4().hex),
         'current_index_name': current_index_name,
         'new_index_name': new_index_name,
-        'index_alias': index_alias
+        'index_alias': index_alias,
+        'source_definition': source_definition
     }
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
+    first_step = source_definition['chain'].pop(0)
     try:
-        for item in extractor.run():
-            # Generate an identifier for each chain, and record that in
-            # {}_chains, so that we can know for sure when all tasks
-            # from an extractor have finished
-            params['chain_id'] = uuid4().hex
-            celery_app.backend.add_value_to_set(set_name=run_identifier_chains,
-                                                value=params['chain_id'])
+        for item in load_object(first_step)(**params).run():
+            step_chain = chain()
 
-            item_chain = chain()
+            for step in source_definition['chain']:
+                # Generate an identifier for each chain, and record that in
+                # {}_chains, so that we can know for sure when all tasks
+                # from an extractor have finished
 
-            # Tranform
-            item_chain |= transformer.s(
-                *item,
-                source_definition=source_definition,
-                **params
-            )
+                params['chain_id'] = uuid4().hex
+                celery_app.backend.add_value_to_set(set_name=run_identifier_chains,
+                                                    value=params['chain_id'])
 
-            # Enrich
-            for enricher_task, enricher_settings in enrichers:
-                item_chain |= enricher_task.s(
-                    source_definition=source_definition,
-                    enricher_settings=enricher_settings,
+                step_class = load_object(step)()
+
+                step_chain |= step_class.s(
+                    *item,
                     **params
                 )
 
-            # Load
-            item_chain |= loader.s(
-                source_definition=source_definition,
-                **params
-            )
+                item = []
 
-            item_chain.delay()
+            step_chain.delay()
     except:
         logger.error('An exception has occured in the "{extractor}" extractor. '
                      'Setting status of run identifier "{run_identifier}" to '
                      '"error".'
-                     .format(index=new_index_name,
+                     .format(index=params['new_index_name'],
                              run_identifier=params['run_identifier'],
-                             extractor=source_definition['extractor']))
+                             extractor=first_step))
 
         celery_app.backend.set(params['run_identifier'], 'error')
         raise
