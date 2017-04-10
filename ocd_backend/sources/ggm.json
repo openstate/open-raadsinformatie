@@ -1,0 +1,39 @@
+[
+  {
+    "id": "gegevensmagazijn",
+    "chain": [
+      "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor",
+      "ocd_backend.transformers.ggm.GegevensmagazijnBaseTransformer",
+      "ocd_backend.loaders.ggm.GegevensmagazijnElasticsearchLoader"
+    ],
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "ggm",
+    "keep_index_on_update": true,
+    "base_url": "https://gegevensmagazijn.tweedekamer.nl/REST/Feed.json?filter=persoon",
+    "ggm_username": "joepmeindertsma",
+    "ggm_password": "pb2XeZ*D3sDXDUq4Q1Xt",
+    "ldp_loader_url": "https://localhost:8082",
+    "mapping": {
+      "activiteit": {
+        "doc_type": "event",
+        "item_class": "ocd_backend.items.ggm.Meeting",
+        "jsonld": "http://www.popoloproject.com/contexts/event.jsonld",
+        "sub_items": [
+          "/activiteit/agendapunt/besluit"
+        ]
+      },
+      "besluit": {
+        "doc_type": "motion",
+        "item_class": "ocd_backend.items.ggm.Motion",
+        "jsonld": "http://www.popoloproject.com/contexts/motion.jsonld"
+      },
+      "persoon": {
+        "doc_type": "person",
+        "item_class": "ocd_backend.items.ggm.Person",
+        "jsonld": "http://www.popoloproject.com/contexts/person.jsonld"
+      }
+    }
+  }
+]
