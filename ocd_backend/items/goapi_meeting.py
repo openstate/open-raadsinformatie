@@ -59,7 +59,12 @@ class Meeting(
 
         combined_index_data['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['name'] = self.original_item['description']
+        if self.original_item['description']:
+            combined_index_data['name'] = self.original_item['description']
+        else:
+            combined_index_data['name'] = 'Vergadering %s' % \
+                self.original_item['dmu']['name']
+
         combined_index_data['classification'] = u'Agenda'
 
         combined_index_data['identifiers'] = [
