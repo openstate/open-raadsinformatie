@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 
 class ElasticsearchService(object):
     def __init__(self, host, port):
-        self._es = Elasticsearch([{'host': host, 'port': port}])
+        self._es = Elasticsearch([{'host': host, 'port': port}], http_auth=('elastic', 'changeme'))
 
     def search(self, *args, **kwargs):
         return self._es.search(*args, **kwargs)
