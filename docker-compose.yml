@@ -1,44 +1,46 @@
 version: "3"
 services:
   backend:
-    build: .
+    image: openstatefoundation/openraadsinformatie-backend
     volumes:
       - .:/opt/ori
     links:
-      - celery
-      - elasticsearch
-    #command: "/opt/ori/start.sh"
-    command: "tail -f /dev/null"
+      - redis:redis
+      - elasticsearch:elasticsearch
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    volumes:
-      - .:/opt/ori
+    image: openstatefoundation/openraadsinformatie-frontend
     links:
-      - elasticsearch
+      - elasticsearch:elasticsearch
     ports:
       - "5000:5000"
   redis:
     image: "redis:${REDIS_VERSION}"
   elasticsearch:
-    image: "elasticsearch:${ES_VERSION}"
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
     environment:
-      es.node.name: "TestNode"
-      node.name: "TestNode"
-      discovery.zen.ping.multicast.enabled: "false"
-  celery:
-    #image: celery:${CELERY_VERSION}
-    build:
-      context: .
-      dockerfile: Dockerfile.celery
-    links:
-      - redis
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+    cap_add:
+      - IPC_LOCK
     volumes:
-      - ./ocd_backend:/home/user/ocd_backend
-    #  - ./ocd_backend/celeryconfig.py:/home/user/celeryconfig.py
-    command: celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
-    environment:
-      CELERY_BROKER_URL: "redis://redis:6379/0"
-      CELERY_VERSION: "3.1.17"
-      CELERY_APP: "ocd_backend.celery_app"
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+volumes:
+  esdata:
+    driver: local
