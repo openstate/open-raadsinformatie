@@ -1,14 +1,14 @@
 version: "3"
 services:
   backend:
-    image: openstatefoundation/openraadsinformatie-backend
+    image: openstatefoundation/open-raadsinformatie-backend
     volumes:
       - .:/opt/ori
     links:
       - redis:redis
       - elasticsearch:elasticsearch
   frontend:
-    image: openstatefoundation/openraadsinformatie-frontend
+    image: openstatefoundation/open-raadsinformatie-frontend
     links:
       - elasticsearch:elasticsearch
     ports:
