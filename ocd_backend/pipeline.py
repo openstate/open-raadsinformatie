@@ -52,44 +52,66 @@ def setup_pipeline(source_definition):
         'run_identifier': 'pipeline_{}'.format(uuid4().hex),
         'current_index_name': current_index_name,
         'new_index_name': new_index_name,
-        'index_alias': index_alias,
-        'source_definition': source_definition
+        'index_alias': index_alias
     }
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
-    first_step = source_definition['chain'].pop(0)
+    extractors = (
+        source_definition.get('extractors', None) or
+        [source_definition['extractor']])
+    transformers = (
+        source_definition.get('transformers', None) or
+        [source_definition['transformer']])
+    enrichers = [(load_object(enricher[0])(), enricher[1]) for enricher in
+                 source_definition['enrichers']]
+    loaders = (
+        source_definition.get('loaders', None) or
+        [source_definition['loader']])
+
+    first_extractor = extractors.pop(0)
     try:
-        for item in load_object(first_step)(**params).run():
+        for item in load_object(first_extractor)(source_definition).run():
             step_chain = chain()
 
-            for step in source_definition['chain']:
-                # Generate an identifier for each chain, and record that in
-                # {}_chains, so that we can know for sure when all tasks
-                # from an extractor have finished
+            params['chain_id'] = uuid4().hex
+            celery_app.backend.add_value_to_set(
+                set_name=run_identifier_chains,
+                value=params['chain_id'])
 
-                params['chain_id'] = uuid4().hex
-                celery_app.backend.add_value_to_set(set_name=run_identifier_chains,
-                                                    value=params['chain_id'])
+            # FIXME: Biggest problem with this step is that is does not
+            # differentiate between first-step extractors and after ...
+            for step in extractors:
+                step_class = load_object(step)(source_definition)
+                step_chain |= step_class.s(*item, **params)
 
+            for step in transformers:
                 step_class = load_object(step)()
-
                 step_chain |= step_class.s(
-                    *item,
+                    *item, source_definition=source_definition, **params)
+
+            # Enrich
+            for enricher_task, enricher_settings in enrichers:
+                step_chain |= enricher_task.s(
+                    source_definition=source_definition,
+                    enricher_settings=enricher_settings,
                     **params
                 )
 
-                item = []
+            for step in loaders:
+                step_class = load_object(step)()
+                step_chain |= step_class.s(
+                    source_definition=source_definition, **params)
 
             step_chain.delay()
     except:
-        logger.error('An exception has occured in the "{extractor}" extractor. '
-                     'Setting status of run identifier "{run_identifier}" to '
+        logger.error('An exception has occured in the "{extractor}" extractor.'
+                     ' Setting status of run identifier "{run_identifier}" to '
                      '"error".'
                      .format(index=params['new_index_name'],
                              run_identifier=params['run_identifier'],
-                             extractor=first_step))
+                             extractor=first_extractor))
 
         celery_app.backend.set(params['run_identifier'], 'error')
         raise
