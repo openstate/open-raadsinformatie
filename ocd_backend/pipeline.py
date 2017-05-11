@@ -2,7 +2,7 @@ from datetime import datetime
 from uuid import uuid4
 
 from elasticsearch.exceptions import NotFoundError
-from celery import chain
+from celery import chain, group
 
 from ocd_backend.es import elasticsearch as es
 from ocd_backend import settings, celery_app
@@ -99,10 +99,12 @@ def setup_pipeline(source_definition):
                     **params
                 )
 
+            initialized_loaders = []
             for step in loaders:
                 step_class = load_object(step)()
-                step_chain |= step_class.s(
-                    source_definition=source_definition, **params)
+                initialized_loaders.append(step_class.s(
+                    source_definition=source_definition, **params))
+            step_chain |= group(initialized_loaders)
 
             step_chain.delay()
     except:
