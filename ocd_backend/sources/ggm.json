@@ -1,10 +1,12 @@
 [
   {
     "id": "gegevensmagazijn",
-    "chain": [
+    "extractors": [
       "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
-      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor",
-      "ocd_backend.transformers.ggm.GegevensmagazijnBaseTransformer",
+      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
+    ],
+    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnBaseTransformer",
+    "loaders": [
       "ocd_backend.loaders.ggm.GegevensmagazijnElasticsearchLoader"
     ],
     "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
