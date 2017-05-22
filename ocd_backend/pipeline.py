@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import uuid4
+from copy import deepcopy
 
 from elasticsearch.exceptions import NotFoundError
 from celery import chain, group
@@ -64,6 +65,9 @@ def setup_pipeline(source_definition):
     transformers = (
         source_definition.get('transformers', None) or
         [source_definition['transformer']])
+    item_transformers = (
+        source_definition.get('items', None) or
+        [source_definition['item']])
     enrichers = [(load_object(enricher[0])(), enricher[1]) for enricher in
                  source_definition['enrichers']]
     loaders = (
@@ -73,43 +77,57 @@ def setup_pipeline(source_definition):
     first_extractor = extractors.pop(0)
     try:
         for item in load_object(first_extractor)(source_definition).run():
-            step_chain = chain()
+            # FIXME: this currently requires that the number of transformers
+            # and item transformers are the same. We should print an error if
+            # not?
+            for transformer, item_transformer in zip(
+                transformers, item_transformers
+            ):
+                step_chain = chain()
 
-            params['chain_id'] = uuid4().hex
-            celery_app.backend.add_value_to_set(
-                set_name=run_identifier_chains,
-                value=params['chain_id'])
+                params['chain_id'] = uuid4().hex
+                celery_app.backend.add_value_to_set(
+                    set_name=run_identifier_chains,
+                    value=params['chain_id'])
 
-            # FIXME: Biggest problem with this step is that is does not
-            # differentiate between first-step extractors and after ...
-            for step in extractors:
-                step_class = load_object(step)(source_definition)
-                step_chain |= step_class.s(*item, **params)
+                # the item transformer is actually fired by the transformer
+                # hence, we need to modify the source definition in place
+                # to make sure it fires the item transformer we need ...
+                transformer_source_definition = deepcopy(source_definition)
+                transformer_source_definition['item'] = item_transformer
 
-            # FIXME: the transformer actually drives the item transformer
-            # which is what we want to do multiple times here... not the
-            # transformer itself ...
-            for step in transformers:
-                step_class = load_object(step)()
+                # FIXME: Biggest problem with this step is that is does not
+                # differentiate between first-step extractors and after ...
+                for step in extractors:
+                    step_class = load_object(step)(
+                        transformer_source_definition)
+                    step_chain |= step_class.s(*item, **params)
+
+                # FIXME: current implementation for transformers + item
+                # transformers causes multiple extraction rounds, which is
+                # not what we want. Need to separate this step, if possible.
+                step_class = load_object(transformer)()
                 step_chain |= step_class.s(
-                    *item, source_definition=source_definition, **params)
+                    *item, source_definition=transformer_source_definition,
+                    **params)
 
-            # Enrich
-            for enricher_task, enricher_settings in enrichers:
-                step_chain |= enricher_task.s(
-                    source_definition=source_definition,
-                    enricher_settings=enricher_settings,
-                    **params
-                )
+                # Enrich
+                for enricher_task, enricher_settings in enrichers:
+                    step_chain |= enricher_task.s(
+                        source_definition=transformer_source_definition,
+                        enricher_settings=enricher_settings,
+                        **params
+                    )
 
-            initialized_loaders = []
-            for step in loaders:
-                step_class = load_object(step)()
-                initialized_loaders.append(step_class.s(
-                    source_definition=source_definition, **params))
-            step_chain |= group(initialized_loaders)
+                initialized_loaders = []
+                for step in loaders:
+                    step_class = load_object(step)()
+                    initialized_loaders.append(step_class.s(
+                        source_definition=transformer_source_definition,
+                        **params))
+                step_chain |= group(initialized_loaders)
 
-            step_chain.delay()
+                step_chain.delay()
     except:
         logger.error('An exception has occured in the "{extractor}" extractor.'
                      ' Setting status of run identifier "{run_identifier}" to '
