@@ -86,6 +86,9 @@ def setup_pipeline(source_definition):
                 step_class = load_object(step)(source_definition)
                 step_chain |= step_class.s(*item, **params)
 
+            # FIXME: the transformer actually drives the item transformer
+            # which is what we want to do multiple times here... not the
+            # transformer itself ...
             for step in transformers:
                 step_class = load_object(step)()
                 step_chain |= step_class.s(
