@@ -59,82 +59,79 @@ def setup_pipeline(source_definition):
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
-    extractors = (
-        source_definition.get('extractors', None) or
-        [source_definition['extractor']])
-    transformers = (
-        source_definition.get('transformers', None) or
-        [source_definition['transformer']])
-    item_transformers = (
-        source_definition.get('items', None) or
-        [source_definition['item']])
-    enrichers = [(load_object(enricher[0])(), enricher[1]) for enricher in
-                 source_definition['enrichers']]
-    loaders = (
-        source_definition.get('loaders', None) or
-        [source_definition['loader']])
+    # we can have multiple pipelines. but for compatibility and readability
+    # use the source definition if no specific pipelines have been defined
+    pipelines = source_definition.get('pipelines', None) or [source_definition]
+    extractors = list(set([p['extractor'] for p in pipelines]))
 
-    first_extractor = extractors.pop(0)
+    # adjusted source definitionsv per pipeline. This way you can for example
+    # change the index on a pipeline basis
+    pipeline_definitions = {}
+    pipeline_transformers = {}
+    pipeline_enrichers = {}
+    pipeline_loaders = {}
+    for pipeline in pipelines:
+        pipeline_definitions[pipeline['id']] = deepcopy(source_definition)
+        pipeline_definitions[pipeline['id']].update(pipeline)
+        pipeline_transformers[pipeline['id']] = load_object(
+            pipeline['transformer'])()
+        pipeline_enrichers[pipeline['id']] = [
+            (load_object(enricher[0])(), enricher[1]) for enricher in
+            pipeline_definitions[pipeline['id']]['enrichers']]
+        pipeline_normalized_loaders = (
+            pipeline_definitions[pipeline['id']].get('loaders', None) or
+            [pipeline_definitions[pipeline['id']]['loader']])
+        pipeline_loaders[pipeline['id']] = [
+            load_object(pll)() for pll in pipeline_normalized_loaders]
+
     try:
-        for item in load_object(first_extractor)(source_definition).run():
-            # FIXME: this currently requires that the number of transformers
-            # and item transformers are the same. We should print an error if
-            # not?
-            for transformer, item_transformer in zip(
-                transformers, item_transformers
-            ):
-                step_chain = chain()
+        for extractor in extractors:
+            for item in load_object(extractor)(source_definition).run():
+                for pipeline in pipelines:
+                    # skip if the extractor from the pipeline was different
+                    # from the one we're extracting from right now
+                    if pipeline['extractor'] != extractor:
+                        continue
 
-                params['chain_id'] = uuid4().hex
-                celery_app.backend.add_value_to_set(
-                    set_name=run_identifier_chains,
-                    value=params['chain_id'])
+                    step_chain = chain()
 
-                # the item transformer is actually fired by the transformer
-                # hence, we need to modify the source definition in place
-                # to make sure it fires the item transformer we need ...
-                transformer_source_definition = deepcopy(source_definition)
-                transformer_source_definition['item'] = item_transformer
+                    params['chain_id'] = uuid4().hex
+                    celery_app.backend.add_value_to_set(
+                        set_name=run_identifier_chains,
+                        value=params['chain_id'])
 
-                # FIXME: Biggest problem with this step is that is does not
-                # differentiate between first-step extractors and after ...
-                for step in extractors:
-                    step_class = load_object(step)(
-                        transformer_source_definition)
-                    step_chain |= step_class.s(*item, **params)
+                    step_chain |= pipeline_transformers[pipeline['id']].s(
+                        *item,
+                        source_definition=pipeline_definitions[pipeline['id']],
+                        **params)
 
-                # FIXME: current implementation for transformers + item
-                # transformers causes multiple extraction rounds, which is
-                # not what we want. Need to separate this step, if possible.
-                step_class = load_object(transformer)()
-                step_chain |= step_class.s(
-                    *item, source_definition=transformer_source_definition,
-                    **params)
+                    # Enrich
+                    for enricher_task, enricher_settings in pipeline_enrichers[
+                        pipeline['id']
+                    ]:
+                        step_chain |= enricher_task.s(
+                            source_definition=pipeline_definitions[
+                                pipeline['id']],
+                            enricher_settings=enricher_settings,
+                            **params
+                        )
 
-                # Enrich
-                for enricher_task, enricher_settings in enrichers:
-                    step_chain |= enricher_task.s(
-                        source_definition=transformer_source_definition,
-                        enricher_settings=enricher_settings,
-                        **params
-                    )
+                    initialized_loaders = []
+                    for loader in pipeline_loaders[pipeline['id']]:
+                        initialized_loaders.append(loader.s(
+                            source_definition=pipeline_definitions[
+                                pipeline['id']],
+                            **params))
+                    step_chain |= group(initialized_loaders)
 
-                initialized_loaders = []
-                for step in loaders:
-                    step_class = load_object(step)()
-                    initialized_loaders.append(step_class.s(
-                        source_definition=transformer_source_definition,
-                        **params))
-                step_chain |= group(initialized_loaders)
-
-                step_chain.delay()
+                    step_chain.delay()
     except:
         logger.error('An exception has occured in the "{extractor}" extractor.'
                      ' Setting status of run identifier "{run_identifier}" to '
                      '"error".'
                      .format(index=params['new_index_name'],
                              run_identifier=params['run_identifier'],
-                             extractor=first_extractor))
+                             extractor=extractor))
 
         celery_app.backend.set(params['run_identifier'], 'error')
         raise

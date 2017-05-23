@@ -43,17 +43,18 @@
   },
   {
       "id": "goirle_popit_organizations",
-      "extractor": "ocd_backend.extractors.popit.PopItExtractor",
-      "transformers": [
-        "ocd_backend.transformers.BaseTransformer",
-        "ocd_backend.transformers.BaseTransformer"],
-      "items": [
-        "ocd_backend.items.popit.PopitOrganisationItem",
-        "ocd_backend.items.popit.PopitOrganisationItem"],
-      "enrichers": [],
-      "loaders": [
-        "ocd_backend.loaders.ElasticsearchLoader",
-        "ocd_backend.loaders.DummyLoader"],
+      "pipelines": [
+        {
+          "id": "pipeline_normal",
+          "extractor": "ocd_backend.extractors.popit.PopItExtractor",
+          "transformer": "ocd_backend.transformers.BaseTransformer",
+          "item": "ocd_backend.items.popit.PopitOrganisationItem",
+          "enrichers": [],
+          "loaders": [
+            "ocd_backend.loaders.ElasticsearchLoader",
+            "ocd_backend.loaders.DummyLoader"]
+        }
+      ],
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
       "index_name": "goirle",
