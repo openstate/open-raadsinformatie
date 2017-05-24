@@ -10,4 +10,9 @@ mock==1.0.1
 msgpack-python==0.4.2
 pdfminer==20140328  # TODO needs to be removed after merge
 suds==0.4
+tika==1.13.1
 python-dateutil==2.6.0
+python-magic==0.4.13
+pyOpenSSL==0.14
+translitcodec==0.4.0
+flower

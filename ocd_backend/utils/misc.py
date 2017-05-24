@@ -2,6 +2,7 @@ import datetime
 import json
 import re
 import glob
+import translitcodec
 
 from elasticsearch.helpers import scan, bulk
 
