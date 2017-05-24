@@ -64,15 +64,17 @@ def setup_pipeline(source_definition):
     pipelines = source_definition.get('pipelines', None) or [source_definition]
     extractors = list(set([p['extractor'] for p in pipelines]))
 
-    # adjusted source definitionsv per pipeline. This way you can for example
-    # change the index on a pipeline basis
     pipeline_definitions = {}
     pipeline_transformers = {}
     pipeline_enrichers = {}
     pipeline_loaders = {}
     for pipeline in pipelines:
+        # adjusted source definitionsv per pipeline. This way you can for
+        # example change the index on a pipeline basis
         pipeline_definitions[pipeline['id']] = deepcopy(source_definition)
         pipeline_definitions[pipeline['id']].update(pipeline)
+
+        # initialize the ETL classes, per pipeline
         pipeline_transformers[pipeline['id']] = load_object(
             pipeline['transformer'])()
         pipeline_enrichers[pipeline['id']] = [
@@ -116,6 +118,7 @@ def setup_pipeline(source_definition):
                             **params
                         )
 
+                    # multiple loaders to enable to save to different stores
                     initialized_loaders = []
                     for loader in pipeline_loaders[pipeline['id']]:
                         initialized_loaders.append(loader.s(
