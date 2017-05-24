@@ -7,6 +7,10 @@ services:
     links:
       - redis:redis
       - elasticsearch:elasticsearch
+      - frontend:frontend
+    ports:
+      - "81:5555"
+    command: /opt/ori/bin/backend.sh
   frontend:
     image: openstatefoundation/open-raadsinformatie-frontend
     links:
