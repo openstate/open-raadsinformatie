@@ -7,8 +7,8 @@ RUN apk add --update build-base git tzdata libxml2-dev libxslt-dev ffmpeg-dev \
   && pip install cython
 
 # Install python requirements
-COPY ocd_backend/requirements.txt /opt/ori
-#RUN pip install --no-cache-dir -r /opt/ori/requirements.txt
+COPY ocd_backend/requirements.txt /opt/ori/requirements.txt
+RUN pip install --no-cache-dir -r /opt/ori/requirements.txt
 
 # Install poppler and pdfparser
 COPY src/poppler /tmp/poppler
