@@ -257,7 +257,6 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         #pprint(processed)
         passed_vote_count = 0
         for result in processed:
-            print "%s - %s" % (result.get('id', '-'), result.get('name', '-'),)
             yield 'application/json', json.dumps(result)
             passed_vote_count += 1
         print "Extracted %d meetings and passed %s out of %d voting rounds." % (

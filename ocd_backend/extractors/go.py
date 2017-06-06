@@ -151,10 +151,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 html = etree.HTML(resp.content)
 
                 if not self.filter_meeting(meeting, html):
-                    print "Skipping item for %s" % (meeting['url'],)
                     continue
-
-                print "Yielding item for %s" % (meeting['url'],)
 
                 # this is a bit ugly, but saves us from having to scrape
                 # all the meeting pages twice ...
@@ -179,10 +176,6 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                             'content': etree.tostring(meeting_item_html),
                             'full_content': resp.content,
                         }
-
-                        print "Yielding meeting item %s for %s" % (
-                            u''.join(meeting_item_html.xpath(
-                                './/div[@class="title"]/h3/a/text()')), meeting['url'],)
 
                         yield 'application/json', json.dumps(meeting_item_obj)
 
