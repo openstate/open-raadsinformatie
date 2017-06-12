@@ -196,7 +196,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
         meeting_sorting_key = self.source_definition.get('meeting_sorting', 'MeetingDate')
 
-        sorted_meetings = sorted(meetings.Meetings[0], lambda m: getaatr(m, meeting_sorting_key))
+        sorted_meetings = sorted(meetings.Meetings[0], key=lambda m: getattr(m, meeting_sorting_key))
         for meeting in sorted_meetings:
             meeting_dict = meeting_to_dict(meeting)
             # Getting the meeting type as a string is easier this way ...
@@ -223,16 +223,14 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
 
             processed = []
+            if meeting_dict_short['MeetingItems'] is None:
+                continue
             for mi in meeting_dict_short['MeetingItems']:
                 if mi['ListEntries'] is None:
                     continue
                 for le in mi['ListEntries']:
-                    # motion's unique identifier
-                    print le['EntryTitle'].split(' ')[0][1:]
-                    motion_id = normalize_motion_id(le['EntryTitle'].split(' ')[0][1:])
-
-                    print "Motie id : %s" % (motion_id.strip(),)
-                    hash_content = u'motion-%s' % (motion_id.strip())
+                    print "Motie id : %s" % le['EntryId']
+                    hash_content = u'motion-%s' % (le['EntryId'])
                     hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
                     print "Hashedotie id : %s" % (hashed_motion_id.strip(),)
 
