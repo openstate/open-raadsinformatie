@@ -1,8 +1,9 @@
 from datetime import datetime
 from uuid import uuid4
+from copy import deepcopy
 
 from elasticsearch.exceptions import NotFoundError
-from celery import chain
+from celery import chain, group
 
 from ocd_backend.es import elasticsearch as es
 from ocd_backend import settings, celery_app
@@ -52,46 +53,113 @@ def setup_pipeline(source_definition):
         'run_identifier': 'pipeline_{}'.format(uuid4().hex),
         'current_index_name': current_index_name,
         'new_index_name': new_index_name,
-        'index_alias': index_alias,
-        'source_definition': source_definition
+        'index_alias': index_alias
     }
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
-    first_step = source_definition['chain'].pop(0)
-    try:
-        for item in load_object(first_step)(**params).run():
-            step_chain = chain()
+    # we can have multiple pipelines. but for compatibility and readability
+    # use the source definition if no specific pipelines have been defined
+    pipelines = source_definition.get('pipelines', None) or [source_definition]
 
-            for step in source_definition['chain']:
-                # Generate an identifier for each chain, and record that in
-                # {}_chains, so that we can know for sure when all tasks
-                # from an extractor have finished
+    pipeline_definitions = {}
+    pipeline_extractors = {}
+    pipeline_transformers = {}
+    pipeline_enrichers = {}
+    pipeline_loaders = {}
+
+    for pipeline in pipelines:
+        if 'id' not in pipeline:
+            raise ConfigurationError("Each pipeline must have an id field.")
+
+        # adjusted source definitionsv per pipeline. This way you can for
+        # example change the index on a pipeline basis
+        pipeline_definitions[pipeline['id']] = deepcopy(source_definition)
+        pipeline_definitions[pipeline['id']].update(pipeline)
+
+        # initialize the ETL classes, per pipeline
+        pipeline_extractors[pipeline['id']] = [
+            load_object(cls) for cls in
+            pipeline_definitions[pipeline['id']].get('extractors', None) or [
+                pipeline_definitions[pipeline['id']]['extractor']
+            ]
+        ]
+
+        pipeline_transformers[pipeline['id']] = load_object(
+            pipeline['transformer'])()
+
+        pipeline_enrichers[pipeline['id']] = [
+            (load_object(enricher[0])(), enricher[1]) for enricher in
+            pipeline_definitions[pipeline['id']].get('enrichers', [])]
+
+        pipeline_loaders[pipeline['id']] = [
+            load_object(cls)() for cls in
+            pipeline_definitions[pipeline['id']].get('loaders', None) or [
+                pipeline_definitions[pipeline['id']]['loader']
+            ]
+        ]
+
+    for pipeline in pipelines:
+        try:
+            # The first extractor should be a generator instead of a task
+            for item in pipeline_extractors[pipeline['id']][0](
+                    source_definition=pipeline_definitions[pipeline['id']]).run():
+
+                step_chain = chain()
 
                 params['chain_id'] = uuid4().hex
-                celery_app.backend.add_value_to_set(set_name=run_identifier_chains,
-                                                    value=params['chain_id'])
+                celery_app.backend.add_value_to_set(
+                    set_name=run_identifier_chains,
+                    value=params['chain_id'])
 
-                step_class = load_object(step)()
+                # Remaining extractors
+                for extractor in pipeline_extractors[pipeline['id']][1:]:
+                    step_chain |= extractor().s(
+                        *item,
+                        source_definition=pipeline_definitions[pipeline['id']],
+                        **params
+                    )
+                    # Prevent old item being passed down to next steps
+                    item = []
 
-                step_chain |= step_class.s(
+                # Transformers
+                step_chain |= pipeline_transformers[pipeline['id']].s(
                     *item,
-                    **params
-                )
+                    source_definition=pipeline_definitions[pipeline['id']],
+                    **params)
 
-                item = []
+                # Enrichers
+                for enricher_task, enricher_settings in pipeline_enrichers[
+                    pipeline['id']
+                ]:
+                    step_chain |= enricher_task.s(
+                        source_definition=pipeline_definitions[
+                            pipeline['id']],
+                        enricher_settings=enricher_settings,
+                        **params
+                    )
 
-            step_chain.delay()
-    except:
-        logger.error('An exception has occured in the "{extractor}" extractor. '
-                     'Setting status of run identifier "{run_identifier}" to '
-                     '"error".'
-                     .format(index=params['new_index_name'],
-                             run_identifier=params['run_identifier'],
-                             extractor=first_step))
+                # Loaders
+                # Multiple loaders to enable to save to different stores
+                initialized_loaders = []
+                for loader in pipeline_loaders[pipeline['id']]:
+                    initialized_loaders.append(loader.s(
+                        source_definition=pipeline_definitions[
+                            pipeline['id']],
+                        **params))
+                step_chain |= group(initialized_loaders)
 
-        celery_app.backend.set(params['run_identifier'], 'error')
-        raise
+                step_chain.delay()
+        except:
+            logger.error('An exception has occured in the "{extractor}" extractor.'
+                         ' Setting status of run identifier "{run_identifier}" to '
+                         '"error".'
+                         .format(index=params['new_index_name'],
+                                 run_identifier=params['run_identifier'],
+                                 extractor=pipeline_extractors[pipeline['id']][0]))
+
+            celery_app.backend.set(params['run_identifier'], 'error')
+            raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
