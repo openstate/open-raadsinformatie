@@ -62,12 +62,13 @@ def setup_pipeline(source_definition):
     # we can have multiple pipelines. but for compatibility and readability
     # use the source definition if no specific pipelines have been defined
     pipelines = source_definition.get('pipelines', None) or [source_definition]
-    extractors = list(set([p['extractor'] for p in pipelines]))
 
     pipeline_definitions = {}
+    pipeline_extractors = {}
     pipeline_transformers = {}
     pipeline_enrichers = {}
     pipeline_loaders = {}
+
     for pipeline in pipelines:
         if 'id' not in pipeline:
             raise ConfigurationError("Each pipeline must have an id field.")
@@ -78,68 +79,87 @@ def setup_pipeline(source_definition):
         pipeline_definitions[pipeline['id']].update(pipeline)
 
         # initialize the ETL classes, per pipeline
+        pipeline_extractors[pipeline['id']] = [
+            load_object(cls) for cls in
+            pipeline_definitions[pipeline['id']].get('extractors', None) or [
+                pipeline_definitions[pipeline['id']]['extractor']
+            ]
+        ]
+
         pipeline_transformers[pipeline['id']] = load_object(
             pipeline['transformer'])()
+
         pipeline_enrichers[pipeline['id']] = [
             (load_object(enricher[0])(), enricher[1]) for enricher in
-            pipeline_definitions[pipeline['id']]['enrichers']]
-        pipeline_normalized_loaders = (
-            pipeline_definitions[pipeline['id']].get('loaders', None) or
-            [pipeline_definitions[pipeline['id']]['loader']])
+            pipeline_definitions[pipeline['id']].get('enrichers', [])]
+
         pipeline_loaders[pipeline['id']] = [
-            load_object(pll)() for pll in pipeline_normalized_loaders]
+            load_object(cls)() for cls in
+            pipeline_definitions[pipeline['id']].get('loaders', None) or [
+                pipeline_definitions[pipeline['id']]['loader']
+            ]
+        ]
 
-    try:
-        for extractor in extractors:
-            for item in load_object(extractor)(source_definition).run():
-                for pipeline in pipelines:
-                    # skip if the extractor from the pipeline was different
-                    # from the one we're extracting from right now
-                    if pipeline['extractor'] != extractor:
-                        continue
+    for pipeline in pipelines:
+        try:
+            # The first extractor should be a generator instead of a task
+            for item in pipeline_extractors[pipeline['id']][0](
+                    source_definition=pipeline_definitions[pipeline['id']]).run():
 
-                    step_chain = chain()
+                step_chain = chain()
 
-                    params['chain_id'] = uuid4().hex
-                    celery_app.backend.add_value_to_set(
-                        set_name=run_identifier_chains,
-                        value=params['chain_id'])
+                params['chain_id'] = uuid4().hex
+                celery_app.backend.add_value_to_set(
+                    set_name=run_identifier_chains,
+                    value=params['chain_id'])
 
-                    step_chain |= pipeline_transformers[pipeline['id']].s(
+                # Remaining extractors
+                for extractor in pipeline_extractors[pipeline['id']][1:]:
+                    step_chain |= extractor().s(
                         *item,
                         source_definition=pipeline_definitions[pipeline['id']],
-                        **params)
+                        **params
+                    )
+                    # Prevent old item being passed down to next steps
+                    item = []
 
-                    # Enrich
-                    for enricher_task, enricher_settings in pipeline_enrichers[
-                        pipeline['id']
-                    ]:
-                        step_chain |= enricher_task.s(
-                            source_definition=pipeline_definitions[
-                                pipeline['id']],
-                            enricher_settings=enricher_settings,
-                            **params
-                        )
+                # Transformers
+                step_chain |= pipeline_transformers[pipeline['id']].s(
+                    *item,
+                    source_definition=pipeline_definitions[pipeline['id']],
+                    **params)
 
-                    # multiple loaders to enable to save to different stores
-                    initialized_loaders = []
-                    for loader in pipeline_loaders[pipeline['id']]:
-                        initialized_loaders.append(loader.s(
-                            source_definition=pipeline_definitions[
-                                pipeline['id']],
-                            **params))
-                    step_chain |= group(initialized_loaders)
+                # Enrichers
+                for enricher_task, enricher_settings in pipeline_enrichers[
+                    pipeline['id']
+                ]:
+                    step_chain |= enricher_task.s(
+                        source_definition=pipeline_definitions[
+                            pipeline['id']],
+                        enricher_settings=enricher_settings,
+                        **params
+                    )
 
-                    step_chain.delay()
-    except:
-        logger.error('An exception has occured in the "{extractor}" extractor.'
-                     ' Setting status of run identifier "{run_identifier}" to '
-                     '"error".'
-                     .format(index=params['new_index_name'],
-                             run_identifier=params['run_identifier'],
-                             extractor=extractor))
+                # Loaders
+                # Multiple loaders to enable to save to different stores
+                initialized_loaders = []
+                for loader in pipeline_loaders[pipeline['id']]:
+                    initialized_loaders.append(loader.s(
+                        source_definition=pipeline_definitions[
+                            pipeline['id']],
+                        **params))
+                step_chain |= group(initialized_loaders)
 
-        celery_app.backend.set(params['run_identifier'], 'error')
-        raise
+                step_chain.delay()
+        except:
+            logger.error('An exception has occured in the "{extractor}" extractor.'
+                         ' Setting status of run identifier "{run_identifier}" to '
+                         '"error".'
+                         .format(index=params['new_index_name'],
+                                 run_identifier=params['run_identifier'],
+                                 extractor=pipeline_extractors[pipeline['id']][0]))
+
+            celery_app.backend.set(params['run_identifier'], 'error')
+            raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
