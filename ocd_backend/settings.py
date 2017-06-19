@@ -3,17 +3,17 @@ import os
 # Register custom serializer for Celery that allows for encoding and decoding
 # Python datetime objects (and potentially other ones)
 from kombu.serialization import register
-from serializers import encoder, decoder
+from ocd_backend.serializers import encoder, decoder
 
 register('ocd_serializer', encoder, decoder, content_encoding='binary',
          content_type='application/ocd-msgpack')
 
 CELERY_CONFIG = {
-    'BROKER_URL': 'redis://127.0.0.1:6379/0',
+    'BROKER_URL': 'redis://redis:6379/0',
     'CELERY_ACCEPT_CONTENT': ['ocd_serializer'],
     'CELERY_TASK_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
-    'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://127.0.0.1:6379/0',
+    'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://redis:6379/0',
     'CELERY_IGNORE_RESULT': True,
     'CELERY_DISABLE_RATE_LIMITS': True,
     # Expire results after 30 minutes; otherwise Redis will keep
@@ -51,7 +51,7 @@ LOGGING = {
     }
 }
 
-ELASTICSEARCH_HOST = '127.0.0.1'
+ELASTICSEARCH_HOST = 'elasticsearch'
 ELASTICSEARCH_PORT = 9200
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -68,7 +68,7 @@ COMBINED_INDEX = 'ori_combined_index'
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
-RESOLVER_BASE_URL = 'http://localhost:5000/v0/resolve'
+RESOLVER_BASE_URL = 'http://frontend:5000/v0/resolve'
 RESOLVER_URL_INDEX = 'ori_resolver'
 
 # The User-Agent that is used when retrieving data from external sources
@@ -78,7 +78,7 @@ USER_AGENT = 'Open Raadsinformatie/0.1 (+http://www.openraadsinformatie.nl/)'
 # Should include API version and a trailing slash.
 # Can be overridden in the CLI when required, for instance when the user wants
 # to download dumps from another API instance than the one hosted by OpenState
-API_URL = 'http://127.0.0.1:5000/v0/'
+API_URL = 'http://frontend:5000/v0/'
 
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'

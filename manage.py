@@ -16,14 +16,17 @@ from click.decorators import _make_command
 
 from elasticsearch import helpers as es_helpers
 from elasticsearch.exceptions import RequestError
-from werkzeug.serving import run_simple
 
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, DEFAULT_INDEX_PREFIX
 from ocd_backend.utils.misc import load_sources_config
 from ocd_frontend.settings import DUMPS_DIR, API_URL, LOCAL_DUMPS_DIR
-from ocd_frontend.wsgi import application
+
+
+# NOTE: don't forget to change this value if you forked this repo and
+# renamed '/opt/oci'
+sys.path.insert(0, '/opt/ori')
 
 
 def command(name=None, cls=None, **attrs):
@@ -354,6 +357,8 @@ def frontend_runserver(host, port):
     :param host: host to run dev server on (defaults to 0.0.0.0)
     :param port: defaults to 5000
     """
+    from werkzeug.serving import run_simple
+    from ocd_frontend.wsgi import application
     run_simple(host, port, application, use_reloader=True, use_debugger=True)
 
 

@@ -1,6 +1,9 @@
 import os.path
 from werkzeug.wsgi import DispatcherMiddleware
+from werkzeug.serving import run_simple
 
+import sys
+sys.path.insert(0, '/opt/ori')
 from ocd_frontend import rest
 
 application = DispatcherMiddleware(rest.create_app(), {
@@ -24,3 +27,6 @@ if application.app.config.get('DEBUG', False):
         base_dir = os.path.join(application.app.config.get('THUMBNAILS_DIR'),
                                 os.path.dirname(filename))
         return send_from_directory(base_dir, os.path.basename(filename))
+
+if __name__ == '__main__':
+    run_simple('0.0.0.0', 5000, application, processes=8, use_reloader=True, use_debugger=True)

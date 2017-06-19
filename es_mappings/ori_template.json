@@ -2,7 +2,6 @@
     "template": "ori_*",
     "settings": {
         "index": {
-            "analyzer": "dutch",
             "number_of_shards": 1,
             "number_of_replicas": 0,
             "query": {
@@ -10,6 +9,9 @@
             },
             "analysis": {
                 "analyzer": {
+                    "default": {
+                      "type": "dutch"
+                    },
                     "text_nl": {
                         "type": "custom",
                         "filter": [
@@ -41,14 +43,13 @@
             "_all": {
                 "enabled": false
             },
-            "_index": {"enabled": true},
             "dynamic_templates": [
                 {
                     "original_object_urls": {
                         "path_match": "meta.original_object_urls.*",
                         "mapping": {
-                            "type": "string",
-                            "index": "no"
+                            "type": "keyword",
+                            "index": "false"
                         }
                     }
                 }
@@ -58,20 +59,16 @@
                     "type": "object",
                     "properties": {
                         "source_id": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "collection": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "original_object_id": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "rights": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         },
                         "original_object_urls": {
                             "type": "object"
@@ -87,20 +84,19 @@
                     }
                 },
                 "all_text": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "text_nl"
                 },
                 "title": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "text_nl"
                 },
                 "description": {
-                    "type": "string",
+                    "type": "text",
                     "analyzer": "text_nl"
                 },
                 "classification": {
-                    "type": "string",
-                    "index": "not_analyzed"
+                    "type": "keyword"
                 },
                 "date": {
                     "type": "date",
@@ -110,38 +106,40 @@
                     "type": "short"
                 },
                 "authors": {
-                    "type": "multi_field",
+                    "type": "text",
                     "fields": {
                         "authors": {
-                            "type" : "string",
+                            "type" : "text",
                             "analyzer": "text_nl"
                         },
                         "untouched": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "media_urls": {
-                    "index_name": "media_url",
                     "properties": {
                         "url": {
-                            "type": "string",
-                            "index": "no"
+                            "type": "keyword",
+                            "index": "false",
+                            "copy_to": "media_url"
                         },
                         "original_url": {
-                            "type": "string",
-                            "index": "no"
+                            "type": "keyword",
+                            "index": "false",
+                            "copy_to": "media_url"
                         },
                         "width": {
-                            "type": "integer"
+                            "type": "integer",
+                            "copy_to": "media_url"
                         },
                         "height": {
-                            "type": "integer"
+                            "type": "integer",
+                            "copy_to": "media_url"
                         },
                         "content_type": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword",
+                            "copy_to": "media_url"
                         }
                     }
                 },
@@ -151,20 +149,18 @@
                         "media_urls": {
                             "properties": {
                                 "url": {
-                                    "type": "string",
-                                    "index": "no"
+                                    "type": "keyword",
+                                    "index": "false"
                                 },
                                 "original_url": {
-                                    "type": "string",
-                                    "index": "no"
+                                    "type": "keyword",
+                                    "index": "false"
                                 },
                                 "media_type": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type": "keyword"
                                 },
                                 "content_type": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type": "keyword"
                                 },
                                 "size_in_bytes": {
                                     "type": "integer"
@@ -184,12 +180,10 @@
                                     }
                                 },
                                 "image_format": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type": "keyword"
                                 },
                                 "image_mode": {
-                                    "type": "string",
-                                    "index": "not_analyzed"
+                                    "type": "keyword"
                                 }
                             }
                         }
@@ -199,18 +193,19 @@
                     "type": "object",
                     "properties": {
                         "data": {
-                            "type": "string",
-                            "index": "no"
+                            "type": "text",
+                            "index": "false",
+                            "doc_values": "false"
                         },
                         "content_type": {
-                            "type": "string",
-                            "index": "not_analyzed"
+                            "type": "keyword"
                         }
                     }
                 },
                 "combined_index_data": {
-                    "type": "string",
-                    "index": "no"
+                    "type": "text",
+                    "index": "false",
+                    "doc_values": "false"
                 }
             }
         }

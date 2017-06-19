@@ -162,7 +162,7 @@ def parse_search_request(data, doc_type, mlt=False):
 
             filters.append(r_filter)
 
-    filters.append({"bool": {"must": {"term": {"hidden": 0}}}})
+    filters.append({"term": {"hidden": "false"}})
 
     return {
         'query': query,
@@ -320,8 +320,8 @@ def search(doc_type=u'items'):
     # Construct the query we are going to send to Elasticsearch
     es_q = {
         'query': {
-            'filtered': {
-                'query': {
+            'bool': {
+                'must': {
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
@@ -332,14 +332,14 @@ def search(doc_type=u'items'):
                 'filter': {}
             }
         },
-        'facets': search_req['facets'],
+        'aggregations': search_req['facets'],
         'size': search_req['n_size'],
         'from': search_req['n_from'],
         'sort': {
             search_req['sort']: {'order': search_req['order']}
         },
         '_source': {
-            'exclude': excluded_fields
+            'excludes': excluded_fields
         },
         'highlight': {
             'fields': highlighted_fields
@@ -347,12 +347,10 @@ def search(doc_type=u'items'):
     }
 
     if not search_req['query']:
-        es_q['query']['filtered']['query'] = {'match_all': {}}
+        es_q['query']['bool']['must'] = {'match_all': {}}
 
     if search_req['filters']:
-        es_q['query']['filtered']['filter'] = {
-            'bool': {'must': search_req['filters']}
-        }
+        es_q['query']['bool']['filter'] = search_req['filters']
 
     if doc_type != settings.DOC_TYPE_DEFAULT:
         request_doc_type = doc_type
@@ -410,8 +408,8 @@ def search_source(source_id, doc_type=u'items'):
     # Construct the query we are going to send to Elasticsearch
     es_q = {
         'query': {
-            'filtered': {
-                'query': {
+            'bool': {
+                'must': {
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
@@ -429,24 +427,22 @@ def search_source(source_id, doc_type=u'items'):
                 'filter': {}
             }
         },
-        'facets': search_req['facets'],
+        'aggregations': search_req['facets'],
         'size': search_req['n_size'],
         'from': search_req['n_from'],
         'sort': {
             search_req['sort']: {'order': search_req['order']}
         },
         '_source': {
-            'exclude': excluded_fields
+            'excludes': excluded_fields
         }
     }
 
     if not search_req['query']:
-        es_q['query']['filtered']['query'] = {'match_all': {}}
+        es_q['query']['bool']['must'] = {'match_all': {}}
 
     if search_req['filters']:
-        es_q['query']['filtered']['filter'] = {
-            'bool': {'must': search_req['filters']}
-        }
+        es_q['query']['bool']['filter'] = search_req['filters']
 
     try:
         es_r = current_app.es.search(
@@ -684,8 +680,8 @@ def similar(object_id, source_id=None, doc_type=u'items'):
     # FIXME: should do here something with the fields ...
     es_q = {
         'query': {
-            'filtered': {
-                'query': {
+            'bool': {
+                'must': {
                     'more_like_this': {
                         'docs': [{
                             '_index': index_name,
@@ -711,14 +707,12 @@ def similar(object_id, source_id=None, doc_type=u'items'):
             search_params['sort']: {'order': search_params['order']}
         },
         '_source': {
-            'exclude': excluded_fields
+            'excludes': excluded_fields
         }
     }
 
     if search_params['filters']:
-        es_q['query']['filtered']['filter'] = {
-            'bool': {'must': search_params['filters']}
-        }
+        es_q['query']['bool']['filter'] = search_params['filters']
 
     try:
         es_r = current_app.es.search(body=es_q, index=index_name,
