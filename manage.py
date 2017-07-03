@@ -581,6 +581,7 @@ def load_dump(collection_dump, collection_name):
         'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
         'transformer': 'ocd_backend.transformers.BaseTransformer',
         'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+        'cleanup': 'ocd_backend.tasks.CleanupElasticsearch',
         'item': 'ocd_backend.items.LocalDumpItem',
         'dump_path': collection,
         'index_name': collection_name
