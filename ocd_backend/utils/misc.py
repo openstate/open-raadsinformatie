@@ -178,7 +178,7 @@ class DatetimeJSONEncoder(json.JSONEncoder):
         else:
             return super(DatetimeJSONEncoder, self).default(o)
 
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+_punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
 def slugify(text, delim=u'-'):
