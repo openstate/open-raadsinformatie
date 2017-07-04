@@ -1,12 +1,11 @@
 import os
+import pickle
 
-# Register custom serializer for Celery that allows for encoding and decoding
-# Python datetime objects (and potentially other ones)
 from kombu.serialization import register
-from ocd_backend.serializers import encoder, decoder
 
-register('ocd_serializer', encoder, decoder, content_encoding='binary',
-         content_type='application/ocd-msgpack')
+register('ocd_serializer', pickle.dumps, pickle.loads,
+         content_encoding='binary',
+         content_type='application/x-pickle2')
 
 CELERY_CONFIG = {
     'BROKER_URL': 'redis://redis:6379/0',
