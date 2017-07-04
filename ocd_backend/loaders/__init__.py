@@ -2,7 +2,6 @@ from datetime import datetime
 import json
 
 import requests
-from elasticsearch import ConflictError
 
 from ocd_backend import celery_app
 from ocd_backend import settings
@@ -106,12 +105,10 @@ class ElasticsearchLoader(BaseLoader):
                     url_doc['content_type'] = \
                         m_url_content_types[media_url['original_url']]
 
-                try:
-                    elasticsearch.create(index=settings.RESOLVER_URL_INDEX,
+                # Update if already exists
+                elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
                                          doc_type='url', id=url_hash,
                                          body=url_doc)
-                except ConflictError:
-                    log.debug('Resolver document %s already exists' % url_hash)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
