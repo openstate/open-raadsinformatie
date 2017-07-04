@@ -387,7 +387,7 @@ AVAILABLE_HIGHLIGHTS = {
 ALLOWED_DATE_INTERVALS = ('day', 'week', 'month', 'quarter', 'year')
 
 # Name of the Elasticsearch index used to store URL resolve documnts
-RESOLVER_URL_INDEX = 'npo_resolver'
+RESOLVER_URL_INDEX = 'ori_resolver'
 
 # Determines if API usage events should be logged
 USAGE_LOGGING_ENABLED = True
@@ -397,6 +397,7 @@ USAGE_LOGGING_INDEX = 'npo_usage_logs'
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
 LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
+STATIC_DIR_PATH = os.path.join(os.path.dirname(ROOT_PATH), 'static')
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.
