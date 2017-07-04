@@ -15,6 +15,7 @@ CELERY_CONFIG = {
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://redis:6379/0',
     'CELERY_IGNORE_RESULT': True,
+    'CELERYD_HIJACK_ROOT_LOGGER': False,
     'CELERY_DISABLE_RATE_LIMITS': True,
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
@@ -23,6 +24,7 @@ CELERY_CONFIG = {
 
 LOGGING = {
     'version': 1,
+    'disable_existing_loggers': True,
     'formatters': {
         'console': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',
@@ -39,11 +41,16 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filename': 'backend.log'
+            'filename': 'log/backend.log'
         }
     },
     'loggers': {
         'ocd_backend': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'celery': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': False,
