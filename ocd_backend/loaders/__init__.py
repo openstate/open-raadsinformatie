@@ -208,3 +208,14 @@ class PopitLoader(BaseLoader):
     ):
         resp = self._create_or_update_item(
             combined_index_doc, combined_object_id)
+
+
+class JsonLDLoader(BaseLoader):
+    def post_processing(self, combined_object_id, object_id,
+                        combined_index_doc, doc, doc_type):
+        doc['@context'] = "https://raw.githubusercontent.com/argu-co/" \
+                          "popolo-ori/master/context.jsonld"
+        doc['@type'] = doc_type
+        doc['@id'] = "/%s/%s/%s" % (
+            self.source_definition['index_name'], 'need_to_fix_THIS',
+            object_id)
