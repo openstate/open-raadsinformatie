@@ -24,6 +24,7 @@ CELERY_CONFIG = {
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
     'CELERY_TASK_RESULT_EXPIRES': 1800
+    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO',
 }
 
 LOGGING = {
