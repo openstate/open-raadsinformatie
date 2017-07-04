@@ -1,0 +1,4 @@
+version: "2.1"
+services:
+  backend:
+    command: /opt/ori/bin/backend.sh
