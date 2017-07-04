@@ -53,7 +53,8 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         if 'media_urls' in item.combined_index_data:
             for media_url in item.combined_index_data['media_urls']:
                 hashed_url = sha1(media_url['original_url']).hexdigest()
-                media_url['url'] = '%s/%s' % (settings.RESOLVER_BASE_URL, hashed_url)
+                media_url['url'] = '%s/%s' % (settings.RESOLVER_BASE_URL,
+                                              hashed_url)
 
     def transform_item(self, raw_item_content_type, raw_item, item):
         """Transforms a single item.

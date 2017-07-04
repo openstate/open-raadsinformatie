@@ -40,7 +40,7 @@ def setup_pipeline(source_definition):
     current_index_name = current_index_aliases.keys()[0]
     # Check if the source specifies that any update should be added to
     # the current index instead of a new one
-    if source_definition['keep_index_on_update']:
+    if source_definition.get('keep_index_on_update'):
         new_index_name = current_index_name
     else:
         new_index_name = '{index_alias}_{now}'.format(

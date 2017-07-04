@@ -23,7 +23,8 @@ CELERY_CONFIG = {
     'WORKER_PREFETCH_MULTIPLIER': 1,
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
-    'CELERY_TASK_RESULT_EXPIRES': 1800
+    'CELERY_TASK_RESULT_EXPIRES': 1800,
+    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO'
 }
 
 LOGGING = {
