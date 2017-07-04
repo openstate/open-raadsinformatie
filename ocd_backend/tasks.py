@@ -69,3 +69,8 @@ class CleanupElasticsearch(BaseCleanup):
         # Remove old index
         if current_index_name != new_index_name:
             es.indices.delete(index=current_index_name)
+
+
+class DummyCleanup(BaseCleanup):
+    def run_finished(self, run_identifier, **kwargs):
+        log.info('Finished run {}.'.format(run_identifier))
