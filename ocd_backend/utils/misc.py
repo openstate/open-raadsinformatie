@@ -1,10 +1,10 @@
 import datetime
+import glob
 import json
 import re
-import glob
 import translitcodec
-
 from lxml import etree
+
 from elasticsearch.helpers import scan, bulk
 
 

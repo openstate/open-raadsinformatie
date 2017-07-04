@@ -1,11 +1,11 @@
+import json
 from collections import MutableMapping
 from datetime import datetime
 from hashlib import sha1
-import json
 
-from ocd_backend.utils import json_encoder
 from ocd_backend.exceptions import (UnableToGenerateObjectId,
                                     FieldNotAvailable)
+from ocd_backend.utils import json_encoder
 
 
 class BaseItem(object):
