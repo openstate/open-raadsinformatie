@@ -5,36 +5,80 @@
       "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
       "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
     ],
-    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnBaseTransformer",
-    "loaders": [
-      "ocd_backend.loaders.ggm.GegevensmagazijnElasticsearchLoader"
-    ],
+    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
     "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
     "hidden": false,
     "index_name": "ggm",
     "keep_index_on_update": true,
-    "base_url": "https://gegevensmagazijn.tweedekamer.nl/REST/Feed.json?filter=persoon",
-    "ggm_username": "joepmeindertsma",
-    "ggm_password": "pb2XeZ*D3sDXDUq4Q1Xt",
-    "ldp_loader_url": "https://localhost:8082",
+    "base_url": "https://gegevensmagazijn.tweedekamer.nl/REST/",
+    "feed_query": "Feed.json?filter=persoon",
     "mapping": {
       "activiteit": {
         "doc_type": "event",
-        "item_class": "ocd_backend.items.ggm.Meeting",
-        "jsonld": "http://www.popoloproject.com/contexts/event.jsonld",
+        "item": "ocd_backend.items.ggm.Meeting",
         "sub_items": [
           "/activiteit/agendapunt/besluit"
         ]
       },
       "besluit": {
         "doc_type": "motion",
-        "item_class": "ocd_backend.items.ggm.Motion",
-        "jsonld": "http://www.popoloproject.com/contexts/motion.jsonld"
+        "item": "ocd_backend.items.ggm.Motion"
       },
       "persoon": {
         "doc_type": "person",
-        "item_class": "ocd_backend.items.ggm.Person",
-        "jsonld": "http://www.popoloproject.com/contexts/person.jsonld"
+        "item": "ocd_backend.items.ggm.Person"
+      }
+    }
+  },
+  {
+    "id": "gegevensmagazijn-a",
+    "extractors": [
+      "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
+    ],
+    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "ggm",
+    "keep_index_on_update": true,
+    "base_url": "https://gegevensmagazijn-a.tweedekamer.nl/REST/",
+    "feed_query": "Feed.json?filter=activiteit[@id='8918ea90-ca7e-4806-a85c-c5d0978a7c7d']",
+    "mapping": {
+      "activiteit": {
+        "doc_type": "event",
+        "item": "ocd_backend.items.ggm.Meeting",
+        "sub_items": {
+          "motion": "/activiteit/agendapunt/besluit[stemming]"
+        }
+      },
+      "motion": {
+        "doc_type": "motion",
+        "item": "ocd_backend.items.ggm.Motion",
+        "sub_items": {
+          "vote_event": "."
+        }
+      },
+      "vote_event": {
+        "doc_type": "vote_event",
+        "item": "ocd_backend.items.ggm.VoteEvent",
+        "sub_items": {
+          "count": "stemming[fractie/@ref and not(persoon/@ref)]",
+          "vote": "stemming[persoon/@ref]"
+        }
+      },
+      "count": {
+        "doc_type": "count",
+        "item": "ocd_backend.items.ggm.Count"
+      },
+      "vote": {
+        "doc_type": "vote",
+        "item": "ocd_backend.items.ggm.Vote"
+      },
+      "persoon": {
+        "doc_type": "person",
+        "item": "ocd_backend.items.ggm.Person"
       }
     }
   }

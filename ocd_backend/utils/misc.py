@@ -225,3 +225,22 @@ def strip_namespaces(item):
 def json_datetime(o):
     if isinstance(o, datetime.datetime):
         return o.__str__()
+
+
+def get_secret(item_id):
+    try:
+        from ocd_backend.secrets import SECRETS
+    except ImportError:
+        raise UserWarning("The SECRETS variable in ocd_backend/secrets.py "
+                          "does not exist. Copy secrets.default.py to "
+                          "secrets.py and make sure that SECRETS is correct.")
+
+    try:
+        return SECRETS[item_id]
+    except:
+        for k in sorted(SECRETS, key=len, reverse=True):
+            if item_id.startswith(k):
+                return SECRETS[k]
+        raise UserWarning("No secrets found for %s! Make sure that the "
+                          "correct secrets are supplied in ocd_backend/"
+                          "secrets.py" % item_id)

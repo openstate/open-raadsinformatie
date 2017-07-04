@@ -1,27 +1,21 @@
-import os
 import json
+import os
 from base64 import b64encode
 
 from ocd_backend import celery_app
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.utils.misc import get_secret
 
 
 class GegevensmagazijnBaseExtractor(BaseExtractor, HttpRequestMixin):
-
-    def __init__(self, **kwargs):
-        super(GegevensmagazijnBaseExtractor, self).__init__(source_definition=kwargs['source_definition'])
-        self.http_session.headers['Authorization'] = 'Basic %s' % b64encode('%s:%s' % (self.source_definition['ggm_username'], self.source_definition['ggm_password']))
-        self.base_url = self.source_definition['base_url']
-
-
-class GegevensmagazijnEntityExtractor(HttpRequestMixin, celery_app.Task):
-
-    def run(self, item, **kwargs):
-        self.source_definition = kwargs['source_definition']
-        self.http_session.headers['Authorization'] = 'Basic %s' % b64encode('%s:%s' % (self.source_definition['ggm_username'], self.source_definition['ggm_password']))
-        self.http_session.headers['Accept'] = 'application/xml; charset="utf-8"'
-        resp = self.http_session.get(item)
-        return 'application/xml', resp.content
+    def __init__(self, source_definition):
+        super(GegevensmagazijnBaseExtractor, self).__init__(
+            source_definition=source_definition)
+        user, password = get_secret(self.source_definition['id'])
+        self.http_session.headers['Authorization'] = 'Basic %s' % b64encode(
+            '%s:%s' % (user, password))
+        self.feed_url = self.source_definition['base_url'] + \
+                        self.source_definition['feed_query']
 
 
 class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
@@ -30,14 +24,15 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
         while True:
             if piket:
                 print "Downloading:", piket
-                resp = self.http_session.get(u'%s&piket=%s' % (self.base_url, piket))
+                resp = self.http_session.get(u'%s&piket=%s' % (
+                    self.feed_url, piket))
             elif os.environ.get('GGM_PIKET'):
                 print "Downloading using env:", os.environ.get('GGM_PIKET')
                 resp = self.http_session.get(
-                    u'%s&piket=%s' % (self.base_url, os.environ['GGM_PIKET']))
+                    u'%s&piket=%s' % (self.feed_url, os.environ['GGM_PIKET']))
             else:
                 print "Downloading the base_url"
-                resp = self.http_session.get(self.base_url)
+                resp = self.http_session.get(self.feed_url)
 
             if resp.status_code == 200:
                 feed = json.loads(resp.content)
@@ -59,3 +54,15 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
                 print resp.status_code
                 #raise  # todo fix this!
                 break
+
+
+class GegevensmagazijnEntityExtractor(HttpRequestMixin, celery_app.Task):
+    def run(self, *args, **kwargs):
+        item = args[0]
+        user, password = get_secret(kwargs['source_definition']['id'])
+        self.http_session.headers['Authorization'] = 'Basic %s' % b64encode(
+            '%s:%s' % (user, password))
+        self.http_session.headers[
+            'Accept'] = 'application/xml; charset="utf-8"'
+        resp = self.http_session.get(item)
+        return 'application/xml', resp.content

@@ -1,6 +1,5 @@
 from datetime import datetime
 import json
-from pprint import pprint
 
 import requests
 from elasticsearch import ConflictError
@@ -33,22 +32,27 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
         :type source_definition: dict.
         :returns: the output of :py:meth:`~BaseTransformer.transform_item`
         """
+        items = args[0]
         self.source_definition = kwargs['source_definition']
 
-        combined_object_id, object_id, combined_index_doc, doc = args[0]
+        # Make a single list if items is a single item
+        if type(items) == tuple:
+            items = [items]
 
+        for item in items:
+            self.post_processing(*item)
+            self.load_item(*item)
+
+    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
+                  doc_type):
+        raise NotImplemented
+
+    def post_processing(self, combined_object_id, object_id,
+                        combined_index_doc, doc, doc_type):
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
         combined_index_doc['meta']['processing_finished'] = finished
         doc['meta']['processing_finished'] = finished
-
-        return self.load_item(combined_object_id, object_id,
-                              combined_index_doc, doc)
-
-    def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
-    ):
-        raise NotImplemented
 
 
 class ElasticsearchLoader(BaseLoader):
@@ -65,23 +69,21 @@ class ElasticsearchLoader(BaseLoader):
         self.current_index_name = kwargs.get('current_index_name')
         self.index_name = kwargs.get('new_index_name')
         self.alias = kwargs.get('index_alias')
-        self.doc_type = kwargs['source_definition'].get('doc_type', 'item')
 
         if not self.index_name:
             raise ConfigurationError('The name of the index is not provided')
 
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
-    def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
-    ):
-        log.info('Indexing documents...')
+    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
+                  doc_type):
+        log.info('Indexing document id: %s' % object_id)
         elasticsearch.index(index=settings.COMBINED_INDEX,
-                            doc_type=self.doc_type, id=combined_object_id,
+                            doc_type=doc_type, id=combined_object_id,
                             body=combined_index_doc)
 
         # Index documents into new index
-        elasticsearch.index(index=self.index_name, doc_type=self.doc_type,
+        elasticsearch.index(index=self.index_name, doc_type=doc_type,
                             body=doc, id=object_id)
 
         m_url_content_types = {}
@@ -117,15 +119,14 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     Updates elasticsearch items using the update method. Use with caution.
     """
 
-    def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
-    ):
+    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
+                  doc_type):
 
         if combined_index_doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing documents...')
+        log.info('Indexing document id: %s' % object_id)
         elasticsearch.update(index=settings.COMBINED_INDEX,
                             doc_type=self.doc_type, id=combined_object_id,
                             body={'doc': combined_index_doc['doc']})
@@ -141,9 +142,9 @@ class DummyLoader(BaseLoader):
     """
     Prints the item to the console, for debugging purposes.
     """
-    def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
-    ):
+
+    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
+                  doc_type):
         print '=' * 50
         print '%s %s %s' % ('=' * 4, combined_object_id, '=' * 4)
         print '%s %s %s' % ('=' * 4, object_id, '=' * 4)
@@ -205,7 +206,8 @@ class PopitLoader(BaseLoader):
             headers=headers, data=json.dumps(item, default=json_serial))
 
     def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
+            self, combined_object_id, object_id, combined_index_doc, doc,
+            doc_type
     ):
         resp = self._create_or_update_item(
             combined_index_doc, combined_object_id)
