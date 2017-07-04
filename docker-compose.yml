@@ -16,6 +16,8 @@ services:
     mem_limit: 3g
   frontend:
     image: openstatefoundation/open-raadsinformatie-frontend
+    volumes:
+      - ./dumps/static:/opt/ori/static:ro
     links:
       - elastic_endpoint:elasticsearch
     depends_on:
