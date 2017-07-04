@@ -23,16 +23,19 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         html = etree.HTML(static_content)
 
         council = {
-            'name': u''.join(
-                html.xpath('//div[@id="content"]//h2//text()')).strip(),
+            'name': u' '.join(html.xpath('string(//div[@id="content"]//h2)').split()).strip(),
             'classification': u'Council'}
         organisations[council['name']] = council
 
         for link in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
-            line = u''.join(link.xpath('.//text()'))
-            person, party = [l.strip() for l in line.split(u'\xa0', 1)]
-            organisations[party[1:-1]] = (
-                {'name': party[1:-1], 'classification': u'Party'})
+            line = u''.join(link.xpath('.//text()'))[2:]
+            try:
+                person, party = [l.strip() for l in line.split(u'\n', 1)]
+                if party[1:-1].strip() != "":
+                    organisations[party[1:-1]] = (
+                        {'name': party[1:-1], 'classification': u'Party'})
+            except:
+                pass
 
         pprint(organisations)
 
