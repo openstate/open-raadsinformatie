@@ -1,16 +1,18 @@
 import os
+from base64 import b64encode
 from tempfile import SpooledTemporaryFile
 
 from requests import Session
-from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
-from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT
+from ggm import GegevensmagazijnMotionText
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment, UnsupportedContentType
 from ocd_backend.log import get_source_logger
-
-from .tasks import ImageMetadata, MediaType
+from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT
+from ocd_backend.utils.misc import get_secret
+from .tasks import ImageMetadata, MediaType, FileToText
 
 log = get_source_logger('enricher')
 
@@ -30,7 +32,9 @@ class MediaEnricher(BaseEnricher):
     #: returned ``content-type``.
     available_tasks = {
         'image_metadata': ImageMetadata,
-        'media_type': MediaType
+        'media_type': MediaType,
+        'file_to_text': FileToText,
+        'ggm_motion_text': GegevensmagazijnMotionText
     }
 
     http_session = None
@@ -52,7 +56,12 @@ class MediaEnricher(BaseEnricher):
         http_adapter = HTTPAdapter(max_retries=http_retry)
         self.http_session.mount('https://', http_adapter)
 
-    def fetch_media(self, url, partial_fetch=False):
+    def setup_http_auth(self):
+        user, password = get_secret(self.source_definition['id'])
+        self.http_session.headers['Authorization'] = 'Basic %s' % b64encode(
+            '%s:%s' % (user, password))
+
+    def fetch_media(self, object_id, url, partial_fetch=False):
         """Retrieves a given media object from a remote (HTTP) location
         and returns the content-type and a file-like object containing
         the media content.
@@ -61,6 +70,8 @@ class MediaEnricher(BaseEnricher):
         size - lives in memory or on disk. Once the file is closed, the
         contents are removed from storage.
 
+        :param object_id: the identifier of the item that is being enriched.
+        :type object_id: str
         :param url: the URL of the media asset.
         :type url: str.
         :param partial_fetch: determines if the the complete file should
@@ -120,7 +131,8 @@ class MediaEnricher(BaseEnricher):
             media_file
         )
 
-    def enrich_item(self, enrichments, object_id, combined_index_doc, doc):
+    def enrich_item(self, enrichments, object_id, combined_index_doc, doc,
+                    doc_type):
         """Enriches the media objects referenced in a single item.
 
         First, a media item will be retrieved from the source, than the
@@ -135,6 +147,9 @@ class MediaEnricher(BaseEnricher):
 
         self.setup_http_session()
 
+        if self.enricher_settings.get('authentication', False):
+            self.setup_http_auth()
+
         # Check the settings to see if media should by fetch partially
         partial_fetch = self.enricher_settings.get('partial_media_fetch', False)
 
@@ -143,6 +158,7 @@ class MediaEnricher(BaseEnricher):
             media_item_enrichment = {}
 
             content_type, content_length, media_file = self.fetch_media(
+                object_id,
                 media_item['original_url'],
                 partial_fetch
             )
@@ -155,7 +171,8 @@ class MediaEnricher(BaseEnricher):
                                                media_file,
                                                media_item_enrichment,
                                                object_id, combined_index_doc,
-                                               doc)
+                                               doc,
+                                               doc_type, )
                 except UnsupportedContentType:
                     log.debug('Skipping media enrichment task %s, '
                               'content-type %s (object_id: %s, url %s) is not '

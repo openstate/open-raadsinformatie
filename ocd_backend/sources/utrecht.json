@@ -65,7 +65,13 @@
       "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
       "transformer": "ocd_backend.transformers.BaseTransformer",
       "item": "ocd_backend.items.ibabs_meeting.IBabsMeetingItem",
-      "enrichers": [],
+      "enrichers": [
+      ["ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher", {
+          "tasks": [
+              "ggm_motion_text"
+          ]
+        }]
+      ],
       "loader": "ocd_backend.loaders.ElasticsearchLoader",
       "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
       "hidden": false,
