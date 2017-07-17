@@ -1,5 +1,4 @@
 from PIL import Image
-import av
 
 from ocd_backend.exceptions import UnsupportedContentType
 

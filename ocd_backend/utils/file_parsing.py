@@ -1,7 +1,6 @@
 import tempfile
 import magic
 from urllib2 import HTTPError
-from OpenSSL.SSL import ZeroReturnError
 
 import pdfparser.poppler as pdf
 import tika.parser as parser
@@ -67,8 +66,6 @@ class FileToTextMixin(object):
             return tf
         except HTTPError as e:
             print "Something went wrong downloading %s" % (url,)
-        except ZeroReturnError as e:
-            print "SSL Zero return error %s" % (url,)
         except Exception as e:
             print "Some other exception %s" % (url,)
 

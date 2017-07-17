@@ -2,8 +2,6 @@ version: "2.1"
 services:
   backend:
     image: openstatefoundation/open-raadsinformatie-backend
-    volumes:
-      - .:/opt/ori
     links:
       - redis:redis
       - elasticsearch:elasticsearch

@@ -1,0 +1,21 @@
+build
+conf
+docs
+dumps
+log/*
+ocd_frontend
+# Need frontend settings for import in manage.py for now
+!ocd_frontend/__init__.py
+!ocd_frontend/settings.py
+bootstrap.sh
+CONTRIBUTING.rst
+docker-compose*
+Dockerfile
+INSTALL.rst
+install_pyav_deps.sh
+README.md
+start.sh
+Vagrantfile*
+requirements.txt
+.*
+*.py?

@@ -39,7 +39,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'console',
-            'filename': 'backend.log'
+            'filename': 'log/backend.log'
         }
     },
     'loggers': {

@@ -1,4 +1,6 @@
 version: "2.1"
 services:
   backend:
+    volumes:
+      - .:/opt/ori
     command: /opt/ori/bin/backend.sh
