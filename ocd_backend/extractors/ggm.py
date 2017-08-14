@@ -4,6 +4,7 @@ from base64 import b64encode
 
 from ocd_backend import celery_app
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors.extensions import BaseExtension
 from ocd_backend.utils.misc import get_secret
 
 
@@ -56,7 +57,7 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
                 break
 
 
-class GegevensmagazijnEntityExtractor(HttpRequestMixin, celery_app.Task):
+class GegevensmagazijnEntityExtractor(HttpRequestMixin, BaseExtension):
     def run(self, *args, **kwargs):
         item = args[0]
         user, password = get_secret(kwargs['source_definition']['id'])
