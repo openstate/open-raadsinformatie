@@ -1,8 +1,8 @@
 [
   {
     "id": "gegevensmagazijn",
-    "extractors": [
-      "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+    "extractor": "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+    "extensions": [
       "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
     ],
     "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",

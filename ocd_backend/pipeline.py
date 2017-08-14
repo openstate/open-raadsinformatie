@@ -65,6 +65,7 @@ def setup_pipeline(source_definition):
 
     pipeline_definitions = {}
     pipeline_extractors = {}
+    pipeline_extensions = {}
     pipeline_transformers = {}
     pipeline_enrichers = {}
     pipeline_loaders = {}
@@ -79,12 +80,12 @@ def setup_pipeline(source_definition):
         pipeline_definitions[pipeline['id']].update(pipeline)
 
         # initialize the ETL classes, per pipeline
-        pipeline_extractors[pipeline['id']] = [
+        pipeline_extractors[pipeline['id']] = load_object(
+            pipeline_definitions[pipeline['id']]['extractor'])
+
+        pipeline_extensions[pipeline['id']] = [
             load_object(cls) for cls in
-            pipeline_definitions[pipeline['id']].get('extractors', None) or [
-                pipeline_definitions[pipeline['id']]['extractor']
-            ]
-        ]
+            pipeline_definitions[pipeline['id']].get('extensions', [])]
 
         pipeline_transformers[pipeline['id']] = load_object(
             pipeline['transformer'])()
@@ -103,7 +104,7 @@ def setup_pipeline(source_definition):
     for pipeline in pipelines:
         try:
             # The first extractor should be a generator instead of a task
-            for item in pipeline_extractors[pipeline['id']][0](
+            for item in pipeline_extractors[pipeline['id']](
                     source_definition=pipeline_definitions[pipeline['id']]).run():
 
                 step_chain = chain()
@@ -114,8 +115,8 @@ def setup_pipeline(source_definition):
                     value=params['chain_id'])
 
                 # Remaining extractors
-                for extractor in pipeline_extractors[pipeline['id']][1:]:
-                    step_chain |= extractor().s(
+                for extension in pipeline_extensions[pipeline['id']]:
+                    step_chain |= extension().s(
                         *item,
                         source_definition=pipeline_definitions[pipeline['id']],
                         **params
