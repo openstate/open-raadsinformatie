@@ -3,8 +3,32 @@ import string
 from ocd_backend.enrichers.media_enricher.tasks import FileToText
 
 
-class GegevensmagazijnMotionText(FileToText):
-    def format_text(self):
+class GegevensmagazijnFileToText(FileToText):
+    def get_combined_index_data(self, media_item, content_type, file_object,
+                                enrichment_data, object_id, combined_index_doc,
+                                doc, doc_type):
+        attachment = {
+            '@type': "Attachment",
+            'isBasedOn': media_item['original_url'],
+        }
+        if self.text:
+            attachment['comment'] = media_item.get('note', u''),
+            attachment['fileType'] = content_type,
+            attachment['text'] = self.text
+        else:
+            attachment['comment'] = u'Unable to download or parse this file'
+
+        if 'attachment' not in combined_index_doc:
+            combined_index_doc['attachment'] = []
+        combined_index_doc['attachment'].append(attachment)
+
+        if 'attachment' not in doc:
+            doc['attachment'] = []
+        doc['attachment'].append(attachment)
+
+
+class GegevensmagazijnMotionText(GegevensmagazijnFileToText):
+    def process_text(self):
         lines = self.text.split("\n")
 
         # Determine in the first 10 lines if it is an actual motion

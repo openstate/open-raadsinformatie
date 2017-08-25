@@ -2,6 +2,7 @@ import os
 from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
+from ocd_backend.models import *
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
@@ -13,8 +14,8 @@ class BaseMediaEnrichmentTask(object):
 
     def __init__(self, media_item, content_type, file_object, enrichment_data,
                  object_id, combined_index_doc, doc, doc_type):
-        if self.content_types is not '*' and content_type.lower() not\
-           in self.content_types:
+        if self.content_types is not '*' and content_type.lower() not \
+                in self.content_types:
             raise UnsupportedContentType()
 
         self.enrich_item(media_item, content_type, file_object,
@@ -73,13 +74,14 @@ class ImageMetadata(BaseMediaEnrichmentTask):
                     enrichment_data, object_id, combined_index_doc, doc,
                     doc_type):
         img = Image.open(file_object)
-        enrichment_data['image_format'] = img.format
-        enrichment_data['image_mode'] = img.mode
-        enrichment_data['resolution'] = {
-            'width': img.size[0],
-            'height': img.size[1],
-            'total_pixels': img.size[0] * img.size[1]
+        enrichment_data[ImageObject.encodingFormat] = img.format
+        enrichment_data[ImageObject.exifData] = {
+            TYPE: PropertyValue.type,
+            PropertyValue.name: 'Color Type',
+            PropertyValue.value: img.mode
         }
+        enrichment_data[ImageObject.width] = img.size[0]
+        enrichment_data[ImageObject.height] = img.size[1]
 
 
 class ViedeoMetadata(BaseMediaEnrichmentTask):
@@ -103,30 +105,18 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
     def enrich_item(self, media_item, content_type, file_object,
                     enrichment_data, object_id, combined_index_doc, doc,
                     doc_type):
-
         path = os.path.realpath(file_object.name)
         self.text = self.file_to_text(path)
-        self.format_text()
+        self.process_text()
+        self.get_combined_index_data(media_item, content_type, file_object,
+                                     enrichment_data, object_id,
+                                     combined_index_doc, doc,
+                                     doc_type)
 
-        if self.text:
-            source = {
-                'url': media_item['original_url'],
-                'note': media_item.get('note', u''),
-                'description': self.text
-            }
-        else:
-            source = {
-                'url': media_item['original_url'],
-                'note': media_item.get('note', u''),
-            }
+    def process_text(self):
+        pass
 
-        if 'sources' not in combined_index_doc:
-            combined_index_doc['sources'] = []
-        combined_index_doc['sources'].append(source)
-
-        if 'sources' not in doc:
-            doc['sources'] = []
-        doc['sources'].append(source)
-
-    def format_text(self):
+    def get_combined_index_data(self, media_item, content_type, file_object,
+                                enrichment_data, object_id, combined_index_doc,
+                                doc, doc_type):
         pass

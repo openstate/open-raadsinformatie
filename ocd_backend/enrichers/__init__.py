@@ -38,17 +38,13 @@ class BaseEnricher(celery_app.Task):
         for item in args:
             combined_object_id, object_id, combined_index_doc, doc, doc_type = item
             try:
-                enrichments = self.enrich_item(
+                self.enrich_item(
                     doc['enrichments'],
                     object_id,
                     combined_index_doc,
                     doc,
                     doc_type
                 )
-
-                # Add the modified 'enrichments' dict to the item documents
-                combined_index_doc['enrichments'] = enrichments
-                doc['enrichments'] = enrichments
 
                 results.append((combined_object_id, object_id,
                                 combined_index_doc, doc, doc_type))

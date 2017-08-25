@@ -1,18 +1,22 @@
 import os
 from base64 import b64encode
+from hashlib import sha1
 from tempfile import SpooledTemporaryFile
 
 from requests import Session
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-from ggm import GegevensmagazijnMotionText
 from ocd_backend.enrichers import BaseEnricher
+from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
+    MediaType, FileToText
+from ocd_backend.enrichers.media_enricher.tasks.ggm import \
+    GegevensmagazijnMotionText
 from ocd_backend.exceptions import SkipEnrichment, UnsupportedContentType
 from ocd_backend.log import get_source_logger
+from ocd_backend.models import *
 from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT
 from ocd_backend.utils.misc import get_secret
-from .tasks import ImageMetadata, MediaType, FileToText
 
 log = get_source_logger('enricher')
 
@@ -153,7 +157,6 @@ class MediaEnricher(BaseEnricher):
         # Check the settings to see if media should by fetch partially
         partial_fetch = self.enricher_settings.get('partial_media_fetch', False)
 
-        media_urls_enrichments = []
         for media_item in doc['media_urls']:
             media_item_enrichment = {}
 
@@ -180,15 +183,31 @@ class MediaEnricher(BaseEnricher):
                                               media_item['original_url']))
                     continue
 
-            media_item_enrichment['url'] = media_item['url']
-            media_item_enrichment['original_url'] = media_item['original_url']
-            media_item_enrichment['content_type'] = content_type
-            media_item_enrichment['size_in_bytes'] = content_length
+            self.get_combined_index_data(media_item, content_type,
+                                         content_length,
+                                         media_file,
+                                         media_item_enrichment,
+                                         object_id, combined_index_doc,
+                                         doc,
+                                         doc_type, )
 
             media_file.close()
 
-            media_urls_enrichments.append(media_item_enrichment)
+    def get_combined_index_data(self, media_item, content_type, content_length,
+                                media_file, media_item_enrichment, object_id,
+                                combined_index_doc, doc, doc_type, ):
+        media_item_enrichment[ID] = sha1(media_item['url']).hexdigest()
+        media_item_enrichment[TYPE] = ImageObject.type
+        media_item_enrichment[ImageObject.contentUrl] = media_item['url']
+        media_item_enrichment[ImageObject.isBasedOn] = media_item[
+            'original_url']
+        media_item_enrichment[ImageObject.fileFormat] = content_type
+        media_item_enrichment[ImageObject.contentSize] = content_length
 
-        enrichments['media_urls'] = media_urls_enrichments
+        # Add the modified 'enrichments' dict to the item documents
+        if not combined_index_doc.get(Person.image):
+            combined_index_doc[Person.image] = []
+            doc[Person.image] = []
 
-        return enrichments
+        combined_index_doc[Person.image].append(media_item_enrichment)
+        doc[Person.image].append(media_item_enrichment)
