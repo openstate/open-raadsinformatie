@@ -1,5 +1,6 @@
 import re
 from hashlib import sha1
+from lxml import etree
 
 import iso8601
 
@@ -12,11 +13,13 @@ from ocd_backend.utils.api import FrontendAPIMixin
 class GegevensmagazijnBaseItem(BaseItem, HttpRequestMixin, FrontendAPIMixin):
 
     def _xpath(self, path):
-        return self.original_item.xpath(path)
+        if not hasattr(self, 'xpath'):
+            self.xpath = etree.XPathEvaluator(self.original_item)
+        return self.xpath(path, smart_strings=False)
 
     def _get_current_permalink(self):
         return u'%sEntiteiten/%s' % (self.source_definition['base_url'],
-                                     self.get_object_id())
+                                     self.get_original_object_id())
 
     def _get_resource_permalink(self, item_id):
         return u'%sResources/%s' % (self.source_definition['base_url'], item_id)
@@ -33,9 +36,6 @@ class GegevensmagazijnBaseItem(BaseItem, HttpRequestMixin, FrontendAPIMixin):
         except:
             pass
         return
-
-    def get_object_iri(self):
-        return u"http://id.openraadsinformatie.nl/%s" % self.get_object_id()
 
     def get_original_object_id(self):
         return unicode(self._xpath("string(@id)"))
@@ -64,73 +64,56 @@ class EventItem(GegevensmagazijnBaseItem):
 
         current_permalink = self._get_current_permalink()
 
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(
-            self.get_object_id())  # unicode(self.get_object_iri())
-        combined_index_data[TYPE] = Event.type
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
-
-        combined_index_data[Event.name] = unicode(
-            self._xpath("string(onderwerp)"))
+        event = Event(self.get_original_object_id())
+        event.name = self._xpath("string(onderwerp)")
         # combined_index_data['start_date'] = iso8601.parse_date(self._xpath("string(planning/begin)"))
         # print iso8601.parse_date(self._xpath("string(planning/einde)"))
         # combined_index_data['end_date'] = self._xpath("string(planning/einde)")
-        combined_index_data[Event.location] = unicode(
-            self._xpath("string(locatie)"))
-        combined_index_data[Event.categories] = u'event_item'
+        event.location = self._xpath("string(locatie)")
+        event.categories = u'event_item'
 
-        combined_index_data[AgendaItem.position] = int(self._xpath("volgorde"))
+        # try:
+        #     combined_index_data[AgendaItem.position] = int(self._xpath("number(volgorde)"))
+        # except:
+        #     pass
 
-        combined_index_data[Event.hasAgendaItem] = [
-            u'../event_items/%s' % self.get_object_id(
-                item.xpath("string(@id)"), "event_items") for item in
-            self._xpath("agendapunt")
+        event.agenda = [
+            AgendaItem(item) for item in self._xpath("agendapunt/@id")
         ]
 
-        combined_index_data[Event.attendee] = [
-            u'../persons/%s' %
-            self.get_object_id(item.xpath("string(@id)"), "persons")
+        event.attendee = [
+            Person(item.xpath("string(@id)"))
             for item in self._xpath("deelnemer")
         ]
 
-        combined_index_data[Event.absentee] = [
-            u'../persons/%s' %
-            self.get_object_id(item.xpath("string(@id)"), "persons")
+        event.absentee = [
+            Person(item.xpath("string(@id)"))
             for item in self._xpath("afgemeld")
         ]
 
-        combined_index_data[Event.motion] = [
-            u'../motions/%s' %
-            self.get_object_id(item.xpath("string(@id)"), "motions")
+        event.motion = [
+            Motion(item.xpath("string(@id)"))
             for item in self._xpath("besluit")
         ]
 
-        combined_index_data[Event.organizer] = [{
-            ID: item.xpath("string(@id)"),
-            TYPE: Organization.type,
-            Organization.name: item.xpath("string(name())")}
-            for item in self._xpath("kamers/*")]
+        event.organizer = [
+            Organization(item.xpath("string(name())"))
+            for item in self._xpath("kamers/*")
+        ]
 
         # Status might be with or without a capital
         if self._xpath("contains(status, 'itgevoerd')"):  # Uitgevoerd
-            combined_index_data[
-                Event.eventStatus] = EventStatusType.EventCompleted
+            event.eventStatus = EventStatusType.EventCompleted
         elif self._xpath("contains(status, 'ervplaats')"):  # Verplaatst
-            combined_index_data[
-                Event.eventStatus] = EventStatusType.EventRescheduled  # u'postponed'
+            event.eventStatus = EventStatusType.EventRescheduled  # u'postponed'
         elif self._xpath("contains(status, 'epland')"):  # Gepland
-            combined_index_data[
-                Event.eventStatus] = EventStatusType.EventScheduled  # u'tentative'
+            event.eventStatus = EventStatusType.EventScheduled  # u'tentative'
         elif self._xpath("contains(status, 'eannuleerd')"):  # Geannuleerd
-            combined_index_data[
-                Event.eventStatus] = EventStatusType.EventCancelled  # u'cancelled'
+            event.eventStatus = EventStatusType.EventCancelled  # u'cancelled'
 
-        combined_index_data[ggmIdentifier] = self.get_original_object_id()
-        combined_index_data[ggmVrsNummer] = self._xpath(
-            "string(vrsNummer)")
-        combined_index_data[ggmNummer] = self._xpath(
-            "string(nummer)")
-        combined_index_data[oriIdentifier] = self.get_object_id()
+        event.ggmIdentifier = self.get_original_object_id()
+        event.ggmVrsNummer = self._xpath("string(vrsNummer)")
+        event.ggmNummer = self._xpath("string(nummer)")
 
         # try:
         #     combined_index_data['organization'] = committees[
@@ -154,32 +137,23 @@ class EventItem(GegevensmagazijnBaseItem):
 
         combined_index_data['sources'] = []
 
-        return combined_index_data
+        return event
 
 
 class MotionItem(GegevensmagazijnBaseItem):
 
     def get_combined_index_data(self):
-        combined_index_data = {}
+        motion = Motion(self.get_original_object_id())
+        motion.name = self._xpath("string(onderwerp)")
+        motion.voteEvent = [
+            VoteEvent(self._xpath("string(@id)"))
+        ]
 
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(
-            self.get_object_id())  # unicode(self.get_object_iri())
-        combined_index_data[TYPE] = Motion.type
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
-        combined_index_data[Motion.name] = unicode(
-            self._xpath("string(onderwerp)"))
+        #print "Motion orig:%s id:%s" % (self._xpath("string(@id)"),
+        #                                VoteEvent.get_object_id(
+        #                                self._xpath("string(@id)")))
 
-        combined_index_data[Motion.voteEvent] = [
-            u"../vote_events/%s" % (
-                self.get_object_id(self._xpath("string(@id)"), "vote_events"))]
-
-        print "Motion orig:%s id:%s" % (self._xpath("string(@id)"),
-                                        self.get_object_id(
-                                            self._xpath("string(@id)"),
-                                            "vote_events"))
-
-        return combined_index_data
+        return motion
 
 
 class ZaakMotionItem(GegevensmagazijnBaseItem):
@@ -189,162 +163,99 @@ class ZaakMotionItem(GegevensmagazijnBaseItem):
         return results
 
     def get_combined_index_data(self):
-        combined_index_data = {}
-
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(
-            self.get_object_id())  # unicode(self.get_object_iri())
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
-
-        combined_index_data[Motion.name] = unicode(
-            self._xpath("string(onderwerp)"))
+        motion = None
 
         soort = self._xpath("string(soort)")
         if soort == "Motie":
-            combined_index_data[TYPE] = Motion.type  # u"Motion"
+            motion = Motion(self.get_original_object_id())
         elif soort == "Amendement":
-            combined_index_data[TYPE] = Amendment.type  # u"Amendment"
+            motion = Amendment(self.get_original_object_id())
         elif soort == "Wetgeving":
-            combined_index_data[TYPE] = Bill.type  # u"Legislation"
+            motion = Bill(self.get_original_object_id())
         elif soort == "Initiatiefwetgeving":
-            combined_index_data[
-                TYPE] = PrivateMembersBill.type  # u"Private members's bill"
+            motion = PrivateMembersBill(self.get_original_object_id())
         elif soort == "Verzoekschrift":
-            combined_index_data[TYPE] = Petition.type  # u"Petition"
+            motion = Petition(self.get_original_object_id())
 
-        combined_index_data[Motion.dateSubmitted] = iso8601.parse_date(
-            self._xpath("string(gestartOp)"))
-
-        combined_index_data[Motion.voteEvent] = []
-        for vote_event in self._xpath("besluit/@ref"):
-            # print "VOTE_EVENT_REF: %s" % vote_event
-            # print "VOTE_EVENT_ID: %s" % get_vote_event_id(vote_event)
-            vote_event = self._get_vote_event(
-                self.get_object_id(vote_event, "vote_events"))
-            # print "VOTE_EVENT %s" % type(vote_event)
-            if vote_event:
-                combined_index_data[Motion.voteEvent].append(vote_event)
-
-        # combined_index_data['vote_events'] = [
-        #     vote_event for vote_event in self._xpath("besluit/")
-        # ]
-
-
+        motion.name = self._xpath("string(onderwerp)")
+        motion.dateSubmitted = iso8601.parse_date(self._xpath("string(gestartOp)"))
+        motion.publisher = Organization(self._xpath("string(organisatie)"))
+        motion.creator = Person(self._xpath("string(indiener/persoon/@ref)"))
+        motion.voteEvent = [VoteEvent(v) for v in self._xpath("besluit/@ref")]
+        motion.cocreator = [Person(p) for p in self._xpath("string(medeindiener/persoon/@ref)")]
+        motion.ggmNummer = self._xpath("string(nummer)")
+        motion.ggmVolgnummer = self._xpath("string(volgnummer)")
         # combined_index_data['concluded'] = self._xpath("boolean(afgedaan)")
 
-        # combined_index_data['submitter'] = self._xpath(
-        #    "string(indiener/persoon/@ref)")
-
-        # combined_index_data['identifiers'] = [
-        #     {
-        #         '@type': 'Identifier',
-        #         'value': unicode(self._xpath("string(volgnummer)")),
-        #         'identifierScheme': u'Volgnummer'
-        #     },
-        #     {
-        #         '@type': 'Identifier',
-        #         'value': unicode(self._xpath("string(nummer)")),
-        #         'identifierScheme': u'Nummer'
-        #     }
-        # ]
-
-        return combined_index_data
+        return motion
 
 
 class VoteEventItem(GegevensmagazijnBaseItem):
 
     def get_combined_index_data(self):
-        combined_index_data = {}
+        vote_event = VoteEvent(self.get_original_object_id())
+        vote_event.motion = Motion(self._xpath("string(@id)"))
 
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(
-            self.get_object_id())  # unicode(self.get_object_iri())
-        combined_index_data[TYPE] = VoteEvent.type
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
+        #combined_index_data[VoteEvent.identifier] = unicode(
+        #    self._xpath("string(../volgorde)"))
 
-        combined_index_data[
-            VoteEvent.motion] = u"../motions/%s" % self.get_object_id(
-            self._xpath("string(@id)"), "motions")
-        combined_index_data[VoteEvent.identifier] = unicode(
-            self._xpath("string(../volgorde)"))
-
-        # print "id:%s orig_id:%s" % (combined_index_data['id'], self._xpath("string(@id)"))
-        # print "motion:%s" % get_vote_event_id(self._xpath("string(@id)"))
-
-        result = re.sub(r'[^ a-z]', '', self._xpath("string(""slottekst)").lower())
+        result = re.sub(r'[^ a-z]', '', self._xpath("string(slottekst)").lower())
         if result == "aangenomen":
-            combined_index_data[VoteEvent.result] = Result.ResultPass
+            vote_event.result = Result.ResultPass
         elif result == "verworpen":
-            combined_index_data[VoteEvent.result] = Result.ResultFail
+            vote_event.result = Result.ResultFail
         elif result == "aangehouden":
-            combined_index_data[VoteEvent.result] = Result.ResultKept
+            vote_event.result = Result.ResultKept
         elif result == "uitgesteld":
-            combined_index_data[VoteEvent.result] = Result.ResultPostponed
+            vote_event.result = Result.ResultPostponed
         elif result == "ingetrokken":
-            combined_index_data[VoteEvent.result] = Result.ResultWithdrawn
+            vote_event.result = Result.ResultWithdrawn
         elif result == "vervallen":
-            combined_index_data[VoteEvent.result] = Result.ResultExpired
+            vote_event.result = Result.ResultExpired
         elif result == "inbreng geleverd":
-            combined_index_data[VoteEvent.result] = Result.ResultDiscussed
+            vote_event.result = Result.ResultDiscussed
         elif result == "vrijgegeven":
-            combined_index_data[VoteEvent.result] = Result.ResultPublished
+            vote_event.result = Result.ResultPublished
         else:
             print "Result %s does not exists for: %s" % (result, self.original_item)
 
         sub_events = self.source_definition['mapping']['vote_event']['sub_items']
+        vote_event.count = [Count(c) for c in self._xpath(sub_events['count'] + "/@id")]
+        vote_event.vote = [Vote(v) for v in self._xpath(sub_events['vote'] + "/@id")]
 
-        combined_index_data[VoteEvent.count] = [
-            u"../counts/%s" % (self.get_object_id(x, "counts")) for x in
-            self._xpath(sub_events['count'] + "/@id")]
-        combined_index_data[VoteEvent.vote] = [
-            u"../votes/%s" % (self.get_object_id(x, "votes")) for x in
-            self._xpath(sub_events['vote'] + "/@id")]
-
-        return combined_index_data
+        return vote_event
 
 
 class CountItem(GegevensmagazijnBaseItem):
 
     def get_combined_index_data(self):
-        combined_index_data = {}
-
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(
-            self.get_object_id())  # unicode(self.get_object_iri())
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
+        count = None
 
         soort = unicode(self._xpath("string(soort)"))
         if soort == "Voor":
-            combined_index_data[TYPE] = YesCount.type
+            count = YesCount(self.get_original_object_id())
         elif soort == "Tegen":
-            combined_index_data[TYPE] = NoCount.type
+            count = NoCount(self.get_original_object_id())
         elif soort == "Onthouding":
-            combined_index_data[TYPE] = AbstainCount.type
+            count = AbstainCount(self.get_original_object_id())
         elif soort == "Niet deelgenomen":
-            combined_index_data[TYPE] = AbsentCount.type
+            count = AbsentCount(self.get_original_object_id())
 
-        party = self._get_party(self._xpath("string(fractie/@ref)"))
-        if party:
-            combined_index_data[Count.group] = party
+        #count.group = self._get_party(self._xpath("string(fractie/@ref)"))
+        count.group = Organization(self._xpath("string(fractie/@ref)"))
+        count.value = self._xpath("number(fractieGrootte)")
 
-        combined_index_data[Count.value] = int(self._xpath("number("
-                                                       "fractieGrootte)"))
-
-        return combined_index_data
+        return count
 
 
 class VoteItem(GegevensmagazijnBaseItem):
 
     def get_combined_index_data(self):
-        combined_index_data = {}
-
-        combined_index_data[CONTEXT] = context
-        combined_index_data[ID] = unicode(self.get_object_id())
-        combined_index_data[HIDDEN] = self.source_definition['hidden']
+        vote = Vote(self.get_original_object_id())
 
         soort = unicode(self._xpath("string(soort)"))
         if soort == "Voor":
-            combined_index_data[TYPE] = VoteOption.VoteOptionYes
+            vote.Vote = VoteOption.VoteOptionYes
         elif soort == "Tegen":
             combined_index_data[TYPE] = VoteOption.VoteOptionNo
         elif soort == "Onthouding":

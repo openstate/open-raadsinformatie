@@ -11,6 +11,7 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
 from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
+from ocd_backend.utils import json_encoder
 
 log = get_source_logger('loader')
 
@@ -77,6 +78,10 @@ class ElasticsearchLoader(BaseLoader):
 
     def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
                   doc_type):
+
+        doc = json_encoder.encode(doc)
+        combined_index_doc = json_encoder.encode(combined_index_doc)
+
         log.info('Indexing document id: %s' % object_id)
         elasticsearch.index(index=settings.COMBINED_INDEX,
                             doc_type=doc_type, id=combined_object_id,

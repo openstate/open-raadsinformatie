@@ -1,3 +1,3 @@
-from .misc import DatetimeJSONEncoder
+from owltology.model import ModelJSONEncoder
 
-json_encoder = DatetimeJSONEncoder()
+json_encoder = ModelJSONEncoder()

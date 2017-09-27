@@ -1,22 +1,60 @@
-from ocd_backend.models import owl, schema
+import owl, schema, foaf, ncal, person, org, govid
+from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF
+from owltology.property import Property, Type, Some, Only, Exactly, SomeString, SomeDate, Namespace
 
-NAMESPACE = "opengov"
+
+class Event(schema.Event):
+    _type = Type(OPENGOV)
+    attachment = Only(COUNCIL, 'attachment', 'council.Attachment')
+    name = SomeString(SCHEMA, 'name')
+    location = Some(SCHEMA, 'location', schema.Place)
+    categories = Some(NCAL, 'categories', ncal.Category)
+    agenda = Only(COUNCIL, 'agenda', list)
+    motion = Only(OPENGOV, 'motion', 'opengov.Motion')
+    attendee = Only(SCHEMA, 'attendee', person.Person)
+    absentee = Only(SCHEMA, 'absentee', person.Person)
+    organizer = Some(SCHEMA, 'organizer', foaf.Agent)
+    eventStatus = Some(SCHEMA, 'eventStatus', schema.EventStatusType)
+
+    ggmVrsNummer = govid.ggmVrsNummer
+    ggmNummer = govid.ggmNummer
+    ggmVolgnummer = govid.ggmVolgnummer
 
 
 class Motion(owl.Thing):
-    name = 'schema:name'
-    legislativeSession = 'opengov:legislativeSession'
-    requirement = 'opengov:requirement'
-    additionalType = 'schema:additionalType'
-    creator = "schema:creator"
-    dateSubmitted = "schema:dateSubmitted"
-    publisher = "schema:publisher"
-    text = "schema:text"
-    voteEvent = "opengov:voteEvent"
+    _type = Type(OPENGOV)
+    name = SomeString(SCHEMA, 'name')
+    legislativeSession = Some(OPENGOV, 'legislativeSession', Event)
+    requirement = SomeString(OPENGOV, 'requirement')
+    additionalType = SomeString(SCHEMA, 'additionalType')
+    creator = Some(SCHEMA, 'creator', foaf.Agent)
+    cocreator = Some(COUNCIL, 'cocreator', foaf.Agent)
+    dateSubmitted = SomeDate(SCHEMA, 'dateSubmitted')
+    #concluded
+    publisher = Some(SCHEMA, 'publisher', foaf.Agent)
+    text = SomeString(SCHEMA, 'text')
+    voteEvent = Only(OPENGOV, 'voteEvent', 'opengov.VoteEvent')
+
+    ggmVrsNummer = govid.ggmVrsNummer
+    ggmNummer = govid.ggmNummer
+    ggmVolgnummer = govid.ggmVolgnummer
+
+
+class VoteEvent(schema.Event):
+    _type = Type(OPENGOV)
+    categories = Some(OPENGOV, 'categories', ncal.Category)
+    created = SomeDate(DCTERMS, 'created')
+    modified = SomeDate(DCTERMS, 'modified')
+    motion = Exactly(OPENGOV, 'motion', 1, Motion)
+    result = SomeString(OPENGOV, 'result')
+    organizer = Some(SCHEMA, 'organizer', foaf.Agent)
+    superEvent = Some(SCHEMA, 'superEvent', schema.Event)
+    vote = Some(OPENGOV, 'vote', 'opengov.Vote')
+    count = Some(OPENGOV, 'count', 'opengov.Count')
 
 
 class Speech(owl.Thing):
-    pass
+    _type = Type(OPENGOV)
 
 
 class SpeechAnswer(Speech):
@@ -40,8 +78,9 @@ class SpeechSummary(Speech):
 
 
 class Count(owl.Thing):
-    value = 'rdf:value'
-    group = 'opengov:group'
+    _type = Type(OPENGOV)
+    value = Exactly(RDF, 'value', 1, int)
+    group = Exactly(OPENGOV, 'group', 1, org.Organization)
 
 
 class YesCount(Count):
@@ -69,10 +108,11 @@ class PairedCount(Count):
 
 
 class Vote(owl.Thing):
-    pass
+    _type = Type(OPENGOV)
 
 
 class Result(owl.Thing):
+    _type = Type(OPENGOV)
     # Instances
     ResultFail = 'opengov:ResultFail'
     ResultPass = 'opengov:ResultPass'
@@ -85,37 +125,14 @@ class Result(owl.Thing):
 
 
 class ContactDetail(owl.Thing):
-    pass
-
-
-class Event(schema.Event):
-    name = 'schema:name'
-    location = 'schema:location'
-    categories = 'ncal:categories'
-    hasAgendaItem = 'council:hasAgendaItem'
-    motion = 'opengov:motion'
-    attendee = 'schema:attendee'
-    absentee = 'schema:absentee'
-    organizer = 'schema:organizer'
-    eventStatus = 'schema:eventStatus'
+    _type = Type(OPENGOV)
 
 
 class EventStatusType(schema.Event):
+    _type = Type(OPENGOV)
     # Instances
     EventCancelled = 'schema:EventCancelled'
     EventPostponed = 'schema:EventPostponed'
     EventRescheduled = 'schema:EventRescheduled'
     EventScheduled = 'schema:EventScheduled'
     EventCompleted = 'council:EventCompleted'
-
-
-class VoteEvent(schema.Event):
-    categories = 'opengov:categories'
-    created = 'dcterms:created'
-    modified = 'dcterms:modified'
-    motion = 'opengov:motion'
-    result = 'opengov:result'
-    organizer = 'schema:organizer'
-    superEvent = 'schema:superEvent'
-    vote = 'opengov:vote'
-    count = 'opengov:count'

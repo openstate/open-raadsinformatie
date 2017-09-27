@@ -1,13 +1,15 @@
-from ocd_backend.models import owl, foaf
+import owl, foaf
+from .namespaces import ORG
 
 
 class Membership(owl.Thing):
-    pass
+    NAMESPACE = ORG
 
 
 class Role(owl.Thing):
-    pass
+    NAMESPACE = ORG
 
 
 class Organization(foaf.Agent):
+    NAMESPACE = ORG
     name = 'skos:prefLabel'

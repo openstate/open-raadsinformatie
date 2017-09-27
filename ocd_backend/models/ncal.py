@@ -1,5 +1,6 @@
-from ocd_backend.models import owl
+import owl
+from .namespaces import NCAL
 
 
 class Category(owl.Thing):
-    pass
+    NAMESPACE = NCAL

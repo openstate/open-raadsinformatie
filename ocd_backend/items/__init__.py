@@ -6,6 +6,7 @@ from hashlib import sha1
 from ocd_backend.exceptions import (UnableToGenerateObjectId,
                                     FieldNotAvailable)
 from ocd_backend.utils import json_encoder
+from owltology.model import ModelBase
 
 
 class BaseItem(object):
@@ -76,13 +77,20 @@ class BaseItem(object):
         self.meta['original_object_urls'] = self.get_original_object_urls()
 
     def _construct_combined_index_data(self):
-        self.combined_index_data = StrictMappingDict(self.combined_index_fields)
+        data = self.get_combined_index_data()
 
-        for field, value in self.get_combined_index_data().iteritems():
-            if type(value) == bool:
-                self.combined_index_data[field] = value
-            elif value:
-                self.combined_index_data[field] = value
+        if isinstance(data, ModelBase):
+            # Serializing the model using __iter__ method
+            self.combined_index_data = dict(data)
+        else:
+            # Provide legacy support for older ORI mappings
+            self.combined_index_data = StrictMappingDict(self.combined_index_fields)
+
+            for field, value in data.iteritems():
+                if type(value) == bool:
+                    self.combined_index_data[field] = value
+                elif value:
+                    self.combined_index_data[field] = value
 
     def get_combined_index_doc(self):
         """Construct the document that should be inserted into the 'combined

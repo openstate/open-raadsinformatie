@@ -1,9 +1,11 @@
-from ocd_backend.models import owl
+import owl
+from .namespaces import FOAF
+from owltology.property import Type
 
 
 class Agent(owl.Thing):
-    pass
+    _type = Type(FOAF)
 
 
 class Group(Agent):
-    pass
+    _type = Type(FOAF)
