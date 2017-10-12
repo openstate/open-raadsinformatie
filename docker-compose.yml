@@ -4,15 +4,21 @@ services:
     image: openstatefoundation/open-raadsinformatie-backend
     links:
       - redis:redis
-      - elasticsearch:elasticsearch
+      - elastic_endpoint:elasticsearch
       - frontend:frontend
     ports:
       - "81:5555"
+    depends_on:
+      elastic_endpoint:
+        condition: service_healthy
     mem_limit: 3g
   frontend:
     image: openstatefoundation/open-raadsinformatie-frontend
     links:
-      - elasticsearch:elasticsearch
+      - elastic_endpoint:elasticsearch
+    depends_on:
+      elastic_endpoint:
+        condition: service_healthy
     ports:
       - "5000:5000"
   redis:
@@ -20,15 +26,27 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     mem_limit: 4g
-  elasticsearch:
-    image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
+  elastic_endpoint:
+    container_name: ocd_elastic_endpoint
+    extends:
+      service: elastic
+    ports:
+      - "9200:9200"
     environment:
       - http.host=0.0.0.0
-      - transport.host=127.0.0.1
+      - node.master=true
+  elastic:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
+    environment:
+      - network.host=0.0.0.0
+      - discovery.zen.ping.unicast.hosts=ocd_elastic_endpoint
+      - discovery.zen.minimum_master_nodes=2
+      - node.max_local_storage_nodes=20
       - cluster.name=docker-cluster
-      - xpack.security.enabled=false
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
     ulimits:
       memlock:
         soft: -1
@@ -38,8 +56,11 @@ services:
       - IPC_LOCK
     volumes:
       - esdata:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
+    healthcheck:
+      test: wget -q -O - http://127.0.0.1:9200/_cat/health
+      interval: 15s
+      timeout: 10s
+      retries: 3
 
 volumes:
   esdata:
