@@ -8,6 +8,8 @@ services:
       - frontend:frontend
     ports:
       - "81:5555"
+    volumes:
+      - oridata:/opt/ori/data
     depends_on:
       elastic_endpoint:
         condition: service_healthy
@@ -23,6 +25,8 @@ services:
       - "5000:5000"
   redis:
     image: "redis:${REDIS_VERSION}"
+    volumes:
+     - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
     mem_limit: 4g
@@ -64,4 +68,8 @@ services:
 
 volumes:
   esdata:
+    driver: local
+  redisdata:
+    driver: local
+  oridata:
     driver: local
