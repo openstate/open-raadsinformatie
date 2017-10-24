@@ -74,10 +74,7 @@ class FileToTextMixin(object):
         Method to convert a given PDF file into text file using a subprocess
         """
 
-        if max_pages > 0:
-            content = file_parser(path, range(0, max_pages))
-        else:
-            content = file_parser(path)
 
-
-        return unicode(self.file_clean_text(content.decode('utf-8')))
+        content = file_parser(path, max_pages)
+        text = self.file_clean_text(content.decode('utf-8'))
+        return unicode(text)

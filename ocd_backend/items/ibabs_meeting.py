@@ -1,9 +1,9 @@
 from datetime import datetime
 import json
 from pprint import pprint
+import re
 from hashlib import sha1
 from time import sleep
-import re
 
 import iso8601
 

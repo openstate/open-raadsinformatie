@@ -1,11 +1,11 @@
+import json
 from collections import MutableMapping
 from datetime import datetime
 from hashlib import sha1
-import json
 
-from ocd_backend.utils import json_encoder
 from ocd_backend.exceptions import (UnableToGenerateObjectId,
                                     FieldNotAvailable)
+from ocd_backend.utils import json_encoder
 
 
 class BaseItem(object):
@@ -50,11 +50,12 @@ class BaseItem(object):
     }
 
     def __init__(self, source_definition, data_content_type, data, item,
-                 processing_started=None):
+                 doc_type, processing_started=None):
         self.source_definition = source_definition
         self.data_content_type = data_content_type
         self.data = data
         self.original_item = item
+        self.doc_type = doc_type
 
         # On init, all data should be available to construct self.meta
         # and self.combined_item

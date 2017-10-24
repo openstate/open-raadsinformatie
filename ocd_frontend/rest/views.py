@@ -1,13 +1,14 @@
 import copy
-from datetime import datetime
 import glob
-from flask import (
-    Blueprint, current_app, request, jsonify, redirect, url_for,)
-from elasticsearch import NotFoundError
 import os
+from datetime import datetime
+from hashlib import sha1
 from urlparse import urljoin
 
-from ocd_frontend import thumbnails
+from elasticsearch import NotFoundError
+from flask import (
+    Blueprint, current_app, request, jsonify, redirect, url_for, send_file, )
+
 from ocd_frontend import settings
 from ocd_frontend.rest import OcdApiError, decode_json_post_data
 from ocd_frontend.rest import tasks
@@ -239,7 +240,8 @@ def format_sources_results(results):
     sources = []
 
     for bucket in results['aggregations']['index']['buckets']:
-        source = {d['key']: d['doc_count'] for d in bucket['doc_type']['buckets']}
+        source = {d['key']: d['doc_count']
+                  for d in bucket['doc_type']['buckets']}
         source['id'] = u'_'.join(bucket['key'].split('_')[1:-1])
 
         # FIXME: quick hack
@@ -325,7 +327,7 @@ def search(doc_type=u'items'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields':current_app.config[
+                        'fields': current_app.config[
                             'SIMPLE_QUERY_FIELDS'][doc_type]
                     }
                 },
@@ -394,7 +396,8 @@ def search_source(source_id, doc_type=u'items'):
     if '*' in source_id:
         raise OcdApiError('Invalid \'source_id\'', 400)
 
-    index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'], source_id)
+    index_name = '%s_%s' % (
+        current_app.config['DEFAULT_INDEX_PREFIX'], source_id)
 
     data = request.data or request.args
     search_req = parse_search_request(data, doc_type)
@@ -483,7 +486,9 @@ def get_object(source_id, object_id, doc_type=u'items'):
     index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                             source_id)
 
-    include_fields = [f.strip() for f in request.args.get('include_fields', '').split(',') if f.strip()]
+    include_fields = [f.strip() for f in
+                      request.args.get('include_fields', '').split(',') if
+                      f.strip()]
 
     excluded_fields = validate_included_fields(
         include_fields=include_fields,
@@ -751,70 +756,45 @@ def similar(object_id, source_id=None, doc_type=u'items'):
 @bp.route('/resolve/<url_id>', methods=['GET'])
 def resolve(url_id):
     try:
-        resp = current_app.es.get(index=current_app.config['RESOLVER_URL_INDEX'],
-                                  doc_type='url', id=url_id)
+        resp = current_app.es.get(
+            index=current_app.config['RESOLVER_URL_INDEX'],
+            doc_type='url', id=url_id)
 
-        # If the media item is not "thumbnailable" (e.g. it's a video), or if
-        # the user did not provide a content type, redirect to original source
-        if resp['_source'].get('content_type', 'original') not in current_app.config['THUMBNAILS_MEDIA_TYPES']:
-            # Log a 'resolve' event if usage logging is enabled
+        file_hash = sha1(resp['_source']['original_url']).hexdigest()
+        path = os.path.join(settings.STATIC_DIR_PATH, file_hash)
+        if os.path.exists(path):
+            # Log a 'resolve_filepath' event if usage logging is enabled
             if current_app.config['USAGE_LOGGING_ENABLED']:
                 tasks.log_event.delay(
                     user_agent=request.user_agent.string,
                     referer=request.headers.get('Referer', None),
                     user_ip=request.remote_addr,
                     created_at=datetime.utcnow(),
-                    event_type='resolve',
+                    event_type='resolve_filepath',
                     url_id=url_id,
                 )
-            return redirect(resp['_source']['original_url'])
+            return send_file(path,
+                             mimetype=resp['_source'].get('content_type'))
 
-        size = request.args.get('size', 'large')
-        if size not in current_app.config['THUMBNAIL_SIZES']:
-            available_formats = "', '".join(sorted(current_app.config['THUMBNAIL_SIZES'].keys()))
-            msg = 'You did not provide an appropriate thumbnail size. Available ' \
-                  'options are \'{}\''
-            err_msg = msg.format(available_formats)
-
-            if request.mimetype == 'application/json':
-                raise OcdApiError(err_msg, 400)
-            return '<html><body>{}</body></html>'.format(err_msg), 400
-
-        thumbnail_path = thumbnails.get_thumbnail_path(url_id, size)
-        if not os.path.exists(thumbnail_path):
-            # Thumbnail does not exist yet, check of we've downloaded the
-            # original already
-            original = thumbnails.get_thumbnail_path(url_id, 'original')
-            if not os.path.exists(original):
-                # If we don't, fetch a copy of the original and store it in the
-                # thumbnail cache, so we can use it as a source for thumbnails
-                thumbnails.fetch_original(resp['_source']['original_url'], url_id)
-
-            # Create the thumbnail with the requested size, and save it to the
-            # thumbnail cache
-            thumbnails.create_thumbnail(original, url_id, size)
-
-        # Log a 'resolve_thumbnail' event if usage logging is enabled
+        # Log a 'resolve' event if usage logging is enabled
         if current_app.config['USAGE_LOGGING_ENABLED']:
             tasks.log_event.delay(
                 user_agent=request.user_agent.string,
                 referer=request.headers.get('Referer', None),
                 user_ip=request.remote_addr,
                 created_at=datetime.utcnow(),
-                event_type='resolve_thumbnail',
+                event_type='resolve',
                 url_id=url_id,
-                requested_size=size
             )
-
-        return redirect(thumbnails.get_thumbnail_url(url_id, size))
+        return redirect(resp['_source']['original_url'])
 
     except NotFoundError:
         if request.mimetype == 'application/json':
             raise OcdApiError('URL is not available; the source may no longer '
                               'be available', 404)
 
-        return '<html><body>There is no original url available. You may '\
-               'have an outdated URL, or the resolve id is incorrect.</body>'\
+        return '<html><body>There is no original url available. You may ' \
+               'have an outdated URL, or the resolve id is incorrect.</body>' \
                '</html>', 404
 
 
@@ -824,9 +804,8 @@ def list_dumps():
     dumps = {}
 
     for dump in dump_list:
-        index_name, dump_file = dump.replace('%s/' % current_app.config
-                                                 .get('DUMPS_DIR'), '')\
-                                                 .split('/')
+        index_name, dump_file = dump.replace(
+            '%s/' % current_app.config.get('DUMPS_DIR'), '').split('/')
         if index_name not in dumps:
             dumps[index_name] = []
         dumps[index_name].append(urljoin(current_app.config['DUMP_URL'],

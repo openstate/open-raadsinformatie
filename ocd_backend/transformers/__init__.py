@@ -1,12 +1,12 @@
 import json
 from hashlib import sha1
-
 from lxml import etree
 
 from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.mixins import OCDBackendTaskFailureMixin
+from ocd_backend.utils import json_encoder
 from ocd_backend.utils.misc import load_object
 
 
@@ -53,7 +53,8 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         if 'media_urls' in item.combined_index_data:
             for media_url in item.combined_index_data['media_urls']:
                 hashed_url = sha1(media_url['original_url']).hexdigest()
-                media_url['url'] = '%s/%s' % (settings.RESOLVER_BASE_URL, hashed_url)
+                media_url['url'] = '%s/%s' % (settings.RESOLVER_BASE_URL,
+                                              hashed_url)
 
     def transform_item(self, raw_item_content_type, raw_item, item):
         """Transforms a single item.
@@ -73,7 +74,8 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             for the source specific index.
         """
         item = self.item_class(self.source_definition, raw_item_content_type,
-                               raw_item, item)
+                               raw_item, item,
+                               self.source_definition.get('doc_type', 'item'))
 
         self.add_resolveable_media_urls(item)
 
@@ -81,5 +83,7 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             item.get_combined_object_id(),
             item.get_object_id(),
             item.get_combined_index_doc(),
-            item.get_index_doc()
+            item.get_index_doc(),
+            item.doc_type,
         )
+

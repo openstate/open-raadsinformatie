@@ -1,12 +1,11 @@
 import os
+import pickle
 
-# Register custom serializer for Celery that allows for encoding and decoding
-# Python datetime objects (and potentially other ones)
 from kombu.serialization import register
-from ocd_backend.serializers import encoder, decoder
 
-register('ocd_serializer', encoder, decoder, content_encoding='binary',
-         content_type='application/ocd-msgpack')
+register('ocd_serializer', pickle.dumps, pickle.loads,
+         content_encoding='binary',
+         content_type='application/x-pickle2')
 
 CELERY_CONFIG = {
     'BROKER_URL': 'redis://redis:6379/0',
@@ -15,14 +14,22 @@ CELERY_CONFIG = {
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://redis:6379/0',
     'CELERY_IGNORE_RESULT': True,
+    'CELERY_MESSAGE_COMPRESSION': 'gzip',
+    'CELERYD_HIJACK_ROOT_LOGGER': False,
     'CELERY_DISABLE_RATE_LIMITS': True,
+    # ACKS_LATE prevents two tasks triggered at the same time to hang
+    # https://wiredcraft.com/blog/3-gotchas-for-celery/
+    'CELERY_ACKS_LATE': True,
+    'WORKER_PREFETCH_MULTIPLIER': 1,
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
-    'CELERY_TASK_RESULT_EXPIRES': 1800
+    'CELERY_TASK_RESULT_EXPIRES': 1800,
+    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO'
 }
 
 LOGGING = {
     'version': 1,
+    'disable_existing_loggers': True,
     'formatters': {
         'console': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',
@@ -47,6 +54,11 @@ LOGGING = {
             'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': False,
+        },
+        'celery': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
         }
     }
 }
@@ -59,6 +71,9 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')
 
+# The path of the directory used to store static files
+STATIC_DIR_PATH = os.path.join(ROOT_PATH, '../dumps/static')
+
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*.json')
 
@@ -68,7 +83,7 @@ COMBINED_INDEX = 'ori_combined_index'
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
-RESOLVER_BASE_URL = 'http://frontend:5000/v0/resolve'
+RESOLVER_BASE_URL = 'http://localhost:5000/v0/resolve'
 RESOLVER_URL_INDEX = 'ori_resolver'
 
 # The User-Agent that is used when retrieving data from external sources

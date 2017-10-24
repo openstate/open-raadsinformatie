@@ -1,5 +1,4 @@
 from ocd_backend import celery_app
-from ocd_backend import settings
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 
@@ -27,33 +26,49 @@ class BaseEnricher(celery_app.Task):
         :returns: the output of :py:meth:`~BaseEnricher.enrich_item`
         """
 
+        args = args[0]
         self.source_definition = kwargs['source_definition']
         self.enricher_settings = kwargs['enricher_settings']
 
-        object_id, combined_index_doc, doc = args[0]
-        try:
-            enrichments = self.enrich_item(
-                doc['enrichments'],
-                object_id,
-                combined_index_doc,
-                doc
-            )
-        except SkipEnrichment as e:
-            log.info('Skipping %s for %s, reason: %s'
-                     % (self.__class__.__name__, object_id, e.message))
-            return (object_id, combined_index_doc, doc)
-        except:
-            log.exception('Unexpected error, skipping %s for %s'
-                          % (self.__class__.__name__, object_id))
-            return (object_id, combined_index_doc, doc)
+        # Make a single list if items is a single item
+        if type(args) == tuple:
+            args = [args]
 
-        # Add the modified 'enrichments' dict to the item documents
-        combined_index_doc['enrichments'] = enrichments
-        doc['enrichments'] = enrichments
+        results = list()
+        for item in args:
+            combined_object_id, object_id, combined_index_doc, doc, doc_type = item
+            try:
+                enrichments = self.enrich_item(
+                    doc['enrichments'],
+                    object_id,
+                    combined_index_doc,
+                    doc,
+                    doc_type
+                )
 
-        return (object_id, combined_index_doc, doc)
+                # Add the modified 'enrichments' dict to the item documents
+                combined_index_doc['enrichments'] = enrichments
+                doc['enrichments'] = enrichments
 
-    def enrich_item(self, enrichments, object_id, combined_index_doc, doc):
+                results.append((combined_object_id, object_id,
+                                combined_index_doc, doc, doc_type))
+            except SkipEnrichment as e:
+                log.info('Skipping %s for %s, reason: %s'
+                         % (self.__class__.__name__, object_id, e.message))
+                results.append(
+                    (combined_object_id, object_id, combined_index_doc, doc,
+                     doc_type))
+            except:
+                log.exception('Unexpected error, skipping %s for %s'
+                              % (self.__class__.__name__, object_id))
+                results.append(
+                    (combined_object_id, object_id, combined_index_doc, doc,
+                     doc_type))
+
+        return results
+
+    def enrich_item(self, enrichments, object_id, combined_index_doc, doc,
+                    doc_type):
         """Enriches a single item.
 
         This method should be implemented by the class that inherits

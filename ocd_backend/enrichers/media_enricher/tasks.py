@@ -1,6 +1,8 @@
+import os
 from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
+from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class BaseMediaEnrichmentTask(object):
@@ -10,17 +12,18 @@ class BaseMediaEnrichmentTask(object):
     content_types = []
 
     def __init__(self, media_item, content_type, file_object, enrichment_data,
-                 object_id, combined_index_doc, doc):
+                 object_id, combined_index_doc, doc, doc_type):
         if self.content_types is not '*' and content_type.lower() not\
            in self.content_types:
             raise UnsupportedContentType()
 
-        return self.enrich_item(media_item, content_type, file_object,
-                                enrichment_data, object_id, combined_index_doc,
-                                doc)
+        self.enrich_item(media_item, content_type, file_object,
+                         enrichment_data, object_id, combined_index_doc, doc,
+                         doc_type)
 
     def enrich_item(self, media_item, content_type, file_object,
-                    enrichment_data, object_id, combined_index_doc, doc):
+                    enrichment_data, object_id, combined_index_doc, doc,
+                    doc_type):
         raise NotImplementedError
 
 
@@ -47,7 +50,8 @@ class MediaType(BaseMediaEnrichmentTask):
     )
 
     def enrich_item(self, media_item, content_type, file_object,
-                    enrichment_data, object_id, combined_index_doc, doc):
+                    enrichment_data, object_id, combined_index_doc, doc,
+                    doc_type):
         item_media_type = 'unkown'
 
         for media_type, content_types in self.media_types:
@@ -66,7 +70,8 @@ class ImageMetadata(BaseMediaEnrichmentTask):
     ]
 
     def enrich_item(self, media_item, content_type, file_object,
-                    enrichment_data, object_id, combined_index_doc, doc):
+                    enrichment_data, object_id, combined_index_doc, doc,
+                    doc_type):
         img = Image.open(file_object)
         enrichment_data['image_format'] = img.format
         enrichment_data['image_mode'] = img.mode
@@ -87,5 +92,41 @@ class ViedeoMetadata(BaseMediaEnrichmentTask):
     ]
 
     def enrich_item(self, media_item, content_type, file_object,
-                    enrichment_data, object_id, combined_index_doc, doc):
+                    enrichment_data, object_id, combined_index_doc, doc,
+                    doc_type):
+        pass
+
+
+class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
+    content_types = '*'
+
+    def enrich_item(self, media_item, content_type, file_object,
+                    enrichment_data, object_id, combined_index_doc, doc,
+                    doc_type):
+
+        path = os.path.realpath(file_object.name)
+        self.text = self.file_to_text(path)
+        self.format_text()
+
+        if self.text:
+            source = {
+                'url': media_item['original_url'],
+                'note': media_item.get('note', u''),
+                'description': self.text
+            }
+        else:
+            source = {
+                'url': media_item['original_url'],
+                'note': u'Unable to download or parse this file'
+            }
+
+        if 'sources' not in combined_index_doc:
+            combined_index_doc['sources'] = []
+        combined_index_doc['sources'].append(source)
+
+        if 'sources' not in doc:
+            doc['sources'] = []
+        doc['sources'].append(source)
+
+    def format_text(self):
         pass

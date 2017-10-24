@@ -1,8 +1,9 @@
 import datetime
+import glob
 import json
 import re
-import glob
 import translitcodec
+from lxml import etree
 
 from elasticsearch.helpers import scan, bulk
 
@@ -177,7 +178,7 @@ class DatetimeJSONEncoder(json.JSONEncoder):
         else:
             return super(DatetimeJSONEncoder, self).default(o)
 
-_punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
+_punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
 def slugify(text, delim=u'-'):
@@ -188,3 +189,58 @@ def slugify(text, delim=u'-'):
         if word:
             result.append(word)
     return unicode(delim.join(result))
+
+
+def strip_namespaces(item):
+    xslt = '''
+    <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="xml" indent="no"/>
+
+    <xsl:template match="/|comment()|processing-instruction()">
+        <xsl:copy>
+          <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="*">
+        <xsl:element name="{local-name()}">
+          <xsl:apply-templates select="@*|node()"/>
+        </xsl:element>
+    </xsl:template>
+
+    <xsl:template match="@*">
+        <xsl:attribute name="{local-name()}">
+          <xsl:value-of select="."/>
+        </xsl:attribute>
+    </xsl:template>
+    </xsl:stylesheet>
+    '''
+
+    xslt_root = etree.XML(xslt)
+    transform = etree.XSLT(xslt_root)
+
+    return transform(item)
+
+
+def json_datetime(o):
+    if isinstance(o, datetime.datetime):
+        return o.__str__()
+
+
+def get_secret(item_id):
+    try:
+        from ocd_backend.secrets import SECRETS
+    except ImportError:
+        raise UserWarning("The SECRETS variable in ocd_backend/secrets.py "
+                          "does not exist. Copy secrets.default.py to "
+                          "secrets.py and make sure that SECRETS is correct.")
+
+    try:
+        return SECRETS[item_id]
+    except:
+        for k in sorted(SECRETS, key=len, reverse=True):
+            if item_id.startswith(k):
+                return SECRETS[k]
+        raise UserWarning("No secrets found for %s! Make sure that the "
+                          "correct secrets are supplied in ocd_backend/"
+                          "secrets.py" % item_id)

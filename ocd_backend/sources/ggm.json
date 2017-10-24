@@ -1,0 +1,85 @@
+[
+  {
+    "id": "gegevensmagazijn",
+    "extractor": "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+    "extensions": [
+      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
+    ],
+    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "ggm",
+    "keep_index_on_update": true,
+    "base_url": "https://gegevensmagazijn.tweedekamer.nl/REST/",
+    "feed_query": "Feed.json?filter=persoon",
+    "mapping": {
+      "activiteit": {
+        "doc_type": "event",
+        "item": "ocd_backend.items.ggm.Meeting",
+        "sub_items": [
+          "/activiteit/agendapunt/besluit"
+        ]
+      },
+      "besluit": {
+        "doc_type": "motion",
+        "item": "ocd_backend.items.ggm.Motion"
+      },
+      "persoon": {
+        "doc_type": "person",
+        "item": "ocd_backend.items.ggm.Person"
+      }
+    }
+  },
+  {
+    "id": "gegevensmagazijn-a",
+    "extractors": [
+      "ocd_backend.extractors.ggm.GegevensmagazijnFeedExtractor",
+      "ocd_backend.extractors.ggm.GegevensmagazijnEntityExtractor"
+    ],
+    "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
+    "loader": "ocd_backend.loaders.ElasticsearchLoader",
+    "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
+    "hidden": false,
+    "index_name": "ggm",
+    "keep_index_on_update": true,
+    "base_url": "https://gegevensmagazijn-a.tweedekamer.nl/REST/",
+    "feed_query": "Feed.json?filter=activiteit[@id='8918ea90-ca7e-4806-a85c-c5d0978a7c7d']",
+    "mapping": {
+      "activiteit": {
+        "doc_type": "event",
+        "item": "ocd_backend.items.ggm.Meeting",
+        "sub_items": {
+          "motion": "/activiteit/agendapunt/besluit[stemming]"
+        }
+      },
+      "motion": {
+        "doc_type": "motion",
+        "item": "ocd_backend.items.ggm.Motion",
+        "sub_items": {
+          "vote_event": "."
+        }
+      },
+      "vote_event": {
+        "doc_type": "vote_event",
+        "item": "ocd_backend.items.ggm.VoteEvent",
+        "sub_items": {
+          "count": "stemming[fractie/@ref and not(persoon/@ref)]",
+          "vote": "stemming[persoon/@ref]"
+        }
+      },
+      "count": {
+        "doc_type": "count",
+        "item": "ocd_backend.items.ggm.Count"
+      },
+      "vote": {
+        "doc_type": "vote",
+        "item": "ocd_backend.items.ggm.Vote"
+      },
+      "persoon": {
+        "doc_type": "person",
+        "item": "ocd_backend.items.ggm.Person"
+      }
+    }
+  }
+]
