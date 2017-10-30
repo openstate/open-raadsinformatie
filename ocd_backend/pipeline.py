@@ -158,7 +158,7 @@ def setup_pipeline(source_definition):
                          '"error".'
                          .format(index=params['new_index_name'],
                                  run_identifier=params['run_identifier'],
-                                 extractor=pipeline_extractors[pipeline['id']][0]))
+                                 extractor=pipeline_extractors[pipeline['id']]))
 
             celery_app.backend.set(params['run_identifier'], 'error')
             raise
