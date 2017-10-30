@@ -32,6 +32,9 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'console': {
+            'format': '[%(levelname)s] - %(message)s'
+        },
+        'file': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
         }
@@ -42,21 +45,27 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
-        'file': {
+        'log': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'formatter': 'console',
+            'formatter': 'file',
             'filename': 'log/backend.log'
+        },
+        'err': {
+            'level': 'WARN',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': 'log/backend.err'
         }
     },
     'loggers': {
         'ocd_backend': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'log', 'err'],
             'level': 'INFO',
             'propagate': False,
         },
         'celery': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'log', 'err'],
             'level': 'INFO',
             'propagate': False,
         }

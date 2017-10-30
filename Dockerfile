@@ -26,7 +26,8 @@ RUN adduser -D -H celery \
 # Copy all files, except for .dockerignore entries
 WORKDIR /opt/ori/
 COPY . /opt/ori
-RUN chown -R celery:celery .
+RUN ln -sf /proc/1/fd/1 /opt/ori/log/backend.err \
+  && chown -R celery:celery .
 
 USER celery
 CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
