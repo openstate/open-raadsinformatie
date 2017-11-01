@@ -1,6 +1,11 @@
 import json
 
+from requests import HTTPError
+from dateutil.parser import parse
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('extractor')
 
 
 class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
@@ -11,28 +16,92 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
 
     def __init__(self, *args, **kwargs):
         super(NotubizBaseExtractor, self).__init__(*args, **kwargs)
-
         self.base_url = self.source_definition['base_url']
+
+    def extractor(self, meeting_json):
+        raise NotImplemented
 
     def run(self):
         page = 1
 
         while True:
-            resp = self.http_session.get("%s?format=json&page=%i" % (self.base_url, page))
+            start_date = parse(self.source_definition['start_date'])
+            end_date = parse(self.source_definition['end_date'])
+
+            resp = self.http_session.get(
+                "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
+                "&format=json&version=1.10.8&page=%i" %
+                (
+                    self.base_url,
+                    self.source_definition['organisation_id'],
+                    start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                    end_date.strftime("%Y-%m-%d %H:%M:%S"),
+                    page
+                )
+            )
+
+            try:
+                resp.raise_for_status()
+            except HTTPError, e:
+                log.warn('%s: %s' % (e, resp.request.url))
+                break
+
+            event_json = resp.json()
+
+            if not event_json[self.source_definition['doc_type']]:
+                break
+
+            log.info("Processing page %i" % page)
+
+            for item in event_json[self.source_definition['doc_type']]:
+                resp = self.http_session.get(
+                    "%s/events/meetings/%i?format=json&version=1.10.8" %
+                    (
+                        self.base_url,
+                        item['id']
+                    )
+                )
+
+                try:
+                    resp.raise_for_status()
+                    meeting_json = resp.json()['meeting']
+                except HTTPError, e:
+                    log.warn('%s: %s' % (e, resp.request.url))
+                    break
+                except KeyError, e:
+                    log.error('%s: %s' % (e, resp.request.url))
+                    break
+
+                for result in self.extractor(meeting_json):
+                    yield result
+
+            # Currently not working due to bug
+            # if not event_json['pagination']['has_more_pages']:
+            #     log.info("Done processing all entities!")
+            #     break
 
             page += 1
-            if page % 10 == 0:
-                print "Processed %i" % page
 
-            if resp.status_code == 200:
-                static_json = json.loads(resp.content)
 
-                for item in static_json['results']:
-                    yield 'application/json', json.dumps(item)
+class NotubizMeetingExtractor(NotubizBaseExtractor):
+    def extractor(self, meeting_json):
+        meeting_json['attributes'] = {
+            item['id']: item['value']
+            for item in meeting_json['attributes']
+        }
+        yield 'application/json', json.dumps(meeting_json)
 
-                if static_json['next'] == None:
-                    print "Done!"
-                    break
-            else:
-                print "Error! Not a 200!"
-                break
+
+class NotubizMeetingItemExtractor(NotubizBaseExtractor):
+    def extractor(self, meeting_json):
+        for meeting_item in meeting_json.get('agenda_items', []):
+            meeting_item['attributes'] = {
+                item['id']: item['value']
+                for item in meeting_item['type_data'].get('attributes', [])
+            }
+            yield 'application/json', json.dumps(meeting_item)
+
+            # Recursion for subitems if any
+            for result in self.extractor(meeting_item):
+                # Re-yield all results
+                yield result
