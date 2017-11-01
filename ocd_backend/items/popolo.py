@@ -117,7 +117,8 @@ class EventItem(PopoloBaseItem):
         'attendees': list,
         'parent_id': unicode,
         'sources': list,
-        'children': list
+        'children': list,
+        'media_urls': list,
     }
 
 
@@ -141,7 +142,8 @@ class MotionItem(PopoloBaseItem):
         'requirement': unicode,
         'result': unicode,
         'vote_events': list,
-        'sources': list
+        'sources': list,
+        'media_urls': list,
     }
 
 
@@ -164,5 +166,6 @@ class VotingEventItem(PopoloBaseItem):
         'result': unicode,
         'counts': list,
         'votes': list,
-        'sources': list
+        'sources': list,
+        'media_urls': list,
     }
