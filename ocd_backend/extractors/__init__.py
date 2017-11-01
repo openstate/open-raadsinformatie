@@ -1,4 +1,7 @@
 import requests
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+from dateutil.parser import parse
 from requests.packages.urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 
@@ -33,6 +36,51 @@ class BaseExtractor(object):
           (as a string)
         """
         raise NotImplementedError
+
+    def interval_generator(self):
+        """Returns a generator with date intervals
+
+        The intervals are generated between the 'start_date' and 'end_date'
+        specified in the source configuration. The default is one month ago
+        from now, which can be changed by specifying 'months_interval'.
+        """
+
+        months = 1  # Max 1 months intervals by default
+        if 'months_interval' in self.source_definition:
+            months = self.source_definition['months_interval']
+        days = (months / 2.0) * 30
+
+        if (months / 2.0) < 1.0:
+            interval_delta = relativedelta(days=days)
+        else:
+            interval_delta = relativedelta(months=months)
+
+        current_start = datetime.today() - interval_delta
+
+        if 'start_date' in self.source_definition:
+            current_start = parse(self.source_definition['start_date'])
+
+        end_date = datetime.today() + interval_delta
+
+        if 'end_date' in self.source_definition:
+            end_date = parse(self.source_definition['end_date'])
+
+        while True:
+            current_end = current_start + interval_delta
+
+            # If next current_end exceeds end_date then stop at end_date
+            if current_end > end_date:
+                current_end = end_date
+                log.debug("Next interval exceeds %s, months_interval not used"
+                          % end_date)
+
+            yield current_start, current_end
+
+            current_start = current_end + relativedelta(seconds=1)
+
+            # Stop while loop if exceeded end_date
+            if current_start > end_date:
+                break
 
 
 class HttpRequestMixin(object):
