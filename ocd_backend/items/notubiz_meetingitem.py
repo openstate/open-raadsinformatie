@@ -1,9 +1,7 @@
 from hashlib import sha1
+import iso8601
 
-from ocd_backend.items.popolo import EventItem
-from ocd_backend.extractors import HttpRequestMixin
-from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.items.notubiz_meeting import Meeting
 
 
 def get_meetingitem_id(item_id):
@@ -11,52 +9,54 @@ def get_meetingitem_id(item_id):
     return unicode(sha1(hash_content.decode('utf8')).hexdigest())
 
 
-class MeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class MeetingItem(Meeting):
 
     @staticmethod
     def _get_meeting_id(item_id):
         from ocd_backend.items.notubiz_meeting import get_meeting_id
         return get_meeting_id(item_id)
 
-    def _get_current_permalink(self):
-        return u'%s%i' % (self.source_definition['base_url'], self.original_item['id'])
-
     def get_object_id(self):
         return get_meetingitem_id(self.original_item['id'])
 
-    def get_original_object_id(self):
-        return unicode(self.original_item['id']).strip()
-
-    def get_original_object_urls(self):
-        return {"html": self._get_current_permalink()}
-
-    def get_rights(self):
-        return u'undefined'
-
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
+    def _get_current_permalink(self):
+        return u'%s/agenda_items/agenda_points/%i' % (self.source_definition['base_url'], self.original_item['id'])
 
     def get_combined_index_data(self):
         combined_index_data = dict()
 
         combined_index_data['id'] = unicode(self.get_object_id())
-
         combined_index_data['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['name'] = self.original_item['notes']
-        combined_index_data['description'] = self.original_item['description']
+        try:
+            combined_index_data['name'] = self.original_item['attributes']['1']
+        except KeyError:
+            combined_index_data['name'] = self.original_item['type_data']['title']
 
         combined_index_data['classification'] = u'Agendapunt'
 
         combined_index_data['identifiers'] = [
+            {
+                'identifier': unicode(self.original_item['id']),
+                'scheme': u'Notubiz'
+            },
             {
                 'identifier': self.get_object_id(),
                 'scheme': u'ORI'
             }
         ]
 
-        combined_index_data['status'] = u'confirmed'
-        combined_index_data['parent_id'] = self._get_meeting_id(self.original_item['event'])
+        try:
+            combined_index_data['parent_id'] = get_meetingitem_id(self.original_item['parent']['id'])
+        except TypeError:
+            combined_index_data['parent_id'] = self._get_meeting_id(self.original_item['meeting']['id'])
+
+        #combined_index_data['location'] = self.original_item['attributes']['50']
+
+        if 'agenda_items' in self.original_item:
+            combined_index_data['children'] = [
+                get_meetingitem_id(item['id']) for item in self.original_item['agenda_items']
+            ]
 
         combined_index_data['sources'] = [
             {
@@ -65,35 +65,17 @@ class MeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin
             }
         ]
 
-        try:
-            documents = self.original_item['documents']
-        except KeyError:
-            documents = []
-
-        if documents is None:
-            documents = []
-
-        for document in documents:
-            # sleep(1)
-            description = self.file_get_contents(
-                document['url'],
-                self.source_definition.get('pdf_max_pages', 20),
-                self.final_try
+        media_urls = []
+        for doc in self.original_item.get('documents', []):
+            media_urls.append(
+                {
+                    "url": "/v0/resolve/",
+                    "note": doc['title'],
+                    "original_url": doc['url']
+                }
             )
-
-            if description:
-                source = {
-                    'url': document['url'],
-                    'note': document['text'],
-                    'description': description
-                }
-            else:
-                source = {
-                    'url': document['url'],
-                    'note': u'Unable to download or parse this file'
-                }
-
-            combined_index_data['sources'].append(source)
+        if media_urls:
+            combined_index_data['media_urls'] = media_urls
 
         return combined_index_data
 
