@@ -209,8 +209,8 @@ def format_search_results(results, doc_type='items'):
         del hit['_type']
         del hit['_index']
 
-    if results.has_key('facets'):
-        formatted_results['facets'] = results['facets']
+    if results.has_key('aggregations'):
+        formatted_results['facets'] = results['aggregations']
 
     formatted_results['meta'] = {
         'total': results['hits']['total'],
@@ -270,8 +270,7 @@ def list_sources():
         'aggregations': {
             'index': {
                 'terms': {
-                    'field': '_index',
-                    'size': 0,
+                    'field': '_index'
                 },
                 'aggregations': {
                     'doc_type': {
