@@ -174,7 +174,7 @@ class MeetingItemTestCase(ItemTestCase):
         MeetingItem.file_get_contents = MagicMock(return_value=u'pdf')
         item = MeetingItem(
             self.source_definition, 'application/json',
-            self.raw_item, self.meeting
+            self.raw_item, self.meeting, None
         )
 
 
@@ -194,7 +194,7 @@ class MeetingItemTestCase(ItemTestCase):
 
         item = MeetingItem(
             self.source_definition, 'application/json',
-            self.raw_item, self.meeting_item
+            self.raw_item, self.meeting_item, None
         )
         return item
 
@@ -378,7 +378,7 @@ class MeetingItemTestCase(ItemTestCase):
 
         item = MeetingItem(
             self.source_definition, 'application/json',
-            self.raw_faulty_meeting_item, meeting_item
+            self.raw_faulty_meeting_item, meeting_item, None
         )
 
         #data = item.get_combined_index_data()

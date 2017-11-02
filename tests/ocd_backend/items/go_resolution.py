@@ -110,7 +110,7 @@ class ResolutionItemTestCase(ItemTestCase):
         FileToTextMixin.file_download = MagicMock(return_value=file(self.pdf_path, 'rb'))
         item = ResolutionItem(
             self.source_definition, 'application/json',
-            self.raw_item, self.meeting
+            self.raw_item, self.meeting, None
         )
 
         return item

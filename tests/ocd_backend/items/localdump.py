@@ -37,46 +37,46 @@ class LocalDumpItemTestCase(ItemTestCase):
 
     def test_item_collection(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertEqual(item.get_collection(), self.collection)
 
     def test_get_rights(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertEqual(item.get_rights(), self.rights)
 
     def test_get_original_object_id(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertEqual(item.get_original_object_id(), self.original_object_id)
 
 
     def test_get_original_object_urls(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertDictEqual(item.get_original_object_urls(),
                              self.original_object_urls)
 
 
     def test_get_combined_index_data(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertIsInstance(item.get_combined_index_data(), dict)
 
     def test_get_index_data(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertIsInstance(item.get_index_data(), dict)
 
     def test_get_all_text(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         self.assertEqual(type(item.get_all_text()), unicode)
         self.assertTrue(len(item.get_all_text()) > 0)
 
     def test_combined_index_data_types(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
-                             self.raw_item, self.item)
+                             self.raw_item, self.item, None)
         data = item.get_combined_index_data()
         for field, field_type in item.combined_index_fields.iteritems():
             self.assertIn(field, data)
