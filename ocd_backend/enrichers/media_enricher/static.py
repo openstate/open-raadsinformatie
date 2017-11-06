@@ -3,7 +3,7 @@ from hashlib import sha1
 
 from ocd_backend.enrichers.media_enricher import MediaEnricher
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import STATIC_DIR_PATH
+from ocd_backend.settings import DATA_DIR_PATH
 
 log = get_source_logger('enricher')
 
@@ -13,14 +13,16 @@ class StaticMediaEnricher(MediaEnricher):
         http_resp = self.http_session.get(url, stream=True, timeout=(60, 120))
         http_resp.raise_for_status()
 
-        if not os.path.exists(STATIC_DIR_PATH):
-            log.debug('Creating static directory %s' % STATIC_DIR_PATH)
-            os.makedirs(STATIC_DIR_PATH)
+        static_dir = os.path.join(DATA_DIR_PATH, 'static')
+
+        if not os.path.exists(static_dir):
+            log.info('Creating static directory %s' % static_dir)
+            os.makedirs(static_dir)
 
         file_id = sha1(url).hexdigest()
 
         # Create a file to store the media item in the static dir
-        media_file = open(os.path.join(STATIC_DIR_PATH, file_id), "w+b")
+        media_file = open(os.path.join(static_dir, file_id), "w+b")
 
         # When a partial fetch is requested, request up to two MB
         partial_target_size = 1024 * 1024 * 2

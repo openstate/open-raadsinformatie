@@ -760,7 +760,7 @@ def resolve(url_id):
             doc_type='url', id=url_id)
 
         file_hash = sha1(resp['_source']['original_url']).hexdigest()
-        path = os.path.join(settings.STATIC_DIR_PATH, file_hash)
+        path = os.path.join(settings.DATA_DIR_PATH, 'static', file_hash)
         if os.path.exists(path):
             # Log a 'resolve_filepath' event if usage logging is enabled
             if current_app.config['USAGE_LOGGING_ENABLED']:

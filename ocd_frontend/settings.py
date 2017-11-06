@@ -397,7 +397,7 @@ USAGE_LOGGING_INDEX = 'npo_usage_logs'
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
 LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
-STATIC_DIR_PATH = os.path.join(os.path.dirname(ROOT_PATH), 'static')
+DATA_DIR_PATH = os.path.dirname(ROOT_PATH)
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.
