@@ -7,8 +7,11 @@ register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
 
+REDIS_HOST = "redis"
+REDIS_PORT = "6379"
+
 CELERY_CONFIG = {
-    'BROKER_URL': 'redis://redis:6379/0',
+    'BROKER_URL': 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT),
     'CELERY_ACCEPT_CONTENT': ['ocd_serializer'],
     'CELERY_TASK_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
