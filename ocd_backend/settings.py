@@ -53,27 +53,33 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'file',
             'filename': 'log/backend.log'
-        },
-        'err': {
-            'level': 'WARN',
-            'class': 'logging.FileHandler',
-            'formatter': 'file',
-            'filename': 'log/backend.err'
         }
     },
     'loggers': {
         'ocd_backend': {
-            'handlers': ['console', 'log', 'err'],
-            'level': 'INFO',
+            'handlers': ['console', 'log'],
+            'level': 'DEBUG',
             'propagate': False,
         },
         'celery': {
-            'handlers': ['console', 'log', 'err'],
-            'level': 'INFO',
+            'handlers': ['console', 'log'],
+            'level': 'DEBUG',
             'propagate': False,
         }
     }
 }
+
+if os.path.exists('/var/log/backend.err'):
+    LOGGING['handlers']['docker'] = {
+        'level': 'WARN',
+        'class': 'logging.FileHandler',
+        'formatter': 'file',
+        'filename': '/var/log/backend.err'
+    }
+
+    LOGGING['loggers']['ocd_backend']['handlers'] = ['console', 'log', 'docker']
+    LOGGING['loggers']['celery']['handlers'] = ['console', 'log', 'docker']
+
 
 ELASTICSEARCH_HOST = 'elasticsearch'
 ELASTICSEARCH_PORT = 9200
