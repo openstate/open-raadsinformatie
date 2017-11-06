@@ -2,6 +2,7 @@ build
 conf
 docs
 dumps
+data
 log/*
 ocd_frontend
 # Need frontend settings for import in manage.py for now

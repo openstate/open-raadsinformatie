@@ -58,6 +58,7 @@ local_dumps/
 *.log
 
 dumps/*
+data/*
 local_dumps/*
 ocd_frontend/.thumbnail-cache/*
 log/*log*
