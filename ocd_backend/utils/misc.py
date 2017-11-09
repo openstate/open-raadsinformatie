@@ -76,12 +76,25 @@ def load_sources_config(path):
     :param path: the path of the JSON file(s) wildcards * enabled.
     :type path: str.
     """
-    result = []
+    from yaml import load
+    try:
+        from yaml import CLoader as Loader
+    except ImportError:
+        from yaml import Loader
+
+    result = {}
     for filename in glob.glob(path):
         try:
-            with open(filename) as json_file:
-                for entry in json.load(json_file):
-                    result.append(entry)
+            ext = filename[-4:]
+            with open(filename) as file:
+                if ext == 'yaml':
+                    for key, entry in load(file, Loader=Loader).items():
+                        if key[0:1] == '_':
+                            continue
+                        result[key] = entry
+                elif ext == 'json':
+                    for entry in json.load(file):
+                        result[entry['id']] = entry
 
         except IOError, e:
             e.strerror = 'Unable to load sources configuration file (%s)' % (
@@ -89,6 +102,7 @@ def load_sources_config(path):
             raise
 
     return result
+
 
 def load_object(path):
     """Load an object given it's absolute object path, and return it.

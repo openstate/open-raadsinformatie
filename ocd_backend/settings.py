@@ -93,7 +93,7 @@ TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')
 DATA_DIR_PATH = os.path.join(ROOT_PATH, '../data')
 
 # The path of the JSON file containing the sources config
-SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*.json')
+SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
 
 # The name of the index containing documents from all sources
 COMBINED_INDEX = 'ori_combined_index'
