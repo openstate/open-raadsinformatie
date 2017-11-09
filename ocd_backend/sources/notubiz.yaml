@@ -1,0 +1,148 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+
+_entities: &entities
+  - &municipality
+      entity: municipality
+      doc_type: organizations
+      extractor: ocd_backend.extractors.odata.ODataExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+      loader: ocd_backend.loaders.ElasticsearchLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+      filter:
+        Title: "{{index_name}}" # hacked right now
+
+  - &meetings
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
+    transformer: ocd_backend.transformers.BaseTransformer
+    item: ocd_backend.items.notubiz_meeting.Meeting
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
+    loader: ocd_backend.loaders.ElasticsearchLoader
+    cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+  - &meetingitems
+    entity: meetingitems
+    extractor: ocd_backend.extractors.notubiz.NotubizMeetingItemExtractor
+    item: ocd_backend.items.notubiz_meetingitem.MeetingItem
+    <<: *meetings
+
+_notubiz: &notubiz
+  base_url: "https://api.notubiz.nl"
+  start_date: "2000-01-01T00:00:00"
+  end_date: "2017-01-01T00:00:00"
+  entities: *entities
+  <<: *source_defaults
+
+notubiz:
+  alkmaar:
+    organisation_id: 2048
+    <<: *notubiz
+
+  groningen:
+    organisation_id: 655
+    <<: *notubiz
+
+  amsterdam:
+    organisation_id: 281
+    <<: *notubiz
+
+  castricum:
+    organisation_id: 1812
+    <<: *notubiz
+
+  wageningen:
+    organisation_id: 1451
+    <<: *notubiz
+
+  hardenberg:
+    organisation_id: 793
+    <<: *notubiz
+
+  zaanstad:
+    organisation_id: 801
+    <<: *notubiz
+
+  roermond:
+    organisation_id: 775
+    <<: *notubiz
+
+  waalwijk:
+    organisation_id: 1429
+    <<: *notubiz
+
+  voorst:
+    organisation_id: 742
+    <<: *notubiz
+
+  zandvoort:
+    organisation_id: 924
+    <<: *notubiz
+
+  hilvarenbeek:
+    organisation_id: 545
+    <<: *notubiz
+
+  rhenen:
+    organisation_id: 1266
+    <<: *notubiz
+
+  baarn:
+    organisation_id: 1742
+    <<: *notubiz
+
+  zeist:
+    organisation_id: 1696
+    <<: *notubiz
+
+  soest:
+    organisation_id: 1674
+    <<: *notubiz
+
+  noordwijk:
+    organisation_id: 574
+    <<: *notubiz
+
+  amersfoort:
+    organisation_id: 867
+    <<: *notubiz
+
+  oisterwijk:
+    organisation_id: 531
+    <<: *notubiz
+
+  hulst:
+    organisation_id: 885
+    <<: *notubiz
+
+  maassluis:
+    organisation_id: 269
+    <<: *notubiz
+
+  epe:
+    organisation_id: 429
+    <<: *notubiz
+
+  leeuwarden:
+    organisation_id: 330
+    <<: *notubiz
+
+  den_haag:
+    organisation_id: 318
+    <<: *notubiz
+
+  krimpen_ad_ijssel:
+    organisation_id: 1273
+    <<: *notubiz
+
+  moerdijk:
+    organisation_id: 659
+    <<: *notubiz
