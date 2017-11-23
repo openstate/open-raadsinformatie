@@ -135,14 +135,50 @@ notubiz:
     organisation_id: 330
     <<: *notubiz
 
-  den_haag:
+  denhaag:
     organisation_id: 318
     <<: *notubiz
 
-  krimpen_ad_ijssel:
+  krimpenadijssel:
     organisation_id: 1273
     <<: *notubiz
 
   moerdijk:
     organisation_id: 659
+    <<: *notubiz
+
+  dongen:
+    organisation_id: 503
+    <<: *notubiz
+
+  schiedam:
+    organisation_id: 1062
+    <<: *notubiz
+
+  leiden:
+    organisation_id: 271
+    <<: *notubiz
+
+  vlaardingen:
+    organisation_id: 262
+    <<: *notubiz
+
+  ommen:
+    organisation_id: 434
+    <<: *notubiz
+
+  maastricht:
+    organisation_id: 258
+    <<: *notubiz
+
+  culemborg:
+    organisation_id: 1643
+    <<: *notubiz
+
+  schagen:
+    organisation_id: 1834
+    <<: *notubiz
+
+  almere:
+    organisation_id: 952
     <<: *notubiz
