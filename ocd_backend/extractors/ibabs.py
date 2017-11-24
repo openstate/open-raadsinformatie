@@ -54,9 +54,9 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
     def run(self):
         committee_designator = self.source_definition.get(
             'commitee_designator', 'commissie')
-        for mt in self.client.service.GetMeetingtypes(
         log.info("Getting committees with designator: %s" % (
             committee_designator,))
+        for mt in self.client.service.GetMeetingtypes(
             self.source_definition['sitename']
         ).Meetingtypes[0]:
             if committee_designator in mt.Meetingtype.lower():
