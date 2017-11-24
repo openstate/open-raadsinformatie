@@ -1,0 +1,486 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.odata.ODataExtractor
+    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
+    filter:
+      Title: "{sitename}"
+        
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
+    item: ocd_backend.items.ibabs_committee.CommitteeItem
+    
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.almanak.PersonsExtractor
+    item: ocd_backend.items.persons.AlmanakPersonItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+
+  - &reports
+    <<: *entity_defaults
+    entity: reports
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+    regex: ".*"
+    pdf_max_pages: 0
+    max_pages: 1
+
+_popit: &popit
+  - &popit_organizations
+    <<: *entity_defaults
+    entity: popit_organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.popit.PopItExtractor
+    item: ocd_backend.items.popit.PopitOrganisationItem
+    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/organizations
+
+  - &popit_persons
+    <<: *entity_defaults
+    entity: popit_persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.popit.PopItExtractor
+    item: ocd_backend.items.popit.PopitOrganisationItem
+    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/persons
+
+_cwc: &cwc
+  - &videotulen
+    <<: *entity_defaults
+    entity: videotulen
+    doc_type: events
+    extractor: ocd_backend.extractors.cwc.VideotulenExtractor
+    item: ocd_backend.items.cwc.VideotulenItem
+    cwc_pagesize: 10
+    cwc_paging: false
+
+_ibabs: &ibabs
+  index_name: "{key}"
+  sitename: "{key!c}"
+  entities: *entities
+  #start_date: "2016-01-01T00:00:00"
+  #end_date: "2016-06-01T00:00:00"
+  <<: *source_defaults
+
+ibabs:
+  # Added before 17-11-2017
+  amstelveen:
+    key: amstelveen
+    almanak_id: 28270
+    <<: *ibabs
+
+  enschede:
+    key: enschede
+    almanak_id: 25100
+    <<: *ibabs
+
+  gouda:
+    key: gouda
+    almanak_id: 28975
+    <<: *ibabs
+
+  heerde:
+    key: heerde
+    almanak_id: 23411
+    <<: *ibabs
+
+  medemblik:
+    key: medemblik
+    almanak_id: 23294
+    <<: *ibabs
+
+  oss:
+    key: oss
+    almanak_id: 37907
+    <<: *ibabs
+
+  overbetuwe:
+    key: overbetuwe
+    almanak_id: 26937
+    cwc_username: overbetuwe_read_svc
+    cwc_password: NFd!N39K
+    entities:
+    - *popit_organizations
+    - *popit_persons
+    - *municipality
+    - *committees
+    - *organizations
+    - *persons
+    - *meetings
+    - *reports
+    - *videotulen
+    <<: *ibabs
+
+  zoetermeer:
+    key: zoetermeer
+    almanak_id: 28493
+    <<: *ibabs
+
+  utrecht:
+    key: utrecht
+    almanak_id: 38122
+    cwc_username: utrecht_api
+    cwc_password: U@nG5rfp
+    <<: *ibabs
+    entities:
+    - *popit_organizations
+    - *popit_persons
+    - *municipality
+    - *committees
+    - *organizations
+    - *persons
+    - entity: popit_memberships
+      doc_type: memberships
+      extractor: ocd_backend.extractors.popit.PopItExtractor
+      item: ocd_backend.items.popit.PopitMembershipItem
+      file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/memberships
+      <<: *entity_defaults
+
+    - entity: meetings
+      doc_type: events
+      extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+      item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+      enrichers:
+      - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+        - tasks:
+          - ggm_motion_text
+      <<: *entity_defaults
+
+    - entity: reports
+      doc_type: events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+      include: ".*"
+      exclude: moties
+      pdf_max_pages: 0
+      max_pages: 1
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Commissiebrieven C&F:
+          name: onderwerp
+          description: status
+          start_date: datuminvoer
+        Commissiebrieven M&S:
+          name: onderwerp
+          description: onderwerp
+          start_date: datuminvoer
+        Commissiebrieven S&R:
+          name: onderwerp
+          description: onderwerp
+          start_date: datuminvoer
+        Schriftelijke vragen:
+          name: onderwerp
+          description: indieners
+          start_date: datum
+      <<: *entity_defaults
+
+    - entity: motions
+      doc_type: motions
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: moties
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    - entity: vote_events
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
+      include: moties
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    - entity: voting_rounds
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
+      sitename: UtrechtTest
+      pdf_max_pages: 20
+      start_date: '2016-04-01T00:00:00'
+      end_date: '2016-06-01T00:00:00'
+      <<: *entity_defaults
+
+    - id: utrecht_ibabs_most_recent_popit_persons
+      entity: ibabs_most_recent_popit_persons
+      doc_type: persons
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      item: ocd_backend.items.popit.PopitPersonItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
+      sitename: UtrechtTest
+      pdf_max_pages: 20
+      start_date: '2016-04-01T00:00:00'
+      end_date: '2016-06-01T00:00:00'
+      council_members_count: 45
+      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
+      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
+      popit_entity: persons
+
+    - id: utrecht_ibabs_most_recent_popit_organizations
+      entity: ibabs_most_recent_popit_organizations
+      doc_type: organizations
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitOrganisationItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
+      sitename: UtrechtTest
+      pdf_max_pages: 20
+      start_date: '2016-04-01T00:00:00'
+      end_date: '2016-06-01T00:00:00'
+      council_members_count: 45
+      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
+      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
+      popit_entity: organizations
+
+    - id: utrecht_ibabs_most_recent_popit_memberships
+      entity: ibabs_most_recent_popit_memberships
+      doc_type: memberships
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitMembershipItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
+      sitename: UtrechtTest
+      pdf_max_pages: 20
+      start_date: '2016-04-01T00:00:00'
+      end_date: '2016-06-01T00:00:00'
+      council_members_count: 45
+      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
+      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
+      popit_entity: memberships
+
+    - id: utrecht_ibabs_most_recent_popit_council_memberships
+      entity: ibabs_most_recent_popit_council_memberships
+      doc_type: memberships
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitMembershipItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
+      sitename: UtrechtTest
+      pdf_max_pages: 20
+      start_date: '2016-04-01T00:00:00'
+      end_date: '2016-06-01T00:00:00'
+      council_members_count: 45
+      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
+      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
+      popit_entity: council-memberships
+      council_url: http://utrecht.openraadsinformatie.nl/api/v0.1/organizations/gemeente-utrecht-utrecht-ut
+
+    - entity: meeting_attendees
+      doc_type: events
+      extractor: ocd_backend.extractors.api.FrontendAPIExtractor
+      item: ocd_backend.items.attendance.AttendanceForEventItem
+      frontend_type: events
+      frontend_args:
+        classification: Agenda
+        sort: start_date
+        order: desc
+        size: 100
+      <<: *entity_defaults
+
+    - *videotulen
+
+  # Added on 17-11-2017
+  barneveld:
+    key: barneveld
+    almanak_id: 27179
+    <<: *ibabs
+
+  losser:
+    key: losser
+    almanak_id: 27430
+    <<: *ibabs
+
+  lelystad:
+    key: lelystad
+    almanak_id: 30046
+    <<: *ibabs
+
+  krimpenerwaard:
+    key: krimpenerwaard
+    almanak_id: 129780
+    <<: *ibabs
+
+  teylingen:
+    key: teylingen
+    almanak_id: 29957
+    <<: *ibabs
+
+  arnhem:
+    key: arnhem
+    almanak_id: 32510
+    <<: *ibabs
+
+  heemskerk:
+    key: heemskerk
+    almanak_id: 23365
+    <<: *ibabs
+
+  oosterhout:
+    key: oosterhout
+    almanak_id: 22438
+    <<: *ibabs
+
+  # Waiting for permission
+  #lansingerland:
+  #  key: lansingerland
+  #  almanak_id: 35243
+  #  <<: *ibabs
+
+  landsmeer:
+    key: landsmeer
+    almanak_id: 21723
+    <<: *ibabs
+
+  voorschoten:
+    key: voorschoten
+    almanak_id: 35396
+    <<: *ibabs
+
+  wassenaar:
+    key: wassenaar
+    almanak_id: 40204
+    <<: *ibabs
+
+  aalsmeer:
+    key: aalsmeer
+    almanak_id: 28409
+    <<: *ibabs
+
+  noordwijkerhout:
+    key: noordwijkerhout
+    almanak_id: 34729
+    <<: *ibabs
+
+  texel:
+    key: texel
+    almanak_id: 22715
+    <<: *ibabs
+
+  staphorst:
+    key: staphorst
+    almanak_id: 24378
+    <<: *ibabs
+
+  almelo:
+    key: almelo
+    almanak_id: 26572
+    <<: *ibabs
+
+  nieuwkoop:
+    key: nieuwkoop
+    almanak_id: 26403
+    <<: *ibabs
+
+  loonopzand:
+    key: loonopzand
+    sitename: Loon op Zand
+    almanak_id: 25473
+    <<: *ibabs
+
+  hilversum:
+    key: hilversum
+    almanak_id: 28797
+    <<: *ibabs
+
+  meppel:
+    key: meppel
+    almanak_id: 41121
+    <<: *ibabs
+
+  diemen:
+    key: diemen
+    almanak_id: 21518
+    <<: *ibabs
+
+  nieuwegein:
+    key: nieuwegein
+    almanak_id: 24713
+    <<: *ibabs
+
+  lingewaard:
+    key: lingewaard
+    almanak_id: 37823
+    <<: *ibabs
+
+  hollandskroon:
+    key: hollandskroon
+    almanak_id: 24449
+    <<: *ibabs
+
+  meierijstad:
+    key: meierijstad
+    almanak_id: 29116
+    <<: *ibabs
