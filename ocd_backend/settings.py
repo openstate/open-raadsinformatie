@@ -16,7 +16,7 @@ CELERY_CONFIG = {
     'CELERY_TASK_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://redis:6379/0',
-    'CELERY_IGNORE_RESULT': True,
+    'CELERY_IGNORE_RESULT': False,
     'CELERY_MESSAGE_COMPRESSION': 'gzip',
     'CELERYD_HIJACK_ROOT_LOGGER': False,
     'CELERY_DISABLE_RATE_LIMITS': True,

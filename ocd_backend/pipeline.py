@@ -8,7 +8,7 @@ from celery import chain, group
 from ocd_backend.es import elasticsearch as es
 from ocd_backend import settings, celery_app
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.misc import load_object
+from ocd_backend.utils.misc import load_object, propagate_chain_get
 from ocd_backend.exceptions import ConfigurationError
 
 logger = get_source_logger('pipeline')
@@ -172,4 +172,9 @@ def setup_pipeline(source_definition):
             raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
+    if result and source_definition.get('wait_until_finished'):
+        # Wait for last task chain to end before continuing
+        logger.debug("Waiting for last chain to finish")
+        propagate_chain_get(result)
+
     print

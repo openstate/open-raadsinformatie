@@ -338,3 +338,13 @@ def get_secret(item_id):
         raise UserWarning("No secrets found for %s! Make sure that the "
                           "correct secrets are supplied in ocd_backend/"
                           "secrets.py" % item_id)
+
+
+def propagate_chain_get(terminal_node, timeout=None):
+    node = terminal_node.parent
+    while node:
+        try:
+            node.get(propagate=True, timeout=timeout)
+            node = node.parent
+        except:
+            break
