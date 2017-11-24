@@ -46,4 +46,7 @@ class FrontendAPIMixin(object):
             data=json.dumps(api_query)
         )
         r.raise_for_status()
-        return r.json()[doc_type]
+        try:
+            return r.json()[doc_type]
+        except KeyError, e:
+            return None
