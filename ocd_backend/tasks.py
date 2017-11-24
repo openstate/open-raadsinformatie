@@ -41,10 +41,11 @@ class CleanupElasticsearch(BaseCleanup):
         new_index_name = kwargs.get('new_index_name')
         alias = kwargs.get('index_alias')
 
-        log.info('Finished run {}. Removing alias "{}" from "{}", and '
+        result = 'Finished run {}. Removing alias "{}" from "{}", and ' \
                  'applying it to "{}"'.format(run_identifier, alias,
                                               current_index_name,
-                                              new_index_name))
+                                              new_index_name)
+        log.info(result)
 
         actions = {
             'actions': [
@@ -69,6 +70,8 @@ class CleanupElasticsearch(BaseCleanup):
         # Remove old index
         if current_index_name != new_index_name:
             es.indices.delete(index=current_index_name)
+
+        return result
 
 
 class DummyCleanup(BaseCleanup):

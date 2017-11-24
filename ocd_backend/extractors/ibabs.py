@@ -15,12 +15,16 @@ from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.extractors.data_sync import DataSyncBaseExtractor
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.utils.misc import normalize_motion_id
+from ocd_backend.extractors import BaseExtractor
 
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, document_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
     list_entry_response_to_dict, votes_to_dict)
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('extractor')
 
 
 class IBabsBaseExtractor(BaseExtractor):
@@ -36,7 +40,7 @@ class IBabsBaseExtractor(BaseExtractor):
             ibabs_wsdl = self.source_definition['wsdl']
         except Exception as e:
             ibabs_wsdl = settings.IBABS_WSDL
-        pprint(ibabs_wsdl)
+        #pprint(ibabs_wsdl)
         self.client = Client(ibabs_wsdl)
         self.client.set_options(port='BasicHttpsBinding_IPublic')
 
@@ -50,9 +54,9 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
     def run(self):
         committee_designator = self.source_definition.get(
             'commitee_designator', 'commissie')
-        print "Getting committees with designator: %s" % (
-            committee_designator,)
         for mt in self.client.service.GetMeetingtypes(
+        log.info("Getting committees with designator: %s" % (
+            committee_designator,))
             self.source_definition['sitename']
         ).Meetingtypes[0]:
             if committee_designator in mt.Meetingtype.lower():
@@ -497,12 +501,12 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    pprint(dict_item)
-                    try:
-                        # this should be the motion's unique identifier
-                        pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
-                    except KeyError as e:
-                        pass
+                    #pprint(dict_item)
+                    # try:
+                    #     # this should be the motion's unique identifier
+                    #     pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
+                    # except (KeyError, AttributeError) as e:
+                    #     pass
                     yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1

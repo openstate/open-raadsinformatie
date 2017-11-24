@@ -15,6 +15,8 @@ logger = get_source_logger('pipeline')
 
 
 def setup_pipeline(source_definition):
+    logger.info('Starting pipeline for source: %s' % source_definition.get('id'))
+
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
         prefix=settings.DEFAULT_INDEX_PREFIX,
@@ -158,12 +160,16 @@ def setup_pipeline(source_definition):
         except Exception, e:
             logger.error('An exception has occured in the "{extractor}" extractor.'
                          ' Setting status of run identifier "{run_identifier}" to '
-                         '"error".'
+                         '"error":\n{message}'
                          .format(index=params['new_index_name'],
                                  run_identifier=params['run_identifier'],
-                                 extractor=pipeline_extractors[pipeline['id']]))
+                                 extractor=pipeline_extractors[pipeline['id']],
+                                 message=e,
+                                 )
+                         )
 
             celery_app.backend.set(params['run_identifier'], 'error')
             raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
+    print
