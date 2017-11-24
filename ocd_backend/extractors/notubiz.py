@@ -22,65 +22,66 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
         raise NotImplemented
 
     def run(self):
-        page = 1
+        for start_date, end_date in self.interval_generator():
+            log.info("Now processing first page meeting(items) from %s to %s" % (
+            start_date, end_date,))
 
-        while True:
-            start_date = parse(self.source_definition['start_date'])
-            end_date = parse(self.source_definition['end_date'])
-
-            resp = self.http_session.get(
-                "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                "&format=json&version=1.10.8&page=%i" %
-                (
-                    self.base_url,
-                    self.source_definition['organisation_id'],
-                    start_date.strftime("%Y-%m-%d %H:%M:%S"),
-                    end_date.strftime("%Y-%m-%d %H:%M:%S"),
-                    page
-                )
-            )
-
-            try:
-                resp.raise_for_status()
-            except HTTPError, e:
-                log.warn('%s: %s' % (e, resp.request.url))
-                break
-
-            event_json = resp.json()
-
-            if not event_json[self.source_definition['doc_type']]:
-                break
-
-            log.info("Processing page %i" % page)
-
-            for item in event_json[self.source_definition['doc_type']]:
+            page = 1
+            while True:
                 resp = self.http_session.get(
-                    "%s/events/meetings/%i?format=json&version=1.10.8" %
+                    "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
+                    "&format=json&version=1.10.8&page=%i" %
                     (
                         self.base_url,
-                        item['id']
+                        self.source_definition['organisation_id'],
+                        start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        end_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        page
                     )
                 )
 
                 try:
                     resp.raise_for_status()
-                    meeting_json = resp.json()['meeting']
                 except HTTPError, e:
                     log.warn('%s: %s' % (e, resp.request.url))
                     break
-                except KeyError, e:
-                    log.error('%s: %s' % (e, resp.request.url))
+
+                event_json = resp.json()
+
+                if not event_json[self.source_definition['doc_type']]:
                     break
 
-                for result in self.extractor(meeting_json):
-                    yield result
+                if page > 1:
+                    log.debug("Processing page %i" % page)
 
-            # Currently not working due to bug
-            # if not event_json['pagination']['has_more_pages']:
-            #     log.info("Done processing all entities!")
-            #     break
+                for item in event_json[self.source_definition['doc_type']]:
+                    resp = self.http_session.get(
+                        "%s/events/meetings/%i?format=json&version=1.10.8" %
+                        (
+                            self.base_url,
+                            item['id']
+                        )
+                    )
 
-            page += 1
+                    try:
+                        resp.raise_for_status()
+                        meeting_json = resp.json()['meeting']
+                    except HTTPError, e:
+                        log.warn('%s: %s' % (e, resp.request.url))
+                        break
+                    except KeyError, e:
+                        log.error('%s: %s' % (e, resp.request.url))
+                        break
+
+                    for result in self.extractor(meeting_json):
+                        yield result
+
+                # Currently not working due to bug
+                # if not event_json['pagination']['has_more_pages']:
+                #     log.info("Done processing all entities!")
+                #     break
+
+                page += 1
 
 
 class NotubizMeetingExtractor(NotubizBaseExtractor):
