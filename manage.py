@@ -386,11 +386,6 @@ def extract_start(source_id, subitem, entiteit, sources_config):
         for item in source.get('entities'):
             if (not entiteit and item) or (entiteit and item.get('entity') in entiteit):
                 source.update(item)
-                source['id'] = '%s_%s' % (source_id, item['entity'])
-                source['index_name'] = source_id
-                if 'filter' in source:
-                    # todo temporary fix
-                    source['filter']['Title'] = source_id.capitalize()
                 setup_pipeline(source)
 
 

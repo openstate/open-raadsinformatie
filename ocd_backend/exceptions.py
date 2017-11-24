@@ -33,3 +33,7 @@ class SkipEnrichment(Exception):
 class UnsupportedContentType(Exception):
     """Exception thrown when a media enrichemnt task is asked to process
     media content that is doesn't understand."""
+
+
+class MissingTemplateTag(KeyError):
+    """Thrown when a template tag is missing in the configuration"""

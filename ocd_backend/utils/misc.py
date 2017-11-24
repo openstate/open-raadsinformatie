@@ -4,7 +4,9 @@ import json
 import re
 import translitcodec
 from lxml import etree
+from string import Formatter
 
+from ocd_backend.exceptions import MissingTemplateTag
 from elasticsearch.helpers import scan, bulk
 
 
@@ -69,6 +71,37 @@ def reindex(client, source_index, target_index, target_client=None, chunk_size=5
         chunk_size=chunk_size, stats_only=True)
 
 
+class ExtendedFormatter(Formatter):
+    """An extended format string formatter
+    Formatter with extended conversion symbol
+    See: https://stackoverflow.com/a/46160537/5081021
+    """
+    def convert_field(self, value, conversion):
+        """ Extend conversion symbol
+        Following additional symbol has been added
+        * c: convert to string and capitalize
+        * l: convert to string and low case
+        * u: convert to string and up case
+
+        default are:
+        * s: convert with str()
+        * r: convert with repr()
+        * a: convert with ascii()
+        """
+
+        if conversion == "c":
+            return str(value).capitalize()
+        elif conversion == "u":
+            return str(value).upper()
+        elif conversion == "l":
+            return str(value).lower()
+        # Do the default conversion or raise error if no matching conversion found
+        super(ExtendedFormatter, self).convert_field(value, conversion)
+
+        # return for None case
+        return value
+
+
 def load_sources_config(path):
     """Loads a JSON file(s) containing the configuration of the available
     sources.
@@ -76,6 +109,52 @@ def load_sources_config(path):
     :param path: the path of the JSON file(s) wildcards * enabled.
     :type path: str.
     """
+
+    def sort_source_keys(key):
+        """Sort importance of specified key"""
+        try:
+            if key[0] == 'key':
+                return int(0)
+            if str(key[1]).startswith('{key'):
+                return int(1)
+            if type(key[1]) == list or type(key[1]) == dict:
+                return int(4)
+            if '{' in str(key[1]):
+                return int(2)
+        except AttributeError:
+            pass
+        return int(3)
+
+    def replace_tags(data, chain=None):
+        """Replace tags by higher level defined values in yaml files."""
+        if type(data) == dict:
+            if not chain or 'key' in data:
+                chain = dict()
+            chain.update(data)
+
+            new_data = dict()
+            for key, value in sorted(data.items(), key=sort_source_keys):
+                if key[0:1] == '_':
+                    continue
+
+                if isinstance(value, basestring):
+                    try:
+                        new_data[key] = ExtendedFormatter().format(value, **chain)
+                        chain[key] = new_data[key]
+                    except KeyError, e:
+                        raise MissingTemplateTag('Missing template tag %s in configuration for key \'%s\'' % (e, key))
+                else:
+                    chain[key] = value
+                    new_data[key] = replace_tags(value, chain)
+            return new_data
+        elif type(data) == list:
+            new_data = list()
+            for value in data:
+                new_data.append(replace_tags(value, chain))
+            return new_data
+        else:
+            return data
+
     from yaml import load
     try:
         from yaml import CLoader as Loader
@@ -88,9 +167,10 @@ def load_sources_config(path):
             ext = filename[-4:]
             with open(filename) as file:
                 if ext == 'yaml':
-                    for key, entry in load(file, Loader=Loader).items():
-                        if key[0:1] == '_':
-                            continue
+                    data = load(file, Loader=Loader)
+                    data = replace_tags(data)
+
+                    for key, entry in data.items():
                         result[key] = entry
                 elif ext == 'json':
                     for entry in json.load(file):
