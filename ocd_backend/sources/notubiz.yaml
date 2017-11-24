@@ -2,183 +2,224 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
 
 _entities: &entities
   - &municipality
-      entity: municipality
-      doc_type: organizations
-      extractor: ocd_backend.extractors.odata.ODataExtractor
-      transformer: ocd_backend.transformers.BaseTransformer
-      item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-      loader: ocd_backend.loaders.ElasticsearchLoader
-      cleanup: ocd_backend.tasks.CleanupElasticsearch
-      file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
-      filter:
-        Title: "{{index_name}}" # hacked right now
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.odata.ODataExtractor
+    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+    file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+    filter:
+      Title: "{sitename}"
 
   - &meetings
+    <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
-    transformer: ocd_backend.transformers.BaseTransformer
     item: ocd_backend.items.notubiz_meeting.Meeting
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
       - tasks:
         - file_to_text
-    loader: ocd_backend.loaders.ElasticsearchLoader
-    cleanup: ocd_backend.tasks.CleanupElasticsearch
 
   - &meetingitems
+    <<: *meetings
     entity: meetingitems
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingItemExtractor
     item: ocd_backend.items.notubiz_meetingitem.MeetingItem
-    <<: *meetings
 
 _notubiz: &notubiz
+  index_name: "{key}"
+  sitename: "{key!c}"
   base_url: "https://api.notubiz.nl"
-  start_date: "2000-01-01T00:00:00"
-  end_date: "2017-01-01T00:00:00"
   entities: *entities
   <<: *source_defaults
 
 notubiz:
   alkmaar:
+    key: alkmaar
     organisation_id: 2048
     <<: *notubiz
 
   groningen:
+    key: groningen
+    sitename: Groningen (gemeente)
     organisation_id: 655
     <<: *notubiz
 
   amsterdam:
+    key: amsterdam
     organisation_id: 281
     <<: *notubiz
 
   castricum:
+    key: castricum
     organisation_id: 1812
     <<: *notubiz
 
   wageningen:
+    key: wageningen
     organisation_id: 1451
     <<: *notubiz
 
   hardenberg:
+    key: hardenberg
     organisation_id: 793
     <<: *notubiz
 
   zaanstad:
+    key: zaanstad
     organisation_id: 801
     <<: *notubiz
 
   roermond:
+    key: roermond
     organisation_id: 775
     <<: *notubiz
 
   waalwijk:
+    key: waalwijk
     organisation_id: 1429
     <<: *notubiz
 
   voorst:
+    key: voorst
     organisation_id: 742
     <<: *notubiz
 
   zandvoort:
+    key: zandvoort
     organisation_id: 924
     <<: *notubiz
 
   hilvarenbeek:
+    key: hilvarenbeek
     organisation_id: 545
     <<: *notubiz
 
   rhenen:
+    key: rhenen
     organisation_id: 1266
     <<: *notubiz
 
   baarn:
+    key: baarn
     organisation_id: 1742
     <<: *notubiz
 
   zeist:
+    key: zeist
     organisation_id: 1696
     <<: *notubiz
 
   soest:
+    key: soest
     organisation_id: 1674
     <<: *notubiz
 
   noordwijk:
+    key: noordwijk
     organisation_id: 574
     <<: *notubiz
 
   amersfoort:
+    key: amersfoort
     organisation_id: 867
     <<: *notubiz
 
   oisterwijk:
+    key: oisterwijk
     organisation_id: 531
     <<: *notubiz
 
   hulst:
+    key: hulst
     organisation_id: 885
     <<: *notubiz
 
   maassluis:
+    key: maassluis
     organisation_id: 269
     <<: *notubiz
 
   epe:
+    key: epe
     organisation_id: 429
     <<: *notubiz
 
   leeuwarden:
+    key: leeuwarden
     organisation_id: 330
     <<: *notubiz
 
   denhaag:
+    key: denhaag
+    sitename: "'s-Gravenhage (gemeente)"
     organisation_id: 318
     <<: *notubiz
 
   krimpenadijssel:
+    key: krimpenadijssel
+    sitename: Krimpen aan den IJssel
     organisation_id: 1273
     <<: *notubiz
 
   moerdijk:
+    key: moerdijk
     organisation_id: 659
     <<: *notubiz
 
   dongen:
+    key: dongen
     organisation_id: 503
     <<: *notubiz
 
   schiedam:
+    key: schiedam
     organisation_id: 1062
     <<: *notubiz
 
   leiden:
+    key: leiden
     organisation_id: 271
     <<: *notubiz
 
   vlaardingen:
+    key: vlaardingen
     organisation_id: 262
     <<: *notubiz
 
   ommen:
+    key: ommen
     organisation_id: 434
     <<: *notubiz
 
   maastricht:
+    key: maastricht
     organisation_id: 258
     <<: *notubiz
 
   culemborg:
+    key: culemborg
     organisation_id: 1643
     <<: *notubiz
 
   schagen:
+    key: schagen
     organisation_id: 1834
     <<: *notubiz
 
   almere:
+    key: almere
     organisation_id: 952
     <<: *notubiz
