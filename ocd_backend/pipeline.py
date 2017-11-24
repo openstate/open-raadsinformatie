@@ -101,13 +101,14 @@ def setup_pipeline(source_definition):
             ]
         ]
 
+    result = None
     for pipeline in pipelines:
         try:
             # The first extractor should be a generator instead of a task
             for item in pipeline_extractors[pipeline['id']](
                     source_definition=pipeline_definitions[pipeline['id']]).run():
 
-                step_chain = chain()
+                step_chain = list()
 
                 params['chain_id'] = uuid4().hex
                 celery_app.backend.add_value_to_set(
@@ -116,29 +117,31 @@ def setup_pipeline(source_definition):
 
                 # Remaining extractors
                 for extension in pipeline_extensions[pipeline['id']]:
-                    step_chain |= extension().s(
+                    step_chain.append(extension().s(
                         *item,
                         source_definition=pipeline_definitions[pipeline['id']],
                         **params
+                        )
                     )
                     # Prevent old item being passed down to next steps
                     item = []
 
                 # Transformers
-                step_chain |= pipeline_transformers[pipeline['id']].s(
+                step_chain.append(pipeline_transformers[pipeline['id']].s(
                     *item,
                     source_definition=pipeline_definitions[pipeline['id']],
-                    **params)
+                    **params))
 
                 # Enrichers
                 for enricher_task, enricher_settings in pipeline_enrichers[
                     pipeline['id']
                 ]:
-                    step_chain |= enricher_task.s(
+                    step_chain.append(enricher_task.s(
                         source_definition=pipeline_definitions[
                             pipeline['id']],
                         enricher_settings=enricher_settings,
                         **params
+                        )
                     )
 
                 # Loaders
@@ -149,10 +152,10 @@ def setup_pipeline(source_definition):
                         source_definition=pipeline_definitions[
                             pipeline['id']],
                         **params))
-                step_chain |= group(initialized_loaders)
+                step_chain.append(group(initialized_loaders))
 
-                step_chain.delay()
-        except:
+                result = chain(step_chain).delay()
+        except Exception, e:
             logger.error('An exception has occured in the "{extractor}" extractor.'
                          ' Setting status of run identifier "{run_identifier}" to '
                          '"error".'
