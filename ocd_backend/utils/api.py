@@ -1,8 +1,6 @@
-from datetime import datetime
 import json
-from pprint import pprint
 
-import iso8601
+import requests
 
 from ocd_backend import settings
 
@@ -13,9 +11,15 @@ class FrontendAPIMixin(object):
     """
 
     def api_request(self, index_name, doc_type, query=None, *args, **kwargs):
-        api_url = u'%s%s/%s/search' % (
-            self.source_definition.get('frontend_api_url', settings.API_URL),
-            index_name, doc_type,)
+
+        if doc_type:
+            api_url = u'%s%s/%s/search' % (
+                self.source_definition.get('frontend_api_url', settings.API_URL),
+                index_name, doc_type,)
+        else:
+            api_url = u'%s%s/search' % (
+                self.source_definition.get('frontend_api_url', settings.API_URL),
+                index_name,)
 
         # TODO: facets (better), sorting
         api_query = {
@@ -45,8 +49,30 @@ class FrontendAPIMixin(object):
             api_url,
             data=json.dumps(api_query)
         )
-        r.raise_for_status()
         try:
-            return r.json()[doc_type]
-        except KeyError, e:
+            r.raise_for_status()
+        except requests.HTTPError:
             return None
+
+        if doc_type:
+            try:
+                return r.json()[doc_type]
+            except KeyError:
+                return None
+        return r.json()
+
+    def api_request_object(self, index_name, doc_type, object_id, *args,
+                           **kwargs):
+        api_url = u'%s%s/%s/%s' % (
+            self.source_definition.get('frontend_api_url',
+                                       settings.API_URL), index_name, doc_type,
+            object_id)
+        r = self.http_session.get(
+            api_url
+        )
+        try:
+            r.raise_for_status()
+        except requests.HTTPError:
+            return None
+
+        return r.json()

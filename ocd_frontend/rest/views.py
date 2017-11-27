@@ -446,9 +446,14 @@ def search_source(source_id, doc_type=u'items'):
     if search_req['filters']:
         es_q['query']['bool']['filter'] = search_req['filters']
 
+    if doc_type != settings.DOC_TYPE_DEFAULT:
+        request_doc_type = doc_type
+    else:
+        request_doc_type = None
+
     try:
         es_r = current_app.es.search(
-            body=es_q, index=index_name, doc_type=doc_type)
+            body=es_q, index=index_name, doc_type=request_doc_type)
     except NotFoundError:
         raise OcdApiError('Source \'%s\' does not exist' % source_id, 404)
 
