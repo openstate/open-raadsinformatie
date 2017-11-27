@@ -157,6 +157,9 @@ def setup_pipeline(source_definition):
                 step_chain.append(group(initialized_loaders))
 
                 result = chain(step_chain).delay()
+        except KeyboardInterrupt:
+            logger.warn('KeyboardInterrupt received. Stopping the program.')
+            exit()
         except Exception, e:
             logger.error('An exception has occured in the "{extractor}" extractor.'
                          ' Setting status of run identifier "{run_identifier}" to '
