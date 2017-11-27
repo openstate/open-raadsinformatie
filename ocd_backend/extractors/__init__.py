@@ -83,6 +83,16 @@ class BaseExtractor(object):
                 break
 
 
+class CustomRetry(Retry):
+    """A subclass of the Retry class but with extra logging"""
+    def increment(self, method=None, url=None, response=None, error=None,
+                  _pool=None, _stacktrace=None):
+        res = super(CustomRetry, self).increment(method, url, response,
+                                                 error, _pool, _stacktrace)
+        log.info("Retrying url: %s" % url)
+        return res
+
+
 class HttpRequestMixin(object):
     """A mixin that can be used by extractors that use HTTP as a method
     to fetch data from a remote source. A persistent
@@ -100,13 +110,13 @@ class HttpRequestMixin(object):
             session = requests.Session()
             session.headers['User-Agent'] = USER_AGENT
 
-            http_retry = Retry(total=5, status_forcelist=[500, 503],
-                               backoff_factor=.5)
+            http_retry = CustomRetry(total=12, status_forcelist=[500, 503],
+                                     backoff_factor=.4)
             http_adapter = HTTPAdapter(max_retries=http_retry)
             session.mount('http://', http_adapter)
 
-            http_retry = Retry(total=5, status_forcelist=[500, 503],
-                               backoff_factor=.5)
+            http_retry = CustomRetry(total=12, status_forcelist=[500, 503],
+                                     backoff_factor=.4)
             http_adapter = HTTPAdapter(max_retries=http_retry)
             session.mount('https://', http_adapter)
 
