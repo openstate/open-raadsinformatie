@@ -2,24 +2,15 @@ import json
 from pprint import pprint
 import re
 from hashlib import sha1
-import os
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from dateutil.parser import parse
 
 import requests
-from lxml import etree
 from suds.client import Client
 
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
-from ocd_backend.extractors.data_sync import DataSyncBaseExtractor
-from ocd_backend.exceptions import ConfigurationError
-from ocd_backend.utils.misc import normalize_motion_id
 from ocd_backend.extractors import BaseExtractor
 
 from ocd_backend import settings
 from ocd_backend.utils.ibabs import (
-    meeting_to_dict, document_to_dict, meeting_item_to_dict,
+    meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
     list_entry_response_to_dict, votes_to_dict)
 from ocd_backend.log import get_source_logger
@@ -56,11 +47,16 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
             'commitee_designator', 'commissie')
         log.info("Getting committees with designator: %s" % (
             committee_designator,))
-        for mt in self.client.service.GetMeetingtypes(
+        meeting_types = self.client.service.GetMeetingtypes(
             self.source_definition['sitename']
-        ).Meetingtypes[0]:
-            if committee_designator in mt.Meetingtype.lower():
-                yield 'application/json', json.dumps(meeting_type_to_dict(mt))
+        )
+
+        if meeting_types.Meetingtypes:
+            for mt in meeting_types.Meetingtypes[0]:
+                if committee_designator in mt.Meetingtype.lower():
+                    yield 'application/json', json.dumps(meeting_type_to_dict(mt))
+        else:
+            log.warn('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -75,40 +71,16 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 self.source_definition['sitename']).Meetingtypes[0]}
 
     def run(self):
-        months = 1  # Max 1 months intervals by default
-        if 'months_interval' in self.source_definition:
-            months = self.source_definition['months_interval']
-        days = (months / 2.0) * 30
-        # current_start = datetime(2000, 1, 1)  # Start somewhere by default
-        if (months / 2.0) < 1.0:
-            interval_delta = relativedelta(days=days)
-        else:
-            interval_delta = relativedelta(months=months)
-
-        # current_start = datetime(2000, 1, 1)  # Start somewhere by default
-        current_start = datetime.today() - interval_delta
-
-        if 'start_date' in self.source_definition:
-            current_start = parse(self.source_definition['start_date'])
-
-        end_date = datetime.today() + interval_delta
-
-        if 'end_date' in self.source_definition:
-            end_date = parse(self.source_definition['end_date'])
-
-        print "Getting all meetings for %s to %s" % (current_start, end_date,)
-
         meeting_count = 0
-        meeting_item_count = 0
         meetings_skipped = 0
-
-        while True:
-            current_end = current_start + interval_delta
+        meeting_item_count = 0
+        for start_date, end_date in self.interval_generator():
+            log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
 
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['sitename'],
-                StartDate=current_start.strftime('%Y-%m-%dT%H:%M:%S'),
-                EndDate=current_end.strftime('%Y-%m-%dT%H:%M:%S'),
+                StartDate=start_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                EndDate=end_date.strftime('%Y-%m-%dT%H:%M:%S'),
                 MetaDataOnly=False)
 
             meeting_types = self._meetingtypes_as_dict()
@@ -139,17 +111,8 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                             meeting_item_count += 1
                     meeting_count += 1
 
-            print "Now processing meetings %s months from %s to %s" % (
-                months, current_start, current_end,)
-            print (
-                "Extracted total of %d meetings and %d meeting items. Also"
-                "Skipped %d meetings in total.") % (
-                meeting_count, meeting_item_count, meetings_skipped,)
-
-            if current_end > end_date:  # Stop while loop if exceeded end_date
-                break
-
-            current_start = current_end + relativedelta(days=1)
+            log.info("Extracted total of %d meetings and %d meeting items. Also "
+                     "Skipped %d meetings in total." % (meeting_count, meeting_item_count, meetings_skipped,))
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
@@ -182,87 +145,84 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         return False
 
     def run(self):
-        start_date = self.source_definition.get(
-            'start_date', '2015-06-01T00:00:00')
-        end_date = self.source_definition.get(
-            'end_date', '2016-07-01T00:00:00')
-        print "Getting meetings for %s to %s" % (start_date, end_date,)
-        meetings = self.client.service.GetMeetingsByDateRange(
-            Sitename=self.source_definition['sitename'],
-            StartDate=start_date,
-            EndDate=end_date,
-            MetaDataOnly=False)
-
-        meeting_types = self._meetingtypes_as_dict()
-
-        meeting_count = 0
-        vote_count = 0
-
-        meeting_sorting_key = self.source_definition.get('meeting_sorting', 'MeetingDate')
-
-        sorted_meetings = sorted(meetings.Meetings[0], key=lambda m: getattr(m, meeting_sorting_key))
-        for meeting in sorted_meetings:
-            meeting_dict = meeting_to_dict(meeting)
-            # Getting the meeting type as a string is easier this way ...
-            pprint(meeting_dict['Id'])
-            meeting_dict['Meetingtype'] = meeting_types[
-                meeting_dict['MeetingtypeId']]
-
-            kv = self.client.factory.create('ns0:iBabsKeyValue')
-            kv.Key = 'IncludeMeetingItems'
-            kv.Value = True
-
-            kv2 = self.client.factory.create('ns0:iBabsKeyValue')
-            kv2.Key = 'IncludeListEntries'
-            kv2.Value = True
-
-            params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
-            params.iBabsKeyValue.append(kv)
-            params.iBabsKeyValue.append(kv2)
-
-            vote_meeting = self.client.service.GetMeetingWithOptions(
+        for start_date, end_date in self.interval_generator():
+            meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['sitename'],
-                MeetingId=meeting_dict['Id'],
-                Options=params)
-            meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
+                StartDate=start_date,
+                EndDate=end_date,
+                MetaDataOnly=False)
 
+            meeting_types = self._meetingtypes_as_dict()
+
+            meeting_count = 0
+            vote_count = 0
+
+            meeting_sorting_key = self.source_definition.get('meeting_sorting', 'MeetingDate')
+
+            sorted_meetings = sorted(meetings.Meetings[0], key=lambda m: getattr(m, meeting_sorting_key))
             processed = []
-            if meeting_dict_short['MeetingItems'] is None:
-                continue
-            for mi in meeting_dict_short['MeetingItems']:
-                if mi['ListEntries'] is None:
+            for meeting in sorted_meetings:
+                meeting_dict = meeting_to_dict(meeting)
+                # Getting the meeting type as a string is easier this way ...
+                pprint(meeting_dict['Id'])
+                meeting_dict['Meetingtype'] = meeting_types[
+                    meeting_dict['MeetingtypeId']]
+
+                kv = self.client.factory.create('ns0:iBabsKeyValue')
+                kv.Key = 'IncludeMeetingItems'
+                kv.Value = True
+
+                kv2 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv2.Key = 'IncludeListEntries'
+                kv2.Value = True
+
+                params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
+                params.iBabsKeyValue.append(kv)
+                params.iBabsKeyValue.append(kv2)
+
+                vote_meeting = self.client.service.GetMeetingWithOptions(
+                    Sitename=self.source_definition['sitename'],
+                    MeetingId=meeting_dict['Id'],
+                    Options=params)
+                meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
+
+                if meeting_dict_short['MeetingItems'] is None:
                     continue
-                for le in mi['ListEntries']:
-                    print "Motie id : %s" % le['EntryId']
-                    hash_content = u'motion-%s' % (le['EntryId'])
-                    hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
-                    print "Hashedotie id : %s" % (hashed_motion_id.strip(),)
+                for mi in meeting_dict_short['MeetingItems']:
+                    if mi['ListEntries'] is None:
+                        continue
+                    for le in mi['ListEntries']:
+                        log.debug("Motie id : %s" % le['EntryId'])
+                        hash_content = u'motion-%s' % (le['EntryId'])
+                        hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
+                        log.debug("Hashedotie id : %s" % (hashed_motion_id.strip(),))
 
-                    votes = self.client.service.GetListEntryVotes(
-                        Sitename=self.source_definition['sitename'],
-                        EntryId=le['EntryId'])
-                    if votes.ListEntryVotes is None:
-                        votes = []
-                    else:
-                        votes = votes_to_dict(votes.ListEntryVotes[0])
-                    result = {
-                        'motion_id': hashed_motion_id,
-                        'meeting': meeting_dict,
-                        'entry': le,
-                        'votes': votes
-                    }
-                    vote_count += 1
-                    if self.valid_meeting(result):
-                        processed += self.process_meeting(result)
-            meeting_count += 1
+                        votes = self.client.service.GetListEntryVotes(
+                            Sitename=self.source_definition['sitename'],
+                            EntryId=le['EntryId'])
+                        if votes.ListEntryVotes is None:
+                            votes = []
+                        else:
+                            votes = votes_to_dict(votes.ListEntryVotes[0])
+                        result = {
+                            'motion_id': hashed_motion_id,
+                            'meeting': meeting_dict,
+                            'entry': le,
+                            'votes': votes
+                        }
+                        vote_count += 1
+                        if self.valid_meeting(result):
+                            processed += self.process_meeting(result)
+                meeting_count += 1
 
-        #pprint(processed)
-        passed_vote_count = 0
-        for result in processed:
-            yield 'application/json', json.dumps(result)
-            passed_vote_count += 1
-        print "Extracted %d meetings and passed %s out of %d voting rounds." % (
-            meeting_count, passed_vote_count, vote_count,)
+            #pprint(processed)
+            passed_vote_count = 0
+            for result in processed:
+                yield 'application/json', json.dumps(result)
+                passed_vote_count += 1
+            log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
+            log.info("Extracted %d meetings and passed %s out of %d voting rounds." % (
+                meeting_count, passed_vote_count, vote_count,))
 
 
 class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
