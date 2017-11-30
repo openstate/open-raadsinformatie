@@ -308,35 +308,53 @@ def available_indices():
 def extract_list_sources(sources_config):
     """
     Show a list of available sources (preconfigured pipelines).
+    Old-style sources might show multiple entities.
+    New-style sources will show only the name of the source
 
     :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
     """
     sources = load_sources_config(sources_config)
 
+    all_keys = list()
+    for key, source in sources.items():
+        all_keys.append(key)
+        if 'id' not in source and 'entities' not in source:
+            for sub_key in source.keys():
+                all_keys.append(sub_key)
+
     click.echo('Available sources:')
-    for source in sources:
-        click.echo(' - %s' % source['id'])
+    for source in sorted(all_keys):
+        click.echo(' - %s' % source)
 
 
 @command('start')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 @click.argument('source_id')
-def extract_start(source_id, sources_config):
+@click.option('--subitem', '-s', multiple=True)
+@click.option('--entiteit', '-e', multiple=True)
+def extract_start(source_id, subitem, entiteit, sources_config):
     """
     Start extraction for a pipeline specified by ``source_id`` defined in
     ``--sources-config``. ``--sources-config defaults to ``settings.SOURCES_CONFIG_FILE``.
+    When ``id`` is specified in the source it will trigger old-style json behaviour for backward compatibility reasons.
+
+    Otherwise new-style yaml is assumed, which looks for ``entities`` in the source to determine the order in which entities are processed.
+    If no ``entities`` are found in the source, all subitems of the source will be processed, if any.
+    If one or more ``--subitem`` is specified, only those subitems will be processed.
+    When one or more ``--entiteit`` is specified, only those entities will be processed. By default, all entities are processed.
+
+    Note: ``--subitem`` and ``--entiteit`` only work in new-style yaml configurations.
 
     :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
     :param source_id: identifier used in ``--sources_config`` to describe pipeline
+    :param subitem: one ore more items under the parent `source_id`` to specify which subitems should be run
+    :param entiteit: one ore more entity arguments to specify which entities should be run
     """
+
     sources = load_sources_config(sources_config)
 
     # Find the requested source definition in the list of available sources
-    source = None
-    for candidate_source in sources:
-        if candidate_source['id'] == source_id:
-            source = candidate_source
-            continue
+    source = sources.get(source_id)
 
     # Without a config we can't do anything, notify the user and exit
     if not source:
@@ -344,7 +362,31 @@ def extract_start(source_id, sources_config):
                    'config' % source_id)
         return
 
-    setup_pipeline(source)
+    # Check for old-style json sources
+    if 'id' in source:
+        setup_pipeline(source)
+        return
+
+    # New-style behaviour
+    selected_sources = dict()
+    if 'entities' not in source:
+        if subitem:
+            for s in subitem:
+                # Add the specified subs
+                selected_sources[s] = source[s]
+        else:
+            # All sub sources if no subs are specified
+            selected_sources = source
+    else:
+        # Only one main source
+        selected_sources = {source_id: source}
+
+    # Processing each item
+    for source_id, source in selected_sources.items():
+        for item in source.get('entities'):
+            if (not entiteit and item) or (entiteit and item.get('entity') in entiteit):
+                source.update(item)
+                setup_pipeline(source)
 
 
 @command('runserver')
