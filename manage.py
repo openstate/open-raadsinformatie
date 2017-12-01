@@ -235,7 +235,7 @@ def create_indexes(mapping_dir):
     """
     click.echo('Creating indexes for ES mappings in %s' % (mapping_dir))
 
-    for mapping_file_path in glob('%s/ocd_mapping_*.json' % mapping_dir):
+    for mapping_file_path in glob('%s/ori_mapping_*.json' % mapping_dir):
         # Extract the index name from the filename
         index_name = DEFAULT_INDEX_PREFIX
         mapping_file = os.path.split(mapping_file_path)[-1].split('.')[0]
