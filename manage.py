@@ -287,18 +287,18 @@ def available_indices():
     Shows a list of collections available at ``ELASTICSEARCH_HOST:ELASTICSEARCH_PORT``.
     """
     available = []
-    indices = es.cat.indices()
+    indices = [
+        i.split() for i in es.cat.indices().strip().split('\n') if
+        i.split()[2].startswith('%s_' % (DEFAULT_INDEX_PREFIX,))]
 
     if not indices:
         click.secho('No indices available in this instance', fg='red')
         return None
 
-    for index in indices.strip().split('\n'):
-        index = index.split()
-        if u'resolver' not in index[1] and u'combined_index' not in index[1]:
-            click.secho('%s (%s docs, %s)' % (index[1], index[4], index[6]),
-                        fg='green')
-            available.append(index[1])
+    for index in indices:
+        click.secho('%s (%s docs, %s)' % (index[2], index[6], index[8]),
+                    fg='green')
+        available.append(index[2])
 
     return available
 
