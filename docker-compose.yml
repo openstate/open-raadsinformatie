@@ -31,7 +31,7 @@ services:
      - net.core.somaxconn=65535
     mem_limit: 4g
   elastic_endpoint:
-    container_name: ocd_elastic_endpoint
+    container_name: ori_elastic_endpoint
     extends:
       service: elastic
     ports:
@@ -43,7 +43,7 @@ services:
     image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
     environment:
       - network.host=0.0.0.0
-      - discovery.zen.ping.unicast.hosts=ocd_elastic_endpoint
+      - discovery.zen.ping.unicast.hosts=ori_elastic_endpoint
       - discovery.zen.minimum_master_nodes=2
       - node.max_local_storage_nodes=20
       - cluster.name=docker-cluster
