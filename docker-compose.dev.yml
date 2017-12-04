@@ -4,3 +4,6 @@ services:
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
+  frontend:
+    volumes:
+      - ./ocd_frontend:/opt/ori/ocd_frontend
