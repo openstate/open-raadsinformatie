@@ -204,13 +204,21 @@ def format_search_results(results, doc_type='items'):
             try:
                 hit['_source']['meta'][fld] = hit[fld]
             except Exception as e:
-                pass 
+                pass
         formatted_results[hit['_type']].append(hit['_source'])
         del hit['_type']
         del hit['_index']
 
     if results.has_key('aggregations'):
         formatted_results['facets'] = results['aggregations']
+
+        # we need this to keep the API backwards compatible
+        for f_name, f in formatted_results['facets'].iteritems():
+            f['terms'] = []
+            for b in f['buckets']:
+                if ('key' in b) and ('doc_count' in b):
+                    f['terms'].append({
+                        'term': b['key'], 'count': b['doc_count']})
 
     formatted_results['meta'] = {
         'total': results['hits']['total'],
