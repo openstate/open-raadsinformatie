@@ -3,36 +3,29 @@
 source /opt/bin/activate
 cd /opt/ori
 
-# first only do ibabs to popit update
-for JSON_FILE in ocd_backend/sources/*.json
-do
-  MUNI=`basename $JSON_FILE .json`
-  # utrecht_ibabs_most_recent_popit_persons
-  UPDATABLE_SOURCES="${MUNI}_ibabs_most_recent_popit_persons ${MUNI}_ibabs_most_recent_popit_organizations ${MUNI}_ibabs_most_recent_popit_memberships ${MUNI}_ibabs_most_recent_popit_council_memberships"
+./manage.py extract start ibabs -s amstelveen
+./manage.py extract start ibabs -s heerde
+./manage.py extract start ibabs -s utrecht
+./manage.py extract start ibabs -s enschede
+./manage.py extract start ibabs -s gouda
+./manage.py extract start ibabs -s overbetuwe
+./manage.py extract start ibabs -s medemblik
+./manage.py extract start ibabs -s oss
+./manage.py extract start ibabs -s zoetermeer
 
-  for UPDATE_SOURCE in $UPDATABLE_SOURCES
-  do
-    echo `date` $UPDATE_SOURCE
-    ./manage.py extract start $UPDATE_SOURCE --sources_config=$JSON_FILE
-    sleep 60
-  done
+./manage.py extract start go -s goirle
+./manage.py extract start go -s den_helder
+./manage.py extract start go -s doetinchem
+./manage.py extract start go -s noordoostpolder
+./manage.py extract start go -s steenbergen
 
-  sleep 60
-done
+./manage.py extract start oude_ijsselstreek_committees
+./manage.py extract start oude_ijsselstreek_popit_organizations
+./manage.py extract start oude_ijsselstreek_popit_persons
+./manage.py extract start oude_ijsselstreek_meetings
+./manage.py extract start oude_ijsselstreek_reports
+./manage.py extract start oude_ijsselstreek_resolutions
 
-# now do the other updates as well
-for JSON_FILE in ocd_backend/sources/*.json
-do
-  MUNI=`basename $JSON_FILE .json`
-  UPDATABLE_SOURCES="${MUNI}_committees ${MUNI}_popit_organizations ${MUNI}_popit_persons ${MUNI}_meetings ${MUNI}_reports ${MUNI}_resolutions ${MUNI}_videotulen ${MUNI}_motions ${MUNI}_vote_events ${MUNI}_voting_rounds ${MUNI}_meeting_attendees"
-
-  for UPDATE_SOURCE in $UPDATABLE_SOURCES
-  do
-    echo `date` $UPDATE_SOURCE
-    ./manage.py extract start $UPDATE_SOURCE --sources_config=$JSON_FILE
-    sleep 60
-  done
-
-  sleep 60
-done
-echo `date` "All done"
+./manage.py extract start harderwijk_popit_organizations
+./manage.py extract start harderwijk_popit_persons
+./manage.py extract start harderwijk_videotulen
