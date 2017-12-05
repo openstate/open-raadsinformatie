@@ -1,0 +1,101 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.odata.ODataExtractor
+    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+    file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+    filter:
+      Title: "{sitename}"
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
+    item: ocd_backend.items.goapi_committee.CommitteeItem
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.almanak.PersonsExtractor
+    item: ocd_backend.items.persons.AlmanakPersonItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
+    item: ocd_backend.items.goapi_meeting.Meeting
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
+
+  - &meetingitems
+    <<: *meetings
+    entity: meetingitems
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor
+    item: ocd_backend.items.goapi_meetingitem.MeetingItem
+
+_go: &go
+  index_name: "{key}"
+  sitename: "{key!c}"
+  entities: *entities
+  <<: *source_defaults
+
+go:
+  goirle:
+    key: goirle
+    base_url: "https://raad.goirle.nl/api/v1"
+    almanak_id: 30496
+    <<: *go
+
+  den_helder:
+    key: den_helder
+    base_url: "https://gemeenteraad.denhelder.nl/api/v1"
+    almanak_id: 24611
+    <<: *go
+
+  doetinchem:
+    key: doetinchem
+    base_url: "https://besluitvorming.doetinchem.nl/api/v1"
+    almanak_id: 36726
+    <<: *go
+
+  noordoostpolder:
+    key: noordoostpolder
+    base_url: "https://raad.noordoostpolder.nl/api/v1"
+    almanak_id: 26440
+    <<: *go
+
+  steenbergen:
+    key: steenbergen
+    base_url: "https://raad.gemeente-steenbergen.nl/api/v1"
+    almanak_id: 34909
+    <<: *go
