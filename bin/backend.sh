@@ -1,5 +1,6 @@
 #!/bin/sh
 
+cd /opt/ori
 celery flower --app=ocd_backend:celery_app &
 celery multi start 1 -A ocd_backend:celery_app -l info --logfile=log/celery.log -c8 --pidfile=/var/run/celery/%n.pid
 
