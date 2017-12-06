@@ -13,24 +13,12 @@ class MeetingItem(
 
     def __init__(self, source_definition, data_content_type, data, item,
                  processing_started=None):
-        """
-        This class does not inherit its constuctor in order to specify the
-        parent additional to the original_item, based on the key/value item
-        """
-        self.source_definition = source_definition
-        self.data_content_type = data_content_type
-        self.data = data
+        super(MeetingItem, self).__init__(source_definition, data_content_type,
+                                          data, item, processing_started)
 
         # Split key/value to derive the parent of the item
         parent, self.original_item = item.items()[0]
         self.parent = int(parent)
-
-        # On init, all data should be available to construct self.meta
-        # and self.combined_item
-        self._construct_object_meta(processing_started)
-        self._construct_combined_index_data()
-
-        self.index_data = self.get_index_data()
 
     def _get_current_permalink(self):
         return u'%s/meetings/%i' % (self.source_definition[
