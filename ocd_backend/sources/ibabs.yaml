@@ -20,14 +20,14 @@ _entities: &entities
     file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
     filter:
       Title: "{sitename}"
-        
+
   - &committees
     <<: *entity_defaults
     entity: committees
     doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
     item: ocd_backend.items.ibabs_committee.CommitteeItem
-    
+
   - &organizations
     <<: *entity_defaults
     entity: organizations
@@ -361,11 +361,6 @@ ibabs:
   losser:
     key: losser
     almanak_id: 27430
-    <<: *ibabs
-
-  lelystad:
-    key: lelystad
-    almanak_id: 30046
     <<: *ibabs
 
   krimpenerwaard:
