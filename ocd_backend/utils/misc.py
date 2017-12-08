@@ -341,10 +341,8 @@ def get_secret(item_id):
 
 
 def propagate_chain_get(terminal_node, timeout=None):
-    node = terminal_node.parent
-    while node:
+    for node in reversed(list(terminal_node._parents())):
         try:
             node.get(propagate=True, timeout=timeout)
-            node = node.parent
         except:
-            break
+            pass
