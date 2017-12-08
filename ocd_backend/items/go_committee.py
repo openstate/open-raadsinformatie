@@ -40,7 +40,7 @@ class CommitteeItem(OrganisationItem):
                 'scheme': u'ORI'
             },
             {
-                'identifier': self.original_item['name'],
+                'identifier': unicode(self.original_item['name']),
                 'scheme': u'GemeenteOplossingen'
             }
         ]
