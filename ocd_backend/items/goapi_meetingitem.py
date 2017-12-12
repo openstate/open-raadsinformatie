@@ -13,12 +13,13 @@ class MeetingItem(
 
     def __init__(self, source_definition, data_content_type, data, item,
                  processing_started=None):
-        super(MeetingItem, self).__init__(source_definition, data_content_type,
-                                          data, item, processing_started)
 
         # Split key/value to derive the parent of the item
-        parent, self.original_item = item.items()[0]
+        parent, item = item.items()[0]
         self.parent = int(parent)
+
+        super(MeetingItem, self).__init__(source_definition, data_content_type,
+                                          data, item, processing_started)
 
     def _get_current_permalink(self):
         return u'%s/meetings/%i' % (self.source_definition[
