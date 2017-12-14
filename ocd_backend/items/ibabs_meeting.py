@@ -39,7 +39,10 @@ class IBabsMeetingItem(
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
             classification=['committee', 'subcommittee'])
-        return {self._find_meeting_type_id(c): c for c in results}
+        try:
+            return {self._find_meeting_type_id(c): c for c in results}
+        except TypeError:
+            return {}
 
     def _get_meeting_id(self, meeting):
         hash_content = u'meeting-%s' % (meeting['Id'])
