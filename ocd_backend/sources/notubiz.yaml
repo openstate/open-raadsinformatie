@@ -223,3 +223,53 @@ notubiz:
     key: almere
     organisation_id: 952
     <<: *notubiz
+
+  katwijk:
+    key: katwijk
+    organisation_id: 1660
+    <<: *notubiz
+
+  rucphen:
+    key: rucphen
+    organisation_id: 1357
+    <<: *notubiz
+
+  hendrikidoambacht:
+    key: hendrikidoambacht
+    organisation_id: 1781
+    <<: *notubiz
+
+  stichtsevecht:
+    key: stichtsevecht
+    organisation_id: 1770
+    <<: *notubiz
+
+  deventer:
+    key: deventer
+    organisation_id: 427
+    <<: *notubiz
+
+  cappelleadijssel:
+    key: cappelleadijssel
+    organisation_id: 1517
+    <<: *notubiz
+
+  oostgelre:
+    key: oostgelre
+    organisation_id: 341
+    <<: *notubiz
+
+  vlissingen:
+    key: vlissingen
+    organisation_id: 1631
+    <<: *notubiz
+
+  veenendaal:
+    key: veenendaal
+    organisation_id: 1000
+    <<: *notubiz
+
+  binnenmaas:
+    key: binnenmaas
+    organisation_id: 823
+    <<: *notubiz
