@@ -62,6 +62,41 @@ notubiz:
     organisation_id: 281
     <<: *notubiz
 
+  amsterdam_centrum:
+    key: amsterdam_centrum
+    organisation_id: 547
+    <<: *notubiz
+
+  amsterdam_zuid:
+    key: amsterdam_zuid
+    organisation_id: 1424
+    <<: *notubiz
+
+  amsterdam_noord:
+    key: amsterdam_noord
+    organisation_id: 977
+    <<: *notubiz
+
+  amsterdam_west:
+    key: amsterdam_west
+    organisation_id: 1413
+    <<: *notubiz
+
+  amsterdam_oost:
+    key: amsterdam_oost
+    organisation_id: 1425
+    <<: *notubiz
+
+  amsterdam_zuidoost:
+    key: amsterdam_zuidoost
+    organisation_id: 2122
+    <<: *notubiz
+
+  amsterdam_nieuwwest:
+    key: amsterdam_nieuwwest
+    organisation_id: 2328
+    <<: *notubiz
+
   castricum:
     key: castricum
     organisation_id: 1812
