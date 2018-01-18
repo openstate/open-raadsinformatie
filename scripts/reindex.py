@@ -44,6 +44,10 @@ def copy_index(es_alias, es_index):
         sleep(5)
         print "%s (%s) -> %s" % (es_alias, es_index, new_index,)
         try:
+            elasticsearch.indices.delete_alias(index='_all', name=es_alias)
+        except Exception as e:
+            pass  # did not have alias
+        try:
             elasticsearch.indices.put_alias(index=new_index, name=es_alias)
         except Exception as e:
             print "Could not set alias for %s (%s) -> %s" % (es_alias, es_index, new_index,)
