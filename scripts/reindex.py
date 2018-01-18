@@ -54,7 +54,8 @@ def copy_index(es_alias, es_index):
 
 def main():
     for es_alias, es_index in get_aliases().iteritems():
-        copy_index(es_alias, es_index)
+        if not es_index.endswith('_migrated'):
+            copy_index(es_alias, es_index)
     return 0
 
 if __name__ == '__main__':
