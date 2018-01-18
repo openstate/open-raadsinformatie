@@ -32,7 +32,7 @@ def copy_index(es_alias, es_index):
             elasticsearch,
             query=None,
             scroll='5m',
-            raise_on_error=False, index=es_index, doc_type='item')
+            raise_on_error=False, index=es_index)
 
         new_index = u'%s_migrated' % (es_index,)
         new_items = []
