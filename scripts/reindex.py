@@ -34,7 +34,7 @@ def copy_index(es_alias, es_index):
             scroll='5m',
             raise_on_error=False, index=es_index, doc_type='item')
 
-        new_index = re.sub(r'_\d+', '_fixed', es_index)
+        new_index = u'%s_migrated' % (es_index,)
         new_items = []
         for item in items:
             item['_index'] = new_index
