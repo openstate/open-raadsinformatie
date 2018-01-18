@@ -105,6 +105,29 @@
                 "date_granularity": {
                     "type": "short"
                 },
+                "gender": {
+                    "type": "keyword"
+                },
+                "organization_id": {
+                    "type": "keyword"
+                },
+                "location": {
+                    "type": "keyword"
+                },
+                "status": {
+                    "type": "keyword"
+                },
+                "identifiers": {
+                    "type": "object",
+                    "properties": {
+                        "identifier": {
+                            "type": "keyword"
+                        },
+                        "scheme": {
+                            "type": "keyword"
+                        }
+                    }
+                },
                 "authors": {
                     "type": "text",
                     "fields": {
