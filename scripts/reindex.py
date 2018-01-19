@@ -28,11 +28,12 @@ def get_aliases():
 
 
 def copy_index(es_alias, es_index):
+        chunk_size = 10
         items = scan(
             elasticsearch,
             query=None,
             scroll='5m',
-            size=10,
+            size=chunk_size,
             raise_on_error=False, index=es_index)
 
         new_index = u'%s_migrated' % (es_index,)
@@ -41,13 +42,18 @@ def copy_index(es_alias, es_index):
             item['_index'] = new_index
             del item['_score']
             new_items.append(item)
-        bulk(elasticsearch, new_items, chunk_size=10)
+            if len(new_items) >= chunk_size:
+                bulk(elasticsearch, new_items, chunk_size=chunk_size)
+                sleep(1)
+                new_items = []
+        bulk(elasticsearch, new_items, chunk_size=chunk_size)
         sleep(5)
         print "%s (%s) -> %s" % (es_alias, es_index, new_index,)
         try:
             elasticsearch.indices.delete_alias(index='_all', name=es_alias)
         except Exception as e:
             pass  # did not have alias
+        sleep(1)
         try:
             elasticsearch.indices.put_alias(index=new_index, name=es_alias)
         except Exception as e:
