@@ -28,11 +28,11 @@ def get_aliases():
 
 
 def copy_index(es_alias, es_index):
-        chunk_size = 10
+        chunk_size = 25
         items = scan(
             elasticsearch,
             query=None,
-            scroll='5m',
+            scroll='10m',
             size=chunk_size,
             raise_on_error=False, index=es_index)
 
