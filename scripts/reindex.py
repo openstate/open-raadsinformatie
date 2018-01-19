@@ -32,6 +32,7 @@ def copy_index(es_alias, es_index):
             elasticsearch,
             query=None,
             scroll='5m',
+            size=25,
             raise_on_error=False, index=es_index)
 
         new_index = u'%s_migrated' % (es_index,)
@@ -40,7 +41,7 @@ def copy_index(es_alias, es_index):
             item['_index'] = new_index
             del item['_score']
             new_items.append(item)
-        bulk(elasticsearch, new_items)
+        bulk(elasticsearch, new_items, chunk_size=25)
         sleep(5)
         print "%s (%s) -> %s" % (es_alias, es_index, new_index,)
         try:
