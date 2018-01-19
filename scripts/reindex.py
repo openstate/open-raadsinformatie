@@ -37,18 +37,23 @@ def copy_index(es_alias, es_index):
             raise_on_error=False, index=es_index)
 
         new_index = u'%s_migrated' % (es_index,)
+
+
+        sys.stdout.write("\n")
+        print "%s (%s) -> %s" % (es_alias, es_index, new_index,)
+
         new_items = []
         for item in items:
             item['_index'] = new_index
             del item['_score']
             new_items.append(item)
             if len(new_items) >= chunk_size:
-                bulk(elasticsearch, new_items, chunk_size=chunk_size)
+                bulk(elasticsearch, new_items, chunk_size=chunk_size, request_timeout=120)
                 sleep(1)
                 new_items = []
-        bulk(elasticsearch, new_items, chunk_size=chunk_size)
+                sys.stdout.write(".")
+        bulk(elasticsearch, new_items, chunk_size=chunk_size, request_timeout=120)
         sleep(5)
-        print "%s (%s) -> %s" % (es_alias, es_index, new_index,)
         try:
             elasticsearch.indices.delete_alias(index='_all', name=es_alias)
         except Exception as e:
