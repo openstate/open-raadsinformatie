@@ -52,6 +52,7 @@ def copy_index(es_alias, es_index):
             elasticsearch.indices.put_alias(index=new_index, name=es_alias)
         except Exception as e:
             print "Could not set alias for %s (%s) -> %s" % (es_alias, es_index, new_index,)
+            print e.message
 
 def main():
     for es_alias, es_index in get_aliases().iteritems():
