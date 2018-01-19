@@ -11,7 +11,7 @@ services:
     depends_on:
       elastic_endpoint:
         condition: service_healthy
-    mem_limit: 3g
+    mem_limit: 10g
   frontend:
     image: openstatefoundation/open-raadsinformatie-frontend
     links:
@@ -25,7 +25,7 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
-    mem_limit: 4g
+    mem_limit: 8g
   elastic_endpoint:
     container_name: ori_elastic_endpoint
     extends:
