@@ -188,11 +188,14 @@ class IBabsMotionVotingMixin(
             sleep(1)
             print u"%s: %s" % (
                 combined_index_data['name'], document['DisplayName'],)
+            public_download_url = document['PublicDownloadURL']
+            if not public_download_url.startswith('http'):
+                public_download_url = u'https://www.mijnbabs.nl' + public_download_url
             description = self.file_get_contents(
-                document['PublicDownloadURL'],
+                public_download_url,
                 self.source_definition.get('pdf_max_pages', 20)).strip()
             combined_index_data['sources'].append({
-                'url': document['PublicDownloadURL'],
+                'url': public_download_url,
                 'note': document['DisplayName'],
                 'description': description
             })

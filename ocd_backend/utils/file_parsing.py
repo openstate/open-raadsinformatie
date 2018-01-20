@@ -59,7 +59,7 @@ class FileToTextMixin(object):
         print "Downloading %s" % (url,)
         try:
             # GO has no wildcard domain for SSL
-            r = self.http_session.get(url, verify=False)
+            r = self.http_session.get(url, verify=False, timeout=5)
             tf = tempfile.NamedTemporaryFile()
             tf.write(r.content)
             tf.seek(0)
