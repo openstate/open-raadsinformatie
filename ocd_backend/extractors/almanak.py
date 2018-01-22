@@ -57,7 +57,8 @@ class PersonsExtractor(StaticHtmlExtractor):
             settings.API_URL, self.source_definition['index_name'],)
         r = self.http_session.get(organisations_url, verify=False)
         r.raise_for_status()
-        organisations = r.json()['organizations']
+        as_json = r.json()
+        organisations = as_json.get('organizations', [])
         return {
             o['name']: {
                 'id': o['id'],
