@@ -13,6 +13,7 @@
     "keep_index_on_update": true,
     "base_url": "https://gegevensmagazijn.tweedekamer.nl/REST/",
     "feed_query": "Feed.json?filter=persoon",
+    "http_retry": 12,
     "mapping": {
       "activiteit": {
         "doc_type": "event",

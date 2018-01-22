@@ -105,17 +105,20 @@ class HttpRequestMixin(object):
         """Returns a :class:`requests.Session` object. A new session is
         created if it doesn't already exist."""
         http_session = getattr(self, '_http_session', None)
+        # try to get the source definition if available
+        source_definition = getattr(self, 'source_definition', {})
+        total_retries = source_definition.get('http_retries', 0)
         if not http_session:
             requests.packages.urllib3.disable_warnings()
             session = requests.Session()
             session.headers['User-Agent'] = USER_AGENT
 
-            http_retry = CustomRetry(total=12, status_forcelist=[500, 503],
+            http_retry = CustomRetry(total=total_retries, status_forcelist=[500, 503],
                                      backoff_factor=.4)
             http_adapter = HTTPAdapter(max_retries=http_retry)
             session.mount('http://', http_adapter)
 
-            http_retry = CustomRetry(total=12, status_forcelist=[500, 503],
+            http_retry = CustomRetry(total=total_retries, status_forcelist=[500, 503],
                                      backoff_factor=.4)
             http_adapter = HTTPAdapter(max_retries=http_retry)
             session.mount('https://', http_adapter)
