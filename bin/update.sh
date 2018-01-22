@@ -1,7 +1,10 @@
 #!/bin/sh
 
-source /opt/bin/activate
+# source /opt/bin/activate
 cd /opt/ori
+
+#TODO: do not have access to all iBabs yet
+# ./manage.py extract start ibabs
 
 ./manage.py extract start ibabs -s amstelveen
 ./manage.py extract start ibabs -s heerde
@@ -13,11 +16,8 @@ cd /opt/ori
 ./manage.py extract start ibabs -s oss
 ./manage.py extract start ibabs -s zoetermeer
 
-./manage.py extract start go -s goirle
-./manage.py extract start go -s den_helder
-./manage.py extract start go -s doetinchem
-./manage.py extract start go -s noordoostpolder
-./manage.py extract start go -s steenbergen
+./manage.py extract start go
+./manage.py extract start notubiz
 
 ./manage.py extract start oude_ijsselstreek_committees
 ./manage.py extract start oude_ijsselstreek_popit_organizations
