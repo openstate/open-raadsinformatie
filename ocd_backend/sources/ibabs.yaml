@@ -490,10 +490,10 @@ ibabs:
     almanak_id: 22102
     <<: *ibabs
 
-  ettenleur:
-    key: ettenleur
-    almanak_id: 21760
-    <<: *ibabs
+  # ettenleur:
+  #   key: ettenleur
+  #   almanak_id: 21760
+  #   <<: *ibabs
 
   velsen:
     key: velsen
