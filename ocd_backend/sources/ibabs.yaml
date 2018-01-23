@@ -515,11 +515,6 @@ ibabs:
     almanak_id: 27300
     <<: *ibabs
 
-  dewolden:
-    key: dewolden
-    almanak_id: 21391
-    <<: *ibabs
-
   zwolle:
     key: zwolle
     almanak_id: 33731
