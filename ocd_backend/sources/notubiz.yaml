@@ -291,12 +291,8 @@ notubiz:
 
   dewolden:
     key: dewolden
+    organisation_id: 1317
     almanak_id: 21391
-    <<: *notubiz
-
-  ommen:
-    key: ommen
-    almanak_id: 26754
     <<: *notubiz
 
   oostgelre:
