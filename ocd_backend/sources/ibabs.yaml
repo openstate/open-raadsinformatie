@@ -475,10 +475,6 @@ ibabs:
     <<: *ibabs
 
   # Added on 29-12-2017
-  ommen:
-    key: ommen
-    almanak_id: 26754
-    <<: *ibabs
 
   buren:
     key: buren

@@ -294,6 +294,11 @@ notubiz:
     almanak_id: 21391
     <<: *notubiz
 
+  ommen:
+    key: ommen
+    almanak_id: 26754
+    <<: *notubiz
+
   oostgelre:
     key: oostgelre
     organisation_id: 341
