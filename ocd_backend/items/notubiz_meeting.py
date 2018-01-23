@@ -20,7 +20,8 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         return get_meetingitem_id(item_id)
 
     def _get_current_permalink(self):
-        return u'%s/events/meetings/%i' % (self.source_definition['base_url'], self.original_item['id'])
+        return u'%s/events/meetings/%i' % (
+            self.source_definition['base_url'], self.original_item['id'])
 
     def get_object_id(self):
         return get_meeting_id(self.original_item['id'])
@@ -55,12 +56,15 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
             )
 
         try:
-            combined_index_data['name'] = u'Vergadering %s %s' % (self.original_item['attributes']['1'], combined_index_data['start_date'])
+            combined_index_data['name'] = u'Vergadering %s %s' % (
+                self.original_item['attributes']['1'],
+                combined_index_data['start_date'])
         except LookupError:
-            combined_index_data['name'] = u'Vergadering
+            combined_index_data['name'] = u'Vergadering'
 
         try:
-            combined_index_data['description'] = self.original_item['attributes']['3']
+            combined_index_data['description'] = self.original_item[
+                'attributes']['3']
         except LookupError:
             combined_index_data['description'] = u''
 
@@ -77,15 +81,16 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
             }
         ]
 
-        combined_index_data['organization_id'] = unicode(self.original_item['organisation']['id'])
-        #combined_index_data['organization'] = self.original_item['body']
-
+        combined_index_data['organization_id'] = unicode(
+            self.original_item['organisation']['id'])
+        # combined_index_data['organization'] = self.original_item['body']
 
         # combined_index_data['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
         try:
-            combined_index_data['location'] = unicode(self.original_item['attributes']['50'])
+            combined_index_data['location'] = unicode(
+                self.original_item['attributes']['50'])
         except LookupError:
             pass
 
@@ -98,7 +103,8 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
         if 'agenda_items' in self.original_item:
             combined_index_data['children'] = [
-                self._get_meetingitem_id(item['id']) for item in self.original_item['agenda_items']
+                self._get_meetingitem_id(item['id'])
+                for item in self.original_item['agenda_items']
             ]
 
         combined_index_data['sources'] = [
