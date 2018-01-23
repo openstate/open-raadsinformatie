@@ -28,6 +28,7 @@ WORKDIR /opt/ori/
 COPY . /opt/ori
 RUN ln -sf /proc/1/fd/1 /opt/ori/log/backend.err \
   && chown -R celery:celery .
+RUN mkdir -p /opt/ori/data/static && chown -R celery:celery /opt/ori/data
 
 USER celery
 CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1

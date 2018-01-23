@@ -54,8 +54,16 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
                 self.original_item['plannings'][0]['end_date']
             )
 
-        combined_index_data['name'] = 'Vergadering %s %s' % (self.original_item['attributes']['1'], combined_index_data['start_date'])
-        combined_index_data['description'] = self.original_item['attributes']['3']
+        try:
+            combined_index_data['name'] = u'Vergadering %s %s' % (self.original_item['attributes']['1'], combined_index_data['start_date'])
+        except LookupError:
+            combined_index_data['name'] = u'Vergadering
+
+        try:
+            combined_index_data['description'] = self.original_item['attributes']['3']
+        except LookupError:
+            combined_index_data['description'] = u''
+
         combined_index_data['classification'] = u'Agenda'
 
         combined_index_data['identifiers'] = [
@@ -64,7 +72,7 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
                 'scheme': u'Notubiz'
             },
             {
-                'identifier': self.get_object_id(),
+                'identifier': unicode(self.get_object_id()),
                 'scheme': u'ORI'
             }
         ]
@@ -76,7 +84,10 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         # combined_index_data['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
-        combined_index_data['location'] = self.original_item['attributes']['50']
+        try:
+            combined_index_data['location'] = unicode(self.original_item['attributes']['50'])
+        except LookupError:
+            pass
 
         if self.original_item['canceled']:
             combined_index_data['status'] = u'cancelled'
