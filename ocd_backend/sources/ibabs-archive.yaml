@@ -1,0 +1,278 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+  months_interval: 3
+  start_date: "2017-12-01"
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.odata.ODataExtractor
+    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
+    filter:
+      Title: "{sitename}"
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
+    item: ocd_backend.items.ibabs_committee.CommitteeItem
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.almanak.PersonsExtractor
+    item: ocd_backend.items.persons.AlmanakPersonItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+
+  - &reports
+    <<: *entity_defaults
+    entity: reports
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+    regex: ".*"
+    pdf_max_pages: 0
+    max_pages: 1
+
+_popit: &popit
+  - &popit_organizations
+    <<: *entity_defaults
+    entity: popit_organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.popit.PopItExtractor
+    item: ocd_backend.items.popit.PopitOrganisationItem
+    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/organizations
+
+  - &popit_persons
+    <<: *entity_defaults
+    entity: popit_persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.popit.PopItExtractor
+    item: ocd_backend.items.popit.PopitOrganisationItem
+    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/persons
+
+_cwc: &cwc
+  - &videotulen
+    <<: *entity_defaults
+    entity: videotulen
+    doc_type: events
+    extractor: ocd_backend.extractors.cwc.VideotulenExtractor
+    item: ocd_backend.items.cwc.VideotulenItem
+    cwc_pagesize: 10
+    cwc_paging: false
+
+_ibabs: &ibabs
+  index_name: "{key}"
+  sitename: "{key!c}"
+  entities: *entities
+  #start_date: "2016-01-01T00:00:00"
+  #end_date: "2016-06-01T00:00:00"
+  <<: *source_defaults
+
+ibabs-archive:
+  # Added before 17-11-2017
+
+  medemblik:
+    key: medemblik
+    almanak_id: 23294
+    <<: *ibabs
+
+  # Added on 17-11-2017
+  barneveld:
+    key: barneveld
+    almanak_id: 27179
+    <<: *ibabs
+
+  # losser:
+  #   key: losser
+  #   almanak_id: 27430
+  #   <<: *ibabs
+
+  krimpenerwaard:
+    key: krimpenerwaard
+    almanak_id: 129780
+    <<: *ibabs
+
+  teylingen:
+    key: teylingen
+    almanak_id: 29957
+    <<: *ibabs
+
+  arnhem:
+    key: arnhem
+    almanak_id: 32510
+    <<: *ibabs
+
+  heemskerk:
+    key: heemskerk
+    almanak_id: 23365
+    <<: *ibabs
+
+  oosterhout:
+    key: oosterhout
+    almanak_id: 22438
+    <<: *ibabs
+
+  landsmeer:
+    key: landsmeer
+    almanak_id: 21723
+    <<: *ibabs
+
+  # voorschoten:
+  #   key: voorschoten
+  #   almanak_id: 35396
+  #   <<: *ibabs
+  #
+  # wassenaar:
+  #   key: wassenaar
+  #   almanak_id: 40204
+  #   <<: *ibabs
+
+  aalsmeer:
+    key: aalsmeer
+    almanak_id: 28409
+    <<: *ibabs
+
+  noordwijkerhout:
+    key: noordwijkerhout
+    almanak_id: 34729
+    <<: *ibabs
+
+  texel:
+    key: texel
+    almanak_id: 22715
+    <<: *ibabs
+
+  staphorst:
+    key: staphorst
+    almanak_id: 24378
+    <<: *ibabs
+
+  almelo:
+    key: almelo
+    almanak_id: 26572
+    <<: *ibabs
+
+  nieuwkoop:
+    key: nieuwkoop
+    almanak_id: 26403
+    <<: *ibabs
+
+  loonopzand:
+    key: loonopzand
+    sitename: Loon op Zand
+    almanak_id: 25473
+    <<: *ibabs
+
+  hilversum:
+    key: hilversum
+    almanak_id: 28797
+    <<: *ibabs
+
+  meppel:
+    key: meppel
+    almanak_id: 41121
+    <<: *ibabs
+
+  diemen:
+    key: diemen
+    almanak_id: 21518
+    <<: *ibabs
+
+  nieuwegein:
+    key: nieuwegein
+    almanak_id: 24713
+    <<: *ibabs
+
+  lingewaard:
+    key: lingewaard
+    almanak_id: 37823
+    <<: *ibabs
+
+  hollandskroon:
+    key: hollandskroon
+    almanak_id: 24449
+    <<: *ibabs
+
+  meierijstad:
+    key: meierijstad
+    almanak_id: 29116
+    <<: *ibabs
+
+  # Added on 29-12-2017
+
+  buren:
+    key: buren
+    almanak_id: 40352
+    <<: *ibabs
+
+  edamvolendam:
+    key: edamvolendam
+    almanak_id: 22102
+    <<: *ibabs
+
+  # ettenleur:
+  #   key: ettenleur
+  #   almanak_id: 21760
+  #   <<: *ibabs
+
+  # velsen:
+  #   key: velsen
+  #   almanak_id: 38811
+  #   <<: *ibabs
+
+  emmen:
+    key: emmen
+    almanak_id: 22781
+    <<: *ibabs
+
+  oldambt:
+    key: oldambt
+    almanak_id: 33197
+    <<: *ibabs
+
+  rijswijk:
+    key: rijswijk
+    almanak_id: 27300
+    <<: *ibabs
+
+  zwolle:
+    key: zwolle
+    almanak_id: 33731
+    <<: *ibabs
+
+  raalte:
+    key: raalte
+    almanak_id: 25053
+    <<: *ibabs
