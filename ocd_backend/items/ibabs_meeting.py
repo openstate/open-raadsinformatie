@@ -120,9 +120,12 @@ class IBabsMeetingItem(
                 meeting))
 
         if self.original_item.has_key('MeetingItems'):
-            combined_index_data['children'] = [
-                self._get_meeting_id(mi) for mi in self.original_item[
-                    'MeetingItems']]
+            try:
+                combined_index_data['children'] = [
+                    self._get_meeting_id(mi) for mi in self.original_item[
+                        'MeetingItems']]
+            except TypeError:
+                pass
 
         combined_index_data['sources'] = []
 
