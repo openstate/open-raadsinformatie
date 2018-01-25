@@ -112,7 +112,11 @@ class IBabsMeetingItem(
             meeting['MeetingDate'],)
         combined_index_data['end_date'] = iso8601.parse_date(
             meeting['MeetingDate'],)
-        combined_index_data['location'] = meeting['Location'].strip()
+        try:
+            combined_index_data['location'] = meeting['Location'].strip()
+        except AttributeError:
+            pass
+
         combined_index_data['status'] = u'confirmed'
 
         if self.original_item.has_key('MeetingId'):
