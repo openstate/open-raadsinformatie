@@ -21,7 +21,7 @@ _entities: &entities
     item: ocd_backend.items.organisations.MunicipalityOrganisationItem
     file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
     filter:
-      Title: "{sitename}"
+      Title: "{municipality}"
 
   - &committees
     <<: *entity_defaults
@@ -95,6 +95,7 @@ _cwc: &cwc
 _ibabs: &ibabs
   index_name: "{key}"
   sitename: "{key!c}"
+  municipality: "{sitename}"
   entities: *entities
   #start_date: "2016-01-01T00:00:00"
   #end_date: "2016-06-01T00:00:00"

@@ -19,7 +19,7 @@ _entities: &entities
     item: ocd_backend.items.organisations.MunicipalityOrganisationItem
     file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
     filter:
-      Title: "{sitename}"
+      Title: "{municipality}"
 
   - &meetings
     <<: *entity_defaults
@@ -41,6 +41,7 @@ _entities: &entities
 _notubiz: &notubiz
   index_name: "{key}"
   sitename: "{key!c}"
+  municipality: "{sitename}"
   base_url: "https://api.notubiz.nl"
   entities: *entities
   <<: *source_defaults
