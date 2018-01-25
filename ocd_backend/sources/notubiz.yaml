@@ -278,6 +278,7 @@ notubiz:
 
   stichtsevecht:
     key: stichtsevecht
+    municipality: "Stichtse Vecht"
     organisation_id: 1770
     <<: *notubiz
 
@@ -288,6 +289,7 @@ notubiz:
 
   cappelleadijssel:
     key: cappelleadijssel
+    municipality: "Capelle aan den IJssel"
     organisation_id: 1517
     <<: *notubiz
 
@@ -300,6 +302,7 @@ notubiz:
 
   oostgelre:
     key: oostgelre
+    municipality: "Oost Gelre"
     organisation_id: 341
     <<: *notubiz
 

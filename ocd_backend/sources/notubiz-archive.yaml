@@ -274,11 +274,13 @@ notubiz-archive:
 
   hendrikidoambacht:
     key: hendrikidoambacht
+    municipality: "Hendrik-Ido-Ambacht"
     organisation_id: 1781
     <<: *notubiz
 
   stichtsevecht:
     key: stichtsevecht
+    municipality: "Stichtse Vecht"
     organisation_id: 1770
     <<: *notubiz
 
@@ -289,6 +291,7 @@ notubiz-archive:
 
   cappelleadijssel:
     key: cappelleadijssel
+    municipality: "Capelle aan den IJssel"
     organisation_id: 1517
     <<: *notubiz
 
@@ -301,6 +304,7 @@ notubiz-archive:
 
   oostgelre:
     key: oostgelre
+    municipality: "Oost Gelre"
     organisation_id: 341
     <<: *notubiz
 
