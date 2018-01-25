@@ -467,6 +467,7 @@ ibabs:
 
   hollandskroon:
     key: hollandskroon
+    municipality: "Hollands Kroon"
     almanak_id: 24449
     <<: *ibabs
 
@@ -484,6 +485,7 @@ ibabs:
 
   edamvolendam:
     key: edamvolendam
+    municipality: "Edam-Volendam"
     almanak_id: 22102
     <<: *ibabs
 

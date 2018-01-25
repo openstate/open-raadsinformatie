@@ -19,7 +19,7 @@ class ODataExtractor(StaticJSONExtractor):
         # print "Searching for: %s" % (item_filter,)
 
         for item in static_json['value']:
-            #pprint(item)
+            # pprint(item)
             passed_filter = (item_filter is None) or (
                 item[item_filter.keys()[0]] == item_filter.values()[0])
 
