@@ -430,21 +430,30 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             total_count = 0
             yield_count = 0
             while ((active_page_nr < max_pages) and (result_count == per_page)):
-                result = self.client.service.GetListReport(
-                    Sitename=self.source_definition['sitename'], ListId=l.Key,
-                    ReportId=report.Key, ActivePageNr=active_page_nr,
-                    RecordsPerPage=per_page
-                )
+                try:
+                    result = self.client.service.GetListReport(
+                        Sitename=self.source_definition['sitename'],
+                        ListId=l.Key, ReportId=report.Key,
+                        ActivePageNr=active_page_nr, RecordsPerPage=per_page)
+                except Exception as e:  # most likely an XML parse problem
+                    print "Could not parse page %s correctly!" % (
+                        active_page_nr,)
+                    print e.message
+                    result = None
                 result_count = 0
                 # print "* %s: %s/%s - %d/%d" % (
                 #     self.source_definition['sitename'],
                 #     result.ListName, result.ReportName,
                 #     active_page_nr, max_pages,)
-                try:
-                    document_element = result.Data.diffgram[0].DocumentElement[0]
-                except AttributeError as e:
-                    document_element = None
-                except IndexError as e:
+
+                if result is not None:
+                    try:
+                        document_element = result.Data.diffgram[0].DocumentElement[0]
+                    except AttributeError as e:
+                        document_element = None
+                    except IndexError as e:
+                        document_element = None
+                else:
                     document_element = None
 
                 if document_element is None:
