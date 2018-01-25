@@ -265,6 +265,7 @@ ibabs-archive:
 
   rijswijk:
     key: rijswijk
+    municipality: "Rijswijk (ZH.)"
     almanak_id: 27300
     <<: *ibabs
 

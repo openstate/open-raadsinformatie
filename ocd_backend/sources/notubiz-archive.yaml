@@ -294,6 +294,7 @@ notubiz-archive:
 
   dewolden:
     key: dewolden
+    municipality: "De Wolden"
     organisation_id: 1317
     almanak_id: 21391
     <<: *notubiz

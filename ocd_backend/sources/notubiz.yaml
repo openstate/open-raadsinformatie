@@ -272,6 +272,7 @@ notubiz:
 
   hendrikidoambacht:
     key: hendrikidoambacht
+    municipality: "Hendrik-Ido-Ambacht"
     organisation_id: 1781
     <<: *notubiz
 
@@ -292,6 +293,7 @@ notubiz:
 
   dewolden:
     key: dewolden
+    municipality: "De Wolden"
     organisation_id: 1317
     almanak_id: 21391
     <<: *notubiz
