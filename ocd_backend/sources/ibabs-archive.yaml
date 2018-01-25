@@ -245,15 +245,16 @@ ibabs-archive:
     almanak_id: 22102
     <<: *ibabs
 
-  # ettenleur:
-  #   key: ettenleur
-  #   almanak_id: 21760
-  #   <<: *ibabs
+  ettenleur:
+    key: ettenleur
+    municipality: "Etten-Leur"
+    almanak_id: 21760
+    <<: *ibabs
 
-  # velsen:
-  #   key: velsen
-  #   almanak_id: 38811
-  #   <<: *ibabs
+  velsen:
+    key: velsen
+    almanak_id: 38811
+    <<: *ibabs
 
   emmen:
     key: emmen
