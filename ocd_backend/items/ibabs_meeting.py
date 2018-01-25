@@ -184,10 +184,13 @@ class IBabsReportItem(
         Gets the committees that are active for the council.
         """
 
-        results = self.api_request(
-            self.source_definition['index_name'], 'organizations',
-            classification=['committee', 'subcommittee'])
-        return {c['name']: c for c in results}
+        try:
+            results = self.api_request(
+                self.source_definition['index_name'], 'organizations',
+                classification=['committee', 'subcommittee'])
+            return {c['name']: c for c in results}
+        except TypeError:
+            return {}
 
     def _get_public_url(self, doc_id):
         return (
