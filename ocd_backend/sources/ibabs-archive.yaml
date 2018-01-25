@@ -161,7 +161,7 @@ ibabs-archive:
 
   aalsmeer:
     key: aalsmeer
-    almanak_id: 28409
+    almanak_id: 38409
     <<: *ibabs
 
   noordwijkerhout:
