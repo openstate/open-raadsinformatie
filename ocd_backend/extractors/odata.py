@@ -14,9 +14,13 @@ class ODataExtractor(StaticJSONExtractor):
         Extracts items from a JSON file. It is assumed to be an array
         of items.
         """
-        static_json = json.loads(static_content)
+
+        new_content = self.http_session.get(
+            'https://dataderden.cbs.nl/ODataApi/OData/45042NED/Gemeenten',
+            verify=False).content
+        static_json = json.loads(new_content)
         item_filter = self.source_definition['filter']
-        # print "Searching for: %s" % (item_filter,)
+        print "Searching for: %s" % (item_filter,)
 
         for item in static_json['value']:
             # pprint(item)

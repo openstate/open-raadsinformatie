@@ -75,7 +75,8 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         meetings_skipped = 0
         meeting_item_count = 0
         for start_date, end_date in self.interval_generator():
-            log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
+            log.info("%s: Now processing meetings from %s to %s" % (
+                self.source_definition['sitename'], start_date, end_date,))
 
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['sitename'],
