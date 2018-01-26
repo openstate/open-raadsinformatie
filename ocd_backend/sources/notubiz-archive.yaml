@@ -322,3 +322,8 @@ notubiz-archive:
     key: binnenmaas
     organisation_id: 823
     <<: *notubiz
+
+  losser:
+    key: losser
+    organisation_id: 628
+    <<: *notubiz
