@@ -4,7 +4,8 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: true
   months_interval: 3
-  start_date: "2017-12-01"
+  start_date: "2017-01-01"
+  end_date: "2017-12-01"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"

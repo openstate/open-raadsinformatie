@@ -4,7 +4,8 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: true
   months_interval: 3
-  start_date: "2017-12-01"
+  start_date: "2017-01-01"
+  end_date: "2017-12-01"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -145,47 +146,47 @@ ibabs-archive:
     almanak_id: 21723
     <<: *ibabs
 
-  voorschoten:
-    key: voorschoten
-    almanak_id: 35396
-    sitename: Duivenvoorde
-    entities:
-    - *municipality
-    - *committees
-    - *organizations
-    - *persons
-    - *meetings
-    - *reports
-    - entity: reports
-      doc_type: events
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_meeting.IBabsReportItem
-      include: ".*Voorschoten$"
-      exclude: moties
-      pdf_max_pages: 0
-      max_pages: 1
-    <<: *ibabs
-
-  wassenaar:
-    key: wassenaar
-    almanak_id: 40204
-    sitename: Duivenvoorde
-    entities:
-    - *municipality
-    - *committees
-    - *organizations
-    - *persons
-    - *meetings
-    - *reports
-    - entity: reports
-      doc_type: events
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_meeting.IBabsReportItem
-      include: ".*Wassenaar$"
-      exclude: moties
-      pdf_max_pages: 0
-      max_pages: 1
-    <<: *ibabs
+  # voorschoten:
+  #   key: voorschoten
+  #   almanak_id: 35396
+  #   sitename: Duivenvoorde
+  #   entities:
+  #   - *municipality
+  #   - *committees
+  #   - *organizations
+  #   - *persons
+  #   - *meetings
+  #   - *reports
+  #   - entity: reports
+  #     doc_type: events
+  #     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  #     item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+  #     include: ".*Voorschoten$"
+  #     exclude: moties
+  #     pdf_max_pages: 0
+  #     max_pages: 1
+  #   <<: *ibabs
+  #
+  # wassenaar:
+  #   key: wassenaar
+  #   almanak_id: 40204
+  #   sitename: Duivenvoorde
+  #   entities:
+  #   - *municipality
+  #   - *committees
+  #   - *organizations
+  #   - *persons
+  #   - *meetings
+  #   - *reports
+  #   - entity: reports
+  #     doc_type: events
+  #     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  #     item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+  #     include: ".*Wassenaar$"
+  #     exclude: moties
+  #     pdf_max_pages: 0
+  #     max_pages: 1
+  #   <<: *ibabs
 
   aalsmeer:
     key: aalsmeer
