@@ -404,8 +404,8 @@ ibabs:
       doc_type: events
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_meeting.IBabsReportItem
-      include: ".*Voorschoten$"
-      exclude: ".*Wassenaar$"
+      include: ".*voorschoten$"
+      exclude: ".*wassenaar$"
       pdf_max_pages: 0
       max_pages: 1
     <<: *ibabs
@@ -425,8 +425,8 @@ ibabs:
       doc_type: events
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_meeting.IBabsReportItem
-      include: ".*Wassenaar$"
-      exclude: ".*Voorschoten$"
+      include: ".*wassenaar$"
+      exclude: ".*voorschoten$"
       pdf_max_pages: 0
       max_pages: 1
     <<: *ibabs
