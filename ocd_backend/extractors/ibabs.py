@@ -400,7 +400,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         try:
             kv = lists.iBabsKeyValue
         except AttributeError as e:
-            print "No reports defined"
+            print "No reports defined for %s" % (
+                self.source_definition['sitename'],)
             return
 
         selected_lists = []
