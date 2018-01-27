@@ -69,7 +69,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                     except HTTPError, e:
                         log.warn('%s: %s' % (e, resp.request.url))
                         break
-                    except KeyError, e:
+                    except (ValueError, KeyError), e:
                         log.error('%s: %s' % (e, resp.request.url))
                         break
 
