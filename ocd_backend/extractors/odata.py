@@ -1,5 +1,9 @@
+import os
 import json
 from pprint import pprint
+from time import sleep
+
+from ocd_backend import settings
 
 from .staticfile import StaticJSONExtractor
 
@@ -14,11 +18,13 @@ class ODataExtractor(StaticJSONExtractor):
         Extracts items from a JSON file. It is assumed to be an array
         of items.
         """
+        static_json = {'value': []}
 
-        new_content = self.http_session.get(
-            'https://dataderden.cbs.nl/ODataApi/OData/45042NED/Gemeenten',
-            verify=False).content
-        static_json = json.loads(new_content)
+        gem_path = os.path.abspath(
+            os.path.join(settings.ROOT_PATH, '../gemeenten.json'))
+        with open(gem_path) as gem_file:
+            static_json = json.load(gem_file)
+
         item_filter = self.source_definition['filter']
         print "Searching for: %s" % (item_filter,)
 
