@@ -47,6 +47,7 @@ Authors:
 * Justin van Wees ([@justin_v_w](https://twitter.com/justin_v_w))
 * Breyten Ernsting ([@breyten](https://twitter.com/breyten))
 * Sicco van Sas([@siccovansas](https://twitter.com/siccovansas))
+* Jurrian Tromp ([@jurrian](https://github.com/jurrian))
 
 Contributors:
 
