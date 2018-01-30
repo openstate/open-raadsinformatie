@@ -717,7 +717,7 @@ def similar(object_id, source_id=None, doc_type=u'items'):
                 'filter': {}
             }
         },
-        'facets': search_params['facets'],
+        'aggregations': search_params['facets'],
         'size': search_params['n_size'],
         'from': search_params['n_from'],
         'sort': {
