@@ -320,10 +320,10 @@ def extract_list_sources(sources_config):
         all_keys.append(key)
         if 'id' not in source and 'entities' not in source:
             for sub_key in source.keys():
-                all_keys.append(sub_key)
+                all_keys.append('%s -s %s' % (key, sub_key))
 
     click.echo('Available sources:')
-    for source in sorted(all_keys):
+    for source in sorted(set(all_keys)):
         click.echo(' - %s' % source)
 
 
