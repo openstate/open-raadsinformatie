@@ -112,7 +112,7 @@ go-archive:
 
   molenwaard:
     key: molenwaard
-    base_url: "http://raad.molenwaard.nl/api/v1"
+    base_url: "https://raad.gemeentemolenwaard.nl/api/v1"
     almanak_id: 27268
     <<: *go
 
