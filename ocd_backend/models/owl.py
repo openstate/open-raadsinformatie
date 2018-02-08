@@ -1,17 +1,16 @@
 import govid
 
-from owltology.model import ModelBase
-from owltology.property import Property
-from .namespaces import OWL, COUNCIL
+from owltology.model import ModelBase, Relation
+from .namespaces import OWL, META
 
 
 class Thing(ModelBase):
-    NAMESPACE = OWL
+    ori_identifier = govid.ori_identifier
+    ggm_identifier = govid.ggm_identifier
+    ibabs_identifier = govid.ibabs_identifier
+    notubiz_identifier = govid.notubiz_identifier
 
-    # Optional local identifier which doesn't have to be an URI
-    identifier = 'dcterms:identifier'
+    meta = Relation(META, 'meta')
 
-    _hidden = Property(COUNCIL, 'hidden')  # _hidden is required by ori for filtering
-
-    ggmIdentifier = govid.ggmIdentifier
-    oriIdentifier = govid.oriIdentifier
+    class Meta:
+        namespace = OWL

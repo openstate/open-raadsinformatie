@@ -1,55 +1,91 @@
-import owl, schema, foaf, person, opengov
+import owl, schema, opengov, govid
 from .namespaces import OPENGOV, SCHEMA, COUNCIL
-from owltology.property import Property, Instance, Type, Only, OnlyInteger, OnlyString, Exactly, MaxString
+from owltology.property import StringProperty, IntegerProperty, Relation
 
 
 class Attachment(owl.Thing):
-    #NAMESPACE = COUNCIL
-    _type = Type(COUNCIL)
-    contentUrl = Exactly(SCHEMA, 'contentUrl', 1, Property)
-    fileSize = OnlyInteger(SCHEMA, 'fileSize')
-    fileType = OnlyString(COUNCIL, 'fileType')
-    additionalType = MaxString(SCHEMA, 'additionalType', 1)
-    creator = Only(SCHEMA, 'creator', foaf.Agent)
-    fileFormat = MaxString(SCHEMA, 'fileFormat', 1)
+    name = StringProperty(SCHEMA, 'name')
+    url = StringProperty(SCHEMA, 'contentUrl')
+    size_in_bytes = IntegerProperty(SCHEMA, 'fileSize')
+    file_type = StringProperty(COUNCIL, 'fileType')
+    additional_type = StringProperty(SCHEMA, 'additionalType')
+    creator = Relation(SCHEMA, 'creator')
+    content_type = StringProperty(SCHEMA, 'fileFormat')
+    original_url = StringProperty(SCHEMA, 'isBasedOn')
+    text = StringProperty(SCHEMA, 'text')
+
+    class Meta:
+        namespace = COUNCIL
+        enricher_task = 'file_to_text'
 
 
 class Amendment(opengov.Motion):
-    NAMESPACE = COUNCIL
+    amends = Relation(COUNCIL, 'amends')
+
+    class Meta:
+        namespace = COUNCIL
 
 
 class Bill(opengov.Motion):
-    NAMESPACE = COUNCIL
+    class Meta:
+        namespace = COUNCIL
 
 
 class PrivateMembersBill(Bill):
-    NAMESPACE = COUNCIL
+    class Meta:
+        namespace = COUNCIL
 
 
 class Petition(opengov.Motion):
-    NAMESPACE = COUNCIL
+    class Meta:
+        namespace = COUNCIL
 
 
 class AgendaItem(schema.Event):
-    _type = Type(COUNCIL)
-    name = MaxString(SCHEMA, 'name', 1)
-    description = MaxString(SCHEMA, 'description', 1)
-    position = OnlyInteger(SCHEMA, 'position')
-    attachment = Only(COUNCIL, 'attachment', Attachment)
-    motion = Only(OPENGOV, 'motion', opengov.Motion)
-    attendee = Only(SCHEMA, 'attendee', person.Person)  # not in owl
-    absentee = Only(SCHEMA, 'absentee', person.Person)  # not in owl
-    superEvent = Only(SCHEMA, 'superEvent', opengov.Event)
-    #organizer = 'schema:organizer'
-    #eventStatus = 'schema:eventStatus'
+    attachment = Relation(COUNCIL, 'attachment')
+    motion = Relation(OPENGOV, 'motion')
+    description = StringProperty(SCHEMA, 'description')
+    name = StringProperty(SCHEMA, 'name')
+    position = IntegerProperty(SCHEMA, 'position')
+    parent = Relation(SCHEMA, 'superEvent')
+    vote_event = Relation(OPENGOV, 'voteEvent')
+    attendee = Relation(SCHEMA, 'attendee')
+    absentee = Relation(SCHEMA, 'absentee')
+    agenda = Relation(COUNCIL, 'agenda')
+
+    ggm_nummer = govid.ggm_nummer
+
+    class Meta:
+        namespace = COUNCIL
+        legacy_type = 'event_item'
+
+
+class Result(owl.Thing):
+    text = StringProperty(SCHEMA, 'text')
+    vote_event = Relation(OPENGOV, 'voteEvent')
+
+    # Instances
+    ResultFail = 'opengov:ResultFail'
+    ResultPass = 'opengov:ResultPass'
+    ResultKept = 'council:ResultKept'
+    ResultPostponed = 'council:ResultPostponed'
+    ResultWithdrawn = 'council:ResultWithdrawn'
+    ResultExpired = 'council:ResultExpired'
+    ResultDiscussed = 'council:ResultDiscussed'
+    ResultPublished = 'council:ResultPublished'
+
+    class Meta:
+        namespace = COUNCIL
 
 
 class VoteOption(owl.Thing):
-    _type = Type(COUNCIL)
     # Instances
-    VoteOptionYes = Instance(COUNCIL, 'VoteOptionYes')
-    VoteOptionNo = Instance(COUNCIL, 'VoteOptionNo')
-    VoteOptionAbstain = Instance(COUNCIL, 'VoteOptionAbstain')
-    VoteOptionAbsent = Instance(COUNCIL, 'VoteOptionAbsent')
-    VoteOptionNotVoting = Instance(COUNCIL, 'VoteOptionNotVoting')
-    VoteOptionPaired = Instance(COUNCIL, 'VoteOptionPaired')
+    VoteOptionYes = 'council:VoteOptionYes'
+    VoteOptionNo = 'council:VoteOptionNo'
+    VoteOptionAbstain = 'council:VoteOptionAbstain'
+    VoteOptionAbsent = 'council:VoteOptionAbsent'
+    VoteOptionNotVoting = 'council:VoteOptionNotVoting'
+    VoteOptionPaired = 'council:VoteOptionPaired'
+
+    class Meta:
+        namespace = COUNCIL

@@ -1,16 +1,27 @@
 import foaf
-from .namespaces import PERSON
+from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
+from owltology.property import StringProperty, DateTimeProperty, Relation
 
 
 class Person(foaf.Agent):
-    NAMESPACE = PERSON
-    name = 'foaf:name'
-    givenName = 'foaf:givenName'
-    familyName = 'foaf:familyName'
-    gender = 'foaf:gender'
-    birthDate = 'schema:birthDate'
-    deathDate = 'schema:deathDate'
-    email = 'schema:email'
-    nationalIdentity = 'opengov:nationalIdentity'
-    image = 'schema:image'
-    seeAlso = 'rdfs:seeAlso'
+    biography = StringProperty(BIO, 'biography')
+    contact_details = Relation(OPENGOV, 'contactDetail')
+    alternative_name = StringProperty(DCTERMS, 'alternative')
+    family_name = StringProperty(FOAF, 'familyName')
+    gender = StringProperty(FOAF, 'gender')
+    given_name = StringProperty(FOAF, 'givenName')
+    name = StringProperty(FOAF, 'name')
+    national_identity = StringProperty(OPENGOV, 'nationalIdentity')
+    summary = StringProperty(BIO, 'olb')
+    other_names = StringProperty(OPENGOV, 'otherName')
+    links = StringProperty(RDFS, 'seeAlso')
+    birth_date = DateTimeProperty(SCHEMA, 'birthDate')
+    death_date = DateTimeProperty(SCHEMA, 'deathDate')
+    email = StringProperty(SCHEMA, 'email')
+    image = Relation(SCHEMA, 'image')
+
+    def verbose_name(self):
+        self.name = '%s %s' % (self.given_name, self.family_name)
+
+    class Meta:
+        namespace = PERSON

@@ -3,4 +3,5 @@ from .namespaces import NCAL
 
 
 class Category(owl.Thing):
-    NAMESPACE = NCAL
+    class Meta:
+        namespace = NCAL

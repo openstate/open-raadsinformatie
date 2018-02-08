@@ -1,8 +1,10 @@
 from .namespaces import GOVID
-from owltology.property import OnlyString
+from owltology.property import StringProperty
 
-ggmIdentifier = OnlyString(GOVID, 'ggmIdentifier')
-ggmVrsNummer = OnlyString(GOVID, 'ggmVrsNummer')
-ggmNummer = OnlyString(GOVID, 'ggmNummer')
-ggmVolgnummer = OnlyString(GOVID, 'ggmVolgnummer')
-oriIdentifier = OnlyString(GOVID, 'oriIdentifier')
+ori_identifier = StringProperty(GOVID, 'oriIdentifier')
+ibabs_identifier = StringProperty(GOVID, 'ibabsIdentifier')
+notubiz_identifier = StringProperty(GOVID, 'notubizIdentifier')
+ggm_identifier = StringProperty(GOVID, 'ggmIdentifier')
+ggm_vrsnummer = StringProperty(GOVID, 'ggmVrsNummer')
+ggm_nummer = StringProperty(GOVID, 'ggmNummer')
+ggm_volgnummer = StringProperty(GOVID, 'ggmVolgnummer')

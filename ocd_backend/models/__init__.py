@@ -7,6 +7,7 @@ import owl
 import person
 import schema
 import govid
+import meta
 
 # This file is used to specify custom mappings
 
@@ -15,13 +16,13 @@ import govid
 Event = opengov.Event
 VoteEvent = opengov.VoteEvent
 Organization = org.Organization
-EventStatusType = opengov.EventStatusType
+EventStatusType = schema.EventStatusType
 Motion = opengov.Motion
 Amendment = council.Amendment
 Bill = council.Bill
 PrivateMembersBill = council.PrivateMembersBill
 Petition = council.Petition
-Result = opengov.Result
+Result = council.Result
 Count = opengov.Count
 YesCount = opengov.YesCount
 NoCount = opengov.NoCount
@@ -34,47 +35,9 @@ Attachment = council.Attachment
 ImageObject = schema.ImageObject
 PropertyValue = schema.PropertyValue
 AgendaItem = council.AgendaItem
-ggmIdentifier = govid.ggmIdentifier
-ggmVrsNummer = govid.ggmVrsNummer
-ggmNummer = govid.ggmNummer
-oriIdentifier = govid.oriIdentifier
+Metadata = meta.Metadata
 
-# TEMP
-# Mandatory URI for JsonLD
-CONTEXT = '@context'
-ID = '@id'
-TYPE = '@type'
-HIDDEN = 'hidden'
-
-context = {
-    "foaf": "http://xmlns.com/foaf/0.1/",
-    "ncal": "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#",
-    "opengov": "http://www.w3.org/ns/opengov#",
-    "org": "http://www.w3.org/ns/org#",
-    "council": "https://argu.co/ns/0.1/gov/council#",
-    "govid": "https://argu.co/ns/0.1/gov/id#",
-    "owl": "http://www.w3.org/2002/07/owl#",
-    "person": "http://www.w3.org/ns/person#",
-    "schema": "http://schema.org/",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-
-    "council:agenda": {
-        "@type": "@id",
-        "@container": "@list"
-    },
-    "schema:attendee": {
-        "@type": "@id"
-    },
-    "opengov:vote": {
-        "@type": "@id"
-    },
-    "opengov:count": {
-        "@type": "@id"
-    },
-    "opengov:voteEvent": {
-        "@type": "@id"
-    },
-    "opengov:motion": {
-        "@type": "@id"
-    }
-}
+ggm_identifier = govid.ggm_identifier
+ggm_vrsnummer = govid.ggm_vrsnummer
+ggm_nummer = govid.ggm_nummer
+ori_identifier = govid.ori_identifier

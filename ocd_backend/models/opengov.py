@@ -1,60 +1,84 @@
-import owl, schema, foaf, ncal, person, org, govid
-from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF
-from owltology.property import Property, Type, Some, Only, Exactly, SomeString, SomeDate, Namespace
+import owl, schema, govid
+from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
+from owltology.property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
 
 
 class Event(schema.Event):
-    _type = Type(OPENGOV)
-    attachment = Only(COUNCIL, 'attachment', 'council.Attachment')
-    name = SomeString(SCHEMA, 'name')
-    location = Some(SCHEMA, 'location', schema.Place)
-    categories = Some(NCAL, 'categories', ncal.Category)
-    agenda = Only(COUNCIL, 'agenda', list)
-    motion = Only(OPENGOV, 'motion', 'opengov.Motion')
-    attendee = Only(SCHEMA, 'attendee', person.Person)
-    absentee = Only(SCHEMA, 'absentee', person.Person)
-    organizer = Some(SCHEMA, 'organizer', foaf.Agent)
-    eventStatus = Some(SCHEMA, 'eventStatus', schema.EventStatusType)
+    agenda = Relation(COUNCIL, 'agenda')
+    attachment = Relation(COUNCIL, 'attachment')
+    classification = ArrayProperty(NCAL, 'categories')
+    motion = Relation(OPENGOV, 'motion')
+    attendee = Relation(SCHEMA, 'attendee')
+    audio = Relation(SCHEMA, 'audio')
+    description = StringProperty(SCHEMA, 'description')
+    status = Relation(SCHEMA, 'eventStatus')
+    location = StringProperty(SCHEMA, 'location')
+    name = StringProperty(SCHEMA, 'name', required=True)
+    organization = Relation(SCHEMA, 'organizer')
+    parent = Relation(SCHEMA, 'superEvent')
+    chair = StringProperty(COUNCIL, 'chair')
+    absentee = Relation(SCHEMA, 'absentee')
+    invitee = Relation(SCHEMA, 'invitee')
 
-    ggmVrsNummer = govid.ggmVrsNummer
-    ggmNummer = govid.ggmNummer
-    ggmVolgnummer = govid.ggmVolgnummer
+    ggm_vrsnummer = govid.ggm_vrsnummer
+    ggm_nummer = govid.ggm_nummer
+    ggm_volgnummer = govid.ggm_volgnummer
+
+    class Meta:
+        namespace = OPENGOV
 
 
 class Motion(owl.Thing):
-    _type = Type(OPENGOV)
-    name = SomeString(SCHEMA, 'name')
-    legislativeSession = Some(OPENGOV, 'legislativeSession', Event)
-    requirement = SomeString(OPENGOV, 'requirement')
-    additionalType = SomeString(SCHEMA, 'additionalType')
-    creator = Some(SCHEMA, 'creator', foaf.Agent)
-    cocreator = Some(COUNCIL, 'cocreator', foaf.Agent)
-    dateSubmitted = SomeDate(SCHEMA, 'dateSubmitted')
-    #concluded
-    publisher = Some(SCHEMA, 'publisher', foaf.Agent)
-    text = SomeString(SCHEMA, 'text')
-    voteEvent = Only(OPENGOV, 'voteEvent', 'opengov.VoteEvent')
+    attachment = Relation(SCHEMA, 'attachment')
+    legislative_session = StringProperty(OPENGOV, 'legislativeSession')
+    requirement = StringProperty(OPENGOV, 'requirement')
+    classification = StringProperty(SCHEMA, 'additionalType')
+    creator = Relation(SCHEMA, 'creator')
+    cocreator = Relation(COUNCIL, 'cocreator')
+    date = DateTimeProperty(SCHEMA, 'dateSubmitted')
+    name = StringProperty(SCHEMA, 'name')
+    organization = Relation(SCHEMA, 'publisher')
+    text = StringProperty(SCHEMA, 'text')
+    vote_events = Relation(OPENGOV, 'voteEvent')
 
-    ggmVrsNummer = govid.ggmVrsNummer
-    ggmNummer = govid.ggmNummer
-    ggmVolgnummer = govid.ggmVolgnummer
+    ggm_vrsnummer = govid.ggm_vrsnummer
+    ggm_nummer = govid.ggm_nummer
+    ggm_volgnummer = govid.ggm_volgnummer
+
+    class Meta:
+        namespace = OPENGOV
 
 
 class VoteEvent(schema.Event):
-    _type = Type(OPENGOV)
-    categories = Some(OPENGOV, 'categories', ncal.Category)
-    created = SomeDate(DCTERMS, 'created')
-    modified = SomeDate(DCTERMS, 'modified')
-    motion = Exactly(OPENGOV, 'motion', 1, Motion)
-    result = SomeString(OPENGOV, 'result')
-    organizer = Some(SCHEMA, 'organizer', foaf.Agent)
-    superEvent = Some(SCHEMA, 'superEvent', schema.Event)
-    vote = Some(OPENGOV, 'vote', 'opengov.Vote')
-    count = Some(OPENGOV, 'count', 'opengov.Count')
+    classification = ArrayProperty(NCAL, 'categories')
+    created_at = DateTimeProperty(DCTERMS, 'created')
+    updated_at = DateTimeProperty(DCTERMS, 'modified')
+    motion = Relation(OPENGOV, 'motion')
+    result = StringProperty(OPENGOV, 'result')
+    organization = Relation(SCHEMA, 'organizer')
+    legislative_session = Relation(SCHEMA, 'superEvent')
+    votes = Relation(OPENGOV, 'vote')
+    counts = Relation(OPENGOV, 'count')
+
+    class Meta:
+        namespace = OPENGOV
 
 
 class Speech(owl.Thing):
-    _type = Type(OPENGOV)
+    attribution_text = StringProperty(OPENGOV, 'attributionText')
+    audience = Relation(DCTERMS, 'audience')
+    event = Relation(BIBFRAME, 'event')
+    role = Relation(OPENGOV, 'role')
+    audio = Relation(SCHEMA, 'audio')
+    creator = Relation(SCHEMA, 'creator')
+    end_date = DateTimeProperty(SCHEMA, 'endDate')
+    position = IntegerProperty(SCHEMA, 'position')
+    start_date = DateTimeProperty(SCHEMA, 'startDate')
+    text = StringProperty(SCHEMA, 'text')
+    video = StringProperty(SCHEMA, 'video')
+
+    class Meta:
+        namespace = OPENGOV
 
 
 class SpeechAnswer(Speech):
@@ -78,9 +102,11 @@ class SpeechSummary(Speech):
 
 
 class Count(owl.Thing):
-    _type = Type(OPENGOV)
-    value = Exactly(RDF, 'value', 1, int)
-    group = Exactly(OPENGOV, 'group', 1, org.Organization)
+    value = IntegerProperty(RDF, 'value')
+    group = Relation(OPENGOV, 'group')
+
+    class Meta:
+        namespace = OPENGOV
 
 
 class YesCount(Count):
@@ -108,31 +134,23 @@ class PairedCount(Count):
 
 
 class Vote(owl.Thing):
-    _type = Type(OPENGOV)
+    group = Relation(OPENGOV, 'politicalGroup')
+    role = StringProperty(OPENGOV, 'role')
+    voter = Relation(SCHEMA, 'agent')
+    vote_event = Relation(OPENGOV, 'voteEvent')
+    option = StringProperty(OPENGOV, 'voteOption')
 
-
-class Result(owl.Thing):
-    _type = Type(OPENGOV)
-    # Instances
-    ResultFail = 'opengov:ResultFail'
-    ResultPass = 'opengov:ResultPass'
-    ResultKept = 'council:ResultKept'
-    ResultPostponed = 'council:ResultPostponed'
-    ResultWithdrawn = 'council:ResultWithdrawn'
-    ResultExpired = 'council:ResultExpired'
-    ResultDiscussed = 'council:ResultDiscussed'
-    ResultPublished = 'council:ResultPublished'
+    class Meta:
+        namespace = OPENGOV
 
 
 class ContactDetail(owl.Thing):
-    _type = Type(OPENGOV)
+    type = StringProperty(RDF, 'type')
+    value = StringProperty(RDF, 'value')
+    label = StringProperty(RDFS, 'label')
+    valid_from = DateTimeProperty(SCHEMA, 'validFrom')
+    note = StringProperty(SKOS, 'note')
+    valid_until = DateTimeProperty(OPENGOV, 'validUntil')
 
-
-class EventStatusType(schema.Event):
-    _type = Type(OPENGOV)
-    # Instances
-    EventCancelled = 'schema:EventCancelled'
-    EventPostponed = 'schema:EventPostponed'
-    EventRescheduled = 'schema:EventRescheduled'
-    EventScheduled = 'schema:EventScheduled'
-    EventCompleted = 'council:EventCompleted'
+    class Meta:
+        namespace = OPENGOV

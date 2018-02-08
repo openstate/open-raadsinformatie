@@ -1,15 +1,17 @@
+from copy import deepcopy
 from datetime import datetime
 from uuid import uuid4
-from copy import deepcopy
 
-from elasticsearch.exceptions import NotFoundError
 from celery import chain, group
+from elasticsearch.exceptions import NotFoundError
 
-from ocd_backend.es import elasticsearch as es
 from ocd_backend import settings, celery_app
+from ocd_backend.es import elasticsearch as es
+from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import load_object, propagate_chain_get
 from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.models.meta import Run
 
 logger = get_source_logger('pipeline')
 
@@ -58,6 +60,12 @@ def setup_pipeline(source_definition):
         'index_alias': index_alias
     }
 
+    logger.debug('Starting run with identifier %s' % params['run_identifier'])
+
+    run = Run('run_identifier', params['run_identifier'])
+    run.save()
+    params['run_node'] = run
+
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
@@ -89,19 +97,19 @@ def setup_pipeline(source_definition):
             load_object(cls) for cls in
             pipeline_definitions[pipeline['id']].get('extensions', [])]
 
-        pipeline_transformers[pipeline['id']] = load_object(
-            pipeline['transformer'])()
+        if pipeline.get('transformer'):
+            pipeline_transformers[pipeline['id']] = load_object(
+                pipeline['transformer'])()
 
         pipeline_enrichers[pipeline['id']] = [
             (load_object(enricher[0])(), enricher[1] or {}) for enricher in
             pipeline_definitions[pipeline['id']].get('enrichers', [])]
 
-        pipeline_loaders[pipeline['id']] = [
-            load_object(cls)() for cls in
-            pipeline_definitions[pipeline['id']].get('loaders', None) or [
-                pipeline_definitions[pipeline['id']]['loader']
-            ]
-        ]
+        pipeline_loaders[pipeline['id']] = list()
+        for cls in pipeline_definitions[pipeline['id']].get('loaders', None) or [
+                pipeline_definitions[pipeline['id']].get('loader', None)]:
+            if cls:
+                pipeline_loaders[pipeline['id']].append(load_object(cls)())
 
     result = None
     for pipeline in pipelines:
@@ -129,10 +137,12 @@ def setup_pipeline(source_definition):
                     item = []
 
                 # Transformers
-                step_chain.append(pipeline_transformers[pipeline['id']].s(
-                    *item,
-                    source_definition=pipeline_definitions[pipeline['id']],
-                    **params))
+                if pipeline_transformers.get(pipeline['id']):
+                    step_chain.append(pipeline_transformers[pipeline['id']].s(
+                        *item,
+                        source_definition=pipeline_definitions[pipeline['id']],
+                        **params)
+                    )
 
                 # Enrichers
                 for enricher_task, enricher_settings in pipeline_enrichers[

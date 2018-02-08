@@ -1,11 +1,17 @@
 import owl
-from .namespaces import FOAF
-from owltology.property import Type
+from .namespaces import FOAF, ORG
+from owltology.property import Relation
 
 
 class Agent(owl.Thing):
-    _type = Type(FOAF)
+    has_member = Relation(ORG, 'hasMember')
+
+    class Meta:
+        namespace = FOAF
 
 
 class Group(Agent):
-    _type = Type(FOAF)
+    member = Relation(ORG, 'member')
+
+    class Meta:
+        namespace = FOAF
