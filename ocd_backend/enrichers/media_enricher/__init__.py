@@ -1,6 +1,5 @@
 import os
 from base64 import b64encode
-from hashlib import sha1
 from tempfile import SpooledTemporaryFile
 
 from requests import Session
@@ -12,10 +11,9 @@ from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
     MediaType, FileToText
 from ocd_backend.enrichers.media_enricher.tasks.ggm import \
     GegevensmagazijnMotionText
-from ocd_backend.exceptions import SkipEnrichment, UnsupportedContentType
+from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.log import get_source_logger
-from ocd_backend.models import *
-from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT
+from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT, RESOLVER_BASE_URL
 from ocd_backend.utils.misc import get_secret
 
 log = get_source_logger('enricher')
@@ -135,8 +133,7 @@ class MediaEnricher(BaseEnricher):
             media_file
         )
 
-    def enrich_item(self, enrichments, object_id, combined_index_doc, doc,
-                    doc_type):
+    def enrich_item(self, item):
         """Enriches the media objects referenced in a single item.
 
         First, a media item will be retrieved from the source, than the
@@ -145,10 +142,6 @@ class MediaEnricher(BaseEnricher):
         a specific media enrichment task fails, only that task is
         skipped, which means that we move on to the next task.
         """
-
-        if not doc.get('media_urls', []):
-            raise SkipEnrichment('No "media_urls" in document.')
-
         self.setup_http_session()
 
         if self.enricher_settings.get('authentication', False):
@@ -157,57 +150,32 @@ class MediaEnricher(BaseEnricher):
         # Check the settings to see if media should by fetch partially
         partial_fetch = self.enricher_settings.get('partial_media_fetch', False)
 
-        for media_item in doc['media_urls']:
-            media_item_enrichment = {}
+        content_type, content_length, media_file = self.fetch_media(
+            item.get_ori_id(),
+            item.original_url,
+            partial_fetch
+        )
 
-            content_type, content_length, media_file = self.fetch_media(
-                object_id,
-                media_item['original_url'],
-                partial_fetch
-            )
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, item.get_object_hash(item.original_url))
+        item.content_type = content_type
+        item.size_in_bytes = content_length
 
-            for task in self.enricher_settings['tasks']:
-                # Seek to the beginning of the file before starting a task
-                media_file.seek(0)
-                try:
-                    self.available_tasks[task](media_item, content_type,
-                                               media_file,
-                                               media_item_enrichment,
-                                               object_id, combined_index_doc,
-                                               doc,
-                                               doc_type, )
-                except UnsupportedContentType:
-                    log.debug('Skipping media enrichment task %s, '
-                              'content-type %s (object_id: %s, url %s) is not '
-                              'supported.' % (task, content_type, object_id,
-                                              media_item['original_url']))
-                    continue
+        enrich_tasks = item.Meta.enricher_task
+        if isinstance(enrich_tasks, basestring):
+            enrich_tasks = [item.Meta.enricher_task]
 
-            self.get_combined_index_data(media_item, content_type,
-                                         content_length,
-                                         media_file,
-                                         media_item_enrichment,
-                                         object_id, combined_index_doc,
-                                         doc,
-                                         doc_type, )
+        for task in enrich_tasks:
+            # Seek to the beginning of the file before starting a task
+            media_file.seek(0)
+            try:
+                self.available_tasks[task](item, content_type, media_file)
+            except UnsupportedContentType:
+                log.info('Skipping media enrichment task %s, '
+                          'content-type %s (ob1ject_id: %s, url %s) is not '
+                          'supported.' % (task, content_type, item.get_ori_id(),
+                                          item.original_url))
+                continue
 
             media_file.close()
 
-    def get_combined_index_data(self, media_item, content_type, content_length,
-                                media_file, media_item_enrichment, object_id,
-                                combined_index_doc, doc, doc_type, ):
-        media_item_enrichment[ID] = sha1(media_item['url']).hexdigest()
-        media_item_enrichment[TYPE] = ImageObject.type
-        media_item_enrichment[ImageObject.contentUrl] = media_item['url']
-        media_item_enrichment[ImageObject.isBasedOn] = media_item[
-            'original_url']
-        media_item_enrichment[ImageObject.fileFormat] = content_type
-        media_item_enrichment[ImageObject.contentSize] = content_length
-
-        # Add the modified 'enrichments' dict to the item documents
-        if not combined_index_doc.get(Person.image):
-            combined_index_doc[Person.image] = []
-            doc[Person.image] = []
-
-        combined_index_doc[Person.image].append(media_item_enrichment)
-        doc[Person.image].append(media_item_enrichment)
+        item.save()

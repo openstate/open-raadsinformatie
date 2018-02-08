@@ -52,6 +52,9 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - # reserved for enricher_settings
 
   - &reports
     <<: *entity_defaults
@@ -170,8 +173,7 @@ ibabs:
       item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
       enrichers:
       - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
-        - tasks:
-          - ggm_motion_text
+        - # reserved for enricher_settings
       <<: *entity_defaults
 
     - entity: reports

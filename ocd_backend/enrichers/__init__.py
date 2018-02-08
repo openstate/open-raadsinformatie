@@ -34,57 +34,36 @@ class BaseEnricher(celery_app.Task):
         if type(args) == tuple:
             args = [args]
 
-        results = list()
-        for item in args:
-            combined_object_id, object_id, combined_index_doc, doc, doc_type = item
+        for doc in args:
             try:
-                self.enrich_item(
-                    doc['enrichments'],
-                    object_id,
-                    combined_index_doc,
-                    doc,
-                    doc_type
-                )
+                for prop, value in doc.properties(props=True, rels=True):
+                    try:
+                        if not value.Meta.enricher_task:
+                            continue
+                    except AttributeError:
+                        continue
 
-                results.append((combined_object_id, object_id,
-                                combined_index_doc, doc, doc_type))
+                    self.enrich_item(value)
+
             except SkipEnrichment as e:
                 log.info('Skipping %s for %s, reason: %s'
-                         % (self.__class__.__name__, object_id, e.message))
-                results.append(
-                    (combined_object_id, object_id, combined_index_doc, doc,
-                     doc_type))
-            except:
+                         % (self.__class__.__name__, doc.get_ori_id(), e.message))
+            except Exception, e:
+                print e
                 log.exception('Unexpected error, skipping %s for %s'
-                              % (self.__class__.__name__, object_id))
-                results.append(
-                    (combined_object_id, object_id, combined_index_doc, doc,
-                     doc_type))
+                              % (self.__class__.__name__, doc.get_ori_id()))
 
-        return results
+        return args
 
-    def enrich_item(self, enrichments, object_id, combined_index_doc, doc,
-                    doc_type):
+    def enrich_item(self, item):
         """Enriches a single item.
 
         This method should be implemented by the class that inherits
-        from :class:`.BaseEnricher`. The method should modify and return
-        the passed ``enrichments`` dictionary. The contents of the
-        ``combined_index_doc`` and ``doc`` can be used to generate the
-        enrichments.
+        from :class:`.BaseEnricher`. The method should modify or add
+        attributes of the supplied item.
 
-        :param enrichments: the dict that should be modified by the
-            enrichment task. It is possible that this dictionary already
-            contains enrichments from previous tasks.
-        :type enrichments: dict
-        :param object_id: the identifier of the item that is being enriched.
-        :type object_id: str
-        :param combined_index_doc: the 'combined index' representation
-            of the item.
-        :type combined_index_doc: dict
-        :param doc: the collection specific index representation of the
+        :param item: the collection specific index representation of the
             item.
-        :type doc: dict
-        :returns: a modified enrichments dictionary.
+        :type item: object
         """
         raise NotImplemented

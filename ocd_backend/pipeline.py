@@ -93,7 +93,7 @@ def setup_pipeline(source_definition):
             pipeline['transformer'])()
 
         pipeline_enrichers[pipeline['id']] = [
-            (load_object(enricher[0])(), enricher[1]) for enricher in
+            (load_object(enricher[0])(), enricher[1] or {}) for enricher in
             pipeline_definitions[pipeline['id']].get('enrichers', [])]
 
         pipeline_loaders[pipeline['id']] = [
