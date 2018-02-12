@@ -19,6 +19,22 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         from ocd_backend.items.notubiz_meetingitem import get_meetingitem_id
         return get_meetingitem_id(item_id)
 
+    def _get_documents_as_media_urls(self):
+        media_urls = {}
+        for doc in self.original_item.get('documents', []):
+            doc_hash = unicode(sha1(
+                (doc.get('url', u'') + u':' + doc.get('title', u'')).decode(
+                    'utf8')).hexdigest())
+            media_urls[doc_hash] = {
+                "url": "/v0/resolve/",
+                "note": doc['title'],
+                "original_url": doc['url']
+            }
+        if media_urls:
+            return media_urls.values()
+        else:
+            return None
+
     def _get_current_permalink(self):
         return u'%s/events/meetings/%i' % (
             self.source_definition['base_url'], self.original_item['id'])
@@ -114,17 +130,7 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
             }
         ]
 
-        media_urls = []
-        for doc in self.original_item.get('documents', []):
-            media_urls.append(
-                {
-                    "url": "/v0/resolve/",
-                    "note": doc['title'],
-                    "original_url": doc['url']
-                }
-            )
-        if media_urls:
-            combined_index_data['media_urls'] = media_urls
+        combined_index_data['media_urls'] = self._get_documents_as_media_urls()
 
         return combined_index_data
 
