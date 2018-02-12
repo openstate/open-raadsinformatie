@@ -65,17 +65,7 @@ class MeetingItem(Meeting):
             }
         ]
 
-        media_urls = []
-        for doc in self.original_item.get('documents', []):
-            media_urls.append(
-                {
-                    "url": "/v0/resolve/",
-                    "note": doc['title'],
-                    "original_url": doc['url']
-                }
-            )
-        if media_urls:
-            combined_index_data['media_urls'] = media_urls
+        combined_index_data['media_urls'] = self._get_documents_as_media_urls()
 
         return combined_index_data
 
