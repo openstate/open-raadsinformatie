@@ -49,7 +49,7 @@ _notubiz: &notubiz
 notubiz:
   alkmaar:
     key: alkmaar
-    organisation_id: 2048
+    organisation_id: 987 
     <<: *notubiz
 
   groningen:
