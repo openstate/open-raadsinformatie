@@ -17,14 +17,14 @@ class MunicipalityOrganisationItem(OrganisationItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['name'] = unicode(self.original_item['Title'])
-        combined_index_data['identifiers'] = [
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['name'] = unicode(self.original_item['Title'])
+        object_model['identifiers'] = [
             {
                 'identifier': self.original_item['Key'].strip(),
                 'scheme': u'CBS'
@@ -34,10 +34,10 @@ class MunicipalityOrganisationItem(OrganisationItem):
                 'scheme': u'ORI'
             }
         ]
-        combined_index_data['classification'] = u'Municipality'
-        combined_index_data['description'] = self.original_item['Description']
+        object_model['classification'] = u'Municipality'
+        object_model['description'] = self.original_item['Description']
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}
@@ -64,24 +64,24 @@ class AlmanakOrganisationItem(OrganisationItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['name'] = unicode(self.original_item['name'])
-        combined_index_data['identifiers'] = [
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['name'] = unicode(self.original_item['name'])
+        object_model['identifiers'] = [
             {
                 'identifier': self.get_object_id(),
                 'scheme': u'ORI'
             }
         ]
-        combined_index_data['classification'] = self.original_item[
+        object_model['classification'] = self.original_item[
             'classification']
-        combined_index_data['description'] = self.original_item['name']
+        object_model['description'] = self.original_item['name']
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

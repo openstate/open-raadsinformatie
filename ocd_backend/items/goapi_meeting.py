@@ -49,25 +49,25 @@ class Meeting(
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
         committees = self._get_committees()
         current_permalink = self._get_current_permalink()
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['hidden'] = self.source_definition['hidden']
 
         if self.original_item['description']:
-            combined_index_data['name'] = self.original_item['description']
+            object_model['name'] = self.original_item['description']
         else:
-            combined_index_data['name'] = 'Vergadering %s' % \
+            object_model['name'] = 'Vergadering %s' % \
                 self.original_item['dmu']['name']
 
-        combined_index_data['classification'] = u'Agenda'
+        object_model['classification'] = u'Agenda'
 
-        combined_index_data['identifiers'] = [
+        object_model['identifiers'] = [
             {
                 'identifier': unicode(self.original_item['id']),
                 'scheme': u'GemeenteOplossingen'
@@ -79,20 +79,20 @@ class Meeting(
         ]
 
         try:
-            combined_index_data['organization'] = committees[
+            object_model['organization'] = committees[
                 self.original_item['dmu']['id']]
         except KeyError:
             pass
 
-        combined_index_data['organization_id'] = unicode(
+        object_model['organization_id'] = unicode(
             self.original_item['dmu']['id'])
 
-        combined_index_data['start_date'] = iso8601.parse_date(
+        object_model['start_date'] = iso8601.parse_date(
             self.original_item['date'])
 
-        combined_index_data['location'] = self.original_item['location']
-        combined_index_data['status'] = u'confirmed'
-        combined_index_data['sources'] = [
+        object_model['location'] = self.original_item['location']
+        object_model['status'] = u'confirmed'
+        object_model['sources'] = [
             {
                 'url': current_permalink,
                 'note': u''
@@ -100,10 +100,10 @@ class Meeting(
         ]
 
         if 'items' in self.original_item:
-            combined_index_data['children'] = [
+            object_model['children'] = [
                 self.get_meeting_id(mi) for mi in self.original_item['items']]
 
-        combined_index_data['sources'] = []
+        object_model['sources'] = []
 
         try:
             documents = self.original_item['documents']
@@ -121,13 +121,13 @@ class Meeting(
                 self.source_definition.get('pdf_max_pages', 20)
             )
 
-            combined_index_data['sources'].append({
+            object_model['sources'].append({
                 'url': url,
                 'note': document['filename'],
                 'description': description
             })
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

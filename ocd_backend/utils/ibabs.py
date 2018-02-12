@@ -74,14 +74,19 @@ def meeting_to_dict(m, excludes=[]):
         'MeetingDate': lambda x: x.isoformat(),
         'StartTime': lambda x: unicode(x),
         'EndTime': lambda x: unicode(x),
-        'Location': None,
-        'Chairman': None,
+        'Location': lambda x: unicode(x),
+        'Chairman': lambda x: unicode(x),
+        'Invitees': lambda x: [
+            user_to_dict(y) if y is not None else [] for y in x[0]],
+        'Attendees': lambda x: [
+            user_to_dict(y) if y is not None else [] for y in x[0]],
         'Explanation': None,
         'PublishDate': lambda x: x.isoformat(),
         'MeetingItems': lambda x: [
             meeting_item_to_dict(y) if y is not None else [] for y in x[0]],
         'Documents': lambda x: [
-            document_to_dict(y) if y is not None else [] for y in x[0]]
+            document_to_dict(y) if y is not None else [] for y in x[0]],
+        'Webcast': lambda x: unicode(x['Code']),
     }
     return _ibabs_to_dict(m, fields, excludes)
 
@@ -101,6 +106,18 @@ def list_entry_to_dict(l):
         'VotesInFavour': None,
     }
     return _ibabs_to_dict(l, fields)
+
+
+def user_to_dict(u):
+    """
+    Converts an iBabsUserBasic to a JSON serializable dict
+    """
+    fields = {
+        'UniqueId': lambda x: unicode(x),
+        'Name': lambda x: unicode(x),
+        'Emailaddress': lambda x: unicode(x),
+    }
+    return _ibabs_to_dict(u, fields)
 
 
 def meeting_item_to_dict(m):

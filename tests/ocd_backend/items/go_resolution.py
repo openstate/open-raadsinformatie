@@ -137,56 +137,56 @@ class ResolutionItemTestCase(ItemTestCase):
 
     def test_meeting_name(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['name'], self.meeting_name)
 
 
     def test_meeting_identifiers(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['identifiers'], self.meeting_identifiers)
 
 
     def test_meeting_organisation(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
 
     def test_meeting_classification(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['classification'], self.meeting_classification)
 
 
     def test_meeting_dates(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
 
     def test_meeting_location(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
 
 
     def test_meeting_status(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
 
 
     def test_meeting_sources(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_sources)
 
 
     def test_meeting_description(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         pprint(data['description'])
         result = data['description'].startswith(
             u'pdf')

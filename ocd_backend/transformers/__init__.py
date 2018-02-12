@@ -32,6 +32,7 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         """
         self.source_definition = kwargs['source_definition']
         self.item_class = load_object(kwargs['source_definition']['item'])
+        self.run_node = kwargs['run_node']
 
         item = self.deserialize_item(*args)
         return self.transform_item(*args, item=item)
@@ -46,15 +47,6 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         else:
             raise NoDeserializerAvailable('Item with content_type %s'
                                           % raw_item_content_type)
-
-    def add_resolveable_media_urls(self, item):
-        """For each item in ``media_urls``, add a ``url`` variant that
-        can be resolved by the OCD REST API."""
-        if 'media_urls' in item.combined_index_data:
-            for media_url in item.combined_index_data['media_urls']:
-                hashed_url = sha1(media_url['original_url']).hexdigest()
-                media_url['url'] = '%s/%s' % (settings.RESOLVER_BASE_URL,
-                                              hashed_url)
 
     def transform_item(self, raw_item_content_type, raw_item, item):
         """Transforms a single item.
@@ -74,16 +66,6 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             for the source specific index.
         """
         item = self.item_class(self.source_definition, raw_item_content_type,
-                               raw_item, item,
-                               self.source_definition.get('doc_type', 'item'))
+                               raw_item, item, self.run_node)
 
-        self.add_resolveable_media_urls(item)
-
-        return (
-            item.get_combined_object_id(),
-            item.get_object_id(),
-            item.get_combined_index_doc(),
-            item.get_index_doc(),
-            item.doc_type,
-        )
-
+        return item.get_object_model()

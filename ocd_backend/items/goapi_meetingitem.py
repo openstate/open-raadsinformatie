@@ -63,7 +63,7 @@ class MeetingItem(
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
+    def get_object_model(self):
         combined_index_data = {}
 
         current_permalink = self._get_current_permalink()

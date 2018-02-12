@@ -1,7 +1,7 @@
 from hashlib import sha1
-import iso8601
 
 from ocd_backend.items.notubiz_meeting import Meeting
+from ocd_backend.models import *
 
 
 def get_meetingitem_id(item_id):
@@ -22,68 +22,34 @@ class MeetingItem(Meeting):
     def _get_current_permalink(self):
         return u'%s/agenda_items/agenda_points/%i' % (self.source_definition['base_url'], self.original_item['id'])
 
-    def get_combined_index_data(self):
-        combined_index_data = dict()
-
-        combined_index_data['id'] = unicode(self.get_object_id())
-        combined_index_data['hidden'] = self.source_definition['hidden']
-
-        meeting = self.original_item.get('meeting')
-
+    def get_object_model(self):
+        agenda_item = AgendaItem('notubiz_identifier', self.original_item['id'])
+        agenda_item.name = self.original_item['attributes']['Titel']
+        agenda_item.position = self.original_item['order']
         try:
-            combined_index_data['name'] = self.original_item['attributes']['Titel']
-        except KeyError:
-            combined_index_data['name'] = self.original_item['attributes']['1']
-        except KeyError:
-            combined_index_data['name'] = self.original_item['type_data']['title']
-
-        combined_index_data['classification'] = u'Agendapunt'
-
-        combined_index_data['identifiers'] = [
-            {
-                'identifier': unicode(self.original_item['id']),
-                'scheme': u'Notubiz'
-            },
-            {
-                'identifier': self.get_object_id(),
-                'scheme': u'ORI'
-            }
-        ]
-
-        try:
-            combined_index_data['parent_id'] = get_meetingitem_id(self.original_item['parent']['id'])
+            parent = self.original_item['parent']['id']
         except TypeError:
-            combined_index_data['parent_id'] = self._get_meeting_id(self.original_item['meeting']['id'])
+            parent = self.original_item['meeting']['id']
+        agenda_item.parent = Event('notubiz_identifier', parent, temporary=True)
 
-        #combined_index_data['location'] = self.original_item['attributes']['50']
-
-        if meeting['plannings'][0]['start_date']:
-            combined_index_data['start_date'] = iso8601.parse_date(
-                meeting['plannings'][0]['start_date']
+        agenda_item.agenda = []
+        for item in self.original_item.get('agenda_items', []):
+            agendaitem = AgendaItem(
+                'notubiz_identifier',
+                item['id'],
+                rel_params={'rdf': '_%i' % item['order']},
+                temporary=True
             )
-            combined_index_data['date_granularity'] = 8
+            agenda_item.agenda.append(agendaitem)
 
-        if meeting['plannings'][0]['end_date']:
-            combined_index_data['end_date'] = iso8601.parse_date(
-                meeting['plannings'][0]['end_date']
-            )
-            combined_index_data['date_granularity'] = 8
+        agenda_item.attachment = []
+        for doc in self.original_item.get('documents', []):
+            attachment = Attachment('notubiz_identifier', doc['id'])
+            attachment.original_url = doc['url']
+            attachment.name = doc['title']
+            agenda_item.attachment.append(attachment)
 
-        if 'agenda_items' in self.original_item:
-            combined_index_data['children'] = [
-                get_meetingitem_id(item['id']) for item in self.original_item['agenda_items']
-            ]
-
-        combined_index_data['sources'] = [
-            {
-                'url': self._get_current_permalink(),
-                'note': u''
-            }
-        ]
-
-        combined_index_data['media_urls'] = self._get_documents_as_media_urls()
-
-        return combined_index_data
+        return agenda_item
 
     def get_index_data(self):
         return {}

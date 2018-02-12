@@ -44,20 +44,20 @@ class ReportItem(MeetingItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = super(ReportItem, self).get_combined_index_data()
+    def get_object_model(self):
+        object_model = super(ReportItem, self).get_object_model()
 
-        combined_index_data['name'] = u'Verslag %s' % (combined_index_data['name'],)
+        object_model['name'] = u'Verslag %s' % (object_model['name'],)
 
-        combined_index_data['classification'] = u'Verslag'
+        object_model['classification'] = u'Verslag'
 
         # TODO: get all the descriptive content?
         items = self._get_meeting_items()
-        combined_index_data['description'] = u'\n'.join(
+        object_model['description'] = u'\n'.join(
             [u"%s. %s\n\n%s" % (i['index'], i['title'], i['description'],) for i in items])
 
-        for identifier in combined_index_data['identifiers']:
+        for identifier in object_model['identifiers']:
             if identifier['scheme'] == u'GemeenteOplossingen':
                 identifier['identifier'] += '#downloaden'
 
-        return combined_index_data
+        return object_model

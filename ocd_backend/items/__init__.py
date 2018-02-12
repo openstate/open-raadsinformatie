@@ -6,6 +6,7 @@ from hashlib import sha1
 from ocd_backend.exceptions import (UnableToGenerateObjectId,
                                     FieldNotAvailable)
 from ocd_backend.utils import json_encoder
+from ocd_backend.models import Metadata
 from owltology.model import ModelBase
 
 
@@ -27,177 +28,47 @@ class BaseItem(object):
     :type processing_started: datetime or None
     """
 
-    #: Allowed key-value pairs for the item's meta
-    meta_fields = {
-        'processing_started': datetime,
-        'processing_finished': datetime,
-        'source_id': unicode,
-        'collection': unicode,
-        'rights': unicode,
-        'original_object_id': unicode,
-        'original_object_urls': dict,
-    }
-
-    #: Allowed key-value pairs for the document inserted in the 'combined index'
-    combined_index_fields = {
-        'hidden': bool,
-        'title': unicode,
-        'description': unicode,
-        'date': datetime,
-        'date_granularity': int,
-        'authors': list,
-        'media_urls': list,
-        'all_text': unicode
-    }
-
-    def __init__(self, source_definition, data_content_type, data, item,
-                 doc_type, processing_started=None):
+    def __init__(self, source_definition, data_content_type, data, item, run_node, processing_started=None, final_try=False):
         self.source_definition = source_definition
         self.data_content_type = data_content_type
         self.data = data
         self.original_item = item
-        self.doc_type = doc_type
+        self.run_node = run_node
+        self.final_try = final_try
 
         # On init, all data should be available to construct self.meta
         # and self.combined_item
+        self._store_object_data()
         self._construct_object_meta(processing_started)
-        self._construct_combined_index_data()
-
-        self.index_data = self.get_index_data()
 
     def _construct_object_meta(self, processing_started=None):
-        self.meta = StrictMappingDict(self.meta_fields)
+        meta = Metadata('ori_identifier', self.object_data.get_ori_id())
+
         if not processing_started:
-            self.meta['processing_started'] = datetime.now()
+            meta.processing_started = datetime.now()
 
-        self.meta['source_id'] = unicode(self.source_definition['id'])
-        self.meta['collection'] = self.get_collection()
-        self.meta['rights'] = self.get_rights()
-        self.meta['original_object_id'] = self.get_original_object_id()
-        self.meta['original_object_urls'] = self.get_original_object_urls()
+        meta.source_id = unicode(self.source_definition['id'])
+        meta.collection = self.get_collection()
+        meta.rights = self.get_rights()
 
-    def _construct_combined_index_data(self):
-        data = self.get_combined_index_data()
+        self.object_data.attach('meta', self.run_node, rel_params=meta)
 
-        if isinstance(data, ModelBase):
-            # Serializing the model using __iter__ method
-            self.combined_index_data = dict(data)
-        else:
-            # Provide legacy support for older ORI mappings
-            self.combined_index_data = StrictMappingDict(self.combined_index_fields)
+        return meta
 
-            for field, value in data.iteritems():
-                if type(value) == bool:
-                    self.combined_index_data[field] = value
-                elif value:
-                    self.combined_index_data[field] = value
+    def _store_object_data(self):
+        object_data = self.get_object_model()
+        object_data.save()
 
-    def get_combined_index_doc(self):
-        """Construct the document that should be inserted into the 'combined
-        index'.
+        self.object_data = object_data
 
-        :returns: a dict ready to be indexed.
-        :rtype: dict
-        """
-        combined_item = {}
-
-        combined_item['meta'] = dict(self.meta)
-        combined_item['enrichments'] = {}
-        combined_item.update(dict(self.combined_index_data))
-        combined_item['all_text'] = self.get_all_text()
-
-        return combined_item
-
-    def get_index_doc(self):
+    def get_object_model(self):
         """Construct the document that should be inserted into the index
         belonging to the item's source.
 
         :returns: a dict ready for indexing.
         :rtype: dict
         """
-        item = {}
-
-        item['meta'] = dict(self.meta)
-        item['enrichments'] = {}
-        item['source_data'] = {
-            'content_type': self.data_content_type,
-            'data': self.data
-        }
-
-        combined_index_data = dict(self.combined_index_data)
-        item.update(combined_index_data)
-
-        # Store a string representation of the combined index data on the
-        # collection specific index as well, as we need to be able to
-        # reconstruct the combined index from the individual indices
-        item['combined_index_data'] = json_encoder.encode(self.get_combined_index_doc())
-
-        item.update(self.index_data)
-
-        return item
-
-    def get_original_object_id(self):
-        """Retrieves the ID used by the source for identify this item.
-
-        This method should be implemented by the class that inherits from
-        :class:`.BaseItem`.
-
-        :rtype: unicode.
-        """
-        raise NotImplementedError
-
-    def get_object_id(self):
-        """Generates a new object ID which is used within OCD to identify
-        the item.
-
-        By default, we use a hash containing the id of the source, the
-        original object id of the item (:meth:`~.get_original_object_id`)
-        and the original urls (:meth:`~.get_original_object_urls`).
-
-        :raises UnableToGenerateObjectId: when both the original object
-            id and urls are missing.
-        :rtype: str
-        """
-        try:
-            object_id = self.get_original_object_id()
-        except NotImplementedError:
-            object_id = u''
-
-        try:
-            urls = self.get_original_object_urls()
-        except NotImplementedError:
-            urls = {}
-
-        if not object_id and not urls:
-            raise UnableToGenerateObjectId('Both original id and urls missing')
-
-        hash_content = self.source_definition['id'] + object_id + u''.join(sorted(urls.values()))
-
-        return sha1(hash_content.decode('utf8')).hexdigest()
-
-    def get_combined_object_id(self):
-        """Generates a new object ID which is used within OCD to identify
-        the item in the combined index.
-
-        By default the ID is the same as the object ID generated for the
-        source's individual index using (:meth:`~.get_object_id`).
-
-        :rtype: str
-        """
-        return self.get_object_id()
-
-    def get_original_object_urls(self):
-        """Retrieves the item's original URLs at the source location.
-        The keys of the returned dictionary should be named after the
-        document format to which the value of the dictionary item, the
-        URL, points (e.g. ``json``, ``html`` or ``csv``).
-
-        This method should be implemented by the class that inherits
-        from :class:`.BaseItem`.
-
-        :rtype: dict.
-        """
-        raise NotImplementedError
+        return self.object_data
 
     def get_collection(self):
         """Retrieves the name of the collection the item belongs to.
@@ -222,7 +93,7 @@ class BaseItem(object):
         """
         raise NotImplementedError
 
-    def get_combined_index_data(self):
+    def map_object_data(self):
         """Returns a dictionary containing the data that is suitable to
         be indexed in a combined/normalized repository, together with
         items from other collections. Only keys defined in
@@ -232,30 +103,7 @@ class BaseItem(object):
         This method should be implemented by the class that inherits
         from :class:`.BaseItem`.
 
-        :rtype: dict
-        """
-        raise NotImplementedError
-
-    def get_index_data(self):
-        """Returns a dictionary containing index-specific data that you
-        want to index, but does not belong in the combined index. Can
-        contain whatever fields, and should be handled an validated
-        (with care) in the class that inherits from :class:`.BaseItem`.
-
-        :rtype: dict
-        """
-        raise NotImplementedError
-
-    def get_all_text(self):
-        """Retrieves all textual content of the item as a concatenated
-        string. This text is used in the combined index to allow
-        retrieving content that is not included in one of the
-        :attr:`.combined_index_fields` fields.
-
-        This method should be implemented by the class that inherits
-        from :class:`.BaseItem`.
-
-        :rtype: unicode.
+        :rtype: owltology.models.Modelbase
         """
         raise NotImplementedError
 
@@ -291,7 +139,7 @@ class LocalDumpItem(BaseItem):
             raise FieldNotAvailable('original_object_urls')
         return original_object_urls
 
-    def get_combined_index_data(self):
+    def get_object_model(self):
         combined_index_data = self.original_item['_source']\
             .get('combined_index_data')
         if not combined_index_data:
@@ -327,43 +175,3 @@ class LocalDumpItem(BaseItem):
         :rtype: dict
         """
         return self.original_item.get('_source', {})
-
-
-class StrictMappingDict(MutableMapping):
-    """A dictionary that can only contain a select number of predefined
-    key-value pairs.
-
-    When setting an item, the key is first checked against
-    mapping. If the key is not in the mapping, a :exc:`KeyError` is
-    raised. If the value is not of the datetype that is specified in the
-    mapping, a :exc:`TypeError` is raised.
-
-    :param mapping: the mapping of allowed keys and value datatypes.
-    :type mapping: dict
-    """
-
-    def __init__(self, mapping):
-        self.mapping = mapping
-
-        self.store = {}
-
-    def __getitem__(self, key):
-        return self.store[key]
-
-    def __setitem__(self, key, value):
-        if key not in self.mapping:
-            raise KeyError('According to the mapping, %s is not in allowed' % key)
-        elif type(value) is not self.mapping[key]:
-            raise TypeError('Value of %s must be %s, not %s'
-                            % (key, self.mapping[key], type(value)))
-        else:
-            self.store[key] = value
-
-    def __delitem__(self, key):
-        del self.store[key]
-
-    def __iter__(self):
-        return iter(self.store)
-
-    def __len__(self):
-        return len(self.store)

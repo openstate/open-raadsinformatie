@@ -49,22 +49,22 @@ class VideotulenItem(
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
         council = self._get_council()
         committees = self._get_committees()
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['hidden'] = self.source_definition['hidden']
 
         if self.original_item['Webcast'].has_key('Title'):
-            combined_index_data['name'] = u'%s' % (
+            object_model['name'] = u'%s' % (
                 unicode(self.original_item['Webcast']['Title']),)
         else:
-            combined_index_data['name'] = self.get_collection()
+            object_model['name'] = self.get_collection()
 
-        combined_index_data['identifiers'] = [
+        object_model['identifiers'] = [
             {
                 'identifier': unicode(self.original_item['Webcast']['Id']),
                 'scheme': u'CWC'
@@ -76,16 +76,16 @@ class VideotulenItem(
         ]
 
         try:
-            combined_index_data['organization_id'] = committees[
-                combined_index_data['name']]['id']
-            combined_index_data['organization'] = committees[
-                combined_index_data['name']]
+            object_model['organization_id'] = committees[
+                object_model['name']]['id']
+            object_model['organization'] = committees[
+                object_model['name']]
         except KeyError as e:
-            combined_index_data['organization_id'] = council['id']
-            combined_index_data['organization'] = council
+            object_model['organization_id'] = council['id']
+            object_model['organization'] = council
 
-        combined_index_data['classification'] = u'Videotulen %s' % (
-            combined_index_data['name'],)
+        object_model['classification'] = u'Videotulen %s' % (
+            object_model['name'],)
 
         topic_descriptions = []
         if self.original_item['Webcast']['Topics'] is not None:
@@ -98,9 +98,9 @@ class VideotulenItem(
                         topic['Title'], topic_description,))
 
         if len(topic_descriptions) > 0:
-            combined_index_data['description'] = u'\n'.join(topic_descriptions)
+            object_model['description'] = u'\n'.join(topic_descriptions)
         else:
-            combined_index_data['description'] = self.original_item['Webcast']['Description']
+            object_model['description'] = self.original_item['Webcast']['Description']
 
 
         if self.original_item['Webcast'].has_key('ActualStart'):
@@ -110,14 +110,14 @@ class VideotulenItem(
             start_date_field = 'ScheduledStart'
             end_date_field = 'ScheduledStart'
 
-        combined_index_data['start_date'] = iso8601.parse_date(
+        object_model['start_date'] = iso8601.parse_date(
             self.original_item['Webcast'][start_date_field],)
-        combined_index_data['end_date'] = iso8601.parse_date(
+        object_model['end_date'] = iso8601.parse_date(
             self.original_item['Webcast'][end_date_field],)
-        combined_index_data['location'] = u'Raadszaal'
-        combined_index_data['status'] = u'confirmed'
+        object_model['location'] = u'Raadszaal'
+        object_model['status'] = u'confirmed'
 
-        combined_index_data['sources'] = [
+        object_model['sources'] = [
             {'url': a['Location'], 'note': a['Description']} for a in self.original_item['Webcast']['Attachments']['Attachment']]
 
         documents = []
@@ -135,9 +135,9 @@ class VideotulenItem(
                     documents.append({
                         'url': a['Location'], 'note': a['Description'],
                         'description': description})
-        combined_index_data['sources'] += documents
+        object_model['sources'] += documents
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

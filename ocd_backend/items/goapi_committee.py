@@ -26,14 +26,14 @@ class CommitteeItem(OrganisationItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['name'] = unicode(self.original_item['name'])
-        combined_index_data['identifiers'] = [
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['name'] = unicode(self.original_item['name'])
+        object_model['identifiers'] = [
             {
                 'identifier': self.get_object_id(),
                 'scheme': u'ORI'
@@ -44,17 +44,17 @@ class CommitteeItem(OrganisationItem):
             }
         ]
 
-        combined_index_data['classification'] = u'committee'
-        combined_index_data['description'] = combined_index_data['name']
+        object_model['classification'] = u'committee'
+        object_model['description'] = object_model['name']
 
-        combined_index_data['sources'] = [
+        object_model['sources'] = [
             {
                 'url': self._get_current_permalink(),
                 'note': u''
             }
         ]
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

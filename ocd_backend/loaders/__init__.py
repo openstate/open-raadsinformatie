@@ -1,9 +1,9 @@
 from datetime import datetime
 import json
-
 import requests
 from elasticsearch.exceptions import NotFoundError, TransportError
 
+from datetime import datetime
 from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.es import elasticsearch
@@ -44,16 +44,13 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
             self.post_processing(*item)
             self.load_item(*item)
 
-    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
-                  doc_type):
+    def load_item(self, doc):
         raise NotImplemented
 
-    def post_processing(self, combined_object_id, object_id,
-                        combined_index_doc, doc, doc_type):
+    def post_processing(self, doc):
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
-        combined_index_doc['meta']['processing_finished'] = finished
-        doc['meta']['processing_finished'] = finished
+        doc.Meta.processing_finished = finished
 
 
 class ElasticsearchLoader(BaseLoader):
@@ -76,49 +73,32 @@ class ElasticsearchLoader(BaseLoader):
 
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
-    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
-                  doc_type):
+    def load_item(self, doc):
+        body = json_encoder.encode(doc.deflate(props=True, rels=True))
 
-        doc = json_encoder.encode(doc)
-        combined_index_doc = json_encoder.encode(combined_index_doc)
-
-        log.info('Indexing document id: %s' % object_id)
-        elasticsearch.index(index=settings.COMBINED_INDEX,
-                            doc_type=doc_type, id=combined_object_id,
-                            body=combined_index_doc)
+        log.info('Indexing document id: %s' % doc.get_ori_id())
 
         # Index documents into new index
-        elasticsearch.index(index=self.index_name, doc_type=doc_type,
-                            body=doc, id=object_id)
+        elasticsearch.index(index=self.index_name, doc_type=doc.get_popolo_type(),
+                            body=body, id=doc.get_ori_id())
 
-        self._create_resolvable_media_urls(doc)
+        for prop, value in doc.properties(props=True, rels=True):
+            try:
+                if not value.Meta.enricher_task or \
+                        not hasattr(value, 'original_url') or \
+                        not hasattr(value, 'content_type'):
+                    continue
+            except AttributeError:
+                continue
 
-    def _create_resolvable_media_urls(self, doc):
-        m_url_content_types = {}
-        if 'media_urls' in doc['enrichments']:
-            for media_url in doc['enrichments']['media_urls']:
-                if 'content_type' in media_url:
-                    m_url_content_types[media_url['original_url']] = \
-                        media_url['content_type']
+            url_doc = {
+                'original_url': value.original_url,
+                'content_type': value.content_type,
+            }
 
-        # For each media_urls.url, add a resolver document to the
-        # RESOLVER_URL_INDEX
-        if 'media_urls' in doc:
-            for media_url in doc['media_urls']:
-                url_hash = media_url['url'].split('/')[-1]
-                url_doc = {
-                    'original_url': media_url['original_url']
-                }
-
-                if media_url['original_url'] in m_url_content_types:
-                    url_doc['content_type'] = \
-                        m_url_content_types[media_url['original_url']]
-
-                # Update if already exists
-                elasticsearch.index(
-                    index=settings.RESOLVER_URL_INDEX,
-                    doc_type='url', id=url_hash,
-                    body=url_doc)
+            # Update if already exists
+            elasticsearch.index(index=settings.RESOLVER_URL_INDEX, doc_type='url',
+                                id=get_url_hash(value.original_url), body=url_doc)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
@@ -126,29 +106,18 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     Updates elasticsearch items using the update method. Use with caution.
     """
 
-    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
-                  doc_type):
+    def load_item(self, doc):
+        body = json_encoder.encode(doc.deflate(props=True, rels=True))
 
-        if combined_index_doc == {}:
+        if doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing document id: %s' % object_id)
-        try:
-            elasticsearch.update(
-                index=settings.COMBINED_INDEX,
-                doc_type=doc_type, id=combined_object_id,
-                body={'doc': combined_index_doc['doc']})
-        except (NotFoundError, TransportError):
-            log.error('Document %s did not exist....' % (combined_object_id,))
+        log.info('Indexing document id: %s' % doc.get_ori_id())
 
         # Index documents into new index
-        try:
-            elasticsearch.update(
-                index=self.index_name, doc_type=doc_type,
-                body={'doc': doc['doc']}, id=object_id)
-        except (NotFoundError, TransportError):
-            log.error('Document %s did not exist....' % (object_id,))
+        elasticsearch.update(index=self.index_name, doc_type=doc.get_popolo_type(),
+                            body={'doc': body}, id=doc.get_ori_id())
         # remember, resolver URLs are not update here to prevent too complex
         # things
 
@@ -190,15 +159,11 @@ class DummyLoader(BaseLoader):
     Prints the item to the console, for debugging purposes.
     """
 
-    def load_item(self, combined_object_id, object_id, combined_index_doc, doc,
-                  doc_type):
+    def load_item(self, doc):
         print '=' * 50
-        print '%s %s %s' % ('=' * 4, combined_object_id, '=' * 4)
-        print '%s %s %s' % ('=' * 4, object_id, '=' * 4)
-        print '%s %s %s' % ('-' * 20, 'combined', '-' * 20)
-        print combined_index_doc
+        print '%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4)
         print '%s %s %s' % ('-' * 20, 'doc', '-' * 25)
-        print doc
+        print doc.deflate(props=True, rels=True)
         print '=' * 50
 
     def run_finished(self, run_identifier):
@@ -218,12 +183,38 @@ def json_serial(obj):
     raise TypeError("Type not serializable")
 
 
-class JsonLDLoader(BaseLoader):
-    def post_processing(self, combined_object_id, object_id,
-                        combined_index_doc, doc, doc_type):
-        doc['@context'] = "https://raw.githubusercontent.com/argu-co/" \
-                          "popolo-ori/master/context.jsonld"
-        doc['@type'] = doc_type
-        doc['@id'] = "/%s/%s/%s" % (
-            self.source_definition['index_name'], 'need_to_fix_THIS',
-            object_id)
+class PopitLoader(BaseLoader):
+    """
+    Loads data to a Popit instance.
+    """
+
+    def _create_or_update_item(self, item, item_id):
+        """
+        First tries to post (aka create) a new item. If that does not work,
+        do an update (aka put).
+        """
+
+        headers = {
+            "Apikey": self.source_definition['popit_api_key'],
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        }
+
+        popit_url = "%s/%s" % (
+            self.source_definition['popit_base_url'],
+            self.source_definition['doc_type'],)
+        resp = requests.post(
+            popit_url,
+            headers=headers, data=json.dumps(item, default=json_serial))
+
+        # popit update controls where we should update the data from ibabs (overwriting our own data)
+        # or whether we should only add things when there's new information.
+        if ((not self.source_definition.get('popit_update', False)) or (resp.status_code != 500)):
+            return resp
+
+        return requests.put(
+            "%s/%s" % (popit_url, item_id,),
+            headers=headers, data=json.dumps(item, default=json_serial))
+
+    def load_item(self, doc):
+        resp = self._create_or_update_item(doc, doc.get_ori_id())

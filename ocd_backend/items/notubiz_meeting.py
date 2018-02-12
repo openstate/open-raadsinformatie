@@ -1,10 +1,10 @@
 from hashlib import sha1
-import iso8601
 
 from ocd_backend.items.popolo import EventItem
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.models import *
 
 
 def get_meeting_id(item_id):
@@ -54,85 +54,52 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = dict()
+    def get_object_model(self):
+        event = Event('notubiz_identifier', self.original_item['id'])
+        event.startDate = self.original_item['plannings'][0]['start_date']
+        event.endDate = self.original_item['plannings'][0]['end_date']
+        event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.startDate)
+        # event.description =
+        event.classification = u'Agenda'
+        event.location = self.original_item['attributes'].get('Locatie')
+        event.organization = Organization(
+            'notubiz_identifier',
+            self.original_item['organisation']['id'],
+            temporary=True,
+        )
 
-        combined_index_data['id'] = unicode(self.get_object_id())
-
-        combined_index_data['hidden'] = self.source_definition['hidden']
-
-        if self.original_item['plannings'][0]['start_date']:
-            combined_index_data['start_date'] = iso8601.parse_date(
-                self.original_item['plannings'][0]['start_date']
+        event.agenda = []
+        for item in self.original_item.get('agenda_items', []):
+            agendaitem = AgendaItem(
+                'notubiz_identifier',
+                item['id'],
+                rel_params={'rdf': '_%i' % item['order']},
+                temporary=True,
             )
+            agendaitem.description = self.original_item['attributes'].get('Omschrijving') or \
+                                     self.original_item['attributes'].get('Tekst')
 
-        if self.original_item['plannings'][0]['end_date']:
-            combined_index_data['end_date'] = iso8601.parse_date(
-                self.original_item['plannings'][0]['end_date']
-            )
+            event.agenda.append(agendaitem)
 
-        try:
-            combined_index_data['name'] = u'Vergadering %s %s' % (
-                self.original_item['attributes']['1'],
-                combined_index_data['start_date'])
-        except LookupError:
-            combined_index_data['name'] = u'Vergadering'
 
-        try:
-            combined_index_data['description'] = self.original_item[
-                'attributes']['3']
-        except LookupError:
-            combined_index_data['description'] = u''
-
-        combined_index_data['classification'] = u'Agenda'
-
-        combined_index_data['identifiers'] = [
-            {
-                'identifier': unicode(self.original_item['id']),
-                'scheme': u'Notubiz'
-            },
-            {
-                'identifier': unicode(self.get_object_id()),
-                'scheme': u'ORI'
-            }
-        ]
-
-        combined_index_data['organization_id'] = unicode(
-            self.original_item['organisation']['id'])
-        # combined_index_data['organization'] = self.original_item['body']
-
-        # combined_index_data['last_modified'] = iso8601.parse_date(
+        # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
-        try:
-            combined_index_data['location'] = unicode(
-                self.original_item['attributes']['50'])
-        except LookupError:
-            pass
-
         if self.original_item['canceled']:
-            combined_index_data['status'] = u'cancelled'
+            event.status = EventStatusType.EventCancelled
         elif self.original_item['inactive']:
-            combined_index_data['status'] = u'inactive'
+            event.status = EventStatusType.EventInactive
         else:
-            combined_index_data['status'] = u'confirmed'
+            event.status = EventStatusType.EventConfirmed
 
-        if 'agenda_items' in self.original_item:
-            combined_index_data['children'] = [
-                self._get_meetingitem_id(item['id'])
-                for item in self.original_item['agenda_items']
-            ]
+        event.attachment = []
+        for doc in self.original_item.get('documents', []):
+            attachment = Attachment('notubiz_identifier', doc['id'])
+            attachment.original_url = doc['url']
+            attachment.name = doc['title']
+            event.attachment.append(attachment)
 
-        combined_index_data['sources'] = [
-            {
-                'url': self._get_current_permalink(),
-                'note': u''
-            }
-        ]
-
-        combined_index_data['media_urls'] = self._get_documents_as_media_urls()
-
-        return combined_index_data
+        return event
 
     def get_index_data(self):
         return {}

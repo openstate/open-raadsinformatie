@@ -58,10 +58,10 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         print "Got votes"
         return [{'id': p['voter_id']} for p in vote_event['votes']]
 
-    def get_combined_index_data(self):
+    def get_object_model(self):
         combined_index_data = {}
 
-        combined_index_data['id'] = self.original_item['id']
+        object_model['id'] = self.original_item['id']
 
         vote_event = self._get_vote_event(self.original_item['id'])
         if vote_event is None:
@@ -69,12 +69,12 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
             return {}
 
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['doc'] = {
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['doc'] = {
             'attendees': self._get_voters(vote_event)
         }
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

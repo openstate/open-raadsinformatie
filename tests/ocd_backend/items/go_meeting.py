@@ -243,84 +243,84 @@ class MeetingItemTestCase(ItemTestCase):
 
     def test_meeting_name(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['name'], self.meeting_name)
 
 
     def test_meeting_item_name(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['name'], self.meeting_item_name)
 
     def test_meeting_identifiers(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['identifiers'], self.meeting_identifiers)
 
 
     def test_meeting_item_identifiers(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['identifiers'], self.meeting_item_identifiers)
 
     def test_meeting_organisation(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
 
     def test_meeting_item_organisation(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
 
     def test_meeting_classification(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['classification'], self.meeting_classification)
 
 
     def test_meeting_item_classification(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['classification'], self.meeting_item_classification)
 
     def test_meeting_dates(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
 
     def test_meeting_item_dates(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
 
     def test_meeting_location(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
 
 
     def test_meeting_item_location(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
 
 
     def test_meeting_status(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
 
 
     def test_meeting_item_status(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
 
 
@@ -335,31 +335,31 @@ class MeetingItemTestCase(ItemTestCase):
     def test_meeting_item_get_parent_id(self):
         meeting = self._instantiate_meeting()
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['parent_id'], meeting.get_object_id())
 
 
     def test_meeting_sources(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_sources)
 
 
     def test_meeting_item_sources(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_item_sources)
 
 
     def test_meeting_description(self):
         item = self._instantiate_meeting()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['description'], self.meeting_description)
 
 
     def test_meeting_item_description(self):
         item = self._instantiate_meeting_item()
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         self.assertEqual(data['description'], self.meeting_item_description)
 
     def test_faulty_meeting_item(self):
@@ -381,7 +381,7 @@ class MeetingItemTestCase(ItemTestCase):
             self.raw_faulty_meeting_item, meeting_item, None
         )
 
-        #data = item.get_combined_index_data()
+        #data = item.get_object_model()
         meeting_item_id = item._get_meeting_item_id()
         self.assertEqual(meeting_item_id, self.faulty_meeting_item_id)
 

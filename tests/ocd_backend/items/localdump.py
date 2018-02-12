@@ -58,10 +58,10 @@ class LocalDumpItemTestCase(ItemTestCase):
                              self.original_object_urls)
 
 
-    def test_get_combined_index_data(self):
+    def test_get_object_model(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
                              self.raw_item, self.item, None)
-        self.assertIsInstance(item.get_combined_index_data(), dict)
+        self.assertIsInstance(item.get_object_model(), dict)
 
     def test_get_index_data(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
@@ -77,7 +77,7 @@ class LocalDumpItemTestCase(ItemTestCase):
     def test_combined_index_data_types(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
                              self.raw_item, self.item, None)
-        data = item.get_combined_index_data()
+        data = item.get_object_model()
         for field, field_type in item.combined_index_fields.iteritems():
             self.assertIn(field, data)
             self.assertIsInstance(data[field], field_type)

@@ -27,19 +27,19 @@ class ResolutionItem(MeetingItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = super(ResolutionItem, self).get_combined_index_data()
+    def get_object_model(self):
+        object_model = super(ResolutionItem, self).get_object_model()
 
-        combined_index_data['name'] = u'Besluitenlijst %s' % (combined_index_data['name'],)
+        object_model['name'] = u'Besluitenlijst %s' % (object_model['name'],)
 
-        combined_index_data['classification'] = u'Besluitenlijst'
+        object_model['classification'] = u'Besluitenlijst'
 
-        combined_index_data['description'] = self.file_get_contents(
+        object_model['description'] = self.file_get_contents(
             self.get_original_object_urls()['pdf'],
             self.source_definition.get('pdf_max_pages', 20))
 
-        for identifier in combined_index_data['identifiers']:
+        for identifier in object_model['identifiers']:
             if identifier['scheme'] == u'GemeenteOplossingen':
                 identifier['identifier'] += '#documenten'
 
-        return combined_index_data
+        return object_model

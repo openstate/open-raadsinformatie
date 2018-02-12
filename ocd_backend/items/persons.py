@@ -21,8 +21,8 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
         request_url = u'https://almanak.overheid.nl%s' % (
             unicode(self.original_item['url']),)
@@ -31,16 +31,16 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
         r.raise_for_status()
         html = etree.HTML(r.content)
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['name'] = u''.join(
+        object_model['name'] = u''.join(
             html.xpath('//div[@id="content"]/h2//text()')).strip()
 
-        combined_index_data['identifiers'] = [
+        object_model['identifiers'] = [
             {
-                'identifier': combined_index_data['id'],
+                'identifier': object_model['id'],
                 'scheme': u'ORI'
             },
             {
@@ -51,11 +51,11 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
             }
 
         ]
-        combined_index_data['email'] = u''.join(html.xpath(
+        object_model['email'] = u''.join(html.xpath(
             '//a[starts-with(@href,"mailto:")]/text()'))
         # TODO: should explicitly check for female prefixes
-        combined_index_data['gender'] = (
-            u'male' if combined_index_data['name'].startswith(u'Dhr. ') else
+        object_model['gender'] = (
+            u'male' if object_model['name'].startswith(u'Dhr. ') else
             u'female')
 
         parties = self.original_item['parties']
@@ -75,25 +75,25 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
             council_obj = None
             council_id = None
 
-        combined_index_data['memberships'] = [
+        object_model['memberships'] = [
             {
                 'label': role,
                 'role': role,
-                'person_id': combined_index_data['id'],
+                'person_id': object_model['id'],
                 'organization_id': council_id,
                 'organization': council_obj
             }
         ]
         if party_id is not None:
-            combined_index_data['memberships'].append({
+            object_model['memberships'].append({
                 'label': role,
                 'role': role,
-                'person_id': combined_index_data['id'],
+                'person_id': object_model['id'],
                 'organization_id': party_id,
                 'organization': party_obj
             })
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

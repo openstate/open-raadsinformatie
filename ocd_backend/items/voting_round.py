@@ -118,23 +118,24 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
             'option': "yes" if v['Vote'] else "no"
         } for v in self.original_item['votes']]
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
-        combined_index_data['id'] = self.get_object_id()
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['id'] = self.original_item['motion_id']
+        object_model['hidden'] = self.source_definition['hidden']
 
         council = self._get_council()
         members = self._get_council_members()
         parties = self._get_council_parties()
 
-        combined_index_data['doc'] = {
+        object_model['doc'] = {
+            "result": self._get_result(),
             "group_results": self._get_group_results(parties),
             "counts": self._get_counts(council, parties, members),
             "votes": self._get_votes(council, parties, members)
         }
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

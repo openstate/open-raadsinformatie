@@ -146,46 +146,45 @@ class IBabsMotionVotingMixin(
         return unicode(self.source_definition['index_name'])
 
     def _get_motion_data(self, council, members, parties):
-        combined_index_data = {}
+        object_model = {}
 
-        combined_index_data['id'] = unicode(self.get_original_object_id())
+        object_model['id'] = unicode(self.get_original_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['name'] = unicode(self._value('Onderwerp'))
+        object_model['name'] = unicode(self._value('Onderwerp'))
 
-        combined_index_data['identifier'] = combined_index_data['id']
+        object_model['identifier'] = object_model['id']
 
-        combined_index_data['organization_id'] = council['id']
-        combined_index_data['organization'] = council
+        object_model['organization_id'] = council['id']
+        object_model['organization'] = council
 
         # TODO: this gets only the first creator listed. We should fix it to
         # get all of them
         creator = self._get_creator(self._value('Indiener(s)'), members, parties)
         if creator is not None:
-            combined_index_data['creator_id'] = creator['id']
-            combined_index_data['creator'] = creator
+            object_model['creator_id'] = creator['id']
+            object_model['creator'] = creator
 
-        combined_index_data['classification'] = unicode(
-            self.source_definition.get('classification', u'Moties'))
+        object_model['classification'] = u'Moties'
 
-        combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
+        object_model['date'] = iso8601.parse_date(self.original_item['datum'][0],)
         # TODO: this is only for searching compatability ...
-        combined_index_data['start_date'] = combined_index_data['date']
-        combined_index_data['end_date'] = combined_index_data['date']
+        object_model['start_date'] = object_model['date']
+        object_model['end_date'] = object_model['date']
 
         # finding the event where this motion was put to a voting round
         legislative_session = self._find_legislative_session(
-            combined_index_data['date'], council, members, parties)
+            object_model['date'], council, members, parties)
         if legislative_session is not None:
-            combined_index_data['legislative_session_id'] = legislative_session['id']
-            combined_index_data['legislative_session'] = legislative_session
+            object_model['legislative_session_id'] = legislative_session['id']
+            object_model['legislative_session'] = legislative_session
 
-        combined_index_data['result'] = self._value('Status')
-        combined_index_data['requirement'] = u'majority'
-        combined_index_data['sources'] = []
+        object_model['result'] = self._value('Status')
+        object_model['requirement'] = u'majority'
+        object_model['sources'] = []
 
-        combined_index_data['vote_events'] = [self.get_original_object_id()]
+        object_model['vote_events'] = [self.get_original_object_id()]
 
         try:
             documents = self.original_item['_Extra']['Documents']
@@ -196,30 +195,27 @@ class IBabsMotionVotingMixin(
 
         # Default the text to "-". If a document contains actual text
         # then that text will be used.
-        combined_index_data['text'] = u"-"
+        object_model['text'] = u"-"
         for document in documents:
             sleep(1)
             print u"%s: %s" % (
-                combined_index_data['name'], document['DisplayName'],)
-            public_download_url = document['PublicDownloadURL']
-            if not public_download_url.startswith('http'):
-                public_download_url = u'https://www.mijnbabs.nl' + public_download_url
+                object_model['name'], document['DisplayName'],)
             description = self.file_get_contents(
                 public_download_url,
                 self.source_definition.get('pdf_max_pages', 20)).strip()
-            combined_index_data['sources'].append({
-                'url': public_download_url,
+            object_model['sources'].append({
+                'url': document['PublicDownloadURL'],
                 'note': document['DisplayName'],
                 'description': description
             })
             # FIXME: assumes that there is only one document from which
             # we can extract text; is that a valid assumption?
             if len(description) > 0:
-                combined_index_data['text'] = description
+                object_model['text'] = description
 
-        return combined_index_data
+        return object_model
 
-    def get_combined_index_data(self):
+    def get_object_model(self):
         council = self._get_council()
         members = self._get_council_members()
         parties = self._get_council_parties()
@@ -240,19 +236,19 @@ class IBabsMotionItem(IBabsMotionVotingMixin, MotionItem):
 
 
 class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
         council = self._get_council()
         members = self._get_council_members()
         parties = self._get_council_parties()
         #pprint(parties)
-        combined_index_data['motion'] = self._get_motion_data(
+        object_model['motion'] = self._get_motion_data(
             council, members, parties)
 
-        combined_index_data['classification'] = u'Stemmingen'
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['start_date'] = combined_index_data['motion']['date']
-        combined_index_data['end_date'] = combined_index_data['motion']['date']
+        object_model['classification'] = u'Stemmingen'
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['start_date'] = object_model['motion']['date']
+        object_model['end_date'] = object_model['motion']['date']
 
         # we can copy some fields from the motion
         for field in [
@@ -260,13 +256,76 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             'sources', 'legislative_session_id'
         ]:
             try:
-                combined_index_data[field] = combined_index_data['motion'][field]
+                object_model[field] = object_model['motion'][field]
             except KeyError as e:
                 pass
 
 
-        combined_index_data['counts'] = []
-        combined_index_data['votes'] = []
+        # Not all motions are actually voted on
+        # FIXME: are there more. is every municipality specifying the same?
+        # allowed_results = [
+        #     'Motie aangenomen',
+        #     'Motie verworpen',
+        # ]
+
+        object_model['counts'] = []
+        object_model['votes'] = []
 
 
-        return combined_index_data
+        # if object_model['result'] not in allowed_results:
+        #     return object_model
+        #
+        # party_ids = [p['id'] for p in parties if p.has_key('id')]
+        #
+        # # make the vote a bit random, but retain te result by majority vote
+        # majority_count = (len(members) // 2) + 1
+        # vote_count_to_result = len(members)
+        # new_vote_count_to_result = vote_count_to_result
+        # current_votes = {p['id']: object_model['result'] for p in parties if p.has_key('name')}
+        # party_sizes = {p['id']: len(list(set([m['person_id'] for m in p['memberships']]))) for p in parties if p.has_key('name')}
+        # parties_voted = []
+        #
+        # while new_vote_count_to_result >= majority_count:
+        #     if new_vote_count_to_result != vote_count_to_result:
+        #         vote_count_to_result = new_vote_count_to_result
+        #         current_votes[party_id] = random.choice([r for r in allowed_results if r != object_model['result']])
+        #         parties_voted.append(party_id)
+        #
+        #     # pick a random party
+        #     party_id = random.choice([p for p in party_ids if p not in parties_voted])
+        #
+        #     new_vote_count_to_result = new_vote_count_to_result - party_sizes[party_id]
+        #
+        # # now record the votes
+        # for party in parties:
+        #     if not party.has_key('name'):
+        #         continue
+        #     try:
+        #         num_members = len(list(set([m['person_id'] for m in party['memberships']])))
+        #     except KeyError as e:
+        #         num_members = 0
+        #     object_model['counts'].append({
+        #         'option': current_votes[party['id']],  # object_model['result'],
+        #         'value': num_members,
+        #         'group': {
+        #             'name': party.get('name', '')
+        #         }
+        #     })
+        #
+        # # FIXME: get the actual individual votes, depends on the voting kind
+        # for m in members:
+        #     try:
+        #         member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
+        #         member_vote = current_votes[member_party]
+        #     except (KeyError, IndexError) as e:
+        #         member_party = None
+        #         member_vote = object_model['result']
+        #
+        #     object_model['votes'].append({
+        #         'voter_id' : m['id'],
+        #         'voter': m,
+        #         'option': member_vote,  # FIXME: actual vote
+        #         'group_id': member_party
+        #     })
+
+        return object_model

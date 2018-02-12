@@ -165,30 +165,30 @@ class MeetingItem(
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
         council = self._get_council()
         committees = self._get_committees()
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
+        object_model['hidden'] = self.source_definition['hidden']
 
         if self.original_item['type'] == 'meeting':
-            combined_index_data['name'] = u''.join(
+            object_model['name'] = u''.join(
                 self.full_html.xpath('//title/text()')).strip()
-            combined_index_data['classification'] = u'Agenda'
+            object_model['classification'] = u'Agenda'
         else:
             meeting_item_index = (
                 u''.join(self.html.xpath('.//div[@class="first"]//text()')).strip())
-            combined_index_data['name'] = u'%s. %s' % (
+            object_model['name'] = u'%s. %s' % (
                 meeting_item_index,
                 u''.join(self.html.xpath('.//div[@class="title"]/h3//text()')).strip(),
             )
-            combined_index_data['classification'] = u'Agendapunt'
+            object_model['classification'] = u'Agendapunt'
 
-        combined_index_data['identifiers'] = [
+        object_model['identifiers'] = [
             {
                 'identifier': unicode(self._get_current_permalink()),
                 'scheme': u'GemeenteOplossingen'
@@ -202,19 +202,19 @@ class MeetingItem(
         organisation_name = u''.join(
             self.full_html.xpath('//h2[@class="page_title"]/span//text()'))
         try:
-            combined_index_data['organization_id'] = committees[
+            object_model['organization_id'] = committees[
                 organisation_name]['id']
-            combined_index_data['organization'] = committees[
+            object_model['organization'] = committees[
                 organisation_name]
         except KeyError as e:
-            combined_index_data['organization_id'] = council['id']
-            combined_index_data['organization'] = council
+            object_model['organization_id'] = council['id']
+            object_model['organization'] = council
 
 
         if self.original_item['type'] != 'meeting':
-            combined_index_data['description'] = u''.join(self.html.xpath('.//div[@class="toelichting"]//text()'),)
+            object_model['description'] = u''.join(self.html.xpath('.//div[@class="toelichting"]//text()'),)
         else:
-            combined_index_data['description'] = u''
+            object_model['description'] = u''
 
 
         meeting_date = u''.join(
@@ -222,13 +222,13 @@ class MeetingItem(
         meeting_time = u''.join(
              self.full_html.xpath('//span[@class="time"]//text()')).strip()
 
-        combined_index_data['start_date'] = iso8601.parse_date(u'%sT%s:00Z' % (
+        object_model['start_date'] = iso8601.parse_date(u'%sT%s:00Z' % (
             self._convert_date(meeting_date), meeting_time,))
-        combined_index_data['end_date'] = combined_index_data['start_date']
+        object_model['end_date'] = object_model['start_date']
 
-        combined_index_data['location'] = u'Gemeentehuis'
-        combined_index_data['status'] = u'confirmed'
-        combined_index_data['sources'] = [
+        object_model['location'] = u'Gemeentehuis'
+        object_model['status'] = u'confirmed'
+        object_model['sources'] = [
             {
                 'url': self._get_current_permalink(),
                 'note': u''
@@ -238,7 +238,7 @@ class MeetingItem(
         if self.original_item['type'] != 'meeting':
             parent_url = self._get_stable_permalink(False)
             pprint(parent_url)
-            combined_index_data['parent_id'] = unicode(self._get_object_id_for(
+            object_model['parent_id'] = unicode(self._get_object_id_for(
                 parent_url, {"html": parent_url}))
 
             # FIXME: in order to get the documents for an meeting item you
@@ -258,12 +258,12 @@ class MeetingItem(
                         doc_url = u'%s%s' % (self.source_definition['base_url'], doc_url,)
                     doc_note = u''.join(doc.xpath('.//text()')).strip()
                     if doc_note != u'notitie':
-                        combined_index_data['sources'].append({
+                        object_model['sources'].append({
                             'url': doc_url,
                             'note': doc_note
                         })
         else:
-            combined_index_data['children'] = [
+            object_model['children'] = [
                 unicode(self._get_object_id_for(
                     i, {"html": i}
                 )) for i in self.full_html.xpath(
@@ -278,7 +278,7 @@ class MeetingItem(
                     base_url, u''.join(doc.xpath('.//@href')).strip())
                 doc_note = u''.join(doc.xpath('.//text()')).strip()
                 if doc_note != u'notitie':
-                    combined_index_data['sources'].append({
+                    object_model['sources'].append({
                         'url': doc_url,
                         'note': doc_note
                     })
@@ -288,18 +288,18 @@ class MeetingItem(
                     base_url, u''.join(doc.xpath('.//@href')).strip())
                 doc_note = u''.join(doc.xpath('.//text()')).strip()
                 if doc_note != u'notitie':
-                    combined_index_data['sources'].append({
+                    object_model['sources'].append({
                         'url': doc_url,
                         'note': doc_note
                     })
 
-        for source in combined_index_data['sources']:
+        for source in object_model['sources']:
             if not source['url'].lower().endswith('.pdf'):
                 continue
             source['description'] = self.file_get_contents(
                 source['url'], self.source_definition.get('pdf_max_pages', 20))
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

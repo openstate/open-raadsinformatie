@@ -47,8 +47,8 @@ class PopitBaseItem(object):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {
+    def get_object_model(self):
+        object_model = {
             'hidden': self.source_definition['hidden']
         }
 
@@ -57,31 +57,31 @@ class PopitBaseItem(object):
                 continue
 
             if self.combined_index_fields[field] == unicode:
-                combined_index_data[field] = unicode(
+                object_model[field] = unicode(
                     self.original_item[field])
             elif self.combined_index_fields[field] == datetime:
                 if self.original_item[field] is not None:
                     try:
-                        combined_index_data[field] = iso8601.parse_date(
+                        object_model[field] = iso8601.parse_date(
                             self.original_item[field])
                     except iso8601.ParseError as e:
-                        combined_index_data[field] = None
+                        object_model[field] = None
             elif self.combined_index_fields[field] == list:
                 if field in self.ignored_list_fields:
-                    combined_index_data[field] = [
+                    object_model[field] = [
                         {k: v for k, v in l.iteritems() if k not in self.ignored_list_fields[field]} for l in self.original_item[field]]
                 else:
-                    combined_index_data[field] = self.original_item[field]
+                    object_model[field] = self.original_item[field]
             elif self.combined_index_fields[field] == dict:
                 if field in self.ignored_list_fields:
-                    combined_index_data[field] = {
+                    object_model[field] = {
                         k: v for k, v in self.original_item[field].iteritems() if k not in self.ignored_list_fields[field]}
                 else:
-                    combined_index_data[field] = self.original_item[field]
+                    object_model[field] = self.original_item[field]
             else:
-                combined_index_data[field] = self.original_item[field]
+                object_model[field] = self.original_item[field]
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}

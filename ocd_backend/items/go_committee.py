@@ -26,15 +26,15 @@ class CommitteeItem(OrganisationItem):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_combined_index_data(self):
-        combined_index_data = {}
+    def get_object_model(self):
+        object_model = {}
 
-        combined_index_data['id'] = unicode(self.get_object_id())
+        object_model['id'] = unicode(self.get_object_id())
 
-        combined_index_data['hidden'] = self.source_definition['hidden']
-        combined_index_data['name'] = unicode(
+        object_model['hidden'] = self.source_definition['hidden']
+        object_model['name'] = unicode(
             self.original_item['name'])
-        combined_index_data['identifiers'] = [
+        object_model['identifiers'] = [
             {
                 'identifier': self.get_object_id(),
                 'scheme': u'ORI'
@@ -48,10 +48,10 @@ class CommitteeItem(OrganisationItem):
             classification = u'subcommittee'
         else:
             classification = u'committee'
-        combined_index_data['classification'] = classification
-        combined_index_data['description'] = combined_index_data['name']
+        object_model['classification'] = classification
+        object_model['description'] = object_model['name']
 
-        return combined_index_data
+        return object_model
 
     def get_index_data(self):
         return {}
