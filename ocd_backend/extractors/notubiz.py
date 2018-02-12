@@ -22,6 +22,29 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
         raise NotImplemented
 
     def run(self):
+        resp = self.http_session.get(
+            "%s/organisations"
+            "?format=json&version=1.10.8" % self.base_url
+        )
+
+        try:
+            resp.raise_for_status()
+        except HTTPError, e:
+            log.warn('%s: %s' % (e, resp.request.url))
+            return
+
+        organizations = dict()
+        for organization in resp.json()['organisations']['organisation']:
+
+            attributes = dict()
+            for field in organization['settings']['folder']['fields']['field']:
+                attributes[field['@attributes']['id']] = field['label']
+
+            organizations[organization['@attributes']['id']] = {
+                'logo': organization['logo'],
+                'attributes': attributes,
+            }
+
         for start_date, end_date in self.interval_generator():
             log.info("Now processing first page meeting(items) from %s to %s" % (
             start_date, end_date,))
@@ -66,12 +89,14 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                     try:
                         resp.raise_for_status()
                         meeting_json = resp.json()['meeting']
-                    except HTTPError, e:
+                    except (HTTPError, KeyError), e:
                         log.warn('%s: %s' % (e, resp.request.url))
                         break
                     except (ValueError, KeyError), e:
                         log.error('%s: %s' % (e, resp.request.url))
                         break
+
+                    self.organization = organizations[self.source_definition['organisation_id']]
 
                     for result in self.extractor(meeting_json):
                         yield result
@@ -86,20 +111,26 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
 
 class NotubizMeetingExtractor(NotubizBaseExtractor):
     def extractor(self, meeting_json):
-        meeting_json['attributes'] = {
-            item['id']: item['value']
-            for item in meeting_json['attributes']
-        }
+        attributes = {}
+        for item in meeting_json['attributes']:
+            try:
+                attributes[self.organization['attributes'][item['id']]] = item['value']
+            except KeyError:
+                pass
+        meeting_json['attributes'] = attributes
         yield 'application/json', json.dumps(meeting_json)
 
 
 class NotubizMeetingItemExtractor(NotubizBaseExtractor):
     def extractor(self, meeting_json):
         for meeting_item in meeting_json.get('agenda_items', []):
-            meeting_item['attributes'] = {
-                item['id']: item['value']
-                for item in meeting_item['type_data'].get('attributes', [])
-            }
+            attributes = {}
+            for item in meeting_item['type_data'].get('attributes', []):
+                try:
+                    attributes[self.organization['attributes'][item['id']]] = item['value']
+                except KeyError:
+                    pass
+            meeting_item['attributes'] = attributes
             yield 'application/json', json.dumps(meeting_item)
 
             # Recursion for subitems if any
