@@ -34,7 +34,7 @@ var/
 *.egg
 
 # Redis database
-dump.rdb
+dumps/dump.rdb
 
 # Sphinx documentation builds
 docs/_build/

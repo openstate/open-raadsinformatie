@@ -44,7 +44,7 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'DEBUG',
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'console'
         },
@@ -84,13 +84,16 @@ if os.path.exists('/var/log/backend.err'):
 ELASTICSEARCH_HOST = 'elasticsearch'
 ELASTICSEARCH_PORT = 9200
 
+NEO4J_URL = "http://neo4j:abc@localhost:7474/db/data/"
+
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_PATH = os.path.dirname(ROOT_PATH)
 
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')
 
 # The path of the directory used to store static files
-DATA_DIR_PATH = os.path.join(ROOT_PATH, '../data')
+DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
 
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')

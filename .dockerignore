@@ -19,4 +19,4 @@ start.sh
 Vagrantfile*
 requirements.txt
 .*
-*.py?
+*.pyc
