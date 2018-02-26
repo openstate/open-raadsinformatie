@@ -2,7 +2,8 @@ import datetime
 import glob
 import json
 import re
-import translitcodec
+import translitcodec  # needs to be imported here
+from hashlib import sha1
 from lxml import etree
 from string import Formatter
 from hashlib import sha1
@@ -359,3 +360,24 @@ def propagate_chain_get(terminal_node, timeout=None):
             node.get(propagate=True, timeout=timeout)
         except:
             pass
+
+
+def iterate(item, parent=None):
+    if type(item) == dict:
+        for key, dict_item in item.items():
+            for value in iterate(dict_item, key):
+                yield value
+    elif type(item) == list:
+        for list_item in item:
+            for value in iterate(list_item, parent):
+                yield value
+    elif type(item) == tuple:
+        for tuple_item in item:
+            for value in iterate(tuple_item, parent):
+                yield value
+    else:
+        yield parent, item,
+
+
+def get_url_hash(url):
+    return sha1(url).hexdigest()

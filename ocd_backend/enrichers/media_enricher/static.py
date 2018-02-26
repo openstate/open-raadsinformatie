@@ -1,9 +1,9 @@
 import os
-from hashlib import sha1
 
 from ocd_backend.enrichers.media_enricher import MediaEnricher
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import DATA_DIR_PATH
+from ocd_backend.utils.misc import get_url_hash
 
 log = get_source_logger('enricher')
 
@@ -19,7 +19,7 @@ class StaticMediaEnricher(MediaEnricher):
             log.info('Creating static directory %s' % static_dir)
             os.makedirs(static_dir)
 
-        file_id = sha1(url).hexdigest()
+        file_id = get_url_hash(url)
 
         # Create a file to store the media item in the static dir
         media_file = open(os.path.join(static_dir, file_id), "w+b")

@@ -5,6 +5,7 @@ import json
 import re
 from py2neo import Graph
 from ocd_backend.settings import NEO4J_URL
+from ocd_backend.utils.misc import iterate
 from json import JSONEncoder
 import datetime
 import property
@@ -88,18 +89,6 @@ class ModelBase(object):
         ]
 
     def properties(self, props=True, rels=True):
-        def iterate(item, parent=None):
-            if type(item) == dict:
-                for key, dict_item in item.items():
-                    for value in iterate(dict_item, key):
-                        yield value
-            elif type(item) == list:
-                for list_item in item:
-                    for value in iterate(list_item, parent):
-                        yield value
-            else:
-                yield parent, item,
-
         props_list = list()
         for name, prop in iterate(self.__dict__):
             if name[0:2] == '__':
@@ -127,7 +116,7 @@ class ModelBase(object):
 
             value = self.__dict__.get(name, None)
 
-            if value is not None:
+            if value:
                 props_list[namespaced] = definition.serialize(value)
             elif not self.__temporary__ and definition.required:
                 raise RequiredProperty("Property '%s' is required for %s" %

@@ -1,6 +1,7 @@
 from ocd_backend import celery_app
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.misc import iterate
 
 log = get_source_logger('enricher')
 
@@ -26,15 +27,10 @@ class BaseEnricher(celery_app.Task):
         :returns: the output of :py:meth:`~BaseEnricher.enrich_item`
         """
 
-        args = args[0]
         self.source_definition = kwargs['source_definition']
         self.enricher_settings = kwargs['enricher_settings']
 
-        # Make a single list if items is a single item
-        if type(args) == tuple:
-            args = [args]
-
-        for doc in args:
+        for _, doc in iterate(args):
             try:
                 for prop, value in doc.properties(props=True, rels=True):
                     try:

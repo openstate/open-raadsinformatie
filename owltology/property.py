@@ -1,6 +1,7 @@
 import iso8601
 from dateutil.parser import parse
 from datetime import datetime
+from ocd_backend.utils.misc import iterate
 
 
 class PropertyBase(object):
@@ -92,4 +93,12 @@ class ArrayProperty(Property):
 
 
 class Relation(PropertyBase):
-    pass
+
+    def serialize(self, value):
+        props = list()
+        for _, item in iterate(value):
+            props.append(item.get_ori_id())
+
+        if len(props) == 1:
+            return props[0]
+        return props

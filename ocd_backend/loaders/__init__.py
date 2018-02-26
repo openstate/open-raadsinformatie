@@ -12,6 +12,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
 from ocd_backend.utils import json_encoder
+from ocd_backend.utils.misc import iterate, get_url_hash
 
 log = get_source_logger('loader')
 
@@ -33,16 +34,11 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
         :type source_definition: dict.
         :returns: the output of :py:meth:`~BaseTransformer.transform_item`
         """
-        items = args[0]
         self.source_definition = kwargs['source_definition']
 
-        # Make a single list if items is a single item
-        if type(items) == tuple:
-            items = [items]
-
-        for item in items:
-            self.post_processing(*item)
-            self.load_item(*item)
+        for _, item in iterate(args):
+            self.post_processing(item)
+            self.load_item(item)
 
     def load_item(self, doc):
         raise NotImplemented
