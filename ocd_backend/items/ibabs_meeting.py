@@ -230,12 +230,18 @@ class IBabsReportItem(
             name_field = self.source_definition['fields'][report_name]['name']
         except KeyError as e:
             for field in self.original_item.keys():
+                # Search for things that look like title
+                if field.lower()[0:3] == 'tit':
+                    name_field = field
+                    break
+
                 id_for_field = '%sIds' % (field,)
                 if (
                     self.original_item.has_key(id_for_field) and
                     name_field is None
                 ):
                     name_field = field
+                    break
 
         combined_index_data['name'] = unicode(
             self.original_item[name_field][0])
