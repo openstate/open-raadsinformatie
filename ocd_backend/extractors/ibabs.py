@@ -315,6 +315,25 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                 result = groups.values()
             elif entity_type == 'persons':
                 # process persons
+                for v in meeting['votes']:
+                    p = v['UserId']
+                    persons[p]['memberships'] = [
+                        {
+                            'person_id': p,
+                            'person': {
+                                'id': p,
+                                'name': persons[p]['name'],
+                                'identifiers': [
+                                    {
+                                        'id': u'id-p-%s' % (p,),
+                                        'identifier': p,
+                                        'scheme': u'iBabs'
+                                    }
+                                ]
+                            },
+                            'organization_id': v['GroupId'],
+                            'organization': groups[v['GroupId']]
+                        }]
                 result = persons.values()
             elif entity_type == 'council-memberships':
                 try:
