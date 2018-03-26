@@ -49,7 +49,7 @@ _notubiz: &notubiz
 notubiz:
   alkmaar:
     key: alkmaar
-    organisation_id: 987 
+    organisation_id: 987
     <<: *notubiz
 
   groningen:
@@ -321,7 +321,8 @@ notubiz:
     organisation_id: 823
     <<: *notubiz
 
-  losser:
-    key: losser
-    organisation_id: 628
-    <<: *notubiz
+#  Appears missing in API
+#  losser:
+#    key: losser
+#    organisation_id: 628
+#    <<: *notubiz

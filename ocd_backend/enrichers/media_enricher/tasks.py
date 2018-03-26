@@ -117,7 +117,7 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
         else:
             source = {
                 'url': media_item['original_url'],
-                'note': u'Unable to download or parse this file'
+                'note': media_item.get('note', u''),
             }
 
         if 'sources' not in combined_index_doc:

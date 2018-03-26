@@ -17,10 +17,10 @@ def file_parser(fname, pages=None):
                         for l in b:
                             text_array.append(l.text.encode('UTF-8'))
 
-                if i == pages:  # break after x pages
+                if i >= pages:  # break after x pages
                     break
 
-            print "Processed %i pages" % (i)
+            print "Processed %i pages (%i max)" % (i, pages)
             return '\n'.join(text_array)
         except Exception as e:
             print "PDF Parser Exception: ", e
@@ -45,6 +45,9 @@ class FileToTextMixin(object):
         """
         Convenience method to download a PDF file and converting it to text.
         """
+        if max_pages < 1:  # do not process if not at least one
+            return
+
         tf = self.file_download(url)
         if tf is not None:
             return self.file_to_text(tf.name, max_pages)

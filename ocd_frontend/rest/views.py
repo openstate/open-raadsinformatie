@@ -187,7 +187,8 @@ def format_search_results(results, doc_type='items'):
         # del hit['_source']['hidden']
         kwargs = {
             'object_id': hit['_id'],
-            'source_id': hit['_source']['meta']['source_id'],
+            'source_id': hit['_source']['meta']['collection'],
+            'doc_type': hit['_type'],
             '_external': True
         }
         hit['_source']['meta']['ocd_url'] = url_for('api.get_object', **kwargs)
