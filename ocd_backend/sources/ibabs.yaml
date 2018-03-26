@@ -159,12 +159,12 @@ ibabs:
     almanak_id: 38122
     cwc_username: utrecht_api
     cwc_password: U@nG5rfp
+    start_date: '2018-03-01T00:00:00'
+    end_date: '2018-03-21T00:00:00'
     <<: *ibabs
     entities:
     - *municipality
     - *committees
-    - *organizations
-    - *persons
 
     - entity: meetings
       doc_type: events
@@ -210,6 +210,30 @@ ibabs:
           description: indieners
           start_date: datum
       <<: *entity_defaults
+
+    - id: utrecht_ibabs_organizations
+      entity: organizations
+      doc_type: organizations
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitOrganisationItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      vote_entity: organizations
+      pdf_max_pages: 20
+      council_members_count: 45
+
+    - id: utrecht_ibabs_persons
+      entity: persons
+      doc_type: persons
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitPersonItem
+      loader: ocd_backend.loaders.PopitLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      vote_entity: persons
+      pdf_max_pages: 20
+      council_members_count: 45
 
     # - entity: motions
     #   doc_type: motions
@@ -260,22 +284,8 @@ ibabs:
     #   end_date: '2016-06-01T00:00:00'
     #   <<: *entity_defaults
     #
-    # - id: utrecht_ibabs_most_recent_popit_persons
-    #   entity: ibabs_most_recent_popit_persons
-    #   doc_type: persons
-    #   extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    #   item: ocd_backend.items.popit.PopitPersonItem
-    #   loader: ocd_backend.loaders.PopitLoader
-    #   cleanup: ocd_backend.tasks.CleanupElasticsearch
-    #   wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-    #   sitename: UtrechtTest
-    #   pdf_max_pages: 20
-    #   start_date: '2016-04-01T00:00:00'
-    #   end_date: '2016-06-01T00:00:00'
-    #   council_members_count: 45
-    #   popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-    #   popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-    #   popit_entity: persons
+
+
     #
     # - id: utrecht_ibabs_most_recent_popit_organizations
     #   entity: ibabs_most_recent_popit_organizations

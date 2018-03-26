@@ -225,7 +225,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                             processed += self.process_meeting(result)
                 meeting_count += 1
 
-            #pprint(processed)
+            pprint(processed)
             passed_vote_count = 0
             for result in processed:
                 yield 'application/json', json.dumps(result)
@@ -242,8 +242,11 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
 
     def valid_meeting(self, meeting):
         if meeting['votes'] is not None:
+            if len(meeting['votes']) == int(self.source_definition['council_members_count']):
+                print "Hey, we have a valid meeting with %s (should be %s)votes..." % (
+                    len(meeting['votes']),int(self.source_definition['council_members_count']),)
             try:
-                return (len(meeting['votes']) == self.source_definition['council_members_count'])
+                return (len(meeting['votes']) == int(self.source_definition['council_members_count']))
             except ValueError as e:
                 pass
         return False
@@ -251,7 +254,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
     def process_meeting(self, meeting):
         meeting_count = getattr(self, 'meeting_count', 0)
 
-        entity_type = self.source_definition.get('popit_entity', 'organizations')
+        entity_type = self.source_definition.get('vote_entity', 'organizations')
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
             if entity_type == 'organizations':
