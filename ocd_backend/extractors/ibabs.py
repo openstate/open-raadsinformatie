@@ -257,28 +257,24 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
         entity_type = self.source_definition.get('vote_entity', 'organizations')
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
-            if entity_type == 'organizations':
-                # process parties
-                result = {
-                    v['GroupId']: {
-                        'id': v['GroupId'],
-                        'classification': 'Party',
-                        'name': v['GroupName'],
-                        'identifiers': [
-                            {
-                                'id': u'id-g-%s' % (v['GroupId'],),
-                                'identifier': v['GroupId'],
-                                'scheme': u'iBabs'
-                            }
-                        ],
-                        'meta': {
-                            '_type': 'organizations'
+            groups = {
+                v['GroupId']: {
+                    'id': v['GroupId'],
+                    'classification': 'Party',
+                    'name': v['GroupName'],
+                    'identifiers': [
+                        {
+                            'id': u'id-g-%s' % (v['GroupId'],),
+                            'identifier': v['GroupId'],
+                            'scheme': u'iBabs'
                         }
-                    } for v in meeting['votes']}.values()
-            elif entity_type == 'persons':
-                # process persons
-                result = [
-                    {
+                    ],
+                    'meta': {
+                        '_type': 'organizations'
+                    }
+                } for v in meeting['votes']}
+            persons = {
+                    v['UserId']: {
                         'id': v['UserId'],
                         'name': v['UserName'],
                         'identifiers': [
@@ -291,7 +287,35 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                         'meta': {
                             '_type': 'persons'
                         }
-                    } for v in meeting['votes']]
+                    } for v in meeting['votes']}
+            if entity_type == 'organizations':
+                # process parties
+                unique_groups = list(
+                    set([v['GroupId'] for v in meeting['votes']]))
+                for g in unique_groups:
+                    groups[g]['memberships'] = [
+                        {
+                            'person_id': v['UserId'],
+                            'person': persons[v['UserId']],
+                            'organization_id': g,
+                            'organization': {
+                                'id': g,
+                                'classification': 'Party',
+                                'name': groups[g]['name'],
+                                'identifiers': [
+                                    {
+                                        'id': u'id-g-%s' % (g,),
+                                        'identifier': g,
+                                        'scheme': u'iBabs'
+                                    }
+                                ]
+                            }
+                        }
+                        for v in meeting['votes']]
+                result = groups.values()
+            elif entity_type == 'persons':
+                # process persons
+                result = persons.values()
             elif entity_type == 'council-memberships':
                 try:
                     council = requests.get(self.source_definition['council_url']).json()['result']
