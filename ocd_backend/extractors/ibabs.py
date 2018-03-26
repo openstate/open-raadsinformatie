@@ -9,6 +9,8 @@ from suds.client import Client
 from ocd_backend.extractors import BaseExtractor
 
 from ocd_backend import settings
+from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
@@ -235,7 +237,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 meeting_count, passed_vote_count, vote_count,))
 
 
-class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
+class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpRequestMixin, FrontendAPIMixin):
     """
     Gets a voting record where the number of voters is complete ...
     """
@@ -257,6 +259,11 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
         entity_type = self.source_definition.get('vote_entity', 'organizations')
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
+            r = self.api_request(
+                self.source_definition['index_name'], 'organizations', classification=u'Council'
+            )
+            print "Council:"
+            pprint(r)
             groups = {
                 v['GroupId']: {
                     'id': v['GroupId'],
@@ -273,6 +280,18 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                         '_type': 'organizations'
                     }
                 } for v in meeting['votes']}
+            if council is None:
+                groups.update(
+                    {u'council': {
+                        'id': 'council',
+                        'classification': 'Council',
+                        'name': u'Gemeenteraad',
+                        'identifiers': [
+                        ],
+                        'meta': {
+                            '_type': 'organizations'
+                        }
+                    }})
             persons = {
                     v['UserId']: {
                         'id': v['UserId'],
