@@ -85,6 +85,9 @@ class ElasticsearchLoader(BaseLoader):
         elasticsearch.index(index=self.index_name, doc_type=doc_type,
                             body=doc, id=object_id)
 
+        self._create_resolvable_media_urls(doc)
+
+    def _create_resolvable_media_urls(self, doc):
         m_url_content_types = {}
         if 'media_urls' in doc['enrichments']:
             for media_url in doc['enrichments']['media_urls']:
@@ -127,12 +130,12 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
         log.info('Indexing document id: %s' % object_id)
         elasticsearch.update(
             index=settings.COMBINED_INDEX,
-            doc_type=self.doc_type, id=combined_object_id,
+            doc_type=doc_type, id=combined_object_id,
             body={'doc': combined_index_doc['doc']})
 
         # Index documents into new index
         elasticsearch.update(
-            index=self.index_name, doc_type=self.doc_type,
+            index=self.index_name, doc_type=doc_type,
             body={'doc': doc['doc']}, id=object_id)
         # remember, resolver URLs are not update here to prevent too complex
         # things
@@ -144,7 +147,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     """
 
     def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc
+        self, combined_object_id, object_id, combined_index_doc, doc, doc_type
     ):
 
         if combined_index_doc == {}:
@@ -153,7 +156,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
 
         log.info('Indexing documents...')
         elasticsearch.update(
-            index=settings.COMBINED_INDEX, doc_type=self.doc_type,
+            index=settings.COMBINED_INDEX, doc_type=doc_type,
             id=combined_object_id, body={
                 'doc': combined_index_doc,
                 'doc_as_upsert': True
@@ -161,7 +164,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
 
         # Index documents into new index
         elasticsearch.update(
-            index=self.index_name, doc_type=self.doc_type,
+            index=self.index_name, doc_type=doc_type,
             body={
                 'doc': doc,
                 'doc_as_upsert': True

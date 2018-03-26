@@ -217,7 +217,7 @@ ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
       item: ocd_backend.items.popit.PopitOrganisationItem
-      loader: ocd_backend.loaders.PopitLoader
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
       vote_entity: organizations
       pdf_max_pages: 20
@@ -229,7 +229,7 @@ ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
       item: ocd_backend.items.popit.PopitPersonItem
-      loader: ocd_backend.loaders.PopitLoader
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
       vote_entity: persons
       pdf_max_pages: 20

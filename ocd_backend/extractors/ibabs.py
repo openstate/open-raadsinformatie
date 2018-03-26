@@ -262,7 +262,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor):
                 result = {
                     v['GroupId']: {
                         'id': v['GroupId'],
-                        'classifcation': 'Party',
+                        'classification': 'Party',
                         'name': v['GroupName'],
                         'identifiers': [
                             {
