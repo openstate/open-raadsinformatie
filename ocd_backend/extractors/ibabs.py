@@ -259,11 +259,11 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         entity_type = self.source_definition.get('vote_entity', 'organizations')
         if meeting_count == 0:
             setattr(self, 'meeting_count', 1)
-            r = self.api_request(
+            council = self.api_request(
                 self.source_definition['index_name'], 'organizations', classification=u'Council'
             )
             print "Council:"
-            pprint(r)
+            pprint(council)
             groups = {
                 v['GroupId']: {
                     'id': v['GroupId'],
@@ -292,6 +292,8 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                             '_type': 'organizations'
                         }
                     }})
+            else:
+                groups[u'council'] = council
             persons = {
                     v['UserId']: {
                         'id': v['UserId'],
@@ -330,7 +332,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                                 ]
                             }
                         }
-                        for v in meeting['votes']]
+                        for v in meeting['votes'] if v['GroupId'] == g]
                 result = groups.values()
             elif entity_type == 'persons':
                 # process persons
