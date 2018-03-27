@@ -172,9 +172,16 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             meeting_count = 0
             vote_count = 0
 
-            meeting_sorting_key = self.source_definition.get('meeting_sorting', 'MeetingDate')
+            meeting_sorting_key = self.source_definition.get(
+                'meeting_sorting', 'MeetingDate')
 
-            sorted_meetings = sorted(meetings.Meetings[0], key=lambda m: getattr(m, meeting_sorting_key))
+            if meetings.Meetings is not None:
+                sorted_meetings = sorted(
+                    meetings.Meetings[0],
+                    key=lambda m: getattr(m, meeting_sorting_key))
+            else:
+                sorted_meetings = []
+
             processed = []
             for meeting in sorted_meetings:
                 meeting_dict = meeting_to_dict(meeting)
@@ -246,24 +253,25 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
 
     def valid_meeting(self, meeting):
         if meeting['votes'] is not None:
-            if len(meeting['votes']) == int(self.source_definition['council_members_count']):
-                print "Hey, we have a valid meeting with %s (should be %s)votes..." % (
-                    len(meeting['votes']),int(self.source_definition['council_members_count']),)
             try:
-                return (len(meeting['votes']) == int(self.source_definition['council_members_count']))
-            except ValueError as e:
+                return (
+                    len(meeting['votes']) ==
+                    int(self.source_definition['council_members_count']))
+            except ValueError:
                 pass
         return False
 
     def process_meeting(self, meeting):
         meeting_count = getattr(self, 'meeting_count', 0)
-
-        entity_type = self.source_definition.get('vote_entity', 'organizations')
-        if meeting_count == 0:
-            setattr(self, 'meeting_count', 1)
+        max_meetings = self.source_definition.get('max_processed_meetings', 1)
+        entity_type = self.source_definition.get(
+            'vote_entity', 'organizations')
+        if ((max_meetings <= 0) or (meeting_count < max_meetings)):
+            setattr(self, 'meeting_count', meeting_count + 1)
+            print "Processing meeting %d" % (meeting_count,)
             council = self.api_request(
-                self.source_definition['index_name'], 'organizations', classification=u'Council'
-            )
+                self.source_definition['index_name'], 'organizations',
+                classification=u'Council')
             groups = {
                 v['GroupId']: {
                     'id': v['GroupId'],

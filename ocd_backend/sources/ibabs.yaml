@@ -159,8 +159,6 @@ ibabs:
     almanak_id: 38122
     cwc_username: utrecht_api
     cwc_password: U@nG5rfp
-    start_date: '2018-03-01T00:00:00'
-    end_date: '2018-03-21T00:00:00'
     <<: *ibabs
     entities:
     - *municipality
@@ -223,6 +221,9 @@ ibabs:
       pdf_max_pages: 20
       council_members_count: 45
       reverse_chronological: true
+      max_processed_meetings: 1
+      start_date: '2017-09-01T00:00:00'
+      end_date: '2018-03-21T00:00:00'
 
     - id: utrecht_ibabs_persons
       entity: persons
@@ -236,6 +237,9 @@ ibabs:
       pdf_max_pages: 20
       council_members_count: 45
       reverse_chronological: true
+      max_processed_meetings: 1
+      start_date: '2017-09-01T00:00:00'
+      end_date: '2018-03-21T00:00:00'
 
     # - entity: motions
     #   doc_type: motions
