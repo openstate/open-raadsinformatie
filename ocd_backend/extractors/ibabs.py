@@ -293,7 +293,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                         }
                     }})
             else:
-                groups[u'council'] = council
+                groups[u'council'] = council[0]
             persons = {
                     v['UserId']: {
                         'id': v['UserId'],
@@ -311,9 +311,9 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                     } for v in meeting['votes']}
             if entity_type == 'organizations':
                 # process parties
-                unique_groups = list(
-                    set([v['GroupId'] for v in meeting['votes']]))
+                unique_groups = list(set(groups.keys()))
                 for g in unique_groups:
+                    #pprint(meeting['votes'])
                     groups[g]['memberships'] = [
                         {
                             'person_id': v['UserId'],
@@ -332,7 +332,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                                 ]
                             }
                         }
-                        for v in meeting['votes'] if v['GroupId'] == g]
+                        for v in meeting['votes'] if ((v['GroupId'] == g) or (g == u'council'))]
                 result = groups.values()
             elif entity_type == 'persons':
                 # process persons
