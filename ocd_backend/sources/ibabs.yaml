@@ -222,6 +222,7 @@ ibabs:
       vote_entity: organizations
       pdf_max_pages: 20
       council_members_count: 45
+      reverse_chronological: true
 
     - id: utrecht_ibabs_persons
       entity: persons
@@ -234,6 +235,7 @@ ibabs:
       vote_entity: persons
       pdf_max_pages: 20
       council_members_count: 45
+      reverse_chronological: true
 
     # - entity: motions
     #   doc_type: motions
