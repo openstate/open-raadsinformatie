@@ -52,16 +52,22 @@ class IBabsMotionVotingMixin(
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
         print "Creators: %s" % (creators_str)
-        creator_str = creators_str.split('), ')[0]
+
+        if creators_str is None:
+            return
+
+        creator_str = re.split(r'\)[,;]\s*', creators_str)[0]
         print "Looking for : %s" % (creator_str,)
 
-        party_match = re.search(r' \(([^\)]*?)$', creator_str)
+        party_match = re.search(r' \(([^\)]*?)\)?$', creator_str)
         if not party_match:
             return
 
-
+        print "Party match: %s, parties: %s" % (
+            party_match.group(1),
+            u','.join([p.get('name', u'') for p in parties]),)
         try:
-            party = [p for p in parties if p.get('name', u'') == party_match.group(1)][0]
+            party = [p for p in parties if unicode(p.get('name', u'')).lower() == unicode(party_match.group(1)).lower()][0]
         except Exception as e:
             party = None
 
