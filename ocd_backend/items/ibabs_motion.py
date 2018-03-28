@@ -157,6 +157,8 @@ class IBabsMotionVotingMixin(
         combined_index_data['organization_id'] = council['id']
         combined_index_data['organization'] = council
 
+        # TODO: this gets only the first creator listed. We should fix it to
+        # get all of them
         creator = self._get_creator(self._value('Indiener(s)'), members, parties)
         if creator is not None:
             combined_index_data['creator_id'] = creator['id']
