@@ -243,6 +243,8 @@ class IBabsReportItem(
                     name_field = field
                     break
 
+        print u"Found name field '%s' for report '%s'" % (
+            name_field, report_name,)
         combined_index_data['name'] = unicode(
             self.original_item[name_field][0])
 

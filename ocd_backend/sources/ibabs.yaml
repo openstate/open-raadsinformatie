@@ -241,24 +241,44 @@ ibabs:
       start_date: '2017-09-01T00:00:00'
       end_date: '2018-03-21T00:00:00'
 
-    # - entity: motions
-    #   doc_type: motions
-    #   extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    #   item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-    #   include: moties
-    #   pdf_max_pages: 20
-    #   max_pages: 1
-    #   per_page: 100
-    #   fields:
-    #     Moties:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #     Amendementen:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #   <<: *entity_defaults
+    - entity: motions
+      doc_type: motions
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: moties
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    - entity: amendments
+      doc_type: amendments
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: amendementen
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
     #
     # - entity: vote_events
     #   doc_type: vote_events

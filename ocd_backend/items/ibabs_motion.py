@@ -42,7 +42,7 @@ class IBabsMotionVotingMixin(
         return u'Moties'
 
     def _value(self, key):
-        pprint(self.source_definition['fields']['Moties'])
+        # pprint(self.source_definition['fields']['Moties'])
         try:
             actual_key = self.source_definition['fields']['Moties']['Extra'][key]
         except KeyError as e:
@@ -51,6 +51,7 @@ class IBabsMotionVotingMixin(
 
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
+        print "Creators: %s" % (creators_str)
         creator_str = creators_str.split('), ')[0]
         print "Looking for : %s" % (creator_str,)
 
@@ -105,10 +106,11 @@ class IBabsMotionVotingMixin(
             # pprint(len(results))
             # filtered_results = [r for r in results if r['organization_id'] == council['id']]
             # return filtered_results[0]
-            return results[0]
+            if results is not None:
+                return results[0]
         except (KeyError, IndexError) as e:
             pprint("Error blaat")
-            return None
+        return None
 
     def _get_motion_id_encoded(self):
         #pprint(self.original_item)
