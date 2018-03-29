@@ -29,13 +29,14 @@ class IBabsMotionVotingMixin(
         return results[0]
 
     def _get_council_members(self):
-        results = self.api_request(self.source_definition['index_name'],
-            'persons', size=100)  # 100 for now ...
+        results = self.api_request(
+            self.source_definition['index_name'], 'persons', size=100)  # 100
         return results
 
     def _get_council_parties(self):
-        results = self.api_request(self.source_definition['index_name'],
-            'organizations', classification='Party', size=100)  # 100 for now ...
+        results = self.api_request(
+            self.source_definition['index_name'], 'organizations',
+            classification='Party', size=100)  # 100 for now ...
         return results
 
     def _get_classification(self):
@@ -44,10 +45,14 @@ class IBabsMotionVotingMixin(
     def _value(self, key):
         # pprint(self.source_definition['fields']['Moties'])
         try:
-            actual_key = self.source_definition['fields']['Moties']['Extra'][key]
-        except KeyError as e:
+            actual_key = self.source_definition[
+                'fields']['Moties']['Extra'][key]
+        except KeyError:
             actual_key = key
-        return self.original_item['_Extra']['Values'][actual_key]
+        try:
+            return self.original_item['_Extra']['Values'][actual_key]
+        except KeyError:
+            return None
 
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
@@ -164,7 +169,8 @@ class IBabsMotionVotingMixin(
             combined_index_data['creator_id'] = creator['id']
             combined_index_data['creator'] = creator
 
-        combined_index_data['classification'] = u'Moties'
+        combined_index_data['classification'] = unicode(
+            self.source_definition.get('classification', u'Moties'))
 
         combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
         # TODO: this is only for searching compatability ...
