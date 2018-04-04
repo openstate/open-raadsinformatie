@@ -14,7 +14,9 @@ from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.utils.misc import normalize_motion_id
+from ocd_backend.utils.misc import (
+    normalize_motion_id, full_normalized_motion_id)
+
 
 class IBabsMotionVotingMixin(
         HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
@@ -124,13 +126,8 @@ class IBabsMotionVotingMixin(
         return None
 
     def _get_motion_id_encoded(self):
-        #pprint(self.original_item)
-        normalized_motion_id = normalize_motion_id(
-            self._value('Kenmerk').strip(),
-            self.original_item['datum'][0]
-        )
-        hash_content = u'motion-%s' % (normalized_motion_id,)
-        return unicode(sha1(hash_content.decode('utf8')).hexdigest())
+        return unicode(
+            full_normalized_motion_id(self._value('Onderwerp')))
 
     def get_object_id(self):
         return self._get_motion_id_encoded()
@@ -267,75 +264,9 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             except KeyError as e:
                 pass
 
-        # FIXME: have actual votes below. Currently assumes everyone votes as
-        # specified in the motion result
-
-        # Not all motions are actually voted on
-        # FIXME: are there more. is every municipality specifying the same?
-        # allowed_results = [
-        #     'Motie aangenomen',
-        #     'Motie verworpen',
-        # ]
 
         combined_index_data['counts'] = []
         combined_index_data['votes'] = []
 
-        # TODO: getting voting rounds is done in another item transformer ...
-
-        # if combined_index_data['result'] not in allowed_results:
-        #     return combined_index_data
-        #
-        # party_ids = [p['id'] for p in parties if p.has_key('id')]
-        #
-        # # make the vote a bit random, but retain te result by majority vote
-        # majority_count = (len(members) // 2) + 1
-        # vote_count_to_result = len(members)
-        # new_vote_count_to_result = vote_count_to_result
-        # current_votes = {p['id']: combined_index_data['result'] for p in parties if p.has_key('name')}
-        # party_sizes = {p['id']: len(list(set([m['person_id'] for m in p['memberships']]))) for p in parties if p.has_key('name')}
-        # parties_voted = []
-        #
-        # while new_vote_count_to_result >= majority_count:
-        #     if new_vote_count_to_result != vote_count_to_result:
-        #         vote_count_to_result = new_vote_count_to_result
-        #         current_votes[party_id] = random.choice([r for r in allowed_results if r != combined_index_data['result']])
-        #         parties_voted.append(party_id)
-        #
-        #     # pick a random party
-        #     party_id = random.choice([p for p in party_ids if p not in parties_voted])
-        #
-        #     new_vote_count_to_result = new_vote_count_to_result - party_sizes[party_id]
-        #
-        # # now record the votes
-        # for party in parties:
-        #     if not party.has_key('name'):
-        #         continue
-        #     try:
-        #         num_members = len(list(set([m['person_id'] for m in party['memberships']])))
-        #     except KeyError as e:
-        #         num_members = 0
-        #     combined_index_data['counts'].append({
-        #         'option': current_votes[party['id']],  # combined_index_data['result'],
-        #         'value': num_members,
-        #         'group': {
-        #             'name': party.get('name', '')
-        #         }
-        #     })
-        #
-        # # FIXME: get the actual individual votes, depends on the voting kind
-        # for m in members:
-        #     try:
-        #         member_party = [ms['organization_id'] for ms in m['memberships'] if ms['organization_id'] in party_ids][0]
-        #         member_vote = current_votes[member_party]
-        #     except (KeyError, IndexError) as e:
-        #         member_party = None
-        #         member_vote = combined_index_data['result']
-        #
-        #     combined_index_data['votes'].append({
-        #         'voter_id' : m['id'],
-        #         'voter': m,
-        #         'option': member_vote,  # FIXME: actual vote
-        #         'group_id': member_party
-        #     })
 
         return combined_index_data

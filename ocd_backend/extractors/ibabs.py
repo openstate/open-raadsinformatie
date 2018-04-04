@@ -11,6 +11,8 @@ from ocd_backend.extractors import BaseExtractor
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.utils.misc import (
+    normalize_motion_id, full_normalized_motion_id)
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
@@ -198,26 +200,27 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 kv2.Key = 'IncludeListEntries'
                 kv2.Value = True
 
+                kv3 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv3.Key = 'IncludeMeetingItems'
+                kv3.Value = True
+
                 params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
                 params.iBabsKeyValue.append(kv)
                 params.iBabsKeyValue.append(kv2)
+                params.iBabsKeyValue.append(kv3)
 
                 vote_meeting = self.client.service.GetMeetingWithOptions(
                     Sitename=self.source_definition['sitename'],
                     MeetingId=meeting_dict['Id'],
                     Options=params)
                 meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
-
+                print(meeting_dict_short['MeetingDate'])
                 if meeting_dict_short['MeetingItems'] is None:
                     continue
                 for mi in meeting_dict_short['MeetingItems']:
                     if mi['ListEntries'] is None:
                         continue
                     for le in mi['ListEntries']:
-                        hash_content = u'motion-%s' % (le['EntryId'])
-                        hashed_motion_id = unicode(sha1(hash_content.decode('utf8')).hexdigest())
-                        log.debug("Motie id: %s hash : %s" % (le['EntryId'], hashed_motion_id.strip(),))
-
                         votes = self.client.service.GetListEntryVotes(
                             Sitename=self.source_definition['sitename'],
                             EntryId=le['EntryId'])
@@ -225,8 +228,8 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                             votes = []
                         else:
                             votes = votes_to_dict(votes.ListEntryVotes[0])
+                        #log.debug(votes)
                         result = {
-                            'motion_id': hashed_motion_id,
                             'meeting': meeting_dict,
                             'entry': le,
                             'votes': votes
@@ -453,12 +456,14 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    #pprint(dict_item)
-                    # try:
-                    #     # this should be the motion's unique identifier
-                    #     pprint(dict_item['_Extra']['Values'][u'Titel'].split(' ')[0])
-                    # except (KeyError, AttributeError) as e:
-                    #     pass
+                    # if dict_item['kenmerk'][0].startswith('2018 M67'):
+                    #     pprint(dict_item)
+                    try:
+                        # this should be the motion's unique identifier
+                        pprint(full_normalized_motion_id(
+                            dict_item['_Extra']['Values'][u'Onderwerp']))
+                    except (KeyError, AttributeError) as e:
+                        pass
                     yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1

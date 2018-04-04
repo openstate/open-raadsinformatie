@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 
 import requests
+from elasticsearch.exceptions import NotFoundError, TransportError
 
 from ocd_backend import celery_app
 from ocd_backend import settings
@@ -128,15 +129,21 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
             return
 
         log.info('Indexing document id: %s' % object_id)
-        elasticsearch.update(
-            index=settings.COMBINED_INDEX,
-            doc_type=doc_type, id=combined_object_id,
-            body={'doc': combined_index_doc['doc']})
+        try:
+            elasticsearch.update(
+                index=settings.COMBINED_INDEX,
+                doc_type=doc_type, id=combined_object_id,
+                body={'doc': combined_index_doc['doc']})
+        except (NotFoundError, TransportError):
+            log.error('Document %s did not exist....' % (combined_object_id,))
 
         # Index documents into new index
-        elasticsearch.update(
-            index=self.index_name, doc_type=doc_type,
-            body={'doc': doc['doc']}, id=object_id)
+        try:
+            elasticsearch.update(
+                index=self.index_name, doc_type=doc_type,
+                body={'doc': doc['doc']}, id=object_id)
+        except (NotFoundError, TransportError):
+            log.error('Document %s did not exist....' % (object_id,))
         # remember, resolver URLs are not update here to prevent too complex
         # things
 

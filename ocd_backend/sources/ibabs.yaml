@@ -245,6 +245,7 @@ ibabs:
       doc_type: motions
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       include: moties
       pdf_max_pages: 20
       max_pages: 1
@@ -260,56 +261,56 @@ ibabs:
           start_date: datum
       <<: *entity_defaults
 
-    # - entity: amendments
-    #   doc_type: amendments
-    #   classification: Amendementen
-    #   extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    #   item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-    #   include: amendementen
-    #   pdf_max_pages: 20
-    #   max_pages: 1
-    #   per_page: 100
-    #   fields:
-    #     Amendementen:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #     Moties:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #   <<: *entity_defaults
+    - entity: amendments
+      doc_type: amendments
+      classification: Amendementen
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: amendementen
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
 
     #
-    # - entity: vote_events
-    #   doc_type: vote_events
-    #   extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    #   item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
-    #   include: moties
-    #   pdf_max_pages: 20
-    #   max_pages: 1
-    #   per_page: 100
-    #   fields:
-    #     Moties:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #     Amendementen:
-    #       name: onderwerp
-    #       description: status
-    #       start_date: datum
-    #   <<: *entity_defaults
+    - entity: vote_events
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
+      include: moties
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
     #
-    # - entity: voting_rounds
-    #   doc_type: vote_events
-    #   extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-    #   item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-    #   wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-    #   sitename: UtrechtTest
-    #   pdf_max_pages: 20
-    #   start_date: '2016-04-01T00:00:00'
-    #   end_date: '2016-06-01T00:00:00'
-    #   <<: *entity_defaults
+    - entity: voting_rounds
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+      loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+      reverse_chronological: false
+      max_processed_meetings: 0
+      start_date: '2018-02-01T00:00:00'
+      end_date: '2018-03-21T00:00:00'
+      <<: *entity_defaults
     #
 
 
