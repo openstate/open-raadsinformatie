@@ -262,7 +262,7 @@ ibabs:
       <<: *entity_defaults
 
     - entity: amendments
-      doc_type: amendments
+      doc_type: motions
       classification: Amendementen
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
@@ -308,68 +308,10 @@ ibabs:
       loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
       reverse_chronological: false
       max_processed_meetings: 0
-      start_date: '2018-02-01T00:00:00'
-      end_date: '2018-03-21T00:00:00'
+      # start_date: '2018-02-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
       <<: *entity_defaults
-    #
 
-
-    #
-    # - id: utrecht_ibabs_most_recent_popit_organizations
-    #   entity: ibabs_most_recent_popit_organizations
-    #   doc_type: organizations
-    #   extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    #   transformer: ocd_backend.transformers.BaseTransformer
-    #   item: ocd_backend.items.popit.PopitOrganisationItem
-    #   loader: ocd_backend.loaders.PopitLoader
-    #   cleanup: ocd_backend.tasks.CleanupElasticsearch
-    #   wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-    #   sitename: UtrechtTest
-    #   pdf_max_pages: 20
-    #   start_date: '2016-04-01T00:00:00'
-    #   end_date: '2016-06-01T00:00:00'
-    #   council_members_count: 45
-    #   popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-    #   popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-    #   popit_entity: organizations
-    #
-    # - id: utrecht_ibabs_most_recent_popit_memberships
-    #   entity: ibabs_most_recent_popit_memberships
-    #   doc_type: memberships
-    #   extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    #   transformer: ocd_backend.transformers.BaseTransformer
-    #   item: ocd_backend.items.popit.PopitMembershipItem
-    #   loader: ocd_backend.loaders.PopitLoader
-    #   cleanup: ocd_backend.tasks.CleanupElasticsearch
-    #   wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-    #   sitename: UtrechtTest
-    #   pdf_max_pages: 20
-    #   start_date: '2016-04-01T00:00:00'
-    #   end_date: '2016-06-01T00:00:00'
-    #   council_members_count: 45
-    #   popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-    #   popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-    #   popit_entity: memberships
-    #
-    # - id: utrecht_ibabs_most_recent_popit_council_memberships
-    #   entity: ibabs_most_recent_popit_council_memberships
-    #   doc_type: memberships
-    #   extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    #   transformer: ocd_backend.transformers.BaseTransformer
-    #   item: ocd_backend.items.popit.PopitMembershipItem
-    #   loader: ocd_backend.loaders.PopitLoader
-    #   cleanup: ocd_backend.tasks.CleanupElasticsearch
-    #   wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-    #   sitename: UtrechtTest
-    #   pdf_max_pages: 20
-    #   start_date: '2016-04-01T00:00:00'
-    #   end_date: '2016-06-01T00:00:00'
-    #   council_members_count: 45
-    #   popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-    #   popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-    #   popit_entity: council-memberships
-    #   council_url: http://utrecht.openraadsinformatie.nl/api/v0.1/organizations/gemeente-utrecht-utrecht-ut
-    #
     # - entity: meeting_attendees
     #   doc_type: events
     #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor

@@ -5,6 +5,7 @@ import re
 import translitcodec
 from lxml import etree
 from string import Formatter
+from hashlib import sha1
 
 from ocd_backend.exceptions import MissingTemplateTag
 from elasticsearch.helpers import scan, bulk
@@ -14,7 +15,8 @@ def full_normalized_motion_id(motion_id, date_as_str=None):
     n_id = normalize_motion_id(motion_id, date_as_str)
     if n_id is not None:
         return n_id
-    return motion_id
+    return sha1(motion_id.encode('utf8')).hexdigest()
+    #return motion_id
 
 
 def normalize_motion_id(motion_id, date_as_str=None):
