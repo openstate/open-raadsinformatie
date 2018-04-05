@@ -179,7 +179,7 @@ ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_meeting.IBabsReportItem
       include: ".*"
-      exclude: moties
+      exclude: (moties|amendementen)
       pdf_max_pages: 0
       max_pages: 1
       fields:
