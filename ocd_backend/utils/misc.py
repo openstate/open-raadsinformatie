@@ -5,9 +5,18 @@ import re
 import translitcodec
 from lxml import etree
 from string import Formatter
+from hashlib import sha1
 
 from ocd_backend.exceptions import MissingTemplateTag
 from elasticsearch.helpers import scan, bulk
+
+
+def full_normalized_motion_id(motion_id, date_as_str=None):
+    n_id = normalize_motion_id(motion_id, date_as_str)
+    if n_id is not None:
+        return n_id
+    return sha1(motion_id.encode('utf8')).hexdigest()
+    #return motion_id
 
 
 def normalize_motion_id(motion_id, date_as_str=None):
@@ -16,15 +25,19 @@ def normalize_motion_id(motion_id, date_as_str=None):
     """
 
     regexes = [
-        r'^M(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
-        r'^(?P<year>\d{4})\s*M\s*(?P<id>\d+)',
+        r'^(?P<kind>M|A)(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
+        r'^(?P<year>\d{4})\s*(?P<kind>M|A)\s*(?P<id>\d+)',
         r'^(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
-        r'^M\s+(?P<id>\d+)'
+        r'^(?P<kind>M|A)\s+(?P<id>\d+)'
     ]
 
     for regex in regexes:
         res = re.match(regex, motion_id.upper())
         if res is not None:
+            try:
+                kind = res.group('kind')
+            except IndexError as e:
+                kind = u'M'
             try:
                 year = res.group('year')
             except IndexError as e:
@@ -34,7 +47,7 @@ def normalize_motion_id(motion_id, date_as_str=None):
                     date_as_str = datetime.datetime.now().isoformat()
                 year = date_as_str[0:4]
             mid = res.group('id')
-            return u'%sM%s' % (year, mid,)
+            return u'%s%s%s' % (year, kind, mid,)
     return None
 
 

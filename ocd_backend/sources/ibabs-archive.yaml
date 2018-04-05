@@ -4,8 +4,8 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: true
   months_interval: 3
-  start_date: "2013-01-01"
-  end_date: "2014-01-01"
+  # start_date: "2013-01-01"
+  # end_date: "2014-01-01"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -104,6 +104,131 @@ _ibabs: &ibabs
 
 ibabs-archive:
   # Added before 17-11-2017
+  utrecht:
+    key: utrecht
+    municipality: "Utrecht (gemeente)"
+    almanak_id: 38122
+    cwc_username: utrecht_api
+    cwc_password: U@nG5rfp
+    <<: *ibabs
+    entities:
+
+    - id: utrecht_ibabs_organizations
+      entity: organizations
+      doc_type: organizations
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitOrganisationItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      vote_entity: organizations
+      pdf_max_pages: 20
+      council_members_count: 45
+      reverse_chronological: true
+      max_processed_meetings: 1
+      # start_date: '2017-09-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
+
+    - id: utrecht_ibabs_persons
+      entity: persons
+      doc_type: persons
+      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+      transformer: ocd_backend.transformers.BaseTransformer
+      item: ocd_backend.items.popit.PopitPersonItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      vote_entity: persons
+      pdf_max_pages: 20
+      council_members_count: 45
+      reverse_chronological: true
+      max_processed_meetings: 1
+      # start_date: '2017-09-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
+
+    - entity: motions
+      doc_type: motions
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      include: moties
+      pdf_max_pages: 20
+      max_pages: 100
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    - entity: amendments
+      doc_type: motions
+      classification: Amendementen
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: amendementen
+      pdf_max_pages: 20
+      max_pages: 100
+      per_page: 100
+      fields:
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    #
+    - entity: vote_events
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
+      include: (moties|amendementen)
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+    #
+    - entity: voting_rounds
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+      loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+      reverse_chronological: false
+      max_processed_meetings: 0
+      # start_date: '2018-02-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
+      <<: *entity_defaults
+
+    # - entity: meeting_attendees
+    #   doc_type: events
+    #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor
+    #   item: ocd_backend.items.attendance.AttendanceForEventItem
+    #   frontend_type: events
+    #   frontend_args:
+    #     classification: Agenda
+    #     sort: start_date
+    #     order: desc
+    #     size: 100
+    #   <<: *entity_defaults
+
+    - *videotulen
 
   medemblik:
     key: medemblik

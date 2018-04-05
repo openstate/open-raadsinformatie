@@ -155,23 +155,14 @@ ibabs:
 
   utrecht:
     key: utrecht
+    municipality: "Utrecht (gemeente)"
     almanak_id: 38122
     cwc_username: utrecht_api
     cwc_password: U@nG5rfp
     <<: *ibabs
     entities:
-    - *popit_organizations
-    - *popit_persons
     - *municipality
     - *committees
-    - *organizations
-    - *persons
-    - entity: popit_memberships
-      doc_type: memberships
-      extractor: ocd_backend.extractors.popit.PopItExtractor
-      item: ocd_backend.items.popit.PopitMembershipItem
-      file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/memberships
-      <<: *entity_defaults
 
     - entity: meetings
       doc_type: events
@@ -218,138 +209,120 @@ ibabs:
           start_date: datum
       <<: *entity_defaults
 
-    - entity: motions
-      doc_type: motions
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-      include: moties
-      pdf_max_pages: 20
-      max_pages: 1
-      per_page: 100
-      fields:
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-      <<: *entity_defaults
-
-    - entity: vote_events
-      doc_type: vote_events
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
-      include: moties
-      pdf_max_pages: 20
-      max_pages: 1
-      per_page: 100
-      fields:
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-      <<: *entity_defaults
-
-    - entity: voting_rounds
-      doc_type: vote_events
-      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-      sitename: UtrechtTest
-      pdf_max_pages: 20
-      start_date: '2016-04-01T00:00:00'
-      end_date: '2016-06-01T00:00:00'
-      <<: *entity_defaults
-
-    - id: utrecht_ibabs_most_recent_popit_persons
-      entity: ibabs_most_recent_popit_persons
-      doc_type: persons
-      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      item: ocd_backend.items.popit.PopitPersonItem
-      loader: ocd_backend.loaders.PopitLoader
-      cleanup: ocd_backend.tasks.CleanupElasticsearch
-      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-      sitename: UtrechtTest
-      pdf_max_pages: 20
-      start_date: '2016-04-01T00:00:00'
-      end_date: '2016-06-01T00:00:00'
-      council_members_count: 45
-      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-      popit_entity: persons
-
-    - id: utrecht_ibabs_most_recent_popit_organizations
-      entity: ibabs_most_recent_popit_organizations
+    - id: utrecht_ibabs_organizations
+      entity: organizations
       doc_type: organizations
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
       item: ocd_backend.items.popit.PopitOrganisationItem
-      loader: ocd_backend.loaders.PopitLoader
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
-      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-      sitename: UtrechtTest
+      vote_entity: organizations
       pdf_max_pages: 20
-      start_date: '2016-04-01T00:00:00'
-      end_date: '2016-06-01T00:00:00'
       council_members_count: 45
-      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-      popit_entity: organizations
+      reverse_chronological: true
+      max_processed_meetings: 1
+      # start_date: '2017-09-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
 
-    - id: utrecht_ibabs_most_recent_popit_memberships
-      entity: ibabs_most_recent_popit_memberships
-      doc_type: memberships
+    - id: utrecht_ibabs_persons
+      entity: persons
+      doc_type: persons
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
-      item: ocd_backend.items.popit.PopitMembershipItem
-      loader: ocd_backend.loaders.PopitLoader
+      item: ocd_backend.items.popit.PopitPersonItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
-      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-      sitename: UtrechtTest
+      vote_entity: persons
       pdf_max_pages: 20
-      start_date: '2016-04-01T00:00:00'
-      end_date: '2016-06-01T00:00:00'
       council_members_count: 45
-      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-      popit_entity: memberships
+      reverse_chronological: true
+      max_processed_meetings: 1
+      # start_date: '2017-09-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
 
-    - id: utrecht_ibabs_most_recent_popit_council_memberships
-      entity: ibabs_most_recent_popit_council_memberships
-      doc_type: memberships
-      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      transformer: ocd_backend.transformers.BaseTransformer
-      item: ocd_backend.items.popit.PopitMembershipItem
-      loader: ocd_backend.loaders.PopitLoader
-      cleanup: ocd_backend.tasks.CleanupElasticsearch
-      wsdl: https://www.mijnbabs.nl/iBabsWCFServiceTEST/Public.svc?singleWsdl
-      sitename: UtrechtTest
+    - entity: motions
+      doc_type: motions
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      include: moties
       pdf_max_pages: 20
-      start_date: '2016-04-01T00:00:00'
-      end_date: '2016-06-01T00:00:00'
-      council_members_count: 45
-      popit_base_url: http://utrecht.openraadsinformatie.nl/api/v0.1
-      popit_api_key: d9f780bce2f2e6d6a2101208a40feacabd883522
-      popit_entity: council-memberships
-      council_url: http://utrecht.openraadsinformatie.nl/api/v0.1/organizations/gemeente-utrecht-utrecht-ut
-
-    - entity: meeting_attendees
-      doc_type: events
-      extractor: ocd_backend.extractors.api.FrontendAPIExtractor
-      item: ocd_backend.items.attendance.AttendanceForEventItem
-      frontend_type: events
-      frontend_args:
-        classification: Agenda
-        sort: start_date
-        order: desc
-        size: 100
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
       <<: *entity_defaults
+
+    - entity: amendments
+      doc_type: motions
+      classification: Amendementen
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+      include: amendementen
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+
+    #
+    - entity: vote_events
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
+      include: (moties|amendementen)
+      pdf_max_pages: 20
+      max_pages: 1
+      per_page: 100
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+      <<: *entity_defaults
+    #
+    - entity: voting_rounds
+      doc_type: vote_events
+      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+      loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+      reverse_chronological: false
+      max_processed_meetings: 0
+      # start_date: '2018-02-01T00:00:00'
+      # end_date: '2018-03-21T00:00:00'
+      <<: *entity_defaults
+
+    # - entity: meeting_attendees
+    #   doc_type: events
+    #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor
+    #   item: ocd_backend.items.attendance.AttendanceForEventItem
+    #   frontend_type: events
+    #   frontend_args:
+    #     classification: Agenda
+    #     sort: start_date
+    #     order: desc
+    #     size: 100
+    #   <<: *entity_defaults
 
     - *videotulen
 

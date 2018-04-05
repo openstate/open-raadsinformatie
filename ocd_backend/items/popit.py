@@ -41,7 +41,7 @@ class PopitBaseItem(object):
     def get_rights(self):
         try:
             return self.original_item['meta']['rights']
-        except KeyError as e:
+        except (TypeError, KeyError) as e:
             return u'undefined'
 
     def get_collection(self):

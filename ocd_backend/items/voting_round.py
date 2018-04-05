@@ -8,6 +8,8 @@ from ocd_backend import settings
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.utils.misc import (
+    normalize_motion_id, full_normalized_motion_id)
 
 
 class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
@@ -28,17 +30,20 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         return results[0]
 
     def _get_council_members(self):
-        results = self.api_request(self.source_definition['index_name'],
-            'persons', size=100)  # 100 for now ...
+        results = self.api_request(
+            self.source_definition['index_name'], 'persons',
+            size=100)  # 100 for now ...
         return results
 
     def _get_council_parties(self):
-        results = self.api_request(self.source_definition['index_name'],
-            'organizations', classification='Party', size=100)  # 100 for now ...
+        results = self.api_request(
+            self.source_definition['index_name'], 'organizations',
+            classification='Party', size=100)  # 100 for now
         return results
 
     def get_object_id(self):
-        return unicode(self.original_item['motion_id'])
+        return unicode(full_normalized_motion_id(
+            self.original_item['entry']['EntryTitle']))
 
     def get_original_object_id(self):
         return self.get_object_id()
@@ -116,7 +121,7 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def get_combined_index_data(self):
         combined_index_data = {}
 
-        combined_index_data['id'] = self.original_item['motion_id']
+        combined_index_data['id'] = self.get_object_id()
         combined_index_data['hidden'] = self.source_definition['hidden']
 
         council = self._get_council()

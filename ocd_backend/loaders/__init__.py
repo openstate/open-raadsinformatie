@@ -1,6 +1,8 @@
+from datetime import datetime
 import json
 
 import requests
+from elasticsearch.exceptions import NotFoundError, TransportError
 
 from ocd_backend import celery_app
 from ocd_backend import settings
@@ -84,6 +86,9 @@ class ElasticsearchLoader(BaseLoader):
         elasticsearch.index(index=self.index_name, doc_type=doc_type,
                             body=doc, id=object_id)
 
+        self._create_resolvable_media_urls(doc)
+
+    def _create_resolvable_media_urls(self, doc):
         m_url_content_types = {}
         if 'media_urls' in doc['enrichments']:
             for media_url in doc['enrichments']['media_urls']:
@@ -105,9 +110,10 @@ class ElasticsearchLoader(BaseLoader):
                         m_url_content_types[media_url['original_url']]
 
                 # Update if already exists
-                elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
-                                         doc_type='url', id=url_hash,
-                                         body=url_doc)
+                elasticsearch.index(
+                    index=settings.RESOLVER_URL_INDEX,
+                    doc_type='url', id=url_hash,
+                    body=url_doc)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
@@ -123,15 +129,55 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
             return
 
         log.info('Indexing document id: %s' % object_id)
-        elasticsearch.update(index=settings.COMBINED_INDEX,
-                            doc_type=self.doc_type, id=combined_object_id,
-                            body={'doc': combined_index_doc['doc']})
+        try:
+            elasticsearch.update(
+                index=settings.COMBINED_INDEX,
+                doc_type=doc_type, id=combined_object_id,
+                body={'doc': combined_index_doc['doc']})
+        except (NotFoundError, TransportError):
+            log.error('Document %s did not exist....' % (combined_object_id,))
 
         # Index documents into new index
-        elasticsearch.update(index=self.index_name, doc_type=self.doc_type,
-                            body={'doc': doc['doc']}, id=object_id)
+        try:
+            elasticsearch.update(
+                index=self.index_name, doc_type=doc_type,
+                body={'doc': doc['doc']}, id=object_id)
+        except (NotFoundError, TransportError):
+            log.error('Document %s did not exist....' % (object_id,))
         # remember, resolver URLs are not update here to prevent too complex
         # things
+
+
+class ElasticsearchUpsertLoader(ElasticsearchLoader):
+    """
+    Updates elasticsearch items using the update method. Use with caution.
+    """
+
+    def load_item(
+        self, combined_object_id, object_id, combined_index_doc, doc, doc_type
+    ):
+
+        if combined_index_doc == {}:
+            log.info('Empty document ....')
+            return
+
+        log.info('Indexing documents...')
+        elasticsearch.update(
+            index=settings.COMBINED_INDEX, doc_type=doc_type,
+            id=combined_object_id, body={
+                'doc': combined_index_doc,
+                'doc_as_upsert': True
+            })
+
+        # Index documents into new index
+        elasticsearch.update(
+            index=self.index_name, doc_type=doc_type,
+            body={
+                'doc': doc,
+                'doc_as_upsert': True
+            }, id=object_id)
+
+        self._create_resolvable_media_urls(doc)
 
 
 class DummyLoader(BaseLoader):
@@ -158,55 +204,13 @@ class DummyLoader(BaseLoader):
         print '*' * 50
 
 
-from datetime import datetime
-
 def json_serial(obj):
     """JSON serializer for objects not serializable by default json code"""
 
     if isinstance(obj, datetime):
         serial = obj.isoformat()
         return serial
-    raise TypeError ("Type not serializable")
-
-class PopitLoader(BaseLoader):
-    """
-    Loads data to a Popit instance.
-    """
-
-    def _create_or_update_item(self, item, item_id):
-        """
-        First tries to post (aka create) a new item. If that does not work,
-        do an update (aka put).
-        """
-
-        headers = {
-            "Apikey": self.source_definition['popit_api_key'],
-            "Accept": "application/json",
-            "Content-Type": "application/json"
-        }
-
-        popit_url = "%s/%s" % (
-            self.source_definition['popit_base_url'],
-            self.source_definition['doc_type'],)
-        resp = requests.post(
-            popit_url,
-            headers=headers, data=json.dumps(item, default=json_serial))
-
-        # popit update controls where we should update the data from ibabs (overwriting our own data)
-        # or whether we should only add things when there's new information.
-        if ((not self.source_definition.get('popit_update', False)) or (resp.status_code != 500)):
-            return resp
-
-        return requests.put(
-            "%s/%s" % (popit_url, item_id,),
-            headers=headers, data=json.dumps(item, default=json_serial))
-
-    def load_item(
-            self, combined_object_id, object_id, combined_index_doc, doc,
-            doc_type
-    ):
-        resp = self._create_or_update_item(
-            combined_index_doc, combined_object_id)
+    raise TypeError("Type not serializable")
 
 
 class JsonLDLoader(BaseLoader):
