@@ -899,47 +899,47 @@ class RestApiResolveTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertIn('location', response.headers)
         self.assertTrue(response.headers['location'].startswith('http://'))
 
-    def test_successful_thumbnail_resolve(self):
-        """Test if a valid URL resolves and returns a redirect to a thumbnailed
-        image.
-        """
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='large')
-
-        response = self.get(url, follow_redirects=False)
-
-        self.assert_status_code(response, 302)
-        self.assert_content_type(response, 'text/html; charset=utf-8')
-        self.assertIn('location', response.headers)
-        self.assertIn('large', response.headers['location'])
-        self.assertIn(self.app.config.get('THUMBNAIL_URL'), response.headers['location'])
-
-    def test_invalid_thumbnail_size_json(self):
-        """Test if a request with an invalid thumbnail size returns a 400 with
-        proper content type"""
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='humongous')
-
-        response = self.get(url, follow_redirects=False)
-
-        self.assert_bad_request(response)
-        self.assert_content_type(response, 'application/json')
-        self.assertEqual(response.json.get('status'), 'error')
-        self.assertIn('appropriate thumbnail size', response.json.get('error'))
-
-    def test_invalid_thumbnail_size_html(self):
-        """Test if a request with an invalid thumbnail size returns a 400 with
-        proper content type"""
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='humongous')
-
-        response = self.get(url, follow_redirects=False,
-                            content_type='text/html')
-
-        self.assert_bad_request(response)
-        self.assert_content_type(response, 'text/html; charset=utf-8')
-        self.assertIn('<html><body>You did not provide an appropriate '
-                      'thumbnail size', response.data)
+    # def test_successful_thumbnail_resolve(self):
+    #     """Test if a valid URL resolves and returns a redirect to a thumbnailed
+    #     image.
+    #     """
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='large')
+    #
+    #     response = self.get(url, follow_redirects=False)
+    #
+    #     self.assert_status_code(response, 302)
+    #     self.assert_content_type(response, 'text/html; charset=utf-8')
+    #     self.assertIn('location', response.headers)
+    #     self.assertIn('large', response.headers['location'])
+    #     self.assertIn(self.app.config.get('THUMBNAIL_URL'), response.headers['location'])
+    #
+    # def test_invalid_thumbnail_size_json(self):
+    #     """Test if a request with an invalid thumbnail size returns a 400 with
+    #     proper content type"""
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='humongous')
+    #
+    #     response = self.get(url, follow_redirects=False)
+    #
+    #     self.assert_bad_request(response)
+    #     self.assert_content_type(response, 'application/json')
+    #     self.assertEqual(response.json.get('status'), 'error')
+    #     self.assertIn('appropriate thumbnail size', response.json.get('error'))
+    #
+    # def test_invalid_thumbnail_size_html(self):
+    #     """Test if a request with an invalid thumbnail size returns a 400 with
+    #     proper content type"""
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='humongous')
+    #
+    #     response = self.get(url, follow_redirects=False,
+    #                         content_type='text/html')
+    #
+    #     self.assert_bad_request(response)
+    #     self.assert_content_type(response, 'text/html; charset=utf-8')
+    #     self.assertIn('<html><body>You did not provide an appropriate '
+    #                   'thumbnail size', response.data)
 
     def test_invalid_resolve_json(self):
         """Tests if a request to resolve an invalid URL results in a
