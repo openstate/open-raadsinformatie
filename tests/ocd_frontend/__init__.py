@@ -357,7 +357,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     def test_sort_option_is_accepted(self):
         """Tests if valid use of the ``sort`` option results in a
@@ -723,7 +723,7 @@ class RestApiGetObjectTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
     def test_logging_called_if_enabled(self, mocked_log_task):
@@ -770,10 +770,10 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
                       doc_type='items', object_id=doc_id)
         response = self.get(url)
 
-        pprint(requests.get('http://localhost:9200/_cat/indices').content)
-        pprint(self.doc_ids)
-        pprint(url)
-        pprint(response)
+        # pprint(requests.get('http://localhost:9200/_cat/indices').content)
+        # pprint(self.doc_ids)
+        # pprint(url)
+        # pprint(response)
         self.assert_ok_json(response)
 
     def test_get_nonexistent_object(self):
@@ -798,7 +798,7 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
     def test_logging_called_if_enabled(self, mocked_log_task):

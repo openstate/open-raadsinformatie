@@ -682,7 +682,7 @@ def get_object_stats(source_id, object_id, doc_type=u'items'):
         search_body.append({
             'index': current_app.config['USAGE_LOGGING_INDEX'],
             'type': query[1],
-            'search_type': 'count'
+            'size': 0
         })
         search_body.append(query[2])
 
