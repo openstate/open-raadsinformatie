@@ -1005,3 +1005,25 @@ class LogEventTaskTestCase(UnittestTestCase):
         task_args = self.default_args
         task_args['event_type'] = 'unknown-test-event'
         self.assertRaises(ValueError, tasks.log_event, **task_args)
+
+
+class RestApiScrollTestCase(OcdRestTestCaseMixin, TestCase):
+    endpoint_url = 'api.search'
+    endpoint_url_args = {}
+    required_indexes = [
+        'ori_test_scroll_index'
+    ]
+
+    def test_scroll_valid_search(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        print(url)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'scroll': '1m', 'size': 1}))
+        pprint(response.json)
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
