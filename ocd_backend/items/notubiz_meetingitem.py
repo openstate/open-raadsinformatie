@@ -31,6 +31,8 @@ class MeetingItem(Meeting):
         meeting = self.original_item.get('meeting')
 
         try:
+            combined_index_data['name'] = self.original_item['attributes']['Titel']
+        except KeyError:
             combined_index_data['name'] = self.original_item['attributes']['1']
         except KeyError:
             combined_index_data['name'] = self.original_item['type_data']['title']
