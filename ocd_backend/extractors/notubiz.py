@@ -1,6 +1,7 @@
 import json
 
 from requests import HTTPError
+from copy import copy
 from dateutil.parser import parse
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.log import get_source_logger
@@ -131,6 +132,12 @@ class NotubizMeetingItemExtractor(NotubizBaseExtractor):
                 except KeyError:
                     pass
             meeting_item['attributes'] = attributes
+
+            meeting_copy = copy(meeting_json)
+            # Prevent deep nesting of agenda_items
+            del meeting_copy['agenda_items']
+            meeting_item['meeting'] = meeting_copy
+
             yield 'application/json', json.dumps(meeting_item)
 
             # Recursion for subitems if any

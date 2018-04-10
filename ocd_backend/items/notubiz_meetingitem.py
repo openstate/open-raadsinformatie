@@ -28,6 +28,8 @@ class MeetingItem(Meeting):
         combined_index_data['id'] = unicode(self.get_object_id())
         combined_index_data['hidden'] = self.source_definition['hidden']
 
+        meeting = self.original_item.get('meeting')
+
         try:
             combined_index_data['name'] = self.original_item['attributes']['1']
         except KeyError:
@@ -52,6 +54,18 @@ class MeetingItem(Meeting):
             combined_index_data['parent_id'] = self._get_meeting_id(self.original_item['meeting']['id'])
 
         #combined_index_data['location'] = self.original_item['attributes']['50']
+
+        if meeting['plannings'][0]['start_date']:
+            combined_index_data['start_date'] = iso8601.parse_date(
+                meeting['plannings'][0]['start_date']
+            )
+            combined_index_data['date_granularity'] = 8
+
+        if meeting['plannings'][0]['end_date']:
+            combined_index_data['end_date'] = iso8601.parse_date(
+                meeting['plannings'][0]['end_date']
+            )
+            combined_index_data['date_granularity'] = 8
 
         if 'agenda_items' in self.original_item:
             combined_index_data['children'] = [
