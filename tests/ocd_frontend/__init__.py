@@ -1018,12 +1018,48 @@ class RestApiScrollTestCase(OcdRestTestCaseMixin, TestCase):
         """Tests if a valid search request responds with a JSON and
         status 200 OK."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        print(url)
         current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
 
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'scroll': '1m', 'size': 1}))
-        pprint(response.json)
         self.assert_ok_json(response)
         self.assertTrue('scroll' in response.json['meta'])
         self.assertEqual(int(response.json['meta']['total']), 3)
+
+    def test_scroll_valid_search_no_scroll(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'size': 1}))
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' not in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
+
+    def test_scroll_valid_search_full(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK and check all pages."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'scroll': '1m', 'size': 1}))
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
+        self.assertEqual(len(response.json['item']), 1)
+        scroll_id = response.json['meta']['scroll']
+        while (
+            ('item' in response.json) and
+            (len(response.json['item']) > 0)
+        ):
+            response = self.post(
+                url, content_type='application/json',
+                data=json.dumps({'scroll': '1m', 'scroll_id': scroll_id}))
+            self.assert_ok_json(response)
+            self.assertTrue('scroll' in response.json['meta'])
+            self.assertEqual(int(response.json['meta']['total']), 3)
+            if 'item' in response.json:
+                self.assertEqual(len(response.json['item']), 1)
