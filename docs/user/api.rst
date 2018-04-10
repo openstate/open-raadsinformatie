@@ -731,6 +731,34 @@ Searching within a single collection
    :statuscode 400: Bad Request. An accompanying error message will explain why the request was invalid.
    :statuscode 404: The requested source does not exist.
 
+.. _rest_scroll:
+
+Searching with scroll
+---------------------
+
+
+.. http:post:: /(source_id)/search
+.. http:post:: /(source_id)/(doc_type)/search
+
+   Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than only those fields that all indexed datasets have in common. The search can be restricted to a certain `doc_type`, in the same way as the previous API call does.
+   A scroll cursor is returned so you can get all results (Due to handling in Elasticsearch general paging is limited to 10.000 items).
+   Scrolling works akin to Elasticsearch scrolling, except that the first call which a scroll parameter also returns the first page of results. Subsequent calls need only have the scroll and scroll_id parameters and will return subsequent pages.
+   The scroll id is returned in the meta dictionary returned as part of the results.
+
+   See specifications of the :ref:`search method <rest_search>` for the request and response format.
+
+   :jsonparameter query: one or more keywords.
+   :jsonparameter filters: an object with field and values to filter on (optional).
+   :jsonparameter facets: an object with fields for which to return facets (optional).
+   :jsonparameter sort: the field the search results are sorted on. By default, results are sorted by relevancy to the query.
+   :jsonparameter size: the maximum number of documents to return (optional, defaults to 10).
+   :jsonparameter scroll: the scroll window (eg. 1m).
+   :jsonparameter scroll_id: the scroll cursor which was returned in previous calls.
+   :statuscode 200: OK, no errors.
+   :statuscode 400: Bad Request. An accompanying error message will explain why the request was invalid.
+   :statuscode 404: The requested source does not exist.
+
+
 .. _rest_get:
 
 Retrieving a single object

@@ -357,7 +357,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     def test_sort_option_is_accepted(self):
         """Tests if valid use of the ``sort`` option results in a
@@ -723,7 +723,7 @@ class RestApiGetObjectTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
     def test_logging_called_if_enabled(self, mocked_log_task):
@@ -770,10 +770,10 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
                       doc_type='items', object_id=doc_id)
         response = self.get(url)
 
-        pprint(requests.get('http://localhost:9200/_cat/indices').content)
-        pprint(self.doc_ids)
-        pprint(url)
-        pprint(response)
+        # pprint(requests.get('http://localhost:9200/_cat/indices').content)
+        # pprint(self.doc_ids)
+        # pprint(url)
+        # pprint(response)
         self.assert_ok_json(response)
 
     def test_get_nonexistent_object(self):
@@ -798,7 +798,7 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
 
         self.assert_not_found_request_json(response)
         self.assertEqual(response.json['error'],
-                         'Source \'%s\' does not exist' % source_id)
+                         'Document not found.')
 
     @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
     def test_logging_called_if_enabled(self, mocked_log_task):
@@ -899,47 +899,47 @@ class RestApiResolveTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertIn('location', response.headers)
         self.assertTrue(response.headers['location'].startswith('http://'))
 
-    def test_successful_thumbnail_resolve(self):
-        """Test if a valid URL resolves and returns a redirect to a thumbnailed
-        image.
-        """
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='large')
-
-        response = self.get(url, follow_redirects=False)
-
-        self.assert_status_code(response, 302)
-        self.assert_content_type(response, 'text/html; charset=utf-8')
-        self.assertIn('location', response.headers)
-        self.assertIn('large', response.headers['location'])
-        self.assertIn(self.app.config.get('THUMBNAIL_URL'), response.headers['location'])
-
-    def test_invalid_thumbnail_size_json(self):
-        """Test if a request with an invalid thumbnail size returns a 400 with
-        proper content type"""
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='humongous')
-
-        response = self.get(url, follow_redirects=False)
-
-        self.assert_bad_request(response)
-        self.assert_content_type(response, 'application/json')
-        self.assertEqual(response.json.get('status'), 'error')
-        self.assertIn('appropriate thumbnail size', response.json.get('error'))
-
-    def test_invalid_thumbnail_size_html(self):
-        """Test if a request with an invalid thumbnail size returns a 400 with
-        proper content type"""
-        doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
-        url = url_for('api.resolve', url_id=doc_id, size='humongous')
-
-        response = self.get(url, follow_redirects=False,
-                            content_type='text/html')
-
-        self.assert_bad_request(response)
-        self.assert_content_type(response, 'text/html; charset=utf-8')
-        self.assertIn('<html><body>You did not provide an appropriate '
-                      'thumbnail size', response.data)
+    # def test_successful_thumbnail_resolve(self):
+    #     """Test if a valid URL resolves and returns a redirect to a thumbnailed
+    #     image.
+    #     """
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='large')
+    #
+    #     response = self.get(url, follow_redirects=False)
+    #
+    #     self.assert_status_code(response, 302)
+    #     self.assert_content_type(response, 'text/html; charset=utf-8')
+    #     self.assertIn('location', response.headers)
+    #     self.assertIn('large', response.headers['location'])
+    #     self.assertIn(self.app.config.get('THUMBNAIL_URL'), response.headers['location'])
+    #
+    # def test_invalid_thumbnail_size_json(self):
+    #     """Test if a request with an invalid thumbnail size returns a 400 with
+    #     proper content type"""
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='humongous')
+    #
+    #     response = self.get(url, follow_redirects=False)
+    #
+    #     self.assert_bad_request(response)
+    #     self.assert_content_type(response, 'application/json')
+    #     self.assertEqual(response.json.get('status'), 'error')
+    #     self.assertIn('appropriate thumbnail size', response.json.get('error'))
+    #
+    # def test_invalid_thumbnail_size_html(self):
+    #     """Test if a request with an invalid thumbnail size returns a 400 with
+    #     proper content type"""
+    #     doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
+    #     url = url_for('api.resolve', url_id=doc_id, size='humongous')
+    #
+    #     response = self.get(url, follow_redirects=False,
+    #                         content_type='text/html')
+    #
+    #     self.assert_bad_request(response)
+    #     self.assert_content_type(response, 'text/html; charset=utf-8')
+    #     self.assertIn('<html><body>You did not provide an appropriate '
+    #                   'thumbnail size', response.data)
 
     def test_invalid_resolve_json(self):
         """Tests if a request to resolve an invalid URL results in a
@@ -1005,3 +1005,61 @@ class LogEventTaskTestCase(UnittestTestCase):
         task_args = self.default_args
         task_args['event_type'] = 'unknown-test-event'
         self.assertRaises(ValueError, tasks.log_event, **task_args)
+
+
+class RestApiScrollTestCase(OcdRestTestCaseMixin, TestCase):
+    endpoint_url = 'api.search'
+    endpoint_url_args = {}
+    required_indexes = [
+        'ori_test_scroll_index'
+    ]
+
+    def test_scroll_valid_search(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'scroll': '1m', 'size': 1}))
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
+
+    def test_scroll_valid_search_no_scroll(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'size': 1}))
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' not in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
+
+    def test_scroll_valid_search_full(self):
+        """Tests if a valid search request responds with a JSON and
+        status 200 OK and check all pages."""
+        url = url_for(self.endpoint_url, **self.endpoint_url_args)
+        current_app.config['COMBINED_INDEX'] = 'ori_test_scroll_index'
+
+        response = self.post(url, content_type='application/json',
+                             data=json.dumps({'scroll': '1m', 'size': 1}))
+        self.assert_ok_json(response)
+        self.assertTrue('scroll' in response.json['meta'])
+        self.assertEqual(int(response.json['meta']['total']), 3)
+        self.assertEqual(len(response.json['item']), 1)
+        scroll_id = response.json['meta']['scroll']
+        while (
+            ('item' in response.json) and
+            (len(response.json['item']) > 0)
+        ):
+            response = self.post(
+                url, content_type='application/json',
+                data=json.dumps({'scroll': '1m', 'scroll_id': scroll_id}))
+            self.assert_ok_json(response)
+            self.assertTrue('scroll' in response.json['meta'])
+            self.assertEqual(int(response.json['meta']['total']), 3)
+            if 'item' in response.json:
+                self.assertEqual(len(response.json['item']), 1)
