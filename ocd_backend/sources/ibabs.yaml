@@ -510,3 +510,8 @@ ibabs:
     key: nijkerk
     almanak_id: 31196
     <<: *ibabs
+
+  steenwijkerland:
+    key: steenwijkerland
+    almanak_id: 24145
+    <<: *ibabs
