@@ -129,7 +129,6 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         parties = self._get_council_parties()
 
         combined_index_data['doc'] = {
-            "result": self._get_result(),
             "group_results": self._get_group_results(parties),
             "counts": self._get_counts(council, parties, members),
             "votes": self._get_votes(council, parties, members)
