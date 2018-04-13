@@ -108,6 +108,7 @@ class EventItem(PopoloBaseItem):
         'description': unicode,
         'start_date': datetime,
         'end_date': datetime,
+        'date_granularity': int,
         'status': unicode,
         'location': unicode,
         'identifiers': list,
