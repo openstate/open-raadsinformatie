@@ -70,6 +70,9 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
+            if not item['order']:
+                continue
+
             agendaitem = AgendaItem(
                 'notubiz_identifier',
                 item['id'],
