@@ -24,8 +24,7 @@ class MeetingItem(Meeting):
 
     def get_object_model(self):
         agenda_item = AgendaItem('notubiz_identifier', self.original_item['id'])
-        agenda_item.name = self.original_item['attributes']['Titel']
-        agenda_item.position = self.original_item['order']
+
         try:
             parent = self.original_item['parent']['id']
         except TypeError:
@@ -48,6 +47,14 @@ class MeetingItem(Meeting):
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             agenda_item.attachment.append(attachment)
+
+        # If it's a 'label' type some attributes do not exist
+        if self.original_item['type'] == 'label':
+            agenda_item.name = self.original_item['type_data']['title']
+            return agenda_item
+
+        agenda_item.name = self.original_item['attributes']['Titel']
+        agenda_item.position = self.original_item['order']
 
         return agenda_item
 
