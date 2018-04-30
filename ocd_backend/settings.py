@@ -104,7 +104,7 @@ COMBINED_INDEX = 'ori_combined_index'
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
-RESOLVER_BASE_URL = 'http://localhost:5000/v0/resolve'
+RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'http://10.0.1.48:5000/v1/resolve')
 RESOLVER_URL_INDEX = 'ori_resolver'
 
 # The User-Agent that is used when retrieving data from external sources
@@ -114,7 +114,7 @@ USER_AGENT = 'Open Raadsinformatie/0.1 (+http://www.openraadsinformatie.nl/)'
 # Should include API version and a trailing slash.
 # Can be overridden in the CLI when required, for instance when the user wants
 # to download dumps from another API instance than the one hosted by OpenState
-API_URL = 'http://frontend:5000/v0/'
+API_URL = os.getenv('API_URL', 'http://frontend:5000/v1/')
 
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'

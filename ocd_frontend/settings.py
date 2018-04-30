@@ -403,7 +403,7 @@ DATA_DIR_PATH = os.path.dirname(ROOT_PATH)
 # Should include API version and a trailing slash.
 # Can be overridden in the CLI when required, for instance when the user wants
 # to download dumps from another API instance than the one hosted by OpenState
-API_URL = 'http://frontend:5000/v0/'
+API_URL = os.getenv('API_URL', 'http://frontend:5000/v1/')
 
 # URL where collection dumps are hosted. This is used for generating full URLs
 # to dumps in the /dumps endpoint

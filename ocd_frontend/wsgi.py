@@ -7,7 +7,7 @@ sys.path.insert(0, '/opt/ori')
 from ocd_frontend import rest
 
 application = DispatcherMiddleware(rest.create_app(), {
-    '/v0': rest.create_app()
+    '/v1': rest.create_app()
 })
 
 # For testing purposes, add a route that serves static files from a directory.
