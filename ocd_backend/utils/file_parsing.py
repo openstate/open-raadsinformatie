@@ -22,14 +22,16 @@ def file_parser(fname, pages=None):
 
             print "Processed %i pages (%i max)" % (i, pages)
             return '\n'.join(text_array)
-        except Exception as e:
-            print "PDF Parser Exception: ", e
+        except:
+            # reraise everything
+            raise
     else:
         try:
             content = parser.from_file(fname)['content']
             return (content or '').encode('UTF-8')
-        except Exception as e:
-            print "File Parser Exception: ", e
+        except:
+            # reraise everything
+            raise
 
 
 class FileToTextMixin(object):
