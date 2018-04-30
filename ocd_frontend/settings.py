@@ -3,11 +3,13 @@ import os.path
 DEBUG = True
 
 # Celery settings
-CELERY_BROKER_URL = 'redis://redis:6379/1'
+REDIS_HOST = os.getenv('REDIS_HOST', "redis")
+REDIS_PORT = os.getenv('REDIS_PORT', "6379")
+CELERY_BROKER_URL = 'redis://%s:%s/1' % (REDIS_HOST, REDIS_PORT)
 
 # Elasticsearch
-ELASTICSEARCH_HOST = 'elasticsearch'
-ELASTICSEARCH_PORT = 9200
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
+ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 # The default number of hits to return for a search request via the REST API
 DEFAULT_SEARCH_SIZE = 10

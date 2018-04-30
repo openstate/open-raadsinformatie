@@ -7,15 +7,20 @@ register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
 
-REDIS_HOST = "redis"
-REDIS_PORT = "6379"
+BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
+
+RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
+
+REDIS_HOST = os.getenv('REDIS_HOST', "redis")
+REDIS_PORT = os.getenv('REDIS_PORT', "6379")
+REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 
 CELERY_CONFIG = {
-    'BROKER_URL': 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT),
+    'BROKER_URL': REDIS_URL,
     'CELERY_ACCEPT_CONTENT': ['ocd_serializer'],
     'CELERY_TASK_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
-    'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+redis://redis:6379/0',
+    'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+%s' % REDIS_URL,
     'CELERY_IGNORE_RESULT': False,
     'CELERY_MESSAGE_COMPRESSION': 'gzip',
     'CELERYD_HIJACK_ROOT_LOGGER': False,
@@ -65,7 +70,17 @@ LOGGING = {
             'handlers': ['console', 'log'],
             'level': 'DEBUG',
             'propagate': False,
-        }
+        },
+        'neo4j.bolt': {
+            'handlers': [],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'httpstream': {
+            'handlers': [],
+            'level': 'WARNING',
+            'propagate': False,
+        },
     }
 }
 
@@ -81,10 +96,10 @@ if os.path.exists('/var/log/backend.err'):
     LOGGING['loggers']['celery']['handlers'] = ['console', 'log', 'docker']
 
 
-ELASTICSEARCH_HOST = 'elasticsearch'
-ELASTICSEARCH_PORT = 9200
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
+ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
-NEO4J_URL = "http://neo4j:abc@localhost:7474/db/data/"
+NEO4J_URL = os.getenv('NEO4J_URL', "http://neo4j:abc@localhost:7474/db/data/")
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_PATH = os.path.dirname(ROOT_PATH)
