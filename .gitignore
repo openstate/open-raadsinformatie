@@ -64,6 +64,7 @@ ocd_frontend/.thumbnail-cache/*
 log/*log*
 log/*err*
 log/*.pid
+es-licence.json
 
 # Do NOT commit your secrets!
 ocd_backend/secrets.py

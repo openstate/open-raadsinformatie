@@ -166,8 +166,6 @@ def parse_search_request(data, doc_type, mlt=False):
 
             filters.append(r_filter)
 
-    filters.append({"term": {"hidden": "false"}})
-
     return {
         'query': query,
         'n_size': n_size,
