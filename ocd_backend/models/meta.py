@@ -8,6 +8,7 @@ class Metadata(owl.Thing):
     status = StringProperty(META, 'status')
     processing_started = DateTimeProperty(META, 'processingStarted')
     source_id = StringProperty(META, 'sourceId')
+    collection = StringProperty(META, 'collection')
     rights = StringProperty(META, 'rights')
 
     class Meta:

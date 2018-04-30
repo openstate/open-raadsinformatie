@@ -1,6 +1,6 @@
 import owl
-from .namespaces import SCHEMA, OPENGOV
-from owltology.property import StringProperty, DateTimeProperty, ArrayProperty, Relation
+from .namespaces import SCHEMA, OPENGOV, COUNCIL
+from owltology.property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
 
 
 class AudioObject(owl.Thing):
@@ -32,13 +32,13 @@ class Event(owl.Thing):
 
 class EventStatusType(owl.Thing):
     # Instances
-    EventCancelled = 'schema:EventCancelled'
-    EventPostponed = 'schema:EventPostponed'
-    EventRescheduled = 'schema:EventRescheduled'
-    EventScheduled = 'schema:EventScheduled'
-    EventCompleted = 'council:EventCompleted'
-    EventConfirmed = 'council:EventConfirmed'
-    EventInactive = 'council:EventInactive'
+    EventCancelled = Instance(SCHEMA, 'EventCancelled')
+    EventPostponed = Instance(SCHEMA, 'EventPostponed')
+    EventRescheduled = Instance(SCHEMA, 'EventRescheduled')
+    EventScheduled = Instance(SCHEMA, 'EventScheduled')
+    EventCompleted = Instance(COUNCIL, 'EventCompleted')
+    EventConfirmed = Instance(COUNCIL, 'EventConfirmed')
+    EventInactive = Instance(COUNCIL, 'EventInactive')
 
     class Meta:
         namespace = SCHEMA

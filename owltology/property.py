@@ -25,19 +25,6 @@ class PropertyBase(object):
     def __repr__(self):
         return '<%s %s>' % (self.get_prefix_uri(), self.__class__.__name__)
 
-# class Id(PropertyBase):
-#     def __init__(self):
-#         self.name = '@id'
-#         super(Id, self).__init__()
-#
-#
-# class Type(PropertyBase):
-#     def __init__(self, ns):
-#         if not isinstance(ns, Namespace):
-#             raise Exception("Not a valid Namespace")
-#         self.ns = ns
-#         super(Type, self).__init__()
-
 
 class Namespace(object):
     def __init__(self, namespace, prefix):
@@ -53,7 +40,9 @@ class Property(PropertyBase):
 
 
 class Instance(Property):
-    pass
+
+    def serialize(self, value):
+        return value.get_prefix_uri()
 
 
 class StringProperty(Property):

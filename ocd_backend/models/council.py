@@ -1,6 +1,6 @@
 import owl, schema, opengov, govid
 from .namespaces import OPENGOV, SCHEMA, COUNCIL
-from owltology.property import StringProperty, IntegerProperty, Relation
+from owltology.property import StringProperty, IntegerProperty, Relation, Instance
 
 
 class Attachment(owl.Thing):
@@ -65,14 +65,14 @@ class Result(owl.Thing):
     vote_event = Relation(OPENGOV, 'voteEvent')
 
     # Instances
-    ResultFail = 'opengov:ResultFail'
-    ResultPass = 'opengov:ResultPass'
-    ResultKept = 'council:ResultKept'
-    ResultPostponed = 'council:ResultPostponed'
-    ResultWithdrawn = 'council:ResultWithdrawn'
-    ResultExpired = 'council:ResultExpired'
-    ResultDiscussed = 'council:ResultDiscussed'
-    ResultPublished = 'council:ResultPublished'
+    ResultFail = Instance(OPENGOV, 'ResultFail')
+    ResultPass = Instance(OPENGOV, 'ResultPass')
+    ResultKept = Instance(COUNCIL, 'ResultKept')
+    ResultPostponed = Instance(COUNCIL, 'ResultPostponed')
+    ResultWithdrawn = Instance(COUNCIL, 'ResultWithdrawn')
+    ResultExpired = Instance(COUNCIL, 'ResultExpired')
+    ResultDiscussed = Instance(COUNCIL, 'ResultDiscussed')
+    ResultPublished = Instance(COUNCIL, 'ResultPublished')
 
     class Meta:
         namespace = COUNCIL
@@ -80,12 +80,12 @@ class Result(owl.Thing):
 
 class VoteOption(owl.Thing):
     # Instances
-    VoteOptionYes = 'council:VoteOptionYes'
-    VoteOptionNo = 'council:VoteOptionNo'
-    VoteOptionAbstain = 'council:VoteOptionAbstain'
-    VoteOptionAbsent = 'council:VoteOptionAbsent'
-    VoteOptionNotVoting = 'council:VoteOptionNotVoting'
-    VoteOptionPaired = 'council:VoteOptionPaired'
+    VoteOptionYes = Instance(COUNCIL, 'VoteOptionYes')
+    VoteOptionNo = Instance(COUNCIL, 'VoteOptionNo')
+    VoteOptionAbstain = Instance(COUNCIL, 'VoteOptionAbstain')
+    VoteOptionAbsent = Instance(COUNCIL, 'VoteOptionAbsent')
+    VoteOptionNotVoting = Instance(COUNCIL, 'VoteOptionNotVoting')
+    VoteOptionPaired = Instance(COUNCIL, 'VoteOptionPaired')
 
     class Meta:
         namespace = COUNCIL

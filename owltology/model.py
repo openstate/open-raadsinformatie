@@ -9,7 +9,6 @@ from ocd_backend.utils.misc import iterate
 from json import JSONEncoder
 import datetime
 import property
-from owltology.property import Property, Relation
 from owltology.exceptions import RequiredProperty
 
 graph = None
@@ -28,7 +27,8 @@ class ModelBaseMetaclass(type):
         for key, value in list(attrs.items()):
             if isinstance(value, property.PropertyBase):
                 definitions[key] = value
-                attrs.pop(key)
+                if not isinstance(value, property.Instance):
+                    attrs.pop(key)
         attrs['__definitions__'] = definitions
 
         # attr = getattr(self, key)
@@ -44,10 +44,12 @@ class ModelBaseMetaclass(type):
             if hasattr(base, '__definitions__'):
                 definitions.update(base.__definitions__)
 
-            # Field shadowing.
+            # Meta field shadowing.
             for attr, value in base.__dict__.items():
-                if value is None and attr in definitions:
-                    definitions.pop(attr)
+                if attr == 'Meta':
+                    for key, val in value.__dict__.items():
+                        if key[0:2] != '__' and key not in new_class.Meta.__dict__:
+                            setattr(new_class.Meta, key, val)
 
         new_class.__definitions__ = definitions
 
@@ -102,8 +104,8 @@ class ModelBase(object):
     def definitions(self, props=True, rels=True):
         props_list = list()
         for name, definition in self.__definitions__.items():
-            if (props and isinstance(definition, Property) or
-                    (rels and isinstance(definition, Relation))):
+            if (props and isinstance(definition, property.Property) or
+                    (rels and isinstance(definition, property.Relation))):
                 props_list.append((name, definition,))
         return props_list
 
@@ -127,7 +129,7 @@ class ModelBase(object):
         return props_list
 
     def __setattr__(self, key, value):
-        if key[0:2] != '__' and not hasattr(self, '__temporary__') and key not in self.__definitions__:
+        if key[0:2] != '__' and key not in self.__definitions__ and (hasattr(self, '__temporary__') and not self.__temporary__):
             raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
 
         super(ModelBase, self).__setattr__(key, value)
@@ -155,9 +157,12 @@ class ModelBase(object):
             pass
         return False
 
+    def __repr__(self):
+        return '<%s Model>' % self.get_prefix_uri()
+
     def save(self):
         self.replace()
-        for key, prop in self.properties(props=False):
+        for key, prop in self.properties(rels=True, props=False):
             self.attach(key, prop)
         return self
 

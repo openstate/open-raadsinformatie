@@ -1,17 +1,17 @@
 import owl, schema, govid
 from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
-from owltology.property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
+from owltology.property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Instance
 
 
 class Event(schema.Event):
     agenda = Relation(COUNCIL, 'agenda')
     attachment = Relation(COUNCIL, 'attachment')
-    classification = ArrayProperty(NCAL, 'categories')
+    classification = StringProperty(NCAL, 'categories')  # todo fix with popolo
     motion = Relation(OPENGOV, 'motion')
     attendee = Relation(SCHEMA, 'attendee')
     audio = Relation(SCHEMA, 'audio')
     description = StringProperty(SCHEMA, 'description')
-    status = Relation(SCHEMA, 'eventStatus')
+    status = Instance(SCHEMA, 'eventStatus')
     location = StringProperty(SCHEMA, 'location')
     name = StringProperty(SCHEMA, 'name', required=True)
     organization = Relation(SCHEMA, 'organizer')
