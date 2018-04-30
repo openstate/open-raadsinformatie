@@ -7,6 +7,8 @@ register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
 
+VERSION = os.getenv('VERSION', None)
+
 BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
 RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
