@@ -223,16 +223,3 @@ class ModelBase(object):
                 '@type': '@id',
             }
         return {'@context': context}
-
-
-class ModelJSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, datetime.datetime) or isinstance(o, datetime.date):
-            return o.isoformat()
-        elif isinstance(o, datetime.timedelta):
-            return (datetime.datetime.min + o).time().isoformat()
-        elif isinstance(o, ModelBase):
-            #return o.__json__()
-            return o.encode()
-        # Let the base class default method raise the TypeError
-        return JSONEncoder.default(self, o)
