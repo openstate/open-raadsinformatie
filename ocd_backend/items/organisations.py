@@ -1,10 +1,9 @@
-from datetime import datetime
-
-from ocd_backend.items.popolo import OrganisationItem
+from ocd_backend.items import BaseItem
+from ocd_backend.models import Organization
 from ocd_backend.utils.misc import slugify
 
 
-class MunicipalityOrganisationItem(OrganisationItem):
+class MunicipalityOrganisationItem(BaseItem):
     def get_original_object_id(self):
         return unicode(self.original_item['Key']).strip()
 
@@ -18,25 +17,10 @@ class MunicipalityOrganisationItem(OrganisationItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        object_model = {}
-
-        object_model['id'] = unicode(self.get_object_id())
-
-        object_model['hidden'] = self.source_definition['hidden']
-        object_model['name'] = unicode(self.original_item['Title'])
-        object_model['identifiers'] = [
-            {
-                'identifier': self.original_item['Key'].strip(),
-                'scheme': u'CBS'
-            },
-            {
-                'identifier': self.get_object_id(),
-                'scheme': u'ORI'
-            }
-        ]
-        object_model['classification'] = u'Municipality'
-        object_model['description'] = self.original_item['Description']
-
+        object_model = Organization('cbs_identifier', self.original_item['Key'].strip())
+        object_model.name = unicode(self.original_item['Title'])
+        object_model.classification = u'Municipality'
+        object_model.description = self.original_item['Description']
         return object_model
 
     def get_index_data(self):
@@ -48,7 +32,7 @@ class MunicipalityOrganisationItem(OrganisationItem):
         return u' '.join(text_items)
 
 
-class AlmanakOrganisationItem(OrganisationItem):
+class AlmanakOrganisationItem(BaseItem):
     def get_object_id(self):
         return slugify(unicode(self.original_item['name']).strip())
 
@@ -65,22 +49,9 @@ class AlmanakOrganisationItem(OrganisationItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        object_model = {}
-
-        object_model['id'] = unicode(self.get_object_id())
-
-        object_model['hidden'] = self.source_definition['hidden']
-        object_model['name'] = unicode(self.original_item['name'])
-        object_model['identifiers'] = [
-            {
-                'identifier': self.get_object_id(),
-                'scheme': u'ORI'
-            }
-        ]
-        object_model['classification'] = self.original_item[
-            'classification']
-        object_model['description'] = self.original_item['name']
-
+        object_model = Organization('name', self.original_item['name'])
+        #object_model.name = self.original_item['name']
+        object_model.description = self.original_item['name']
         return object_model
 
     def get_index_data(self):

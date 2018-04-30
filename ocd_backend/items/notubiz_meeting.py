@@ -1,6 +1,6 @@
 from hashlib import sha1
 
-from ocd_backend.items.popolo import EventItem
+from ocd_backend.items import BaseItem
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
@@ -12,7 +12,7 @@ def get_meeting_id(item_id):
     return unicode(sha1(hash_content.decode('utf8')).hexdigest())
 
 
-class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
     @staticmethod
     def _get_meetingitem_id(item_id):
@@ -56,11 +56,11 @@ class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
     def get_object_model(self):
         event = Event('notubiz_identifier', self.original_item['id'])
-        event.startDate = self.original_item['plannings'][0]['start_date']
-        event.endDate = self.original_item['plannings'][0]['end_date']
-        event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.startDate)
+        event.start_date = self.original_item['plannings'][0]['start_date']
+        event.end_date = self.original_item['plannings'][0]['end_date']
+        event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.start_date)
         # event.description =
-        event.classification = u'Agenda'
+        event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
         event.organization = Organization(
             'notubiz_identifier',
