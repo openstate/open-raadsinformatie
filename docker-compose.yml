@@ -6,8 +6,6 @@ services:
       - redis:redis
       - elastic_endpoint:elasticsearch
       - frontend:frontend
-    ports:
-      - "81:5555"
     volumes:
       - oridata:/opt/ori/data
     depends_on:
@@ -19,7 +17,7 @@ services:
   frontend:
     image: openstatefoundation/open-raadsinformatie-frontend
     volumes:
-      - ./dumps/static:/opt/ori/static:ro
+      - ./data/static:/opt/ori/static:ro
     links:
       - elastic_endpoint:elasticsearch
     depends_on:
@@ -38,8 +36,6 @@ services:
     container_name: ori_elastic_endpoint
     extends:
       service: elastic
-    ports:
-      - "9200:9200"
     environment:
       - http.host=0.0.0.0
       - node.master=true

@@ -1,9 +1,18 @@
 version: "2.1"
 services:
   backend:
+    ports:
+      - "81:5555"
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
   frontend:
     volumes:
       - ./ocd_frontend:/opt/ori/ocd_frontend
+  elastic_endpoint:
+    ports:
+      - "9200:9200"
+  neo4j:
+    ports:
+      - "7474:7474"
+      - "7687:7687"
