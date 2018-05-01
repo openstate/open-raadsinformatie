@@ -14,7 +14,7 @@ from ocd_backend.enrichers.media_enricher.tasks.ggm import \
 from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import TEMP_DIR_PATH, USER_AGENT, RESOLVER_BASE_URL
-from ocd_backend.utils.misc import get_secret
+from ocd_backend.utils.misc import get_secret, get_sha1_hash
 
 log = get_source_logger('enricher')
 
@@ -156,7 +156,7 @@ class MediaEnricher(BaseEnricher):
             partial_fetch
         )
 
-        item.url = '%s/%s' % (RESOLVER_BASE_URL, item.get_object_hash(item.original_url))
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, get_sha1_hash(item.original_url))
         item.content_type = content_type
         item.size_in_bytes = content_length
 
@@ -171,7 +171,7 @@ class MediaEnricher(BaseEnricher):
                 self.available_tasks[task](item, content_type, media_file)
             except UnsupportedContentType:
                 log.info('Skipping media enrichment task %s, '
-                          'content-type %s (ob1ject_id: %s, url %s) is not '
+                          'content-type %s (object_id: %s, url %s) is not '
                           'supported.' % (task, content_type, item.get_ori_id(),
                                           item.original_url))
                 continue

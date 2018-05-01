@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
 from ocd_backend.utils import json_encoder
-from ocd_backend.utils.misc import iterate, get_url_hash
+from ocd_backend.utils.misc import iterate, get_sha1_hash
 
 log = get_source_logger('loader')
 
@@ -89,6 +89,7 @@ class ElasticsearchLoader(BaseLoader):
                 continue
 
             url_doc = {
+                'ori_identifier': value.get_ori_id(),
                 'original_url': value.original_url,
                 'content_type': value.content_type,
                 'file_name': value.name,
@@ -96,7 +97,7 @@ class ElasticsearchLoader(BaseLoader):
 
             # Update if already exists
             elasticsearch.index(index=settings.RESOLVER_URL_INDEX, doc_type='url',
-                                id=get_url_hash(value.original_url), body=url_doc)
+                                id=get_sha1_hash(value.original_url), body=url_doc)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):

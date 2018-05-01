@@ -3,7 +3,6 @@ import glob
 import json
 import re
 import translitcodec  # needs to be imported here
-from hashlib import sha1
 from lxml import etree
 from string import Formatter
 from hashlib import sha1
@@ -379,5 +378,5 @@ def iterate(item, parent=None):
         yield parent, item,
 
 
-def get_url_hash(url):
+def get_sha1_hash(url):
     return sha1(url).hexdigest()
