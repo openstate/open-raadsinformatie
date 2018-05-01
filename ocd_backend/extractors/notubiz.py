@@ -92,10 +92,10 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                         meeting_json = resp.json()['meeting']
                     except (HTTPError, KeyError), e:
                         log.warn('%s: %s' % (e, resp.request.url))
-                        break
+                        continue
                     except (ValueError, KeyError), e:
                         log.error('%s: %s' % (e, resp.request.url))
-                        break
+                        continue
 
                     self.organization = organizations[self.source_definition['organisation_id']]
 
