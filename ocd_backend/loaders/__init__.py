@@ -82,7 +82,8 @@ class ElasticsearchLoader(BaseLoader):
             try:
                 if not value.Meta.enricher_task or \
                         not hasattr(value, 'original_url') or \
-                        not hasattr(value, 'content_type'):
+                        not hasattr(value, 'content_type') or \
+                        not hasattr(value, 'name'):
                     continue
             except AttributeError:
                 continue
@@ -90,6 +91,7 @@ class ElasticsearchLoader(BaseLoader):
             url_doc = {
                 'original_url': value.original_url,
                 'content_type': value.content_type,
+                'file_name': value.name,
             }
 
             # Update if already exists

@@ -806,8 +806,11 @@ def resolve(url_id):
                     event_type='resolve_filepath',
                     url_id=url_id,
                 )
-            return send_file(path,
-                             mimetype=resp['_source'].get('content_type'))
+            return send_file(
+                path,
+                mimetype=resp['_source'].get('content_type'),
+                attachment_filename=resp['_source'].get('file_name', file_hash),
+            )
 
         # Log a 'resolve' event if usage logging is enabled
         if current_app.config['USAGE_LOGGING_ENABLED']:
