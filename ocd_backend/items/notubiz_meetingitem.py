@@ -26,19 +26,15 @@ class MeetingItem(Meeting):
         agenda_item = AgendaItem('notubiz_identifier', self.original_item['id'])
 
         try:
-            parent = self.original_item['parent']['id']
+            parent_id = self.original_item['parent']['id']
         except TypeError:
-            parent = self.original_item['meeting']['id']
-        agenda_item.parent = Event('notubiz_identifier', parent, temporary=True)
+            parent_id = self.original_item['meeting']['id']
+        agenda_item.parent = Event.get_or_create(notubiz_identifier=parent_id)
 
         agenda_item.agenda = []
         for item in self.original_item.get('agenda_items', []):
-            agendaitem = AgendaItem(
-                'notubiz_identifier',
-                item['id'],
-                rel_params={'rdf': '_%i' % item['order']},
-                temporary=True
-            )
+            agendaitem = AgendaItem.get_or_create(notubiz_identifier=item['id'])
+            agenda_item.__rel_params__ = {'rdf': '_%i' % item['order']}
             agenda_item.agenda.append(agendaitem)
 
         agenda_item.attachment = []

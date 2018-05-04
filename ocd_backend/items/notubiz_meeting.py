@@ -62,38 +62,30 @@ class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         # event.description =
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
-        event.organization = Organization(
-            'notubiz_identifier',
-            self.original_item['organisation']['id'],
-            temporary=True,
-        )
+
+        event.organization = Organization.get_or_create(name=self.source_definition['municipality'])
+        event.organization.notubiz_identifier = self.original_item['organisation']['id']
+
+        event.committee = Organization.get_or_create(notubiz_identifier=self.original_item['gremium']['id'])
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
             if not item['order']:
                 continue
 
-            agendaitem = AgendaItem(
-                'notubiz_identifier',
-                item['id'],
-                rel_params={'rdf': '_%i' % item['order']},
-                temporary=True,
-            )
-            agendaitem.description = self.original_item['attributes'].get('Omschrijving') or \
-                                     self.original_item['attributes'].get('Tekst')
-
+            agendaitem = AgendaItem.get_or_create(notubiz_identifier=item['id'])
+            agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             event.agenda.append(agendaitem)
-
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
         if self.original_item['canceled']:
-            event.status = EventStatusType.EventCancelled
+            event.status = schema.EventCancelled
         elif self.original_item['inactive']:
-            event.status = EventStatusType.EventInactive
+            event.status = schema.EventInactive
         else:
-            event.status = EventStatusType.EventConfirmed
+            event.status = schema.EventConfirmed
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):

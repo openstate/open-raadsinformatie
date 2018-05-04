@@ -46,7 +46,9 @@ class Instance(Property):
 
 
 class StringProperty(Property):
-    pass
+
+    def serialize(self, value):
+        return unicode(value).strip()
 
 
 class IntegerProperty(Property):
@@ -76,9 +78,7 @@ class DateTimeProperty(Property):
 
 
 class ArrayProperty(Property):
-
-    def serialize(self, value):
-        return value.deflate(namespaces=True, props=True, rels=True)
+    pass
 
 
 class Relation(PropertyBase):
@@ -86,7 +86,10 @@ class Relation(PropertyBase):
     def serialize(self, value):
         props = list()
         for _, item in iterate(value):
-            props.append(item.get_ori_id())
+            if not item.__temporary__:
+                props.append(item.deflate(namespaces=True, props=True, rels=True))
+            else:
+                props.append(item.get_ori_id())
 
         if len(props) == 1:
             return props[0]

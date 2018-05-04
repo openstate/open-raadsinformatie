@@ -64,28 +64,24 @@ class Result(owl.Thing):
     text = StringProperty(SCHEMA, 'text')
     vote_event = Relation(OPENGOV, 'voteEvent')
 
-    # Instances
-    ResultFail = Instance(OPENGOV, 'ResultFail')
-    ResultPass = Instance(OPENGOV, 'ResultPass')
-    ResultKept = Instance(COUNCIL, 'ResultKept')
-    ResultPostponed = Instance(COUNCIL, 'ResultPostponed')
-    ResultWithdrawn = Instance(COUNCIL, 'ResultWithdrawn')
-    ResultExpired = Instance(COUNCIL, 'ResultExpired')
-    ResultDiscussed = Instance(COUNCIL, 'ResultDiscussed')
-    ResultPublished = Instance(COUNCIL, 'ResultPublished')
-
     class Meta:
         namespace = COUNCIL
 
 
-class VoteOption(owl.Thing):
-    # Instances
-    VoteOptionYes = Instance(COUNCIL, 'VoteOptionYes')
-    VoteOptionNo = Instance(COUNCIL, 'VoteOptionNo')
-    VoteOptionAbstain = Instance(COUNCIL, 'VoteOptionAbstain')
-    VoteOptionAbsent = Instance(COUNCIL, 'VoteOptionAbsent')
-    VoteOptionNotVoting = Instance(COUNCIL, 'VoteOptionNotVoting')
-    VoteOptionPaired = Instance(COUNCIL, 'VoteOptionPaired')
+# Instances Result
+ResultFail = Instance(OPENGOV, 'ResultFail')
+ResultPass = Instance(OPENGOV, 'ResultPass')
+ResultKept = Instance(COUNCIL, 'ResultKept')
+ResultPostponed = Instance(COUNCIL, 'ResultPostponed')
+ResultWithdrawn = Instance(COUNCIL, 'ResultWithdrawn')
+ResultExpired = Instance(COUNCIL, 'ResultExpired')
+ResultDiscussed = Instance(COUNCIL, 'ResultDiscussed')
+ResultPublished = Instance(COUNCIL, 'ResultPublished')
 
-    class Meta:
-        namespace = COUNCIL
+# Instances VoteOption
+VoteOptionYes = Instance(COUNCIL, 'VoteOptionYes')
+VoteOptionNo = Instance(COUNCIL, 'VoteOptionNo')
+VoteOptionAbstain = Instance(COUNCIL, 'VoteOptionAbstain')
+VoteOptionAbsent = Instance(COUNCIL, 'VoteOptionAbsent')
+VoteOptionNotVoting = Instance(COUNCIL, 'VoteOptionNotVoting')
+VoteOptionPaired = Instance(COUNCIL, 'VoteOptionPaired')

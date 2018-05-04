@@ -4,3 +4,11 @@ class ValidationError(Exception):
 
 class RequiredProperty(Exception):
     pass
+
+
+class MissingProperty(Exception):
+    pass
+
+
+class QueryResultError(Exception):
+    pass

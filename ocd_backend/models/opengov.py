@@ -6,7 +6,7 @@ from owltology.property import StringProperty, IntegerProperty, DateTimeProperty
 class Event(schema.Event):
     agenda = Relation(COUNCIL, 'agenda')
     attachment = Relation(COUNCIL, 'attachment')
-    classification = StringProperty(NCAL, 'categories')  # todo fix with popolo
+    classification = ArrayProperty(NCAL, 'categories')  # todo fix with popolo
     motion = Relation(OPENGOV, 'motion')
     attendee = Relation(SCHEMA, 'attendee')
     audio = Relation(SCHEMA, 'audio')
@@ -15,6 +15,7 @@ class Event(schema.Event):
     location = StringProperty(SCHEMA, 'location')
     name = StringProperty(SCHEMA, 'name', required=True)
     organization = Relation(SCHEMA, 'organizer')
+    committee = Relation(COUNCIL, 'committee')
     parent = Relation(SCHEMA, 'superEvent')
     chair = StringProperty(COUNCIL, 'chair')
     absentee = Relation(SCHEMA, 'absentee')

@@ -3,13 +3,13 @@
 from hashlib import sha1
 import json
 import re
-from py2neo import Graph
+from py2neo import Graph, ConstraintError
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate
 from json import JSONEncoder
 import datetime
 import property
-from owltology.exceptions import RequiredProperty
+from owltology.exceptions import RequiredProperty, MissingProperty, QueryResultError
 
 graph = None
 def get_graph():
@@ -27,8 +27,7 @@ class ModelBaseMetaclass(type):
         for key, value in list(attrs.items()):
             if isinstance(value, property.PropertyBase):
                 definitions[key] = value
-                if not isinstance(value, property.Instance):
-                    attrs.pop(key)
+                attrs.pop(key)
         attrs['__definitions__'] = definitions
 
         # attr = getattr(self, key)
@@ -91,6 +90,7 @@ class ModelBase(object):
         ]
 
     def properties(self, props=True, rels=True):
+        """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate(self.__dict__):
             if name[0:2] == '__':
@@ -101,15 +101,18 @@ class ModelBase(object):
                 props_list.append((definition.get_prefix_uri(), prop,))
         return props_list
 
-    def definitions(self, props=True, rels=True):
+    @classmethod
+    def definitions(cls, props=True, rels=True):
+        """ Return properties and relations objects from model definitions """
         props_list = list()
-        for name, definition in self.__definitions__.items():
+        for name, definition in cls.__definitions__.items():
             if (props and isinstance(definition, property.Property) or
                     (rels and isinstance(definition, property.Relation))):
                 props_list.append((name, definition,))
         return props_list
 
-    def deflate(self, attr=None, namespaces=True, props=True, rels=False):
+    def deflate(self, namespaces=True, props=True, rels=False):
+        """ Returns a serialized value for each model definition """
         props_list = dict()
         for name, definition in self.definitions(props=props, rels=rels):
             namespaced = name
@@ -123,10 +126,23 @@ class ModelBase(object):
             elif not self.__temporary__ and definition.required:
                 raise RequiredProperty("Property '%s' is required for %s" %
                                        (name, self.get_prefix_uri()))
-
-            if attr and attr == name:
-                return {namespaced: value}
         return props_list
+
+    @classmethod
+    def inflate(cls, props):
+        # todo inflate needs inflate relations and models as well
+        instance = cls('ori_identifier', props[cls.__definitions__['ori_identifier'].get_prefix_uri()])
+
+        for namespaced, value in props.items():
+            ns_string, name = namespaced.split(':')
+
+            for definition_name, definition_object in cls.definitions(props=True, rels=True):
+                if name == definition_object.local_name and ns_string == definition_object.ns.prefix:
+                    setattr(instance, definition_name, value)
+                    break
+
+        instance.__temporary__ = True
+        return instance
 
     def __setattr__(self, key, value):
         if key[0:2] != '__' and key not in self.__definitions__ and (hasattr(self, '__temporary__') and not self.__temporary__):
@@ -140,7 +156,12 @@ class ModelBase(object):
 
         setattr(self, identifier_key, identifier_value)
         self.__identifier_key__ = identifier_key
-        self.ori_identifier = self.get_object_hash(identifier_value)
+
+        ori_identifier = identifier_value
+        if identifier_key != 'ori_identifier':
+            ori_identifier = self.get_object_hash(identifier_value)
+
+        self.ori_identifier = ori_identifier
 
     def __iter__(self):
         for key, value in self.__dict__.items():
@@ -160,6 +181,44 @@ class ModelBase(object):
     def __repr__(self):
         return '<%s Model>' % self.get_prefix_uri()
 
+    @classmethod
+    def get_or_create(cls, **kwargs):
+        if len(kwargs) < 1:
+            raise TypeError('get() takes exactly 1 keyword-argument')
+
+        definitions = dict(cls.definitions(props=True, rels=True))
+        params = list()
+        props = list()
+        for name, value in kwargs.items():
+            try:
+                identifier = definitions[name].get_prefix_uri()
+                props.append((name, value,))
+                params.append(
+                    '`%(key)s`: \'%(value)s\'' % {
+                        'key': identifier,
+                        'value': value,
+                    }
+                )
+            except KeyError:
+                raise MissingProperty("Cannot query '%s' since it's not defined in %s" % (name, cls.__name__))
+
+        # todo lazy returning only the id, instead everything must be inflated
+        query = 'MATCH (n {%s}) RETURN n.`govid:oriIdentifier` AS n' % ', '.join(params)
+        try:
+            result = get_graph().data(query)
+        except ConstraintError, e:
+            raise
+
+        if len(result) > 1:
+            raise QueryResultError('The number of results is greater than one!')
+
+        if len(result) < 1:
+            instance = cls(*props[0])
+            instance.__temporary__ = True
+            return instance
+
+        return cls.inflate({'govid:oriIdentifier': result[0]['n']})
+
     def save(self):
         self.replace()
         for key, prop in self.properties(rels=True, props=False):
@@ -167,10 +226,8 @@ class ModelBase(object):
         return self
 
     def replace(self):
-        identifier_key, identifier_value = self.deflate(self.__identifier_key__).items()[0]
-
         query = '''
-        MERGE (n :`%(labels)s` {`%(identifier_key)s`: $identifier_value})
+        MERGE (n :`%(labels)s` {`govid:oriIdentifier`: '%(identifier_value)s'})
         SET n = $replace_params
         WITH n
         OPTIONAL MATCH (n)-[r]->()
@@ -179,11 +236,15 @@ class ModelBase(object):
         RETURN DISTINCT n
         '''
 
-        result = get_graph().data(query % {'labels': '`:`'.join(self.labels()), 'identifier_key': identifier_key},
-                                 replace_params=self.deflate(), identifier_value=identifier_value)
+        try:
+            result = get_graph().data(query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
+                                 replace_params=self.deflate())
+        except ConstraintError, e:
+            # todo
+            raise
 
         if len(result) != 1:
-            raise Exception('The number of results is more or less than one!')
+            raise QueryResultError('The number of results is more or less than one!')
         return result[0]['n']
 
     def attach(self, rel_type, other, rel_params=None):
@@ -193,13 +254,10 @@ class ModelBase(object):
         if isinstance(rel_params, ModelBase):
             rel_params = rel_params.deflate(props=True, rels=True)
 
-        self_identifier_key, self_identifier_value = self.deflate(self.__identifier_key__).items()[0]
-        other_identifier_key, other_identifier_value = other.deflate(other.__identifier_key__).items()[0]
-
-        query = 'MATCH (n :`%(labels)s` {`%(identifier_key)s`: $self_identifier_value}) ' % \
-                {'labels': '`:`'.join(self.labels()), 'identifier_key': self_identifier_key}
-        query += 'MERGE (m {`%(identifier_key)s`: $other_identifier_value}) ' % \
-                {'labels': '`:`'.join(other.labels()), 'identifier_key': other_identifier_key}
+        query = 'MATCH (n :`%(labels)s` {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
+                {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()}
+        query += 'MERGE (m {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
+                {'labels': '`:`'.join(other.labels()), 'identifier_value': other.get_ori_id()}
         query += '''MERGE (n)-[r :`%(rel_type)s`]->(m)
         ON CREATE SET m += $create_params
         ON MATCH SET m += $create_params
@@ -208,11 +266,15 @@ class ModelBase(object):
         RETURN n
         ''' % {'rel_type': rel_type, 'labels': '`:`'.join(other.labels())}
 
-        result = get_graph().data(query,
-                                 self_identifier_value=self_identifier_value,
-                                 other_identifier_value=other_identifier_value,
-                                 create_params=create_params,
-                                 rel_params=rel_params)
+        try:
+            result = get_graph().data(
+                query,
+                create_params=create_params,
+                rel_params=rel_params
+            )
+        except ConstraintError, e:
+            raise
+
         return result
 
     def get_context(self):

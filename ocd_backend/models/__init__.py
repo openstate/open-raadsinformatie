@@ -16,7 +16,6 @@ import meta
 Event = opengov.Event
 VoteEvent = opengov.VoteEvent
 Organization = org.Organization
-EventStatusType = schema.EventStatusType
 Motion = opengov.Motion
 Amendment = council.Amendment
 Bill = council.Bill
@@ -29,7 +28,6 @@ NoCount = opengov.NoCount
 AbstainCount = opengov.AbstainCount
 AbsentCount = opengov.AbsentCount
 Vote = opengov.Vote
-VoteOption = council.VoteOption
 Person = person.Person
 Attachment = council.Attachment
 ImageObject = schema.ImageObject

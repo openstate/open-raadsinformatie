@@ -30,20 +30,6 @@ class Event(owl.Thing):
         namespace = SCHEMA
 
 
-class EventStatusType(owl.Thing):
-    # Instances
-    EventCancelled = Instance(SCHEMA, 'EventCancelled')
-    EventPostponed = Instance(SCHEMA, 'EventPostponed')
-    EventRescheduled = Instance(SCHEMA, 'EventRescheduled')
-    EventScheduled = Instance(SCHEMA, 'EventScheduled')
-    EventCompleted = Instance(COUNCIL, 'EventCompleted')
-    EventConfirmed = Instance(COUNCIL, 'EventConfirmed')
-    EventInactive = Instance(COUNCIL, 'EventInactive')
-
-    class Meta:
-        namespace = SCHEMA
-
-
 class ImageObject(owl.Thing):
     content_url = StringProperty(SCHEMA, 'contentUrl')
     is_based_on = StringProperty(SCHEMA, 'isBasedOn')
@@ -77,3 +63,13 @@ class VideoObject(owl.Thing):
 
     class Meta:
         namespace = SCHEMA
+
+
+# Instances EventStatusType
+EventCancelled = Instance(SCHEMA, 'EventCancelled')
+EventPostponed = Instance(SCHEMA, 'EventPostponed')
+EventRescheduled = Instance(SCHEMA, 'EventRescheduled')
+EventScheduled = Instance(SCHEMA, 'EventScheduled')
+EventCompleted = Instance(COUNCIL, 'EventCompleted')
+EventConfirmed = Instance(COUNCIL, 'EventConfirmed')
+EventInactive = Instance(COUNCIL, 'EventInactive')

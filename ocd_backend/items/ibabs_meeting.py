@@ -6,9 +6,6 @@ import iso8601
 
 from ocd_backend import settings
 from ocd_backend.items import BaseItem
-from ocd_backend.extractors import HttpRequestMixin
-from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.file_parsing import FileToTextMixin
 from ocd_backend.models import *
 
 
@@ -47,19 +44,20 @@ class IBabsMeetingItem(BaseItem):
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location'].strip()
-            organization = Organization('attribute', 'MeetingtypeId', temporary=True)
+            organization = Organization.get_or_create(attribute='MeetingtypeId')
             organization.value = meeting['MeetingtypeId']
             item.organization = organization
 
             if 'MeetingItems' in meeting:
                 item.agenda = list()
                 for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-                    agenda_item = AgendaItem('ibabs_identifier', mi['Id'], rel_params={'rdf': '_%i' % i}, temporary=True)
+                    agenda_item = AgendaItem.get_or_create(ibabs_identifier=mi['Id'])
+                    agenda_item.__rel_params__ = {'rdf': '_%i' % i}
                     item.agenda.append(agenda_item)
 
             item.invitee = list()
             for invitee in meeting['Invitees'] or []:
-                item.invitee.append(Person('ibabs_identifier', invitee['UniqueId'], temporary=True))
+                item.invitee.append(Person.get_or_create(ibabs_identifier=invitee['UniqueId']))
         else:
             meeting = self.original_item['Meeting']
             item = AgendaItem('ibabs_identifier', self.original_item['Id'])
@@ -69,8 +67,8 @@ class IBabsMeetingItem(BaseItem):
             )
             item.description = self.original_item['Explanation']
 
-            event = Event('ibabs_identifier', self.original_item['MeetingId'], temporary=True)
-            event.attachment = Attachment('ibabs_identifier', self.original_item['MeetingId'], temporary=True)
+            event = Event.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
+            event.attachment = Attachment.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
             item.parent = event
 
         item.start_date = iso8601.parse_date(meeting['MeetingDate'],).strftime("%s")
