@@ -102,3 +102,82 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
         text_items = []
 
         return u' '.join(text_items)
+
+
+class HTMLPersonItem(HttpRequestMixin, PersonItem):
+    def get_original_object_id(self):
+        return unicode(u''.join(
+            self.original_item.xpath('.//h2/a/@href'))).strip()
+
+    def get_original_object_urls(self):
+        return {"html": self.source_definition['file_url']}
+
+    def get_rights(self):
+        return u'undefined'
+
+    def get_collection(self):
+        return unicode(self.source_definition['index_name'])
+
+    def get_combined_index_data(self):
+        combined_index_data = {}
+
+        combined_index_data['id'] = unicode(self.get_object_id())
+
+        combined_index_data['hidden'] = self.source_definition['hidden']
+
+        combined_index_data['name'] = u''.join(
+            self.original_item.xpath('.//h2//text()')).strip()
+
+        combined_index_data['identifiers'] = [
+            {
+                'identifier': combined_index_data['id'],
+                'scheme': u'ORI'
+            }
+
+        ]
+        combined_index_data['email'] = u''.join(self.original_item.xpath(
+            '//a[starts-with(@href,"mailto:")]/@title'))
+        combined_index_data['gender'] = u'unknown'
+
+        # party = u''.join(
+        #     self.original_item.xpath('//span[@class="naw"]/text()'))
+        # party_id = parties[party]['id'] if parties.has_key(party) else None
+        # party_obj = parties[party] if parties.has_key(party) else None
+        # role = u''.join(
+        #     html.xpath('//div[@id="content"]//h3/text()')).strip()
+        # try:
+        #     council_obj = [
+        #         p for p in parties.values() if (
+        #             p['classification'] == u'Council')][0]
+        #     council_id = council_obj['id']
+        # except IndexError as e:
+        #     council_obj = None
+        #     council_id = None
+        #
+        # combined_index_data['memberships'] = [
+        #     {
+        #         'label': role,
+        #         'role': role,
+        #         'person_id': combined_index_data['id'],
+        #         'organization_id': council_id,
+        #         'organization': council_obj
+        #     }
+        # ]
+        # if party_id is not None:
+        #     combined_index_data['memberships'].append({
+        #         'label': role,
+        #         'role': role,
+        #         'person_id': combined_index_data['id'],
+        #         'organization_id': party_id,
+        #         'organization': party_obj
+        #     })
+
+        return combined_index_data
+
+    def get_index_data(self):
+        return {}
+
+    def get_all_text(self):
+        text_items = []
+
+        return u' '.join(text_items)
