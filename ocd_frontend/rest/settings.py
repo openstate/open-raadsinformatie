@@ -1,4 +1,5 @@
 import os.path
+import sys
 
 DEBUG = True
 
@@ -9,7 +10,7 @@ BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
 
 # Elasticsearch
-ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 # The default number of hits to return for a search request via the REST API
@@ -397,10 +398,10 @@ USAGE_LOGGING_ENABLED = True
 # Name of the Elasticsearch index used to store logged events
 USAGE_LOGGING_INDEX = 'ori_usage_logs'
 
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+ROOT_PATH = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
 LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
-DATA_DIR_PATH = os.path.dirname(ROOT_PATH)
+DATA_DIR_PATH = os.path.join(os.path.dirname(ROOT_PATH), 'data', 'static')
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.

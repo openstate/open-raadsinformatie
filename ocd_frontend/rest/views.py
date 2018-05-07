@@ -793,7 +793,11 @@ def resolve(url_id):
             doc_type='url', id=url_id)
 
         file_hash = sha1(resp['_source']['original_url']).hexdigest()
-        path = os.path.join(settings.DATA_DIR_PATH, 'static', file_hash)
+
+        if not os.path.exists(settings.DATA_DIR_PATH):
+            raise OSError('DATA_DIR_PATH does not exist: %s' % settings.DATA_DIR_PATH)
+
+        path = os.path.join(settings.DATA_DIR_PATH, file_hash)
         if os.path.exists(path):
             # Log a 'resolve_filepath' event if usage logging is enabled
             if current_app.config['USAGE_LOGGING_ENABLED']:
