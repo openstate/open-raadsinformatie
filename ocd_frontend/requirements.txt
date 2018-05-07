@@ -4,3 +4,4 @@ elasticsearch>=5.0.0,<6.0.0
 Flask==0.10.1
 #Flask-Testing==0.4.2
 Pillow
+gunicorn==19.8.1

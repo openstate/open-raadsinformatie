@@ -9,6 +9,7 @@ services:
   frontend:
     volumes:
       - ./ocd_frontend:/opt/ori/ocd_frontend
+    command: python wsgi.py
   elastic_endpoint:
     ports:
       - "9200:9200"

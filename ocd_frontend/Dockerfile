@@ -11,4 +11,4 @@ RUN apk add --update build-base python-dev py-pip jpeg-dev zlib-dev \
 
 COPY . /opt/ori/ocd_frontend
 
-CMD python wsgi.py
+CMD gunicorn -w 2 -b 0.0.0.0:5000 wsgi
