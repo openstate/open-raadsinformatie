@@ -9,7 +9,7 @@ class ElasticsearchService(object):
         return self._es.search(*args, **kwargs)
 
     def create(self, *args, **kwargs):
-        return self._es.create(*args, **kwargs)
+        return self._es.index(*args, **kwargs)
 
     def get(self, *args, **kwargs):
         return self._es.get(*args, **kwargs)

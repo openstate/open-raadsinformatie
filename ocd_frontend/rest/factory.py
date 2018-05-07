@@ -1,10 +1,12 @@
-import os
+import log  # needed for logging init
 
 from flask import Flask
-from celery import Celery
 
-from ocd_frontend.helpers import register_blueprints
-from ocd_frontend.es import ElasticsearchService
+from settings import BUGSNAG_APIKEY
+from helpers import register_blueprints
+from es import ElasticsearchService
+from bugsnag.flask import handle_exceptions
+import settings
 
 
 def create_app_factory(package_name, package_path, settings_override=None):
@@ -17,29 +19,16 @@ def create_app_factory(package_name, package_path, settings_override=None):
     """
     app = Flask(package_name, instance_relative_config=True)
 
-    app.config.from_object('ocd_frontend.settings')
+    app.config.from_object(settings)
     app.config.from_object(settings_override)
 
     app.es = ElasticsearchService(app.config['ELASTICSEARCH_HOST'],
                                   app.config['ELASTICSEARCH_PORT'])
 
+    # Bugsnag handler for Flask
+    if BUGSNAG_APIKEY:
+        handle_exceptions(app)
+
     register_blueprints(app, package_name, package_path)
 
     return app
-
-
-def create_celery_app(app=None):
-    app = app or create_app_factory('ocd_frontend', os.path.dirname(__file__))
-    celery = Celery(__name__, broker=app.config['CELERY_BROKER_URL'])
-    celery.conf.update(app.config)
-    TaskBase = celery.Task
-
-    class ContextTask(TaskBase):
-        abstract = True
-
-        def __call__(self, *args, **kwargs):
-            with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
-
-    celery.Task = ContextTask
-    return celery

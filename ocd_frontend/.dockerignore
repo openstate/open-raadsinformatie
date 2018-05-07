@@ -1,4 +1,6 @@
 Dockerfile
 .dockerignore
 .thumbnail-cache
+local_settings.py
 **/*.pyc
+**/__pycache__

@@ -1,10 +1,9 @@
 import os.path
+
 from werkzeug.wsgi import DispatcherMiddleware
 from werkzeug.serving import run_simple
 
-import sys
-sys.path.insert(0, '/opt/ori')
-from ocd_frontend import rest
+import rest
 
 application = DispatcherMiddleware(rest.create_app(), {
     '/v1': rest.create_app()

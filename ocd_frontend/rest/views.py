@@ -9,9 +9,8 @@ from elasticsearch import NotFoundError
 from flask import (
     Blueprint, current_app, request, jsonify, redirect, url_for, send_file, )
 
-from ocd_frontend import settings
-from ocd_frontend.rest import OcdApiError, decode_json_post_data
-from ocd_frontend.rest import tasks
+import settings
+from . import OcdApiError, decode_json_post_data, tasks
 
 bp = Blueprint('api', __name__)
 

@@ -2,8 +2,7 @@ from functools import wraps
 import json
 
 from flask import jsonify, request
-
-from ocd_frontend.factory import create_app_factory
+from factory import create_app_factory
 
 
 def create_app(settings_override=None):

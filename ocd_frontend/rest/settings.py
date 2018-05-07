@@ -2,10 +2,11 @@ import os.path
 
 DEBUG = True
 
-# Celery settings
-REDIS_HOST = os.getenv('REDIS_HOST', "redis")
-REDIS_PORT = os.getenv('REDIS_PORT', "6379")
-CELERY_BROKER_URL = 'redis://%s:%s/1' % (REDIS_HOST, REDIS_PORT)
+APP_VERSION = os.getenv('APP_VERSION', None)
+
+BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
+
+RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
 
 # Elasticsearch
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
@@ -394,7 +395,7 @@ RESOLVER_URL_INDEX = 'ori_resolver'
 # Determines if API usage events should be logged
 USAGE_LOGGING_ENABLED = True
 # Name of the Elasticsearch index used to store logged events
-USAGE_LOGGING_INDEX = 'npo_usage_logs'
+USAGE_LOGGING_INDEX = 'ori_usage_logs'
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
