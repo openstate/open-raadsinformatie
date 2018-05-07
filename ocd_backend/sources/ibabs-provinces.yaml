@@ -10,6 +10,21 @@ _entity_defaults: &entity_defaults
   loader: ocd_backend.loaders.ElasticsearchLoader
   cleanup: ocd_backend.tasks.CleanupElasticsearch
 
+_motions_voting_defaults: &motions_voting_defaults
+  fields:
+    Moties:
+      id: Titel
+      name: Titel
+      creator: Hoofdindieners
+      description: status
+      start_date: Datum
+    Amendementen:
+      id: Titel
+      name: Titel
+      creator: Hoofdindieners
+      description: status
+      start_date: Datum
+
 _entities: &entities
   - &province
     <<: *entity_defaults
@@ -112,19 +127,6 @@ _entities_voting: &entities_voting
   - &reports_voting
     <<: *reports
 
-  - &_motions_config_voting
-    fields:
-      Moties:
-        id: Titel
-        name: Titel
-        creator: Hoofdindieners
-        description: status
-        start_date: Datum
-      Amendementen:
-        name: onderwerp
-        description: status
-        start_date: datum
-
   - &motions_voting
     entity: motions
     doc_type: motions
@@ -135,7 +137,7 @@ _entities_voting: &entities_voting
     pdf_max_pages: 20
     max_pages: 1
     per_page: 100
-    <<: *_motions_config_voting
+    <<: *motions_voting_defaults
     <<: *entity_defaults
 
   - &amendments_voting
@@ -148,7 +150,7 @@ _entities_voting: &entities_voting
     pdf_max_pages: 20
     max_pages: 1
     per_page: 100
-    <<: *_motions_config_voting
+    <<: *motions_voting_defaults
     <<: *entity_defaults
 
   #
@@ -161,7 +163,7 @@ _entities_voting: &entities_voting
     pdf_max_pages: 20
     max_pages: 1
     per_page: 100
-    <<: *_motions_config_voting
+    <<: *motions_voting_defaults
     <<: *entity_defaults
   #
   - &voting_rounds
