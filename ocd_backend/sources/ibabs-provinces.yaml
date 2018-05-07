@@ -10,20 +10,25 @@ _entity_defaults: &entity_defaults
   loader: ocd_backend.loaders.ElasticsearchLoader
   cleanup: ocd_backend.tasks.CleanupElasticsearch
 
-_motions_voting_defaults: &motions_voting_defaults
-  fields:
-    Moties:
-      id: Titel
-      name: Titel
-      creator: Hoofdindieners
-      description: status
-      start_date: Datum
-    Amendementen:
-      id: Titel
-      name: Titel
-      creator: Hoofdindieners
-      description: status
-      start_date: Datum
+_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
+  <<: *entity_defaults
+  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+  include: moties
+  pdf_max_pages: 20
+  max_pages: 1
+  per_page: 100
+
+_voting_rounds_defaults: &voting_rounds_defaults
+  <<: *entity_defaults
+  entity: voting_rounds
+  doc_type: vote_events
+  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+  item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+  reverse_chronological: false
+  max_processed_meetings: 0
 
 _entities: &entities
   - &province
@@ -76,7 +81,7 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     item: ocd_backend.items.ibabs_meeting.IBabsReportItem
-    regex: ".*"
+    include: ".*"
     pdf_max_pages: 0
     max_pages: 1
 
@@ -126,58 +131,10 @@ _entities_voting: &entities_voting
 
   - &reports_voting
     <<: *reports
-
-  - &motions_voting
-    entity: motions
-    doc_type: motions
-    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-    loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-    include: moties
-    pdf_max_pages: 20
+    include: ".*"
+    exclude: (moties|amendementen)
+    pdf_max_pages: 0
     max_pages: 1
-    per_page: 100
-    <<: *motions_voting_defaults
-    <<: *entity_defaults
-
-  - &amendments_voting
-    entity: amendments
-    doc_type: motions
-    classification: Amendementen
-    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-    include: amendementen
-    pdf_max_pages: 20
-    max_pages: 1
-    per_page: 100
-    <<: *motions_voting_defaults
-    <<: *entity_defaults
-
-  #
-  - &vote_events
-    entity: vote_events
-    doc_type: vote_events
-    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
-    include: (moties|amendementen)
-    pdf_max_pages: 20
-    max_pages: 1
-    per_page: 100
-    <<: *motions_voting_defaults
-    <<: *entity_defaults
-  #
-  - &voting_rounds
-    entity: voting_rounds
-    doc_type: vote_events
-    extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-    item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-    loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
-    reverse_chronological: false
-    max_processed_meetings: 0
-    start_date: '2018-01-01T00:00:00'
-    end_date: '2018-04-01T00:00:00'
-    <<: *entity_defaults
-
 
 _ibabs: &ibabs
   index_name: "{key}"
@@ -211,4 +168,57 @@ ibabs-provinces:
   limburg:
     key: limburg
     almanak_id: 16071
+
+    _fields_limburg: &fields_limburg
+      fields:
+        Moties:
+          id: Titel
+          name: Titel
+          creator: Hoofdindieners
+          description: status
+          start_date: Datum
+        Amendementen:
+          id: Titel
+          name: Titel
+          creator: Hoofdindieners
+          description: status
+          start_date: Datum
+
     <<: *ibabs_voting
+    entities:
+    - *province_voting
+    - *committees_voting
+    - *organizations_voting
+    - *persons_voting
+    - *meetings_voting
+    - *reports_voting
+
+    - &motions_voting
+      entity: motions
+      doc_type: motions
+      include: moties
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &amendments_voting
+      entity: amendments
+      doc_type: motions
+      classification: Amendementen
+      include: amendementen
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &vote_events
+      entity: vote_events
+      doc_type: vote_events
+      include: (moties|amendementen)
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &voting_rounds
+      start_date: '2018-01-01T00:00:00'
+      end_date: '2018-04-01T00:00:00'
+      <<: *voting_rounds_defaults
