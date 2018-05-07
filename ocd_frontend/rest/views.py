@@ -301,15 +301,14 @@ def list_sources():
     es_r = current_app.es.search(body=es_q)
 
     # Log a 'sources' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='sources',
-            query_time_ms=es_r['took']
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='sources',
+        query_time_ms=es_r['took']
+    )
 
     return jsonify(format_sources_results(es_r))
 
@@ -390,27 +389,26 @@ def search(doc_type=u'items'):
             doc_type=request_doc_type)
 
     # Log a 'search' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        hit_log = []
-        for hit in es_r['hits']['hits']:
-            hit_log.append({
-                'source_id': hit['_source']['meta']['source_id'],
-                'object_id': hit['_id'],
-                'score': hit['_score']
-            })
+    hit_log = []
+    for hit in es_r['hits']['hits']:
+        hit_log.append({
+            'source_id': hit['_source']['meta']['source_id'],
+            'object_id': hit['_id'],
+            'score': hit['_score']
+        })
 
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='search',
-            doc_type=doc_type,
-            query=search_req,
-            hits=hit_log,
-            n_total_hits=es_r['hits']['total'],
-            query_time_ms=es_r['took']
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='search',
+        doc_type=doc_type,
+        query=search_req,
+        hits=hit_log,
+        n_total_hits=es_r['hits']['total'],
+        query_time_ms=es_r['took']
+    )
 
     return jsonify(format_search_results(es_r, doc_type))
 
@@ -486,28 +484,27 @@ def search_source(source_id, doc_type=u'items'):
         raise OcdApiError('Source \'%s\' does not exist' % source_id, 404)
 
     # Log a 'search' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        hit_log = []
-        for hit in es_r['hits']['hits']:
-            hit_log.append({
-                'source_id': hit['_source']['meta']['source_id'],
-                'object_id': hit['_id'],
-                'score': hit['_score']
-            })
+    hit_log = []
+    for hit in es_r['hits']['hits']:
+        hit_log.append({
+            'source_id': hit['_source']['meta']['source_id'],
+            'object_id': hit['_id'],
+            'score': hit['_score']
+        })
 
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='search',
-            source_id=source_id,
-            doc_type=doc_type,
-            query=search_req,
-            hits=hit_log,
-            n_total_hits=es_r['hits']['total'],
-            query_time_ms=es_r['took']
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='search',
+        source_id=source_id,
+        doc_type=doc_type,
+        query=search_req,
+        hits=hit_log,
+        n_total_hits=es_r['hits']['total'],
+        query_time_ms=es_r['took']
+    )
 
     return jsonify(format_search_results(es_r, doc_type))
 
@@ -541,17 +538,16 @@ def get_object(source_id, object_id, doc_type=u'items'):
         raise OcdApiError(message, 404)
 
     # Log a 'get_object' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='get_object',
-            source_id=source_id,
-            doc_type=doc_type,
-            object_id=object_id
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='get_object',
+        source_id=source_id,
+        doc_type=doc_type,
+        object_id=object_id
+    )
 
     for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
         try:
@@ -584,17 +580,16 @@ def get_object_source(source_id, object_id, doc_type=u'items'):
     resp.mimetype = obj['_source']['source_data']['content_type']
 
     # Log a 'get_object_source' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='get_object_source',
-            source_id=source_id,
-            doc_type=doc_type,
-            object_id=object_id
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='get_object_source',
+        source_id=source_id,
+        doc_type=doc_type,
+        object_id=object_id
+    )
 
     return resp
 
@@ -758,29 +753,28 @@ def similar(object_id, source_id=None, doc_type=u'items'):
         raise OcdApiError('Source \'%s\' does not exist' % source_id, 404)
 
     # Log a 'search_similar' event if usage logging is enabled
-    if current_app.config['USAGE_LOGGING_ENABLED']:
-        hit_log = []
-        for hit in es_r['hits']['hits']:
-            hit_log.append({
-                'source_id': hit['_source']['meta']['source_id'],
-                'object_id': hit['_id'],
-                'score': hit['_score']
-            })
+    hit_log = []
+    for hit in es_r['hits']['hits']:
+        hit_log.append({
+            'source_id': hit['_source']['meta']['source_id'],
+            'object_id': hit['_id'],
+            'score': hit['_score']
+        })
 
-        tasks.log_event.delay(
-            user_agent=request.user_agent.string,
-            referer=request.headers.get('Referer', None),
-            user_ip=request.remote_addr,
-            created_at=datetime.utcnow(),
-            event_type='search_similar',
-            similar_to_source_id=source_id,
-            similar_to_object_id=object_id,
-            doc_type=doc_type,
-            query=search_params,
-            hits=hit_log,
-            n_total_hits=es_r['hits']['total'],
-            query_time_ms=es_r['took']
-        )
+    tasks.log_event(
+        user_agent=request.user_agent.string,
+        referer=request.headers.get('Referer', None),
+        user_ip=request.remote_addr,
+        created_at=datetime.utcnow(),
+        event_type='search_similar',
+        similar_to_source_id=source_id,
+        similar_to_object_id=object_id,
+        doc_type=doc_type,
+        query=search_params,
+        hits=hit_log,
+        n_total_hits=es_r['hits']['total'],
+        query_time_ms=es_r['took']
+    )
 
     return jsonify(format_search_results(es_r, doc_type))
 
@@ -800,15 +794,14 @@ def resolve(url_id):
         path = os.path.join(settings.DATA_DIR_PATH, file_hash)
         if os.path.exists(path):
             # Log a 'resolve_filepath' event if usage logging is enabled
-            if current_app.config['USAGE_LOGGING_ENABLED']:
-                tasks.log_event.delay(
-                    user_agent=request.user_agent.string,
-                    referer=request.headers.get('Referer', None),
-                    user_ip=request.remote_addr,
-                    created_at=datetime.utcnow(),
-                    event_type='resolve_filepath',
-                    url_id=url_id,
-                )
+            tasks.log_event(
+                user_agent=request.user_agent.string,
+                referer=request.headers.get('Referer', None),
+                user_ip=request.remote_addr,
+                created_at=datetime.utcnow(),
+                event_type='resolve_filepath',
+                url_id=url_id,
+            )
             return send_file(
                 path,
                 mimetype=resp['_source'].get('content_type'),
@@ -816,15 +809,14 @@ def resolve(url_id):
             )
 
         # Log a 'resolve' event if usage logging is enabled
-        if current_app.config['USAGE_LOGGING_ENABLED']:
-            tasks.log_event.delay(
-                user_agent=request.user_agent.string,
-                referer=request.headers.get('Referer', None),
-                user_ip=request.remote_addr,
-                created_at=datetime.utcnow(),
-                event_type='resolve',
-                url_id=url_id,
-            )
+        tasks.log_event(
+            user_agent=request.user_agent.string,
+            referer=request.headers.get('Referer', None),
+            user_ip=request.remote_addr,
+            created_at=datetime.utcnow(),
+            event_type='resolve_redirect',
+            url_id=url_id,
+        )
         return redirect(resp['_source']['original_url'])
 
     except NotFoundError:
