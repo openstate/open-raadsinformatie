@@ -1,22 +1,20 @@
-import json
 import os
-from mock import MagicMock
 from pprint import pprint
 
-from lxml import etree
 import iso8601
+from mock import MagicMock
 
 from ocd_backend.items.go_report import ReportItem
-
 from . import ItemTestCase
 
 
 class ReportItemTestCase(ItemTestCase):
-    def setUp(self):
-        super(ReportItemTestCase, self).setUp()
+    def setup(self):
+        super(ReportItemTestCase, self).setup()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_archived_meeting.html'))
-        self.pdf_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/Besluitenlijst-raadsvergadering-29-juni-2015.pdf'))
+        self.pdf_path = os.path.abspath(
+            os.path.join(self.PWD, '../test_dumps/Besluitenlijst-raadsvergadering-29-juni-2015.pdf'))
 
         self.source_definition = {
             "id": "den_helder_resolutions",
@@ -50,7 +48,7 @@ class ReportItemTestCase(ItemTestCase):
             'mp3': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/29-juni/17:00/download/880/mp3'
         }
 
-        self.rights = u'undefined' # for now ...
+        self.rights = u'undefined'  # for now ...
         self.collection = u'den_helder'
 
         self.meeting_name = u'Verslag Gemeenteraad 29 juni 2015 17:00:00'
@@ -71,7 +69,6 @@ class ReportItemTestCase(ItemTestCase):
         self.start_date = iso8601.parse_date(u'2015-06-29T17:00:00')
         self.location = u'Gemeentehuis'
         self.status = u'confirmed'
-
 
         self.meeting_sources = [
             {
@@ -113,7 +110,6 @@ class ReportItemTestCase(ItemTestCase):
 
         return item
 
-
     def test_meeting_get_original_object_id(self):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_original_object_id(), self.meeting_object_id)
@@ -127,35 +123,29 @@ class ReportItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_rights(), self.rights)
 
-
     def test_meeting_get_collection(self):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_collection(), self.collection)
-
 
     def test_meeting_name(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['name'], self.meeting_name)
 
-
     def test_meeting_identifiers(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['identifiers'], self.meeting_identifiers)
-
 
     def test_meeting_organisation(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
-
     def test_meeting_classification(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['classification'], self.meeting_classification)
-
 
     def test_meeting_dates(self):
         item = self._instantiate_meeting()
@@ -163,24 +153,20 @@ class ReportItemTestCase(ItemTestCase):
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
-
     def test_meeting_location(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
-
 
     def test_meeting_status(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
 
-
     def test_meeting_sources(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_sources)
-
 
     def test_meeting_description(self):
         item = self._instantiate_meeting()

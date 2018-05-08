@@ -1,13 +1,8 @@
 import json
-from collections import MutableMapping
 from datetime import datetime
-from hashlib import sha1
 
-from ocd_backend.exceptions import (UnableToGenerateObjectId,
-                                    FieldNotAvailable)
-from ocd_backend.utils import json_encoder
+from ocd_backend.exceptions import FieldNotAvailable
 from ocd_backend.models import Metadata
-from owltology.model import ModelBase
 
 
 class BaseItem(object):
@@ -28,7 +23,8 @@ class BaseItem(object):
     :type processing_started: datetime or None
     """
 
-    def __init__(self, source_definition, data_content_type, data, item, run_node, processing_started=None, final_try=False):
+    def __init__(self, source_definition, data_content_type, data, item, run_node, processing_started=None,
+                 final_try=False):
         self.source_definition = source_definition
         self.data_content_type = data_content_type
         self.data = data
@@ -93,27 +89,14 @@ class BaseItem(object):
         """
         raise NotImplementedError
 
-    def map_object_data(self):
-        """Returns a dictionary containing the data that is suitable to
-        be indexed in a combined/normalized repository, together with
-        items from other collections. Only keys defined in
-        :attr:`.combined_index_fields`
-        are allowed.
-
-        This method should be implemented by the class that inherits
-        from :class:`.BaseItem`.
-
-        :rtype: owltology.models.Modelbase
-        """
-        raise NotImplementedError
-
 
 class LocalDumpItem(BaseItem):
     """
     Represents an Item extracted from a local dump
     """
+
     def get_collection(self):
-        collection = self.original_item['_source'].get('meta', {})\
+        collection = self.original_item['_source'].get('meta', {}) \
             .get('collection')
         if not collection:
             raise FieldNotAvailable('collection')
@@ -126,21 +109,21 @@ class LocalDumpItem(BaseItem):
         return rights
 
     def get_original_object_id(self):
-        original_object_id = self.original_item['_source'].get('meta', {})\
+        original_object_id = self.original_item['_source'].get('meta', {}) \
             .get('original_object_id')
         if not original_object_id:
             raise FieldNotAvailable('original_object_id')
         return original_object_id
 
     def get_original_object_urls(self):
-        original_object_urls = self.original_item['_source'].get('meta', {})\
+        original_object_urls = self.original_item['_source'].get('meta', {}) \
             .get('original_object_urls')
         if not original_object_urls:
             raise FieldNotAvailable('original_object_urls')
         return original_object_urls
 
     def get_object_model(self):
-        combined_index_data = self.original_item['_source']\
+        combined_index_data = self.original_item['_source'] \
             .get('combined_index_data')
         if not combined_index_data:
             raise FieldNotAvailable('combined_index_data')

@@ -1,13 +1,13 @@
+import council
 import foaf
+import govid
+import meta
 import ncal
 import opengov
 import org
-import council
 import owl
 import person
 import schema
-import govid
-import meta
 
 # This file is used to specify custom mappings
 

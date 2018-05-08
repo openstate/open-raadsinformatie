@@ -1,13 +1,14 @@
 from hashlib import sha1
+
 from ocd_backend.items.popolo import OrganisationItem
 
 
 class CommitteeItem(OrganisationItem):
-
     def _get_current_permalink(self):
         return u'%s/dmus' % (self.source_definition['base_url'])
 
-    def _get_meeting_id(self, meeting):
+    @staticmethod
+    def _get_meeting_id(meeting):
         hash_content = u'committee-%s' % (meeting['id'])
         return sha1(hash_content.decode('utf8')).hexdigest()
 
@@ -20,14 +21,15 @@ class CommitteeItem(OrganisationItem):
     def get_original_object_urls(self):
         return {"html": self._get_current_permalink()}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        object_model = {}
+        object_model = dict()
 
         object_model['id'] = unicode(self.get_object_id())
 
@@ -56,10 +58,12 @@ class CommitteeItem(OrganisationItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

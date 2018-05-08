@@ -2,13 +2,15 @@ import datetime
 import glob
 import json
 import re
-import translitcodec  # needs to be imported here
-from lxml import etree
-from string import Formatter
 from hashlib import sha1
+from string import Formatter
+
+# noinspection PyUnresolvedReferences
+import translitcodec  # used for encoding, search 'translit'
+from elasticsearch.helpers import scan, bulk
+from lxml import etree
 
 from ocd_backend.exceptions import MissingTemplateTag
-from elasticsearch.helpers import scan, bulk
 
 
 def full_normalized_motion_id(motion_id, date_as_str=None):
@@ -16,7 +18,7 @@ def full_normalized_motion_id(motion_id, date_as_str=None):
     if n_id is not None:
         return n_id
     return sha1(motion_id.encode('utf8')).hexdigest()
-    #return motion_id
+    # return motion_id
 
 
 def normalize_motion_id(motion_id, date_as_str=None):
@@ -51,7 +53,8 @@ def normalize_motion_id(motion_id, date_as_str=None):
     return None
 
 
-def reindex(client, source_index, target_index, target_client=None, chunk_size=500, scroll='5m', transformation_callable=None):
+def reindex(client, source_index, target_index, target_client=None, chunk_size=500, scroll='5m',
+            transformation_callable=None):
     """
     Reindex all documents from one index to another, potentially (if
     `target_client` is specified) on a different cluster.
@@ -69,10 +72,12 @@ def reindex(client, source_index, target_index, target_client=None, chunk_size=5
     :arg chunk_size: number of docs in one chunk sent to es (default: 500)
     :arg scroll: Specify how long a consistent view of the index should be
         maintained for scrolled search
+    :arg transformation_callable: transform each document using a function
     """
     target_client = client if target_client is None else target_client
 
     docs = scan(client, index=source_index, scroll=scroll, _source_include=['*'])
+
     def _change_doc_index(hits, index):
         for h in hits:
             h['_index'] = index
@@ -81,7 +86,7 @@ def reindex(client, source_index, target_index, target_client=None, chunk_size=5
             yield h
 
     return bulk(target_client, _change_doc_index(docs, target_index),
-        chunk_size=chunk_size, stats_only=True)
+                chunk_size=chunk_size, stats_only=True)
 
 
 class ExtendedFormatter(Formatter):
@@ -89,6 +94,7 @@ class ExtendedFormatter(Formatter):
     Formatter with extended conversion symbol
     See: https://stackoverflow.com/a/46160537/5081021
     """
+
     def convert_field(self, value, conversion):
         """ Extend conversion symbol
         Following additional symbol has been added
@@ -123,16 +129,16 @@ def load_sources_config(path):
     :type path: str.
     """
 
-    def sort_source_keys(key):
+    def sort_source_keys(key_name):
         """Sort importance of specified key"""
         try:
-            if key[0] == 'key':
+            if key_name[0] == 'key':
                 return int(0)
-            if str(key[1]).startswith('{key'):
+            if str(key_name[1]).startswith('{key'):
                 return int(1)
-            if type(key[1]) == list or type(key[1]) == dict:
+            if type(key_name[1]) == list or type(key_name[1]) == dict:
                 return int(4)
-            if '{' in str(key[1]):
+            if '{' in str(key_name[1]):
                 return int(2)
         except AttributeError:
             pass
@@ -178,15 +184,15 @@ def load_sources_config(path):
     for filename in glob.glob(path):
         try:
             ext = filename[-4:]
-            with open(filename) as file:
+            with open(filename) as f:
                 if ext == 'yaml':
-                    data = load(file, Loader=Loader)
-                    data = replace_tags(data)
+                    loaded_data = load(f, Loader=Loader)
+                    loaded_data = replace_tags(loaded_data)
 
-                    for key, entry in data.items():
-                        result[key] = entry
+                    for data_key, entry in loaded_data.items():
+                        result[data_key] = entry
                 elif ext == 'json':
-                    for entry in json.load(file):
+                    for entry in json.load(f):
                         result[entry['id']] = entry
 
         except IOError, e:
@@ -208,19 +214,19 @@ def load_object(path):
     try:
         dot = path.rindex('.')
     except ValueError:
-        raise ValueError, "Error loading object '%s': not a full path" % path
+        raise ValueError("Error loading object '%s': not a full path" % path)
 
-    module, name = path[:dot], path[dot+1:]
+    m, name = path[:dot], path[dot + 1:]
     try:
-        mod = __import__(module, {}, {}, [''])
+        mod = __import__(m, {}, {}, [''])
     except ImportError, e:
-        raise ImportError, "Error loading object '%s': %s" % (path, e)
+        raise ImportError("Error loading object '%s': %s" % (path, e))
 
     try:
         obj = getattr(mod, name)
     except AttributeError:
-        raise NameError, "Module '%s' doesn't define any object named '%s'" % (
-            module, name)
+        raise NameError("Module '%s' doesn't define any object named '%s'" % (
+            m, name))
 
     return obj
 
@@ -262,11 +268,11 @@ def parse_date_span(regexen, date1_str, date2_str):
         # TODO: integrate both granularities
         if (date1_gran, date1) == (date2_gran, date2):
             return date1_gran, date1
-        if (date2 - date1).days < 5*365:
+        if (date2 - date1).days < 5 * 365:
             return 4, date1
-        if (date2 - date1).days < 50*365:
+        if (date2 - date1).days < 50 * 365:
             return 3, date1
-        if (date2 - date1).days >= 50*365:
+        if (date2 - date1).days >= 50 * 365:
             return 2, date1
     else:
         return date1_gran, date1
@@ -277,13 +283,15 @@ class DatetimeJSONEncoder(json.JSONEncoder):
     JSONEncoder that can handle ``datetime.datetime``, ``datetime.date`` and
     ``datetime.timedelta`` objects.
     """
-    def default(self, o):
+
+    def default(self, o):  # pylint: disable=method-hidden
         if isinstance(o, datetime.datetime) or isinstance(o, datetime.date):
             return o.isoformat()
         elif isinstance(o, datetime.timedelta):
             return (datetime.datetime.min + o).time().isoformat()
         else:
             return super(DatetimeJSONEncoder, self).default(o)
+
 
 _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 

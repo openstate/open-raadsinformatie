@@ -18,14 +18,6 @@ class BaseEnricher(celery_app.Task):
         and expects args to contain a transformed (and possibly enriched)
         item. Kwargs should contain the ``source_definition`` dict.
 
-        :param item: The item tuple as returned by a transformer or by
-            a previously runned enricher.
-        :param source_definition: The configuration of a single source in
-            the form of a dictionary (as defined in the settings).
-        :type source_definition: dict.
-        :param enricher_settings: The settings for the requested enricher,
-            as provided in the source definition.
-        :type enricher_settings: dict.
         :returns: the output of :py:meth:`~BaseEnricher.enrich_item`
         """
 
@@ -55,7 +47,7 @@ class BaseEnricher(celery_app.Task):
             except Exception, e:
                 bugsnag.notify(e, severity="warning")
                 log.warn('Unexpected error: %s, skipping %s for %s'
-                              % (self.__class__.__name__, e, doc.get_ori_id()))
+                         % (self.__class__.__name__, e, doc.get_ori_id()))
 
         return args
 
@@ -70,4 +62,4 @@ class BaseEnricher(celery_app.Task):
             item.
         :type item: object
         """
-        raise NotImplemented
+        raise NotImplementedError

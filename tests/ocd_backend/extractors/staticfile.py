@@ -5,14 +5,12 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors.staticfile import (
     StaticJSONDumpExtractor, StaticJSONExtractor
 )
-
 from . import ExtractorTestCase
 
 
 class StaticfileExtractorTestCase(ExtractorTestCase):
-
-    def setUp(self):
-        super(StaticfileExtractorTestCase, self).setUp()
+    def setup(self):
+        super(StaticfileExtractorTestCase, self).setup()
         self.extractor = StaticJSONDumpExtractor(self.source_definition)
 
     def test_dump_path_set(self):
@@ -39,8 +37,8 @@ class StaticfileExtractorTestCase(ExtractorTestCase):
 
 
 class StaticJSONExtractorTestCase(ExtractorTestCase):
-    def setUp(self):
-        super(StaticJSONExtractorTestCase, self).setUp()
+    def setup(self):
+        super(StaticJSONExtractorTestCase, self).setup()
         self.source_definition['file_url'] = 'http://example.org/dump.json'
         self.extractor = StaticJSONExtractor(self.source_definition)
 

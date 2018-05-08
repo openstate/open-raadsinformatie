@@ -1,22 +1,20 @@
-from hashlib import sha1
 import re
 import urlparse
+from hashlib import sha1
 
-from lxml import etree
 import iso8601
-
+from lxml import etree
 from ocd_backend.items.popolo import EventItem
+
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.log import get_source_logger
 
 log = get_source_logger('item')
 
 
-class MeetingItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
-
+class MeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     @property
     def html(self):
         _old_html = getattr(self, '_html', None)
@@ -47,7 +45,8 @@ class MeetingItem(
             classification='Council')
         return results[0]
 
-    def _find_meeting_type_id(self, org):
+    @staticmethod
+    def _find_meeting_type_id(org):
         results = [x for x in org['identifiers'] if x['scheme'] == u'GemeenteOplossingen']
         return results[0]['identifier']
 
@@ -61,7 +60,8 @@ class MeetingItem(
             classification=['committee', 'subcommittee'])
         return {self._find_meeting_type_id(c): c for c in results}
 
-    def _convert_date(self, date_str):
+    @staticmethod
+    def _convert_date(date_str):
         month_names2int = {
             u'januari': u'01',
             u'februari': u'02',
@@ -82,7 +82,7 @@ class MeetingItem(
         parts = output.split(u' ')
         return u'%s-%s-%s' % (parts[2], parts[1], parts[0],)
 
-    def _get_object_id_for(self, object_id, urls={}):
+    def _get_object_id_for(self, object_id, urls=None):
         """Generates a new object ID which is used within OCD to identify
         the item.
 
@@ -95,10 +95,12 @@ class MeetingItem(
         :rtype: str
         """
 
+        if urls is None:
+            urls = {}
         if not object_id and not urls:
             raise UnableToGenerateObjectId('Both original id and urls missing')
 
-        hash_content = self.source_definition['id'] + object_id #+ u''.join(sorted(urls.values()))
+        hash_content = self.source_definition['id'] + object_id  # + u''.join(sorted(urls.values()))
 
         return sha1(hash_content.decode('utf8')).hexdigest()
 
@@ -156,7 +158,8 @@ class MeetingItem(
         # FIXME: what to do when there is not an original URL?
         return {"html": self._get_current_permalink()}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
@@ -207,17 +210,15 @@ class MeetingItem(
             object_model['organization_id'] = council['id']
             object_model['organization'] = council
 
-
         if self.original_item['type'] != 'meeting':
-            object_model['description'] = u''.join(self.html.xpath('.//div[@class="toelichting"]//text()'),)
+            object_model['description'] = u''.join(self.html.xpath('.//div[@class="toelichting"]//text()'), )
         else:
             object_model['description'] = u''
 
-
         meeting_date = u''.join(
-             self.full_html.xpath('//span[@class="date"]//text()')).strip()
+            self.full_html.xpath('//span[@class="date"]//text()')).strip()
         meeting_time = u''.join(
-             self.full_html.xpath('//span[@class="time"]//text()')).strip()
+            self.full_html.xpath('//span[@class="time"]//text()')).strip()
 
         object_model['start_date'] = iso8601.parse_date(u'%sT%s:00Z' % (
             self._convert_date(meeting_date), meeting_time,))
@@ -242,7 +243,7 @@ class MeetingItem(
             # need to do a separate request:
             # https://gemeenteraad.denhelder.nl/modules/risbis/risbis.php?g=get_docs_for_ag&agendapunt_object_id=19110
 
-            if (len(self.html.xpath('.//a[contains(@class, "bijlage_true")]')) > 0):
+            if len(self.html.xpath('.//a[contains(@class, "bijlage_true")]')) > 0:
                 docs_contents = self._get_documents_html_for_item()
                 if docs_contents:
                     docs_html = etree.HTML(docs_contents)
@@ -265,7 +266,7 @@ class MeetingItem(
                     i, {"html": i}
                 )) for i in self.full_html.xpath(
                     '//li[contains(@class, "agendaRow")]/div[@class="first"]/a/@href'
-            )]
+                )]
 
             base_url = u''.join(
                 self.full_html.xpath('//meta[@property="og:url"]/@content')).strip()
@@ -298,10 +299,12 @@ class MeetingItem(
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

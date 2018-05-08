@@ -1,9 +1,7 @@
-
 from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.log import get_source_logger
-
 
 log = get_source_logger('ocd_backend.tasks')
 
@@ -35,7 +33,6 @@ class BaseCleanup(celery_app.Task):
 
 
 class CleanupElasticsearch(BaseCleanup):
-
     def run_finished(self, run_identifier, **kwargs):
         current_index_name = kwargs.get('current_index_name')
         new_index_name = kwargs.get('new_index_name')

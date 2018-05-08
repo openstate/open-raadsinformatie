@@ -1,10 +1,10 @@
 import json
-from suds.client import Client
-from suds.sudsobject import asdict
 
-from ocd_backend.extractors import BaseExtractor
+from suds.client import Client  # pylint: disable=import-error
+from suds.sudsobject import asdict  # pylint: disable=import-error
 
 from ocd_backend import settings
+from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
@@ -45,6 +45,9 @@ class CompanyWebcastBaseExtractor(BaseExtractor):
     and configures the right port to use.
     """
 
+    def run(self):
+        pass
+
     def __init__(self, *args, **kwargs):
         super(CompanyWebcastBaseExtractor, self).__init__(*args, **kwargs)
 
@@ -62,7 +65,7 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
         pagesize = self.source_definition['cwc_pagesize']
         result_count = pagesize
 
-        while (result_count == pagesize):
+        while result_count == pagesize:
             log.debug("Requesting page %s ..." % (current_page,))
             results = self.client.service.WebcastSearch(
                 Username=self.source_definition['cwc_username'],

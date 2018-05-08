@@ -1,6 +1,7 @@
-import owl, foaf
-from .namespaces import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
+import foaf
+import owl
 from owltology.property import StringProperty, DateTimeProperty, Relation
+from .namespaces import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
 
 
 class Membership(owl.Thing):

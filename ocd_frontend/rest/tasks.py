@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from flask import current_app
 
 
@@ -12,10 +13,11 @@ def log_event(user_agent, referer, user_ip, created_at, event_type, **kwargs):
     :type referer: str or None
     :param user_ip: the user's IP address
     :type user_ip: str
-    :param crated_at: the datetime when the event was created (in UTC)
+    :param created_at: the datetime when the event was created (in UTC)
     :type created_at: datetime.datetime
-    :event_type: the name of the event type; available event types are
+    :param event_type: the name of the event type; available event types are
                  specified under ``available_event_types``
+    :type event_type: str
     :param kwargs: any additional arguments will be passed on to the
                    function responsible for processing the event
     """

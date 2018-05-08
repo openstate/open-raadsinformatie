@@ -23,10 +23,12 @@ class MunicipalityOrganisationItem(BaseItem):
         object_model.description = self.original_item['Description']
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)
@@ -50,14 +52,16 @@ class AlmanakOrganisationItem(BaseItem):
 
     def get_object_model(self):
         object_model = Organization('name', self.original_item['name'])
-        #object_model.name = self.original_item['name']
+        # object_model.name = self.original_item['name']
         object_model.description = self.original_item['name']
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

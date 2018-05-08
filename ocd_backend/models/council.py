@@ -1,6 +1,9 @@
-import owl, schema, opengov, govid
-from .namespaces import OPENGOV, SCHEMA, COUNCIL
+import govid
+import opengov
+import owl
+import schema
 from owltology.property import StringProperty, IntegerProperty, Relation, Instance
+from .namespaces import OPENGOV, SCHEMA, COUNCIL
 
 
 class Attachment(owl.Thing):

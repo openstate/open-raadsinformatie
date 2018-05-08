@@ -1,8 +1,8 @@
 import os
+
 from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
-from ocd_backend.models import *
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 

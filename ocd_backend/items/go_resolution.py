@@ -2,6 +2,7 @@ import urlparse
 
 from .go_meeting import MeetingItem
 
+
 class ResolutionItem(MeetingItem):
     def _get_resolution_document(self):
 

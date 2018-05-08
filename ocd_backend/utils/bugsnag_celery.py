@@ -1,7 +1,7 @@
 from __future__ import division, print_function, absolute_import
 
-from celery.signals import task_failure
 import bugsnag
+from celery.signals import task_failure
 
 
 def failure_handler(sender, task_id, exception, args, kwargs, traceback, einfo,

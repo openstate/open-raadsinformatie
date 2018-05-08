@@ -15,6 +15,9 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
     base extractor just configures the base url to use for scraping.
     """
 
+    def run(self):
+        pass
+
     def __init__(self, *args, **kwargs):
         super(GemeenteOplossingenBaseExtractor, self).__init__(*args, **kwargs)
 
@@ -120,7 +123,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             field = 'upcoming'
         else:
             field = 'archive'
-        return [c[field] for c in self._get_committees()] # for now ...
+        return [c[field] for c in self._get_committees()]  # for now ...
 
     def filter_meeting(self, meeting, html):
         """
@@ -165,15 +168,14 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                     continue
 
                 for meeting_item_html in html.xpath(
-                    '//li[contains(@class, "agendaRow")]'):
+                        '//li[contains(@class, "agendaRow")]'):
+                    meeting_item_obj = {
+                        'type': 'meeting-item',
+                        'content': etree.tostring(meeting_item_html),
+                        'full_content': resp.content,
+                    }
 
-                        meeting_item_obj = {
-                            'type': 'meeting-item',
-                            'content': etree.tostring(meeting_item_html),
-                            'full_content': resp.content,
-                        }
-
-                        yield 'application/json', json.dumps(meeting_item_obj)
+                    yield 'application/json', json.dumps(meeting_item_obj)
 
 
 class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtractor):

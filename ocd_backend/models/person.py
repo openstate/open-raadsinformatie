@@ -1,6 +1,6 @@
 import foaf
-from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
 from owltology.property import StringProperty, DateTimeProperty, Relation
+from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
 
 
 class Person(foaf.Agent):

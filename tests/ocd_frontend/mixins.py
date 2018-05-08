@@ -1,7 +1,7 @@
-import os
-from glob import glob
 import json
+import os
 import shutil
+from glob import glob
 
 from werkzeug.utils import parse_cookie
 
@@ -22,7 +22,7 @@ class OcdRestTestCaseMixin(object):
         app.config['USAGE_LOGGING_INDEX'] = 'ori_test_usage_logging_index'
         app.config['USAGE_LOGGING_ENABLED'] = False
 
-        self.es_client = app.es._es
+        self.es_client = app.es.get_esclient()
         self.PWD = os.path.dirname(__file__)
         self.thumbnail_cache = os.path.join(os.path.abspath(self.PWD),
                                             'test-thumbnail-cache')
@@ -31,7 +31,7 @@ class OcdRestTestCaseMixin(object):
 
         return app
 
-    def setUp(self):
+    def setup(self):
         # If ES indexes are required, Elasticsearch should be running
         if self.required_indexes:
             self.assertTrue(self.es_client.ping(),
@@ -102,7 +102,8 @@ class OcdRestTestCaseMixin(object):
         """Remove thumbnail cache directory"""
         shutil.rmtree(self.thumbnail_cache)
 
-    def _request(self, method, *args, **kwargs):
+    @staticmethod
+    def _request(method, *args, **kwargs):
         """Execute HTTP method with provided args and kwargs.
 
         The ``content_type`` is set to "application/json" by default,
@@ -128,7 +129,8 @@ class OcdRestTestCaseMixin(object):
     def delete(self, *args, **kwargs):
         return self._request(self.client.delete, *args, **kwargs)
 
-    def get_cookies(self, response):
+    @staticmethod
+    def get_cookies(response):
         """Parse cookies from Flask Response.
 
         :param response:

@@ -1,7 +1,8 @@
 import json
+from datetime import datetime
+
 import requests
 
-from datetime import datetime
 from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.es import elasticsearch
@@ -26,10 +27,6 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
         contain the output of the transformer as a tuple.
         Kwargs should contain the ``source_definition`` dict.
 
-        :param item:
-        :param source_definition: The configuration of a single source in
-            the form of a dictionary (as defined in the settings).
-        :type source_definition: dict.
         :returns: the output of :py:meth:`~BaseTransformer.transform_item`
         """
         self.source_definition = kwargs['source_definition']
@@ -39,9 +36,10 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
             self.load_item(item)
 
     def load_item(self, doc):
-        raise NotImplemented
+        raise NotImplementedError
 
-    def post_processing(self, doc):
+    @staticmethod
+    def post_processing(doc):
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
         doc.Meta.processing_finished = finished
@@ -57,12 +55,11 @@ class ElasticsearchLoader(BaseLoader):
     Each URL found in ``media_urls`` is added as a document to the
     ``RESOLVER_URL_INDEX`` (if it doesn't already exist).
     """
-    def run(self, *args, **kwargs):
-        self.current_index_name = kwargs.get('current_index_name')
-        self.index_name = kwargs.get('new_index_name')
-        self.alias = kwargs.get('index_alias')
 
-        if not self.index_name:
+    def run(self, *args, **kwargs):
+        index_name = kwargs.get('new_index_name')
+
+        if not index_name:
             raise ConfigurationError('The name of the index is not provided')
 
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
@@ -113,8 +110,12 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
         log.info('Indexing document id: %s' % doc.get_ori_id())
 
         # Index documents into new index
-        elasticsearch.update(index=self.index_name, doc_type=doc.get_popolo_type(),
-                            body={'doc': body}, id=doc.get_ori_id())
+        elasticsearch.update(
+            id=doc.get_ori_id(),
+            index=self.index_name,
+            doc_type=doc.get_popolo_type(),
+            body={'doc': body},
+        )
         # remember, resolver URLs are not update here to prevent too complex
         # things
 
@@ -124,31 +125,25 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     Updates elasticsearch items using the update method. Use with caution.
     """
 
-    def load_item(
-        self, combined_object_id, object_id, combined_index_doc, doc, doc_type
-    ):
+    def load_item(self, doc):
+        body = json_encoder.encode(doc.deflate(props=True, rels=True))
 
-        if combined_index_doc == {}:
+        if doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing documents...')
-        elasticsearch.update(
-            index=settings.COMBINED_INDEX, doc_type=doc_type,
-            id=combined_object_id, body={
-                'doc': combined_index_doc,
-                'doc_as_upsert': True
-            })
+        log.info('Indexing document id: %s' % doc.get_ori_id())
 
         # Index documents into new index
         elasticsearch.update(
-            index=self.index_name, doc_type=doc_type,
+            id=doc.get_ori_id(),
+            index=self.index_name,
+            doc_type=doc.get_popolo_type(),
             body={
-                'doc': doc,
-                'doc_as_upsert': True
-            }, id=object_id)
-
-        self._create_resolvable_media_urls(doc)
+                'doc': body,
+                'doc_as_upsert': True,
+            },
+        )
 
 
 class DummyLoader(BaseLoader):
@@ -163,7 +158,8 @@ class DummyLoader(BaseLoader):
         log.debug(doc.deflate(props=True, rels=True))
         log.debug('=' * 50)
 
-    def run_finished(self, run_identifier):
+    @staticmethod
+    def run_finished(run_identifier):
         log.debug('*' * 50)
         log.debug('Finished run {}'.format(run_identifier))
         log.debug('*' * 50)
@@ -204,7 +200,7 @@ class PopitLoader(BaseLoader):
 
         # popit update controls where we should update the data from ibabs (overwriting our own data)
         # or whether we should only add things when there's new information.
-        if ((not self.source_definition.get('popit_update', False)) or (resp.status_code != 500)):
+        if (not self.source_definition.get('popit_update', False)) or (resp.status_code != 500):
             return resp
 
         return requests.put(

@@ -9,9 +9,8 @@ from ocd_backend import settings, celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.misc import load_object, propagate_chain_get
-from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.models.meta import Run
+from ocd_backend.utils.misc import load_object, propagate_chain_get
 
 logger = get_source_logger('pipeline')
 
@@ -106,8 +105,8 @@ def setup_pipeline(source_definition):
             pipeline_definitions[pipeline['id']].get('enrichers', [])]
 
         pipeline_loaders[pipeline['id']] = list()
-        for cls in pipeline_definitions[pipeline['id']].get('loaders', None) or [
-                pipeline_definitions[pipeline['id']].get('loader', None)]:
+        for cls in pipeline_definitions[pipeline['id']].get('loaders', None) or \
+                [pipeline_definitions[pipeline['id']].get('loader', None)]:
             if cls:
                 pipeline_loaders[pipeline['id']].append(load_object(cls)())
 
@@ -131,7 +130,7 @@ def setup_pipeline(source_definition):
                         *item,
                         source_definition=pipeline_definitions[pipeline['id']],
                         **params
-                        )
+                    )
                     )
                     # Prevent old item being passed down to next steps
                     item = []
@@ -153,7 +152,7 @@ def setup_pipeline(source_definition):
                             pipeline['id']],
                         enricher_settings=enricher_settings,
                         **params
-                        )
+                    )
                     )
 
                 # Loaders

@@ -1,6 +1,6 @@
 import owl
-from .namespaces import META, SCHEMA, COUNCIL
 from owltology.property import StringProperty, DateTimeProperty
+from .namespaces import META, COUNCIL
 
 
 class Metadata(owl.Thing):

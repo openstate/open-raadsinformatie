@@ -1,9 +1,10 @@
 import tempfile
-import magic
 from urllib2 import HTTPError
 
+import magic
 import pdfparser.poppler as pdf
 import tika.parser as parser
+
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('file_parser')
@@ -13,6 +14,7 @@ def file_parser(fname, pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         try:
             text_array = []
+            i = 0
             d = pdf.Document(fname)
             for i, p in enumerate(d, start=1):
                 for f in p:
@@ -23,7 +25,7 @@ def file_parser(fname, pages=None):
                 if i >= pages:  # break after x pages
                     break
 
-            log.debug("Processed %i pages (%i max)" % (i, pages))
+            log.debug("Processed %i pages (%i max)", i, pages)
             return '\n'.join(text_array)
         except:
             # reraise everything
@@ -42,7 +44,8 @@ class FileToTextMixin(object):
     Interface for converting a PDF file into text format using pdftotext
     """
 
-    def file_clean_text(self, text):
+    @staticmethod
+    def file_clean_text(text):
         return text
         # return re.sub(r'\s+', u' ', text)
 
@@ -57,14 +60,14 @@ class FileToTextMixin(object):
         if tf is not None:
             return self.file_to_text(tf.name, max_pages)
         else:
-            return u'' # FIXME: should be something else ...
+            return u''  # FIXME: should be something else ...
 
     def file_download(self, url):
         """
         Downloads a given url to a tempfile.
         """
 
-        log.debug("Downloading %s" % (url,))
+        log.debug("Downloading %s", url)
         try:
             # GO has no wildcard domain for SSL
             r = self.http_session.get(url, verify=False, timeout=5)
@@ -73,9 +76,9 @@ class FileToTextMixin(object):
             tf.seek(0)
             return tf
         except HTTPError as e:
-            log.info("Something went wrong downloading %s" % (url,))
+            log.info("Something went wrong downloading %s", url)
         except Exception as e:
-            log.warn("Some other exception %s" % (url,))
+            log.warn("Some other exception %s", url)
 
     def file_to_text(self, path, max_pages=20):
         """

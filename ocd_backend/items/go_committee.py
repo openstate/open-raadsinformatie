@@ -1,4 +1,5 @@
 from ocd_backend.items.popolo import OrganisationItem
+
 from ocd_backend.utils.misc import slugify
 
 
@@ -12,14 +13,15 @@ class CommitteeItem(OrganisationItem):
     def get_original_object_urls(self):
         return {"html": self.original_item['archive']}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        object_model = {}
+        object_model = dict()
 
         object_model['id'] = unicode(self.get_object_id())
 
@@ -45,10 +47,12 @@ class CommitteeItem(OrganisationItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

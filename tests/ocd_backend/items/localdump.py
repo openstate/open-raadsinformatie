@@ -2,13 +2,12 @@ import json
 import os
 
 from ocd_backend.items import LocalDumpItem
-
 from . import ItemTestCase
 
 
 class LocalDumpItemTestCase(ItemTestCase):
-    def setUp(self):
-        super(LocalDumpItemTestCase, self).setUp()
+    def setup(self):
+        super(LocalDumpItemTestCase, self).setup()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/ocd_openbeelden_test.gz'))
         self.source_definition = {
@@ -50,13 +49,11 @@ class LocalDumpItemTestCase(ItemTestCase):
                              self.raw_item, self.item, None)
         self.assertEqual(item.get_original_object_id(), self.original_object_id)
 
-
     def test_get_original_object_urls(self):
         item = LocalDumpItem(self.source_definition, 'application/json',
                              self.raw_item, self.item, None)
         self.assertDictEqual(item.get_original_object_urls(),
                              self.original_object_urls)
-
 
     def test_get_object_model(self):
         item = LocalDumpItem(self.source_definition, 'application/json',

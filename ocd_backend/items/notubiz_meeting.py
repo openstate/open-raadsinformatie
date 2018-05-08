@@ -1,10 +1,10 @@
 from hashlib import sha1
 
-from ocd_backend.items import BaseItem
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.items import BaseItem
+from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.models import *
 
 
 def get_meeting_id(item_id):
@@ -13,7 +13,6 @@ def get_meeting_id(item_id):
 
 
 class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
-
     @staticmethod
     def _get_meetingitem_id(item_id):
         from ocd_backend.items.notubiz_meetingitem import get_meetingitem_id

@@ -8,7 +8,6 @@ log = get_source_logger('transformer')
 
 
 class GegevensmagazijnTransformer(BaseTransformer):
-
     def run(self, *args, **kwargs):
         args = args[0]
 

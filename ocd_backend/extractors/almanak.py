@@ -2,8 +2,9 @@ import json
 
 from lxml import etree
 
-from .staticfile import StaticHtmlExtractor
 from ocd_backend.log import get_source_logger
+from ocd_backend.settings import API_URL
+from .staticfile import StaticHtmlExtractor
 
 log = get_source_logger('extractor')
 
@@ -54,7 +55,7 @@ class PersonsExtractor(StaticHtmlExtractor):
         """
         # TODO: not currently likely that we will have more than 100 orgs.
         organisations_url = u'%s%s/organizations/search?size=100' % (
-            settings.API_URL, self.source_definition['index_name'],)
+            API_URL, self.source_definition['index_name'],)
         r = self.http_session.get(organisations_url, verify=False)
         r.raise_for_status()
         as_json = r.json()

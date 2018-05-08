@@ -1,22 +1,26 @@
 import json
 import os
 import time
-import dateutil.parser
-import redis
 from base64 import b64encode
 from hashlib import sha1
-from urlparse import urlparse, urlunparse, parse_qs
 from urllib import urlencode
+from urlparse import urlparse, urlunparse, parse_qs
+
+import dateutil.parser
+import redis
 
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.log import get_source_logger
 from ocd_backend.settings import REDIS_HOST, REDIS_PORT, DATA_DIR_PATH
 from ocd_backend.utils.misc import get_secret
-from ocd_backend.log import get_source_logger
 
 log = get_source_logger('loader')
 
 
 class GegevensmagazijnBaseExtractor(BaseExtractor, HttpRequestMixin):
+    def run(self):
+        pass
+
     def __init__(self, source_definition):
         super(GegevensmagazijnBaseExtractor, self).__init__(source_definition=source_definition)
         user, password = get_secret(self.source_definition['id'])
@@ -40,7 +44,8 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
         else:
             pikets = self.get_pikets()
             if second_last_piket:
-                log.info("Yielding all entities for %i pikets from redis cache for url:\n%s" % (len(pikets), self.feed_url))
+                log.info(
+                    "Yielding all entities for %i pikets from redis cache for url:\n%s" % (len(pikets), self.feed_url))
 
             i = 0
             for piket in pikets:

@@ -1,22 +1,20 @@
-from pprint import pprint
-from time import sleep
 import re
+from time import sleep
 
 import iso8601
-
 from ocd_backend.items.popolo import MotionItem, VotingEventItem
+
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
 from ocd_backend.utils.misc import full_normalized_motion_id
-from ocd_backend.log import get_source_logger
 
 log = get_source_logger('item')
 
 
-class IBabsMotionVotingMixin(
-        HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class IBabsMotionVotingMixin(HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -38,7 +36,8 @@ class IBabsMotionVotingMixin(
             classification='Party', size=100)  # 100 for now ...
         return results
 
-    def _get_classification(self):
+    @staticmethod
+    def _get_classification():
         return u'Moties'
 
     def _value(self, key):
@@ -53,9 +52,10 @@ class IBabsMotionVotingMixin(
         except KeyError:
             return None
 
-    def _get_creator(self, creators_str, members, parties):
+    @staticmethod
+    def _get_creator(creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
-        log.debug("Creators: %s" % (creators_str))
+        log.debug("Creators: %s" % creators_str)
 
         if creators_str is None:
             return
@@ -63,7 +63,7 @@ class IBabsMotionVotingMixin(
         creator_str = re.split(r'\)[,;]\s*', creators_str)[0]
         log.debug("Looking for : %s" % (creator_str,))
 
-        party_match = re.search(r' \(([^\)]*?)\)?$', creator_str)
+        party_match = re.search(r' \(([^)]*?)\)?$', creator_str)
         if not party_match:
             return
 
@@ -71,7 +71,8 @@ class IBabsMotionVotingMixin(
             party_match.group(1),
             u','.join([p.get('name', u'') for p in parties]),))
         try:
-            party = [p for p in parties if unicode(p.get('name', u'')).lower() == unicode(party_match.group(1)).lower()][0]
+            party = \
+                [p for p in parties if unicode(p.get('name', u'')).lower() == unicode(party_match.group(1)).lower()][0]
         except Exception as e:
             party = None
 
@@ -80,7 +81,7 @@ class IBabsMotionVotingMixin(
 
         log.debug("Found party: %s" % (party['name']))
 
-        last_name_match = re.match(r'^([^\,]*)\, ', creator_str)
+        last_name_match = re.match(r'^([^,]*), ', creator_str)
         if not last_name_match:
             return
 
@@ -132,18 +133,20 @@ class IBabsMotionVotingMixin(
     def get_original_object_id(self):
         return self._get_motion_id_encoded()
 
-    def get_original_object_urls(self):
+    @staticmethod
+    def get_original_object_urls():
         # FIXME: what to do when there is not an original URL?
         return {"html": settings.IBABS_WSDL}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
     def _get_motion_data(self, council, members, parties):
-        object_model = {}
+        object_model = dict()
 
         object_model['id'] = unicode(self.get_original_object_id())
 
@@ -165,7 +168,7 @@ class IBabsMotionVotingMixin(
 
         object_model['classification'] = u'Moties'
 
-        object_model['date'] = iso8601.parse_date(self.original_item['datum'][0],)
+        object_model['date'] = iso8601.parse_date(self.original_item['datum'][0], )
         # TODO: this is only for searching compatability ...
         object_model['start_date'] = object_model['date']
         object_model['end_date'] = object_model['date']
@@ -219,10 +222,12 @@ class IBabsMotionVotingMixin(
 
         return self._get_motion_data(council, members, parties)
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)
@@ -257,7 +262,6 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
             except KeyError as e:
                 pass
 
-
         # Not all motions are actually voted on
         # FIXME: are there more. is every municipality specifying the same?
         # allowed_results = [
@@ -267,7 +271,6 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
 
         object_model['counts'] = []
         object_model['votes'] = []
-
 
         # if object_model['result'] not in allowed_results:
         #     return object_model

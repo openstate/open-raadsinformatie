@@ -18,6 +18,7 @@ class NoDeserializerAvailable(Exception):
 
 class FieldNotAvailable(Exception):
     """Exception thrown when a field could not be found."""
+
     def __init__(self, field):
         self.field = field
 

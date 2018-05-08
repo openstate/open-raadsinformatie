@@ -1,6 +1,7 @@
 import json
 
 from requests import HTTPError
+
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.log import get_source_logger
 
@@ -18,7 +19,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
         self.base_url = self.source_definition['base_url']
 
     def extractor(self, meeting_json):
-        raise NotImplemented
+        raise NotImplementedError
 
     def run(self):
         resp = self.http_session.get(
@@ -48,7 +49,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
         meetings_skipped = 0
         for start_date, end_date in self.interval_generator():
             log.info("Now processing first page meeting(items) from %s to %s" % (
-            start_date, end_date,))
+                start_date, end_date,))
 
             page = 1
             while True:

@@ -3,8 +3,7 @@ from unittest import TestCase
 
 
 class ExtractorTestCase(TestCase):
-
-    def setUp(self):
+    def setup(self):
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(
             os.path.join(self.PWD, '..', 'test_dumps/ocd_openbeelden_test.gz')
@@ -18,6 +17,7 @@ class ExtractorTestCase(TestCase):
             'dump_path': dump_path,
             'index_name': 'openbeelden'
         }
+
 
 # Import test modules here so the noserunner can pick them up, and the
 # ExtractorTestCase is parsed. Add additional testcases when required

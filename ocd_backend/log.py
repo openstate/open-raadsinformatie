@@ -22,7 +22,6 @@ if BUGSNAG_APIKEY:
     handler.setLevel(logging.WARN)
     logger.addHandler(handler)
 
-
 logging.config.dictConfig(LOGGING)
 
 

@@ -1,1 +1,76 @@
-{"processed_at": "2015-01-18T18:52:23.376672", "user_properties": {"ip": "10.0.2.2", "referer": null, "user_agent": "curl/7.37.1"}, "created_at": "2015-01-18T18:52:23.373598", "event_properties": {"source_id": null, "query": {"sort": "_score", "include_fields": [], "n_from": 0, "facets": {}, "n_size": 10, "filters": [], "query": "de", "order": "desc"}, "hits": [{"source_id": "rijksmuseum", "score": 1.8734272, "object_id": "ac6e75cfc5c5b20c1ac9b79f283c67e8c2f0b24f"}, {"source_id": "rijksmuseum", "score": 1.6956471, "object_id": "17807adadb9c2c449cc4837bb26c1c20f8ed89bf"}, {"source_id": "rijksmuseum", "score": 1.6906533, "object_id": "233fe7b59bb29534ff2ce58e6f7ac20d255ba9f7"}, {"source_id": "rijksmuseum", "score": 1.1869588, "object_id": "77547d252ba8e4cd2f413f499f6ac9f1aa8e7fef"}, {"source_id": "rijksmuseum", "score": 0.95091164, "object_id": "3fc39c98b3296c145d7da2bd96e99464c12ce55b"}, {"source_id": "rijksmuseum", "score": 0.85171604, "object_id": "7e6e1a49e96fa141efb34e0980571151f7b144b2"}, {"source_id": "rijksmuseum", "score": 0.778896, "object_id": "86699c235a0c950cb8e0ba908fc8dd8faf715b58"}, {"source_id": "rijksmuseum", "score": 0.76340187, "object_id": "b7a8609bdbe0a60b5b1eb6b3b7e708b06435d217"}, {"source_id": "rijksmuseum", "score": 0.73292685, "object_id": "327465a9f71878f30db527d8a9672a1821668de5"}, {"source_id": "rijksmuseum", "score": 0.72893363, "object_id": "73baee365e56903b90eb0aba279735211df2daee"}], "n_total_hits": 95, "query_time_ms": 3}}
+{
+  "processed_at": "2015-01-18T18:52:23.376672",
+  "user_properties": {
+    "ip": "10.0.2.2",
+    "referer": null,
+    "user_agent": "curl/7.37.1"
+  },
+  "created_at": "2015-01-18T18:52:23.373598",
+  "event_properties": {
+    "source_id": null,
+    "query": {
+      "sort": "_score",
+      "include_fields": [],
+      "n_from": 0,
+      "facets": {},
+      "n_size": 10,
+      "filters": [],
+      "query": "de",
+      "order": "desc"
+    },
+    "hits": [
+      {
+        "source_id": "rijksmuseum",
+        "score": 1.8734272,
+        "object_id": "ac6e75cfc5c5b20c1ac9b79f283c67e8c2f0b24f"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 1.6956471,
+        "object_id": "17807adadb9c2c449cc4837bb26c1c20f8ed89bf"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 1.6906533,
+        "object_id": "233fe7b59bb29534ff2ce58e6f7ac20d255ba9f7"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 1.1869588,
+        "object_id": "77547d252ba8e4cd2f413f499f6ac9f1aa8e7fef"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.95091164,
+        "object_id": "3fc39c98b3296c145d7da2bd96e99464c12ce55b"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.85171604,
+        "object_id": "7e6e1a49e96fa141efb34e0980571151f7b144b2"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.778896,
+        "object_id": "86699c235a0c950cb8e0ba908fc8dd8faf715b58"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.76340187,
+        "object_id": "b7a8609bdbe0a60b5b1eb6b3b7e708b06435d217"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.73292685,
+        "object_id": "327465a9f71878f30db527d8a9672a1821668de5"
+      },
+      {
+        "source_id": "rijksmuseum",
+        "score": 0.72893363,
+        "object_id": "73baee365e56903b90eb0aba279735211df2daee"
+      }
+    ],
+    "n_total_hits": 95,
+    "query_time_ms": 3
+  }
+}

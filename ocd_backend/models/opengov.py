@@ -1,6 +1,8 @@
-import owl, schema, govid
-from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
+import govid
+import owl
+import schema
 from owltology.property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Instance
+from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
 
 
 class Event(schema.Event):

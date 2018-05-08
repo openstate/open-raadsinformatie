@@ -1,10 +1,8 @@
 import json
-import mock
 import random
 from unittest import TestCase as UnittestTestCase
-from pprint import pprint
-import requests
 
+import mock
 from flask import url_for, current_app
 from flask.ext.testing import TestCase
 
@@ -642,6 +640,7 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
                              data=json.dumps({}))
         self.assertFalse(mocked_log_task.called)
 
+
 class RestApiSourcesTestCase(OcdRestTestCaseMixin, TestCase):
     required_indexes = [
         'ori_test_combined_index'
@@ -949,7 +948,6 @@ class RestApiResolveTestCase(OcdRestTestCaseMixin, TestCase):
                             content_type='application/json')
         self.assert_not_found_request_json(response)
 
-
     def test_invalid_resolve_html(self):
         """Tests if a request to resolve an invalid URL results in a
         404 response with the proper content type."""
@@ -988,7 +986,7 @@ class RestApiResolveTestCase(OcdRestTestCaseMixin, TestCase):
 
         doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
         url = url_for('api.resolve', url_id=doc_id)
-        response = self.get(url,  follow_redirects=False)
+        response = self.get(url, follow_redirects=False)
         self.assertFalse(mocked_log_task.called)
 
 
@@ -1052,8 +1050,8 @@ class RestApiScrollTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertEqual(len(response.json['item']), 1)
         scroll_id = response.json['meta']['scroll']
         while (
-            ('item' in response.json) and
-            (len(response.json['item']) > 0)
+                    ('item' in response.json) and
+                    (len(response.json['item']) > 0)
         ):
             response = self.post(
                 url, content_type='application/json',

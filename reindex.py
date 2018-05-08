@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-import requests
 import json
 
-indices = []
+import requests
+
 with open('old-indices.txt') as in_file:
     indices = [x.strip() for x in in_file.readlines()]
 
 for idx in indices:
     data = {
         "source": {
-            "remote":{"host": "http://c-open-raadsinformatie:9200"},
+            "remote": {"host": "http://c-open-raadsinformatie:9200"},
             "index": idx,
             "size": 25,
         },

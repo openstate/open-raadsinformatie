@@ -1,9 +1,9 @@
+import logging
 import os
 import pickle
-import logging
 
-from pythonjsonlogger import jsonlogger
 from kombu.serialization import register
+from pythonjsonlogger import jsonlogger
 
 register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
@@ -45,6 +45,7 @@ CELERY_CONFIG = {
 
 class SetDebugFilter(logging.Filter):
     """ This filter decreases the logrecord to DEBUG """
+
     def filter(self, record):
         # Downgrade level to debug
         record.levelno = 10
@@ -54,6 +55,7 @@ class SetDebugFilter(logging.Filter):
 
 class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
     """ Formats the record to a Google Stackdriver compatible json string """
+
     def __init__(self, fmt="%(levelname) %(message)", *args, **kwargs):
         jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
 

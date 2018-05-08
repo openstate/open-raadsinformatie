@@ -97,18 +97,18 @@ class MediaEnricher(BaseEnricher):
 
         # Create a temporary file to store the media item, write the file
         # to disk if it is larger than 1 MB.
-        media_file = SpooledTemporaryFile(max_size=1024*1024, prefix='ocd_m_',
+        media_file = SpooledTemporaryFile(max_size=1024 * 1024, prefix='ocd_m_',
                                           suffix='.tmp',
                                           dir=TEMP_DIR_PATH)
 
         # When a partial fetch is requested, request up to two MB
-        partial_target_size = 1024*1024*2
+        partial_target_size = 1024 * 1024 * 2
         content_length = http_resp.headers.get('content-length')
         if content_length and int(content_length) < partial_target_size:
             partial_target_size = int(content_length)
 
         retrieved_bytes = 0
-        for chunk in http_resp.iter_content(chunk_size=512*1024):
+        for chunk in http_resp.iter_content(chunk_size=512 * 1024):
             if chunk:  # filter out keep-alive chunks
                 media_file.write(chunk)
                 retrieved_bytes += len(chunk)
@@ -171,9 +171,9 @@ class MediaEnricher(BaseEnricher):
                 self.available_tasks[task](item, content_type, media_file)
             except UnsupportedContentType:
                 log.info('Skipping media enrichment task %s, '
-                          'content-type %s (object_id: %s, url %s) is not '
-                          'supported.' % (task, content_type, item.get_ori_id(),
-                                          item.original_url))
+                         'content-type %s (object_id: %s, url %s) is not '
+                         'supported.' % (task, content_type, item.get_ori_id(),
+                                         item.original_url))
                 continue
 
             media_file.close()

@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from hashlib import sha1
-import json
 import re
+from hashlib import sha1
+
 from py2neo import Graph, ConstraintError
+
+import property
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate
-from json import JSONEncoder
-import datetime
-import property
-from owltology.exceptions import RequiredProperty, MissingProperty, QueryResultError
+from owltology.exceptions import RequiredProperty, MissingProperty, \
+    QueryResultError
 
 graph = None
+
+
 def get_graph():
     global graph
     if graph:
@@ -96,8 +98,7 @@ class ModelBase(object):
             if name[0:2] == '__':
                 continue
             definition = self.__definitions__[name]
-            if ((props and not isinstance(prop, ModelBase))
-                    or (rels and isinstance(prop, ModelBase))):
+            if (props and not isinstance(prop, ModelBase)) or (rels and isinstance(prop, ModelBase)):
                 props_list.append((definition.get_prefix_uri(), prop,))
         return props_list
 
@@ -145,7 +146,8 @@ class ModelBase(object):
         return instance
 
     def __setattr__(self, key, value):
-        if key[0:2] != '__' and key not in self.__definitions__ and (hasattr(self, '__temporary__') and not self.__temporary__):
+        if key[0:2] != '__' and key not in self.__definitions__ and (
+                    hasattr(self, '__temporary__') and not self.__temporary__):
             raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
 
         super(ModelBase, self).__setattr__(key, value)
@@ -237,8 +239,9 @@ class ModelBase(object):
         '''
 
         try:
-            result = get_graph().data(query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
-                                 replace_params=self.deflate())
+            result = get_graph().data(
+                query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
+                replace_params=self.deflate())
         except ConstraintError, e:
             # todo
             raise
@@ -257,7 +260,7 @@ class ModelBase(object):
         query = 'MATCH (n :`%(labels)s` {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
                 {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()}
         query += 'MERGE (m {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
-                {'labels': '`:`'.join(other.labels()), 'identifier_value': other.get_ori_id()}
+                 {'labels': '`:`'.join(other.labels()), 'identifier_value': other.get_ori_id()}
         query += '''MERGE (n)-[r :`%(rel_type)s`]->(m)
         ON CREATE SET m += $create_params
         ON MATCH SET m += $create_params

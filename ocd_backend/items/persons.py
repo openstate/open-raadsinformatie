@@ -1,7 +1,7 @@
 from lxml import etree
+from ocd_backend.items.popolo import PersonItem
 
 from ocd_backend.extractors import HttpRequestMixin
-from ocd_backend.items.popolo import PersonItem
 
 
 class AlmanakPersonItem(HttpRequestMixin, PersonItem):
@@ -12,7 +12,8 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
     def get_original_object_urls(self):
         return {"html": self.get_original_object_id()}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
@@ -43,7 +44,7 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
             {
                 'identifier': u''.join(html.xpath(
                     '//meta[@name="DCTERMS.identifier"]/@content')).replace(
-                        u'.html', u''),
+                    u'.html', u''),
                 'scheme': u'Almanak'
             }
 
@@ -92,10 +93,12 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

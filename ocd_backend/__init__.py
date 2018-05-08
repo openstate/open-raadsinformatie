@@ -1,6 +1,6 @@
 from celery import Celery
 from celery import current_app
-from celery.five import with_metaclass
+from vine.five import with_metaclass
 from celery.local import Proxy
 from celery.utils import gen_task_name
 
@@ -31,8 +31,9 @@ class TaskType(type):
     If no :attr:`Task.name` attribute is provided, then the name is generated
     from the module and class name.
     """
-    def __new__(cls, name, bases, attrs):
-        new = super(TaskType, cls).__new__
+
+    def __new__(mcs, name, bases, attrs):
+        new = super(TaskType, mcs).__new__
         task_module = attrs.get('__module__') or '__main__'
 
         # The 'app' attribute is now a property, with the real app located
@@ -62,7 +63,7 @@ class TaskType(type):
         # name, so we always return the registered version.
         tasks = app._tasks
         if task_name not in tasks:
-            tasks.register(new(cls, name, bases, attrs))
+            tasks.register(new(mcs, name, bases, attrs))
         instance = tasks[task_name]
         instance.bind(app)
         return instance.__class__
@@ -77,4 +78,4 @@ class RegisterTask(celery_app.Task):
 
 
 # Monkeypatching Task in order to let it register automatically
-celery_app.Task = RegisterTask
+setattr(celery_app, 'Task', RegisterTask)

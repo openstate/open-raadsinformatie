@@ -1,23 +1,20 @@
-import json
 import os
-from mock import MagicMock
-from pprint import pprint
 
-from lxml import etree
 import iso8601
+from mock import MagicMock
 
 from ocd_backend.items.go_meeting import MeetingItem
-
 from . import ItemTestCase
 
 
 class MeetingItemTestCase(ItemTestCase):
-    def setUp(self):
-        super(MeetingItemTestCase, self).setUp()
+    def setup(self):
+        super(MeetingItemTestCase, self).setup()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting.html'))
         dump_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item.html'))
-        dump_item_docs_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item_documents.html'))
+        dump_item_docs_path = os.path.abspath(
+            os.path.join(self.PWD, '../test_dumps/den_helder_meeting_item_documents.html'))
 
         faulty_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_faulty_meeting.html'))
         faulty_item_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/den_helder_faulty_meeting_item.html'))
@@ -69,7 +66,7 @@ class MeetingItemTestCase(ItemTestCase):
         self.meeting_item_object_urls = {
             'html': u'https://gemeenteraad.denhelder.nl/Vergaderingen/Gemeenteraad/2015/31-augustus/19:30/#agendapunt19024_4718'
         }
-        self.rights = u'undefined' # for now ...
+        self.rights = u'undefined'  # for now ...
         self.collection = u'den_helder'
 
         self.meeting_name = u'Gemeenteraad 31 augustus 2015 19:30:00'
@@ -177,15 +174,12 @@ class MeetingItemTestCase(ItemTestCase):
             self.raw_item, self.meeting, None
         )
 
-
-
         return item
 
     def _instantiate_meeting_item(self):
         """
         Instantiate the item from the raw and parsed item we have
         """
-
 
         # FIXME: these need to return some values
         MeetingItem._get_council = MagicMock(return_value={'id': u'1', 'name': u'Den Helder'})
@@ -198,44 +192,36 @@ class MeetingItemTestCase(ItemTestCase):
         )
         return item
 
-
     def test_meeting_get_original_object_id(self):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_original_object_id(), self.meeting_object_id)
-
 
     def test_meeting_item_get_original_object_id(self):
         item = self._instantiate_meeting_item()
         self.assertEqual(
             item.get_original_object_id(), self.meeting_item_object_id)
 
-
     def test_meeting_get_original_object_urls(self):
         item = self._instantiate_meeting()
         self.assertDictEqual(
             item.get_original_object_urls(), self.meeting_object_urls)
-
 
     def test_meeting_item_get_original_object_urls(self):
         item = self._instantiate_meeting_item()
         self.assertDictEqual(
             item.get_original_object_urls(), self.meeting_item_object_urls)
 
-
     def test_meeting_get_rights(self):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_rights(), self.rights)
-
 
     def test_meeting_item_get_rights(self):
         item = self._instantiate_meeting_item()
         self.assertEqual(item.get_rights(), self.rights)
 
-
     def test_meeting_get_collection(self):
         item = self._instantiate_meeting()
         self.assertEqual(item.get_collection(), self.collection)
-
 
     def test_meeting_item_get_collection(self):
         item = self._instantiate_meeting_item()
@@ -245,7 +231,6 @@ class MeetingItemTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['name'], self.meeting_name)
-
 
     def test_meeting_item_name(self):
         item = self._instantiate_meeting_item()
@@ -257,7 +242,6 @@ class MeetingItemTestCase(ItemTestCase):
         data = item.get_object_model()
         self.assertEqual(data['identifiers'], self.meeting_identifiers)
 
-
     def test_meeting_item_identifiers(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
@@ -268,18 +252,15 @@ class MeetingItemTestCase(ItemTestCase):
         data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
-
     def test_meeting_item_organisation(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertDictEqual(data['organization'], self.organisation)
 
-
     def test_meeting_classification(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['classification'], self.meeting_classification)
-
 
     def test_meeting_item_classification(self):
         item = self._instantiate_meeting_item()
@@ -292,37 +273,31 @@ class MeetingItemTestCase(ItemTestCase):
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
-
     def test_meeting_item_dates(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertEqual(data['start_date'], self.start_date)
         self.assertEqual(data['end_date'], self.start_date)
 
-
     def test_meeting_location(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
-
 
     def test_meeting_item_location(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertEqual(data['location'], self.location)
 
-
     def test_meeting_status(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
 
-
     def test_meeting_item_status(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertEqual(data['status'], self.status)
-
 
     def test_get_object_id_for(self):
         item = self._instantiate_meeting()
@@ -331,31 +306,26 @@ class MeetingItemTestCase(ItemTestCase):
             item.get_original_object_urls()
         ), item.get_object_id())
 
-
     def test_meeting_item_get_parent_id(self):
         meeting = self._instantiate_meeting()
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertEqual(data['parent_id'], meeting.get_object_id())
 
-
     def test_meeting_sources(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_sources)
-
 
     def test_meeting_item_sources(self):
         item = self._instantiate_meeting_item()
         data = item.get_object_model()
         self.assertEqual(data['sources'], self.meeting_item_sources)
 
-
     def test_meeting_description(self):
         item = self._instantiate_meeting()
         data = item.get_object_model()
         self.assertEqual(data['description'], self.meeting_description)
-
 
     def test_meeting_item_description(self):
         item = self._instantiate_meeting_item()
@@ -381,7 +351,7 @@ class MeetingItemTestCase(ItemTestCase):
             self.raw_faulty_meeting_item, meeting_item, None
         )
 
-        #data = item.get_object_model()
+        # data = item.get_object_model()
         meeting_item_id = item._get_meeting_item_id()
         self.assertEqual(meeting_item_id, self.faulty_meeting_item_id)
 

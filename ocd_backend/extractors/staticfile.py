@@ -1,10 +1,11 @@
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
-from ocd_backend.exceptions import ConfigurationError
-
-from click import progressbar
 import gzip
 import json
+
+from click import progressbar
 from lxml import etree
+
+from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 
 
 class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
@@ -86,7 +87,7 @@ class StaticXmlExtractor(StaticFileBaseExtractor):
     def extract_items(self, static_content):
         tree = etree.fromstring(static_content)
 
-        self.namespaces = None
+        namespaces = None
         if self.default_namespace is not None:
             # the namespace map has a key None if there is a default namespace
             # so the configuration has to specify the default key
@@ -166,6 +167,7 @@ class StaticJSONDumpExtractor(BaseExtractor):
     """
     Extract items from JSON dumps.
     """
+
     def __init__(self, *args, **kwargs):
         super(StaticJSONDumpExtractor, self).__init__(*args, **kwargs)
 
@@ -181,9 +183,10 @@ class StaticJSONDumpExtractor(BaseExtractor):
         for item in self.extract_items(dump_path):
             yield item
 
-    def extract_items(self, dump_path):
+    @staticmethod
+    def extract_items(dump_path):
         with progressbar(
-            gzip.open(dump_path, 'rb'), label='Loading %s' % dump_path
+                gzip.open(dump_path, 'rb'), label='Loading %s' % dump_path
         ) as f:
             for line in f:
                 yield 'application/json', line.strip()

@@ -1,12 +1,13 @@
-import requests
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from dateutil.parser import parse
-from requests.packages.urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
 
-from ocd_backend.settings import USER_AGENT
+import requests
+from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+
 from ocd_backend.log import get_source_logger
+from ocd_backend.settings import USER_AGENT
 
 log = get_source_logger('extractor')
 
@@ -85,6 +86,7 @@ class BaseExtractor(object):
 
 class CustomRetry(Retry):
     """A subclass of the Retry class but with extra logging"""
+
     def increment(self, method=None, url=None, response=None, error=None,
                   _pool=None, _stacktrace=None):
         res = super(CustomRetry, self).increment(method, url, response,
@@ -99,6 +101,8 @@ class HttpRequestMixin(object):
     :class:`requests.Session` is used to take advantage of
     HTTP Keep-Alive.
     """
+
+    _http_session = None
 
     @property
     def http_session(self):

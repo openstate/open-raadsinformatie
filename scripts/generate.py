@@ -1,14 +1,5 @@
 #!/usr/bin/env python
-from datetime import datetime
 import json
-from glob import glob
-import gzip
-from hashlib import sha1
-import os
-import requests
-import sys
-import time
-from urlparse import urljoin
 
 import click
 from click.core import Command
@@ -29,6 +20,7 @@ def command(name=None, cls=None, **attrs):
         r = _make_command(f, name, attrs, cls)
         r.__doc__ = f.__doc__
         return r
+
     return decorator
 
 
@@ -168,6 +160,7 @@ def generate_sources_municipality(name, almanak, provider):
     )
 
     print json.dumps(sources, indent=4)
+
 
 sources.add_command(generate_sources_municipality)
 

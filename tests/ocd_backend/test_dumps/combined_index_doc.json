@@ -1,73 +1,73 @@
 {
-    "description": "Camping in de duinen bij Oost-Vlieland.",
-    "title": "Duincamping bij Oost-Vlieland",
-    "date_granularity": 8,
-    "meta": {
-        "processing_started": "2014-11-17T14:02:48.642602",
-        "rights": "Creative Commons Attribution-ShareAlike",
-        "collection": "Open Beelden",
-        "original_object_id": "oai:openimages.eu:749181",
-        "source_id": "test_definition",
-        "original_object_urls": {
-            "xml": "http://openbeelden.nl/feeds/oai/?verb=GetRecord&identifier=oai:openimages.eu:749181&metadataPrefix=oai_oi",
-            "html": "http://openbeelden.nl/media/749181/"
-        }
+  "description": "Camping in de duinen bij Oost-Vlieland.",
+  "title": "Duincamping bij Oost-Vlieland",
+  "date_granularity": 8,
+  "meta": {
+    "processing_started": "2014-11-17T14:02:48.642602",
+    "rights": "Creative Commons Attribution-ShareAlike",
+    "collection": "Open Beelden",
+    "original_object_id": "oai:openimages.eu:749181",
+    "source_id": "test_definition",
+    "original_object_urls": {
+      "xml": "http://openbeelden.nl/feeds/oai/?verb=GetRecord&identifier=oai:openimages.eu:749181&metadataPrefix=oai_oi",
+      "html": "http://openbeelden.nl/media/749181/"
+    }
+  },
+  "authors": [
+    "Natuur Digitaal (Marc Plomp); Stichting Natuurbeelden"
+  ],
+  "date": "2012-06-12T00:00:00",
+  "all_text": "Duincamping bij Oost-Vlieland Natuur Digitaal (Marc Plomp); Stichting Natuurbeelden bewolkt bossen buitenopname camping close dag duinen kampeerterrein kamperen landschappen natuurcamping tenten totaal zomer zonnig Clip gemaakt in de Nederlandse natuur uit de collectie van Stichting Natuurbeelden (www.natuurbeelden.nl). Camping in de duinen bij Oost-Vlieland. Stichting  Natuurbeelden Plomp, Marc (camera) 4804208 00023VLIELAND-NAT00Z02YB4 Moving Image",
+  "media_urls": [
+    {
+      "url": "http://localhost:5000/v0/resolve/2c21135fa421b94769d07cdf55425a007f8f87ae",
+      "content_type": "video/mp4",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749245.749185.00023VLIELAND-NAT00Z02YB4.mp4"
     },
-    "authors": [
-        "Natuur Digitaal (Marc Plomp); Stichting Natuurbeelden"
-    ],
-    "date": "2012-06-12T00:00:00",
-    "all_text": "Duincamping bij Oost-Vlieland Natuur Digitaal (Marc Plomp); Stichting Natuurbeelden bewolkt bossen buitenopname camping close dag duinen kampeerterrein kamperen landschappen natuurcamping tenten totaal zomer zonnig Clip gemaakt in de Nederlandse natuur uit de collectie van Stichting Natuurbeelden (www.natuurbeelden.nl). Camping in de duinen bij Oost-Vlieland. Stichting  Natuurbeelden Plomp, Marc (camera) 4804208 00023VLIELAND-NAT00Z02YB4 Moving Image",
-    "media_urls": [
-        {
-            "url": "http://localhost:5000/v0/resolve/2c21135fa421b94769d07cdf55425a007f8f87ae",
-            "content_type": "video/mp4",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749245.749185.00023VLIELAND-NAT00Z02YB4.mp4"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/1019681773951d42696fdd65eabf8643c25c1aa4",
-            "content_type": "video/mp4",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749247.749185.00023VLIELAND-NAT00Z02YB4.mp4"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/ecb2df0d714388518e981ea396313d5bac9009a4",
-            "content_type": "video/mp4",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749185.00023VLIELAND-NAT00Z02YB4.mp4"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/b1c9ed763a597f3870480c646a5afbae8cca955f",
-            "content_type": "video/webm",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749249.749185.00023VLIELAND-NAT00Z02YB4.webm"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/b3988ebc7fd7b97fb6ce63b6518ce6c7e838cb66",
-            "content_type": "video/ogg",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749241.749185.00023VLIELAND-NAT00Z02YB4.ogv"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/a2180012025c88e7c9416baa54d73aa3eed24ebe",
-            "content_type": "video/ogg",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749243.749185.00023VLIELAND-NAT00Z02YB4.ogv"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/250abdc591bb2c866bbb91112af44acdb03f4f79",
-            "content_type": "application/x-mpegurl",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749285.749185.00023VLIELAND_NAT00Z02YB4.m3u8"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/a0f6614ff7a48d2cb015a6ef4a6f1c76acd3bd2e",
-            "content_type": "video/mp2t",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749251.749185.00023VLIELAND-NAT00Z02YB4.ts"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/5c2f3a38e36fbbc8ad3f553db38e6ad9f853ad4d",
-            "content_type": "video/mpeg",
-            "original_url": "http://www.openbeelden.nl/files/07/49/749232.749185.00023VLIELAND-NAT00Z02YB4.mpeg"
-        },
-        {
-            "url": "http://localhost:5000/v0/resolve/6686802628f132f97a0955354172d4c51c16c491",
-            "content_type": "image/png",
-            "original_url": "http://www.openbeelden.nl/images/749410/Duincamping_bij_Oost-Vlieland_%282_17%29.png"
-        }
-    ]
+    {
+      "url": "http://localhost:5000/v0/resolve/1019681773951d42696fdd65eabf8643c25c1aa4",
+      "content_type": "video/mp4",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749247.749185.00023VLIELAND-NAT00Z02YB4.mp4"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/ecb2df0d714388518e981ea396313d5bac9009a4",
+      "content_type": "video/mp4",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749185.00023VLIELAND-NAT00Z02YB4.mp4"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/b1c9ed763a597f3870480c646a5afbae8cca955f",
+      "content_type": "video/webm",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749249.749185.00023VLIELAND-NAT00Z02YB4.webm"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/b3988ebc7fd7b97fb6ce63b6518ce6c7e838cb66",
+      "content_type": "video/ogg",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749241.749185.00023VLIELAND-NAT00Z02YB4.ogv"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/a2180012025c88e7c9416baa54d73aa3eed24ebe",
+      "content_type": "video/ogg",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749243.749185.00023VLIELAND-NAT00Z02YB4.ogv"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/250abdc591bb2c866bbb91112af44acdb03f4f79",
+      "content_type": "application/x-mpegurl",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749285.749185.00023VLIELAND_NAT00Z02YB4.m3u8"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/a0f6614ff7a48d2cb015a6ef4a6f1c76acd3bd2e",
+      "content_type": "video/mp2t",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749251.749185.00023VLIELAND-NAT00Z02YB4.ts"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/5c2f3a38e36fbbc8ad3f553db38e6ad9f853ad4d",
+      "content_type": "video/mpeg",
+      "original_url": "http://www.openbeelden.nl/files/07/49/749232.749185.00023VLIELAND-NAT00Z02YB4.mpeg"
+    },
+    {
+      "url": "http://localhost:5000/v0/resolve/6686802628f132f97a0955354172d4c51c16c491",
+      "content_type": "image/png",
+      "original_url": "http://www.openbeelden.nl/images/749410/Duincamping_bij_Oost-Vlieland_%282_17%29.png"
+    }
+  ]
 }

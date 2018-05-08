@@ -1,12 +1,12 @@
-import log  # needed for logging init
-
+from bugsnag.flask import handle_exceptions
 from flask import Flask
 
-from settings import BUGSNAG_APIKEY
-from helpers import register_blueprints
-from es import ElasticsearchService
-from bugsnag.flask import handle_exceptions
+# noinspection PyUnresolvedReferences
+####### import log  # needed for init logging
 import settings
+from es import ElasticsearchService
+from helpers import register_blueprints
+from settings import BUGSNAG_APIKEY
 
 
 def create_app_factory(package_name, package_path, settings_override=None):

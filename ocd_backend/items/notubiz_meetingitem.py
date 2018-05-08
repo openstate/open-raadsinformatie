@@ -10,7 +10,6 @@ def get_meetingitem_id(item_id):
 
 
 class MeetingItem(Meeting):
-
     @staticmethod
     def _get_meeting_id(item_id):
         from ocd_backend.items.notubiz_meeting import get_meeting_id

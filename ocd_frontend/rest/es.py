@@ -19,3 +19,6 @@ class ElasticsearchService(object):
 
     def msearch(self, *args, **kwargs):
         return self._es.msearch(*args, **kwargs)
+
+    def get_esclient(self):
+        return self._es

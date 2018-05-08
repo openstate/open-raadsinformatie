@@ -1,20 +1,20 @@
 from hashlib import sha1
-import iso8601
 
+import iso8601
 from ocd_backend.items.popolo import EventItem
+
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
-class Meeting(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
-
+class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def _get_current_permalink(self):
         return u'%s/meetings/%i' % (self.source_definition[
-                                    'base_url'], self.original_item['id'])
+                                        'base_url'], self.original_item['id'])
 
-    def _find_meeting_type_id(self, org):
+    @staticmethod
+    def _find_meeting_type_id(org):
         results = [x for x in org['identifiers']
                    if x['scheme'] == u'GemeenteOplossingen']
         return results[0]['identifier']
@@ -43,7 +43,8 @@ class Meeting(
     def get_original_object_urls(self):
         return {"html": self._get_current_permalink()}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
@@ -63,7 +64,7 @@ class Meeting(
             object_model['name'] = self.original_item['description']
         else:
             object_model['name'] = 'Vergadering %s' % \
-                self.original_item['dmu']['name']
+                                   self.original_item['dmu']['name']
 
         object_model['classification'] = u'Agenda'
 
@@ -129,10 +130,12 @@ class Meeting(
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

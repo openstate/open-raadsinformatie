@@ -1,7 +1,8 @@
-from unittest import TestCase
 import datetime
+from unittest import TestCase
 
 from ocd_backend.utils.misc import normalize_motion_id
+
 
 class MotionIdNormalizerTestCase(TestCase):
     def test_normalize_motion_id(self):

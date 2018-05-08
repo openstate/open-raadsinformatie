@@ -1,8 +1,10 @@
 import unittest
-from ocd_backend.models.model_base import ModelBase
-from ocd_backend.models.namespaces import owl, foaf, OPENGOV, SCHEMA, COUNCIL
-from ocd_backend.models.property_base import Type, Some, Only, Min, Exactly, SomeString, SomeDate
+
 from ocd_backend.models.exceptions import ValidationError
+from ocd_backend.models.model_base import ModelBase
+from ocd_backend.models.property_base import Type, Min, Exactly, SomeString
+
+from ocd_backend.models.namespaces import OPENGOV, SCHEMA
 
 
 class Motion(ModelBase):
@@ -11,9 +13,8 @@ class Motion(ModelBase):
 
 
 class MyTest(unittest.TestCase):
-    def setUp(self):
+    def setup(self):
         self.model = Motion()
-
 
     def test_predefined_attributes(self):
         try:

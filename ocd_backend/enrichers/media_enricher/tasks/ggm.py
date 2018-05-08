@@ -1,4 +1,5 @@
 import string
+
 import bugsnag
 
 from ocd_backend.enrichers.media_enricher.tasks import FileToText
@@ -22,7 +23,7 @@ class GegevensmagazijnMotionText(FileToText):
             bugsnag.notify(
                 "Invalid motion, stop processing: ",
                 severity="info",
-                meta_data={"text": self.text}
+                meta_data={"text": text}
             )
 
         opening_offset = 1
@@ -42,7 +43,7 @@ class GegevensmagazijnMotionText(FileToText):
         try:
             motion_lines = lines[opening_number:closing_number]
         except IndexError:
-            pass
+            motion_lines = None
 
         # Make last
         if motion_lines[-1][-1] in string.punctuation:
@@ -63,6 +64,6 @@ class GegevensmagazijnMotionText(FileToText):
                 first_request = False
 
         if not first_request:
-            motion_lines[-1] = motion_lines[-1] + "**"
+            motion_lines[-1] += "**"
 
         media_item.text = "\n".join(motion_lines)

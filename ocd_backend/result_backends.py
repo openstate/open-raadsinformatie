@@ -22,6 +22,7 @@ class OCDBackendMixin(object):
     This will make sure whether the subclass has implemented all the required
     methods, and allow it to override specific methods if required.
     """
+
     def get(self, key):
         """Get value by `key`"""
         raise NotImplementedError('Subclass should implement `get` method')
@@ -54,7 +55,6 @@ class OCDBackendMixin(object):
 
 
 class OCDRedisBackend(RedisBackend, OCDBackendMixin):
-
     def add_value_to_set(self, set_name, value):
         self.client.sadd(set_name, value)
 

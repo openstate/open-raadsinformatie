@@ -11,6 +11,7 @@ class OCDBackendTaskMixin(object):
 
     It loads a `Task` that is defined by a dotted path in `sources.json`.
     """
+
     def cleanup(self, **kwargs):
         cleanup_task = load_object(self.source_definition.get('cleanup'))()
         cleanup_task.delay(**kwargs)
@@ -19,6 +20,7 @@ class OCDBackendTaskMixin(object):
 class OCDBackendTaskFailureMixin(OCDBackendTaskMixin):
     """Add this mixin to a task that should execute `self.cleanup` when the
     Task fails."""
+
     def on_failure(self, exc, task_id, args, kwargs, einfo):
         self.cleanup(**kwargs)
 
@@ -26,5 +28,6 @@ class OCDBackendTaskFailureMixin(OCDBackendTaskMixin):
 class OCDBackendTaskSuccessMixin(OCDBackendTaskMixin):
     """Add this mixin to a task that should execute `self.cleanup` when the
     Task succeeds."""
+
     def after_return(self, status, retval, task_id, args, kwargs, einfo):
         self.cleanup(**kwargs)

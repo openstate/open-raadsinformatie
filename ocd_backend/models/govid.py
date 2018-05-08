@@ -1,5 +1,5 @@
-from .namespaces import GOVID
 from owltology.property import StringProperty
+from .namespaces import GOVID
 
 ori_identifier = StringProperty(GOVID, 'oriIdentifier')
 ibabs_identifier = StringProperty(GOVID, 'ibabsIdentifier')

@@ -1,33 +1,24 @@
 #!/usr/bin/env python
 
-import sys
-import os
-import re
 import json
-from pprint import pprint
-from collections import OrderedDict
+import sys
 from optparse import OptionParser
 
-import redis
-import requests
-
-from elasticsearch import helpers as es_helpers
-from elasticsearch.exceptions import RequestError
-
-import ocd_backend
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.utils.misc import reindex
 
 
 def transform_to_same(h):
     print "Transforming item %s ..." % (h['_id'],)
-    #pprint(h)
+    # pprint(h)
     return h
+
 
 def transform_to_old(h):
     if h['_type'] == u'events' and h['_source']['classification'] == u'Meetingitem':
         h['_source']['classification'] = u'Meeting Item'
     return h
+
 
 def transform_to_new(h):
     if h['_type'] != u'events':
@@ -41,12 +32,12 @@ def transform_to_new(h):
     if h['_source']['classification'] == u'Meeting':
         h['_source']['classification'] = u'Agenda'
 
-    if h['_source'].has_key('source_data'):
+    if 'source_data' in h['_source']:
         sd = h['_source']['source_data']
     else:
         try:
             doc = es.get(index=u'ori_%s' % (h['_source']['meta']['collection'],),
-                doc_type=h['_type'], id=h['_id'], _source_include=['*'])
+                         doc_type=h['_type'], id=h['_id'], _source_include=['*'])
             sd = doc['_source']['source_data']
             h['_source']['source_data'] = sd
         except Exception as e:
@@ -55,11 +46,11 @@ def transform_to_new(h):
     if h['_source']['classification'] != u'Report':
         return h
 
-    if sd.has_key('content_type') and sd[u'content_type'] ==  u'application/json':
+    if 'content_type' in sd and sd[u'content_type'] == u'application/json':
         # FIXME: this is mainly for iBabs, but what about GemeenteOplossingen?
         data = json.loads(sd['data'])
 
-        if data.has_key('_ReportName'):
+        if '_ReportName' in data:
             h['_source']['classification'] = unicode(
                 data['_ReportName'].split(r'\s+')[0])
         elif h['_source']['classification'] == u'Report':
@@ -68,6 +59,7 @@ def transform_to_new(h):
             h['_source']['classification'] = u'Besluitenlijst'
 
     return h
+
 
 def run(argv):
     parser = OptionParser()
@@ -81,7 +73,7 @@ def run(argv):
                       action="store_false", dest="verbose", default=True,
                       help="don't print status messages to stdout")
     (options, args) = parser.parse_args()
-    #reindex(es, options.index, options.output, transformation_callable=dummy_transform)
+    # reindex(es, options.index, options.output, transformation_callable=dummy_transform)
 
     func = None
 
@@ -98,6 +90,7 @@ def run(argv):
 
     reindex(es, options.index, options.output, transformation_callable=func)
     return 0
+
 
 if __name__ == '__main__':
     sys.exit(run(sys.argv))

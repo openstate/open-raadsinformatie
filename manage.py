@@ -8,7 +8,6 @@ from hashlib import sha1
 import os
 import requests
 import sys
-import time
 from urlparse import urljoin
 
 import click
@@ -38,6 +37,7 @@ def command(name=None, cls=None, **attrs):
     """
     if cls is None:
         cls = Command
+
     def decorator(f):
         r = _make_command(f, name, attrs, cls)
         r.__doc__ = f.__doc__
@@ -229,7 +229,7 @@ def create_indexes(mapping_dir):
     following naming convention: "ocd_mapping_{SOURCE_NAME}.json".
     For example: "ocd_mapping_rijksmuseum.json".
     """
-    click.echo('Creating indexes for ES mappings in %s' % (mapping_dir))
+    click.echo('Creating indexes for ES mappings in %s' % mapping_dir)
 
     for mapping_file_path in glob('%s/ori_mapping_*.json' % mapping_dir):
         # Extract the index name from the filename
@@ -261,7 +261,7 @@ def delete_indexes(delete_template):
     provided, delete the index template too (index template contains default
     index configuration and mappings).
 
-    :param delete-template: if provided, delete template too
+    :param delete_template: if provided, delete template too
     """
     index_glob = '%s_*' % DEFAULT_INDEX_PREFIX
     indices = es.indices.status(index=index_glob, human=True)
@@ -453,7 +453,6 @@ def create_dump(ctx, index):
     click.secho('Created dump "%s" (checksum %s)' % (dump_name, checksum),
                 fg='green')
 
-
     latest = os.path.join(path, '%s_latest.gz' % index)
     try:
         os.unlink(latest)
@@ -547,8 +546,7 @@ def download_dumps(api_url, destination, collections, all_collections):
         collection = click.prompt('For which collection do you want to download'
                                   ' a dump? Please provide the number correspon'
                                   'ding to the collection that you want to down'
-                                  'load', type=click.Choice([
-            str(i[0]) for i in available_collections]))
+                                  'load', type=click.Choice([str(i[0]) for i in available_collections]))
 
         collection = dict(available_collections)[int(collection)]
         for i, dump in enumerate(dumps[collection]):

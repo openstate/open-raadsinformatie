@@ -28,23 +28,29 @@ DEFAULT_INDEX_PREFIX = 'ori'
 # The fields which can be used for sorting results via the REST API
 SORTABLE_FIELDS = {
     'persons': [
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score', 'gender', 'name'],
     'organizations': [
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score', 'classification', 'name'],
-    'events' :[
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+    'events': [
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'start_date',
         'location'],
-    'motions':[
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+    'motions': [
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'date'],
     'vote_events': [
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'start_date'],
     'items': [
-        'meta.source_id', 'meta.processing_started', 'meta.processing_finished',
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
         'start_date', '_score']
 }
 
@@ -67,7 +73,8 @@ ALLOWED_INCLUDE_FIELDS_SEARCH = []
 
 SIMPLE_QUERY_FIELDS = {
     'persons': [
-        'biography^4', 'name^3', 'other_names^2', 'memberships.organization.name^2',
+        'biography^4', 'name^3', 'other_names^2',
+        'memberships.organization.name^2',
         'memberships.role'],
     'organizations': ['name^4', 'description'],
     'events': [
@@ -137,7 +144,7 @@ COMMON_FACETS = {
             'field': 'start_date',
             'interval': 'month'
         }
-     }
+    }
 }
 
 AVAILABLE_FACETS = {
@@ -286,7 +293,6 @@ AVAILABLE_FACETS = {
         }
     }
 }
-
 
 # AVAILABLE_FACETS = {
 #     # 'retrieved_at': {
@@ -452,12 +458,12 @@ THUMBNAIL_SIZES = {
     'medium': {'size': (THUMBNAIL_MEDIUM, THUMBNAIL_MEDIUM), 'type': 'aspect'},
     'small': {'size': (THUMBNAIL_SMALL, THUMBNAIL_SMALL), 'type': 'aspect'},
     'large_sq': {'size': (THUMBNAIL_LARGE, THUMBNAIL_LARGE), 'type': 'crop'},
-    'medium_sq': {'size': (THUMBNAIL_MEDIUM, THUMBNAIL_MEDIUM), 'type': 'crop'},
+    'medium_sq': {'size': (THUMBNAIL_MEDIUM, THUMBNAIL_MEDIUM),
+                  'type': 'crop'},
     'small_sq': {'size': (THUMBNAIL_SMALL, THUMBNAIL_SMALL), 'type': 'crop'},
 }
 
 THUMBNAIL_URL = '/media/'
-
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be

@@ -1,8 +1,7 @@
-from ocd_backend.items import BaseItem
-
 from ocd_backend.extractors import HttpRequestMixin
-from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.items import BaseItem
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.api import FrontendAPIMixin
 
 log = get_source_logger('item')
 
@@ -43,20 +42,20 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
             log.debug("vote events found:")
             for r in results:
                 log.debug("* %s (%s)" % (r['id'], u','.join(r.keys()),))
-            return [r for r in results if r.has_key('votes')][0]
+            return [r for r in results if 'votes' in r][0]
         except Exception as e:
             log.warn("Got exception:", e)
             pass
 
     def _get_voters(self, vote_event):
-        if not vote_event.has_key('votes'):
+        if 'votes' not in vote_event:
             log.info("No votes found for event id %s (%s)!" % (self.original_item['id'], vote_event['id'],))
             return []
 
         return [{'id': p['voter_id']} for p in vote_event['votes']]
 
     def get_object_model(self):
-        object_model = {}
+        object_model = dict()
 
         object_model['id'] = self.original_item['id']
 
@@ -72,10 +71,12 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

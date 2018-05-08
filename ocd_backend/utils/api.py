@@ -35,7 +35,7 @@ class FrontendAPIMixin(object):
             api_query["query"] = query
 
         for k, v in kwargs.iteritems():
-            if api_query.has_key(k):
+            if k in api_query:
                 api_query[k] = v
             else:
                 if isinstance(v, basestring):

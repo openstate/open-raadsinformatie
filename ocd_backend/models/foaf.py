@@ -1,6 +1,6 @@
 import owl
-from .namespaces import FOAF, ORG
 from owltology.property import Relation
+from .namespaces import FOAF, ORG
 
 
 class Agent(owl.Thing):

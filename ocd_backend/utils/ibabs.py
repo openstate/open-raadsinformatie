@@ -1,8 +1,9 @@
-
-def _ibabs_to_dict(o, fields, excludes=[]):
+def _ibabs_to_dict(o, fields, excludes=None):
     """
     Converts an iBabs SOAP response to a JSON serializable dict
     """
+    if excludes is None:
+        excludes = []
     output = {}
     for f in fields.keys():
         if f in excludes:
@@ -58,11 +59,13 @@ def document_to_dict(d):
     return _ibabs_to_dict(d, fields)
 
 
-def meeting_to_dict(m, excludes=[]):
+def meeting_to_dict(m, excludes=None):
     """
     Converts an iBabsMeeting to a JSON serializable dict
     """
     # TODO: add list items?
+    if excludes is None:
+        excludes = []
     fields = {
         'Id': None,
         'MeetingtypeId': None,
@@ -157,6 +160,7 @@ def list_report_response_to_dict(r):
     dict
     """
     return {k[0]: _list_response_field_to_val(k[1]) for k in r}
+
 
 # json.dumps(meeting_to_dict(m.Meetings[0][0]))
 

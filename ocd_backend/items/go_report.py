@@ -2,6 +2,7 @@ import urlparse
 
 from .go_meeting import MeetingItem
 
+
 class ReportItem(MeetingItem):
     def _get_report_document(self):
         for item in self.full_html.xpath('//div[@id="downloaden"]//li/a[1]'):
@@ -19,15 +20,14 @@ class ReportItem(MeetingItem):
     def _get_meeting_items(self):
         items = []
         for meeting_item_html in self.full_html.xpath(
-            '//li[contains(@class, "agendaRow")]'):
-                meeting_item_obj = {
-                    'index': u''.join(meeting_item_html.xpath('.//div[@class="first"]//text()')).strip(),
-                    'title': u''.join(meeting_item_html.xpath('.//div[@class="title"]/h3//text()')),
-                    'description': u''.join(meeting_item_html.xpath('.//div[@class="toelichting"]//text()')),
-                }
-                items.append(meeting_item_obj)
+                '//li[contains(@class, "agendaRow")]'):
+            meeting_item_obj = {
+                'index': u''.join(meeting_item_html.xpath('.//div[@class="first"]//text()')).strip(),
+                'title': u''.join(meeting_item_html.xpath('.//div[@class="title"]/h3//text()')),
+                'description': u''.join(meeting_item_html.xpath('.//div[@class="toelichting"]//text()')),
+            }
+            items.append(meeting_item_obj)
         return items
-
 
     def get_original_object_id(self):
         return u'%s#downloaden' % (self._get_stable_permalink(),)

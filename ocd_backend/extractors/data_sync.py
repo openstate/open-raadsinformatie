@@ -1,6 +1,6 @@
 from ocd_backend.extractors import BaseExtractor
-from ocd_backend.utils.misc import load_object, load_sources_config
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.misc import load_object, load_sources_config
 
 log = get_source_logger('extractor')
 

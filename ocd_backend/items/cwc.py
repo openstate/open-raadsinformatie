@@ -5,8 +5,7 @@ from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
-class VideotulenItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class VideotulenItem(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -33,7 +32,8 @@ class VideotulenItem(
     def get_original_object_urls(self):
         return {"html": unicode(self.original_item['Webcast']['RegisterUrl']).strip()}
 
-    def get_rights(self):
+    @staticmethod
+    def get_rights():
         return u'undefined'
 
     def get_collection(self):
@@ -48,7 +48,7 @@ class VideotulenItem(
 
         object_model['hidden'] = self.source_definition['hidden']
 
-        if self.original_item['Webcast'].has_key('Title'):
+        if 'Title' in self.original_item['Webcast']:
             object_model['name'] = u'%s' % (
                 unicode(self.original_item['Webcast']['Title']),)
         else:
@@ -92,8 +92,7 @@ class VideotulenItem(
         else:
             object_model['description'] = self.original_item['Webcast']['Description']
 
-
-        if self.original_item['Webcast'].has_key('ActualStart'):
+        if 'ActualStart' in self.original_item['Webcast']:
             start_date_field = 'ActualStart'
             end_date_field = 'ActualEnd'
         else:
@@ -101,14 +100,15 @@ class VideotulenItem(
             end_date_field = 'ScheduledStart'
 
         object_model['start_date'] = iso8601.parse_date(
-            self.original_item['Webcast'][start_date_field],)
+            self.original_item['Webcast'][start_date_field], )
         object_model['end_date'] = iso8601.parse_date(
-            self.original_item['Webcast'][end_date_field],)
+            self.original_item['Webcast'][end_date_field], )
         object_model['location'] = u'Raadszaal'
         object_model['status'] = u'confirmed'
 
         object_model['sources'] = [
-            {'url': a['Location'], 'note': a['Description']} for a in self.original_item['Webcast']['Attachments']['Attachment']]
+            {'url': a['Location'], 'note': a['Description']} for a in
+            self.original_item['Webcast']['Attachments']['Attachment']]
 
         documents = []
         if self.original_item['Webcast']['Topics'] is not None:
@@ -129,10 +129,12 @@ class VideotulenItem(
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

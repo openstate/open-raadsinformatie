@@ -13,6 +13,9 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
     configures the base url to use for accessing the API.
     """
 
+    def run(self):
+        pass
+
     def __init__(self, *args, **kwargs):
         super(GemeenteOplossingenBaseExtractor, self).__init__(*args, **kwargs)
 

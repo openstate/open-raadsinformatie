@@ -1,14 +1,13 @@
 import os.path
 
-from . import TransformerTestCase
-
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.transformers import BaseTransformer
+from . import TransformerTestCase
 
 
 class BaseTransformerTestCase(TransformerTestCase):
-    def setUp(self):
-        super(BaseTransformerTestCase, self).setUp()
+    def setup(self):
+        super(BaseTransformerTestCase, self).setup()
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(os.path.join(self.PWD, '../test_dumps/ocd_openbeelden_test.gz'))
         self.source_definition = {

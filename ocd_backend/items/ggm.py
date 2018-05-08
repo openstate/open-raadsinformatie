@@ -1,20 +1,19 @@
 import re
 from hashlib import sha1
-from lxml import etree
 
 import iso8601
+from lxml import etree
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.items import BaseItem
+from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.log import get_source_logger
 
 log = get_source_logger('item')
 
 
 class GegevensmagazijnBaseItem(BaseItem, HttpRequestMixin, FrontendAPIMixin):
-
     def _xpath(self, path):
         if not hasattr(self, 'xpath'):
             self.xpath = etree.XPathEvaluator(self.original_item)
@@ -52,16 +51,17 @@ class GegevensmagazijnBaseItem(BaseItem, HttpRequestMixin, FrontendAPIMixin):
     def get_collection(self):
         return unicode(self.source_definition['index_name'])
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
         return u' '.join(text_items)
 
 
 class EventItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
         combined_index_data = {}
 
@@ -144,7 +144,6 @@ class EventItem(GegevensmagazijnBaseItem):
 
 
 class MotionItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
         motion = Motion(self.get_original_object_id())
         motion.name = self._xpath("string(onderwerp)")
@@ -194,12 +193,11 @@ class ZaakMotionItem(GegevensmagazijnBaseItem):
 
 
 class VoteEventItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
         vote_event = VoteEvent(self.get_original_object_id())
         vote_event.motion = Motion(self._xpath("string(@id)"))
 
-        #combined_index_data[VoteEvent.identifier] = unicode(
+        # combined_index_data[VoteEvent.identifier] = unicode(
         #    self._xpath("string(../volgorde)"))
 
         result = re.sub(r'[^ a-z]', '', self._xpath("string(slottekst)").lower())
@@ -230,7 +228,6 @@ class VoteEventItem(GegevensmagazijnBaseItem):
 
 
 class CountItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
         count = None
 
@@ -244,7 +241,7 @@ class CountItem(GegevensmagazijnBaseItem):
         elif soort == "Niet deelgenomen":
             count = AbsentCount(self.get_original_object_id())
 
-        #count.group = self._get_party(self._xpath("string(fractie/@ref)"))
+        # count.group = self._get_party(self._xpath("string(fractie/@ref)"))
         count.group = Organization(self._xpath("string(fractie/@ref)"))
         count.value = self._xpath("number(fractieGrootte)")
 
@@ -252,7 +249,6 @@ class CountItem(GegevensmagazijnBaseItem):
 
 
 class VoteItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
         vote = Vote(self.get_original_object_id())
 
@@ -276,9 +272,8 @@ class VoteItem(GegevensmagazijnBaseItem):
 
 
 class PersonItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
-        combined_index_data = {}
+        combined_index_data = dict()
 
         combined_index_data[CONTEXT] = context
         combined_index_data[ID] = unicode(
@@ -343,9 +338,8 @@ class PersonItem(GegevensmagazijnBaseItem):
 
 
 class DocumentItem(GegevensmagazijnBaseItem):
-
     def get_combined_index_data(self):
-        combined_index_data = {}
+        combined_index_data = dict()
 
         combined_index_data[CONTEXT] = context
         combined_index_data[ID] = unicode(

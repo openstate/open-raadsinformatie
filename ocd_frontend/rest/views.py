@@ -212,7 +212,7 @@ def format_search_results(results, doc_type='items'):
         del hit['_type']
         del hit['_index']
 
-    if results.has_key('aggregations'):
+    if 'aggregations' in results:
         formatted_results['facets'] = results['aggregations']
 
         # we need this to keep the API backwards compatible
@@ -232,6 +232,7 @@ def format_search_results(results, doc_type='items'):
         formatted_results['meta']['scroll'] = results['_scroll_id']
 
     return formatted_results
+
 
 def validate_included_fields(include_fields, excluded_fields,
                              allowed_to_include):
@@ -381,7 +382,7 @@ def search(doc_type=u'items'):
                 index=current_app.config['COMBINED_INDEX'],
                 doc_type=request_doc_type, scroll=scroll)
             scroll_id = es_r['_scroll_id']
-        es_r = current_app.es._es.scroll(scroll=scroll, scroll_id=scroll_id)
+        es_r = current_app.es.get_esclient().scroll(scroll=scroll, scroll_id=scroll_id)
     else:
         es_r = current_app.es.search(
             body=es_q,
@@ -805,7 +806,8 @@ def resolve(url_id):
             return send_file(
                 path,
                 mimetype=resp['_source'].get('content_type'),
-                attachment_filename=resp['_source'].get('file_name', file_hash),
+                attachment_filename=resp['_source'].get('file_name',
+                                                        file_hash),
             )
 
         # Log a 'resolve' event if usage logging is enabled

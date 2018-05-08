@@ -4,24 +4,23 @@
 # 46143143cd126fb7d1fe3cba4a2657c15c2d8250 amstelveen_organisations.json \
 # amstelveen_persons.json
 
-import sys
-import os
-import re
-import json
 import codecs
-from pprint import pprint
 import hashlib
+import json
+import sys
 
 import requests
+
 
 def md5str(text):
     m = hashlib.md5()
     m.update(text)
     return m.hexdigest()
 
+
 def main(argv=None):
     if argv is None:
-        argv=sys.argv
+        argv = sys.argv
 
     base_url = argv[1]
     api_key = argv[2]
@@ -53,7 +52,7 @@ def main(argv=None):
     # some persons appear twice ;)
     persons_done = {}
     for person in persons:
-        if not persons_done.has_key(person['name']):
+        if not person['name'] in persons_done:
             persons_done[person['name']] = person
         else:
             persons_done[person['name']]['memberships'] += person['memberships']
@@ -74,5 +73,6 @@ def main(argv=None):
 
     return 0
 
+
 if __name__ == '__main__':
-   sys.exit(main())
+    sys.exit(main())

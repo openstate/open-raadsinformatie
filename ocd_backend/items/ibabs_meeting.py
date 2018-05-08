@@ -6,18 +6,20 @@ import iso8601
 
 from ocd_backend import settings
 from ocd_backend.items import BaseItem
-from ocd_backend.models import *
 from ocd_backend.log import get_source_logger
+from ocd_backend.models import *
 
 log = get_source_logger('item')
 
 
 class IBabsMeetingItem(BaseItem):
-    def _find_meeting_type_id(self, org):
+    @staticmethod
+    def _find_meeting_type_id(org):
         results = [x for x in org['identifiers'] if x['scheme'] == u'iBabs']
         return results[0]['identifier']
 
-    def _get_meeting_id(self, meeting):
+    @staticmethod
+    def _get_meeting_id(meeting):
         hash_content = u'meeting-%s' % (meeting['Id'])
         return sha1(hash_content.decode('utf8')).hexdigest()
 
@@ -27,7 +29,8 @@ class IBabsMeetingItem(BaseItem):
     def get_original_object_id(self):
         return unicode(self.original_item['Id']).strip()
 
-    def get_original_object_urls(self):
+    @staticmethod
+    def get_original_object_urls():
         # FIXME: what to do when there is not an original URL?
         return {"html": settings.IBABS_WSDL}
 
@@ -38,8 +41,8 @@ class IBabsMeetingItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        #council = self._get_council()
-        #committees = self._get_committees()
+        # council = self._get_council()
+        # committees = self._get_committees()
 
         meeting = self.original_item
         if 'MeetingId' not in self.original_item:
@@ -74,8 +77,8 @@ class IBabsMeetingItem(BaseItem):
             event.attachment = Attachment.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
             item.parent = event
 
-        item.start_date = iso8601.parse_date(meeting['MeetingDate'],).strftime("%s")
-        item.end_date = iso8601.parse_date(meeting['MeetingDate'],).strftime("%s")
+        item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+        item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
         item.attachment = list()
         for document in self.original_item['Documents'] or []:
@@ -87,10 +90,12 @@ class IBabsMeetingItem(BaseItem):
 
         return item
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)
@@ -128,7 +133,8 @@ class IBabsReportItem(BaseItem):
     def get_original_object_id(self):
         return unicode(self.original_item['id'][0]).strip()
 
-    def get_original_object_urls(self):
+    @staticmethod
+    def get_original_object_urls():
         # FIXME: what to do when there is not an original URL?
         return {"html": settings.IBABS_WSDL}
 
@@ -152,7 +158,6 @@ class IBabsReportItem(BaseItem):
 
         object_model['classification'] = report_name
 
-
         name_field = None
         try:
             name_field = self.source_definition['fields'][report_name]['name']
@@ -165,8 +170,8 @@ class IBabsReportItem(BaseItem):
 
                 id_for_field = '%sIds' % (field,)
                 if (
-                    self.original_item.has_key(id_for_field) and
-                    name_field is None
+                            self.original_item.has_key(id_for_field) and
+                                name_field is None
                 ):
                     name_field = field
                     break
@@ -190,8 +195,8 @@ class IBabsReportItem(BaseItem):
         found_committee = False
         for comm_name, comm in committees.iteritems():
             if (
-                comm_name.lower() in object_model['name'].lower() and
-                not found_committee
+                            comm_name.lower() in object_model['name'].lower() and
+                        not found_committee
             ):
                 object_model['organization_id'] = comm['id']
                 object_model['organization'] = comm
@@ -226,9 +231,9 @@ class IBabsReportItem(BaseItem):
             # msgpack does not like microseconds for some reason.
             # no biggie if we disregard it, though
             object_model['start_date'] = iso8601.parse_date(
-                re.sub(r'\.\d+\+', '+', datum),)
+                re.sub(r'\.\d+\+', '+', datum), )
             object_model['end_date'] = iso8601.parse_date(
-                re.sub(r'\.\d+\+', '+', datum),)
+                re.sub(r'\.\d+\+', '+', datum), )
 
         # object_model['location'] = meeting['Location'].strip()
         object_model['status'] = u'confirmed'
@@ -260,8 +265,8 @@ class IBabsReportItem(BaseItem):
             if not self.original_item.has_key(id_for_field):
                 continue
             if (
-                self.original_item[field][0] ==
-                self.original_item[id_for_field][0]
+                        self.original_item[field][0] ==
+                        self.original_item[id_for_field][0]
             ):
                 continue
             field_values = self.original_item[field][0].split(r'\s*;\s*')
@@ -278,10 +283,12 @@ class IBabsReportItem(BaseItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

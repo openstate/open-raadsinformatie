@@ -1,9 +1,9 @@
-import os
 import json
+import os
 
-from .staticfile import StaticJSONExtractor
 from ocd_backend import settings
 from ocd_backend.log import get_source_logger
+from .staticfile import StaticJSONExtractor
 
 log = get_source_logger('extractor')
 

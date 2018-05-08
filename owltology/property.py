@@ -1,6 +1,8 @@
+from datetime import datetime
+
 import iso8601
 from dateutil.parser import parse
-from datetime import datetime
+
 from ocd_backend.utils.misc import iterate
 
 
@@ -40,13 +42,11 @@ class Property(PropertyBase):
 
 
 class Instance(Property):
-
     def serialize(self, value):
         return value.get_prefix_uri()
 
 
 class StringProperty(Property):
-
     def serialize(self, value):
         return unicode(value).strip()
 
@@ -56,23 +56,25 @@ class IntegerProperty(Property):
 
 
 class DateTimeProperty(Property):
-
     def serialize(self, value):
         if isinstance(value, datetime):
             return value.strftime("%s")
 
         try:
             return parse(value).strftime("%s")
-        except: pass
+        except:
+            pass
 
         try:
             return iso8601.parse_date(value).strftime("%s")
-        except iso8601.ParseError: pass
+        except iso8601.ParseError:
+            pass
 
         try:
             datetime.fromtimestamp(float(value))
             return value
-        except: pass
+        except:
+            pass
 
         raise
 
@@ -82,7 +84,6 @@ class ArrayProperty(Property):
 
 
 class Relation(PropertyBase):
-
     def serialize(self, value):
         props = list()
         for _, item in iterate(value):

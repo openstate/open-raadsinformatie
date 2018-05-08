@@ -1,7 +1,6 @@
-from ocd_backend.items import BaseItem
 from ocd_backend import settings
-
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.items import BaseItem
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.misc import full_normalized_motion_id
 
@@ -42,7 +41,8 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def get_original_object_id(self):
         return self.get_object_id()
 
-    def get_original_object_urls(self):
+    @staticmethod
+    def get_original_object_urls():
         return {"html": settings.IBABS_WSDL}
 
     def get_rights(self):
@@ -113,7 +113,7 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
         } for v in self.original_item['votes']]
 
     def get_object_model(self):
-        object_model = {}
+        object_model = dict()
 
         object_model['id'] = self.original_item['motion_id']
         object_model['hidden'] = self.source_definition['hidden']
@@ -131,10 +131,12 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)

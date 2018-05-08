@@ -1,19 +1,18 @@
 import json
 import re
 
-from suds.client import Client
-
-from ocd_backend.extractors import BaseExtractor
+from suds.client import Client  # pylint: disable=import-error
 
 from ocd_backend import settings
+from ocd_backend.extractors import BaseExtractor
 from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.misc import full_normalized_motion_id
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
     list_entry_response_to_dict, votes_to_dict)
-from ocd_backend.log import get_source_logger
+from ocd_backend.utils.misc import full_normalized_motion_id
 
 log = get_source_logger('extractor')
 
@@ -23,6 +22,9 @@ class IBabsBaseExtractor(BaseExtractor):
     A base extractor for the iBabs SOAP service. Instantiates the client
     and configures the right port tu use.
     """
+
+    def run(self):
+        pass
 
     def __init__(self, *args, **kwargs):
         super(IBabsBaseExtractor, self).__init__(*args, **kwargs)
@@ -133,8 +135,9 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
     def _meetingtypes_as_dict(self):
         return {
-            o.Id: o.Description for o in self.client.service.GetMeetingtypes(
-                self.source_definition['sitename']).Meetingtypes[0]}
+            o.Id: o.Description for o in
+            self.client.service.GetMeetingtypes(self.source_definition['sitename']).Meetingtypes[0]
+        }
 
     def valid_meeting(self, meeting):
         """
@@ -148,7 +151,8 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         """
         return [meeting]
 
-    def filter_out_processed_meeting(self, meeting):
+    @staticmethod
+    def filter_out_processed_meeting(meeting):
         """
         Should the processed result be filtered out? Return false if not.
         """
@@ -224,7 +228,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                             votes = []
                         else:
                             votes = votes_to_dict(votes.ListEntryVotes[0])
-                        #log.debug(votes)
+                        # log.debug(votes)
                         result = {
                             'meeting': meeting_dict,
                             'entry': le,
@@ -265,7 +269,8 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         max_meetings = self.source_definition.get('max_processed_meetings', 1)
         entity_type = self.source_definition.get(
             'vote_entity', 'organizations')
-        if ((max_meetings <= 0) or (meeting_count < max_meetings)):
+        result = None
+        if (max_meetings <= 0) or (meeting_count < max_meetings):
             setattr(self, 'meeting_count', meeting_count + 1)
             log.debug("Processing meeting %d" % (meeting_count,))
             council = self.api_request(
@@ -302,20 +307,20 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
             else:
                 groups[u'council'] = council[0]
             persons = {
-                    v['UserId']: {
-                        'id': v['UserId'],
-                        'name': v['UserName'],
-                        'identifiers': [
-                            {
-                                'id': u'id-p-%s' % (v['UserId'],),
-                                'identifier': v['UserId'],
-                                'scheme': u'iBabs'
-                            }
-                        ],
-                        'meta': {
-                            '_type': 'persons'
+                v['UserId']: {
+                    'id': v['UserId'],
+                    'name': v['UserName'],
+                    'identifiers': [
+                        {
+                            'id': u'id-p-%s' % (v['UserId'],),
+                            'identifier': v['UserId'],
+                            'scheme': u'iBabs'
                         }
-                    } for v in meeting['votes']}
+                    ],
+                    'meta': {
+                        '_type': 'persons'
+                    }
+                } for v in meeting['votes']}
             if entity_type == 'organizations':
                 # process parties
                 unique_groups = list(set(groups.keys()))
@@ -367,6 +372,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         else:
             return []
 
+
 class IBabsReportsExtractor(IBabsBaseExtractor):
     """
     Extracts reports from the iBabs SOAP Service. The source definition should
@@ -411,7 +417,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             result_count = per_page
             total_count = 0
             yield_count = 0
-            while ((active_page_nr < max_pages) and (result_count == per_page)):
+            while (active_page_nr < max_pages) and (result_count == per_page):
                 try:
                     result = self.client.service.GetListReport(
                         Sitename=self.source_definition['sitename'],

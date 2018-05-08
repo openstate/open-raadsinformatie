@@ -1,6 +1,6 @@
 import owl
-from .namespaces import SCHEMA, OPENGOV, COUNCIL
 from owltology.property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
+from .namespaces import SCHEMA, OPENGOV, COUNCIL
 
 
 class AudioObject(owl.Thing):

@@ -1,6 +1,6 @@
 from datetime import datetime
-import iso8601
 
+import iso8601
 from ocd_backend.items.popolo import (
     PersonItem, OrganisationItem, MembershipItem)
 
@@ -69,13 +69,15 @@ class PopitBaseItem(object):
             elif self.combined_index_fields[field] == list:
                 if field in self.ignored_list_fields:
                     object_model[field] = [
-                        {k: v for k, v in l.iteritems() if k not in self.ignored_list_fields[field]} for l in self.original_item[field]]
+                        {k: v for k, v in l.iteritems() if k not in self.ignored_list_fields[field]} for l in
+                        self.original_item[field]]
                 else:
                     object_model[field] = self.original_item[field]
             elif self.combined_index_fields[field] == dict:
                 if field in self.ignored_list_fields:
                     object_model[field] = {
-                        k: v for k, v in self.original_item[field].iteritems() if k not in self.ignored_list_fields[field]}
+                        k: v for k, v in self.original_item[field].iteritems() if
+                        k not in self.ignored_list_fields[field]}
                 else:
                     object_model[field] = self.original_item[field]
             else:
@@ -83,10 +85,12 @@ class PopitBaseItem(object):
 
         return object_model
 
-    def get_index_data(self):
+    @staticmethod
+    def get_index_data():
         return {}
 
-    def get_all_text(self):
+    @staticmethod
+    def get_all_text():
         text_items = []
 
         return u' '.join(text_items)
