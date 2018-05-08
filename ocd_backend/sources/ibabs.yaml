@@ -247,18 +247,23 @@ ibabs:
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
       loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       include: moties
+      exclude: "^$"
       pdf_max_pages: 20
       max_pages: 1
       per_page: 100
       fields:
         Moties:
-          name: onderwerp
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
           description: status
-          start_date: datum
+          start_date: Datum
         Amendementen:
-          name: onderwerp
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
           description: status
-          start_date: datum
+          start_date: Datum
       <<: *entity_defaults
 
     - entity: amendments
@@ -267,18 +272,23 @@ ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
       include: amendementen
+      exclude: "^$"
       pdf_max_pages: 20
       max_pages: 1
       per_page: 100
       fields:
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
         Moties:
-          name: onderwerp
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
           description: status
-          start_date: datum
+          start_date: Datum
+        Amendementen:
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
+          description: status
+          start_date: Datum
       <<: *entity_defaults
 
     #
@@ -287,18 +297,23 @@ ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
       include: (moties|amendementen)
+      exclude: "^$"
       pdf_max_pages: 20
       max_pages: 1
       per_page: 100
       fields:
         Moties:
-          name: onderwerp
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
           description: status
-          start_date: datum
+          start_date: Datum
         Amendementen:
-          name: onderwerp
+          id: Onderwerp
+          creator: "Indiener(s)"
+          name: Onderwerp
           description: status
-          start_date: datum
+          start_date: Datum
       <<: *entity_defaults
     #
     - entity: voting_rounds

@@ -1,5 +1,6 @@
 from datetime import datetime
 import iso8601
+import re
 
 from ocd_backend.items.popolo import (
     PersonItem, OrganisationItem, MembershipItem)
@@ -81,6 +82,11 @@ class PopitBaseItem(object):
             else:
                 combined_index_data[field] = self.original_item[field]
 
+        # FIXME: sometimes they will have the roles in the party names ... :(
+        if 'name' in combined_index_data:
+            combined_index_data['name'] = re.sub(
+                r'\s*\((statenlid|statenleden)\)\s*',
+                '', combined_index_data['name'], flags=re.I)
         return combined_index_data
 
     def get_index_data(self):
