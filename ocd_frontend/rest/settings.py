@@ -415,6 +415,7 @@ DUMP_URL = 'http://dumps.opencultuurdata.nl/'
 
 LOGGING = {
     'version': 1,
+    'disable_existing_loggers': False,
     'formatters': {
         'console': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',

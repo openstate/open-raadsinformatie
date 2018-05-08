@@ -1,6 +1,8 @@
 import os
 import pickle
+import logging
 
+from pythonjsonlogger import jsonlogger
 from kombu.serialization import register
 
 register('ocd_serializer', pickle.dumps, pickle.loads,
@@ -16,6 +18,9 @@ RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
 REDIS_HOST = os.getenv('REDIS_HOST', "redis")
 REDIS_PORT = os.getenv('REDIS_PORT', "6379")
 REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
+
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_PATH = os.path.dirname(ROOT_PATH)
 
 CELERY_CONFIG = {
     'BROKER_URL': REDIS_URL,
@@ -37,74 +42,145 @@ CELERY_CONFIG = {
     'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO'
 }
 
+
+class SetDebugFilter(logging.Filter):
+    """ This filter decreases the logrecord to DEBUG """
+    def filter(self, record):
+        # Downgrade level to debug
+        record.levelno = 10
+        record.levelname = 'DEBUG'
+        return True
+
+
+class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
+    """ Formats the record to a Google Stackdriver compatible json string """
+    def __init__(self, fmt="%(levelname) %(message)", *args, **kwargs):
+        jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
+
+    def process_log_record(self, log_record):
+        log_record['severity'] = log_record['levelname']
+        del log_record['levelname']
+        return super(StackdriverJsonFormatter, self).process_log_record(log_record)
+
+
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,  # Existing loggers are 'disabled' below
+    'filters': {
+        'set_debug': {
+            '()': SetDebugFilter,
+        }
+    },
     'formatters': {
-        'console': {
-            'format': '[%(levelname)s] - %(message)s'
+        'basic': {
+            'format': '[%(module)s] %(levelname)s %(message)s'
         },
-        'file': {
+        'advanced': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'stackdriver': {
+            '()': StackdriverJsonFormatter,
         }
     },
     'handlers': {
-        'console': {
-            'level': 'INFO',
+        'default': {
+            # Basic logging when not running in docker or stackdriver
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'console'
+            'formatter': 'basic',
+            'stream': 'ext://sys.stdout'
         },
-        'log': {
+        'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'formatter': 'file',
-            'filename': 'log/backend.log'
+            'formatter': 'advanced',
+            'filename': os.path.join(PROJECT_PATH, 'log', 'backend.log')
         }
     },
     'loggers': {
         'ocd_backend': {
-            'handlers': ['console', 'log'],
+            'handlers': ['default'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'celery': {
-            'handlers': ['console', 'log'],
-            'level': 'DEBUG',
+            'handlers': ['default'],
+            'level': 'INFO',
             'propagate': False,
         },
+        'celery.worker.strategy': {
+            'handlers': ['default'],
+            'level': 'INFO',
+            'propagate': False,
+            'filters': ['set_debug']
+        },
+        'celery.app.trace': {
+            'handlers': ['default'],
+            'level': 'INFO',
+            'propagate': False,
+            'filters': ['set_debug']
+        },
         'neo4j.bolt': {
-            'handlers': [],
+            'handlers': ['default'],
             'level': 'WARNING',
             'propagate': False,
         },
         'httpstream': {
-            'handlers': [],
+            'handlers': ['default'],
             'level': 'WARNING',
             'propagate': False,
         },
-    }
+        'elasticsearch': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'requests': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'urllib3': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'iso8601': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['default'],
+        'level': 'INFO',
+    },
 }
 
-if os.path.exists('/var/log/backend.err'):
-    LOGGING['handlers']['docker'] = {
-        'level': 'WARN',
+if os.path.exists(os.path.join(PROJECT_PATH, 'log', 'stdout')):
+    # Set default handler to write to docker logs via /proc/1/fd/1 symlink
+    # (see Dockerfile)
+    LOGGING['handlers']['default'] = {
+        'level': 'DEBUG',
         'class': 'logging.FileHandler',
-        'formatter': 'file',
-        'filename': '/var/log/backend.err'
+        'formatter': 'basic',
+        'filename': os.path.join(PROJECT_PATH, 'log', 'stdout')
     }
 
-    LOGGING['loggers']['ocd_backend']['handlers'] = ['console', 'log', 'docker']
-    LOGGING['loggers']['celery']['handlers'] = ['console', 'log', 'docker']
-
+if os.getenv('GCE_STACKDRIVER'):
+    # Set default handler to format for Google Stackdriver logging
+    LOGGING['handlers']['default'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'stackdriver',
+        'stream': 'ext://sys.stdout',
+    }
 
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 NEO4J_URL = os.getenv('NEO4J_URL', "http://neo4j:abc@neo4j:7474/db/data/")
-
-ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-PROJECT_PATH = os.path.dirname(ROOT_PATH)
 
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')

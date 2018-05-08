@@ -27,7 +27,9 @@ RUN adduser -D -H celery \
 WORKDIR /opt/ori/
 VOLUME /opt/ori/data
 COPY . /opt/ori
-RUN ln -sf /proc/1/fd/1 /opt/ori/log/backend.err \
+
+# Trick to redirect logs to process 1 when running multiple processes
+RUN ln -sf /proc/1/fd/1 /opt/ori/log/stdout \
   && chown -R celery:celery .
 RUN mkdir -p /opt/ori/data/static && chown -R celery:celery /opt/ori/data
 

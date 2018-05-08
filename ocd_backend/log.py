@@ -3,8 +3,6 @@ import logging.config
 
 from ocd_backend.settings import LOGGING, RELEASE_STAGE, BUGSNAG_APIKEY, APP_VERSION
 
-logging.config.dictConfig(LOGGING)
-
 if BUGSNAG_APIKEY:
     import bugsnag
     from bugsnag.handlers import BugsnagHandler
@@ -24,6 +22,9 @@ if BUGSNAG_APIKEY:
     # send only WARN-level logs and above
     handler.setLevel(logging.WARN)
     logger.addHandler(handler)
+
+
+logging.config.dictConfig(LOGGING)
 
 
 def get_source_logger(name=None):
