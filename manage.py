@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from copy import deepcopy
 from datetime import datetime
 import json
 from glob import glob
@@ -385,8 +386,9 @@ def extract_start(source_id, subitem, entiteit, sources_config):
     for source_id, source in selected_sources.items():
         for item in source.get('entities'):
             if (not entiteit and item) or (entiteit and item.get('entity') in entiteit):
-                source.update(item)
-                setup_pipeline(source)
+                new_source = deepcopy(source)
+                new_source.update(item)
+                setup_pipeline(new_source)
 
 
 @command('runserver')
