@@ -57,13 +57,11 @@ local_dumps/
 # logs
 *.log
 
-dumps/*
+dumps/*log
 data/*
 local_dumps/*
 ocd_frontend/.thumbnail-cache/*
-log/*log*
-log/*err*
-log/*.pid
+log/*
 es-licence.json
 
 # Do NOT commit your secrets!

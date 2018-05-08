@@ -52,9 +52,8 @@ class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
         except Exception:
             static_content = u''
 
-
         # Extract and yield the items
-        if static_content != u'':
+        if static_content != '':
             for item in self.extract_items(static_content):
                 yield item
 

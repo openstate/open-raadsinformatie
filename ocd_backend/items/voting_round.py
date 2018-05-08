@@ -1,15 +1,9 @@
-from datetime import datetime
-import iso8601
-from pprint import pprint
-
 from ocd_backend.items import BaseItem
-from ocd_backend.items.popolo import EventItem
 from ocd_backend import settings
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.misc import (
-    normalize_motion_id, full_normalized_motion_id)
+from ocd_backend.utils.misc import full_normalized_motion_id
 
 
 class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):

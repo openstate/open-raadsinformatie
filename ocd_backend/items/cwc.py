@@ -1,15 +1,5 @@
-from datetime import datetime
-import json
-from pprint import pprint
-from hashlib import sha1
-from time import sleep
-import re
-
 import iso8601
 
-from ocd_backend.items.popolo import EventItem
-from ocd_backend.utils.misc import slugify
-from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin

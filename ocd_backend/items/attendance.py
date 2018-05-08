@@ -1,12 +1,10 @@
-from datetime import datetime
-import iso8601
-from pprint import pprint
-
 from ocd_backend.items import BaseItem
-from ocd_backend.items.popolo import EventItem
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('item')
 
 
 class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
@@ -42,32 +40,30 @@ class AttendanceForEventItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
             results = self.api_request(
                 self.source_definition['index_name'], 'vote_events',
                 legislative_session_id=event_id, size=30)  # FIXME: for now, get the first
-            print "vote events found:"
+            log.debug("vote events found:")
             for r in results:
-                print "* %s (%s)" % (r['id'], u','.join(r.keys()),)
+                log.debug("* %s (%s)" % (r['id'], u','.join(r.keys()),))
             return [r for r in results if r.has_key('votes')][0]
         except Exception as e:
-            print "Got exception:", e
+            log.warn("Got exception:", e)
             pass
 
     def _get_voters(self, vote_event):
         if not vote_event.has_key('votes'):
-            print "No votes found for event id %s (%s)!" % (self.original_item['id'], vote_event['id'],)
+            log.info("No votes found for event id %s (%s)!" % (self.original_item['id'], vote_event['id'],))
             return []
 
-        print "Got votes"
         return [{'id': p['voter_id']} for p in vote_event['votes']]
 
     def get_object_model(self):
-        combined_index_data = {}
+        object_model = {}
 
         object_model['id'] = self.original_item['id']
 
         vote_event = self._get_vote_event(self.original_item['id'])
         if vote_event is None:
-            print "No vote id found for event id %s!" % (self.original_item['id'],)
+            log.debug("No vote id found for event id %s!" % (self.original_item['id'],))
             return {}
-
 
         object_model['hidden'] = self.source_definition['hidden']
         object_model['doc'] = {

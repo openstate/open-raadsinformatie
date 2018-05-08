@@ -1,8 +1,4 @@
-from datetime import datetime
-import json
-from pprint import pprint
 from hashlib import sha1
-from time import sleep
 import re
 import urlparse
 
@@ -10,11 +6,12 @@ from lxml import etree
 import iso8601
 
 from ocd_backend.items.popolo import EventItem
-from ocd_backend.utils.misc import slugify
-from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('item')
 
 
 class MeetingItem(
@@ -237,7 +234,7 @@ class MeetingItem(
 
         if self.original_item['type'] != 'meeting':
             parent_url = self._get_stable_permalink(False)
-            pprint(parent_url)
+            log.debug(parent_url)
             object_model['parent_id'] = unicode(self._get_object_id_for(
                 parent_url, {"html": parent_url}))
 

@@ -1,19 +1,13 @@
 import json
-from pprint import pprint
-import re
-
-from lxml import etree
 from suds.client import Client
 from suds.sudsobject import asdict
 
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
-from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.extractors import BaseExtractor
 
 from ocd_backend import settings
-from ocd_backend.utils.ibabs import (
-    meeting_to_dict, document_to_dict, meeting_item_to_dict,
-    meeting_type_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict)
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('extractor')
 
 
 # suds serialization to json:
@@ -35,9 +29,11 @@ def recursive_asdict(d):
             out[k] = v
     return out
 
+
 # according to https://stackoverflow.com/questions/23285558/datetime-date2014-4-25-is-not-json-serializable-in-django
 def date_handler(obj):
     return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+
 
 def suds_to_json(data):
     return json.dumps(recursive_asdict(data), default=date_handler)
@@ -67,7 +63,7 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
         result_count = pagesize
 
         while (result_count == pagesize):
-            print "Requesting page %s ..." % (current_page,)
+            log.debug("Requesting page %s ..." % (current_page,))
             results = self.client.service.WebcastSearch(
                 Username=self.source_definition['cwc_username'],
                 Password=self.source_definition['cwc_password'],
@@ -76,8 +72,8 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 Order='CreatedDesc')
 
             if results.WebcastSearchResult != 0:
-                print "Page %s resulted in eror code : %s" % (
-                    current_page, results.WebcastSearchResult,)
+                log.warn("Page %s resulted in error code : %s" % (
+                    current_page, results.WebcastSearchResult,))
                 continue
 
             result_count = 0
@@ -89,14 +85,14 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
 
                 result_count += 1
                 if full_result.WebcastGetResult != 0:
-                    print "Webcast %s resulted in error code : %s" % (
-                        result.Code, full_result.WebcastGetResult,)
+                    log.warn("Webcast %s resulted in error code : %s" % (
+                        result.Code, full_result.WebcastGetResult,))
                     continue
 
                 if full_result is not None and full_result['Webcast'] is not None:
-                    print "%s: %s" % (
+                    log.debug("%s: %s" % (
                         full_result['Webcast']['Title'],
-                        full_result['Webcast']['ScheduledStart'],)
+                        full_result['Webcast']['ScheduledStart'],))
 
                 serialized_result = suds_to_json(full_result)
                 yield 'application/json', serialized_result

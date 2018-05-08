@@ -155,11 +155,6 @@ def _download_dump(dump_url, collection, target_dir=DUMPS_DIR):
     return '{}.gz'.format(filepath)
 
 
-def _process_choices(val):
-    print val
-    return val
-
-
 @click.group()
 @click.version_option()
 def cli():

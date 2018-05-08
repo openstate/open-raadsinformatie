@@ -187,7 +187,5 @@ def setup_pipeline(source_definition):
     celery_app.backend.set(params['run_identifier'], 'done')
     if result and source_definition.get('wait_until_finished'):
         # Wait for last task chain to end before continuing
-        logger.debug("Waiting for last chain to finish")
+        logger.info("Waiting for last chain to finish")
         propagate_chain_get(result)
-
-    print

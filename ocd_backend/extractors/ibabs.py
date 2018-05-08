@@ -1,9 +1,6 @@
 import json
-from pprint import pprint
 import re
-from hashlib import sha1
 
-import requests
 from suds.client import Client
 
 from ocd_backend.extractors import BaseExtractor
@@ -11,8 +8,7 @@ from ocd_backend.extractors import BaseExtractor
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.misc import (
-    normalize_motion_id, full_normalized_motion_id)
+from ocd_backend.utils.misc import full_normalized_motion_id
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
@@ -35,7 +31,7 @@ class IBabsBaseExtractor(BaseExtractor):
             ibabs_wsdl = self.source_definition['wsdl']
         except Exception as e:
             ibabs_wsdl = settings.IBABS_WSDL
-        #pprint(ibabs_wsdl)
+        # log.debug(ibabs_wsdl)
         self.client = Client(ibabs_wsdl)
         self.client.set_options(port='BasicHttpsBinding_IPublic')
 
@@ -188,7 +184,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             for meeting in sorted_meetings:
                 meeting_dict = meeting_to_dict(meeting)
                 # Getting the meeting type as a string is easier this way ...
-                pprint(meeting_dict['Id'])
+                log.debug(meeting_dict['Id'])
                 meeting_dict['Meetingtype'] = meeting_types[
                     meeting_dict['MeetingtypeId']]
 
@@ -214,7 +210,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     MeetingId=meeting_dict['Id'],
                     Options=params)
                 meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
-                print(meeting_dict_short['MeetingDate'])
+                log.debug(meeting_dict_short['MeetingDate'])
                 if meeting_dict_short['MeetingItems'] is None:
                     continue
                 for mi in meeting_dict_short['MeetingItems']:
@@ -239,7 +235,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                             processed += self.process_meeting(result)
                 meeting_count += 1
 
-            #pprint(processed)
+            # log.debug(processed)
             passed_vote_count = 0
             for result in processed:
                 yield 'application/json', json.dumps(result)
@@ -271,7 +267,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
             'vote_entity', 'organizations')
         if ((max_meetings <= 0) or (meeting_count < max_meetings)):
             setattr(self, 'meeting_count', meeting_count + 1)
-            print "Processing meeting %d" % (meeting_count,)
+            log.debug("Processing meeting %d" % (meeting_count,))
             council = self.api_request(
                 self.source_definition['index_name'], 'organizations',
                 classification=u'Council')
@@ -324,7 +320,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
                 # process parties
                 unique_groups = list(set(groups.keys()))
                 for g in unique_groups:
-                    #pprint(meeting['votes'])
+                    # log.debug(meeting['votes'])
                     groups[g]['memberships'] = [
                         {
                             'person_id': v['UserId'],
@@ -384,8 +380,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         try:
             kv = lists.iBabsKeyValue
         except AttributeError as e:
-            print "No reports defined for %s" % (
-                self.source_definition['sitename'],)
+            log.info("No reports defined for %s" % (
+                self.source_definition['sitename'],))
             return
 
         selected_lists = []
@@ -422,15 +418,14 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
-                    print "Could not parse page %s correctly!" % (
-                        active_page_nr,)
-                    print e.message
+                    log.warn("Could not parse page %s correctly!: %s" % (
+                        active_page_nr, e.message))
                     result = None
                 result_count = 0
-                # print "* %s: %s/%s - %d/%d" % (
+                # log.debug("* %s: %s/%s - %d/%d" % (
                 #     self.source_definition['sitename'],
                 #     result.ListName, result.ReportName,
-                #     active_page_nr, max_pages,)
+                #     active_page_nr, max_pages,))
 
                 if result is not None:
                     try:
@@ -443,7 +438,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     document_element = None
 
                 if document_element is None:
-                    print "No correct document element for this page!"
+                    log.debug("No correct document element for this page!")
                     total_count += per_page
                     continue
 
@@ -457,10 +452,10 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
                     # if dict_item['kenmerk'][0].startswith('2018 M67'):
-                    #     pprint(dict_item)
+                    #     log.debug(dict_item)
                     try:
                         # this should be the motion's unique identifier
-                        pprint(full_normalized_motion_id(
+                        log.debug(full_normalized_motion_id(
                             dict_item['_Extra']['Values'][u'Onderwerp']))
                     except (KeyError, AttributeError) as e:
                         pass
@@ -469,4 +464,4 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     result_count += 1
                 total_count += result_count
                 active_page_nr += 1
-            print "%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,)
+            log.info("%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,))

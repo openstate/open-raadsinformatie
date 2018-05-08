@@ -8,6 +8,9 @@ from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('item')
 
 
 class GegevensmagazijnBaseItem(BaseItem, HttpRequestMixin, FrontendAPIMixin):
@@ -67,7 +70,7 @@ class EventItem(GegevensmagazijnBaseItem):
         event = Event(self.get_original_object_id())
         event.name = self._xpath("string(onderwerp)")
         # combined_index_data['start_date'] = iso8601.parse_date(self._xpath("string(planning/begin)"))
-        # print iso8601.parse_date(self._xpath("string(planning/einde)"))
+        # debug.log(iso8601.parse_date(self._xpath("string(planning/einde)")))
         # combined_index_data['end_date'] = self._xpath("string(planning/einde)")
         event.location = self._xpath("string(locatie)")
         event.categories = u'event_item'
@@ -149,9 +152,9 @@ class MotionItem(GegevensmagazijnBaseItem):
             VoteEvent(self._xpath("string(@id)"))
         ]
 
-        #print "Motion orig:%s id:%s" % (self._xpath("string(@id)"),
+        # log.debug("Motion orig:%s id:%s" % (self._xpath("string(@id)"),
         #                                VoteEvent.get_object_id(
-        #                                self._xpath("string(@id)")))
+        #                                self._xpath("string(@id)"))))
 
         return motion
 
@@ -217,7 +220,7 @@ class VoteEventItem(GegevensmagazijnBaseItem):
         elif result == "vrijgegeven":
             vote_event.result = Result.ResultPublished
         else:
-            print "Result %s does not exists for: %s" % (result, self.original_item)
+            log.warn("Result %s does not exists for: %s" % (result, self.original_item))
 
         sub_events = self.source_definition['mapping']['vote_event']['sub_items']
         vote_event.count = [Count(c) for c in self._xpath(sub_events['count'] + "/@id")]

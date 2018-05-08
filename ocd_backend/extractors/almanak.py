@@ -1,11 +1,11 @@
 import json
-from pprint import pprint
 
 from lxml import etree
 
-from ocd_frontend import settings
-
 from .staticfile import StaticHtmlExtractor
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('extractor')
 
 
 class OrganisationsExtractor(StaticHtmlExtractor):
@@ -37,7 +37,7 @@ class OrganisationsExtractor(StaticHtmlExtractor):
             except:
                 pass
 
-        pprint(organisations)
+        log.debug(organisations)
 
         for item in organisations.values():
             yield 'application/json', json.dumps(item)

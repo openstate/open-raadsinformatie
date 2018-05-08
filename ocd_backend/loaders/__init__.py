@@ -1,7 +1,5 @@
-from datetime import datetime
 import json
 import requests
-from elasticsearch.exceptions import NotFoundError, TransportError
 
 from datetime import datetime
 from ocd_backend import celery_app
@@ -159,18 +157,16 @@ class DummyLoader(BaseLoader):
     """
 
     def load_item(self, doc):
-        print '=' * 50
-        print '%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4)
-        print '%s %s %s' % ('-' * 20, 'doc', '-' * 25)
-        print doc.deflate(props=True, rels=True)
-        print '=' * 50
+        log.debug('=' * 50)
+        log.debug('%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4))
+        log.debug('%s %s %s' % ('-' * 20, 'doc', '-' * 25))
+        log.debug(doc.deflate(props=True, rels=True))
+        log.debug('=' * 50)
 
     def run_finished(self, run_identifier):
-        print '*' * 50
-        print
-        print 'Finished run {}'.format(run_identifier)
-        print
-        print '*' * 50
+        log.debug('*' * 50)
+        log.debug('Finished run {}'.format(run_identifier))
+        log.debug('*' * 50)
 
 
 def json_serial(obj):

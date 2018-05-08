@@ -1,21 +1,18 @@
-from datetime import datetime
-import json
 from pprint import pprint
-from hashlib import sha1
 from time import sleep
 import re
-import random
 
 import iso8601
 
 from ocd_backend.items.popolo import MotionItem, VotingEventItem
-from ocd_backend.utils.misc import slugify
 from ocd_backend import settings
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.utils.misc import (
-    normalize_motion_id, full_normalized_motion_id)
+from ocd_backend.utils.misc import full_normalized_motion_id
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('item')
 
 
 class IBabsMotionVotingMixin(
@@ -45,7 +42,7 @@ class IBabsMotionVotingMixin(
         return u'Moties'
 
     def _value(self, key):
-        # pprint(self.source_definition['fields']['Moties'])
+        # log.debug(self.source_definition['fields']['Moties'])
         try:
             actual_key = self.source_definition[
                 'fields']['Moties']['Extra'][key]
@@ -58,21 +55,21 @@ class IBabsMotionVotingMixin(
 
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
-        print "Creators: %s" % (creators_str)
+        log.debug("Creators: %s" % (creators_str))
 
         if creators_str is None:
             return
 
         creator_str = re.split(r'\)[,;]\s*', creators_str)[0]
-        print "Looking for : %s" % (creator_str,)
+        log.debug("Looking for : %s" % (creator_str,))
 
         party_match = re.search(r' \(([^\)]*?)\)?$', creator_str)
         if not party_match:
             return
 
-        print "Party match: %s, parties: %s" % (
+        log.debug("Party match: %s, parties: %s" % (
             party_match.group(1),
-            u','.join([p.get('name', u'') for p in parties]),)
+            u','.join([p.get('name', u'') for p in parties]),))
         try:
             party = [p for p in parties if unicode(p.get('name', u'')).lower() == unicode(party_match.group(1)).lower()][0]
         except Exception as e:
@@ -81,7 +78,7 @@ class IBabsMotionVotingMixin(
         if not party:
             return
 
-        print "Found party: %s" % (party['name'])
+        log.debug("Found party: %s" % (party['name']))
 
         last_name_match = re.match(r'^([^\,]*)\, ', creator_str)
         if not last_name_match:
@@ -91,16 +88,16 @@ class IBabsMotionVotingMixin(
         if len(last_name_members) <= 0:
             return
 
-        print "Found last name candidates: %s" % (u','.join([m['name'] for m in last_name_members]),)
+        log.debug("Found last name candidates: %s" % (u','.join([m['name'] for m in last_name_members]),))
 
         if len(last_name_members) == 1:
-            print "Found final candidate base on last name: %s" % (last_name_members[0]['name'],)
+            log.debug("Found final candidate base on last name: %s" % (last_name_members[0]['name'],))
             return last_name_members[0]
 
         for m in last_name_members:
             correct_party_affiliations = [ms for ms in m['memberships'] if ms['organization_id'] == party['id']]
             if len(correct_party_affiliations) > 0:
-                print "Found final candidate base on last name and party: %s" % (m['name'],)
+                log.debug("Found final candidate base on last name and party: %s" % (m['name'],))
                 return m
 
         return None
@@ -109,20 +106,20 @@ class IBabsMotionVotingMixin(
         # FIXME: match motions and ev ents when they're closest, not the first you run into
         motion_day_start = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T00:00:00', motion_date.isoformat())
         motion_day_end = re.sub(r'T\d{2}:\d{2}:\d{2}', 'T23:59:59', motion_date.isoformat())
-        #pprint((motion_date.isoformat(), motion_day_start, motion_day_end))
+        # log.debug((motion_date.isoformat(), motion_day_start, motion_day_end))
         try:
             results = self.api_request(
                 self.source_definition['index_name'], 'events',
                 classification=u'Agenda',
                 start_date={
                     'from': motion_day_start, 'to': motion_day_end})
-            # pprint(len(results))
+            # log.debug(len(results))
             # filtered_results = [r for r in results if r['organization_id'] == council['id']]
             # return filtered_results[0]
             if results is not None:
                 return results[0]
         except (KeyError, IndexError) as e:
-            pprint("Error blaat")
+            log.error("Error blaat")
         return None
 
     def _get_motion_id_encoded(self):
@@ -198,8 +195,8 @@ class IBabsMotionVotingMixin(
         object_model['text'] = u"-"
         for document in documents:
             sleep(1)
-            print u"%s: %s" % (
-                object_model['name'], document['DisplayName'],)
+            log.debug(u"%s: %s" % (
+                object_model['name'], document['DisplayName'],))
             description = self.file_get_contents(
                 public_download_url,
                 self.source_definition.get('pdf_max_pages', 20)).strip()
@@ -241,7 +238,7 @@ class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
         council = self._get_council()
         members = self._get_council_members()
         parties = self._get_council_parties()
-        #pprint(parties)
+        # log.debug(parties)
         object_model['motion'] = self._get_motion_data(
             council, members, parties)
 

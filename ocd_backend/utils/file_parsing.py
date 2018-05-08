@@ -4,6 +4,9 @@ from urllib2 import HTTPError
 
 import pdfparser.poppler as pdf
 import tika.parser as parser
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('file_parser')
 
 
 def file_parser(fname, pages=None):
@@ -20,7 +23,7 @@ def file_parser(fname, pages=None):
                 if i >= pages:  # break after x pages
                     break
 
-            print "Processed %i pages (%i max)" % (i, pages)
+            log.debug("Processed %i pages (%i max)" % (i, pages))
             return '\n'.join(text_array)
         except:
             # reraise everything
@@ -61,7 +64,7 @@ class FileToTextMixin(object):
         Downloads a given url to a tempfile.
         """
 
-        print "Downloading %s" % (url,)
+        log.debug("Downloading %s" % (url,))
         try:
             # GO has no wildcard domain for SSL
             r = self.http_session.get(url, verify=False, timeout=5)
@@ -70,9 +73,9 @@ class FileToTextMixin(object):
             tf.seek(0)
             return tf
         except HTTPError as e:
-            print "Something went wrong downloading %s" % (url,)
+            log.info("Something went wrong downloading %s" % (url,))
         except Exception as e:
-            print "Some other exception %s" % (url,)
+            log.warn("Some other exception %s" % (url,))
 
     def file_to_text(self, path, max_pages=20):
         """

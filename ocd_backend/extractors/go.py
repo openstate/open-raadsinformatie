@@ -1,15 +1,12 @@
 import json
-from pprint import pprint
-import re
 from time import sleep
 
 from lxml import etree
-from suds.client import Client
 
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
-from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.log import get_source_logger
 
-from ocd_backend import settings
+log = get_source_logger('extractor')
 
 
 class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
@@ -63,7 +60,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         committees = self._get_committees()
-        # pprint(committees)
+        # log.debug(committees)
 
         for c in self._get_committees():
             yield 'application/json', json.dumps(c)
@@ -165,7 +162,6 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 yield 'application/json', json.dumps(meeting_obj)
 
                 if not self.source_definition.get('extract_meeting_items', False):
-                    print "Should not extract meeting items"
                     continue
 
                 for meeting_item_html in html.xpath(

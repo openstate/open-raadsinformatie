@@ -1,7 +1,4 @@
-from datetime import datetime
-
 from lxml import etree
-import requests
 
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.items.popolo import PersonItem

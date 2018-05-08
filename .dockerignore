@@ -21,4 +21,5 @@ start.sh
 Vagrantfile*
 requirements.txt
 .*
-*.pyc
+**/*.pyc
+**/__pycache__

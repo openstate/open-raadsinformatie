@@ -1,8 +1,6 @@
 import json
 
 from requests import HTTPError
-from copy import copy
-from dateutil.parser import parse
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.log import get_source_logger
 

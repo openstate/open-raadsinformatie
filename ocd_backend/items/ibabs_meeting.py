@@ -7,6 +7,9 @@ import iso8601
 from ocd_backend import settings
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('item')
 
 
 class IBabsMeetingItem(BaseItem):
@@ -241,8 +244,8 @@ class IBabsReportItem(BaseItem):
 
         for document in documents:
             sleep(1)
-            print u"Extra docs : %s: %s" % (
-                object_model['name'], document['DisplayName'],)
+            log.debug(u"Extra docs : %s: %s" % (
+                object_model['name'], document['DisplayName'],))
             description = self.file_get_contents(
                 public_download_url,
                 self.source_definition.get('pdf_max_pages', 20))

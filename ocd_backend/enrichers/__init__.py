@@ -1,3 +1,5 @@
+import bugsnag
+
 from ocd_backend import celery_app
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
@@ -42,12 +44,18 @@ class BaseEnricher(celery_app.Task):
                     self.enrich_item(value)
 
             except SkipEnrichment as e:
+                bugsnag.notify(e, severity="info")
                 log.info('Skipping %s for %s, reason: %s'
                          % (self.__class__.__name__, doc.get_ori_id(), e.message))
+            except IOError as e:
+                # In the case of an IOError, disk space or some other
+                # serious problem might occur.
+                bugsnag.notify(e, severity="error")
+                log.critical(e)
             except Exception, e:
-                print e
-                log.exception('Unexpected error, skipping %s for %s'
-                              % (self.__class__.__name__, doc.get_ori_id()))
+                bugsnag.notify(e, severity="warning")
+                log.warn('Unexpected error: %s, skipping %s for %s'
+                              % (self.__class__.__name__, e, doc.get_ori_id()))
 
         return args
 

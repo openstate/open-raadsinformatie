@@ -1,4 +1,5 @@
 import string
+import bugsnag
 
 from ocd_backend.enrichers.media_enricher.tasks import FileToText
 
@@ -18,8 +19,11 @@ class GegevensmagazijnMotionText(FileToText):
                 break
 
         if not header or not motion:
-            print "Invalid motion, stop processing"
-            print self.text
+            bugsnag.notify(
+                "Invalid motion, stop processing: ",
+                severity="info",
+                meta_data={"text": self.text}
+            )
 
         opening_offset = 1
         opening_number = None

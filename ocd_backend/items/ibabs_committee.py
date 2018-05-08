@@ -1,13 +1,5 @@
-from datetime import datetime
-import json
-from pprint import pprint
-
-import iso8601
-
 from ocd_backend.items.popolo import OrganisationItem
 from ocd_backend.utils.misc import slugify
-from ocd_backend import settings
-from ocd_backend.extractors import HttpRequestMixin
 
 
 class CommitteeItem(OrganisationItem):
