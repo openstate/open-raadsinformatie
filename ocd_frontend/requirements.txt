@@ -4,3 +4,4 @@ Flask==0.10.1
 #Flask-Testing==0.4.2
 Pillow
 gunicorn==19.8.1
+pylint==1.8.4

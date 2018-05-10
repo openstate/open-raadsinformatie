@@ -177,7 +177,7 @@ if os.getenv('GCE_STACKDRIVER'):
         'stream': 'ext://sys.stdout',
     }
 
-ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elasticsearch')
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 NEO4J_URL = os.getenv('NEO4J_URL', "http://neo4j:abc@neo4j:7474/db/data/")

@@ -19,6 +19,7 @@ install_pyav_deps.sh
 README.md
 start.sh
 Vagrantfile*
+.semaphore-cache
 requirements.txt
 .*
 **/*.pyc

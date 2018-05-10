@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from ocd_backend.settings import LOGGING, RELEASE_STAGE, BUGSNAG_APIKEY, APP_VERSION
+from ocd_backend.settings import LOGGING, RELEASE_STAGE, BUGSNAG_APIKEY
 
 if BUGSNAG_APIKEY:
     import bugsnag
@@ -12,7 +12,6 @@ if BUGSNAG_APIKEY:
         api_key=BUGSNAG_APIKEY,
         project_root="/opt/ori",
         release_stage=RELEASE_STAGE,
-        app_version=APP_VERSION,
     )
 
     connect_failure_handler()
