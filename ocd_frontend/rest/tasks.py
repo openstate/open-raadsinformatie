@@ -56,7 +56,7 @@ def log_event(user_agent, referer, user_ip, created_at, event_type, **kwargs):
     return event
 
 
-def search_event(query, hits, n_total_hits, query_time_ms, source_id=None):
+def search_event(query, hits, n_total_hits, query_time_ms, doc_type, source_id=None):
     """Format the properties of the ``search`` event.
 
     :param query: a dictionary that specifies the query and it's options
@@ -68,6 +68,8 @@ def search_event(query, hits, n_total_hits, query_time_ms, source_id=None):
     :type n_total_hits: int
     :param query_time_ms: duration of the query in milliseconds
     :type query_time_ms: int
+    :param doc_type: the type of the document
+    :type doc_type: str
     :param source_id: specifies which index was targeted. If ``source_id``
                       is ``None``, the search was executed against the
                       combined index.
@@ -79,12 +81,13 @@ def search_event(query, hits, n_total_hits, query_time_ms, source_id=None):
         'query': query,
         'hits': hits,
         'n_total_hits': n_total_hits,
-        'query_time_ms': query_time_ms
+        'query_time_ms': query_time_ms,
+        'doc_type': doc_type,
     }
 
 
 def search_similar_event(similar_to_source_id, similar_to_object_id, query,
-                         hits, n_total_hits, query_time_ms):
+                         hits, n_total_hits, query_time_ms, doc_type):
     """Format the properties of the ``search_similar`` event.
 
     :param similar_to_source_id: specifies which index was targeted. If
@@ -104,6 +107,8 @@ def search_similar_event(similar_to_source_id, similar_to_object_id, query,
     :type n_total_hits: int
     :param query_time_ms: duration of the query in milliseconds
     :type query_time_ms: int
+    :param doc_type: the type of the document
+    :type doc_type: str
     """
     return {
         'similar_to_object': {
@@ -113,7 +118,8 @@ def search_similar_event(similar_to_source_id, similar_to_object_id, query,
         'query': query,
         'hits': hits,
         'n_total_hits': n_total_hits,
-        'query_time_ms': query_time_ms
+        'query_time_ms': query_time_ms,
+        'doc_type': doc_type,
     }
 
 
@@ -128,17 +134,20 @@ def sources_event(query_time_ms):
     }
 
 
-def get_object_event(source_id, object_id):
+def get_object_event(source_id, object_id, doc_type):
     """Format the properties of the ``get_object`` event.
 
     :param source_id: the ID of the source to which the document belongs
     :type source_id: str
     :param object_id: the ID of the requested object
     :type object_id: str
+    :param doc_type: the type of the document
+    :type doc_type: str
     """
     return {
         'source_id': source_id,
-        'object_id': object_id
+        'object_id': object_id,
+        'doc_type': doc_type,
     }
 
 
