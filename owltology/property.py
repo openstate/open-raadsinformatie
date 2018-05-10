@@ -21,7 +21,7 @@ class PropertyBase(object):
     def get_prefix_uri(self):
         return '%s:%s' % (self.ns.prefix, self.local_name)
 
-    def serialize(self, value):
+    def serialize(self, value, **kwargs):
         return value
 
     def __repr__(self):
@@ -42,12 +42,12 @@ class Property(PropertyBase):
 
 
 class Instance(Property):
-    def serialize(self, value):
+    def serialize(self, value, **kwargs):
         return value.get_prefix_uri()
 
 
 class StringProperty(Property):
-    def serialize(self, value):
+    def serialize(self, value, **kwargs):
         return unicode(value).strip()
 
 
@@ -56,7 +56,7 @@ class IntegerProperty(Property):
 
 
 class DateTimeProperty(Property):
-    def serialize(self, value):
+    def serialize(self, value, **kwargs):
         if isinstance(value, datetime):
             return value.strftime("%s")
 
@@ -84,11 +84,12 @@ class ArrayProperty(Property):
 
 
 class Relation(PropertyBase):
-    def serialize(self, value):
+    def serialize(self, value, **kwargs):
         props = list()
         for _, item in iterate(value):
             if not item.__temporary__:
-                props.append(item.deflate(namespaces=True, props=True, rels=True))
+                # todo temporary fix for deflate recursion
+                props.append(item.deflate(**kwargs))
             else:
                 props.append(item.get_ori_id())
 

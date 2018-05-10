@@ -123,7 +123,7 @@ class ModelBase(object):
             value = self.__dict__.get(name, None)
 
             if value:
-                props_list[namespaced] = definition.serialize(value)
+                props_list[namespaced] = definition.serialize(value, namespaces=namespaces, props=props, rels=rels)
             elif not self.__temporary__ and definition.required:
                 raise RequiredProperty("Property '%s' is required for %s" %
                                        (name, self.get_prefix_uri()))

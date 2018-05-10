@@ -3,7 +3,7 @@ from unittest import TestCase
 
 
 class ItemTestCase(TestCase):
-    def setup(self):
+    def setUp(self):
         self.PWD = os.path.dirname(__file__)
         dump_path = os.path.abspath(
             os.path.join(self.PWD, '..', 'test_dumps/ocd_openbeelden_test.gz')
@@ -23,7 +23,7 @@ class ItemTestCase(TestCase):
 
 # Import test modules here so the noserunner can pick them up, and the
 # ExtractorTestCase is parsed. Add additional testcases when required
-from .localdump import LocalDumpItemTestCase
-from .go_meeting import MeetingItemTestCase
-from .go_resolution import ResolutionItemTestCase
-from .go_report import ReportItemTestCase
+#from .localdump import LocalDumpItemTestCase
+#from .go_meeting import MeetingItemTestCase
+from .notubiz_meeting import NotubizMeetingTestCase
+#from .go_report import ReportItemTestCase

@@ -31,7 +31,7 @@ class OcdRestTestCaseMixin(object):
 
         return app
 
-    def setup(self):
+    def setUp(self):
         # If ES indexes are required, Elasticsearch should be running
         if self.required_indexes:
             self.assertTrue(self.es_client.ping(),
@@ -46,7 +46,8 @@ class OcdRestTestCaseMixin(object):
         self.create_thumbnail_cache()
 
     def create_thumbnail_cache(self):
-        os.makedirs(self.thumbnail_cache)
+        if not os.path.exists(self.thumbnail_cache):
+            os.makedirs(self.thumbnail_cache)
         self.addCleanup(self.remove_thumbnail_cache)
 
     def es_add_indices(self, indices):
@@ -56,7 +57,9 @@ class OcdRestTestCaseMixin(object):
         for index in indices:
             if not self.es_client.indices.exists(index):
                 self.es_client.indices.create(index)
-                self.addCleanup(self.es_remove_index, index)
+
+            # Try to remove, just in case
+            self.addCleanup(self.es_remove_index, index)
 
     def es_index_docs(self, indices):
         """Index test documents for each index specified in ``indices``."""

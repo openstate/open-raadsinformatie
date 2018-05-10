@@ -404,7 +404,7 @@ USAGE_LOGGING_ENABLED = True
 # Name of the Elasticsearch index used to store logged events
 USAGE_LOGGING_INDEX = 'ori_usage_logs'
 
-ROOT_PATH = os.path.dirname(os.path.abspath(sys.modules['__main__'].__file__))
+ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
 LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
 DATA_DIR_PATH = os.path.join(os.path.dirname(ROOT_PATH), 'data', 'static')

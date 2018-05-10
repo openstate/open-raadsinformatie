@@ -20,7 +20,7 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         """
         self.source_definition = kwargs['source_definition']
         self.item_class = load_object(kwargs['source_definition']['item'])
-        self.run_node = kwargs['run_node']
+        self.run_node = kwargs.get('run_node')
 
         item = self.deserialize_item(*args)  # pylint: disable=no-value-for-parameter
         return self.transform_item(*args, item=item)  # pylint: disable=no-value-for-parameter

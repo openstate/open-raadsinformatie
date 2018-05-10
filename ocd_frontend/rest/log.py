@@ -1,7 +1,7 @@
 import logging
 import logging.config
 
-from ocd_frontend.rest.settings import LOGGING
+from settings import LOGGING
 
 logging.config.dictConfig(LOGGING)
 

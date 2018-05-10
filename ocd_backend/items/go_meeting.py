@@ -4,8 +4,7 @@ from hashlib import sha1
 
 import iso8601
 from lxml import etree
-from ocd_backend.items.popolo import EventItem
-
+from ocd_backend.items import BaseItem
 from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
@@ -14,7 +13,7 @@ from ocd_backend.utils.file_parsing import FileToTextMixin
 log = get_source_logger('item')
 
 
-class MeetingItem(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class MeetingItem(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     @property
     def html(self):
         _old_html = getattr(self, '_html', None)

@@ -1,4 +1,3 @@
-from bugsnag.flask import handle_exceptions
 from flask import Flask
 
 # noinspection PyUnresolvedReferences
@@ -24,10 +23,6 @@ def create_app_factory(package_name, package_path, settings_override=None):
 
     app.es = ElasticsearchService(app.config['ELASTICSEARCH_HOST'],
                                   app.config['ELASTICSEARCH_PORT'])
-
-    # Bugsnag handler for Flask
-    if BUGSNAG_APIKEY:
-        handle_exceptions(app)
 
     register_blueprints(app, package_name, package_path)
 

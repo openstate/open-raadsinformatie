@@ -7,8 +7,8 @@ from . import LoaderTestCase
 
 
 class ESLoaderTestCase(LoaderTestCase):
-    def setup(self):
-        super(ESLoaderTestCase, self).setup()
+    def setUp(self):
+        super(ESLoaderTestCase, self).setUp()
         self.PWD = os.path.dirname(__file__)
         self.object_id = u'52c54e5be11b218b1a6df731634fda9fb2188d57'
 

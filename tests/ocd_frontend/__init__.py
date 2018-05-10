@@ -21,7 +21,6 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
         """Tests if a valid search request responds with a JSON and
         status 200 OK."""
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        print(url)
         response = self.post(url, content_type='application/json',
                              data=json.dumps({'query': 'de'}))
         self.assert_ok_json(response)
@@ -271,35 +270,27 @@ class RestApiSearchTestCase(OcdRestTestCaseMixin, TestCase):
                              data=json.dumps({'query': 'de', 'size': -1}))
         self.assert_bad_request_json(response)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        response = self.post(url, content_type='application/json',
-                             data=json.dumps({'query': 'de'}))
-        self.assertTrue(mocked_log_task.called)
+        self.post(url, content_type='application/json', data=json.dumps({'query': 'de'}))
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         url = url_for(self.endpoint_url, **self.endpoint_url_args)
-        response = self.post(url, content_type='application/json',
-                             data=json.dumps({'query': 'de'}))
-        self.assertFalse(mocked_log_task.called)
+        self.post(url, content_type='application/json', data=json.dumps({'query': 'de'}))
+        self.assertFalse(mocked_es_create.called)
 
 
 class RestApiSearchSourceTestCase(RestApiSearchTestCase):
@@ -608,37 +599,29 @@ class RestApiSearchSimilarTestCase(OcdRestTestCaseMixin, TestCase):
                              data=json.dumps({'size': -1}))
         self.assert_bad_request_json(response)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        response = self.post(url, content_type='application/json',
-                             data=json.dumps({}))
-        self.assertTrue(mocked_log_task.called)
+        self.post(url, content_type='application/json', data=json.dumps({}))
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_combined_index']['item'][0]
         url = url_for('api.similar', object_id=doc_id)
-        response = self.post(url, content_type='application/json',
-                             data=json.dumps({}))
-        self.assertFalse(mocked_log_task.called)
+        self.post(url, content_type='application/json', data=json.dumps({}))
+        self.assertFalse(mocked_es_create.called)
 
 
 class RestApiSourcesTestCase(OcdRestTestCaseMixin, TestCase):
@@ -658,33 +641,27 @@ class RestApiSourcesTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertIn('id', source_attrs)
         self.assertIn('organizations', source_attrs)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         url = url_for('api.list_sources')
-        response = self.get(url)
-        self.assertTrue(mocked_log_task.called)
+        self.get(url)
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         url = url_for('api.list_sources')
-        response = self.get(url)
-        self.assertFalse(mocked_log_task.called)
+        self.get(url)
+        self.assertFalse(mocked_es_create.called)
 
 
 class RestApiGetObjectTestCase(OcdRestTestCaseMixin, TestCase):
@@ -724,36 +701,30 @@ class RestApiGetObjectTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertEqual(response.json['error'],
                          'Document not found.')
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_collection_index']['items'][0]
         url = url_for('api.get_object', source_id='test_collection_index',
                       object_id=doc_id)
-        response = self.get(url)
-        self.assertTrue(mocked_log_task.called)
+        self.get(url)
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_collection_index']['items'][0]
-        url = url_for('api.get_object', source_id='test_collection_index',
+        url_for('api.get_object', source_id='test_collection_index',
                       object_id=doc_id)
-        self.assertFalse(mocked_log_task.called)
+        self.assertFalse(mocked_es_create.called)
 
 
 class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
@@ -769,10 +740,6 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
                       doc_type='items', object_id=doc_id)
         response = self.get(url)
 
-        # pprint(requests.get('http://localhost:9200/_cat/indices').content)
-        # pprint(self.doc_ids)
-        # pprint(url)
-        # pprint(response)
         self.assert_ok_json(response)
 
     def test_get_nonexistent_object(self):
@@ -799,37 +766,31 @@ class RestApiGetObjectSourceTestCase(OcdRestTestCaseMixin, TestCase):
         self.assertEqual(response.json['error'],
                          'Document not found.')
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_collection_index']['items'][0]
         url = url_for('api.get_object_source',
                       source_id='test_collection_index', object_id=doc_id)
-        response = self.get(url)
-        self.assertTrue(mocked_log_task.called)
+        self.get(url)
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_collection_index']['items'][0]
         url = url_for('api.get_object_source',
                       source_id='test_collection_index', object_id=doc_id)
-        response = self.get(url)
-        self.assertFalse(mocked_log_task.called)
+        self.get(url)
+        self.assertFalse(mocked_es_create.called)
 
 
 class RestApiGetObjectStatsTestCaste(OcdRestTestCaseMixin, TestCase):
@@ -958,39 +919,33 @@ class RestApiResolveTestCase(OcdRestTestCaseMixin, TestCase):
         self.assert_not_found(response)
         self.assert_content_type(response, 'text/html; charset=utf-8')
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_logging_called_if_enabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_logging_called_if_enabled(self, mocked_es_create):
         """Test if the event log storage function is called when usage
         logging is enabled."""
         # Enable usage logging for this test
         self.app.config['USAGE_LOGGING_ENABLED'] = True
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
         url = url_for('api.resolve', url_id=doc_id)
-        response = self.get(url, follow_redirects=False)
+        self.get(url, follow_redirects=False)
 
-        self.assertTrue(mocked_log_task.called)
+        self.assertTrue(mocked_es_create.called)
 
-    @mock.patch('ocd_frontend.rest.tasks.log_event.delay')
-    def test_search_logging_not_called_if_disabled(self, mocked_log_task):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_search_logging_not_called_if_disabled(self, mocked_es_create):
         """Test if the event log storage function is not called when
         usage logging is disabled."""
         # Make sure usage logging is disabled
         self.app.config['USAGE_LOGGING_ENABLED'] = False
 
-        # Make sure the Celery task doesn't get executed
-        mocked_log_task.return_value = lambda *args, **kwargs: None
-
         doc_id = self.doc_ids['ori_test_resolver_index']['url'][0]
         url = url_for('api.resolve', url_id=doc_id)
-        response = self.get(url, follow_redirects=False)
-        self.assertFalse(mocked_log_task.called)
+        self.get(url, follow_redirects=False)
+        self.assertFalse(mocked_es_create.called)
 
 
-class LogEventTaskTestCase(UnittestTestCase):
+class LogEventTaskTestCase(OcdRestTestCaseMixin, TestCase):
     default_args = {
         'user_agent': 'abc',
         'referer': 'def',
@@ -999,9 +954,12 @@ class LogEventTaskTestCase(UnittestTestCase):
         'event_type': 'get_object'
     }
 
-    def test_unknown_event_raises_exception(self):
+    @mock.patch('tests.ocd_frontend.current_app.es.create')
+    def test_unknown_event_raises_exception(self, _):
         task_args = self.default_args
         task_args['event_type'] = 'unknown-test-event'
+
+        self.app.config['USAGE_LOGGING_ENABLED'] = True
         self.assertRaises(ValueError, tasks.log_event, **task_args)
 
 
