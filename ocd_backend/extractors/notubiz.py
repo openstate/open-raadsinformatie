@@ -44,6 +44,8 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                 'attributes': attributes,
             }
 
+        meeting_count = 0
+        meetings_skipped = 0
         for start_date, end_date in self.interval_generator():
             log.info("Now processing first page meeting(items) from %s to %s" % (
             start_date, end_date,))
@@ -89,15 +91,18 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                         resp.raise_for_status()
                         meeting_json = resp.json()['meeting']
                     except (HTTPError, KeyError), e:
+                        meetings_skipped += 1
                         log.warn('%s: %s' % (e, resp.request.url))
                         continue
                     except (ValueError, KeyError), e:
+                        meetings_skipped += 1
                         log.error('%s: %s' % (e, resp.request.url))
                         continue
 
                     self.organization = organizations[self.source_definition['organisation_id']]
 
                     for result in self.extractor(meeting_json):
+                        meeting_count += 1
                         yield result
 
                 # Currently not working due to bug
@@ -106,6 +111,9 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                 #     break
 
                 page += 1
+
+        log.info("Extracted total of %d meeting(items). Also skipped %d "
+                 "meetings in total." % (meeting_count, meetings_skipped,))
 
 
 class NotubizMeetingExtractor(NotubizBaseExtractor):
