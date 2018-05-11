@@ -94,57 +94,58 @@ class BaseItem(object):
         raise NotImplementedError
 
 
-class LocalDumpItem(BaseItem):
-    """
-    Represents an Item extracted from a local dump
-    """
-
-    def get_collection(self):
-        collection = self.original_item['_source'].get('meta', {}) \
-            .get('collection')
-        if not collection:
-            raise FieldNotAvailable('collection')
-        return collection
-
-    def get_rights(self):
-        rights = self.original_item['_source'].get('meta', {}).get('rights')
-        if not rights:
-            raise FieldNotAvailable('rights')
-        return rights
-
-    def get_object_model(self):
-        combined_index_data = self.original_item['_source'] \
-            .get('combined_index_data')
-        if not combined_index_data:
-            raise FieldNotAvailable('combined_index_data')
-
-        data = json.loads(combined_index_data)
-        data.pop('meta')
-        # Cast datetimes
-        for key, value in data.iteritems():
-            if self.combined_index_fields.get(key) == datetime:
-                data[key] = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')
-
-        return data
-
-    def get_all_text(self):
-        """
-        Returns the content that is stored in the combined_index_data.all_text
-        field, and raise a `FieldNotAvailable` exception when it is not
-        available.
-
-        :rtype: unicode
-        """
-        combined_index_data = json.loads(self.original_item['_source']
-                                         .get('combined_index_data', {}))
-        all_text = combined_index_data.get('all_text')
-        if not all_text:
-            raise FieldNotAvailable('combined_index_data.all_text')
-        return all_text
-
-    def get_index_data(self):
-        """Restore all fields that are originally indexed.
-
-        :rtype: dict
-        """
-        return self.original_item.get('_source', {})
+# todo needs revision v1
+# class LocalDumpItem(BaseItem):
+#     """
+#     Represents an Item extracted from a local dump
+#     """
+#
+#     def get_collection(self):
+#         collection = self.original_item['_source'].get('meta', {}) \
+#             .get('collection')
+#         if not collection:
+#             raise FieldNotAvailable('collection')
+#         return collection
+#
+#     def get_rights(self):
+#         rights = self.original_item['_source'].get('meta', {}).get('rights')
+#         if not rights:
+#             raise FieldNotAvailable('rights')
+#         return rights
+#
+#     def get_object_model(self):
+#         combined_index_data = self.original_item['_source'] \
+#             .get('combined_index_data')
+#         if not combined_index_data:
+#             raise FieldNotAvailable('combined_index_data')
+#
+#         data = json.loads(combined_index_data)
+#         data.pop('meta')
+#         # Cast datetimes
+#         for key, value in data.iteritems():
+#             if self.combined_index_fields.get(key) == datetime:
+#                 data[key] = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S')
+#
+#         return data
+#
+#     def get_all_text(self):
+#         """
+#         Returns the content that is stored in the combined_index_data.all_text
+#         field, and raise a `FieldNotAvailable` exception when it is not
+#         available.
+#
+#         :rtype: unicode
+#         """
+#         combined_index_data = json.loads(self.original_item['_source']
+#                                          .get('combined_index_data', {}))
+#         all_text = combined_index_data.get('all_text')
+#         if not all_text:
+#             raise FieldNotAvailable('combined_index_data.all_text')
+#         return all_text
+#
+#     def get_index_data(self):
+#         """Restore all fields that are originally indexed.
+#
+#         :rtype: dict
+#         """
+#         return self.original_item.get('_source', {})
