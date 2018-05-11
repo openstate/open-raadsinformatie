@@ -1,0 +1,52 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &province
+    <<: *entity_defaults
+    entity: province
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Province
+    prefix: "{classification}"
+
+  - &province_council
+    <<: *entity_defaults
+    entity: council
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Council
+    prefix: "{classification}"
+
+_gv: &gv
+  index_name: "{key}"
+  province: "{key!c}"
+  entities: *entities
+  #start_date: "2016-01-01T00:00:00"
+  #end_date: "2016-06-01T00:00:00"
+  <<: *source_defaults
+
+gv-provinces:
+  zuid-holland:
+    key: zuid-holland
+    almanak_id: 17466
+    # organizations_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Provinciale_Staten
+    # organizations_item_xpath: "//div[contains(@class, \"document\")]//ul[2]/li/a"
+    # persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
+    # persons_item_xpath: "//ul[contains(@class, \"two\")]//li"
+    <<: *gv
