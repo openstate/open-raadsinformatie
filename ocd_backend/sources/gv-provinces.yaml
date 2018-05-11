@@ -33,6 +33,32 @@ _entities: &entities
     classification: Council
     prefix: "{classification}"
 
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    classification: Party
+    file_url: "{organizations_url}"
+    item_xpath: "{organizations_item_xpath}"
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.persons.HTMLPersonItem
+    file_url: "{persons_url}"
+    item_xpath: "{persons_item_xpath}"
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.gv.GreenValleyExtractor
+    item: ocd_backend.items.BaseItem
+
 _gv: &gv
   index_name: "{key}"
   province: "{key!c}"
@@ -45,8 +71,14 @@ gv-provinces:
   zuid-holland:
     key: zuid-holland
     almanak_id: 17466
-    # organizations_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Provinciale_Staten
-    # organizations_item_xpath: "//div[contains(@class, \"document\")]//ul[2]/li/a"
-    # persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
-    # persons_item_xpath: "//ul[contains(@class, \"two\")]//li"
+    greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
+    greenvalley_username: xxx
+    greenvalley_key: yyy
+    greenvalley_hash: zzz
+    organizations_url: https://staten.zuid-holland.nl/Statenleden
+    organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"
+    persons_url: https://staten.zuid-holland.nl/Statenleden
+    persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
+    persons_name_xpath: ".//a/span//text()"
+    persons_id_xpath: ".//a/@href"
     <<: *gv
