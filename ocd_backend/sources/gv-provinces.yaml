@@ -56,15 +56,15 @@ _entities: &entities
     <<: *entity_defaults
     entity: meetings
     doc_type: events
-    extractor: ocd_backend.extractors.gv.GreenValleyExtractor
+    extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     item: ocd_backend.items.BaseItem
 
 _gv: &gv
   index_name: "{key}"
   province: "{key!c}"
   entities: *entities
-  #start_date: "2016-01-01T00:00:00"
-  #end_date: "2016-06-01T00:00:00"
+  start_date: "2018-01-01T00:00:00"
+  end_date: "2018-06-01T00:00:00"
   <<: *source_defaults
 
 gv-provinces:
@@ -72,9 +72,9 @@ gv-provinces:
     key: zuid-holland
     almanak_id: 17466
     greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
-    greenvalley_username: xxx
-    greenvalley_key: yyy
-    greenvalley_hash: zzz
+    greenvalley_username: openstate
+    greenvalley_key: bbaab0a1-51b0-4344-8e49-91182df4139e
+    greenvalley_hash: 9af2bb59b0d6ef3d62fa4f2e0157759c5f5c5ad2f2691ab0
     organizations_url: https://staten.zuid-holland.nl/Statenleden
     organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"
     persons_url: https://staten.zuid-holland.nl/Statenleden
