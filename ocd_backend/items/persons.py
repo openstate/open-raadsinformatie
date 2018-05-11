@@ -107,7 +107,9 @@ class AlmanakPersonItem(HttpRequestMixin, PersonItem):
 class HTMLPersonItem(HttpRequestMixin, PersonItem):
     def get_original_object_id(self):
         return unicode(u''.join(
-            self.original_item.xpath('.//h2/a/@href'))).strip()
+            self.original_item.xpath(
+                self.source_definition.get(
+                    'persons_id_xpath', './/h2/a/@href')))).strip()
 
     def get_original_object_urls(self):
         return {"html": self.source_definition['file_url']}
@@ -126,7 +128,9 @@ class HTMLPersonItem(HttpRequestMixin, PersonItem):
         combined_index_data['hidden'] = self.source_definition['hidden']
 
         combined_index_data['name'] = u''.join(
-            self.original_item.xpath('.//h2//text()')).strip()
+            self.original_item.xpath(
+                self.source_definition.get(
+                    'persons_name_xpath', './/h2//text()'))).strip()
 
         combined_index_data['identifiers'] = [
             {
@@ -135,8 +139,11 @@ class HTMLPersonItem(HttpRequestMixin, PersonItem):
             }
 
         ]
-        combined_index_data['email'] = u''.join(self.original_item.xpath(
-            '//a[starts-with(@href,"mailto:")]/@title'))
+        combined_index_data['email'] = u''.join(
+            self.original_item.xpath(
+                self.source_definition.get(
+                    'persons_mail_xpath',
+                    '//a[starts-with(@href,"mailto:")]/@title'))).strip()
         combined_index_data['gender'] = u'unknown'
 
         # party = u''.join(
