@@ -1,7 +1,7 @@
 FROM python:2.7-alpine
 MAINTAINER Jurrian Tromp <jurrian@argu.co>
 
-COPY ocd_backend/requirements.txt /opt/ori/requirements.txt
+COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 
 # Install system requirements
 # Second line are used for image creation and uninstalled afterwards to reduce
@@ -12,7 +12,7 @@ RUN apk add --update \
   libxml2-dev libxslt-dev poppler-dev \
   inotify-tools libmagic \
   && pip install cython \
-  && pip install --no-cache-dir -r /opt/ori/requirements.txt \
+  && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
   && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
   && echo "Europe/Amsterdam" > /etc/timezone \
@@ -23,15 +23,26 @@ RUN adduser -D -H celery \
   && mkdir -p /var/run/celery \
   && chown celery:celery /var/run/celery
 
-# Copy all files, except for .dockerignore entries
-WORKDIR /opt/ori/
-VOLUME /opt/ori/data
-COPY . /opt/ori
+WORKDIR /opt/ori
 
 # Trick to redirect logs to process 1 when running multiple processes
-RUN ln -sf /proc/1/fd/1 /opt/ori/log/stdout \
-  && chown -R celery:celery .
-RUN mkdir -p /opt/ori/data/static && chown -R celery:celery /opt/ori/data
+RUN mkdir /opt/ori/log \
+  && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
+# Create volume for shared static data with the frontend
+VOLUME /opt/ori/data
+RUN mkdir -p /opt/ori/data/static
+
+# Legacy support for frontend settings in manage.py
+COPY ocd_frontend/rest/settings.py /opt/ori/ocd_frontend/rest/settings.py
+RUN touch /opt/ori/ocd_frontend/__init__.py /opt/ori/ocd_frontend/rest/__init__.py
+
+# Copy all files, except for .dockerignore entries
+COPY bin /opt/ori/bin
+COPY manage.py /opt/ori/manage.py
+COPY owltology /opt/ori/owltology
+COPY ocd_backend /opt/ori/ocd_backend
+
+RUN chown -R celery:celery /opt/ori
 USER celery
 CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1

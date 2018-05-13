@@ -4,23 +4,20 @@ docs
 dumps
 data
 log/*
-ocd_frontend
-# Need frontend settings for import in manage.py for now
-!ocd_frontend/__init__.py
-!ocd_frontend/settings.py
-ocd_frondend/local_settings.py
-ocd_backend/local_settings.py
-bootstrap.sh
-CONTRIBUTING.rst
-docker-compose*
-Dockerfile
-INSTALL.rst
 install_pyav_deps.sh
-README.md
-start.sh
-Vagrantfile*
-.semaphore-cache
-requirements.txt
+docker-compose*
+*.rst
+*.md
+ocd_backend/secrets.py
+ocd_frontend/.thumbnail-cache
 .*
+.semaphore-cache
 **/*.pyc
 **/__pycache__
+**/.coverage
+**/local_settings.py
+**/Dockerfile*
+
+# Force to include these files
+!.pylintrc
+!.env
