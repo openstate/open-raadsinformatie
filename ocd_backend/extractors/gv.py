@@ -2,6 +2,7 @@ import json
 from pprint import pprint
 import re
 from hashlib import sha1
+from time import sleep
 
 import requests
 
@@ -15,6 +16,18 @@ from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
 
+
+def printTree(tree, depth=0):
+    if tree is None or len(tree) == 0:
+        print " " * depth, "-"
+    else:
+        try:
+            items = tree.items()
+        except AttributeError as e:
+            items = []
+        for key, val in items:
+            print " " * depth, key
+            printTree(val, depth+1)
 
 class GreenValleyBaseExtractor(BaseExtractor):
     def __init__(self, *args, **kwargs):
@@ -46,7 +59,7 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
     def _get_meta(self):
         return [
             {"metaname": "objecttype", "operator": "=", "type": "string",
-                "values": ["agenda"]}]
+                "values": self.source_definition['greenvalley_objecttypes']}]
 
     def run(self):
         params = {
@@ -61,7 +74,16 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             print "Fetching items, starting from %s ..." % (params['start'],)
             results = self._fetch('GetObjectsByQuery', params).json()
             for result in results['objects']:
-                yield 'application/json', json.dumps(result)
+                pprint(self._get_meta())
+                print "Fetching model for %s" % (
+                    result[u'default'][u'objectid'],)
+                sleep(1)
+                actual = self._fetch(
+                    'GetModel', {
+                        'objectid': result[u'default'][u'objectid']}).json()
+                # printTree(actual)
+                # pprint(actual)
+                yield 'application/json', json.dumps(actual)
             params['start'] += len(results['objects'])
             fetch_next_page = (len(results['objects']) > 0)
 
@@ -73,7 +95,8 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
                 "metaname": "objecttype",
                 "operator": "=",
                 "type": "string",
-                "values": ["agenda"]
+                "values": self.source_definition['greenvalley_objecttypes']
+                # ["agenda"]
             }, {
                 "metaname": "bis_vergaderdatum",
                 "operator": ">",

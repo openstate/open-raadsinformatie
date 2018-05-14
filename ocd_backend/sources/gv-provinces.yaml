@@ -57,7 +57,18 @@ _entities: &entities
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
-    item: ocd_backend.items.BaseItem
+    item: ocd_backend.items.gv.GreenValleyMeetingItem
+    greenvalley_objecttypes:
+      - agenda
+
+  - &decisions
+    <<: *entity_defaults
+    entity: decisions
+    doc_type: events
+    extractor: ocd_backend.extractors.gv.GreenValleyExtractor
+    item: ocd_backend.items.gv.GreenValleyItem
+    greenvalley_objecttypes:
+      - besluitenlijst
 
 _gv: &gv
   index_name: "{key}"
