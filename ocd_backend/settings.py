@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 import pickle
 
 from kombu.serialization import register
@@ -21,6 +22,10 @@ REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_PATH = os.path.dirname(ROOT_PATH)
+
+# Set server timezone for correct conversions
+os.environ['TZ'] = 'Europe/Amsterdam'
+time.tzset()
 
 CELERY_CONFIG = {
     'BROKER_URL': REDIS_URL,

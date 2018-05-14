@@ -57,9 +57,9 @@ class ElasticsearchLoader(BaseLoader):
     """
 
     def run(self, *args, **kwargs):
-        index_name = kwargs.get('new_index_name')
+        self.index_name = kwargs.get('new_index_name')
 
-        if not index_name:
+        if not self.index_name:
             raise ConfigurationError('The name of the index is not provided')
 
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
