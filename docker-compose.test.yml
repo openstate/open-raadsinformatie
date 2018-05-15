@@ -10,3 +10,11 @@ services:
       context: .
       dockerfile: ocd_frontend/Dockerfile.test
     image: "openstatefoundation/open-raadsinformatie-frontend:${BRANCH_NAME-latest}-test"
+  bootstrap:
+    image: appropriate/curl
+    volumes:
+      - ./es_mappings:/tmp/es_mappings
+    depends_on:
+      elastic_endpoint:
+        condition: service_healthy
+    command: curl -sS -XPUT 'http://elastic_endpoint:9200/_template/ori_template' -d@/tmp/es_mappings/ori_template.json
