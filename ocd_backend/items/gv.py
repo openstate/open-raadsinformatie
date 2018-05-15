@@ -92,30 +92,35 @@ class GreenValleyItem(
             meeting[u'objecttype'].capitalize())
         combined_index_data['description'] = meeting[u'objectname']
 
-        combined_index_data['start_date'] = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
-        combined_index_data['end_date'] = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
+        if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
+            combined_index_data['start_date'] = datetime.fromtimestamp(
+                float(meeting[u'bis_vergaderdatum']) +
+                (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
+                (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
+            combined_index_data['end_date'] = datetime.fromtimestamp(
+                float(meeting[u'bis_vergaderdatum']) +
+                (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
+                (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
         try:
             combined_index_data['location'] = meeting[u'bis_locatie'].strip()
         except (AttributeError, KeyError):
             pass
 
-        # if self.original_item.has_key('MeetingId'):
-        #     combined_index_data['parent_id'] = unicode(self._get_meeting_id(
-        #         meeting))
-        #
-        # if self.original_item.has_key('MeetingItems'):
-        #     try:
-        #         combined_index_data['children'] = [
-        #             self._get_meeting_id(mi) for mi in self.original_item[
-        #                 'MeetingItems']]
-        #     except TypeError:
-        #         pass
+        children = []
+        for a, v in self.original_item[u'object'].get(u'SETS', {}).iteritems():
+            if v[u'objecttype'].lower() == u'agendapage':
+                result = {u'object': {u'default': v}}
+                children.append(result)
+
+        if len(children) > 0:
+            combined_index_data['children'] = [
+                self._get_meeting_id(y) for y in sorted(
+                    children, key=lambda x: x[u'object'][u'default'][u'nodeorder'])]
+
+        if u'parent_objectid' in meeting:
+            combined_index_data['parent_id'] = unicode(self._get_meeting_id(
+                {u'object': {u'default': {
+                    u'objectid': meeting[u'parent_objectid']}}}))
 
         combined_index_data['sources'] = []
 

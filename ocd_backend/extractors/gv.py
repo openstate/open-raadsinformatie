@@ -61,6 +61,9 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             {"metaname": "objecttype", "operator": "=", "type": "string",
                 "values": self.source_definition['greenvalley_objecttypes']}]
 
+    def _get_items(self, response):
+        return [response]
+
     def run(self):
         params = {
             'start': 0,
@@ -74,7 +77,7 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             print "Fetching items, starting from %s ..." % (params['start'],)
             results = self._fetch('GetObjectsByQuery', params).json()
             for result in results['objects']:
-                pprint(self._get_meta())
+                # pprint(self._get_meta())
                 print "Fetching model for %s" % (
                     result[u'default'][u'objectid'],)
                 sleep(1)
@@ -83,7 +86,9 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
                         'objectid': result[u'default'][u'objectid']}).json()
                 # printTree(actual)
                 # pprint(actual)
-                yield 'application/json', json.dumps(actual)
+                for item in self._get_items(actual):
+                    yield 'application/json', json.dumps(item)
+
             params['start'] += len(results['objects'])
             fetch_next_page = (len(results['objects']) > 0)
 
@@ -121,3 +126,17 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             self.source_definition['key'], self.start_date, self.end_date,))
         for item in super(GreenValleyMeetingsExtractor, self).run():
             yield item
+
+
+class GreenValleyMeetingItemsExtractor(GreenValleyMeetingsExtractor):
+    def _get_items(self, response):
+        results = []
+        for a, v in response[u'object'].get(u'SETS', {}).iteritems():
+            if v[u'objecttype'].lower() == u'agendapage':
+                v[u'bis_vergaderdatum'] = response[
+                    u'object'][u'default'][u'bis_vergaderdatum']
+                v[u'parent_objectid'] = response[
+                    u'object'][u'default'][u'objectid']
+                result = {u'object': {u'default': v}}
+                results.append(result)
+        return results
