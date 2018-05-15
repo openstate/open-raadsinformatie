@@ -30,7 +30,6 @@ RUN mkdir /opt/ori/log \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
 # Create volume for shared static data with the frontend
-VOLUME /opt/ori/data
 RUN mkdir -p /opt/ori/data/static
 
 # Legacy support for frontend settings in manage.py
@@ -43,6 +42,12 @@ COPY manage.py /opt/ori/manage.py
 COPY owltology /opt/ori/owltology
 COPY ocd_backend /opt/ori/ocd_backend
 
+# Change permissions before switching to user
 RUN chown -R celery:celery /opt/ori
 USER celery
+
+# Specify the volume last
+# https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
+VOLUME /opt/ori/data
+
 CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
