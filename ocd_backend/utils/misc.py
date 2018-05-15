@@ -2,15 +2,19 @@ import datetime
 import glob
 import json
 import re
+from calendar import timegm
 from hashlib import sha1
 from string import Formatter
 
+import pytz
 # noinspection PyUnresolvedReferences
 import translitcodec  # used for encoding, search 'translit'
+from dateutil.parser import parse
 from elasticsearch.helpers import scan, bulk
 from lxml import etree
 
-from ocd_backend.exceptions import MissingTemplateTag
+from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
+from ocd_backend.settings import TIMEZONE
 
 
 def full_normalized_motion_id(motion_id, date_as_str=None):
@@ -388,3 +392,50 @@ def iterate(item, parent=None):
 
 def get_sha1_hash(url):
     return sha1(url).hexdigest()
+
+
+def datetime_to_unixstamp(date):
+    """
+    Convert a datetime to a unix timestamp using timezone
+    Input date *must* be a timezone aware datetime
+    :param date: a datetime object
+    :return: unix timestamp
+    """
+    try:
+        utc = date.astimezone(pytz.utc)
+        return timegm(utc.timetuple())
+    except ValueError, e:
+        raise InvalidDatetime(e)
+
+
+def str_to_datetime(date_str):
+    """
+    Convert a string to a datetime without knowing what
+    kind of formatting to expect
+    :param date_str: some form of date string
+    :return: datetime
+    """
+
+    tz = pytz.timezone(TIMEZONE)
+
+    if isinstance(date_str, datetime.datetime):
+        # It appears to be a datetime object
+        return date_str
+
+    try:
+        # Try to parse most forms with dateutil
+        # fuzzy will ignore weird characters
+        date_object = parse(date_str, fuzzy=True)
+        return tz.localize(date_object)
+    except ValueError:
+        pass
+
+    try:
+        # Try to parse it as a unix timestamp
+        utc = datetime.datetime.utcfromtimestamp(float(date_str))
+        return utc.replace(tzinfo=pytz.utc)
+    except (TypeError, ValueError):
+        pass
+
+    # If this point is reached then we could not convert it
+    raise InvalidDatetime("Cannot convert '%s' to datetime", date_str)

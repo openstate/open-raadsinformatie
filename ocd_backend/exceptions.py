@@ -38,3 +38,7 @@ class UnsupportedContentType(Exception):
 
 class MissingTemplateTag(KeyError):
     """Thrown when a template tag is missing in the configuration"""
+
+
+class InvalidDatetime(ValueError):
+    pass

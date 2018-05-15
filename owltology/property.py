@@ -1,9 +1,4 @@
-from datetime import datetime
-
-import iso8601
-from dateutil.parser import parse
-
-from ocd_backend.utils.misc import iterate
+from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
 
 
 class PropertyBase(object):
@@ -57,26 +52,8 @@ class IntegerProperty(Property):
 
 class DateTimeProperty(Property):
     def serialize(self, value, **kwargs):
-        if isinstance(value, datetime):
-            return value.strftime("%s")
-
-        try:
-            return parse(value).strftime("%s")
-        except:
-            pass
-
-        try:
-            return iso8601.parse_date(value).strftime("%s")
-        except iso8601.ParseError:
-            pass
-
-        try:
-            datetime.fromtimestamp(float(value))
-            return value
-        except:
-            pass
-
-        raise
+        date_object = str_to_datetime(value)
+        return datetime_to_unixstamp(date_object)
 
 
 class ArrayProperty(Property):

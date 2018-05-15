@@ -23,9 +23,8 @@ REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_PATH = os.path.dirname(ROOT_PATH)
 
-# Set server timezone for correct conversions
-os.environ['TZ'] = 'Europe/Amsterdam'
-time.tzset()
+# Use this timezone as default for timezone unaware dates
+TIMEZONE = 'Europe/Amsterdam'
 
 CELERY_CONFIG = {
     'BROKER_URL': REDIS_URL,
