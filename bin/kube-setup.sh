@@ -28,7 +28,7 @@ main() {
 		--project "${GOOGLE_PROJECT_ID}"
 
 	echo "Authenticating to GCR"
-	gcloud docker --authorize-only --project "${GOOGLE_PROJECT_ID}"
+	gcloud auth configure-docker -q --project "${GOOGLE_PROJECT_ID}"
 
 	echo "Configuring kubectl"
 	gcloud container clusters get-credentials "${GOOGLE_PROJECT_CLUSTER}" \
