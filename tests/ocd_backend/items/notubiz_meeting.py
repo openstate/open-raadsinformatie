@@ -50,7 +50,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'govid:notubizIdentifier': u'458902',
             'schema:eventStatus': 'council:EventConfirmed',
             'ncal:categories': [u'Agenda'],
-            'schema:startDate': '1518093000',
+            'schema:startDate': 1518093000,
             'govid:oriIdentifier': u'47f08ad2e44e564f765169f338857d939897be79',
             'schema:organizer': u'a91e0157bcfe56548f8e8082c5ffe1a5ac9a1288',
             'council:committee': u'43b0e0f2e1bcc2304c422dbe4abec9d74fb364eb',
@@ -98,7 +98,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'classification': [u'Agenda'],
             'ori_identifier': u'47f08ad2e44e564f765169f338857d939897be79',
             'notubiz_identifier': u'458902',
-            'start_date': '1518093000',
+            'start_date': 1518093000,
             'committee': u'43b0e0f2e1bcc2304c422dbe4abec9d74fb364eb',
             'organization': u'a91e0157bcfe56548f8e8082c5ffe1a5ac9a1288',
             'attachment': [
