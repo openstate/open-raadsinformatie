@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - image: openstatefoundation/open-raadsinformatie-frontend
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - configMapRef:
+            name: appconfig
+        volumeMounts:
+        - mountPath: /opt/ori/static
+          name: oridata
+      volumes:
+      - name: oridata
+        persistentVolumeClaim:
+          claimName: oridata
