@@ -1,8 +1,8 @@
-import logging
+import logging.config
 import os
-import time
 import pickle
 
+from bugsnag.handlers import BugsnagHandler
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
 
@@ -10,7 +10,7 @@ register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
 
-VERSION = os.getenv('VERSION', None)
+APP_VERSION = os.getenv('APP_VERSION', None)
 
 BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
@@ -102,6 +102,10 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'advanced',
             'filename': os.path.join(PROJECT_PATH, 'log', 'backend.log')
+        },
+        'bugsnag': {
+            'level': 'WARNING',
+            '()': BugsnagHandler,
         }
     },
     'loggers': {
@@ -159,7 +163,7 @@ LOGGING = {
         },
     },
     'root': {
-        'handlers': ['default'],
+        'handlers': ['default', 'bugsnag'],
         'level': 'INFO',
     },
 }
@@ -182,6 +186,22 @@ if os.getenv('GCE_STACKDRIVER'):
         'formatter': 'stackdriver',
         'stream': 'ext://sys.stdout',
     }
+
+if BUGSNAG_APIKEY:
+    import bugsnag
+    from .utils.bugsnag_celery import connect_failure_handler
+
+    bugsnag.configure(
+        api_key=BUGSNAG_APIKEY,
+        project_root=ROOT_PATH,
+        release_stage=RELEASE_STAGE,
+        app_version=APP_VERSION,
+    )
+
+    connect_failure_handler()
+
+# Configure python logging system with LOGGING dict
+logging.config.dictConfig(LOGGING)
 
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
