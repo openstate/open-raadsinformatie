@@ -408,9 +408,11 @@ USAGE_LOGGING_ENABLED = True
 USAGE_LOGGING_INDEX = 'ori_usage_logs'
 
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'dumps')
-LOCAL_DUMPS_DIR = os.path.join(os.path.dirname(ROOT_PATH), 'local_dumps')
-DATA_DIR_PATH = os.path.join(os.path.dirname(ROOT_PATH), 'data', 'static')
+PROJECT_PATH = os.path.dirname(ROOT_PATH)
+DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
+STATIC_DIR_PATH = os.path.join(DATA_DIR_PATH, 'static')
+LOCAL_DUMPS_DIR = os.path.join(PROJECT_PATH, 'local_dumps')
+DUMPS_DIR = os.path.join(PROJECT_PATH, 'dumps')
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.
