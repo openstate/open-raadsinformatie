@@ -32,13 +32,13 @@ class IBabsVotingRoundItem(HttpRequestMixin, FrontendAPIMixin, BaseItem):
     def _get_council_members(self):
         results = self.api_request(
             self.source_definition['index_name'], 'persons',
-            size=100)  # 100 for now ...
+            size=500)
         return results
 
     def _get_council_parties(self):
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
-            classification='Party', size=100)  # 100 for now
+            classification='Party', size=500)
         return results
 
     def get_object_id(self):
