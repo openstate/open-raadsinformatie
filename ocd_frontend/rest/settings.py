@@ -1,5 +1,8 @@
+import logging.config
 import os.path
-import sys
+
+from bugsnag.handlers import BugsnagHandler
+from pythonjsonlogger import jsonlogger
 
 DEBUG = True
 
@@ -419,30 +422,85 @@ API_URL = os.getenv('API_URL', 'http://frontend:5000/v1/')
 # to dumps in the /dumps endpoint
 DUMP_URL = 'http://dumps.opencultuurdata.nl/'
 
+
+class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
+    """ Formats the record to a Google Stackdriver compatible json string """
+
+    def __init__(self, fmt="%(levelname) %(message)", *args, **kwargs):
+        jsonlogger.JsonFormatter.__init__(self, fmt=fmt, *args, **kwargs)
+
+    def process_log_record(self, log_record):
+        log_record['severity'] = log_record['levelname']
+        del log_record['levelname']
+        return super(StackdriverJsonFormatter, self).process_log_record(log_record)
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'console': {
+        'basic': {
+            'format': '[%(module)s] %(levelname)s %(message)s'
+        },
+        'advanced': {
             'format': '[%(asctime)s] [%(name)s] [%(levelname)s] - %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S'
+        },
+        'stackdriver': {
+            '()': StackdriverJsonFormatter,
         }
     },
     'handlers': {
-        'console': {
+        'default': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'console'
+            'formatter': 'basic',
+            'stream': 'ext://sys.stdout'
         },
+        'bugsnag': {
+            'level': 'WARNING',
+            '()': BugsnagHandler,
+        }
     },
     'loggers': {
         'ocd_frontend': {
-            'handlers': ['console'],
+            'handlers': ['default'],
             'level': 'DEBUG',
             'propagate': False,
+        },
+        'bugsnag': {
+            'handlers': ['bugsnag']
         }
-    }
+    },
+    'root': {
+        'handlers': ['default', 'bugsnag'],
+        'level': 'INFO',
+    },
 }
+
+if os.getenv('GCE_STACKDRIVER'):
+    # Set default handler to format for Google Stackdriver logging
+    LOGGING['handlers']['default'] = {
+        'level': 'DEBUG',
+        'class': 'logging.StreamHandler',
+        'formatter': 'stackdriver',
+        'stream': 'ext://sys.stdout',
+    }
+
+if BUGSNAG_APIKEY:
+    import bugsnag
+    from bugsnag.handlers import BugsnagHandler
+
+    # Needs to be called before dictConfig
+    bugsnag.configure(
+        api_key=BUGSNAG_APIKEY,
+        project_root=ROOT_PATH,
+        release_stage=RELEASE_STAGE,
+        app_version=APP_VERSION,
+    )
+
+# Configure python logging system with LOGGING dict
+logging.config.dictConfig(LOGGING)
 
 THUMBNAILS_TEMP_DIR = '/tmp'
 

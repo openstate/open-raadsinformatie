@@ -1,7 +1,5 @@
 from flask import Flask
 
-# noinspection PyUnresolvedReferences
-####### import log  # needed for init logging
 import settings
 from es import ElasticsearchService
 from helpers import register_blueprints
@@ -25,5 +23,9 @@ def create_app_factory(package_name, package_path, settings_override=None):
                                   app.config['ELASTICSEARCH_PORT'])
 
     register_blueprints(app, package_name, package_path)
+
+    if BUGSNAG_APIKEY:
+        from bugsnag.flask import handle_exceptions
+        handle_exceptions(app)
 
     return app
