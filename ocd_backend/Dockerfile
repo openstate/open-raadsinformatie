@@ -37,6 +37,7 @@ COPY ocd_frontend/rest/settings.py /opt/ori/ocd_frontend/rest/settings.py
 RUN touch /opt/ori/ocd_frontend/__init__.py /opt/ori/ocd_frontend/rest/__init__.py
 
 # Copy all files, except for .dockerignore entries
+COPY json/gemeenten.json /opt/ori/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY owltology /opt/ori/owltology
