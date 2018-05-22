@@ -3,10 +3,14 @@
 set -euo pipefail
 
 main() {
-	kubectl apply -f kubernetes/backend-deployment.yaml --namespace "${SEMAPHORE_SERVER_NAME}"
-	kubectl apply -f kubernetes/frontend-deployment.yaml --namespace "${SEMAPHORE_SERVER_NAME}"
+    export FULL_VERSION=v${APP_VERSION}.${SEMAPHORE_BUILD_NUMBER}
 
-	kubectl get pods --namespace "${SEMAPHORE_SERVER_NAME}"
+    kubectl set image deployment/backend \
+        backend=openstatefoundation/open-raadsinformatie-backend:${FULL_VERSION}
+    kubectl set image deployment/frontend \
+        frontend=openstatefoundation/open-raadsinformatie-frontend:${FULL_VERSION}
+
+    kubectl get pods
 }
 
 main "$@"
