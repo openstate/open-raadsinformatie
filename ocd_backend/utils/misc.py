@@ -366,10 +366,17 @@ def get_secret(item_id):
 
 
 def propagate_chain_get(terminal_node, timeout=None):
-    for node in reversed(list(terminal_node._parents())):
+    current_node = terminal_node
+
+    parents = list()
+    while current_node.parent:
+        current_node = current_node.parent
+        parents.append(current_node)
+
+    for node in reversed(parents):
         try:
             node.get(propagate=True, timeout=timeout)
-        except:
+        except Exception:
             pass
 
 
