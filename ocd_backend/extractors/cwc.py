@@ -75,7 +75,7 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 Order='CreatedDesc')
 
             if results.WebcastSearchResult != 0:
-                log.warn("Page %s resulted in error code : %s" % (
+                log.warning("Page %s resulted in error code : %s" % (
                     current_page, results.WebcastSearchResult,))
                 continue
 
@@ -88,7 +88,7 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
 
                 result_count += 1
                 if full_result.WebcastGetResult != 0:
-                    log.warn("Webcast %s resulted in error code : %s" % (
+                    log.warning("Webcast %s resulted in error code : %s" % (
                         result.Code, full_result.WebcastGetResult,))
                     continue
 

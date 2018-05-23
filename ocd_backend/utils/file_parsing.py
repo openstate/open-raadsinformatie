@@ -78,7 +78,7 @@ class FileToTextMixin(object):
         except HTTPError as e:
             log.info("Something went wrong downloading %s", url)
         except Exception as e:
-            log.warn("Some other exception %s", url)
+            log.warning("Some other exception %s", url)
 
     def file_to_text(self, path, max_pages=20):
         """

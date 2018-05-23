@@ -58,7 +58,7 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                 if committee_designator in mt.Meetingtype.lower():
                     yield 'application/json', json.dumps(meeting_type_to_dict(mt))
         else:
-            log.warn('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
+            log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -424,7 +424,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
-                    log.warn("Could not parse page %s correctly!: %s" % (
+                    log.warning("Could not parse page %s correctly!: %s" % (
                         active_page_nr, e.message))
                     result = None
                 result_count = 0

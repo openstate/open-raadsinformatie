@@ -88,7 +88,7 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
                     if data:
                         yield 'application/xml', data
                 else:
-                    log.warn("The GGM feed featured an entry that had no "
+                    log.warning("The GGM feed featured an entry that had no "
                              "'updated' field. Exiting. %s" % entry)
                     break
 

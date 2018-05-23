@@ -30,7 +30,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
         try:
             resp.raise_for_status()
         except HTTPError, e:
-            log.warn('%s: %s' % (e, resp.request.url))
+            log.warning('%s: %s' % (e, resp.request.url))
             return
 
         organizations = dict()
@@ -68,7 +68,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                 try:
                     resp.raise_for_status()
                 except HTTPError, e:
-                    log.warn('%s: %s' % (e, resp.request.url))
+                    log.warning('%s: %s' % (e, resp.request.url))
                     break
 
                 event_json = resp.json()
@@ -93,7 +93,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                         meeting_json = resp.json()['meeting']
                     except (HTTPError, KeyError), e:
                         meetings_skipped += 1
-                        log.warn('%s: %s' % (e, resp.request.url))
+                        log.warning('%s: %s' % (e, resp.request.url))
                         continue
                     except (ValueError, KeyError), e:
                         meetings_skipped += 1

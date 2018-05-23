@@ -167,7 +167,7 @@ def setup_pipeline(source_definition):
 
                 result = chain(step_chain).delay()
         except KeyboardInterrupt:
-            logger.warn('KeyboardInterrupt received. Stopping the program.')
+            logger.warning('KeyboardInterrupt received. Stopping the program.')
             exit()
         except Exception, e:
             logger.error('An exception has occured in the "{extractor}" extractor.'

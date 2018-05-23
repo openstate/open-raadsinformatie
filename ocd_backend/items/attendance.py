@@ -45,7 +45,7 @@
 #                 log.debug("* %s (%s)" % (r['id'], u','.join(r.keys()),))
 #             return [r for r in results if 'votes' in r][0]
 #         except Exception as e:
-#             log.warn("Got exception:", e)
+#             log.warning("Got exception:", e)
 #             pass
 #
 #     def _get_voters(self, vote_event):

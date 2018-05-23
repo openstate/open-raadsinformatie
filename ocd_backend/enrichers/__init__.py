@@ -46,7 +46,7 @@ class BaseEnricher(celery_app.Task):
                 log.critical(e)
             except Exception, e:
                 bugsnag.notify(e, severity="warning")
-                log.warn('Unexpected error: %s, skipping %s for %s'
+                log.warning('Unexpected error: %s, skipping %s for %s'
                          % (self.__class__.__name__, e, doc.get_ori_id()))
 
         return args

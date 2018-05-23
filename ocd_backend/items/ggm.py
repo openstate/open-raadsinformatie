@@ -219,7 +219,7 @@
 #         elif result == "vrijgegeven":
 #             vote_event.result = Result.ResultPublished
 #         else:
-#             log.warn("Result %s does not exists for: %s" % (result, self.original_item))
+#             log.warning("Result %s does not exists for: %s" % (result, self.original_item))
 #
 #         sub_events = self.source_definition['mapping']['vote_event']['sub_items']
 #         vote_event.count = [Count(c) for c in self._xpath(sub_events['count'] + "/@id")]
