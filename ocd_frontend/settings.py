@@ -13,7 +13,7 @@ ELASTICSEARCH_PORT = 9200
 DEFAULT_SEARCH_SIZE = 10
 
 # The max. number of hits to return for a search request via the REST API
-MAX_SEARCH_SIZE = 100
+MAX_SEARCH_SIZE = 500
 
 # The name of the index containing documents from all sources
 COMBINED_INDEX = 'ori_combined_index'
