@@ -112,6 +112,53 @@ ibabs-archive:
     cwc_password: U@nG5rfp
     <<: *ibabs
     entities:
+    - *municipality
+    - *committees
+
+    - entity: meetings
+      doc_type: events
+      extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+      item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+      enrichers:
+      - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+        - tasks:
+          - ggm_motion_text
+      <<: *entity_defaults
+
+    - entity: reports
+      doc_type: events
+      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+      item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+      include: ".*"
+      exclude: (moties|amendementen)
+      pdf_max_pages: 0
+      max_pages: 1
+      fields:
+        Moties:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Amendementen:
+          name: onderwerp
+          description: status
+          start_date: datum
+        Commissiebrieven C&F:
+          name: onderwerp
+          description: status
+          start_date: datuminvoer
+        Commissiebrieven M&S:
+          name: onderwerp
+          description: onderwerp
+          start_date: datuminvoer
+        Commissiebrieven S&R:
+          name: onderwerp
+          description: onderwerp
+          start_date: datuminvoer
+        Schriftelijke vragen:
+          name: onderwerp
+          description: indieners
+          start_date: datum
+      <<: *entity_defaults
 
     - id: utrecht_ibabs_organizations
       entity: organizations
@@ -152,7 +199,7 @@ ibabs-archive:
       loader: ocd_backend.loaders.ElasticsearchUpsertLoader
       include: moties
       pdf_max_pages: 20
-      max_pages: 100
+      max_pages: 1
       per_page: 100
       fields:
         Moties:
@@ -172,7 +219,7 @@ ibabs-archive:
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
       include: amendementen
       pdf_max_pages: 20
-      max_pages: 100
+      max_pages: 1
       per_page: 100
       fields:
         Amendementen:
