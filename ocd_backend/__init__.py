@@ -7,6 +7,8 @@ from celery.utils import gen_task_name
 from ocd_backend.settings import CELERY_CONFIG
 
 celery_app = Celery('ocd_backend', include=[
+    'ocd_backend.models',
+    'ocd_backend.models.definitions',
     'ocd_backend.extractors',
     'ocd_backend.extractors.ggm',
     'ocd_backend.transformers',
