@@ -97,7 +97,7 @@ class ModelBase(object):
         for name, prop in iterate(self.__dict__):
             if name[0:2] == '__':
                 continue
-            definition = self.__definitions__[name]
+            definition = self.__definitions__[name]  # pylint: disable=no-member
             if (props and not isinstance(prop, ModelBase)) or (rels and isinstance(prop, ModelBase)):
                 props_list.append((definition.get_prefix_uri(), prop,))
         return props_list
@@ -106,7 +106,7 @@ class ModelBase(object):
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
-        for name, definition in cls.__definitions__.items():
+        for name, definition in cls.__definitions__.items():  # pylint: disable=no-member
             if (props and isinstance(definition, property.Property) or
                     (rels and isinstance(definition, property.Relation))):
                 props_list.append((name, definition,))
@@ -132,7 +132,10 @@ class ModelBase(object):
     @classmethod
     def inflate(cls, props):
         # todo inflate needs inflate relations and models as well
-        instance = cls('ori_identifier', props[cls.__definitions__['ori_identifier'].get_prefix_uri()])
+        instance = cls(
+            'ori_identifier',
+            props[cls.__definitions__['ori_identifier'].get_prefix_uri()]  # pylint: disable=no-member
+        )
 
         for namespaced, value in props.items():
             ns_string, name = namespaced.split(':')
@@ -146,9 +149,11 @@ class ModelBase(object):
         return instance
 
     def __setattr__(self, key, value):
-        if key[0:2] != '__' and key not in self.__definitions__ and (
-                    hasattr(self, '__temporary__') and not self.__temporary__):
+        # pylint: disable=no-member
+        if key[0:2] != '__' and key not in self.__definitions__ and \
+                (hasattr(self, '__temporary__') and not self.__temporary__):
             raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
+        # pylint: enable=no-member
 
         super(ModelBase, self).__setattr__(key, value)
 
