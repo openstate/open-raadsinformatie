@@ -22,6 +22,8 @@ REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 PROJECT_PATH = os.path.dirname(ROOT_PATH)
+LOCAL_DUMPS_DIR = os.path.join(PROJECT_PATH, 'local_dumps')
+DUMPS_DIR = os.path.join(PROJECT_PATH, 'dumps')
 
 # Use this timezone as default for timezone unaware dates
 TIMEZONE = 'Europe/Amsterdam'

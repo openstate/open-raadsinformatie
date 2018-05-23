@@ -19,9 +19,9 @@ from elasticsearch.exceptions import RequestError
 
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.pipeline import setup_pipeline
-from ocd_backend.settings import SOURCES_CONFIG_FILE, DEFAULT_INDEX_PREFIX
+from ocd_backend.settings import SOURCES_CONFIG_FILE, \
+    DEFAULT_INDEX_PREFIX, DUMPS_DIR, API_URL, LOCAL_DUMPS_DIR
 from ocd_backend.utils.misc import load_sources_config
-from ocd_frontend.rest.settings import DUMPS_DIR, API_URL, LOCAL_DUMPS_DIR
 
 
 # NOTE: don't forget to change this value if you forked this repo and

@@ -21,7 +21,7 @@ class ODataExtractor(StaticJSONExtractor):
         static_json = {'value': []}
 
         gem_path = os.path.abspath(
-            os.path.join(settings.ROOT_PATH, '../gemeenten.json'))
+            os.path.join(settings.PROJECT_PATH, 'json', 'gemeenten.json'))
         with open(gem_path) as gem_file:
             static_json = json.load(gem_file)
 

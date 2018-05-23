@@ -32,12 +32,8 @@ RUN mkdir /opt/ori/log \
 # Create volume for shared static data with the frontend
 RUN mkdir -p /opt/ori/data/static
 
-# Legacy support for frontend settings in manage.py
-COPY ocd_frontend/rest/settings.py /opt/ori/ocd_frontend/rest/settings.py
-RUN touch /opt/ori/ocd_frontend/__init__.py /opt/ori/ocd_frontend/rest/__init__.py
-
 # Copy all files, except for .dockerignore entries
-COPY json/gemeenten.json /opt/ori/gemeenten.json
+COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY owltology /opt/ori/owltology
