@@ -339,7 +339,8 @@ AVAILABLE_FACETS = {
 COMMON_HIGHLIGHTS = {
     'source': {},
     'collection': {},
-    'rights': {}
+    'rights': {},
+    'sources.description': {}
 }
 
 AVAILABLE_HIGHLIGHTS = {
