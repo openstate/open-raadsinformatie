@@ -515,3 +515,9 @@ ibabs:
     key: steenwijkerland
     almanak_id: 24145
     <<: *ibabs
+
+  # Added on 23-05-2018
+  drimmelen:
+    key: drimmelen
+    almanak_id: 25896
+    <<: *ibabs
