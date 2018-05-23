@@ -1,7 +1,7 @@
 import govid
 import owl
 import schema
-from owltology.property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Instance
+from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Instance
 from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
 
 

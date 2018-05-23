@@ -80,11 +80,11 @@ class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         #    self.original_item['last_modified'])
 
         if self.original_item['canceled']:
-            event.status = schema.EventCancelled
+            event.status = EventCancelled
         elif self.original_item['inactive']:
-            event.status = schema.EventInactive
+            event.status = EventInactive
         else:
-            event.status = schema.EventConfirmed
+            event.status = EventConfirmed
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):

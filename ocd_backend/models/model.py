@@ -8,7 +8,7 @@ from py2neo import Graph, ConstraintError
 import property
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate
-from owltology.exceptions import RequiredProperty, MissingProperty, \
+from .exceptions import RequiredProperty, MissingProperty, \
     QueryResultError
 
 graph = None

@@ -1,4 +1,4 @@
-from owltology.property import Namespace
+from ..property import Namespace
 
 # Namespaces used in this project
 FOAF = Namespace('http://xmlns.com/foaf/0.1/', 'foaf')

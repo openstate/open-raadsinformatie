@@ -1,4 +1,4 @@
-from owltology.property import StringProperty
+from ..property import StringProperty
 from .namespaces import GOVID
 
 ori_identifier = StringProperty(GOVID, 'oriIdentifier')

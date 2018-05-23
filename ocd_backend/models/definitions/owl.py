@@ -1,7 +1,7 @@
 import govid
 
-from owltology.model import ModelBase
-from owltology.property import Relation
+from ..model import ModelBase
+from ..property import Relation
 from .namespaces import OWL, META
 
 

@@ -1,5 +1,5 @@
 import owl
-from owltology.property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
+from ..property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
 from .namespaces import SCHEMA, OPENGOV, COUNCIL
 
 

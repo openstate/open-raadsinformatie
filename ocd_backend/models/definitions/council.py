@@ -2,7 +2,7 @@ import govid
 import opengov
 import owl
 import schema
-from owltology.property import StringProperty, IntegerProperty, Relation, Instance
+from ..property import StringProperty, IntegerProperty, Relation, Instance
 from .namespaces import OPENGOV, SCHEMA, COUNCIL
 
 

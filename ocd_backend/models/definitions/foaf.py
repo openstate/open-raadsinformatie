@@ -1,5 +1,5 @@
 import owl
-from owltology.property import Relation
+from ..property import Relation
 from .namespaces import FOAF, ORG
 
 

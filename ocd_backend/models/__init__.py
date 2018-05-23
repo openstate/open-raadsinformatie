@@ -1,13 +1,13 @@
-import council
-import foaf
-import govid
-import meta
-import ncal
-import opengov
-import org
-import owl
-import person
-import schema
+import definitions.council as council
+import definitions.foaf as foaf
+import definitions.govid as govid
+import definitions.meta as meta
+import definitions.ncal as ncal
+import definitions.opengov as opengov
+import definitions.org as org
+import definitions.owl as owl
+import definitions.person as person
+import definitions.schema as schema
 
 # This file is used to specify custom mappings
 
@@ -34,6 +34,9 @@ ImageObject = schema.ImageObject
 PropertyValue = schema.PropertyValue
 AgendaItem = council.AgendaItem
 Metadata = meta.Metadata
+EventCancelled = schema.EventCancelled
+EventInactive = schema.EventInactive
+EventConfirmed = schema.EventConfirmed
 
 ggm_identifier = govid.ggm_identifier
 ggm_vrsnummer = govid.ggm_vrsnummer

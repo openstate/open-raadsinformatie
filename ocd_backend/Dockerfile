@@ -36,7 +36,6 @@ RUN mkdir -p /opt/ori/data/static
 COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
-COPY owltology /opt/ori/owltology
 COPY ocd_backend /opt/ori/ocd_backend
 
 # Change permissions before switching to user

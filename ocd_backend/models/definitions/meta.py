@@ -1,5 +1,5 @@
 import owl
-from owltology.property import StringProperty, DateTimeProperty
+from ..property import StringProperty, DateTimeProperty
 from .namespaces import META, COUNCIL
 
 

@@ -1,6 +1,6 @@
 import foaf
 import owl
-from owltology.property import StringProperty, DateTimeProperty, Relation
+from ..property import StringProperty, DateTimeProperty, Relation
 from .namespaces import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
 
 
