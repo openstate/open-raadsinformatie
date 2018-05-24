@@ -11,7 +11,8 @@ from requests.packages.urllib3.util.retry import Retry
 from ocd_backend.exceptions import InvalidFile
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
-from ocd_backend.utils.misc import get_sha1_hash, get_sha1_file_hash, localize_datetime, datetime_to_unixstamp
+from ocd_backend.utils.misc import get_sha1_hash, localize_datetime, datetime_to_unixstamp, \
+    str_to_datetime
 
 log = get_source_logger('extractor')
 
@@ -166,13 +167,8 @@ class HttpRequestMixin(object):
         return self._http_session
 
 
-class HTTPCachingMixin(BaseExtractor, HttpRequestMixin):
-    def run(self):
-        raise NotImplementedError
-
-    def is_modified(self):
-        # raise NotImplementedError
-        return True
+class HTTPCachingMixin(HttpRequestMixin):
+    source_definition = None
 
     def base_path(self, file_name):
         first_dir = file_name[0:2]
@@ -188,7 +184,7 @@ class HTTPCachingMixin(BaseExtractor, HttpRequestMixin):
         )
 
     @staticmethod
-    def latest_version_path(file_path):
+    def _latest_version(file_path):
         version_paths = glob.glob('%s-*' % file_path)
 
         if len(version_paths) < 1:
@@ -197,7 +193,7 @@ class HTTPCachingMixin(BaseExtractor, HttpRequestMixin):
         versions = [os.path.basename(version_path).rpartition("-")[2] for version_path in version_paths]
         latest_version = sorted(versions, reverse=True)[0]
 
-        return '%s-%s' % (file_path, latest_version)
+        return file_path, latest_version,
 
     @staticmethod
     def _check_path(path):
@@ -207,41 +203,31 @@ class HTTPCachingMixin(BaseExtractor, HttpRequestMixin):
         if file_bytes < 2:
             raise InvalidFile
 
-    def fetch(self, url):
+    def fetch(self, url, modified_date):
+        modified_date = localize_datetime(str_to_datetime(modified_date))
+
         url_hash = get_sha1_hash(url)
         base_path = self.base_path(url_hash)
 
         try:
-            latest_version_path = self.latest_version_path(base_path)
+            file_path, latest_version = self._latest_version(base_path)
+            latest_version_path = '%s-%s' % (file_path, latest_version)
             self._check_path(latest_version_path)
         except OSError:
             # File does not exist, download and cache the url
-            download_data = self._download_file(url)
-            self._write_to_cache(base_path, download_data)
-            return download_data
+            data = self._download_file(url)
+            self._write_to_cache(base_path, data, modified_date)
+            return data
 
-        # Do smart test to see if newer
-        if not self.is_modified():
-            return
-
-        # Download file and cache it if the hash differs
-        download_data = self._download_file(url)
-        if not self._hash_match(download_data, latest_version_path):
-            self._write_to_cache(base_path, download_data)
-
-        # todo force_old_files
-        return download_data
-
-    @staticmethod
-    def _hash_match(new_data, file_path):
-        new_hash = get_sha1_hash(new_data)
-        old_hash = get_sha1_file_hash(file_path)
-
-        # When the hashes are the same return False
-        if new_hash == old_hash:
-            return True
-
-        return False
+        if modified_date and modified_date > str_to_datetime(latest_version):
+            # If file has been modified download it
+            data = self._download_file(url)
+            self._write_to_cache(base_path, data, modified_date)
+            return data
+        else:
+            # todo force_old_files
+            with open(latest_version_path, 'rb') as f:
+                return f.read()
 
     def _download_file(self, url):
         resp = self.http_session.get(url)
