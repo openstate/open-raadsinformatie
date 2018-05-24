@@ -53,9 +53,11 @@ class SetDebugFilter(logging.Filter):
     """ This filter decreases the logrecord to DEBUG """
 
     def filter(self, record):
-        # Downgrade level to debug
-        record.levelno = 10
-        record.levelname = 'DEBUG'
+        # Only filter when smaller then warning
+        if record.levelno < 30:
+            # Downgrade level to debug
+            record.levelno = 10
+            record.levelname = 'DEBUG'
         return True
 
 
