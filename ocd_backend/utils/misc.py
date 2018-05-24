@@ -424,6 +424,7 @@ def datetime_to_unixstamp(date):
     :return: unix timestamp
     """
     try:
+        date = localize_datetime(date)
         utc = date.astimezone(pytz.utc)
         return timegm(utc.timetuple())
     except ValueError, e:
@@ -461,6 +462,9 @@ def str_to_datetime(date_str):
 
 
 def localize_datetime(date):
+    if date.tzinfo:
+        return date
+
     tz = pytz.timezone(TIMEZONE)
     return tz.localize(date)
 
