@@ -3,9 +3,9 @@ from py2neo import Graph
 import copy
 from nose.tools import eq_, assert_raises
 from ocd_backend.models import Event, Organization, AgendaItem, Person
-from owltology.model import ModelBase
-from owltology.property import Property, Namespace
-from owltology.exceptions import RequiredProperty
+from ocd_backend.models.model import ModelBase
+from ocd_backend.models.property import Property, Namespace
+from ocd_backend.models.exceptions import RequiredProperty
 #ocd_backend.settings.NEO4J_GRAPH = Graph("http://neo4j:tests@localhost:7474/db/data/")
 from unittest import TestCase
 

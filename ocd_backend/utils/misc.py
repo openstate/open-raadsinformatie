@@ -13,7 +13,7 @@ from dateutil.parser import parse
 from elasticsearch.helpers import scan, bulk
 from lxml import etree
 
-from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
+from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime, UnsupportedContentType
 from ocd_backend.settings import TIMEZONE
 
 
@@ -397,8 +397,23 @@ def iterate(item, parent=None):
         yield parent, item,
 
 
-def get_sha1_hash(url):
-    return sha1(url).hexdigest()
+def get_sha1_hash(data):
+    return sha1(data).hexdigest()
+
+
+def get_sha1_file_hash(file_path):
+    # https://stackoverflow.com/a/22058673/5081021
+    buffer_size = 10485760  # lets read stuff in 10MB chunks!
+
+    sha1_hash = sha1()
+    with open(file_path, 'rb') as f:
+        while True:
+            data = f.read(buffer_size)
+            if not data:
+                break
+            sha1_hash.update(data)
+
+    return sha1_hash.hexdigest()
 
 
 def datetime_to_unixstamp(date):
@@ -422,9 +437,6 @@ def str_to_datetime(date_str):
     :param date_str: some form of date string
     :return: datetime
     """
-
-    tz = pytz.timezone(TIMEZONE)
-
     if isinstance(date_str, datetime.datetime):
         # It appears to be a datetime object
         return date_str
@@ -433,7 +445,7 @@ def str_to_datetime(date_str):
         # Try to parse most forms with dateutil
         # fuzzy will ignore weird characters
         date_object = parse(date_str, fuzzy=True)
-        return tz.localize(date_object)
+        return localize_datetime(date_object)
     except ValueError:
         pass
 
@@ -446,3 +458,9 @@ def str_to_datetime(date_str):
 
     # If this point is reached then we could not convert it
     raise InvalidDatetime("Cannot convert '%s' to datetime", date_str)
+
+
+def localize_datetime(date):
+    tz = pytz.timezone(TIMEZONE)
+    return tz.localize(date)
+

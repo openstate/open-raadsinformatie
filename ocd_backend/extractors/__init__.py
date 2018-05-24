@@ -1,3 +1,5 @@
+import glob
+import os
 from datetime import datetime
 
 import requests
@@ -6,8 +8,10 @@ from dateutil.relativedelta import relativedelta
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
+from ocd_backend.exceptions import InvalidFile
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import USER_AGENT
+from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
+from ocd_backend.utils.misc import get_sha1_hash, get_sha1_file_hash, localize_datetime, datetime_to_unixstamp
 
 log = get_source_logger('extractor')
 
@@ -130,3 +134,103 @@ class HttpRequestMixin(object):
             self._http_session = session
 
         return self._http_session
+
+
+class HTTPCachingMixin(BaseExtractor, HttpRequestMixin):
+    def run(self):
+        raise NotImplementedError
+
+    def is_modified(self):
+        # raise NotImplementedError
+        return True
+
+    def base_path(self, file_name):
+        first_dir = file_name[0:2]
+        second_dir = file_name[2:4]
+
+        return os.path.join(
+            DATA_DIR_PATH,
+            'cache',
+            self.source_definition['index_name'],
+            first_dir,
+            second_dir,
+            file_name,
+        )
+
+    @staticmethod
+    def latest_version_path(file_path):
+        version_paths = glob.glob('%s-*' % file_path)
+
+        if len(version_paths) < 1:
+            raise OSError
+
+        versions = [os.path.basename(version_path).rpartition("-")[2] for version_path in version_paths]
+        latest_version = sorted(versions, reverse=True)[0]
+
+        return '%s-%s' % (file_path, latest_version)
+
+    @staticmethod
+    def _check_path(path):
+        file_bytes = os.path.getsize(path)
+
+        # Raise OSError if the filesize is smaller than two bytes
+        if file_bytes < 2:
+            raise InvalidFile
+
+    def fetch(self, url):
+        url_hash = get_sha1_hash(url)
+        base_path = self.base_path(url_hash)
+
+        try:
+            latest_version_path = self.latest_version_path(base_path)
+            self._check_path(latest_version_path)
+        except OSError:
+            # File does not exist, download and cache the url
+            download_data = self._download_file(url)
+            self._write_to_cache(base_path, download_data)
+            return download_data
+
+        # Do smart test to see if newer
+        if not self.is_modified():
+            return
+
+        # Download file and cache it if the hash differs
+        download_data = self._download_file(url)
+        if not self._hash_match(download_data, latest_version_path):
+            self._write_to_cache(base_path, download_data)
+
+        # todo force_old_files
+        return download_data
+
+    @staticmethod
+    def _hash_match(new_data, file_path):
+        new_hash = get_sha1_hash(new_data)
+        old_hash = get_sha1_file_hash(file_path)
+
+        # When the hashes are the same return False
+        if new_hash == old_hash:
+            return True
+
+        return False
+
+    def _download_file(self, url):
+        resp = self.http_session.get(url)
+        resp.raise_for_status()
+        return resp.content
+
+    @staticmethod
+    def _write_to_cache(file_path, data, modified_date=None):
+        try:
+            # Create all subdirectories
+            os.makedirs(os.path.dirname(file_path))
+        except OSError:
+            # Let's assume the directory exists
+            pass
+
+        if not modified_date:
+            modified_date = datetime.now()
+
+        modified_date = datetime_to_unixstamp(localize_datetime(modified_date))
+
+        with open('%s-%s' % (file_path, modified_date), 'w') as f:
+            f.write(data)

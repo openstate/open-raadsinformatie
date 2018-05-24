@@ -32,8 +32,8 @@ class SkipEnrichment(Exception):
 
 
 class UnsupportedContentType(Exception):
-    """Exception thrown when a media enrichemnt task is asked to process
-    media content that is doesn't understand."""
+    """Exception thrown when a task is asked to process media content
+    that is doesn't understand."""
 
 
 class MissingTemplateTag(KeyError):
@@ -42,3 +42,8 @@ class MissingTemplateTag(KeyError):
 
 class InvalidDatetime(ValueError):
     pass
+
+
+class InvalidFile(OSError):
+    """Exception thrown when a file on the filesystem is corrupted
+    or does not seem correct"""

@@ -1,0 +1,2853 @@
+{
+  "creation_date": "2017-10-05 10:36:49",
+  "canceled": false,
+  "inactive": false,
+  "salutation": null,
+  "id": 458902,
+  "announcement": true,
+  "documents": [
+    {
+      "category": "",
+      "description": "",
+      "confidential": 0,
+      "title": "Uitslagenlijst FIN 2018 02 08 [GEWIJZIGD]",
+      "url": "https://api.notubiz.nl/document/6183601/1",
+      "self": "api.notubiz.nl/document/6183601",
+      "versions": [
+        {
+          "file_name": "Uitslagenlijst_FIN_2018_02_08.pdf",
+          "type": "file",
+          "id": 1,
+          "mime_type": "application/pdf",
+          "file_size": 21329
+        }
+      ],
+      "publication_date": "2018-05-10",
+      "last_modified": "2018-03-15 09:34:05",
+      "version": 1,
+      "policy_field": "",
+      "date": "",
+      "case_code": "",
+      "id": 6183601,
+      "types": [
+        {
+          "id": 349,
+          "value": "Uitslagenlijst"
+        }
+      ]
+    },
+    {
+      "category": "",
+      "description": "",
+      "confidential": 0,
+      "title": "Definitief verslag FIN 08 02 2018",
+      "url": "https://api.notubiz.nl/document/6268204/1",
+      "self": "api.notubiz.nl/document/6268204",
+      "versions": [
+        {
+          "file_name": "Definitief_verslag_FIN_08_02_2018.pdf",
+          "type": "file",
+          "id": 1,
+          "mime_type": "application/pdf",
+          "file_size": 67928
+        }
+      ],
+      "publication_date": "2018-05-10",
+      "last_modified": "2018-03-15 09:34:05",
+      "version": 1,
+      "policy_field": "",
+      "date": "",
+      "case_code": "",
+      "id": 6268204,
+      "types": [
+        {
+          "id": 19,
+          "value": "Notulen"
+        }
+      ]
+    }
+  ],
+  "parent": null,
+  "self": "api.notubiz.nl/events/meetings/458902",
+  "live": false,
+  "template": false,
+  "type": "meeting",
+  "body": "council",
+  "organisation": {
+    "self": "api.notubiz.nl/organisations/281",
+    "id": 281
+  },
+  "confidential": 0,
+  "permission_group": "public",
+  "last_modified": "2018-03-15 09:34:04",
+  "module_items": [],
+  "agenda_items": [
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:31",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935516,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935516",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda (4)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:31",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935514,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935514",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda (2)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:34",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935519,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935519",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Waterbeheer",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:31",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935518,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935518",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda (6)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:31",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935517,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935517",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda (5)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": null,
+      "last_modified": "2018-03-15 09:33:31",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3935515,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3935515",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda (3)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 1,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842903,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842903",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "TIJD: 13.30 uur tot 17.00 uur",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 2,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842908,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842908",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "LOCATIE: De Raadszaal",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 3,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842859,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842859",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Algemeen",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 4,
+      "last_modified": "2018-03-15 09:33:30",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842860,
+      "type_data": {
+        "title_prefix": "1.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842860",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Opening procedureel gedeelte",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 5,
+      "last_modified": "2018-03-15 09:33:30",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842861,
+      "type_data": {
+        "title_prefix": "2.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842861",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Mededelingen",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Commissie Agenda (Gewijzigde)",
+          "url": "https://api.notubiz.nl/document/6167808/1",
+          "self": "api.notubiz.nl/document/6167808",
+          "versions": [
+            {
+              "file_name": "Commissie_Agenda_(Gewijzigde).pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 14416
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6167808,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 6,
+      "last_modified": "2018-03-15 09:33:30",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842862,
+      "type_data": {
+        "title_prefix": "3.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842862",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Vaststellen agenda",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Conceptverslag FIN 18-01-2018.doc",
+          "url": "https://api.notubiz.nl/document/6124081/1",
+          "self": "api.notubiz.nl/document/6124081",
+          "versions": [
+            {
+              "file_name": "09012f97822d6f0e.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 468741
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124081,
+          "types": [
+            {
+              "id": 19,
+              "value": "Notulen"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 7,
+      "last_modified": "2018-03-15 09:33:30",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842863,
+      "type_data": {
+        "title_prefix": "4.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842863",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Conceptverslag van de openbare vergadering van de commissie Financi\u00ebn (FIN) van 18.01.2018.",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "FIN portefeuille Gemeentelijk Vastgoed",
+          "url": "https://api.notubiz.nl/document/6160301/1",
+          "self": "api.notubiz.nl/document/6160301",
+          "versions": [
+            {
+              "file_name": "FIN_portefeuille_Gemeentelijk_Vastgoed.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 161715
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160301,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "FIN portefeuille Inkoop",
+          "url": "https://api.notubiz.nl/document/6160302/1",
+          "self": "api.notubiz.nl/document/6160302",
+          "versions": [
+            {
+              "file_name": "FIN_portefeuille_Inkoop.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 117635
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160302,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "FIN portefeuille Personeel en organisatie",
+          "url": "https://api.notubiz.nl/document/6160303/1",
+          "self": "api.notubiz.nl/document/6160303",
+          "versions": [
+            {
+              "file_name": "FIN_portefeuille_Personeel_en_organisatie.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 166972
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160303,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "FIN portefeuille Waterbeheer",
+          "url": "https://api.notubiz.nl/document/6160306/1",
+          "self": "api.notubiz.nl/document/6160306",
+          "versions": [
+            {
+              "file_name": "FIN_portefeuille_Waterbeheer.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 596247
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160306,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "FIN portefeuille Financien",
+          "url": "https://api.notubiz.nl/document/6162147/1",
+          "self": "api.notubiz.nl/document/6162147",
+          "versions": [
+            {
+              "file_name": "FIN_portefeuille_Financien.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 372555
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6162147,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 8,
+      "last_modified": "2018-02-05 08:08:11",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842864,
+      "type_data": {
+        "title_prefix": "5.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842864",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Termijnagenda, per portefeuille",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Commissie TKNLijst",
+          "url": "https://api.notubiz.nl/document/6124082/2",
+          "self": "api.notubiz.nl/document/6124082",
+          "versions": [
+            {
+              "file_name": "09012f97822ca476.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 44169
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124082,
+          "types": [
+            {
+              "id": 135,
+              "value": "Tknlijst"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 9,
+      "last_modified": "2018-02-02 13:19:26",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842865,
+      "type_data": {
+        "title_prefix": "6.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842865",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "TKN-lijst",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 10,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842866,
+      "type_data": {
+        "title_prefix": "7.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842866",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Opening inhoudelijk gedeelte",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 11,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842867,
+      "type_data": {
+        "title_prefix": "8.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842867",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Inspreekhalfuur publiek",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 12,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842868,
+      "type_data": {
+        "title_prefix": "9.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842868",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Actualiteiten en mededelingen",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 13,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842869,
+      "type_data": {
+        "title_prefix": "10.",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842869",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Rondvraag",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 14,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842929,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842929",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Personeel en Organisatie",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Brief aan de Raad inzake nadere informatie over de centrale huisvesting van de Amsterdamse School naar aanleiding van Cie FIN 19 oktober 2017.docx.pdf",
+          "url": "https://api.notubiz.nl/document/6124077/1",
+          "self": "api.notubiz.nl/document/6124077",
+          "versions": [
+            {
+              "file_name": "09012f97822c27b3.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1499595
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124077,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124078/2",
+          "self": "api.notubiz.nl/document/6124078",
+          "versions": [
+            {
+              "file_name": "09012f97822c27b4.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 38916
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124078,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 15,
+      "last_modified": "2018-02-06 13:11:13",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842935,
+      "type_data": {
+        "title_prefix": "11",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842935",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Brief aan de raad inzake Nadere informatie over de centrale huisvesting van de Amsterdamse School naar aanleiding van de vergadering van de Cie FIN van 19 oktober 2017 Nr. BD2018-001117",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124079/2",
+          "self": "api.notubiz.nl/document/6124079",
+          "versions": [
+            {
+              "file_name": "09012f97822c895c.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 32728
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124079,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "brief college over registreren etniciteit.pdf",
+          "url": "https://api.notubiz.nl/document/6124080/1",
+          "self": "api.notubiz.nl/document/6124080",
+          "versions": [
+            {
+              "file_name": "09012f97822c8973.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 913998
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124080,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 16,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843399,
+      "type_data": {
+        "title_prefix": "12",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843399",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Brief aan de Raad inzake Nadere informatie over de (on)mogelijkheden van het registreren van etniciteit binnen het personeelsbestand van de gemeente Nr. BD2018-001208",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 17,
+      "last_modified": "2018-02-02 13:18:11",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3867691,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3867691",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "TOEGEVOEGDE AGENDAPUNTEN",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "0 Commissie Flap 2",
+          "url": "https://api.notubiz.nl/document/6160185/1",
+          "self": "api.notubiz.nl/document/6160185",
+          "versions": [
+            {
+              "file_name": "0_Commissie_Flap_2.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 11826
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160185,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "1  Brief wethouder Kock d d  21 december 2017",
+          "url": "https://api.notubiz.nl/document/6160186/1",
+          "self": "api.notubiz.nl/document/6160186",
+          "versions": [
+            {
+              "file_name": "1__Brief_wethouder_Kock_d_d__21_december_2017.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1373587
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160186,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 19,
+      "last_modified": "2018-02-02 13:20:34",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3867693,
+      "type_data": {
+        "title_prefix": "13",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3867693",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Evaluatie herinvoering fietsontheffingen voor mensen met een beperking in de Amsterdamse Waterleidingduinen Nr. BD2018-001777",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "0 Commissie Flap 3",
+          "url": "https://api.notubiz.nl/document/6160187/1",
+          "self": "api.notubiz.nl/document/6160187",
+          "versions": [
+            {
+              "file_name": "0_Commissie_Flap_3.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 10931
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160187,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Assurance rapport Deloitte inzake proces uitgifte exploitatievergunning segment Bemand groot",
+          "url": "https://api.notubiz.nl/document/6160189/1",
+          "self": "api.notubiz.nl/document/6160189",
+          "versions": [
+            {
+              "file_name": "01_Assurance_rapport_Deloitte_inzake_proces_uitgifte_exploitatievergunning_segment_Bemand_groot.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 990271
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "",
+          "case_code": "",
+          "id": 6160189,
+          "types": [
+            {
+              "id": 1,
+              "value": "Document"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 20,
+      "last_modified": "2018-02-02 13:20:54",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3867697,
+      "type_data": {
+        "title_prefix": "14",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3867697",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Assurance rapport Deloitte proces uitgifte exploitatievergunningen in segment 'bemand groot' Nr. BD2018-001779",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 21,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842967,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842967",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "BESLOTEN DEEL",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 22,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842978,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842978",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "TER KENNISNAMELIJST",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 23,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842979,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842979",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Financi\u00ebn",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "1 Brief aan commissie over inzetten mensen met afstand tot de werkvloer.pdf",
+          "url": "https://api.notubiz.nl/document/6124052/1",
+          "self": "api.notubiz.nl/document/6124052",
+          "versions": [
+            {
+              "file_name": "09012f9782282ef0.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 887780
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124052,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "0 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124053/2",
+          "self": "api.notubiz.nl/document/6124053",
+          "versions": [
+            {
+              "file_name": "09012f97822622b2.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 35727
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124053,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 24,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842980,
+      "type_data": {
+        "title_prefix": "TKN 1",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842980",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Afdoening toezegging personeel WOZ-project (TA 2017-001216). (BD2017-016443)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "1. Brief van wethouder Kock d.d. 19-1-2018 aan de minister van BZK over vergroenen van de OZB.pdf",
+          "url": "https://api.notubiz.nl/document/6124062/1",
+          "self": "api.notubiz.nl/document/6124062",
+          "versions": [
+            {
+              "file_name": "09012f97822bc0c6.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1089740
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124062,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "2. Brief college aan staatssecretaris van Financi\u00ebn over vergroenen OZB d.d. 22-11-2016.PDF",
+          "url": "https://api.notubiz.nl/document/6124064/1",
+          "self": "api.notubiz.nl/document/6124064",
+          "versions": [
+            {
+              "file_name": "09012f97822ba952.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 853581
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124064,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "0 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124063/2",
+          "self": "api.notubiz.nl/document/6124063",
+          "versions": [
+            {
+              "file_name": "09012f97822ba7f4.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 36865
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124063,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "3. Brief staatsecretaris van Financi\u00ebn d.d. 23-2-2017.PDF",
+          "url": "https://api.notubiz.nl/document/6124065/1",
+          "self": "api.notubiz.nl/document/6124065",
+          "versions": [
+            {
+              "file_name": "09012f97822ba951.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 237876
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124065,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 25,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842983,
+      "type_data": {
+        "title_prefix": "TKN 2",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842983",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Brief aan kabinet over vergroenen OZB. (BD2018-000924)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 26,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842984,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842984",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Waterbeheer",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124054/2",
+          "self": "api.notubiz.nl/document/6124054",
+          "versions": [
+            {
+              "file_name": "09012f9782280210.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 35453
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124054,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "1. Brief wethouder Kock d.d. 21 december 2017.pdf",
+          "url": "https://api.notubiz.nl/document/6124055/1",
+          "self": "api.notubiz.nl/document/6124055",
+          "versions": [
+            {
+              "file_name": "09012f9782280134.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1373682
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:06",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124055,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 27,
+      "last_modified": "2018-02-02 13:19:46",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842987,
+      "type_data": {
+        "title_prefix": "TKN 3",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842987",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Evaluatie herinvoering fietsontheffingen voor mensen met een beperking in de Amsterdamse Waterleidingduinen. (BD2017-016946)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124066/2",
+          "self": "api.notubiz.nl/document/6124066",
+          "versions": [
+            {
+              "file_name": "09012f97822be407.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 26050
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124066,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Wethoudersbrief inzake een update van de  termijnagenda Waterbeheer.pdf",
+          "url": "https://api.notubiz.nl/document/6124067/1",
+          "self": "api.notubiz.nl/document/6124067",
+          "versions": [
+            {
+              "file_name": "09012f97822bf553.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 5541637
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124067,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 28,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842990,
+      "type_data": {
+        "title_prefix": "TKN 4",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842990",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Brief inzake de termijnagenda Waterbeheer. (BD2018-001040)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap Assurance rapport Deloitte",
+          "url": "https://api.notubiz.nl/document/6124060/2",
+          "self": "api.notubiz.nl/document/6124060",
+          "versions": [
+            {
+              "file_name": "09012f97822bf2cd.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 32115
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124060,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Assurance rapport Deloitte inzake proces uitgifte exploitatievergunning segment Bemand groot.pdf",
+          "url": "https://api.notubiz.nl/document/6124061/1",
+          "self": "api.notubiz.nl/document/6124061",
+          "versions": [
+            {
+              "file_name": "09012f97822a5823.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 996225
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124061,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 29,
+      "last_modified": "2018-02-02 13:20:02",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842992,
+      "type_data": {
+        "title_prefix": "TKN 5",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842992",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Assurance rapport Deloite proces uitgifte exploitatievergunningen in segment 'bemand groot'. (BD2018-000441)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124068/2",
+          "self": "api.notubiz.nl/document/6124068",
+          "versions": [
+            {
+              "file_name": "09012f97822bfa40.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 32035
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124068,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Brief inzake het opheffen eenrichtingsverkeer in verband met het Amsterdam Light Festival.pdf",
+          "url": "https://api.notubiz.nl/document/6124069/1",
+          "self": "api.notubiz.nl/document/6124069",
+          "versions": [
+            {
+              "file_name": "09012f97822bfd00.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 924252
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124069,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 30,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842998,
+      "type_data": {
+        "title_prefix": "TKN 6",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842998",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Brief inzake het opheffen eenrichtingsverkeer in verband met het Amsterdam Light Festival. (BD2018-001083)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Raadsadres overlast kleine rondvaart.docx",
+          "url": "https://api.notubiz.nl/document/6124071/1",
+          "self": "api.notubiz.nl/document/6124071",
+          "versions": [
+            {
+              "file_name": "09012f97822bffa3.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 15546
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124071,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "02 Beantwoording raadsadres overlast kleine rondvaart.pdf",
+          "url": "https://api.notubiz.nl/document/6124073/1",
+          "self": "api.notubiz.nl/document/6124073",
+          "versions": [
+            {
+              "file_name": "09012f97822c08ce.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 728816
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124073,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Brief over de aanpassingen beleid exploitatie en ligplaatsvergunningen <14meter.pdf",
+          "url": "https://api.notubiz.nl/document/6124070/1",
+          "self": "api.notubiz.nl/document/6124070",
+          "versions": [
+            {
+              "file_name": "09012f97822c08cf.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1673543
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124070,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124072/2",
+          "self": "api.notubiz.nl/document/6124072",
+          "versions": [
+            {
+              "file_name": "09012f97822bfeee.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 34854
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124072,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 31,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3842999,
+      "type_data": {
+        "title_prefix": "TKN 7",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3842999",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Beantwoording raadsadres Overlast door de kleine rondvaart. (BD2018-001087)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Raadsbrief Afronding GWT en verlenging moratorium.pdf",
+          "url": "https://api.notubiz.nl/document/6124058/1",
+          "self": "api.notubiz.nl/document/6124058",
+          "versions": [
+            {
+              "file_name": "09012f97822a4eb9.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 2814967
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124058,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap Raadsbrief Afronding GWT en verlenging moratorium",
+          "url": "https://api.notubiz.nl/document/6124059/2",
+          "self": "api.notubiz.nl/document/6124059",
+          "versions": [
+            {
+              "file_name": "09012f97822a4d3b.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 37734
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124059,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 32,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843007,
+      "type_data": {
+        "title_prefix": "TKN 8",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843007",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Raadsbrief Afronding GWT en verlenging moratorium. (BD2018-000433)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Raadsadres overlast boten in de Leliegracht.docx",
+          "url": "https://api.notubiz.nl/document/6124076/1",
+          "self": "api.notubiz.nl/document/6124076",
+          "versions": [
+            {
+              "file_name": "09012f97822c0004.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 20604
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124076,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124074/2",
+          "self": "api.notubiz.nl/document/6124074",
+          "versions": [
+            {
+              "file_name": "09012f97822bfef1.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 34118
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124074,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "02 Beantwoording raadsadres overlast boten in de Leliegracht.pdf",
+          "url": "https://api.notubiz.nl/document/6124075/1",
+          "self": "api.notubiz.nl/document/6124075",
+          "versions": [
+            {
+              "file_name": "09012f97822c08d2.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 726337
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124075,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 33,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843008,
+      "type_data": {
+        "title_prefix": "TKN 9",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843008",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Beantwoording raadsadres Overlast van boten in de Leliegracht. (BD2018-001088)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 34,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843010,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843010",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Grondzaken",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Notitie Uitwerking bestuursopdracht Toekomstbestendig VEF en de relatie .._.docx",
+          "url": "https://api.notubiz.nl/document/6124056/1",
+          "self": "api.notubiz.nl/document/6124056",
+          "versions": [
+            {
+              "file_name": "09012f97822b27b6.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 394742
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124056,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124057/2",
+          "self": "api.notubiz.nl/document/6124057",
+          "versions": [
+            {
+              "file_name": "09012f978229340e.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 224447
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124057,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 35,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843012,
+      "type_data": {
+        "title_prefix": "TKN 10",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843012",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Uitwerking bestuursopdracht Toekomstbestendig Vereveningsfonds en de relatie met investeringen in maatschappelijke voorzieningen.. (BD2018-000059)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 36,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843013,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843013",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "Gemeentelijk Vastgoed",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 SV Peters_ verkoop gesubsidieerde huurders.pdf",
+          "url": "https://api.notubiz.nl/document/6124048/1",
+          "self": "api.notubiz.nl/document/6124048",
+          "versions": [
+            {
+              "file_name": "09012f9782276202.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 19288
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124048,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "02 Beantwoording SV_verkoop VG gesubsidieerde huurders FA GEWIJZIGD.pdf",
+          "url": "https://api.notubiz.nl/document/6124047/1",
+          "self": "api.notubiz.nl/document/6124047",
+          "versions": [
+            {
+              "file_name": "09012f9782276204.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 25052
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124047,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "00 Commissie Flap",
+          "url": "https://api.notubiz.nl/document/6124049/2",
+          "self": "api.notubiz.nl/document/6124049",
+          "versions": [
+            {
+              "file_name": "09012f9782193f79.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 47303
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124049,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 37,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843014,
+      "type_data": {
+        "title_prefix": "TKN 11",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843014",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Beantwoording schriftelijke vragen lid Peters - verkoop panden met huurders met subsidierelatie. (BD2017-012527)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "01 Voortgangsrapportage tweede en derde kwartaal 2017 groot onderhoud en optimalisatie stadhuis.doc",
+          "url": "https://api.notubiz.nl/document/6124050/1",
+          "self": "api.notubiz.nl/document/6124050",
+          "versions": [
+            {
+              "file_name": "09012f97822ba386.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1767984
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124050,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "tweede en derde kwartaal 2017 verbouwing stadhuis",
+          "url": "https://api.notubiz.nl/document/6124051/2",
+          "self": "api.notubiz.nl/document/6124051",
+          "versions": [
+            {
+              "file_name": "09012f97821c644d.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 37689
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124051,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 38,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843015,
+      "type_data": {
+        "title_prefix": "TKN 12",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843015",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Kwartaalrapportage Q2 en Q3 2017. (BD2017-013593)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Behoud X-helling NDSM voor kunstenaar.pdf",
+          "url": "https://api.notubiz.nl/document/6124044/1",
+          "self": "api.notubiz.nl/document/6124044",
+          "versions": [
+            {
+              "file_name": "09012f97822bf98f.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 59147
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124044,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "02 Raadsbrief motie 890 (534') ondertekend.pdf",
+          "url": "https://api.notubiz.nl/document/6124045/1",
+          "self": "api.notubiz.nl/document/6124045",
+          "versions": [
+            {
+              "file_name": "09012f97822bf990.pdf",
+              "type": "file",
+              "id": 1,
+              "mime_type": "application/pdf",
+              "file_size": 1306287
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 1,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124045,
+          "types": [
+            {
+              "id": 15,
+              "value": "Tekststuk"
+            }
+          ]
+        },
+        {
+          "category": "",
+          "description": "",
+          "confidential": 0,
+          "title": "Behoud X-helling NDSM voor kunstenaars",
+          "url": "https://api.notubiz.nl/document/6124046/2",
+          "self": "api.notubiz.nl/document/6124046",
+          "versions": [
+            {
+              "file_name": "09012f978219380b.pdf",
+              "type": "file",
+              "id": 2,
+              "mime_type": "application/pdf",
+              "file_size": 43689
+            }
+          ],
+          "publication_date": "2018-05-10",
+          "last_modified": "2018-03-15 09:34:07",
+          "version": 2,
+          "policy_field": "",
+          "date": "2018-02-08",
+          "case_code": "",
+          "id": 6124046,
+          "types": [
+            {
+              "id": 47,
+              "value": "Flap"
+            }
+          ]
+        }
+      ],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 39,
+      "last_modified": "2018-02-02 13:01:27",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843016,
+      "type_data": {
+        "title_prefix": "TKN 13",
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843016",
+        "heading": false,
+        "attributes": [
+          {
+            "value": "Beantwoording Motie 890 (524') -  Behoud X-helling NDSM voor kunstenaars. (BD2017-012512)",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    },
+    {
+      "agenda_items": [],
+      "documents": [],
+      "confidential": 0,
+      "parent": null,
+      "type": "agenda_point",
+      "order": 40,
+      "last_modified": "2018-01-26 11:00:48",
+      "permission_group": "public",
+      "module_items": [],
+      "meeting": {
+        "self": "api.notubiz.nl/events/meetings/458902",
+        "id": 458902
+      },
+      "id": 3843019,
+      "type_data": {
+        "title_prefix": null,
+        "self": "api.notubiz.nl/agenda_items/agenda_points/3843019",
+        "heading": true,
+        "attributes": [
+          {
+            "value": "VOOR DE OVERIGE PORTEFEUILLES GEEN PUNTEN TER KENNISNAME",
+            "id": 1,
+            "reference_model": null
+          }
+        ]
+      }
+    }
+  ],
+  "gremium": {
+    "self": "api.notubiz.nl/organisations/281/gremia/4972",
+    "id": 4972
+  },
+  "plannings": [
+    {
+      "start_date": "2018-02-08 13:30:00",
+      "end_date": null
+    }
+  ],
+  "attributes": {
+    "Locatie": "",
+    "Titel": "raadscommissie Financi\u00ebn",
+    "Omschrijving": ""
+  },
+  "order": null
+}
