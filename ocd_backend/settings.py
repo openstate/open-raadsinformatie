@@ -231,7 +231,7 @@ RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'http://10.0.1.48:5000/v1/res
 RESOLVER_URL_INDEX = 'ori_resolver'
 
 # The User-Agent that is used when retrieving data from external sources
-USER_AGENT = 'Open Raadsinformatie/0.1 (+http://www.openraadsinformatie.nl/)'
+USER_AGENT = 'Open Raadsinformatie/1.0 (+http://www.openraadsinformatie.nl/)'
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.

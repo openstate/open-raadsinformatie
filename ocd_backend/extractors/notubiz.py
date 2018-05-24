@@ -2,13 +2,13 @@ import json
 
 from requests import HTTPError
 
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors import BaseExtractor, HTTPCachingMixin
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
 
 
-class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
+class NotubizBaseExtractor(BaseExtractor, HTTPCachingMixin):
     """
     A base extractor for the Notubiz API. This base extractor just
     configures the base url to use for accessing the API.
@@ -47,71 +47,72 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
 
         meeting_count = 0
         meetings_skipped = 0
-        for start_date, end_date in self.interval_generator():
-            log.info("Now processing first page meeting(items) from %s to %s" % (
-                start_date, end_date,))
 
-            page = 1
-            while True:
-                resp = self.http_session.get(
-                    "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                    "&format=json&version=1.10.8&page=%i" %
-                    (
-                        self.base_url,
-                        self.source_definition['organisation_id'],
-                        start_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        end_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        page
-                    )
+        start_date, end_date = self.date_interval()
+
+        log.info("Now processing first page meeting(items) from %s to %s" % (
+            start_date, end_date,))
+
+        page = 1
+        while True:
+            resp = self.http_session.get(
+                "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
+                "&format=json&version=1.10.8&page=%i" %
+                (
+                    self.base_url,
+                    self.source_definition['organisation_id'],
+                    start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                    end_date.strftime("%Y-%m-%d %H:%M:%S"),
+                    page
                 )
+            )
 
+            try:
+                resp.raise_for_status()
+            except HTTPError, e:
+                log.warning('%s: %s' % (e, resp.request.url))
+                break
+
+            event_json = resp.json()
+
+            if not event_json[self.source_definition['doc_type']]:
+                break
+
+            if page > 1:
+                log.debug("Processing page %i" % page)
+
+            for item in event_json[self.source_definition['doc_type']]:
                 try:
-                    resp.raise_for_status()
-                except HTTPError, e:
-                    log.warning('%s: %s' % (e, resp.request.url))
-                    break
-
-                event_json = resp.json()
-
-                if not event_json[self.source_definition['doc_type']]:
-                    break
-
-                if page > 1:
-                    log.debug("Processing page %i" % page)
-
-                for item in event_json[self.source_definition['doc_type']]:
-                    resp = self.http_session.get(
+                    data = self.fetch(
                         "%s/events/meetings/%i?format=json&version=1.10.8" %
                         (
                             self.base_url,
                             item['id']
-                        )
+                        ),
+                        item['last_modified'],
                     )
 
-                    try:
-                        resp.raise_for_status()
-                        meeting_json = resp.json()['meeting']
-                    except (HTTPError, KeyError), e:
-                        meetings_skipped += 1
-                        log.warning('%s: %s' % (e, resp.request.url))
-                        continue
-                    except (ValueError, KeyError), e:
-                        meetings_skipped += 1
-                        log.error('%s: %s' % (e, resp.request.url))
-                        continue
+                    meeting_json = json.loads(data)['meeting']
+                except (HTTPError, KeyError), e:
+                    meetings_skipped += 1
+                    log.warning('%s: %s' % (e, resp.request.url))
+                    continue
+                except (ValueError, KeyError), e:
+                    meetings_skipped += 1
+                    log.error('%s: %s' % (e, resp.request.url))
+                    continue
 
-                    self.organization = organizations[self.source_definition['organisation_id']]
+                self.organization = organizations[self.source_definition['organisation_id']]
 
-                    for result in self.extractor(meeting_json):
-                        meeting_count += 1
-                        yield result
+                for result in self.extractor(meeting_json):
+                    meeting_count += 1
+                    yield result
 
-                # Currently not working due to bug
-                # if not event_json['pagination']['has_more_pages']:
-                #     log.info("Done processing all entities!")
-                #     break
+            page += 1
 
-                page += 1
+            if not event_json['pagination']['has_more_pages']:
+                log.info("Done processing all pages!")
+                break
 
         log.info("Extracted total of %d meeting(items). Also skipped %d "
                  "meetings in total." % (meeting_count, meetings_skipped,))
