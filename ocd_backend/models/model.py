@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import re
 from hashlib import sha1
 
@@ -157,15 +158,21 @@ class ModelBase(object):
 
         super(ModelBase, self).__setattr__(key, value)
 
-    def __init__(self, identifier_key, identifier_value, temporary=False, rel_params=None):
+    def __init__(self, identifier_key=None, identifier_value=None, temporary=False, rel_params=None):
         self.__temporary__ = temporary
         self.__rel_params__ = rel_params
 
-        setattr(self, identifier_key, identifier_value)
-        self.__identifier_key__ = identifier_key
+        if identifier_value:
+            setattr(self, identifier_key, identifier_value)
+
+        if identifier_key:
+            self.__identifier_key__ = identifier_key
 
         ori_identifier = identifier_value
-        if identifier_key != 'ori_identifier':
+        if not identifier_key:
+            random = os.urandom(16).encode('hex')
+            ori_identifier = self.get_object_hash(random)
+        elif identifier_key != 'ori_identifier':
             ori_identifier = self.get_object_hash(identifier_value)
 
         self.ori_identifier = ori_identifier
