@@ -235,9 +235,14 @@ class ModelBase(object):
 
     def save(self):
         self.replace()
-        for key, prop in self.properties(rels=True, props=False):
-            self.attach(key, prop)
+        self.attach_recursive(self)
         return self
+
+    @staticmethod
+    def attach_recursive(model):
+        for key, prop in model.properties(rels=True, props=False):
+            model.attach(key, prop)
+            model.attach_recursive(prop)
 
     def replace(self):
         query = '''
@@ -253,7 +258,7 @@ class ModelBase(object):
         try:
             result = get_graph().data(
                 query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
-                replace_params=self.deflate())
+                replace_params=self.deflate(props=True, rels=False))
         except ConstraintError, e:
             # todo
             raise
