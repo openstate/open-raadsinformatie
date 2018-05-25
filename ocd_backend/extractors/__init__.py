@@ -2,6 +2,7 @@ import glob
 import os
 from datetime import datetime
 
+import errno
 import requests
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
@@ -239,9 +240,10 @@ class HTTPCachingMixin(HttpRequestMixin):
         try:
             # Create all subdirectories
             os.makedirs(os.path.dirname(file_path))
-        except OSError:
-            # Let's assume the directory exists
-            pass
+        except OSError, e:
+            # Reraise if error is not 'File exists'
+            if e.errno != errno.EEXIST:
+                raise e
 
         if not modified_date:
             modified_date = datetime.now()

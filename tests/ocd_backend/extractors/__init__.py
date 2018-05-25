@@ -67,8 +67,35 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
         file_exists = os.path.exists(file_path + "-1543575600")
         self.assertTrue(file_exists, True)
 
-    # def test_download_file(self):
-    #    self.mixin._download_file()
+    def test_write_to_cache_path_exists(self):
+        path = self.test_cache_path + "aa/bb/"
+        os.makedirs(path)
+
+        data = "test-string"
+
+        try:
+            self.mixin._write_to_cache(path + 'aabb-testfile', data)
+        except:
+            self.fail("Unexpected exception caught")
+
+    def test_write_to_cache_permission_denied(self):
+        path = self.test_cache_path + "aa/bb/"
+        os.makedirs(path)
+
+        # Make path unwriteable
+        os.chmod(path, 0555)
+
+        data = "test-string"
+
+        try:
+            self.mixin._write_to_cache(path + 'aabb-testfile', data)
+        except IOError:
+            pass
+        else:
+            self.fail("Unexpected exception caught")
+        finally:
+            # Reset permissions
+            os.chmod(path, 0775)
 
     @mock.patch('tests.ocd_backend.glob.glob')
     def test_latest_version_path(self, mocked_glob):
