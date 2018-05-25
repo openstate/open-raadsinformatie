@@ -55,18 +55,18 @@ class PersonsExtractor(StaticHtmlExtractor):
         """
 
         html = etree.HTML(static_content)
-        parties = self._get_parties()
-        municipality = u''.join(html.xpath('//h2/text()')).strip()
+        municipality = u''.join(html.xpath('//div[@id="content"]//h2/text()')).strip()
 
         for person in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
             person_url = (u''.join(person.xpath('.//@href'))).strip()
             person_text = (u''.join(person.xpath('.//text()'))).strip()
+            person_id = person_url[1:].split('/')[0]
 
             if person_url != '':
                 # TODO: fields are not the best, but hey :)
                 yield 'application/json', json.dumps({
+                    'id': person_id,
                     'url': person_url,
-                    'parties': parties,
                     'text': person_text,
                     'municipality': municipality
                 })

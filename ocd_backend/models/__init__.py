@@ -37,6 +37,7 @@ Metadata = meta.Metadata
 EventCancelled = schema.EventCancelled
 EventInactive = schema.EventInactive
 EventConfirmed = schema.EventConfirmed
+Membership = org.Membership
 Run = meta.Run
 
 ggm_identifier = govid.ggm_identifier

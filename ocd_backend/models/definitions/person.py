@@ -1,6 +1,6 @@
 import foaf
 from ..property import StringProperty, DateTimeProperty, Relation
-from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
+from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO, ORG
 
 
 class Person(foaf.Agent):
@@ -19,6 +19,7 @@ class Person(foaf.Agent):
     death_date = DateTimeProperty(SCHEMA, 'deathDate')
     email = StringProperty(SCHEMA, 'email')
     image = Relation(SCHEMA, 'image')
+    member = Relation(ORG, 'memberOf')
 
     def verbose_name(self):
         self.name = '%s %s' % (self.given_name, self.family_name)

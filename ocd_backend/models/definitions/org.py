@@ -7,7 +7,7 @@ from .namespaces import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
 class Membership(owl.Thing):
     member = Relation(ORG, 'member')
     organization = Relation(ORG, 'organization')
-    role = Relation(ORG, 'role')
+    role = StringProperty(ORG, 'role')
     start_date = DateTimeProperty(SCHEMA, 'validFrom')
     end_date = DateTimeProperty(OPENGOV, 'validUntil')
 
