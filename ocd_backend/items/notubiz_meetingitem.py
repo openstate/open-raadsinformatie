@@ -1,26 +1,8 @@
-from hashlib import sha1
-
 from ocd_backend.items.notubiz_meeting import Meeting
 from ocd_backend.models import *
 
 
-def get_meetingitem_id(item_id):
-    hash_content = u'meetingitem-%s' % item_id
-    return unicode(sha1(hash_content.decode('utf8')).hexdigest())
-
-
 class MeetingItem(Meeting):
-    @staticmethod
-    def _get_meeting_id(item_id):
-        from ocd_backend.items.notubiz_meeting import get_meeting_id
-        return get_meeting_id(item_id)
-
-    def get_object_id(self):
-        return get_meetingitem_id(self.original_item['id'])
-
-    def _get_current_permalink(self):
-        return u'%s/agenda_items/agenda_points/%i' % (self.source_definition['base_url'], self.original_item['id'])
-
     def get_object_model(self):
         agenda_item = AgendaItem('notubiz_identifier', self.original_item['id'])
 
@@ -52,11 +34,3 @@ class MeetingItem(Meeting):
         agenda_item.position = self.original_item['order']
 
         return agenda_item
-
-    def get_index_data(self):
-        return {}
-
-    def get_all_text(self):
-        text_items = []
-
-        return u' '.join(text_items)

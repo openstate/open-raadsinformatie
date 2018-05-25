@@ -1,40 +1,13 @@
-import re
-from hashlib import sha1
-from time import sleep
-
 import iso8601
 
-from ocd_backend import settings
 from ocd_backend.items import BaseItem
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
-from ocd_backend.utils.api import FrontendAPIMixin
 
 log = get_source_logger('item')
 
 
 class IBabsMeetingItem(BaseItem):
-    @staticmethod
-    def _find_meeting_type_id(org):
-        results = [x for x in org['identifiers'] if x['scheme'] == u'iBabs']
-        return results[0]['identifier']
-
-    @staticmethod
-    def _get_meeting_id(meeting):
-        hash_content = u'meeting-%s' % (meeting['Id'])
-        return sha1(hash_content.decode('utf8')).hexdigest()
-
-    def get_object_id(self):
-        return self._get_meeting_id(self.original_item)
-
-    def get_original_object_id(self):
-        return unicode(self.original_item['Id']).strip()
-
-    @staticmethod
-    def get_original_object_urls():
-        # FIXME: what to do when there is not an original URL?
-        return {"html": settings.IBABS_WSDL}
-
     def get_rights(self):
         return u'undefined'
 
@@ -42,9 +15,6 @@ class IBabsMeetingItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        # council = self._get_council()
-        # committees = self._get_committees()
-
         meeting = self.original_item
         if 'MeetingId' not in self.original_item:
             item = Event('ibabs_identifier', self.original_item['Id'])
@@ -90,17 +60,6 @@ class IBabsMeetingItem(BaseItem):
             item.attachment.append(attachment)
 
         return item
-
-    @staticmethod
-    def get_index_data():
-        return {}
-
-    @staticmethod
-    def get_all_text():
-        text_items = []
-
-        return u' '.join(text_items)
-
 
 # todo needs revision v1
 # class IBabsReportItem(BaseItem, FrontendAPIMixin):

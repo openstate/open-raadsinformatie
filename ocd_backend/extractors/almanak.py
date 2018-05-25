@@ -3,7 +3,6 @@ import json
 from lxml import etree
 
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import API_URL
 from .staticfile import StaticHtmlExtractor
 
 log = get_source_logger('extractor')
@@ -38,7 +37,7 @@ class OrganisationsExtractor(StaticHtmlExtractor):
             except:
                 pass
 
-        log.debug(organisations)
+        # log.debug(organisations)
 
         for item in organisations.values():
             yield 'application/json', json.dumps(item)
@@ -48,25 +47,6 @@ class PersonsExtractor(StaticHtmlExtractor):
     """
     Extract persons from an Almanak
     """
-
-    def _get_parties(self):
-        """
-        Gets a list of parties from the frontend API in JSON format.
-        """
-        # TODO: not currently likely that we will have more than 100 orgs.
-        organisations_url = u'%s%s/organizations/search?size=100' % (
-            API_URL, self.source_definition['index_name'],)
-        r = self.http_session.get(organisations_url, verify=False)
-        r.raise_for_status()
-        as_json = r.json()
-        organisations = as_json.get('organizations', [])
-        return {
-            o['name']: {
-                'id': o['id'],
-                'classification': o['classification'],
-                'name': o['name']
-            }
-            for o in organisations if o.has_key('name')}
 
     def extract_items(self, static_content):
         """
