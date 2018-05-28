@@ -1,0 +1,107 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &province
+    <<: *entity_defaults
+    entity: province
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Province
+    prefix: "{classification}"
+
+  - &province_council
+    <<: *entity_defaults
+    entity: council
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Council
+    prefix: "{classification}"
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    classification: Party
+    file_url: "{organizations_url}"
+    item_xpath: "{organizations_item_xpath}"
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.persons.HTMLPersonItem
+    file_url: "{persons_url}"
+    item_xpath: "{persons_item_xpath}"
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
+    item: ocd_backend.items.gv.GreenValleyMeetingItem
+    greenvalley_objecttypes:
+      - agenda
+
+  - &meeting_items
+    <<: *entity_defaults
+    entity: meeting_items
+    doc_type: events
+    extractor: ocd_backend.extractors.gv.GreenValleyMeetingItemsExtractor
+    item: ocd_backend.items.gv.GreenValleyMeetingItem
+    greenvalley_objecttypes:
+      - agenda
+
+  - &reports
+    <<: *entity_defaults
+    entity: reports
+    doc_type: events
+    extractor: ocd_backend.extractors.gv.GreenValleyExtractor
+    item: ocd_backend.items.gv.GreenValleyItem
+    greenvalley_objecttypes:
+      - antwoordstuk
+      - besluitenlijst
+      - ingekomenstuk
+      - notule
+
+_gv: &gv
+  index_name: "{key}"
+  province: "{key!c}"
+  entities: *entities
+  start_date: "2018-01-01T00:00:00"
+  end_date: "2018-06-01T00:00:00"
+  <<: *source_defaults
+
+gv-provinces:
+  zuid-holland:
+    key: zuid-holland
+    almanak_id: 17466
+    greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
+    greenvalley_username: openstate
+    greenvalley_key: bbaab0a1-51b0-4344-8e49-91182df4139e
+    greenvalley_hash: 9af2bb59b0d6ef3d62fa4f2e0157759c5f5c5ad2f2691ab0
+    organizations_url: https://staten.zuid-holland.nl/Statenleden
+    organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"
+    persons_url: https://staten.zuid-holland.nl/Statenleden
+    persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
+    persons_name_xpath: ".//a/span//text()"
+    persons_id_xpath: ".//a/@href"
+    <<: *gv

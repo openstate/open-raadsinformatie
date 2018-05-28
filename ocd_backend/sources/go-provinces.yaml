@@ -1,0 +1,90 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &province
+    <<: *entity_defaults
+    entity: province
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Province
+    prefix: "{classification}"
+
+  - &province_council
+    <<: *entity_defaults
+    entity: council
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Council
+    prefix: "{classification}"
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
+    item: ocd_backend.items.goapi_committee.CommitteeItem
+
+  # - &organizations
+  #   <<: *entity_defaults
+  #   entity: organizations
+  #   doc_type: organizations
+  #   extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+  #   item: ocd_backend.items.organisations.AlmanakOrganisationItem
+  #   file_url: https://almanak.overheid.nl/{almanak_id}/a
+  #   item_xpath: //
+  #
+  # - &persons
+  #   <<: *entity_defaults
+  #   entity: persons
+  #   doc_type: persons
+  #   extractor: ocd_backend.extractors.almanak.PersonsExtractor
+  #   item: ocd_backend.items.persons.AlmanakPersonItem
+  #   file_url: https://almanak.overheid.nl/{almanak_id}/a
+  #   item_xpath: //
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
+    item: ocd_backend.items.goapi_meeting.Meeting
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
+
+  - &meetingitems
+    <<: *meetings
+    entity: meetingitems
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor
+    item: ocd_backend.items.goapi_meetingitem.MeetingItem
+
+_go: &go
+  index_name: "{key}"
+  sitename: "{key!c}"
+  municipality: "{sitename}"
+  entities: *entities
+  <<: *source_defaults
+
+go-provinces:
+  provincie-utrecht:
+    key: provincie-utrecht
+    base_url: "https://www.stateninformatie.provincie-utrecht.nl/api/v1"
+    almanak_id: 17166
+    <<: *go

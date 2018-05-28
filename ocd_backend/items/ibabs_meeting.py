@@ -292,17 +292,37 @@ class IBabsReportItem(
         datum = None
         if self.original_item.has_key(datum_field):
             if isinstance(self.original_item[datum_field], list):
-                datum = self.original_item[datum_field][0]
+                try:
+                    datum = self.original_item[datum_field][0]
+                except IndexError:
+                    pass
             else:
                 datum = self.original_item[datum_field]
+
+        # FIXME: ugly solution but I don't want to reconfigure date fields
+        # for every source since that is a bit annoying :/
+        try_fields = ['Datum', 'Datum invoer', 'Datum PS']
+        for datum_field in try_fields:
+            if (datum is None) and (datum_field in self.original_item['_Extra']['Values']):
+                datum = self.original_item['_Extra']['Values'][datum_field]
 
         if datum is not None:
             # msgpack does not like microseconds for some reason.
             # no biggie if we disregard it, though
-            combined_index_data['start_date'] = iso8601.parse_date(
-                re.sub(r'\.\d+\+', '+', datum),)
-            combined_index_data['end_date'] = iso8601.parse_date(
-                re.sub(r'\.\d+\+', '+', datum),)
+            parsed_date = None
+            try:
+                parsed_date = iso8601.parse_date(
+                    re.sub(r'\.\d+\+', '+', datum),)
+            except iso8601.ParseError:
+                pass
+            if parsed_date is None:
+                try:
+                    parsed_date = datetime.strptime(datum, '%b %d %Y %I:%M%p')
+                except ValueError:
+                    pass
+            if parsed_date is not None:
+                combined_index_data['start_date'] = parsed_date
+                combined_index_data['end_date'] = parsed_date
 
         # combined_index_data['location'] = meeting['Location'].strip()
         combined_index_data['status'] = u'confirmed'

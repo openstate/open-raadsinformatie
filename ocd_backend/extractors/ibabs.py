@@ -239,9 +239,9 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                             processed += self.process_meeting(result)
                 meeting_count += 1
 
-            #pprint(processed)
             passed_vote_count = 0
             for result in processed:
+                #pprint(result['entry'])
                 yield 'application/json', json.dumps(result)
                 passed_vote_count += 1
             log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
@@ -258,7 +258,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         if meeting['votes'] is not None:
             try:
                 return (
-                    len(meeting['votes']) ==
+                    len(meeting['votes']) >=
                     int(self.source_definition['council_members_count']))
             except ValueError:
                 pass

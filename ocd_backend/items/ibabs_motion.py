@@ -56,6 +56,20 @@ class IBabsMotionVotingMixin(
         except KeyError:
             return None
 
+    def _value_of(self, key):
+        classification = unicode(
+            self.source_definition.get('classification', u'Moties'))
+        # pprint(self.source_definition['fields']['Moties'])
+        try:
+            actual_key = self.source_definition[
+                'fields'][classification][key]
+        except KeyError:
+            actual_key = key
+        try:
+            return self.original_item['_Extra']['Values'][actual_key]
+        except KeyError:
+            return None
+
     def _get_creator(self, creators_str, members, parties):
         # FIXME: currently only does the first. what do we do with the others?
         print "Creators: %s" % (creators_str)
@@ -126,8 +140,13 @@ class IBabsMotionVotingMixin(
         return None
 
     def _get_motion_id_encoded(self):
+        classification = unicode(
+            self.source_definition.get('classification', u'Moties'))
         return unicode(
-            full_normalized_motion_id(self._value('Onderwerp')))
+            full_normalized_motion_id(
+                self._value(
+                    self.source_definition['fields'][classification].get(
+                        'id', 'Onderwerp'))))
 
     def get_object_id(self):
         return self._get_motion_id_encoded()
@@ -152,7 +171,7 @@ class IBabsMotionVotingMixin(
 
         combined_index_data['hidden'] = self.source_definition['hidden']
 
-        combined_index_data['name'] = unicode(self._value('Onderwerp'))
+        combined_index_data['name'] = unicode(self._value_of('name'))
 
         combined_index_data['identifier'] = combined_index_data['id']
 
@@ -161,7 +180,7 @@ class IBabsMotionVotingMixin(
 
         # TODO: this gets only the first creator listed. We should fix it to
         # get all of them
-        creator = self._get_creator(self._value('Indiener(s)'), members, parties)
+        creator = self._get_creator(self._value_of('creator'), members, parties)
         if creator is not None:
             combined_index_data['creator_id'] = creator['id']
             combined_index_data['creator'] = creator
@@ -169,7 +188,12 @@ class IBabsMotionVotingMixin(
         combined_index_data['classification'] = unicode(
             self.source_definition.get('classification', u'Moties'))
 
-        combined_index_data['date'] = iso8601.parse_date(self.original_item['datum'][0],)
+        try:
+            combined_index_data['date'] = iso8601.parse_date(
+                self.original_item['datum'][0],)
+        except IndexError:
+            pass
+
         # TODO: this is only for searching compatability ...
         combined_index_data['start_date'] = combined_index_data['date']
         combined_index_data['end_date'] = combined_index_data['date']

@@ -1,0 +1,243 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
+  <<: *entity_defaults
+  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  item: ocd_backend.items.ibabs_motion.IBabsMotionItem
+  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+  include: moties
+  pdf_max_pages: 20
+  max_pages: 1
+  per_page: 100
+
+_voting_rounds_defaults: &voting_rounds_defaults
+  <<: *entity_defaults
+  entity: voting_rounds
+  doc_type: vote_events
+  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+  item: ocd_backend.items.voting_round.IBabsVotingRoundItem
+  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+  reverse_chronological: false
+  max_processed_meetings: 0
+
+_entities: &entities
+  - &province
+    <<: *entity_defaults
+    entity: province
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Province
+    prefix: "{classification}"
+
+  - &province_council
+    <<: *entity_defaults
+    entity: council
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
+    classification: Council
+    prefix: "{classification}"
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
+    item: ocd_backend.items.ibabs_committee.CommitteeItem
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    classification: Party
+    file_url: "{organizations_url}"
+    item_xpath: "{organizations_item_xpath}"
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.persons.HTMLPersonItem
+    file_url: "{persons_url}"
+    item_xpath: "{persons_item_xpath}"
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+
+  - &reports
+    <<: *entity_defaults
+    entity: reports
+    doc_type: events
+    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+    item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+    include: ".*"
+    pdf_max_pages: 0
+    max_pages: 1
+
+_entities_voting: &entities_voting
+  - &province_voting
+    <<: *province
+
+  - &committees_voting
+    <<: *committees
+
+  - &organizations_voting
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+    transformer: ocd_backend.transformers.BaseTransformer
+    item: ocd_backend.items.popit.PopitOrganisationItem
+    loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+    cleanup: ocd_backend.tasks.CleanupElasticsearch
+    vote_entity: organizations
+    pdf_max_pages: 20
+    council_members_count: 1
+    reverse_chronological: true
+    max_processed_meetings: 1
+    start_date: '2018-01-01T00:00:00'
+    end_date: '2018-03-21T00:00:00'
+
+  - &persons_voting
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
+    transformer: ocd_backend.transformers.BaseTransformer
+    item: ocd_backend.items.popit.PopitPersonItem
+    loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+    cleanup: ocd_backend.tasks.CleanupElasticsearch
+    vote_entity: persons
+    pdf_max_pages: 20
+    council_members_count: 1
+    reverse_chronological: true
+    max_processed_meetings: 1
+    start_date: '2018-01-01T00:00:00'
+    end_date: '2018-04-01T00:00:00'
+
+  - &meetings_voting
+    <<: *meetings
+
+  - &reports_voting
+    <<: *reports
+    include: ".*"
+    exclude: (moties|amendementen)
+    pdf_max_pages: 0
+    max_pages: 1
+
+_ibabs: &ibabs
+  index_name: "{key}"
+  sitename: "{key!c}"
+  province: "{sitename}"
+  entities: *entities
+  #start_date: "2016-01-01T00:00:00"
+  #end_date: "2016-06-01T00:00:00"
+  <<: *source_defaults
+
+_ibabs_voting: &ibabs_voting
+  index_name: "{key}"
+  sitename: "{key!c}"
+  province: "{sitename}"
+  entities: *entities_voting
+  #start_date: "2016-01-01T00:00:00"
+  #end_date: "2016-06-01T00:00:00"
+  <<: *source_defaults
+
+ibabs-provinces:
+  # Added before 17-11-2017
+  noord-holland:
+    key: noord-holland
+    almanak_id: 16412
+    organizations_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Provinciale_Staten
+    organizations_item_xpath: "//div[contains(@class, \"document\")]//ul[2]/li/a"
+    persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
+    persons_item_xpath: "//ul[contains(@class, \"two\")]//li"
+    <<: *ibabs
+
+  limburg:
+    key: limburg
+    almanak_id: 16071
+
+    _fields_limburg: &fields_limburg
+      fields:
+        Moties:
+          id: Titel
+          name: Titel
+          creator: Hoofdindieners
+          description: status
+          start_date: Datum
+        Amendementen:
+          id: Titel
+          name: Titel
+          creator: Hoofdindieners
+          description: status
+          start_date: Datum
+        Stemmingen:
+          id: Titel
+          name: Titel
+          creator: Hoofdindieners
+          description: status
+          start_date: Datum
+
+    <<: *ibabs_voting
+    entities:
+    - *province_voting
+    - *committees_voting
+    - *organizations_voting
+    - *persons_voting
+    - *meetings_voting
+    - *reports_voting
+
+    - &motions_voting
+      entity: motions
+      doc_type: motions
+      classification: Moties
+      include: moties
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &amendments_voting
+      entity: amendments
+      doc_type: motions
+      classification: Amendementen
+      include: amendementen
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &vote_events
+      entity: vote_events
+      doc_type: vote_events
+      classification: Stemmingen
+      include: (moties|amendementen)
+      exclude: "^$"
+      <<: *fields_limburg
+      <<: *motions_and_amendments_voting_defaults
+
+    - &voting_rounds
+      start_date: '2018-01-01T00:00:00'
+      end_date: '2018-04-01T00:00:00'
+      <<: *voting_rounds_defaults
