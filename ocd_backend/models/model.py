@@ -95,9 +95,7 @@ class ModelBase(object):
     def properties(self, props=True, rels=True):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
-        for name, prop in iterate(self.__dict__):
-            if name[0:2] == '__':
-                continue
+        for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:2] != '__'}):
             definition = self.__definitions__[name]  # pylint: disable=no-member
             if (props and not isinstance(prop, ModelBase)) or (rels and isinstance(prop, ModelBase)):
                 props_list.append((definition.get_prefix_uri(), prop,))
