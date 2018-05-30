@@ -8,10 +8,3 @@ class Agent(owl.Thing):
 
     class Meta:
         namespace = FOAF
-
-
-class Group(Agent):
-    member = Relation(ORG, 'member')
-
-    class Meta:
-        namespace = FOAF

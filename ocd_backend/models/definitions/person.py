@@ -19,7 +19,7 @@ class Person(foaf.Agent):
     death_date = DateTimeProperty(SCHEMA, 'deathDate')
     email = StringProperty(SCHEMA, 'email')
     image = Relation(SCHEMA, 'image')
-    member = Relation(ORG, 'memberOf')
+    #todo member = Relation(ORG, 'memberOf')
 
     def verbose_name(self):
         self.name = '%s %s' % (self.given_name, self.family_name)

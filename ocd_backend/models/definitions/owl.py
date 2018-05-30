@@ -1,7 +1,7 @@
 import govid
 
 from ..model import ModelBase
-from ..property import Relation
+from ..property import InlineRelation
 from .namespaces import OWL, META
 
 
@@ -12,7 +12,7 @@ class Thing(ModelBase):
     notubiz_identifier = govid.notubiz_identifier
     cbs_identifier = govid.cbs_identifier
 
-    meta = Relation(META, 'meta')
+    meta = InlineRelation(META, 'meta')
 
     class Meta:
         namespace = OWL

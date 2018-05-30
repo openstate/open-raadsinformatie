@@ -2,7 +2,7 @@ import govid
 import opengov
 import owl
 import schema
-from ..property import StringProperty, IntegerProperty, Relation, Instance
+from ..property import StringProperty, IntegerProperty, Relation, InlineRelation, Instance
 from .namespaces import OPENGOV, SCHEMA, COUNCIL
 
 
@@ -45,7 +45,7 @@ class Petition(opengov.Motion):
 
 
 class AgendaItem(schema.Event):
-    attachment = Relation(COUNCIL, 'attachment')
+    attachment = InlineRelation(COUNCIL, 'attachment')
     motion = Relation(OPENGOV, 'motion')
     description = StringProperty(SCHEMA, 'description')
     name = StringProperty(SCHEMA, 'name')
@@ -64,6 +64,7 @@ class AgendaItem(schema.Event):
 
 
 class Result(owl.Thing):
+    # Naar opengov namespace
     text = StringProperty(SCHEMA, 'text')
     vote_event = Relation(OPENGOV, 'voteEvent')
 
@@ -75,6 +76,7 @@ class Result(owl.Thing):
 ResultFail = Instance(OPENGOV, 'ResultFail')
 ResultPass = Instance(OPENGOV, 'ResultPass')
 ResultKept = Instance(COUNCIL, 'ResultKept')
+# todo wat betekent het
 ResultPostponed = Instance(COUNCIL, 'ResultPostponed')
 ResultWithdrawn = Instance(COUNCIL, 'ResultWithdrawn')
 ResultExpired = Instance(COUNCIL, 'ResultExpired')
@@ -82,9 +84,9 @@ ResultDiscussed = Instance(COUNCIL, 'ResultDiscussed')
 ResultPublished = Instance(COUNCIL, 'ResultPublished')
 
 # Instances VoteOption
-VoteOptionYes = Instance(COUNCIL, 'VoteOptionYes')
-VoteOptionNo = Instance(COUNCIL, 'VoteOptionNo')
-VoteOptionAbstain = Instance(COUNCIL, 'VoteOptionAbstain')
-VoteOptionAbsent = Instance(COUNCIL, 'VoteOptionAbsent')
-VoteOptionNotVoting = Instance(COUNCIL, 'VoteOptionNotVoting')
-VoteOptionPaired = Instance(COUNCIL, 'VoteOptionPaired')
+VoteOptionYes = Instance(OPENGOV, 'VoteOptionYes')
+VoteOptionNo = Instance(OPENGOV, 'VoteOptionNo')
+VoteOptionAbstain = Instance(OPENGOV, 'VoteOptionAbstain')
+VoteOptionAbsent = Instance(OPENGOV, 'VoteOptionAbsent')
+VoteOptionNotVoting = Instance(OPENGOV, 'VoteOptionNotVoting')
+VoteOptionPaired = Instance(OPENGOV, 'VoteOptionPaired')
