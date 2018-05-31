@@ -9,19 +9,18 @@ RUN apk add --update build-base python-dev py-pip jpeg-dev zlib-dev \
     && pip install --no-cache-dir -r /opt/ori/ocd_frontend/requirements.txt \
     && apk del build-base python-dev py-pip
 
-# Create volume for shared static data with the backend
-RUN mkdir -p /opt/ori/data/static
+# Create static data folder shared with the backend
+RUN mkdir -p /opt/ori/data/static \
+  && adduser -D -H gunicorn \
+  && chown -R 1000:1000 /opt/ori
 
 # Copy all files, except for .dockerignore entries
 COPY ocd_frontend /opt/ori/ocd_frontend
-
-# Change permissions before switching to user
-RUN chown -R nobody:nobody /opt/ori
-USER nobody
 
 # Specify the volume last
 # https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
 VOLUME /opt/ori/data
 
 # For production run the gunicorn wsgi server
+USER gunicorn
 CMD gunicorn -w 2 -b 0.0.0.0:5000 ocd_frontend.wsgi

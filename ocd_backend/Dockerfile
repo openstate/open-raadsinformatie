@@ -19,18 +19,14 @@ RUN apk add --update \
   && apk del build-base git tzdata
 
 # Setup Celery
-RUN adduser -D -H celery \
-  && mkdir -p /var/run/celery \
-  && chown celery:celery /var/run/celery
-
-WORKDIR /opt/ori
-
+# Create static data folder shared with the frontend
 # Trick to redirect logs to process 1 when running multiple processes
-RUN mkdir /opt/ori/log \
+RUN adduser -D -H celery \
+  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/log \
+  && chown celery:celery /opt/ori /var/run/celery \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
-# Create volume for shared static data with the frontend
-RUN mkdir -p /opt/ori/data/static
+WORKDIR /opt/ori
 
 # Copy all files, except for .dockerignore entries
 COPY json/gemeenten.json /opt/ori/json/gemeenten.json
@@ -38,12 +34,9 @@ COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY ocd_backend /opt/ori/ocd_backend
 
-# Change permissions before switching to user
-RUN chown -R celery:celery /opt/ori
-USER celery
-
 # Specify the volume last
 # https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
 VOLUME /opt/ori/data
 
-CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
+USER celery
+CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=4
