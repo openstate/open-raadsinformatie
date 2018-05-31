@@ -19,7 +19,7 @@ class IBabsMeetingItem(BaseItem):
     def get_object_model(self):
         meeting = self.original_item
         if 'MeetingId' not in self.original_item:
-            item = Event('ibabs_identifier', self.original_item['Id'])
+            item = Meeting('ibabs_identifier', self.original_item['Id'])
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location'].strip()
@@ -46,8 +46,8 @@ class IBabsMeetingItem(BaseItem):
             )
             item.description = self.original_item['Explanation']
 
-            event = Event.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
-            event.attachment = Attachment.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
+            event = Meeting.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
+            event.attachment = MediaObject.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
             item.parent = event
 
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
@@ -55,7 +55,7 @@ class IBabsMeetingItem(BaseItem):
 
         item.attachment = list()
         for document in self.original_item['Documents'] or []:
-            attachment = Attachment('ibabs_identifier', document['Id'])
+            attachment = MediaObject('ibabs_identifier', document['Id'])
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']
@@ -65,6 +65,7 @@ class IBabsMeetingItem(BaseItem):
 
 
 class IBabsReportItem(BaseItem):
+    #todo om naar motion
     def get_rights(self):
         return u'undefined'
 
@@ -72,7 +73,7 @@ class IBabsReportItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        report = Event('ibabs_identifier', self.original_item['id'][0])
+        report = CreativeWork('ibabs_identifier', self.original_item['id'][0])  # todo
 
         report_name = self.original_item['_ReportName'].split(r'\s+')[0]
         report.classification = report_name
@@ -129,7 +130,7 @@ class IBabsReportItem(BaseItem):
 
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
-            attachment = Attachment('ibabs_identifier', document['Id'])
+            attachment = MediaObject('ibabs_identifier', document['Id'])
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']

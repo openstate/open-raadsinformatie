@@ -8,8 +8,9 @@ from py2neo import Graph, ConstraintError
 
 import property
 from ocd_backend.settings import NEO4J_URL
-from ocd_backend.utils.misc import iterate
-from .exceptions import MissingProperty, QueryResultError
+from ocd_backend.utils.misc import iterate, load_object
+from .exceptions import RequiredProperty, MissingProperty, \
+    QueryResultError
 from .serializers import get_serializer
 
 graph = None
@@ -32,6 +33,14 @@ class ModelBaseMetaclass(type):
                 definitions[key] = value
                 attrs.pop(key)
         attrs['__definitions__'] = definitions
+
+        # Resolving namespace by module name
+        namespace_string = 'ocd_backend.models.definitions.namespaces.%s' % \
+                           attrs['__module__'].rpartition('.')[2].upper()
+        try:
+            attrs['__namespace__'] = load_object(namespace_string)
+        except NameError:
+            attrs['__namespace__'] = None
 
         # attr = getattr(self, key)
         # if not isinstance(attr, PropertyBase):
@@ -66,7 +75,10 @@ class ModelBase(object):
         enricher_task = None
         legacy_type = None
 
-    def get_object_hash(self, object_id):
+    def get_object_hash(self, object_id=None):
+        if not object_id:
+            object_id = os.urandom(16).encode('hex')
+
         hash_content = '%s-%s' % (self.get_prefix_uri(), unicode(object_id))  # temporary fix
         return sha1(hash_content.decode('utf8')).hexdigest()
 
@@ -114,10 +126,13 @@ class ModelBase(object):
     @classmethod
     def inflate(cls, props):
         # todo inflate needs inflate relations and models as well
-        instance = cls(
-            'ori_identifier',
-            props[cls.__definitions__['ori_identifier'].get_prefix_uri()]  # pylint: disable=no-member
-        )
+        try:
+            prefix_uri = cls.__definitions__['ori_identifier'].get_prefix_uri()
+            identifier_value = props[prefix_uri]  # pylint: disable=no-member
+        except KeyError:
+            raise  # todo raise correct exception
+
+        instance = cls('ori_identifier', identifier_value)
 
         for namespaced, value in props.items():
             ns_string, name = namespaced.split(':')
@@ -139,24 +154,21 @@ class ModelBase(object):
 
         super(ModelBase, self).__setattr__(key, value)
 
-    def __init__(self, identifier_key=None, identifier_value=None, temporary=False, rel_params=None):
+    def __init__(self, identifier_name=None, identifier_value=None, temporary=False, rel_params=None):
         self.__temporary__ = temporary
         self.__rel_params__ = rel_params
 
-        if identifier_value:
-            setattr(self, identifier_key, identifier_value)
+        if identifier_name and not identifier_value:
+            raise MissingProperty("The identifier_value has not been given")
 
-        if identifier_key:
-            self.__identifier_key__ = identifier_key
+        if identifier_name:
+            from .definitions.owl import Identifier
+            identifier_object = Identifier()
+            identifier_object.identifier = identifier_value
+            #identifier_object.represent = load_object(identifier_name)
+            self.identifier = [identifier_object]
 
-        ori_identifier = identifier_value
-        if not identifier_key:
-            random = os.urandom(16).encode('hex')
-            ori_identifier = self.get_object_hash(random)
-        elif identifier_key != 'ori_identifier':
-            ori_identifier = self.get_object_hash(identifier_value)
-
-        self.ori_identifier = ori_identifier
+        self.ori_identifier = self.get_object_hash(identifier_value)
 
     def __iter__(self):
         for key, value in self.__dict__.items():

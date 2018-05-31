@@ -1,6 +1,22 @@
 import owl
-from ..property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
-from .namespaces import SCHEMA, OPENGOV, COUNCIL
+from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Individual
+from .namespaces import SCHEMA, OPENGOV, MEETING
+
+
+class MediaObject(owl.Thing):
+    name = StringProperty(SCHEMA, 'name')
+    url = StringProperty(SCHEMA, 'contentUrl')
+    size_in_bytes = IntegerProperty(SCHEMA, 'fileSize')
+    file_type = StringProperty(SCHEMA, 'fileType')
+    additional_type = StringProperty(SCHEMA, 'additionalType')
+    creator = Relation(SCHEMA, 'creator')
+    content_type = StringProperty(SCHEMA, 'fileFormat')
+    original_url = StringProperty(SCHEMA, 'isBasedOn')
+    text = StringProperty(SCHEMA, 'text')
+
+    class Meta:
+        namespace = SCHEMA
+        enricher_task = 'file_to_text'
 
 
 class AudioObject(owl.Thing):
@@ -65,11 +81,11 @@ class VideoObject(owl.Thing):
         namespace = SCHEMA
 
 
-# Instances EventStatusType
-EventCancelled = Instance(SCHEMA, 'EventCancelled')
-EventPostponed = Instance(SCHEMA, 'EventPostponed')
-EventRescheduled = Instance(SCHEMA, 'EventRescheduled')
-EventScheduled = Instance(SCHEMA, 'EventScheduled')
-EventCompleted = Instance(COUNCIL, 'EventCompleted')
-EventConfirmed = Instance(COUNCIL, 'EventConfirmed')
-EventInactive = Instance(COUNCIL, 'EventInactive')
+# EventStatusType Individuals
+EventCancelled = Individual(SCHEMA, 'EventCancelled')
+EventPostponed = Individual(SCHEMA, 'EventPostponed')
+EventRescheduled = Individual(SCHEMA, 'EventRescheduled')
+EventScheduled = Individual(SCHEMA, 'EventScheduled')
+EventCompleted = Individual(MEETING, 'EventCompleted')
+EventConfirmed = Individual(MEETING, 'EventConfirmed')
+EventInactive = Individual(MEETING, 'EventInactive')

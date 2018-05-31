@@ -5,7 +5,7 @@ from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
-class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class NotubizMeeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
     def get_rights(self):
         return u'undefined'
 
@@ -13,7 +13,7 @@ class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        event = Event('notubiz_identifier', self.original_item['id'])
+        event = Meeting('notubiz_identifier', self.original_item['id'])
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
         event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.start_date)
@@ -47,7 +47,7 @@ class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):
-            attachment = Attachment('notubiz_identifier', doc['id'])
+            attachment = MediaObject('notubiz_identifier', doc['id'])
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             event.attachment.append(attachment)

@@ -34,8 +34,10 @@ class Property(PropertyBase):
     pass
 
 
-class Instance(Property):
-    pass
+class Individual(Property):
+    @classmethod
+    def serialize(cls, value, **kwargs):
+        return value.get_prefix_uri()
 
 
 class StringProperty(Property):

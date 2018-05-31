@@ -1,6 +1,6 @@
 import owl
 from ..property import StringProperty, DateTimeProperty
-from .namespaces import META, COUNCIL
+from .namespaces import META, MEETING
 
 
 class Metadata(owl.Thing):
@@ -16,7 +16,7 @@ class Metadata(owl.Thing):
 
 
 class Run(owl.Thing):
-    run_identifier = StringProperty(COUNCIL, 'runIdentifier')
+    run_identifier = StringProperty(MEETING, 'runIdentifier')
 
     class Meta:
         namespace = META

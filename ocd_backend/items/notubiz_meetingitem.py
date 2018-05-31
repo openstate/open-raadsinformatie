@@ -1,8 +1,8 @@
-from ocd_backend.items.notubiz_meeting import Meeting
+from ocd_backend.items.notubiz_meeting import NotubizMeeting
 from ocd_backend.models import *
 
 
-class MeetingItem(Meeting):
+class NotubizMeetingItem(NotubizMeeting):
     def get_object_model(self):
         agenda_item = AgendaItem('notubiz_identifier', self.original_item['id'])
 
@@ -10,7 +10,7 @@ class MeetingItem(Meeting):
             parent_id = self.original_item['parent']['id']
         except TypeError:
             parent_id = self.original_item['meeting']['id']
-        agenda_item.parent = Event.get_or_create(notubiz_identifier=parent_id)
+        agenda_item.parent = Meeting.get_or_create(notubiz_identifier=parent_id)
 
         agenda_item.agenda = []
         for item in self.original_item.get('agenda_items', []):
@@ -20,7 +20,7 @@ class MeetingItem(Meeting):
 
         agenda_item.attachment = []
         for doc in self.original_item.get('documents', []):
-            attachment = Attachment('notubiz_identifier', doc['id'])
+            attachment = MediaObject('notubiz_identifier', doc['id'])
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             agenda_item.attachment.append(attachment)

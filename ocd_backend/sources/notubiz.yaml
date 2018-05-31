@@ -26,7 +26,7 @@ _entities: &entities
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
-    item: ocd_backend.items.notubiz_meeting.Meeting
+    item: ocd_backend.items.notubiz_meeting.NotubizMeeting
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
       - # reserved for enricher_settings
@@ -35,7 +35,7 @@ _entities: &entities
     <<: *meetings
     entity: meetingitems
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingItemExtractor
-    item: ocd_backend.items.notubiz_meetingitem.MeetingItem
+    item: ocd_backend.items.notubiz_meetingitem.NotubizMeetingItem
 
 _notubiz: &notubiz
   index_name: "{key}"

@@ -36,6 +36,6 @@ class AlmanakPersonItem(HttpRequestMixin, BaseItem):
         party_member.organization = party
         party_member.role = 'Member'
 
-        person.member = [municipality_member, party_member]
+        person.member_of = [municipality_member, party_member]
 
         return person
