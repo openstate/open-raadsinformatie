@@ -57,4 +57,4 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         item = self.item_class(self.source_definition, raw_item_content_type,
                                raw_item, item, self.run_node)
 
-        return item.get_object_model()
+        return item.object_data

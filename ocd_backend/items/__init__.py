@@ -34,11 +34,11 @@ class BaseItem(object):
 
         # On init, all data should be available to construct self.meta
         # and self.combined_item
-        self._store_object_data()
         self._construct_object_meta(processing_started)
+        self._store_object_data()
 
     def _construct_object_meta(self, processing_started=None):
-        meta = Metadata('ori_identifier', self.object_data.get_ori_id())
+        meta = Metadata()
 
         if not processing_started:
             meta.processing_started = datetime.now()
@@ -47,13 +47,11 @@ class BaseItem(object):
         meta.collection = self.get_collection()
         meta.rights = self.get_rights()
 
-        if self.run_node:
-            self.object_data.attach('meta', self.run_node, rel_params=meta)
-
-        return meta
+        self.meta = meta
 
     def _store_object_data(self):
         object_data = self.get_object_model()
+        object_data.meta = self.meta
 
         # Temporary fix for testing
         if type(self).__name__[0:4] != 'Test':
@@ -68,7 +66,7 @@ class BaseItem(object):
         :returns: a dict ready for indexing.
         :rtype: dict
         """
-        return self.object_data
+        raise NotImplementedError
 
     def get_collection(self):
         """Retrieves the name of the collection the item belongs to.
