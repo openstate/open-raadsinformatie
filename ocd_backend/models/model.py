@@ -9,8 +9,8 @@ from py2neo import Graph, ConstraintError
 import property
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate
-from .exceptions import RequiredProperty, MissingProperty, \
-    QueryResultError
+from .exceptions import MissingProperty, QueryResultError
+from .serializers import get_serializer
 
 graph = None
 
@@ -109,23 +109,6 @@ class ModelBase(object):
             if (props and isinstance(definition, property.Property) or
                     (rels and isinstance(definition, property.Relation))):
                 props_list.append((name, definition,))
-        return props_list
-
-    def deflate(self, namespaces=True, props=True, rels=False):
-        """ Returns a serialized value for each model definition """
-        props_list = dict()
-        for name, definition in self.definitions(props=props, rels=rels):
-            namespaced = name
-            if namespaces:
-                namespaced = definition.get_prefix_uri()
-
-            value = self.__dict__.get(name, None)
-
-            if value:
-                props_list[namespaced] = definition.serialize(value, namespaces=namespaces, props=props, rels=rels)
-            elif not self.__temporary__ and definition.required:
-                raise RequiredProperty("Property '%s' is required for %s" %
-                                       (name, self.get_prefix_uri()))
         return props_list
 
     @classmethod
@@ -256,7 +239,7 @@ class ModelBase(object):
         try:
             result = get_graph().data(
                 query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
-                replace_params=self.deflate(props=True, rels=False))
+                replace_params=get_serializer()(self).deflate(props=True, rels=False))
         except ConstraintError, e:
             # todo
             raise
@@ -266,11 +249,12 @@ class ModelBase(object):
         return result[0]['n']
 
     def attach(self, rel_type, other, rel_params=None):
-        create_params = other.deflate()
+        serializer = get_serializer()
+        create_params = serializer(other).deflate(props=True, rels=True)
         rel_params = rel_params or other.__rel_params__ or {}
 
         if isinstance(rel_params, ModelBase):
-            rel_params = rel_params.deflate(props=True, rels=True)
+            rel_params = serializer(rel_params).deflate(props=True, rels=True)
 
         query = 'MATCH (n :`%(labels)s` {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
                 {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()}
@@ -294,12 +278,3 @@ class ModelBase(object):
             raise
 
         return result
-
-    def get_context(self):
-        context = {}
-        for name, prop in self.definitions():
-            context[name] = {
-                '@id': prop.get_full_uri(),
-                '@type': '@id',
-            }
-        return {'@context': context}

@@ -12,6 +12,7 @@ from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
 from ocd_backend.utils import json_encoder
 from ocd_backend.utils.misc import iterate, get_sha1_hash
+from ocd_backend.models.serializers import get_serializer
 
 log = get_source_logger('loader')
 
@@ -65,7 +66,7 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(get_serializer(format='json-ld')(doc).serialize())
 
         log.info('Indexing document id: %s' % doc.get_ori_id())
 
@@ -101,7 +102,7 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(get_serializer(format='json-ld')(doc).serialize())
 
         if doc == {}:
             log.info('Empty document ....')
@@ -126,7 +127,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(doc.serializer(format='json-ld').serialize())
 
         if doc == {}:
             log.info('Empty document ....')
@@ -155,7 +156,7 @@ class DummyLoader(BaseLoader):
         log.debug('=' * 50)
         log.debug('%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4))
         log.debug('%s %s %s' % ('-' * 20, 'doc', '-' * 25))
-        log.debug(doc.deflate(props=True, rels=True))
+        log.debug(get_serializer(format='json')(doc).serialize())
         log.debug('=' * 50)
 
     @staticmethod

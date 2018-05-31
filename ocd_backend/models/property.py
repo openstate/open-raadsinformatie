@@ -1,6 +1,3 @@
-from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
-
-
 class PropertyBase(object):
     def __init__(self, ns, local_name, required=False):
         if not isinstance(ns, Namespace):
@@ -16,7 +13,8 @@ class PropertyBase(object):
     def get_prefix_uri(self):
         return '%s:%s' % (self.ns.prefix, self.local_name)
 
-    def serialize(self, value, **kwargs):
+    @staticmethod
+    def sanitize(value):
         return value
 
     def __repr__(self):
@@ -37,23 +35,23 @@ class Property(PropertyBase):
 
 
 class Instance(Property):
-    def serialize(self, value, **kwargs):
-        return value.get_prefix_uri()
+    pass
 
 
 class StringProperty(Property):
-    def serialize(self, value, **kwargs):
+    @staticmethod
+    def sanitize(value):
         return unicode(value).strip()
 
 
 class IntegerProperty(Property):
-    pass
+    @staticmethod
+    def sanitize(value):
+        return int(value)
 
 
 class DateTimeProperty(Property):
-    def serialize(self, value, **kwargs):
-        date_object = str_to_datetime(value)
-        return datetime_to_unixstamp(date_object)
+    pass
 
 
 class ArrayProperty(Property):
@@ -61,15 +59,8 @@ class ArrayProperty(Property):
 
 
 class Relation(PropertyBase):
-    def serialize(self, value, **kwargs):
-        props = list()
-        for _, item in iterate(value):
-            if not item.__temporary__:
-                # todo temporary fix for deflate recursion
-                props.append(item.deflate(**kwargs))
-            else:
-                props.append(item.get_ori_id())
+    pass
 
-        if len(props) == 1:
-            return props[0]
-        return props
+
+class InlineRelation(Relation):
+    pass
