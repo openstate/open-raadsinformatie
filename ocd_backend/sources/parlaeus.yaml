@@ -1,0 +1,72 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: true
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.odata.ODataExtractor
+    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
+    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
+    filter:
+      Title: "{municipality}"
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.parlaeus.ParlaeusCommitteesExtractor
+    item: ocd_backend.items.parlaeus.Committee
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.parlaeus.ParlaeusPersonsExtractor
+    item: ocd_backend.items.parlaeus.Person
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingsExtractor
+    item: ocd_backend.items.parlaeus.Meeting
+
+  - &meetingitems
+    <<: *meetings
+    entity: meetingitems
+    extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingitemsExtractor
+    item: ocd_backend.items.parlaeus.MeetingItem
+    enrichers:
+      - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+        - tasks:
+          - file_to_text
+
+
+
+_parlaeus: &parlaeus
+  index_name: "{key}"
+  sitename: "{key!c}"
+  municipality: "{sitename}"
+  base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
+  session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
+  start_date: "2010-01-01T00:00:00"
+  entities: *entities
+  <<: *source_defaults
+
+parlaeus:
+  bodegravenreeuwijk:
+    key: bodegravenreeuwijk
+    sitename: Bodegraven-Reeuwijk
+    almanak_id: 33912
+    <<: *parlaeus

@@ -37,36 +37,66 @@ class BaseExtractor(object):
         """
         raise NotImplementedError
 
-    def interval_generator(self):
-        """Returns a generator with date intervals
+    def _interval_delta(self):
+        """Returns a datetime delta.
 
-        The intervals are generated between the 'start_date' and 'end_date'
-        specified in the source configuration. The default is one month ago
-        from now, which can be changed by specifying 'months_interval'.
+        This method uses 'months_interval' specified in the source
+        configuration, whichs defaults to 1 month. If the 'months_interval'
+        is smaller than 2, the delta is split in two. Therefore, such
+        intervals are measured in days instead of months.
         """
-
         months = 1  # Max 1 months intervals by default
         if 'months_interval' in self.source_definition:
             months = self.source_definition['months_interval']
-        days = (months / 2.0) * 30
 
         if (months / 2.0) < 1.0:
-            interval_delta = relativedelta(days=days)
-        else:
-            interval_delta = relativedelta(months=months)
+            days = (months / 2.0) * 30
+            return relativedelta(days=days)
 
-        current_start = datetime.today() - interval_delta
+        return relativedelta(months=months)
+
+    def date_interval(self):
+        """Returns a tuple of a start_date and end_date
+
+        The interval are exactly the 'start_date' and 'end_date' specified
+        in the source configuration. If one or both is not specified, the
+        date will be the date of today with an offset calculated by
+        :py:meth:`BaseExtractor._interval_delta`.
+
+        :return: A start_date and end_date tuple
+        :rtype: tuple
+        """
+        interval_delta = self._interval_delta()
+
+        start_date = datetime.today() - interval_delta
 
         if 'start_date' in self.source_definition:
-            current_start = parse(self.source_definition['start_date'])
+            start_date = parse(self.source_definition['start_date'])
 
         end_date = datetime.today() + interval_delta
 
         if 'end_date' in self.source_definition:
             end_date = parse(self.source_definition['end_date'])
 
+        return start_date, end_date
+
+    def interval_generator(self):
+        """Returns a generator with date intervals
+
+        The intervals are generated between the 'start_date' and 'end_date'
+        specified in the source configuration. If one or both is not specified, the
+        date will be the date of today with an offset calculated by
+        :py:meth:`BaseExtractor._interval_delta`.
+
+        :return: A generator yielding a start_date and end_date for each
+        interval
+        :rtype: generator
+        """
+
+        current_start, end_date = self.date_interval()
+
         while True:
-            current_end = current_start + interval_delta
+            current_end = current_start + self._interval_delta()
 
             # If next current_end exceeds end_date then stop at end_date
             if current_end > end_date:
