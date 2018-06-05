@@ -6,6 +6,7 @@ cd /opt/ori
 ./manage.py extract start ibabs
 ./manage.py extract start go
 ./manage.py extract start notubiz
+./manage.py extract start parlaeus
 
 ./manage.py extract start oude_ijsselstreek_committees
 ./manage.py extract start oude_ijsselstreek_popit_organizations
@@ -17,3 +18,6 @@ cd /opt/ori
 ./manage.py extract start harderwijk_popit_organizations
 ./manage.py extract start harderwijk_popit_persons
 ./manage.py extract start harderwijk_videotulen
+
+./manage.py extract start go-provinces
+./manage.py extract start ibabs-provinces
