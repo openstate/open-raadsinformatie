@@ -1,6 +1,11 @@
+"""The classes in this schema module are derived from and described by:
+http://schema.org/
+"""
+
 import owl
-from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Individual
-from .namespaces import SCHEMA, OPENGOV, MEETING
+from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
+from ..model import Individual
+from . import SCHEMA, OPENGOV
 
 
 class MediaObject(owl.Thing):
@@ -15,15 +20,11 @@ class MediaObject(owl.Thing):
     text = StringProperty(SCHEMA, 'text')
 
     class Meta:
-        namespace = SCHEMA
         enricher_task = 'file_to_text'
 
 
 class AudioObject(owl.Thing):
     contentUrl = StringProperty(SCHEMA, 'contentUrl')
-
-    class Meta:
-        namespace = SCHEMA
 
 
 class CreativeWork(owl.Thing):
@@ -34,16 +35,10 @@ class CreativeWork(owl.Thing):
     organizer = Relation(SCHEMA, 'organizer')
     text = StringProperty(SCHEMA, 'text')
 
-    class Meta:
-        namespace = SCHEMA
-
 
 class Event(owl.Thing):
     end_date = DateTimeProperty(SCHEMA, 'endDate')
     start_date = DateTimeProperty(SCHEMA, 'startDate')
-
-    class Meta:
-        namespace = SCHEMA
 
 
 class ImageObject(owl.Thing):
@@ -57,7 +52,6 @@ class ImageObject(owl.Thing):
     height = StringProperty(SCHEMA, 'height')
 
     class Meta:
-        namespace = SCHEMA
         enricher_task = 'image_metadata'
 
 
@@ -65,27 +59,27 @@ class PropertyValue(owl.Thing):
     name = StringProperty(SCHEMA, 'name')
     value = StringProperty(SCHEMA, 'value')
 
-    class Meta:
-        namespace = SCHEMA
-
 
 class Place(owl.Thing):
-    class Meta:
-        namespace = SCHEMA
+    pass
 
 
 class VideoObject(owl.Thing):
     content_url = StringProperty(SCHEMA, 'contentUrl')
 
-    class Meta:
-        namespace = SCHEMA
-
 
 # EventStatusType Individuals
-EventCancelled = Individual(SCHEMA, 'EventCancelled')
-EventPostponed = Individual(SCHEMA, 'EventPostponed')
-EventRescheduled = Individual(SCHEMA, 'EventRescheduled')
-EventScheduled = Individual(SCHEMA, 'EventScheduled')
-EventCompleted = Individual(MEETING, 'EventCompleted')
-EventConfirmed = Individual(MEETING, 'EventConfirmed')
-EventInactive = Individual(MEETING, 'EventInactive')
+class EventCancelled(Individual):
+    pass
+
+
+class EventPostponed(Individual):
+    pass
+
+
+class EventRescheduled(Individual):
+    pass
+
+
+class EventScheduled(Individual):
+    pass

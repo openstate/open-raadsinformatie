@@ -1,3 +1,6 @@
+from .namespace import Namespace
+
+
 class PropertyBase(object):
     def __init__(self, ns, local_name, required=False):
         if not isinstance(ns, Namespace):
@@ -21,23 +24,8 @@ class PropertyBase(object):
         return '<%s %s>' % (self.get_prefix_uri(), self.__class__.__name__)
 
 
-class Namespace(object):
-    def __init__(self, namespace, prefix):
-        self.namespace = namespace
-        self.prefix = prefix
-
-    def __str__(self):
-        return self.prefix
-
-
 class Property(PropertyBase):
     pass
-
-
-class Individual(Property):
-    @classmethod
-    def serialize(cls, value, **kwargs):
-        return value.get_prefix_uri()
 
 
 class StringProperty(Property):

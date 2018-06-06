@@ -1,7 +1,17 @@
+"""The classes in this ontology are defined by Argu BV. More details, current
+definitions and information can be found here:
+https://argu.co/ns/meeting#
+
+The purpose of this ontology is to define meeting related classes that can be
+used to describe both virtual (eg. online discussion) and non-virtual (eg.
+an assembly of people) discussion.
+"""
+
 import opengov
 import schema
-from ..property import StringProperty, IntegerProperty, Relation, InlineRelation, Individual
-from .namespaces import OPENGOV, SCHEMA, MEETING
+from ..property import StringProperty, IntegerProperty, Relation, InlineRelation
+from ..model import Individual
+from . import OPENGOV, SCHEMA, MEETING
 
 
 class Meeting(schema.Event):
@@ -14,7 +24,7 @@ class Meeting(schema.Event):
     attendee = Relation(SCHEMA, 'attendee')
     audio = Relation(SCHEMA, 'audio')
     description = StringProperty(SCHEMA, 'description')
-    status = Individual(SCHEMA, 'eventStatus') #todo InlineRelation ipv Individual?
+    status = InlineRelation(SCHEMA, 'eventStatus')
     location = StringProperty(SCHEMA, 'location')
     name = StringProperty(SCHEMA, 'name', required=True)
     organization = Relation(SCHEMA, 'organizer')
@@ -24,18 +34,12 @@ class Meeting(schema.Event):
     absentee = Relation(SCHEMA, 'absentee')
     invitee = Relation(SCHEMA, 'invitee')
 
-    class Meta:
-        namespace = MEETING
-
 
 class Amendment(opengov.Motion):
     """A proposal to modify another proposal. Subclass of
     :class:`.opengov.Motion`
     """
     amends = Relation(MEETING, 'amends')
-
-    class Meta:
-        namespace = MEETING
 
 
 class AgendaItem(schema.Event):
@@ -53,26 +57,51 @@ class AgendaItem(schema.Event):
     absentee = Relation(SCHEMA, 'absentee')
     agenda = Relation(MEETING, 'agenda')
 
-    class Meta:
-        namespace = MEETING
-        legacy_type = 'event'
-
 
 # Result Individuals
-ResultFail = Individual(OPENGOV, 'ResultFail')
-ResultPass = Individual(OPENGOV, 'ResultPass')
-ResultKept = Individual(MEETING, 'ResultKept')
+class ResultKept(Individual):
+    """When a proposal is kept for later processing"""
+    pass
 
-ResultPostponed = Individual(MEETING, 'ResultPostponed')
-ResultWithdrawn = Individual(MEETING, 'ResultWithdrawn')
-ResultExpired = Individual(MEETING, 'ResultExpired')
-ResultDiscussed = Individual(MEETING, 'ResultDiscussed')
-ResultPublished = Individual(MEETING, 'ResultPublished')
 
-# VoteOption Individuals
-VoteOptionYes = Individual(OPENGOV, 'VoteOptionYes')
-VoteOptionNo = Individual(OPENGOV, 'VoteOptionNo')
-VoteOptionAbstain = Individual(OPENGOV, 'VoteOptionAbstain')
-VoteOptionAbsent = Individual(OPENGOV, 'VoteOptionAbsent')
-VoteOptionNotVoting = Individual(OPENGOV, 'VoteOptionNotVoting')
-VoteOptionPaired = Individual(OPENGOV, 'VoteOptionPaired')
+class ResultPostponed(Individual):
+    """When a proposal is postponed to a later (unspecified) moment"""
+    pass
+
+
+class ResultWithdrawn(Individual):
+    """When a proposal is withdrawn by its author"""
+    pass
+
+
+class ResultExpired(Individual):
+    """When a proposal has been expired"""
+    pass
+
+
+class ResultDiscussed(Individual):
+    """When a proposal has been discussed"""
+    pass
+
+
+class ResultPublished(Individual):
+    """When a proposal has been published"""
+    pass
+
+
+# EventStatusType Individuals
+class EventCompleted(Individual):
+    """The event has taken place and has been completed"""
+    pass
+
+
+class EventConfirmed(Individual):
+    """The event will take place but has not been
+    :class:`.schema.EventScheduled` yet
+    """
+    pass
+
+
+class EventUnconfirmed(Individual):
+    """The event is not :class:`EventConfirmed` or is inactive"""
+    pass

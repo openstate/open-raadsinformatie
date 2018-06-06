@@ -1,7 +1,7 @@
-from .property import Instance, StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation
 from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
+from .property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, InlineRelation, Relation
 from .exceptions import SerializerError, SerializerNotFound, RequiredProperty
-from .definitions.namespaces import FOAF, NCAL, OPENGOV, ORG, COUNCIL, GOVID, META, OWL, \
+from .definitions import FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, \
     PERSON, SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME, ORI
 
 
@@ -34,7 +34,7 @@ class BaseSerializer(object):
 
             if value:
                 props_list[namespaced] = self.serialize_prop(definition, value)
-            elif definition.required:
+            elif definition.required and not self.model.Meta.skip_validation:
                 raise RequiredProperty("Property '%s' is required for %s" %
                                        (name, self.model.get_prefix_uri()))
         return props_list
@@ -43,10 +43,10 @@ class BaseSerializer(object):
         raise NotImplementedError
 
     def serialize_prop(self, prop, value):
-        if type(prop) == Instance:
-            return value.get_prefix_uri()
+        # if type(prop) == Instance:
+        #     return value.get_prefix_uri()
 
-        elif type(prop) == StringProperty:
+        if type(prop) == StringProperty:
             return value
 
         elif type(prop) == IntegerProperty:
@@ -62,7 +62,7 @@ class BaseSerializer(object):
         elif type(prop) == InlineRelation:
             props = list()
             for _, item in iterate(value):
-                #props.append('%s:%s' % (ORI.prefix, item.get_ori_id()))
+                #props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
                 props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
 
             if len(props) == 1:
@@ -72,7 +72,7 @@ class BaseSerializer(object):
         elif type(prop) == Relation:
             props = list()
             for _, item in iterate(value):
-                props.append('%s:%s' % (ORI.prefix, item.get_ori_id()))
+                props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
                 #props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
 
             if len(props) == 1:
@@ -93,7 +93,7 @@ class JsonLDSerializer(BaseSerializer):
             }
 
             # Temporary solution to include all namespaces in @context
-            for ns in [FOAF, NCAL, OPENGOV, ORG, COUNCIL, GOVID, META, OWL, PERSON,
+            for ns in [FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, PERSON,
                        SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME]:
                 context[ns.prefix] = {
                     '@id': ns.namespace,
@@ -134,7 +134,7 @@ class JsonSerializer(BaseSerializer):
         elif type(prop) == Relation:
             props = list()
             for _, item in iterate(value):
-                props.append(item.get_ori_id())
+                props.append(item.get_ori_identifier())
 
             if len(props) == 1:
                 return props[0]

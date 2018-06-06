@@ -1,21 +1,18 @@
+"""The classes in this owl module are derived from and described by:
+http://www.w3.org/2002/07/owl#
+"""
+
 from ..model import ModelBase
 from ..property import InlineRelation, StringProperty, ArrayProperty
-from .namespaces import OWL, META, DCTERMS, MEETING, EXT, NCAL
+from . import META, DCTERMS, MEETING, NCAL
 
 
 class Thing(ModelBase):
-    ori_identifier = StringProperty(EXT, 'ori/identifier')
-    identifier = InlineRelation(DCTERMS, 'identifier')  # todo different property?
+    derived_from = InlineRelation(DCTERMS, 'derivedFrom')  # todo prov onto
     classification = ArrayProperty(NCAL, 'categories')  # todo fix with popolo
     meta = InlineRelation(META, 'meta')
-
-    class Meta:
-        namespace = OWL
 
 
 class Identifier(Thing):
     identifier = StringProperty(DCTERMS, 'identifier')
     represent = StringProperty(MEETING, 'represent')
-
-    class Meta:
-        namespace = OWL

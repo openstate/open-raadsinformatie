@@ -1,7 +1,12 @@
+"""The classes in this opengov module are derived from and described by:
+http://www.w3.org/ns/opengov#
+"""
+
 import owl
 import schema
 from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation
-from .namespaces import OPENGOV, SCHEMA, MEETING, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
+from ..model import Individual
+from . import OPENGOV, SCHEMA, MEETING, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
 
 
 class Motion(owl.Thing):
@@ -17,9 +22,6 @@ class Motion(owl.Thing):
     text = StringProperty(SCHEMA, 'text')
     vote_events = Relation(OPENGOV, 'voteEvent')
 
-    class Meta:
-        namespace = OPENGOV
-
 
 class VoteEvent(schema.Event):
     classification = ArrayProperty(NCAL, 'categories')
@@ -31,9 +33,6 @@ class VoteEvent(schema.Event):
     legislative_session = Relation(SCHEMA, 'superEvent')
     votes = Relation(OPENGOV, 'vote')
     counts = Relation(OPENGOV, 'count')
-
-    class Meta:
-        namespace = OPENGOV
 
 
 class Speech(owl.Thing):
@@ -48,9 +47,6 @@ class Speech(owl.Thing):
     start_date = DateTimeProperty(SCHEMA, 'startDate')
     text = StringProperty(SCHEMA, 'text')
     video = StringProperty(SCHEMA, 'video')
-
-    class Meta:
-        namespace = OPENGOV
 
 
 class SpeechAnswer(Speech):
@@ -76,9 +72,6 @@ class SpeechSummary(Speech):
 class Count(owl.Thing):
     value = IntegerProperty(RDF, 'value')
     group = Relation(OPENGOV, 'group')
-
-    class Meta:
-        namespace = OPENGOV
 
 
 class YesCount(Count):
@@ -112,9 +105,6 @@ class Vote(owl.Thing):
     vote_event = Relation(OPENGOV, 'voteEvent')
     option = StringProperty(OPENGOV, 'voteOption')
 
-    class Meta:
-        namespace = OPENGOV
-
 
 class ContactDetail(owl.Thing):
     type = StringProperty(RDF, 'type')
@@ -124,13 +114,52 @@ class ContactDetail(owl.Thing):
     note = StringProperty(SKOS, 'note')
     valid_until = DateTimeProperty(OPENGOV, 'validUntil')
 
-    class Meta:
-        namespace = OPENGOV
-
 
 class Result(owl.Thing):
     text = StringProperty(SCHEMA, 'text')
     vote_event = Relation(OPENGOV, 'voteEvent')
 
-    class Meta:
-        namespace = OPENGOV
+
+# Result Individuals
+class ResultFail(Individual):
+    """When a decision is made in favor of a proposal"""
+    pass
+
+
+class ResultPass(Individual):
+    """When a decision is made against a proposal"""
+    pass
+
+
+# VoteOption Individuals
+class VoteOptionYes(Individual):
+    """When an individual votes in favor of a proposal"""
+    pass
+
+
+class VoteOptionNo(Individual):
+    """When an individual votes against a proposal"""
+    pass
+
+
+class VoteOptionAbstain(Individual):
+    """When an individual abstained from voting"""
+    pass
+
+
+class VoteOptionAbsent(Individual):
+    """When an individual did not vote due to being absent"""
+    pass
+
+
+class VoteOptionNotVoting(Individual):
+    """When an individual is not voting"""
+    pass
+
+
+class VoteOptionPaired(Individual):
+    """When an individual entered a reciprocal agreement with another voter by
+    which the voter abstains if the other is unable to vote. It may not be
+    known which two members form a pair.
+    """
+    pass

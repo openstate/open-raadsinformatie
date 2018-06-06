@@ -1,7 +1,11 @@
+"""The classes in this org module are derived from and described by:
+http://www.w3.org/ns/org#
+"""
+
 import foaf
 import owl
 from ..property import StringProperty, DateTimeProperty, Relation
-from .namespaces import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
+from . import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
 
 
 class Membership(owl.Thing):
@@ -11,13 +15,9 @@ class Membership(owl.Thing):
     start_date = DateTimeProperty(SCHEMA, 'validFrom')
     end_date = DateTimeProperty(OPENGOV, 'validUntil')
 
-    class Meta:
-        namespace = ORG
-
 
 class Role(owl.Thing):
-    class Meta:
-        namespace = ORG
+    pass
 
 
 class Organization(foaf.Agent):
@@ -34,6 +34,3 @@ class Organization(foaf.Agent):
     image = StringProperty(SCHEMA, 'image')
     alt_label = StringProperty(SKOS, 'altLabel')
     name = StringProperty(SKOS, 'prefLabel')
-
-    class Meta:
-        namespace = ORG

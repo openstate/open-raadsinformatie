@@ -1,6 +1,10 @@
+"""The classes in this person module are derived from and described by:
+http://www.w3.org/ns/person#
+"""
+
 import foaf
 from ..property import StringProperty, DateTimeProperty, Relation
-from .namespaces import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO, ORG
+from . import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
 
 
 class Person(foaf.Agent):
@@ -22,6 +26,3 @@ class Person(foaf.Agent):
 
     def verbose_name(self):
         self.name = '%s %s' % (self.given_name, self.family_name)
-
-    class Meta:
-        namespace = PERSON

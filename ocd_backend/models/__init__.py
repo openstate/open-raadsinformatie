@@ -1,6 +1,6 @@
 import definitions.meeting
 import definitions.foaf
-import definitions.ext
+import definitions.mapping
 import definitions.meta
 import definitions.ncal
 import definitions.opengov
@@ -18,9 +18,18 @@ import definitions.schema
 Meeting = definitions.meeting.Meeting
 AgendaItem = definitions.meeting.AgendaItem
 Amendment = definitions.meeting.Amendment
-Bill = definitions.meeting.Bill
-PrivateMembersBill = definitions.meeting.PrivateMembersBill
-Petition = definitions.meeting.Petition
+EventUnconfirmed = definitions.meeting.EventUnconfirmed
+EventConfirmed = definitions.meeting.EventConfirmed
+
+# https://argu.co/voc/mapping/
+OriIdentifier = definitions.mapping.OriIdentifier
+RunIdentifier = definitions.mapping.RunIdentifier
+MetadataIdentifier = definitions.mapping.MetadataIdentifier
+IbabsIdentifier = definitions.mapping.IbabsIdentifier
+NotubizIdentifier = definitions.mapping.NotubizIdentifier
+CbsIdentifier = definitions.mapping.CbsIdentifier
+AlmanakOrganizationName = definitions.mapping.AlmanakOrganizationName
+GGMIdentifier = definitions.mapping.GGMIdentifier
 
 # http://www.w3.org/ns/opengov#
 VoteEvent = definitions.opengov.VoteEvent
@@ -38,8 +47,6 @@ MediaObject = definitions.schema.MediaObject
 ImageObject = definitions.schema.ImageObject
 PropertyValue = definitions.schema.PropertyValue
 EventCancelled = definitions.schema.EventCancelled
-EventInactive = definitions.schema.EventInactive
-EventConfirmed = definitions.schema.EventConfirmed
 
 # http://www.w3.org/ns/person#
 Person = definitions.person.Person
