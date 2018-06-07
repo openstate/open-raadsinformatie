@@ -1,13 +1,13 @@
 import govid
 import owl
 import schema
-from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, Instance
+from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation, Instance
 from .namespaces import OPENGOV, SCHEMA, COUNCIL, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
 
 
 class Event(schema.Event):
     agenda = Relation(COUNCIL, 'agenda')
-    attachment = Relation(COUNCIL, 'attachment')
+    attachment = InlineRelation(COUNCIL, 'attachment')
     classification = ArrayProperty(NCAL, 'categories')  # todo fix with popolo
     motion = Relation(OPENGOV, 'motion')
     attendee = Relation(SCHEMA, 'attendee')

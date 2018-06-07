@@ -7,6 +7,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.items.notubiz_meeting import Meeting
 from ocd_backend.models import Event
 from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.models.serializers import get_serializer
 
 from . import ItemTestCase
 
@@ -42,12 +43,12 @@ class NotubizMeetingTestCase(ItemTestCase):
         self.meeting = json.loads(self.raw_item)
 
         self.model = self._instantiate_meeting().get_object_model()
-        self.namespaced_data = self.model.deflate(namespaces=True, props=True, rels=True)
-        self.not_namespaced_data = self.model.deflate(namespaces=False, props=True, rels=True)
+        self.namespaced_data = get_serializer()(self.model).deflate(namespaces=True, props=True, rels=True)
+        self.not_namespaced_data = get_serializer()(self.model).deflate(namespaces=False, props=True, rels=True)
 
         self.expected_namespaced_result = {
             'schema:name': u'Vergadering raadscommissie Financi\xebn 2018-02-08 13:30:00',
-            'govid:notubizIdentifier': u'458902',
+            'govid:notubizIdentifier': 458902,
             'schema:eventStatus': 'council:EventConfirmed',
             'ncal:categories': [u'Agenda'],
             'schema:startDate': 1518093000,
@@ -58,13 +59,13 @@ class NotubizMeetingTestCase(ItemTestCase):
                 {
                     'schema:isBasedOn': u'https://api.notubiz.nl/document/6183601/1',
                     'schema:name': u'Uitslagenlijst FIN 2018 02 08',
-                    'govid:notubizIdentifier': u'6183601',
+                    'govid:notubizIdentifier': 6183601,
                     'govid:oriIdentifier': u'2528bd4c4467ed8a93925848ec2f937166c24857'
                 },
                 {
                     'schema:isBasedOn': u'https://api.notubiz.nl/document/6268204/1',
                     'schema:name': u'Definitief verslag FIN 08 02 2018',
-                    'govid:notubizIdentifier': u'6268204',
+                    'govid:notubizIdentifier': 6268204,
                     'govid:oriIdentifier': u'f744bca176b6c070cf1374b87e33a6fac51d4d86'
                 }
             ],
@@ -97,7 +98,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'name': u'Vergadering raadscommissie Financi\xebn 2018-02-08 13:30:00',
             'classification': [u'Agenda'],
             'ori_identifier': u'47f08ad2e44e564f765169f338857d939897be79',
-            'notubiz_identifier': u'458902',
+            'notubiz_identifier': 458902,
             'start_date': 1518093000,
             'committee': u'43b0e0f2e1bcc2304c422dbe4abec9d74fb364eb',
             'organization': u'a91e0157bcfe56548f8e8082c5ffe1a5ac9a1288',
@@ -105,13 +106,13 @@ class NotubizMeetingTestCase(ItemTestCase):
                 {
                     'original_url': u'https://api.notubiz.nl/document/6183601/1',
                     'name': u'Uitslagenlijst FIN 2018 02 08',
-                    'notubiz_identifier': u'6183601',
+                    'notubiz_identifier': 6183601,
                     'ori_identifier': u'2528bd4c4467ed8a93925848ec2f937166c24857'
                 },
                 {
                     'original_url': u'https://api.notubiz.nl/document/6268204/1',
                     'name': u'Definitief verslag FIN 08 02 2018',
-                    'notubiz_identifier': u'6268204',
+                    'notubiz_identifier': 6268204,
                     'ori_identifier': u'f744bca176b6c070cf1374b87e33a6fac51d4d86'
                 }
             ],
@@ -135,7 +136,8 @@ class NotubizMeetingTestCase(ItemTestCase):
                 u'b425dfcadff8b7d716d3f05cfceb748d5b7f7863', u'84d58d430815b921439fe5b9b43fd62e8dddf2ab',
                 u'b51654a3f0dcaadbf003fa6b5168fdc0c68b823a', u'0bcb5f00554f6db86b10da1f7d4126975f383402',
                 u'e9be65e049b83a58c704976303fd1b308144b52d', u'40f9627c2e1c8aa53d097d115f13018ade514515',
-                u'826ae256c61962aa1aed67d5ba4ecaf3654d4a74'],
+                u'826ae256c61962aa1aed67d5ba4ecaf3654d4a74'
+            ],
         }
 
         self.rights = u'undefined'  # for now ...
@@ -160,8 +162,8 @@ class NotubizMeetingTestCase(ItemTestCase):
 
     def test_meeting_values_with_namespace(self):
         for _, prop in Event.definitions(props=True, rels=True):
-            full_name = prop.get_prefix_uri()
-            self.assertEqual(self.namespaced_data.get(full_name), self.expected_namespaced_result.get(full_name))
+            prefix_name = prop.get_prefix_uri()
+            self.assertEqual(self.namespaced_data.get(prefix_name), self.expected_namespaced_result.get(prefix_name))
 
     def test_meeting_values_without_namespace(self):
         for name, _ in Event.definitions(props=True, rels=True):
