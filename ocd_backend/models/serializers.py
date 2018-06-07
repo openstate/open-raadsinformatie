@@ -74,8 +74,8 @@ class BaseSerializer(object):
         elif type(prop) == Relation:
             props = list()
             for _, item in iterate(value):
-                props.append('%s:%s' % (ORI.prefix, item.get_ori_id()))
-                #props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
+                # props.append('%s:%s' % (ORI.prefix, item.get_ori_id()))
+                props.append(item.get_ori_id())
 
             if len(props) == 1:
                 return props[0]
