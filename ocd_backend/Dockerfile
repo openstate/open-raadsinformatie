@@ -23,7 +23,6 @@ RUN apk add --update \
 # Trick to redirect logs to process 1 when running multiple processes
 RUN adduser -D -H celery \
   && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/log \
-  && chown celery:celery /opt/ori /var/run/celery \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
 WORKDIR /opt/ori
@@ -33,6 +32,8 @@ COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY ocd_backend /opt/ori/ocd_backend
+
+RUN chown -R 1000:1000 /opt/ori /var/run/celery
 
 # Specify the volume last
 # https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
