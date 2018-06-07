@@ -107,6 +107,8 @@ class MeetingItem(EventItem, HttpRequestMixin):
     def get_combined_index_data(self):
         combined_index_data = {}
 
+        parent = self.original_item['parent']
+
         combined_index_data['id'] = unicode(self.get_object_id())
         combined_index_data['hidden'] = self.source_definition['hidden']
         combined_index_data['classification'] = u'Agendapunt'
@@ -122,7 +124,19 @@ class MeetingItem(EventItem, HttpRequestMixin):
             }
         ]
 
-        combined_index_data['parent_id'] = unicode(Meeting.get_meeting_id(self.original_item['parent']))
+        if parent.get('time'):
+            combined_index_data['start_date'] = datetime.strptime(
+                '%s %s' % (parent['date'], parent['time']),
+                '%Y%m%d %H:%M'
+            )
+
+        if parent.get('endtime') and parent['endtime'] != '0':
+            combined_index_data['end_date'] = datetime.strptime(
+                '%s %s' % (parent['date'], parent['endtime']),
+                '%Y%m%d %H:%M'
+            )
+
+        combined_index_data['parent_id'] = unicode(Meeting.get_meeting_id(parent))
         combined_index_data['name'] = self.original_item['title']
 
         if self.original_item.get('text'):
