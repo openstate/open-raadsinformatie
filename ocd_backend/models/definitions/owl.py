@@ -1,18 +1,17 @@
-import govid
+"""The classes in this owl module are derived from and described by:
+http://www.w3.org/2002/07/owl#
+"""
 
-from ..model import ModelBase
-from ..property import Relation
-from .namespaces import OWL, META
+from ocd_backend.models.definitions import Meta, Dcterms, Meeting, Ncal, Owl
+from ocd_backend.models.model import Model
+from ocd_backend.models.properties import Relation, StringProperty, ArrayProperty
 
 
-class Thing(ModelBase):
-    ori_identifier = govid.ori_identifier
-    ggm_identifier = govid.ggm_identifier
-    ibabs_identifier = govid.ibabs_identifier
-    notubiz_identifier = govid.notubiz_identifier
-    cbs_identifier = govid.cbs_identifier
+class Thing(Owl, Model):
+    classification = ArrayProperty(Ncal, 'categories')  # todo fix with popolo
+    meta = Relation(Meta, 'meta')
 
-    meta = Relation(META, 'meta')
 
-    class Meta:
-        namespace = OWL
+class Identifier(Thing):
+    identifier = StringProperty(Dcterms, 'identifier')
+    represent = StringProperty(Meeting, 'represent')

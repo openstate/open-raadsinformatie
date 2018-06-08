@@ -3,6 +3,8 @@ from datetime import datetime
 
 from ocd_backend.exceptions import FieldNotAvailable
 from ocd_backend.models import Metadata
+from ocd_backend.models.misc import Uri
+from ocd_backend.models.definitions import Mapping
 
 
 class BaseItem(object):
@@ -38,33 +40,34 @@ class BaseItem(object):
         self._store_object_data()
 
     def _construct_object_meta(self, processing_started=None):
-        meta = Metadata()
+        source_defaults = {
+            'source': 'ori/meta',
+            'source_id_key': 'identifier',
+            'organization': 'ori',
+        }
 
-        if not processing_started:
-            meta.processing_started = datetime.now()
-
-        meta.source_id = unicode(self.source_definition['id'])
-        meta.collection = self.get_collection()
-        meta.rights = self.get_rights()
-
-        self.meta = meta
+        # meta = Metadata(1)
+        #
+        # if not processing_started:
+        #     meta.processing_started = datetime.now()
+        #
+        # meta.source_id = unicode(self.source_definition['id'])
+        # meta.collection = self.get_collection()
+        # meta.rights = self.get_rights()
+        #
+        # self.meta = meta
 
     def _store_object_data(self):
         object_data = self.get_object_model()
-        object_data.meta = self.meta
+        # object_data.meta = self.meta
 
-        # Temporary fix for testing
-        if type(self).__name__[0:4] != 'Test':
-            object_data.save()
+        object_data.save()
 
         self.object_data = object_data
 
     def get_object_model(self):
         """Construct the document that should be inserted into the index
         belonging to the item's source.
-
-        :returns: a dict ready for indexing.
-        :rtype: dict
         """
         raise NotImplementedError
 

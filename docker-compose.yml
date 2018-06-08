@@ -5,8 +5,7 @@ services:
       context: .
       dockerfile: ocd_backend/Dockerfile
       cache_from:
-        - python:2.7-alpine
-        - openstatefoundation/open-raadsinformatie-backend
+        - openstatefoundation/open-raadsinformatie-backend:build-tmp
     image: openstatefoundation/open-raadsinformatie-backend
     links:
       - redis:redis
@@ -25,8 +24,7 @@ services:
       context: .
       dockerfile: ocd_frontend/Dockerfile
       cache_from:
-        - python:2.7-alpine
-        - openstatefoundation/open-raadsinformatie-frontend
+        - openstatefoundation/open-raadsinformatie-frontend:build-tmp
     image: openstatefoundation/open-raadsinformatie-frontend
     volumes:
       - oridata:/opt/ori/data

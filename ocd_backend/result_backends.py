@@ -72,3 +72,6 @@ class OCDRedisBackend(RedisBackend, OCDBackendMixin):
 
     def update_ttl(self, key, ttl=300):
         return self.client.expire(key, ttl)
+
+    def increment(self, key):
+        return self.client.incr(key)
