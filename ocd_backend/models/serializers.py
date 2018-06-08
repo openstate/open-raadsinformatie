@@ -21,9 +21,12 @@ def get_serializer(format=None):
 class BaseSerializer(object):
     def __init__(self, model):
         self.model = model
+        self.namespaces = False
 
     def deflate(self, namespaces=True, props=True, rels=False):
         """ Returns a serialized value for each model definition """
+        self.namespaces = namespaces
+
         props_list = dict()
         for name, definition in self.model.definitions(props=props, rels=rels):
             namespaced = name
@@ -63,7 +66,7 @@ class BaseSerializer(object):
             props = list()
             for _, item in iterate(value):
                 #props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
-                props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
+                props.append(type(self)(item).deflate(namespaces=self.namespaces, props=True, rels=True))
 
             if len(props) == 1:
                 return props[0]
