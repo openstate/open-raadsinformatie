@@ -16,7 +16,7 @@ class Meeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
         event = Event('notubiz_identifier', self.original_item['id'])
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
-        event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.start_date)
+        event.name = self.original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
         # event.description =
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
