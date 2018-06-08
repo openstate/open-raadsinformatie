@@ -151,7 +151,7 @@ class MediaEnricher(BaseEnricher):
         partial_fetch = self.enricher_settings.get('partial_media_fetch', False)
 
         content_type, content_length, media_file = self.fetch_media(
-            item.get_ori_id(),
+            item.get_ori_identifier(),
             item.original_url,
             partial_fetch
         )
@@ -160,9 +160,9 @@ class MediaEnricher(BaseEnricher):
         item.content_type = content_type
         item.size_in_bytes = content_length
 
-        enrich_tasks = item.Meta.enricher_task
+        enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, basestring):
-            enrich_tasks = [item.Meta.enricher_task]
+            enrich_tasks = [item.enricher_task]
 
         for task in enrich_tasks:
             # Seek to the beginning of the file before starting a task
@@ -172,7 +172,7 @@ class MediaEnricher(BaseEnricher):
             except UnsupportedContentType:
                 log.info('Skipping media enrichment task %s, '
                          'content-type %s (object_id: %s, url %s) is not '
-                         'supported.' % (task, content_type, item.get_ori_id(),
+                         'supported.' % (task, content_type, item.get_ori_identifier(),
                                          item.original_url))
                 continue
 

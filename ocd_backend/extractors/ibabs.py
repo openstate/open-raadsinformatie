@@ -81,6 +81,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             meeting_types[o.Id] = o.Description
         return meeting_types
 
+
     def run(self):
         meeting_count = 0
         meetings_skipped = 0

@@ -1,23 +1,29 @@
+"""The classes in this ontology are defined by Argu BV. More details, current
+definitions and information can be found here:
+https://argu.co/ns/meta#
+
+The purpose of this ontology is to define metadata information that describes
+ie. when the data was processed, what collection it belongs to rights apply to
+the data.
+"""
+
 import owl
-from ..property import StringProperty, DateTimeProperty
-from .namespaces import META, COUNCIL
+from ocd_backend.models.definitions import Meta, Meeting
+from ocd_backend.models.properties import StringProperty, DateTimeProperty
 
 
-class Metadata(owl.Thing):
+class Metadata(Meta, owl.Thing):
     # todo needs to be formalized in a ontology
-    status = StringProperty(META, 'status')
-    processing_started = DateTimeProperty(META, 'processingStarted')
-    source_id = StringProperty(META, 'sourceId')
-    collection = StringProperty(META, 'collection')
-    rights = StringProperty(META, 'rights')
+    status = StringProperty(Meta, 'status')
+    processing_started = DateTimeProperty(Meta, 'processingStarted')
+    source_id = StringProperty(Meta, 'sourceId')
+    collection = StringProperty(Meta, 'collection')
+    rights = StringProperty(Meta, 'rights')
 
-    class Meta:
-        namespace = META
+    skip_validation = True
 
 
-class Run(owl.Thing):
-    run_identifier = StringProperty(COUNCIL, 'runIdentifier')
+class Run(Meta, owl.Thing):
+    run_identifier = StringProperty(Meeting, 'runIdentifier')
 
-    class Meta:
-        namespace = META
-        temporary = False
+    skip_validation = True

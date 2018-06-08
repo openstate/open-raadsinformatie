@@ -1,5 +1,6 @@
 import datetime
 import glob
+import importlib
 import json
 import re
 from calendar import timegm
@@ -13,7 +14,7 @@ from dateutil.parser import parse
 from elasticsearch.helpers import scan, bulk
 from lxml import etree
 
-from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime, UnsupportedContentType
+from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
 
 
@@ -222,7 +223,7 @@ def load_object(path):
 
     m, name = path[:dot], path[dot + 1:]
     try:
-        mod = __import__(m, {}, {}, [''])
+        mod = importlib.import_module(m)
     except ImportError, e:
         raise ImportError("Error loading object '%s': %s" % (path, e))
 
@@ -381,15 +382,15 @@ def propagate_chain_get(terminal_node, timeout=None):
 
 
 def iterate(item, parent=None):
-    if type(item) == dict:
+    if isinstance(item, dict):
         for key, dict_item in item.items():
             for value in iterate(dict_item, key):
                 yield value
-    elif type(item) == list:
+    elif isinstance(item, list):
         for list_item in item:
             for value in iterate(list_item, parent):
                 yield value
-    elif type(item) == tuple:
+    elif isinstance(item, tuple):
         for tuple_item in item:
             for value in iterate(tuple_item, parent):
                 yield value
@@ -468,3 +469,7 @@ def localize_datetime(date):
     tz = pytz.timezone(TIMEZONE)
     return tz.localize(date)
 
+
+def doc_type(name):
+    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
