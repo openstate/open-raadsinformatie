@@ -381,15 +381,15 @@ def propagate_chain_get(terminal_node, timeout=None):
 
 
 def iterate(item, parent=None):
-    if type(item) == dict:
+    if isinstance(item, dict):
         for key, dict_item in item.items():
             for value in iterate(dict_item, key):
                 yield value
-    elif type(item) == list:
+    elif isinstance(item, list):
         for list_item in item:
             for value in iterate(list_item, parent):
                 yield value
-    elif type(item) == tuple:
+    elif isinstance(item, tuple):
         for tuple_item in item:
             for value in iterate(tuple_item, parent):
                 yield value

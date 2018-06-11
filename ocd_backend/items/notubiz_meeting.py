@@ -5,7 +5,7 @@ from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
-class NotubizMeeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+class NotubizMeeting(BaseItem):
     def get_rights(self):
         return u'undefined'
 
@@ -13,7 +13,8 @@ class NotubizMeeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMix
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        event = Meeting('notubiz_identifier', self.original_item['id'])
+        event = Meeting(NotubizIdentifier, self.original_item['id'], self.source_definition['municipality'])
+        #event.sourceDoc += (NotubizIdentifier, self.original_item['id'], event, 21312334223)
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
         event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.start_date)
@@ -21,17 +22,23 @@ class NotubizMeeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMix
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
 
-        event.organization = Organization.get_or_create(name=self.source_definition['municipality'])
-        event.organization.notubiz_identifier = self.original_item['organisation']['id']
+        # alkmaar/AlmanakOrganisationIdentifier/alkmaar (almanak_id)
+        #Organization.get_or_create('alkmaar', AlmanakOrganizationName, self.source_definition['municipality'])
+        # AlmanakOrganizationName('alkmaar', self.source_definition['municipality']).get_or_create()
 
-        event.committee = Organization.get_or_create(notubiz_identifier=self.original_item['gremium']['id'])
+        Organization(AlmanakOrganizationName('alkmaar', self.source_definition['municipality']))
+
+        event.organization = Organization.get_or_create(name=self.source_definition['municipality'])
+        event.organization.identifier = NotubizIdentifier(self.original_item['organisation']['id'])
+
+        event.committee = Organization.get_or_create(identifier=NotubizIdentifier(self.original_item['gremium']['id']))
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
             if not item['order']:
                 continue
 
-            agendaitem = AgendaItem.get_or_create(notubiz_identifier=item['id'])
+            agendaitem = AgendaItem.get_or_create(identifier=NotubizIdentifier(item['id']))
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             event.agenda.append(agendaitem)
 
@@ -41,13 +48,13 @@ class NotubizMeeting(BaseItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMix
         if self.original_item['canceled']:
             event.status = EventCancelled
         elif self.original_item['inactive']:
-            event.status = EventInactive
+            event.status = EventUnconfirmed
         else:
             event.status = EventConfirmed
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):
-            attachment = MediaObject('notubiz_identifier', doc['id'])
+            attachment = MediaObject(NotubizIdentifier, doc['id'])
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             event.attachment.append(attachment)

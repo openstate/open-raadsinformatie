@@ -9,7 +9,7 @@ from ocd_backend import settings, celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
-from ocd_backend.models import Run
+from ocd_backend.models import Run, RunIdentifier
 from ocd_backend.utils.misc import load_object, propagate_chain_get
 
 logger = get_source_logger('pipeline')
@@ -61,7 +61,7 @@ def setup_pipeline(source_definition):
 
     logger.debug('Starting run with identifier %s' % params['run_identifier'])
 
-    run = Run('run_identifier', params['run_identifier'])
+    run = Run(RunIdentifier, params['run_identifier'], 'ori')
     run.save()
     params['run_node'] = run
 

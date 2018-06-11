@@ -12,7 +12,7 @@ from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
 from ocd_backend.utils import json_encoder
 from ocd_backend.utils.misc import iterate, get_sha1_hash
-from ocd_backend.models.serializers import get_serializer
+from ocd_backend.models.serializers import get_serializer_class
 
 log = get_source_logger('loader')
 
@@ -66,13 +66,13 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
     def load_item(self, doc):
-        body = json_encoder.encode(get_serializer(format='json-ld')(doc).serialize())
+        body = json_encoder.encode(get_serializer_class(format='json-ld')(doc).serialize())
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.index(index=self.index_name, doc_type=doc.get_popolo_type(),
-                            body=body, id=doc.get_ori_id())
+                            body=body, id=doc.get_ori_identifier())
 
         for prop, value in doc.properties(props=True, rels=True):
             try:
@@ -85,7 +85,7 @@ class ElasticsearchLoader(BaseLoader):
                 continue
 
             url_doc = {
-                'ori_identifier': value.get_ori_id(),
+                'ori_identifier': value.get_ori_identifier(),
                 'original_url': value.original_url,
                 'content_type': value.content_type,
                 'file_name': value.name,
@@ -102,17 +102,17 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(get_serializer(format='json-ld')(doc).serialize())
+        body = json_encoder.encode(get_serializer_class(format='json-ld')(doc).serialize())
 
         if doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_id(),
+            id=doc.get_ori_identifier(),
             index=self.index_name,
             doc_type=doc.get_popolo_type(),
             body={'doc': body},
@@ -133,11 +133,11 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
             log.info('Empty document ....')
             return
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_id(),
+            id=doc.get_ori_identifier(),
             index=self.index_name,
             doc_type=doc.get_popolo_type(),
             body={
@@ -154,9 +154,9 @@ class DummyLoader(BaseLoader):
 
     def load_item(self, doc):
         log.debug('=' * 50)
-        log.debug('%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4))
+        log.debug('%s %s %s' % ('=' * 4, doc.get_ori_identifier(), '=' * 4))
         log.debug('%s %s %s' % ('-' * 20, 'doc', '-' * 25))
-        log.debug(get_serializer(format='json')(doc).serialize())
+        log.debug(get_serializer_class(format='json')(doc).serialize())
         log.debug('=' * 50)
 
     @staticmethod
@@ -209,4 +209,4 @@ class PopitLoader(BaseLoader):
             headers=headers, data=json.dumps(item, default=json_serial))
 
     def load_item(self, doc):
-        resp = self._create_or_update_item(doc, doc.get_ori_id())
+        resp = self._create_or_update_item(doc, doc.get_ori_identifier())

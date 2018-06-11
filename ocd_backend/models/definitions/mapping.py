@@ -7,6 +7,7 @@ suppliers. This way, our data contains references to the original data in the
 spirit of linked open data.
 """
 from ..model import Individual, ModelBase
+from prov import Entity
 
 
 class OriIdentifier(Individual):

@@ -8,7 +8,6 @@ from . import META, DCTERMS, MEETING, NCAL
 
 
 class Thing(ModelBase):
-    derived_from = InlineRelation(DCTERMS, 'derivedFrom')  # todo prov onto
     classification = ArrayProperty(NCAL, 'categories')  # todo fix with popolo
     meta = InlineRelation(META, 'meta')
 

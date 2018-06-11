@@ -5,7 +5,7 @@ from .definitions import FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, 
     PERSON, SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME, ORI
 
 
-def get_serializer(format=None):
+def get_serializer_class(format=None):
     if not format:
         serializer = BaseSerializer
     elif format == 'json-ld':
@@ -29,13 +29,9 @@ class BaseSerializer(object):
 
         props_list = dict()
         for name, definition in self.model.definitions(props=props, rels=rels):
-            namespaced = name
-            if namespaces:
-                namespaced = definition.get_prefix_uri()
-
             value = self.model.__dict__.get(name, None)
-
             if value:
+                namespaced = self.model.get_uri(definition)
                 props_list[namespaced] = self.serialize_prop(definition, value)
             elif definition.required and not self.model.Meta.skip_validation:
                 raise RequiredProperty("Property '%s' is required for %s" %
@@ -75,6 +71,10 @@ class BaseSerializer(object):
         elif type(prop) == Relation:
             props = list()
             for _, item in iterate(value):
+                from .model import Relationship
+                if isinstance(item, Relationship):
+                    item = item.model
+
                 props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
                 #props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
 
@@ -84,6 +84,10 @@ class BaseSerializer(object):
 
         else:
             raise SerializerError("")
+
+
+class Neo4jSerializer(BaseSerializer):
+    pass
 
 
 class JsonLDSerializer(BaseSerializer):
@@ -105,7 +109,8 @@ class JsonLDSerializer(BaseSerializer):
         return context
 
     def serialize(self):
-        deflated = self.deflate(namespaces=False, props=True, rels=True)
+        self.model.set_uri_format('name')
+        deflated = self.deflate(props=True, rels=True)
         deflated['@context'] = self.get_context()
         return deflated
 
@@ -115,13 +120,14 @@ class JsonLDSerializer(BaseSerializer):
 
 class JsonSerializer(BaseSerializer):
     def serialize(self):
-        return self.deflate(namespaces=False, props=True, rels=True)
+        self.model.set_uri_format('name')
+        return self.deflate(props=True, rels=True)
 
     def serialize_prop(self, prop, value):
-        if type(prop) == Instance:
-            return value.get_full_uri()
+        # if type(prop) == Instance:
+        #     return value.get_full_uri()
 
-        elif type(prop) == StringProperty:
+        if type(prop) == StringProperty:
             return value
 
         elif type(prop) == IntegerProperty:

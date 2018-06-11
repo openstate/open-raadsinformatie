@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 from ocd_backend.exceptions import FieldNotAvailable
-from ocd_backend.models import Metadata
+from ocd_backend.models import Metadata, MetadataIdentifier
 
 
 class BaseItem(object):
@@ -38,7 +38,7 @@ class BaseItem(object):
         self._store_object_data()
 
     def _construct_object_meta(self, processing_started=None):
-        meta = Metadata()
+        meta = Metadata(MetadataIdentifier, 1, 'ori')
 
         if not processing_started:
             meta.processing_started = datetime.now()
@@ -51,7 +51,7 @@ class BaseItem(object):
 
     def _store_object_data(self):
         object_data = self.get_object_model()
-        object_data.meta = self.meta
+        #object_data.meta = self.meta
 
         # Temporary fix for testing
         if type(self).__name__[0:4] != 'Test':

@@ -16,6 +16,9 @@ class PropertyBase(object):
     def get_prefix_uri(self):
         return '%s:%s' % (self.ns.prefix, self.local_name)
 
+    def get_name(self):
+        return self.local_name
+
     @staticmethod
     def sanitize(value):
         return value
@@ -48,9 +51,9 @@ class ArrayProperty(Property):
     pass
 
 
-class Relation(PropertyBase):
+class InlineRelation(Property):
     pass
 
 
-class InlineRelation(Relation):
+class Relation(PropertyBase):
     pass
