@@ -3,6 +3,8 @@ from pprint import pprint
 import re
 from hashlib import sha1
 
+from xml.sax._exceptions import SAXParseException
+
 import requests
 from suds.client import Client
 
@@ -91,13 +93,16 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             log.info("%s: Now processing meetings from %s to %s" % (
                 self.source_definition['sitename'], start_date, end_date,))
 
-            meetings = self.client.service.GetMeetingsByDateRange(
-                Sitename=self.source_definition['sitename'],
-                StartDate=start_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                EndDate=end_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                MetaDataOnly=False)
+            try:
+                meetings = self.client.service.GetMeetingsByDateRange(
+                    Sitename=self.source_definition['sitename'],
+                    StartDate=start_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                    EndDate=end_date.strftime('%Y-%m-%dT%H:%M:%S'),
+                    MetaDataOnly=False)
 
-            meeting_types = self._meetingtypes_as_dict()
+                meeting_types = self._meetingtypes_as_dict()
+            except SAXParseException:
+                continue
 
             if meetings.Meetings:
                 for meeting in meetings.Meetings[0]:
