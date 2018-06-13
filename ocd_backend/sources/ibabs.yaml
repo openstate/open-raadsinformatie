@@ -390,7 +390,6 @@ ibabs:
     key: wassenaar
     almanak_id: 40204
     sitename: Duivenvoorde
-    include: ".*[Ww]assenaar$"
     exclude: ".*[Vv]oorschoten$"
     <<: *ibabs
 
