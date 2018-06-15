@@ -4,7 +4,7 @@ http://www.w3.org/ns/opengov#
 
 import owl
 import schema
-from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation
+from ..properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation
 from ..model import Individual
 from . import OPENGOV, SCHEMA, MEETING, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
 

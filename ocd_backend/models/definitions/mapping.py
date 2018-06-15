@@ -6,7 +6,7 @@ The purpose of this ontology is to define identifiers that are used by data
 suppliers. This way, our data contains references to the original data in the
 spirit of linked open data.
 """
-from ..model import Individual, ModelBase
+from ..model import Individual, Model
 from prov import Entity
 
 

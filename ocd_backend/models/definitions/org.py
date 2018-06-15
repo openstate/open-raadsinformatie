@@ -4,7 +4,7 @@ http://www.w3.org/ns/org#
 
 import foaf
 import owl
-from ..property import StringProperty, DateTimeProperty, Relation
+from ..properties import StringProperty, DateTimeProperty, Relation, OrderedRelation
 from . import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
 
 
@@ -26,7 +26,7 @@ class Organization(foaf.Agent):
     abstract = StringProperty(DCTERMS, 'abstract')
     description = StringProperty(DCTERMS, 'description')
     classification = StringProperty(ORG, 'classification')
-    parent = Relation(ORG, 'subOrganizationOf')
+    parent = OrderedRelation(ORG, 'subOrganizationOf')
     other_names = StringProperty(OPENGOV, 'otherName')
     links = StringProperty(RDF, 'seeAlso')
     dissolution_date = StringProperty(SCHEMA, 'dissolutionDate')

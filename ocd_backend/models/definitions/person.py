@@ -3,7 +3,7 @@ http://www.w3.org/ns/person#
 """
 
 import foaf
-from ..property import StringProperty, DateTimeProperty, Relation
+from ..properties import StringProperty, DateTimeProperty, Relation
 from . import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
 
 

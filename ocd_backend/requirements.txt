@@ -15,5 +15,5 @@ suds==0.4
 tika==1.13.1
 translitcodec==0.4.0
 bugsnag
-py2neo==3.1.2
+py2neo==4.0.0
 python-json-logger==0.1.8

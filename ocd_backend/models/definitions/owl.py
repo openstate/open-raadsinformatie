@@ -2,12 +2,12 @@
 http://www.w3.org/2002/07/owl#
 """
 
-from ..model import ModelBase
-from ..property import InlineRelation, StringProperty, ArrayProperty
+from ..model import Model
+from ..properties import InlineRelation, StringProperty, ArrayProperty
 from . import META, DCTERMS, MEETING, NCAL
 
 
-class Thing(ModelBase):
+class Thing(Model):
     classification = ArrayProperty(NCAL, 'categories')  # todo fix with popolo
     meta = InlineRelation(META, 'meta')
 

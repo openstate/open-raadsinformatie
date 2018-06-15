@@ -1,38 +1,27 @@
 # -*- coding: utf-8 -*-
 
-import os
 import re
-from hashlib import sha1
 
-from py2neo import Graph, ConstraintError
-from .cypher import cypher_escape, cypher_repr
-
-import property
+import properties
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate, load_object
 from ocd_backend import celery_app
-from .exceptions import RequiredProperty, MissingProperty, QueryResultError, ValidationError
-from .property import StringProperty, IntegerProperty, Relation
+from .exceptions import RequiredProperty, MissingProperty, ValidationError
+from .properties import StringProperty, IntegerProperty, Relation
 from .definitions import MAPPING, PROV
-from .serializers import get_serializer_class
-
-graph = None
-
-
-def get_graph():
-    global graph
-    if graph:
-        return graph
-    graph = Graph(NEO4J_URL)
-    return graph
+from .database import Neo4jDatabase
+from .serializers import Neo4jSerializer
 
 
 class ModelMetaclass(type):
+    db_class = Neo4jDatabase
+    serializer_class = Neo4jSerializer
+
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
         definitions = dict()
         for key, value in list(attrs.items()):
-            if isinstance(value, property.PropertyBase):
+            if isinstance(value, properties.PropertyBase):
                 definitions[key] = value
                 attrs.pop(key)
         attrs['__definitions__'] = definitions
@@ -51,6 +40,10 @@ class ModelMetaclass(type):
         #                      ' subclass of PropertyBase' % (key, type(attr).__name__))
 
         new_class = super(ModelMetaclass, mcs).__new__(mcs, name, bases, attrs)
+
+        new_class.serializer = mcs.serializer_class()
+        new_class.db = mcs.db_class(new_class)
+
 
         # Walk through the MRO.
         for base in reversed(new_class.__mro__):
@@ -76,9 +69,8 @@ class ModelMetaclass(type):
         return new_class
 
 
-class ModelBase(object):
+class Model(object):
     __metaclass__ = ModelMetaclass
-    __uri_format__ = 'name'
 
     # Top-level definitions
     ori_identifier = IntegerProperty(MAPPING, 'ori/identifier')
@@ -104,78 +96,15 @@ class ModelBase(object):
 
     @classmethod
     def get_full_uri(cls):
-        return '%s:%s' % (cls.__namespace__.namespace, cls.get_name())
-
-    @classmethod
-    def get_uri(cls, klass=None):
-        if not klass:
-            klass = cls
-
-        if cls.__uri_format__ == 'full':
-            return klass.get_full_uri()
-        elif cls.__uri_format__ == 'prefix':
-            return klass.get_prefix_uri()
-        else:
-            return klass.get_name()
-
-    @classmethod
-    def set_uri_format(cls, uri_format):
-        if uri_format not in ['full', 'prefix', 'name']:
-            raise ValueError("Not a valid uri_format. Choose 'full', 'prefix' or 'name'")
-        cls.__uri_format__ = uri_format
-
-    @classmethod
-    def get_or_create(cls, identifier_object, **kwargs):
-        if len(kwargs) < 1:
-            raise TypeError('get() takes exactly 1 keyword-argument')
-
-        definitions = dict(cls.definitions(props=True, rels=True))
-        params = list()
-        props = list()
-        for name, value in kwargs.items():
-            try:
-                identifier = definitions[name].get_prefix_uri() #todo get_uri()
-                props.append((name, value,))
-                params.append(
-                    '`%(key)s`: \'%(value)s\'' % {
-                        'key': identifier,
-                        'value': value,
-                    }
-                )
-            except KeyError:
-                raise MissingProperty("Cannot query '%s' since it's not defined in %s" % (name, cls.__name__))
-
-        # todo lazy returning only the id, instead everything must be inflated
-        query = 'MATCH (n {%s}) RETURN n.`govid:oriIdentifier` AS n' % ', '.join(params)
-        try:
-            result = get_graph().data(query)
-        except ConstraintError, e:
-            raise
-
-        if len(result) > 1:
-            raise QueryResultError('The number of results is greater than one!')
-
-        if len(result) < 1:
-            instance = cls()
-            return instance
-
-        return cls.inflate({'govid:oriIdentifier': result[0]['n']})
-
-    @classmethod
-    def labels(cls):
-        return [
-            scls.get_uri()
-            for scls in cls.mro()
-            if issubclass(scls, ModelBase) and scls != ModelBase and scls != Individual
-        ]
+        return '%s%s' % (cls.__namespace__.namespace, cls.get_name())
 
     @classmethod
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
         for name, definition in cls.__definitions__.items():  # pylint: disable=no-member
-            if (props and isinstance(definition, property.Property) or
-                    (rels and isinstance(definition, property.Relation))):
+            if (props and isinstance(definition, properties.Property) or
+                    (rels and isinstance(definition, properties.Relation))):
                 props_list.append((name, definition,))
         return props_list
 
@@ -187,7 +116,7 @@ class ModelBase(object):
             return
 
     @classmethod
-    def inflate(cls, deflated_props):
+    def inflate(cls, **deflated_props):
         properties = dict()
         for full_uri, value in deflated_props.items():
             definitions_mapping = {v.get_full_uri(): k for k, v in cls.definitions()}
@@ -210,9 +139,18 @@ class ModelBase(object):
         #instance.__temporary__ = True
         return instance
 
+    # def serializer(self):
+    #     if not self.__serializer__:
+    #         self.__serializer__ = type(self).serializer_class(self)
+    #
+    #     return self.__serializer__
+
     def __init__(self, identifier_class=None, source_id=None, organization=None):
         self.__temporary__ = None
         self.__rel_params__ = None #todo
+        self.__serializer__ = None
+
+        #self.db = type(self).db_class(self)
 
         if identifier_class and (not source_id or not organization):
             raise MissingProperty("The identifier_value has not been given")
@@ -240,7 +178,7 @@ class ModelBase(object):
         if definition:
             value = definition.sanitize(value)
 
-        super(ModelBase, self).__setattr__(key, value)
+        super(Model, self).__setattr__(key, value)
 
     def __iter__(self):
         for key, value in self.__dict__.items():
@@ -288,161 +226,35 @@ class ModelBase(object):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:2] != '__'}):
-            definition = self.__definitions__[name]  # pylint: disable=no-member
-            if (props and not isinstance(prop, ModelBase)) or (rels and isinstance(prop, ModelBase)):
-                props_list.append((self.get_uri(definition), prop,))
+            definition = self.get_definition(name)
+            if (props and not isinstance(prop, Model)) or \
+                    (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
+                props_list.append((self.serializer.get_uri(definition), prop,))
+        return props_list
+
+    def deflate(self, props=True, rels=False):
+        """ Returns a serialized value for each model definition """
+        props_list = dict()
+        for name, definition in self.definitions(props=props, rels=rels):
+            value = self.__dict__.get(name, None)
+            if value:
+                namespaced = self.serializer.get_uri(definition)
+                props_list[namespaced] = self.serializer.serialize_prop(definition, value)
+            elif definition.required and not self.Meta.skip_validation:
+                raise RequiredProperty("Property '%s' is required for %s" %
+                                       (name, self.get_prefix_uri()))
         return props_list
 
     def save(self):
-        # if not hasattr(self, 'source_locator'):
-        #     raise RequiredProperty("Required property 'source_locator' has not been set")
-        self.update()
-        #self.replace()
-        self.attach_recursive(self)
-        return self
+        db = type(self).db_class(self)
+        db.replace(self)
+        db.attach_recursive(self)
 
-    @staticmethod
-    def attach_recursive(model):
-        for key, prop in model.properties(rels=True, props=False):
-            model.attach(key, prop)
-
-            # End the recursive loop when self-referencing
-            if model != prop:
-                model.attach_recursive(prop)
-
-    @classmethod
-    def get(cls, **kwargs):
-        if len(kwargs) < 1:
-            raise TypeError('get() takes exactly 1 keyword-argument')
-
-        property_map = dict()
-        for name, value in kwargs.items():
-            try:
-                identifier = cls.get_definition(name).get_full_uri()
-                property_map[identifier] = value
-            except KeyError:
-                raise MissingProperty("Cannot query '%s' since it's not defined in %s" % (name, cls.__name__))
-
-        label_string = ":".join(cypher_escape(label) for label in cls.labels())
-
-        clauses = list()
-        clauses.append("MATCH (n :%s %s) RETURN n" % (label_string, cypher_repr(property_map)))
-
-        statement = "\n".join(clauses)
-
-        tx = get_graph().begin()
-        cursor = tx.run(statement)
-        tx.commit()
-
-        result = cursor.data()
-
-        if len(result) > 1:
-            raise QueryResultError('The number of results is greater than one!')
-
-        inflated = cls.inflate({k: v for k, v in result[0]['n'].items()})
-        print
-
-    def update(self):
-        label_string = ":".join(cypher_escape(label) for label in self.labels())
-
-        #self.get(ori_identifier=135)
-
-        #identifier = self.get_definition('ori_identifier').get_prefix_uri()
-        #property_map = {identifier: self.get_ori_identifier()}
-        property_map = get_serializer_class()(self).deflate(namespaces='full', props=True, rels=False)
-
-        clauses = list()
-        clauses.append("MERGE (n :%s %s)" % (label_string, cypher_repr(property_map)))
-        #clauses.append("MERGE (m :%s %s)" % (label_string, ''))
-        #clauses.append("MERGE (n)-[:delta]->(m)")
-
-        statement = "\n".join(clauses)
-
-        tx = get_graph().begin()
-        res = tx.run(statement)
-        tx.commit()
-
-        print
-
-    def replace(self):
-        query = '''
-        MERGE (n :`%(labels)s` {`govid:oriIdentifier`: '%(identifier_value)s'})
-        SET n = $replace_params
-        WITH n
-        OPTIONAL MATCH (n)-[r]->()
-        DELETE r
-        WITH n
-        RETURN DISTINCT n
-        '''
-
-        try:
-            result = get_graph().data(
-                query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_identifier()},
-                replace_params=get_serializer_class()(self).deflate(props=True, rels=False))
-        except ConstraintError, e:
-            # todo
-            raise
-
-        if len(result) != 1:
-            raise QueryResultError('The number of results is more or less than one!')
-        return result[0]['n']
-
-    def attach(self, rel_type, other):
-        rel_params = dict()
-        if isinstance(other, Relationship):
-            rel_params = other.rel
-            other = other.model
-
-        serializer = get_serializer_class()
-        create_params = serializer(other).deflate(namespaces='full', props=True, rels=True)
-
-        if isinstance(rel_params, ModelBase):
-            rel_params = serializer(rel_params).deflate(namespaces='full', props=True, rels=True)
-
-        self_label_string = ":".join(cypher_escape(label) for label in self.labels())
-
-        identifier = self.get_uri(self.get_definition('ori_identifier'))
-        self_property_map = {identifier: self.get_ori_identifier()}
-
-        other_label_string = ":".join(cypher_escape(label) for label in other.labels())
-        other_property_map = {identifier: self.get_ori_identifier()}
-
-        clauses = list()
-        clauses.append("MATCH (n :%s %s)" % (self_label_string, cypher_repr(self_property_map)))
-        clauses.append("MERGE (m %s)" % cypher_repr(other_property_map))
-        clauses.append("MERGE (n)-[r :%s]->(m)" % rel_type)
-        clauses.append("ON CREATE SET m += $create_params")
-        clauses.append("ON MATCH SET m += $create_params")
-        clauses.append("SET m:%s" % other_label_string)
-        clauses.append("RETURN n")
-
-        statement = "\n".join(clauses)
-
-        query = 'MATCH (n :`%(labels)s` {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
-                {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_identifier()}
-        query += 'MERGE (m {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
-                 {'labels': '`:`'.join(other.labels()), 'identifier_value': other.get_ori_identifier()}
-        query += '''MERGE (n)-[r :`%(rel_type)s`]->(m)
-        ON CREATE SET m += $create_params
-        ON MATCH SET m += $create_params
-        SET m:`%(labels)s`
-        SET r = $rel_params
-        RETURN n
-        ''' % {'rel_type': rel_type, 'labels': '`:`'.join(other.labels())}
-
-        try:
-            result = get_graph().data(
-                query,
-                create_params=create_params,
-                rel_params=rel_params
-            )
-        except ConstraintError, e:
-            raise
-
-        return result
+    #def replace(self):
+    #    self.db.replace(self.get_ori_identifier())
 
 
-class Individual(ModelBase):
+class Individual(Model):
     __metaclass__ = ModelMetaclass
 
     def __init__(self, identifier_class, source_id, organization):

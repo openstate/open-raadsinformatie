@@ -9,7 +9,7 @@ an assembly of people) discussion.
 
 import opengov
 import schema
-from ..property import StringProperty, IntegerProperty, Relation, InlineRelation
+from ..properties import StringProperty, IntegerProperty, Relation, InlineRelation
 from ..model import Individual
 from . import OPENGOV, SCHEMA, MEETING
 

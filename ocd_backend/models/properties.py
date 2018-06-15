@@ -57,3 +57,7 @@ class InlineRelation(Property):
 
 class Relation(PropertyBase):
     pass
+
+
+class OrderedRelation(Relation):
+    pass

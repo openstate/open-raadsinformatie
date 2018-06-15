@@ -3,7 +3,7 @@ http://xmlns.com/foaf/0.1/
 """
 
 import owl
-from ..property import Relation
+from ..properties import Relation
 from . import ORG
 
 

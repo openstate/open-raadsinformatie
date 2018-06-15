@@ -66,7 +66,7 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
     def load_item(self, doc):
-        body = json_encoder.encode(get_serializer_class(format='json-ld')(doc).serialize())
+        body = json_encoder.encode(get_serializer_class(format='json-ld').serialize(doc))
 
         log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
@@ -102,7 +102,7 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(get_serializer_class(format='json-ld')(doc).serialize())
+        body = json_encoder.encode(get_serializer_class(format='json-ld').serialize(doc))
 
         if doc == {}:
             log.info('Empty document ....')
@@ -127,7 +127,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.serializer(format='json-ld').serialize())
+        body = json_encoder.encode(get_serializer_class(format='json-ld').serialize(doc))
 
         if doc == {}:
             log.info('Empty document ....')
@@ -156,7 +156,7 @@ class DummyLoader(BaseLoader):
         log.debug('=' * 50)
         log.debug('%s %s %s' % ('=' * 4, doc.get_ori_identifier(), '=' * 4))
         log.debug('%s %s %s' % ('-' * 20, 'doc', '-' * 25))
-        log.debug(get_serializer_class(format='json')(doc).serialize())
+        log.debug(get_serializer_class(format='json').serialize(doc))
         log.debug('=' * 50)
 
     @staticmethod

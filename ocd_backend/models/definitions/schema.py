@@ -3,7 +3,7 @@ http://schema.org/
 """
 
 import owl
-from ..property import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
+from ..properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
 from ..model import Individual
 from . import SCHEMA, OPENGOV
 

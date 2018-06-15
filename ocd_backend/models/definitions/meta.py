@@ -8,7 +8,7 @@ the data.
 """
 
 import owl
-from ..property import StringProperty, DateTimeProperty
+from ..properties import StringProperty, DateTimeProperty
 from . import META, MEETING
 
 

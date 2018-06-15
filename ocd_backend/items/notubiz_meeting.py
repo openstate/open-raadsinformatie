@@ -28,7 +28,8 @@ class NotubizMeeting(BaseItem):
 
         Organization(AlmanakOrganizationName('alkmaar', self.source_definition['municipality']))
 
-        event.organization = Organization.get_or_create(name=self.source_definition['municipality'])
+        event.organization = Organization.db.get(name=self.source_definition['municipality'])
+        event.organization.get_full_uri()
         event.organization.identifier = NotubizIdentifier(self.original_item['organisation']['id'])
 
         event.committee = Organization.get_or_create(identifier=NotubizIdentifier(self.original_item['gremium']['id']))
