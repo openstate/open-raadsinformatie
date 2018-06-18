@@ -88,3 +88,9 @@ go-provinces:
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api/v1"
     almanak_id: 17166
     <<: *go
+
+  flevoland:
+    key: flevoland
+    base_url: "https://stateninformatie.flevoland.nl/api/v1"
+    almanak_id: 14866
+    <<: *go
