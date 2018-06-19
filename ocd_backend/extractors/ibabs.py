@@ -433,6 +433,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     print e.message
                     result = None
                 if active_page_nr < start_page:
+                    active_page_nr += 1
                     print "Skipping page %s ..." % (active_page_nr,)
                     continue
                 result_count = 0
