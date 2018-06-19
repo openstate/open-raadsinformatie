@@ -416,6 +416,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
             active_page_nr = 0
             max_pages = self.source_definition.get('max_pages', 1)
+            start_page = self.source_definition.get('start_page', 0)
             per_page = self.source_definition.get('per_page', 100)
             result_count = per_page
             total_count = 0
@@ -431,6 +432,9 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         active_page_nr,)
                     print e.message
                     result = None
+                if active_page_nr < start_page:
+                    print "Skipping page %s ..." % (active_page_nr,)
+                    continue
                 result_count = 0
                 # print "* %s: %s/%s - %d/%d" % (
                 #     self.source_definition['sitename'],
