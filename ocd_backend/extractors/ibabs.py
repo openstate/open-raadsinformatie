@@ -421,7 +421,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             result_count = per_page
             total_count = 0
             yield_count = 0
-            while ((active_page_nr < max_pages) and (result_count == per_page)):
+            while ((active_page_nr < (start_page + max_pages)) and (result_count == per_page)):
                 try:
                     result = self.client.service.GetListReport(
                         Sitename=self.source_definition['sitename'],
