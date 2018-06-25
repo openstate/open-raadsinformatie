@@ -541,3 +541,9 @@ ibabs:
     key: raalte
     almanak_id: 25053
     <<: *ibabs
+
+  # Added on 25-12-2018
+  rheden:
+    key: rheden
+    almanak_id: 38004
+    <<: *ibabs
