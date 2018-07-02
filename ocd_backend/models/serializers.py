@@ -1,11 +1,10 @@
 from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
 from .properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, InlineRelation, Relation, OrderedRelation
 from .exceptions import SerializerError, SerializerNotFound, RequiredProperty
-from .definitions import FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, \
-    PERSON, SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME, ORI
-from rdflib import Literal, URIRef, Graph, BNode
-from rdflib.collection import Collection
-from rdflib.namespace import XSD, Namespace, NamespaceManager
+from .definitions import ALL, RDF, ORI
+#from rdflib import Literal, URIRef, Graph, BNode
+#from rdflib.collection import Collection
+#from rdflib.namespace import XSD, Namespace, NamespaceManager
 
 
 def get_serializer_class(format=None):
@@ -47,16 +46,12 @@ class BaseSerializer(object):
             raise ValueError("Not a valid uri_format. Choose 'full', 'prefix' or 'name'")
         self.uri_format = uri_format
 
-    def labels(self, model_class):
+    def label(self, model_class):
         from .model import Model
         if isinstance(model_class, Model):
             model_class = type(model_class)
 
-        from .model import Model, Individual
-        return [
-            self.get_uri(scls) for scls in model_class.mro()
-            if issubclass(scls, Model) and scls != Model and scls != Individual
-        ]
+        return self.get_uri(model_class)
 
     def deflate(self, model_object, props, rels):
         """ Returns a serialized value for each model definition """
@@ -204,8 +199,7 @@ class JsonLDSerializer(BaseSerializer):
             }
 
             # Temporary solution to include all namespaces in @context
-            for ns in [FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, PERSON,
-                       SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME]:
+            for ns in ALL:
                 context[ns.prefix] = {
                     '@id': ns.namespace,
                     '@type': '@id',

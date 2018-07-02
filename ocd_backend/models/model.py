@@ -13,6 +13,22 @@ from .database import Neo4jDatabase
 from .serializers import Neo4jSerializer
 
 
+class Singleton(dict):
+    def __new__(cls, model_class=None):
+        """Implement as a Singleton"""
+        if model_class and model_class.__name__ in ['Model', 'Individual']:
+            return
+
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Singleton, cls).__new__(cls)
+            cls.instance.full_uris = dict()
+
+        if model_class:
+            uri = model_class.get_full_uri()
+            cls.instance.full_uris[uri] = model_class
+        return cls.instance
+
+
 class ModelMetaclass(type):
     db_class = Neo4jDatabase
     serializer_class = Neo4jSerializer
@@ -66,6 +82,8 @@ class ModelMetaclass(type):
             except:
                 pass
 
+        a = Singleton(model_class=new_class)
+
         return new_class
 
 
@@ -99,6 +117,10 @@ class Model(object):
         return '%s%s' % (cls.__namespace__.namespace, cls.get_name())
 
     @classmethod
+    def parse_model(cls):
+        return
+
+    @classmethod
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
@@ -117,16 +139,14 @@ class Model(object):
 
     @classmethod
     def inflate(cls, **deflated_props):
-        properties = dict()
+        instance = cls()
         for full_uri, value in deflated_props.items():
             definitions_mapping = {v.get_full_uri(): k for k, v in cls.definitions()}
             try:
                 prop_name = definitions_mapping[full_uri]
-                properties[prop_name] = value
+                setattr(instance, prop_name, value)
             except KeyError:
                 raise  # todo raise correct exception
-
-        instance = cls(**properties)
 
         # for namespaced, value in props.items():
         #     ns_string, name = namespaced.split(':')
@@ -152,12 +172,12 @@ class Model(object):
 
         #self.db = type(self).db_class(self)
 
-        if identifier_class and (not source_id or not organization):
-            raise MissingProperty("The identifier_value has not been given")
+        #if identifier_class and (not source_id or not organization):
+        #    raise MissingProperty("The identifier_value has not been given")
 
         if identifier_class:
-            identifier_object = identifier_class(identifier_class, source_id, organization)
-            #setattr(self, 'was_derived_from', [identifier_object])
+            identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
+            setattr(self, 'was_derived_from', [identifier_object])
 
         #self.set_source_locator(organization, identifier_class, source_id)
 
@@ -248,7 +268,7 @@ class Model(object):
     def save(self):
         db = type(self).db_class(self)
         db.replace(self)
-        db.attach_recursive(self)
+        #db.attach_recursive(self)
 
     #def replace(self):
     #    self.db.replace(self.get_ori_identifier())
@@ -257,14 +277,17 @@ class Model(object):
 class Individual(Model):
     __metaclass__ = ModelMetaclass
 
-    def __init__(self, identifier_class, source_id, organization):
+    @classmethod
+    def set_source(cls, identifier_class, source_id, organization):
         # software / org / resource class / id
         # software / org / resource class / software id
         # utrecht/vergaderingen/357
         # utrecht/ibabsMeetingIdentifier/357
         # org / software / resource class / id
 
-        self.__rel_params__ = None #todo temp
+        instance = cls()
+
+        instance.__rel_params__ = None #todo temp
 
         if not organization or not identifier_class or not source_id:
             raise ValidationError("Invalid source locator specified", organization, identifier_class, source_id)
@@ -272,8 +295,24 @@ class Individual(Model):
         if type(identifier_class) != ModelMetaclass:
             raise ValidationError("The 'identifier_class' is not a metaclass of ModelMetaclass: %s", identifier_class)
 
-        self.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
+        instance.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
+        return instance
 
+    # @classmethod
+    # def inflate(cls, **deflated_props):
+    #
+    #     props = dict()
+    #     for full_uri, value in deflated_props.items():
+    #         definitions_mapping = {v.get_full_uri(): k for k, v in cls.definitions()}
+    #         try:
+    #             prop_name = definitions_mapping[full_uri]
+    #             props[prop_name] = value
+    #         except KeyError:
+    #             raise  # todo raise correct exception
+    #
+    #     args = props['source_locator'].split('/')
+    #     instance = cls(*args)
+    #     return instance
 
 class Relationship(object):
     """

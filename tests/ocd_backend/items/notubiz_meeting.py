@@ -5,7 +5,7 @@ import iso8601
 from mock import MagicMock
 from ocd_backend.items import BaseItem
 from ocd_backend.items.notubiz_meeting import Meeting
-from ocd_backend.models import Event
+from ocd_backend.models import Meeting
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 from . import ItemTestCase
@@ -159,10 +159,10 @@ class NotubizMeetingTestCase(ItemTestCase):
         self.assertEqual(item.get_collection(), self.collection)
 
     def test_meeting_values_with_namespace(self):
-        for _, prop in Event.definitions(props=True, rels=True):
+        for _, prop in Meeting.definitions(props=True, rels=True):
             full_name = prop.get_prefix_uri()
             self.assertEqual(self.namespaced_data.get(full_name), self.expected_namespaced_result.get(full_name))
 
     def test_meeting_values_without_namespace(self):
-        for name, _ in Event.definitions(props=True, rels=True):
+        for name, _ in Meeting.definitions(props=True, rels=True):
             self.assertEqual(self.not_namespaced_data.get(name), self.expected_not_namespaced_result.get(name))

@@ -20,3 +20,8 @@ BIBFRAME = Namespace('http://bibframe.org/vocab/', 'bibframe')
 PROV = Namespace('https://www.w3.org/TR/2013/REC-prov-o-20130430/#', 'prov')
 #IBABSTROEP = Namespace('https://argu.co/ns/opaque-model/ibabs#title')
 ORI = Namespace('https://api.openraadsinformatie.nl/id/', 'ori')
+
+ALL = [
+    FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, PERSON,
+    SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME, PROV, ORI
+]

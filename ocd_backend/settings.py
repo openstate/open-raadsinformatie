@@ -165,10 +165,16 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
+        'kombu': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        }
     },
     'root': {
         'handlers': ['default', 'bugsnag'],
-        'level': 'INFO',
+        'level': 'WARNING',
+        'propagate': False
     },
 }
 

@@ -1,5 +1,6 @@
 import datetime
 import glob
+import importlib
 import json
 import re
 from calendar import timegm
@@ -13,7 +14,7 @@ from dateutil.parser import parse
 from elasticsearch.helpers import scan, bulk
 from lxml import etree
 
-from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime, UnsupportedContentType
+from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
 
 
@@ -222,7 +223,7 @@ def load_object(path):
 
     m, name = path[:dot], path[dot + 1:]
     try:
-        mod = __import__(m, {}, {}, [''])
+        mod = importlib.import_module(m)
     except ImportError, e:
         raise ImportError("Error loading object '%s': %s" % (path, e))
 
@@ -467,4 +468,3 @@ def localize_datetime(date):
 
     tz = pytz.timezone(TIMEZONE)
     return tz.localize(date)
-

@@ -2,7 +2,7 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
-  wait_until_finished: true
+  wait_until_finished: false
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"

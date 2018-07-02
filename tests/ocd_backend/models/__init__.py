@@ -2,16 +2,16 @@ import ocd_backend
 from py2neo import Graph
 import copy
 from nose.tools import eq_, assert_raises
-from ocd_backend.models import Event, Organization, AgendaItem, Person
-from ocd_backend.models.model import ModelBase
-from ocd_backend.models.property import Property, Namespace
+from ocd_backend.models import Meeting, Organization, AgendaItem, Person
+from ocd_backend.models.model import Model
+from ocd_backend.models.properties import Property, Namespace
 from ocd_backend.models.exceptions import RequiredProperty
 #ocd_backend.settings.NEO4J_GRAPH = Graph("http://neo4j:tests@localhost:7474/db/data/")
 from unittest import TestCase
 
 
 def get_event():
-    item = Event('ibabsIdentifier', '104ce628-b453-4fc1-9ab5-61383b6c9ab4')
+    item = Meeting('ibabsIdentifier', '104ce628-b453-4fc1-9ab5-61383b6c9ab4')
     item.name = 'Test iBabs event'
     item.chair = 'Chairman'
     item.location = 'Somewhere'
@@ -72,7 +72,7 @@ class ModelsTestCase(TestCase):
         item = get_event()
         for key, value in item.properties():
             mapping.pop(key, None)
-            if isinstance(value, ModelBase):
+            if isinstance(value, Model):
                 # If value is a instance, return its class for easy compare
                 value = type(value)
 
@@ -85,7 +85,7 @@ class ModelsTestCase(TestCase):
     def test_required_props(self):
         ns = Namespace('http://example.com', 'ex')
 
-        class RequiredModel(ModelBase):
+        class RequiredModel(Model):
             oriIdentifier = Property(ns, 'oriIdentifier')
             ibabsIdentifier = Property(ns, 'ibabsIdentifier')
             required_prop = Property(ns, 'required_prop', required=True)
@@ -122,3 +122,4 @@ class ModelsTestCase(TestCase):
 # Import test modules here so the noserunner can pick them up, and the
 # ModelsTestCase is parsed. Add additional testcases when required
 from .neo4j import Neo4jTestCase
+from .database import DatabaseTestCase

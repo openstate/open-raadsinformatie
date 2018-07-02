@@ -17,3 +17,4 @@ translitcodec==0.4.0
 bugsnag
 py2neo==4.0.0
 python-json-logger==0.1.8
+rdflib==4.2.2

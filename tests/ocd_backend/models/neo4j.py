@@ -1,11 +1,6 @@
-from ocd_backend.settings import NEO4J_URL
-from py2neo import Graph
 import ocd_backend.models
 from nose.tools import eq_
 from . import ModelsTestCase, get_event
-
-
-graph = Graph(NEO4J_URL)
 
 
 class Neo4jTestCase(ModelsTestCase):
