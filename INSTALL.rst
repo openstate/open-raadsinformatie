@@ -72,7 +72,7 @@ Some quick notes on how to use the Open Raadsinformatie API
 On a fresh Elasticsearch instance
 ------------
 
-Put template and create indexes, so we don't get a ``KeyError: 'aggregations'`` (on ``/opt/ori/ocd_frontend/rest/views.py", line 259, in format_sources_results``) when querying ``/v0/sources``:
+Put template and create indexes, so we don't get a ``KeyError: 'aggregations'`` (on ``/opt/ori/ocd_frontend/rest/views.py", line 259, in format_sources_results``) when querying ``/v0/sources``::
 
    $ docker exec -it ori_backend_1 ./manage.py elasticsearch put_template
    $ docker exec -it ori_backend_1 ./manage.py elasticsearch create_indexes es_mappings
