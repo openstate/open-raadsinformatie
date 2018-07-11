@@ -121,6 +121,24 @@ class Neo4jSerializer(BaseSerializer):
     def serialize(self, model_object=None):
         pass
 
+    def serialize_prop(self, prop, value):
+        if type(prop) == InlineRelation:
+            # Neo4j does not support InlineRelation so do normal Relation instead
+            props = list()
+            for _, item in iterate(value):
+                from .model import Relationship
+                if isinstance(item, Relationship):
+                    item = item.model
+
+                props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
+                # props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
+
+            if len(props) == 1:
+                return props[0]
+            return props
+
+        return super(Neo4jSerializer, self).serialize_prop(prop, value)
+
 
 class RDFSerializer(BaseSerializer):
     def deflate(self, model_object, props, rels):

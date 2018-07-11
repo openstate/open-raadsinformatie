@@ -3,6 +3,8 @@ from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.models.namespace import URI
+from ocd_backend.models.definitions import MAPPING
 
 
 class NotubizMeeting(BaseItem):
@@ -13,7 +15,7 @@ class NotubizMeeting(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        event = Meeting(NotubizIdentifier, self.original_item['id'], self.source_definition['municipality'])
+        event = Meeting(URI(MAPPING, 'notubiz/identifier'), self.original_item['id'], self.source_definition['municipality'])
         #event.sourceDoc += (NotubizIdentifier, self.original_item['id'], event, 21312334223)
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
@@ -26,21 +28,21 @@ class NotubizMeeting(BaseItem):
         #Organization.get_or_create('alkmaar', AlmanakOrganizationName, self.source_definition['municipality'])
         # AlmanakOrganizationName('alkmaar', self.source_definition['municipality']).get_or_create()
 
-        Organization(AlmanakOrganizationName('alkmaar', self.source_definition['municipality']))
+        # Organization(AlmanakOrganizationName, 'alkmaar', self.source_definition['municipality'])
 
-        event.organization = Organization.db.get(name=self.source_definition['municipality'])
-        event.organization.get_full_uri()
-        event.organization.identifier = NotubizIdentifier(self.original_item['organisation']['id'])
+        event.organization = Organization(URI(MAPPING, 'notubiz/identifier'), self.original_item['organisation']['id'], self.source_definition['municipality'])
+        # event.organization.get_full_uri()
 
-        event.committee = Organization.get_or_create(identifier=NotubizIdentifier(self.original_item['gremium']['id']))
+        event.committee = Organization(URI(MAPPING, 'notubiz/identifier'), self.original_item['gremium']['id'])
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
             if not item['order']:
                 continue
 
-            agendaitem = AgendaItem.get_or_create(identifier=NotubizIdentifier(item['id']))
+            agendaitem = AgendaItem(URI(MAPPING, 'notubiz/identifier'), item['id'])
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
+            agendaitem.description = item['type_data']['attributes'][0]['value']
             event.agenda.append(agendaitem)
 
         # object_model['last_modified'] = iso8601.parse_date(
@@ -55,7 +57,7 @@ class NotubizMeeting(BaseItem):
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):
-            attachment = MediaObject(NotubizIdentifier, doc['id'])
+            attachment = MediaObject(URI(MAPPING, 'notubiz/identifier'), doc['id'])
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             event.attachment.append(attachment)

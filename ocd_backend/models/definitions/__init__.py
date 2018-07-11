@@ -18,6 +18,7 @@ SKOS = Namespace('http://www.w3.org/2004/02/skos/core#', 'skos')
 BIO = Namespace('http://purl.org/vocab/bio/0.1/', 'bio')
 BIBFRAME = Namespace('http://bibframe.org/vocab/', 'bibframe')
 PROV = Namespace('https://www.w3.org/TR/2013/REC-prov-o-20130430/#', 'prov')
+PAV = Namespace('http://purl.org/pav/', 'pav')
 #IBABSTROEP = Namespace('https://argu.co/ns/opaque-model/ibabs#title')
 ORI = Namespace('https://api.openraadsinformatie.nl/id/', 'ori')
 

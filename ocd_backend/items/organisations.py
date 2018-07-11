@@ -16,11 +16,11 @@ class MunicipalityOrganisationItem(BaseItem):
         object_model.classification = u'Municipality'
         object_model.description = self.original_item['Description']
 
-        a = Organization()
-        a.name = 'a'
+        #a = Organization()
+        #a.name = 'a'
 
-        b = Organization()
-        b.name = 'b'
+        #b = Organization()
+        #b.name = 'b'
 
         # c = Organization()
         # c.name = 'c'
@@ -34,7 +34,7 @@ class MunicipalityOrganisationItem(BaseItem):
 
         #Organization.db.get(ori_identifier=134)
 
-        object_model.parent = [a, b]
+        #object_model.parent = [a, b]
         #object_model.parent = Relationship(a, b, rel=c)
 
         #abc = RDFSerializer().serialize(object_model)

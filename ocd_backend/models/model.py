@@ -6,8 +6,8 @@ import properties
 from ocd_backend.settings import NEO4J_URL
 from ocd_backend.utils.misc import iterate, load_object
 from ocd_backend import celery_app
-from .exceptions import RequiredProperty, MissingProperty, ValidationError
-from .properties import StringProperty, IntegerProperty, Relation
+from .exceptions import RequiredProperty, MissingProperty, ValidationError, QueryResultError
+from .properties import StringProperty, IntegerProperty, InlineRelation
 from .definitions import MAPPING, PROV
 from .database import Neo4jDatabase
 from .serializers import Neo4jSerializer
@@ -93,7 +93,7 @@ class Model(object):
     # Top-level definitions
     ori_identifier = IntegerProperty(MAPPING, 'ori/identifier')
     source_locator = StringProperty(MAPPING, 'ori/sourceLocator')
-    was_derived_from = Relation(PROV, 'wasDerivedFrom')
+    was_derived_from = StringProperty(PROV, 'wasDerivedFrom')
 
     class Meta:
         namespace = None
@@ -165,7 +165,7 @@ class Model(object):
     #
     #     return self.__serializer__
 
-    def __init__(self, identifier_class=None, source_id=None, organization=None):
+    def __init__(self, source=None, source_id=None, organization=None):
         self.__temporary__ = None
         self.__rel_params__ = None #todo
         self.__serializer__ = None
@@ -175,13 +175,15 @@ class Model(object):
         #if identifier_class and (not source_id or not organization):
         #    raise MissingProperty("The identifier_value has not been given")
 
-        if identifier_class:
-            identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
-            setattr(self, 'was_derived_from', [identifier_object])
+        if source:
+            #identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
+            #  Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+            setattr(self, 'source_locator', source_id)
+            setattr(self, 'was_derived_from', source)
+
+            #self.get_ori_identifier()
 
         #self.set_source_locator(organization, identifier_class, source_id)
-
-        self.get_ori_identifier()
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -232,7 +234,15 @@ class Model(object):
 
     def get_ori_identifier(self):
         if not hasattr(self, 'ori_identifier'):
-            self.ori_identifier = celery_app.backend.increment("ori_identifier_autoincrement")
+            try:
+                self.ori_identifier = self.db.get_id(self, self.source_locator)
+            except QueryResultError:
+                raise  # todo generate or not?
+                self.generate_ori_identifier()
+        return self.ori_identifier
+
+    def generate_ori_identifier(self):
+        self.ori_identifier = celery_app.backend.increment("ori_identifier_autoincrement")
         return self.ori_identifier
 
     def get_popolo_type(self):
@@ -266,9 +276,10 @@ class Model(object):
         return props_list
 
     def save(self):
-        db = type(self).db_class(self)
-        db.replace(self)
-        #db.attach_recursive(self)
+        self.db.replace(self)
+        self.db.attach_recursive(self)
+        self.db.transaction_commit()
+        print
 
     #def replace(self):
     #    self.db.replace(self.get_ori_identifier())
@@ -313,6 +324,7 @@ class Individual(Model):
     #     args = props['source_locator'].split('/')
     #     instance = cls(*args)
     #     return instance
+
 
 class Relationship(object):
     """

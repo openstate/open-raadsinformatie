@@ -24,7 +24,7 @@ class Meeting(schema.Event):
     attendee = Relation(SCHEMA, 'attendee')
     audio = Relation(SCHEMA, 'audio')
     description = StringProperty(SCHEMA, 'description')
-    status = InlineRelation(SCHEMA, 'eventStatus')
+    status = Relation(SCHEMA, 'eventStatus')
     location = StringProperty(SCHEMA, 'location')
     name = StringProperty(SCHEMA, 'name', required=True)
     organization = Relation(SCHEMA, 'organizer')
