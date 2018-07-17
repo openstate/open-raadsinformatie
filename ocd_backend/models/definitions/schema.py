@@ -3,9 +3,10 @@ http://schema.org/
 """
 
 import owl
-from ..properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation
-from ..model import Individual
-from . import SCHEMA, OPENGOV
+from ocd_backend.models.definitions import SCHEMA, OPENGOV
+from ocd_backend.models.model import Individual
+from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+    DateTimeProperty, ArrayProperty, Relation
 
 
 class MediaObject(owl.Thing):

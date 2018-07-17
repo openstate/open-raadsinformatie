@@ -3,8 +3,8 @@ http://xmlns.com/foaf/0.1/
 """
 
 import owl
-from ..properties import Relation
-from . import ORG
+from ocd_backend.models.definitions import ORG
+from ocd_backend.models.properties import Relation
 
 
 class Agent(owl.Thing):

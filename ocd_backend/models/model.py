@@ -3,13 +3,12 @@
 import re
 
 import properties
-from ocd_backend.settings import NEO4J_URL
-from ocd_backend.utils.misc import iterate, load_object
 from ocd_backend import celery_app
-from .exceptions import RequiredProperty, MissingProperty, ValidationError, QueryResultError
-from .properties import StringProperty, IntegerProperty, InlineRelation
-from .definitions import MAPPING, PROV
+from ocd_backend.utils.misc import iterate, load_object
 from .database import Neo4jDatabase
+from .definitions import MAPPING, PROV
+from .exceptions import MissingProperty, ValidationError, QueryResultError
+from .properties import StringProperty, IntegerProperty
 from .serializers import Neo4jSerializer
 
 
@@ -24,7 +23,7 @@ class Singleton(dict):
             cls.instance.full_uris = dict()
 
         if model_class:
-            uri = model_class.get_full_uri()
+            uri = model_class.full_uri()
             cls.instance.full_uris[uri] = model_class
         return cls.instance
 
@@ -59,7 +58,6 @@ class ModelMetaclass(type):
 
         new_class.serializer = mcs.serializer_class()
         new_class.db = mcs.db_class(new_class)
-
 
         # Walk through the MRO.
         for base in reversed(new_class.__mro__):
@@ -103,22 +101,18 @@ class Model(object):
         skip_validation = None
 
     @classmethod
-    def get_name(cls):
+    def name(cls):
         if cls.Meta.verbose_name:
             return cls.Meta.verbose_name
         return cls.__name__
 
     @classmethod
-    def get_prefix_uri(cls):
-        return '%s:%s' % (cls.__namespace__.prefix, cls.get_name())
+    def prefix_uri(cls):
+        return '%s:%s' % (cls.__namespace__.prefix, cls.name())
 
     @classmethod
-    def get_full_uri(cls):
-        return '%s%s' % (cls.__namespace__.namespace, cls.get_name())
-
-    @classmethod
-    def parse_model(cls):
-        return
+    def full_uri(cls):
+        return '%s%s' % (cls.__namespace__.namespace, cls.name())
 
     @classmethod
     def definitions(cls, props=True, rels=True):
@@ -141,7 +135,7 @@ class Model(object):
     def inflate(cls, **deflated_props):
         instance = cls()
         for full_uri, value in deflated_props.items():
-            definitions_mapping = {v.get_full_uri(): k for k, v in cls.definitions()}
+            definitions_mapping = {v.full_uri(): k for k, v in cls.definitions()}
             try:
                 prop_name = definitions_mapping[full_uri]
                 setattr(instance, prop_name, value)
@@ -156,7 +150,7 @@ class Model(object):
         #             setattr(instance, definition_name, value)
         #             break
 
-        #instance.__temporary__ = True
+        # instance.__temporary__ = True
         return instance
 
     # def serializer(self):
@@ -167,23 +161,23 @@ class Model(object):
 
     def __init__(self, source=None, source_id=None, organization=None):
         self.__temporary__ = None
-        self.__rel_params__ = None #todo
+        self.__rel_params__ = None  # todo
         self.__serializer__ = None
 
-        #self.db = type(self).db_class(self)
+        # self.db = type(self).db_class(self)
 
-        #if identifier_class and (not source_id or not organization):
+        # if identifier_class and (not source_id or not organization):
         #    raise MissingProperty("The identifier_value has not been given")
 
         if source:
-            #identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
+            # identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
             #  Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
             setattr(self, 'source_locator', source_id)
             setattr(self, 'was_derived_from', source)
 
-            #self.get_ori_identifier()
+            # self.get_ori_identifier()
 
-        #self.set_source_locator(organization, identifier_class, source_id)
+        # self.set_source_locator(organization, identifier_class, source_id)
 
     def __getitem__(self, item):
         return self.__dict__[item]
@@ -230,15 +224,15 @@ class Model(object):
         if type(identifier_class) != ModelMetaclass:
             raise ValidationError("The 'identifier_class' is not a metaclass of ModelMetaclass: %s", identifier_class)
 
-        #self.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
+        # self.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
 
     def get_ori_identifier(self):
         if not hasattr(self, 'ori_identifier'):
             try:
-                self.ori_identifier = self.db.get_id(self, self.source_locator)
+                self.ori_identifier = self.db.get_identifier_by_source_id(self, self.source_locator)
             except QueryResultError:
-                raise  # todo generate or not?
-                self.generate_ori_identifier()
+                raise MissingProperty('OriIdentifier is not present, has the '
+                                      'model been saved?')
         return self.ori_identifier
 
     def generate_ori_identifier(self):
@@ -259,30 +253,42 @@ class Model(object):
             definition = self.get_definition(name)
             if (props and not isinstance(prop, Model)) or \
                     (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
-                props_list.append((self.serializer.get_uri(definition), prop,))
+                props_list.append((self.serializer.uri_format(definition), prop,))
         return props_list
 
-    def deflate(self, props=True, rels=False):
-        """ Returns a serialized value for each model definition """
-        props_list = dict()
-        for name, definition in self.definitions(props=props, rels=rels):
-            value = self.__dict__.get(name, None)
-            if value:
-                namespaced = self.serializer.get_uri(definition)
-                props_list[namespaced] = self.serializer.serialize_prop(definition, value)
-            elif definition.required and not self.Meta.skip_validation:
-                raise RequiredProperty("Property '%s' is required for %s" %
-                                       (name, self.get_prefix_uri()))
-        return props_list
+    # def deflate(self, props=True, rels=False):
+    #     """ Returns a serialized value for each model definition """
+    #     props_list = dict()
+    #     for name, definition in self.definitions(props=props, rels=rels):
+    #         value = self.__dict__.get(name, None)
+    #         if value:
+    #             namespaced = self.serializer.uri_format(definition)
+    #             props_list[namespaced] = self.serializer.serialize_prop(definition, value)
+    #         elif definition.required and not self.Meta.skip_validation:
+    #             raise RequiredProperty("Property '%s' is required for %s" %
+    #                                    (name, self.get_prefix_uri()))
+    #     return props_list
 
     def save(self):
         self.db.replace(self)
-        self.db.attach_recursive(self)
-        self.db.transaction_commit()
-        print
+        self.attach_recursive()
 
-    #def replace(self):
+    # def replace(self):
     #    self.db.replace(self.get_ori_identifier())
+
+    def attach_recursive(self):
+        attach = list()
+        for rel_type, other_object in self.properties(rels=True, props=False):
+
+            self.db.replace(other_object)
+            attach.append(self.db.attach(self, other_object, rel_type))
+
+            # End the recursive loop when self-referencing
+            if self != other_object:
+                attach.extend(other_object.attach_recursive())
+
+        self.db.copy_relations()
+        return attach
 
 
 class Individual(Model):
@@ -298,7 +304,7 @@ class Individual(Model):
 
         instance = cls()
 
-        instance.__rel_params__ = None #todo temp
+        instance.__rel_params__ = None  # todo temp
 
         if not organization or not identifier_class or not source_id:
             raise ValidationError("Invalid source locator specified", organization, identifier_class, source_id)
@@ -314,7 +320,7 @@ class Individual(Model):
     #
     #     props = dict()
     #     for full_uri, value in deflated_props.items():
-    #         definitions_mapping = {v.get_full_uri(): k for k, v in cls.definitions()}
+    #         definitions_mapping = {v.full_uri(): k for k, v in cls.definitions()}
     #         try:
     #             prop_name = definitions_mapping[full_uri]
     #             props[prop_name] = value
@@ -349,6 +355,7 @@ class Relationship(object):
     object_model.parent = [Relationship(a, rel=c), Relationship(b, rel=c)]
     ``
     """
+
     def __new__(cls, *args, **kwargs):
         if len(args) == 1:
             return super(Relationship, cls).__new__(cls)

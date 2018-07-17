@@ -9,9 +9,10 @@ an assembly of people) discussion.
 
 import opengov
 import schema
-from ..properties import StringProperty, IntegerProperty, Relation, InlineRelation
-from ..model import Individual
-from . import OPENGOV, SCHEMA, MEETING
+from ocd_backend.models.definitions import OPENGOV, SCHEMA, MEETING
+from ocd_backend.models.model import Individual
+from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+    Relation
 
 
 class Meeting(schema.Event):
@@ -19,7 +20,7 @@ class Meeting(schema.Event):
     discussion. Subclass of :class:`.schema.Event`
     """
     agenda = Relation(MEETING, 'agenda')
-    attachment = InlineRelation(MEETING, 'attachment')
+    attachment = Relation(MEETING, 'attachment')
     motion = Relation(OPENGOV, 'motion')
     attendee = Relation(SCHEMA, 'attendee')
     audio = Relation(SCHEMA, 'audio')
@@ -46,7 +47,7 @@ class AgendaItem(schema.Event):
     """An item in a list of topics to be discussed at an event. Subclass of
     :class:`.schema.Event`
     """
-    attachment = InlineRelation(MEETING, 'attachment')
+    attachment = Relation(MEETING, 'attachment')
     motion = Relation(OPENGOV, 'motion')
     description = StringProperty(SCHEMA, 'description')
     name = StringProperty(SCHEMA, 'name')

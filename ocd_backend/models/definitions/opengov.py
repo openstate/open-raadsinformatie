@@ -4,13 +4,15 @@ http://www.w3.org/ns/opengov#
 
 import owl
 import schema
-from ..properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, Relation, InlineRelation
-from ..model import Individual
-from . import OPENGOV, SCHEMA, MEETING, DCTERMS, NCAL, RDF, RDFS, SKOS, BIBFRAME
+from ocd_backend.models.definitions import OPENGOV, SCHEMA, MEETING, DCTERMS, \
+    NCAL, RDF, RDFS, SKOS, BIBFRAME
+from ocd_backend.models.model import Individual
+from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+    DateTimeProperty, ArrayProperty, Relation
 
 
 class Motion(owl.Thing):
-    attachment = InlineRelation(SCHEMA, 'attachment')
+    attachment = Relation(SCHEMA, 'attachment')
     legislative_session = StringProperty(OPENGOV, 'legislativeSession')
     requirement = StringProperty(OPENGOV, 'requirement')
     classification = StringProperty(SCHEMA, 'additionalType')

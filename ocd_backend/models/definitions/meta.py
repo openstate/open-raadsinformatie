@@ -8,8 +8,8 @@ the data.
 """
 
 import owl
-from ..properties import StringProperty, DateTimeProperty
-from . import META, MEETING
+from ocd_backend.models.definitions import META, MEETING
+from ocd_backend.models.properties import StringProperty, DateTimeProperty
 
 
 class Metadata(owl.Thing):

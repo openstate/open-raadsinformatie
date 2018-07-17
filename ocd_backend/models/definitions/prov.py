@@ -4,5 +4,5 @@ https://www.w3.org/TR/2013/REC-prov-o-20130430/#
 import owl
 
 
-class Entity(owl.Thing):  #todo juiste superclass?
+class Entity(owl.Thing):  # todo juiste superclass?
     pass

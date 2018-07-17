@@ -1,6 +1,11 @@
-import definitions.meeting
+"""Mapping names to the corresponding models.
+
+This file is used to specify custom model mappings.
+By mapping these names definitions can be remapped if needed later on.
+"""
 import definitions.foaf
 import definitions.mapping
+import definitions.meeting
 import definitions.meta
 import definitions.ncal
 import definitions.opengov
@@ -8,11 +13,6 @@ import definitions.org
 import definitions.owl
 import definitions.person
 import definitions.schema
-
-# This file is used to specify custom mappings
-
-# Mapping names to the corresponding models
-# By mapping these names definitions can be remapped if needed later on.
 
 # https://argu.co/ns/meeting#
 Meeting = definitions.meeting.Meeting

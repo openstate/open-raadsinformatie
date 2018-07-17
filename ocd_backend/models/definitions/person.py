@@ -3,8 +3,10 @@ http://www.w3.org/ns/person#
 """
 
 import foaf
-from ..properties import StringProperty, DateTimeProperty, Relation
-from . import OPENGOV, SCHEMA, FOAF, RDFS, PERSON, DCTERMS, BIO
+from ocd_backend.models.definitions import OPENGOV, SCHEMA, FOAF, RDFS, \
+    DCTERMS, BIO
+from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
+    Relation
 
 
 class Person(foaf.Agent):

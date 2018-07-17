@@ -4,8 +4,10 @@ http://www.w3.org/ns/org#
 
 import foaf
 import owl
-from ..properties import StringProperty, DateTimeProperty, Relation, OrderedRelation
-from . import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA, RDF
+from ocd_backend.models.definitions import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA,\
+    RDF
+from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
+    Relation, OrderedRelation
 
 
 class Membership(owl.Thing):

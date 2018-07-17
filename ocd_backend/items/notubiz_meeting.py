@@ -3,7 +3,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.models.namespace import URI
+from ocd_backend.models.misc import URI
 from ocd_backend.models.definitions import MAPPING
 
 
@@ -31,7 +31,7 @@ class NotubizMeeting(BaseItem):
         # Organization(AlmanakOrganizationName, 'alkmaar', self.source_definition['municipality'])
 
         event.organization = Organization(URI(MAPPING, 'notubiz/identifier'), self.original_item['organisation']['id'], self.source_definition['municipality'])
-        # event.organization.get_full_uri()
+        # event.organization.full_uri()
 
         event.committee = Organization(URI(MAPPING, 'notubiz/identifier'), self.original_item['gremium']['id'])
 

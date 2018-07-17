@@ -1,13 +1,17 @@
+from rdflib import Literal, URIRef, Graph, BNode
+from rdflib.collection import Collection
+from rdflib.namespace import XSD, Namespace, NamespaceManager
+
+from ocd_backend.models.definitions import ALL, RDF, ORI
+from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
+    RequiredProperty, MissingProperty
+from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+    DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
-from .properties import StringProperty, IntegerProperty, DateTimeProperty, ArrayProperty, InlineRelation, Relation, OrderedRelation
-from .exceptions import SerializerError, SerializerNotFound, RequiredProperty
-from .definitions import ALL, RDF, ORI
-#from rdflib import Literal, URIRef, Graph, BNode
-#from rdflib.collection import Collection
-#from rdflib.namespace import XSD, Namespace, NamespaceManager
 
 
 def get_serializer_class(format=None):
+    """Convenience function returns serializer or raises SerializerNotFound."""
     if not format:
         serializer = BaseSerializer()
     elif format == 'json-ld':
@@ -21,58 +25,71 @@ def get_serializer_class(format=None):
 
 
 class BaseSerializer(object):
-    def __new__(cls):
-        """Implement BaseSerializer as a Singleton"""
-        if not hasattr(cls, 'instance') or not isinstance(cls.instance, cls):
-            cls.instance = super(BaseSerializer, cls).__new__(cls)
-        return cls.instance
+    """The base serializer where all serializer should inherit from."""
 
-    def __init__(self, uri_format='name'):
-        self.uri_format = None
-        self.set_uri_format(uri_format)
+    def __init__(self, uri_format_type='name'):
+        """Initialize the serializer with a specified format.
 
-    def get_uri(self, klass):
-        if self.uri_format == 'full':
-            return klass.get_full_uri()
-        elif self.uri_format == 'prefix':
-            return klass.get_prefix_uri()
-        elif self.uri_format == 'name':
-            return klass.get_name()
+        Options for uri_format_type are:
+          - 'full': Fully quantified URI (ie. http://schema.org/example)
+          - 'prefix': A property that is prefixed (ie. schema:example)
+          - 'name': Just the name of the property
+        """
+        if uri_format_type not in ['full', 'prefix', 'name']:
+            raise ValueError(
+                "Not a valid uri_format. Choose 'full', 'prefix' or 'name'"
+            )
+        self.uri_format_type = uri_format_type
 
-        raise ValueError("Not a valid uri_format. Choose 'full', 'prefix' or 'name'")
-
-    def set_uri_format(self, uri_format):
-        if uri_format not in ['full', 'prefix', 'name']:
-            raise ValueError("Not a valid uri_format. Choose 'full', 'prefix' or 'name'")
-        self.uri_format = uri_format
+    def uri_format(self, klass):
+        """Uses `klass` as an interface to return the specified uri_format."""
+        if self.uri_format_type == 'full':
+            return klass.full_uri()
+        elif self.uri_format_type == 'prefix':
+            return klass.prefix_uri()
+        elif self.uri_format_type == 'name':
+            return klass.name()
 
     def label(self, model_class):
+        """Returns the `uri_format` of class name for `model_class`."""
         from .model import Model
         if isinstance(model_class, Model):
             model_class = type(model_class)
 
-        return self.get_uri(model_class)
+        return self.uri_format(model_class)
 
     def deflate(self, model_object, props, rels):
-        """ Returns a serialized value for each model definition """
+        """Returns a recurive serialized value for each model definition."""
         props_list = dict()
         for name, definition in model_object.definitions(props=props, rels=rels):
             value = model_object.__dict__.get(name, None)
             if value:
-                namespaced = self.get_uri(definition)
-                props_list[namespaced] = self.serialize_prop(definition, value)
+                namespaced = self.uri_format(definition)
+                try:
+                    props_list[namespaced] = self.serialize_prop(definition,
+                                                                 value)
+                except MissingProperty:
+                    raise
             elif definition.required and not model_object.Meta.skip_validation:
-                raise RequiredProperty("Property '%s' is required for %s" %
-                                       (name, model_object.get_prefix_uri()))
+                raise RequiredProperty("Property '{}' is required for {}".format(
+                    name, model_object.prefix_uri()))
         return props_list
 
     def serialize(self, model_object):
+        """High-level method that serializes the given `model_object`.
+
+        Needs to be overriden by every subclass to enable serializer subclass
+        specific behaviour. See this method in subclasses for more information.
+        """
         raise NotImplementedError
 
     def serialize_prop(self, prop, value):
-        # if type(prop) == Instance:
-        #     return value.get_prefix_uri()
+        """The actual serialization of the `value` on the provided property.
 
+        This `BaseSerializer` method provides defaults which overridden subclass
+        methods should call too. If there is no matching `prop`, it will raise
+        an SerializerError.
+        """
         if type(prop) == StringProperty:
             return value
 
@@ -86,94 +103,95 @@ class BaseSerializer(object):
         elif type(prop) == ArrayProperty:
             return value
 
-        elif type(prop) == InlineRelation:
-            props = list()
-            for _, item in iterate(value):
-                #props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
-                props.append(self.deflate(item, props=True, rels=True))
-
-            if len(props) == 1:
-                return props[0]
-            return props
-
-        elif type(prop) == Relation or type(prop) == OrderedRelation:
-            props = list()
-            for _, item in iterate(value):
-                from .model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
-                props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
-                #props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
-
-            if len(props) == 1:
-                return props[0]
-            return props
-
         else:
-            raise SerializerError("")
+            raise SerializerError(
+                "Cannot serialize the property of type '{}'".format(type(prop))
+            )
 
 
 class Neo4jSerializer(BaseSerializer):
+    """The `Neo4jSerializer` is just a basic subclass of the `BaseSerializer`.
+
+    This serializer is used to turn the models in full URI properties that can
+    be inserted in Neo4j.
+    """
+
     def __init__(self):
+        """Currently all properties in the Neo4j are fully qualified."""
         super(Neo4jSerializer, self).__init__('full')
 
     def serialize(self, model_object=None):
+        """No high-level serialize method available, use `deflate` instead."""
         pass
-
-    def serialize_prop(self, prop, value):
-        if type(prop) == InlineRelation:
-            # Neo4j does not support InlineRelation so do normal Relation instead
-            props = list()
-            for _, item in iterate(value):
-                from .model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
-                props.append('%s:%s' % (ORI.prefix, item.get_ori_identifier()))
-                # props.append(type(self)(item).deflate(namespaces=True, props=True, rels=True))
-
-            if len(props) == 1:
-                return props[0]
-            return props
-
-        return super(Neo4jSerializer, self).serialize_prop(prop, value)
 
 
 class RDFSerializer(BaseSerializer):
-    def deflate(self, model_object, props, rels):
-        """ Returns a serialized value for each model definition """
-        namespace_manager = NamespaceManager(self.g)
-        namespace_manager.bind(ORI.prefix, Namespace(ORI.namespace), override=False)
-        namespace_manager.bind(model_object.__namespace__.prefix, Namespace(model_object.__namespace__.namespace), override=False)
+    """The `RDFSerializer` create a graph and add the properties as RDF triples.
 
-        s = URIRef('%s%s' % (ORI.namespace, model_object.get_ori_identifier()))
-        p = URIRef('%stype' % RDF.namespace)
-        o = URIRef(model_object.get_full_uri())
+    This uses rdflib to create a graph which can be serialized to the various
+    formats that rdflib supports."""
+
+    def __init__(self):
+        """Set all properties in the Neo4j to be fully qualified."""
+        self.g = Graph()
+        super(RDFSerializer, self).__init__('full')
+
+    def deflate(self, model_object, props, rels):
+        """Overrides the `BaseSerializer` method to add graph logic."""
+        namespace_manager = NamespaceManager(self.g)
+        namespace_manager.bind(
+            ORI.prefix,
+            Namespace(ORI.namespace),
+            override=False
+        )
+        namespace_manager.bind(
+            model_object.__namespace__.prefix,
+            Namespace(model_object.__namespace__.namespace),
+            override=False
+        )
+
+        s = URIRef('{}{}'.format(ORI.namespace,
+                                 model_object.get_ori_identifier()))
+        p = URIRef('{}type'.format(RDF.namespace))
+        o = URIRef(self.uri_format(model_object))
         self.g.add((s, p, o,))
 
         for name, definition in model_object.definitions(props=props, rels=rels):
             value = model_object.__dict__.get(name, None)
             if value:
-                p = URIRef(definition.get_full_uri())
-                o = self.serialize_prop(definition, value)
+                p = URIRef(self.uri_format(definition))
+                try:
+                    o = self.serialize_prop(definition, value)
+                except MissingProperty:
+                    raise
 
-                namespace_manager.bind(definition.ns.prefix, Namespace(definition.ns.namespace), override=False)
+                namespace_manager.bind(
+                    definition.ns.prefix,
+                    Namespace(definition.ns.namespace),
+                    override=False
+                )
                 if type(o) != list:
                     self.g.add((s, p, o,))
                 else:
                     for oo in o:
                         self.g.add((s, p, oo,))
             elif definition.required and not model_object.Meta.skip_validation:
-                raise RequiredProperty("Property '%s' is required for %s" %
-                                       (name, model_object.get_prefix_uri()))
+                raise RequiredProperty("Property '{}' is required for {}".format(
+                    name, model_object.prefix_uri())
+                )
 
     def serialize(self, model_object, format='turtle'):
-        self.g = Graph()
+        """Serializes `model_object` to a  RDF `format`, defaults to 'turtle'.
+        """
         self.deflate(model_object, props=True, rels=True)
         return self.g.serialize(format=format)
 
     def serialize_prop(self, prop, value):
+        """Calls the super method and applies rdflib specific logic on it.
+
+        Most properties will returned as a rdflib `Literal`. Relations will be
+        iterated and returned as `URIRef`.
+        """
         serialized = super(RDFSerializer, self).serialize_prop(prop, value)
 
         if type(prop) == StringProperty:
@@ -186,9 +204,9 @@ class RDFSerializer(BaseSerializer):
             return Literal(serialized, datatype=XSD.dateTime)
 
         elif type(prop) == ArrayProperty:
-            return Literal(serialized)  # todo?
+            return Literal(serialized)  # todo tests?
 
-        elif type(prop) == InlineRelation or type(prop) == Relation or type(prop) == OrderedRelation:
+        elif type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             o = BNode()
             for _, item in iterate(value):
@@ -196,23 +214,58 @@ class RDFSerializer(BaseSerializer):
                 if isinstance(item, Relationship):
                     item = item.model
                 self.deflate(item, props=True, rels=True)
-                props.append(URIRef('%s%s' % (ORI.namespace, item.get_ori_identifier())))
+                props.append(URIRef('{}{}'.format(ORI.namespace,
+                                                  item.get_ori_identifier())))
 
             if type(prop) == OrderedRelation:
                 Collection(self.g, o, props)
                 return o
             return props
         else:
-            raise SerializerError("")
+            raise SerializerError(
+                "Cannot serialize the property of type '{}'".format(type(prop))
+            )
 
 
-class JsonLDSerializer(BaseSerializer):
-    @staticmethod
-    def get_context(model_object):
+class JsonSerializer(BaseSerializer):
+    """The `JsonSerializer` converts models to basic json data."""
+
+    def __init__(self):
+        super(JsonSerializer, self).__init__('name')
+
+    def serialize(self, model_object):
+        return self.deflate(model_object, props=True, rels=True)
+
+    def serialize_prop(self, prop, value):
+        """Serializes `Relation` and `OrderedRelation` references as a prefix.
+
+        For all other properties super is called.
+        """
+        if type(prop) == Relation or type(prop) == OrderedRelation:
+            props = list()
+            for _, item in iterate(value):
+                from .model import Relationship
+                if isinstance(item, Relationship):
+                    item = item.model
+
+                props.append('{}:{}'.format(ORI.prefix, item.get_ori_identifier()))
+
+            if len(props) == 1:
+                return props[0]
+            return props
+
+        return super(JsonSerializer, self).serialize_prop(prop, value)
+
+
+class JsonLDSerializer(JsonSerializer):
+    """The `JsonLDSerializer` behaves like `JsonSerializer but adds @context."""
+
+    def serialize(self, model_object):
+        """Serializes `model_object` to JsonLD and adds @context."""
         context = {}
         for name, prop in model_object.definitions():
             context[name] = {
-                '@id': prop.get_full_uri(),
+                '@id': prop.full_uri(),
                 '@type': '@id',
             }
 
@@ -222,16 +275,7 @@ class JsonLDSerializer(BaseSerializer):
                     '@id': ns.namespace,
                     '@type': '@id',
                 }
-        return context
 
-    def serialize(self, model_object):
-        self.set_uri_format('name')
         deflated = self.deflate(model_object, props=True, rels=True)
-        deflated['@context'] = self.get_context(model_object)
+        deflated['@context'] = context
         return deflated
-
-
-class JsonSerializer(BaseSerializer):
-    def serialize(self, model_object):
-        self.set_uri_format('name')
-        return self.deflate(model_object, props=True, rels=True)

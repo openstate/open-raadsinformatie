@@ -123,3 +123,4 @@ class ModelsTestCase(TestCase):
 # ModelsTestCase is parsed. Add additional testcases when required
 from .neo4j import Neo4jTestCase
 from .database import DatabaseTestCase
+from .serializers import SerializersTestCase
