@@ -4,35 +4,35 @@ http://www.w3.org/ns/org#
 
 import foaf
 import owl
-from ocd_backend.models.definitions import ORG, SKOS, OPENGOV, DCTERMS, SCHEMA,\
-    RDF
+from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
+    Schema, Rdf
 from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
     Relation, OrderedRelation
 
 
-class Membership(owl.Thing):
-    member = Relation(ORG, 'member')
-    organization = Relation(ORG, 'organization')
-    role = StringProperty(ORG, 'role')
-    start_date = DateTimeProperty(SCHEMA, 'validFrom')
-    end_date = DateTimeProperty(OPENGOV, 'validUntil')
+class Membership(Org, owl.Thing):
+    member = Relation(Org, 'member')
+    organization = Relation(Org, 'organization')
+    role = StringProperty(Org, 'role')
+    start_date = DateTimeProperty(Schema, 'validFrom')
+    end_date = DateTimeProperty(Opengov, 'validUntil')
 
 
-class Role(owl.Thing):
+class Role(Org, owl.Thing):
     pass
 
 
-class Organization(foaf.Agent):
-    area = Relation(OPENGOV, 'area')
-    contact_details = Relation(OPENGOV, 'contactDetail')
-    abstract = StringProperty(DCTERMS, 'abstract')
-    description = StringProperty(DCTERMS, 'description')
-    classification = StringProperty(ORG, 'classification')
-    parent = OrderedRelation(ORG, 'subOrganizationOf')
-    other_names = StringProperty(OPENGOV, 'otherName')
-    links = StringProperty(RDF, 'seeAlso')
-    dissolution_date = StringProperty(SCHEMA, 'dissolutionDate')
-    founding_date = StringProperty(SCHEMA, 'foundingDate')
-    image = StringProperty(SCHEMA, 'image')
-    alt_label = StringProperty(SKOS, 'altLabel')
-    name = StringProperty(SKOS, 'prefLabel')
+class Organization(Org, foaf.Agent):
+    area = Relation(Opengov, 'area')
+    contact_details = Relation(Opengov, 'contactDetail')
+    abstract = StringProperty(Dcterms, 'abstract')
+    description = StringProperty(Dcterms, 'description')
+    classification = StringProperty(Org, 'classification')
+    parent = OrderedRelation(Org, 'subOrganizationOf')
+    other_names = StringProperty(Opengov, 'otherName')
+    links = StringProperty(Rdf, 'seeAlso')
+    dissolution_date = StringProperty(Schema, 'dissolutionDate')
+    founding_date = StringProperty(Schema, 'foundingDate')
+    image = StringProperty(Schema, 'image')
+    alt_label = StringProperty(Skos, 'altLabel')
+    name = StringProperty(Skos, 'prefLabel')

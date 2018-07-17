@@ -1,28 +1,110 @@
 from ocd_backend.models.misc import Namespace
 
+
 # Namespaces used in this project
-FOAF = Namespace('http://xmlns.com/foaf/0.1/', 'foaf')
-NCAL = Namespace('http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#', 'ncal')
-OPENGOV = Namespace('http://www.w3.org/ns/opengov#', 'opengov')
-ORG = Namespace('http://www.w3.org/ns/org#', 'org')
-MEETING = Namespace('https://argu.co/ns/meeting/', 'meeting')
-MAPPING = Namespace('https://argu.co/voc/mapping/', 'mapping')
-META = Namespace('https://argu.co/ns/meta#', 'meta')
-OWL = Namespace('http://www.w3.org/2002/07/owl#', 'owl')
-PERSON = Namespace('http://www.w3.org/ns/person#', 'person')
-SCHEMA = Namespace('http://schema.org/', 'schema')
-RDF = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#', 'rdf')
-RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#', 'rdfs')
-DCTERMS = Namespace('http://purl.org/dc/terms/', 'dcterms')
-SKOS = Namespace('http://www.w3.org/2004/02/skos/core#', 'skos')
-BIO = Namespace('http://purl.org/vocab/bio/0.1/', 'bio')
-BIBFRAME = Namespace('http://bibframe.org/vocab/', 'bibframe')
-PROV = Namespace('https://www.w3.org/TR/2013/REC-prov-o-20130430/#', 'prov')
-PAV = Namespace('http://purl.org/pav/', 'pav')
-ORI = Namespace('https://api.openraadsinformatie.nl/id/', 'ori')
-# OPAQUEMODEL = Namespace('https://argu.co/ns/opaque-model/')
+
+
+class Foaf(Namespace):
+    uri = 'http://xmlns.com/foaf/0.1/'
+    prefix = 'foaf'
+
+
+class Ncal(Namespace):
+    uri = 'http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#'
+    prefix = 'ncal'
+
+
+class Opengov(Namespace):
+    uri = 'http://www.w3.org/ns/opengov#'
+    prefix = 'opengov'
+
+
+class Org(Namespace):
+    uri = 'http://www.w3.org/ns/org#'
+    prefix = 'org'
+
+
+class Meeting(Namespace):
+    uri = 'https://argu.co/ns/meeting/'
+    prefix = 'meeting'
+
+
+class Mapping(Namespace):
+    uri = 'https://argu.co/voc/mapping/'
+    prefix = 'mapping'
+
+
+class Meta(Namespace):
+    uri = 'https://argu.co/ns/meta#'
+    prefix = 'meta'
+
+
+class Owl(Namespace):
+    uri = 'http://www.w3.org/2002/07/owl#'
+    prefix = 'owl'
+
+
+class Person(Namespace):
+    uri = 'http://www.w3.org/ns/person#'
+    prefix = 'person'
+
+
+class Schema(Namespace):
+    uri = 'http://schema.org/'
+    prefix = 'schema'
+
+
+class Rdf(Namespace):
+    uri = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
+    prefix = 'rdf'
+
+
+class Rdfs(Namespace):
+    uri = 'http://www.w3.org/2000/01/rdf-schema#'
+    prefix = 'rdfs'
+
+
+class Dcterms(Namespace):
+    uri = 'http://purl.org/dc/terms/'
+    prefix = 'dcterms'
+
+
+class Skos(Namespace):
+    uri = 'http://www.w3.org/2004/02/skos/core#'
+    prefix = 'skos'
+
+
+class Bio(Namespace):
+    uri = 'http://purl.org/vocab/bio/0.1/'
+    prefix = 'bio'
+
+
+class Bibframe(Namespace):
+    uri = 'http://bibframe.org/vocab/'
+    prefix = 'bibframe'
+
+
+class Prov(Namespace):
+    uri = 'https://www.w3.org/TR/2013/REC-prov-o-20130430/#'
+    prefix = 'prov'
+
+
+class Pav(Namespace):
+    uri = 'http://purl.org/pav/'
+    prefix = 'pav'
+
+
+class Ori(Namespace):
+    uri = 'https://api.openraadsinformatie.nl/id/'
+    prefix = 'ori'
+
+
+# class Opaque(Namespace):
+#     uri = 'https://argu.co/ns/opaque-model/'
+#     prefix = 'opaque'
+
 
 ALL = [
-    FOAF, NCAL, OPENGOV, ORG, MEETING, MAPPING, META, OWL, PERSON,
-    SCHEMA, RDF, RDFS, DCTERMS, SKOS, BIO, BIBFRAME, PROV, ORI
+    Foaf, Ncal, Opengov, Org, Meeting, Mapping, Meta, Owl, Person,
+    Schema, Rdf, Rdfs, Dcterms, Skos, Bio, Bibframe, Prov, Ori
 ]

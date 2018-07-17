@@ -1,8 +1,8 @@
 from unittest import TestCase
-from ocd_backend.models.serializers import RDFSerializer
+from ocd_backend.models.serializers import RdfSerializer
 from ocd_backend.models import Organization
-from ocd_backend.models.misc import URI
-from ocd_backend.models.definitions import MAPPING
+from ocd_backend.models.misc import Uri
+from ocd_backend.models.definitions import Mapping
 from ocd_backend.models.exceptions import MissingProperty
 
 
@@ -14,16 +14,16 @@ class SerializersTestCase(TestCase):
         pass
 
     def test_unsaved_model(self):
-        model = Organization(URI(MAPPING, 'cbs/identifier'), 'SomeID0123', 'Alkmaar')
+        model = Organization(Uri(Mapping, 'cbs/identifier'), 'SomeID0123', 'Alkmaar')
 
         with self.assertRaises(MissingProperty):
-            serializer = RDFSerializer()
+            serializer = RdfSerializer()
             serializer.serialize(model)
 
     def test_rdf_serializer(self):
-        model = Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
         model.save()
 
-        serializer = RDFSerializer()
+        serializer = RdfSerializer()
         a = serializer.serialize(model)
         print a

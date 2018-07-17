@@ -3,8 +3,8 @@ from ocd_backend.models.database import Neo4jDatabase
 from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.model import Model
 from ocd_backend.models import Organization, AlmanakOrganizationName, CbsIdentifier
-from ocd_backend.models.misc import URI
-from ocd_backend.models.definitions import MAPPING
+from ocd_backend.models.misc import Uri
+from ocd_backend.models.definitions import Mapping
 
 
 class DatabaseTestCase(TestCase):
@@ -47,15 +47,15 @@ class DatabaseTestCase(TestCase):
     #     self.assertEqual(result[0]['rels'], 6)
 
     def test_replace_nodes(self):
-        object_model = Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'De gemeente Alkmaar'
 
-        a = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
         a.name = 'a'
 
-        b = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
         b.name = 'b'
 
         object_model.parent = [a, b]
@@ -69,15 +69,15 @@ class DatabaseTestCase(TestCase):
         self.assertEqual(result[0]['rels'], 10)
 
         # Make a new object that matches everything but description
-        object_model = Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'De gemeente Alkmaar bestaat al lang'
 
-        a = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
         a.name = 'a'
 
-        b = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
         b.name = 'b'
 
         object_model.parent = [a, b]
@@ -90,15 +90,15 @@ class DatabaseTestCase(TestCase):
 
         second_identifier = object_model.get_ori_identifier()
 
-        object_model = Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'MAAR NU CAPS'
 
-        a = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
         a.name = 'a'
 
-        b = Organization(URI(MAPPING, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
         b.name = 'b'
 
         object_model.parent = [a, b]

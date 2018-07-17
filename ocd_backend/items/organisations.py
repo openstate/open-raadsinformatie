@@ -1,7 +1,7 @@
 from ocd_backend.items import BaseItem
 from ocd_backend.models import Organization, AlmanakOrganizationName, CbsIdentifier
 from ocd_backend.models.model import Relationship
-from ocd_backend.models.serializers import RDFSerializer
+from ocd_backend.models.serializers import Rdfserializer
 
 class MunicipalityOrganisationItem(BaseItem):
     def get_rights(self):
@@ -37,7 +37,7 @@ class MunicipalityOrganisationItem(BaseItem):
         #object_model.parent = [a, b]
         #object_model.parent = Relationship(a, b, rel=c)
 
-        #abc = RDFSerializer().serialize(object_model)
+        #abc = Rdfserializer().serialize(object_model)
 
         return object_model
 

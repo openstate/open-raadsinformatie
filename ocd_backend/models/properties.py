@@ -5,14 +5,14 @@ class PropertyBase(object):
     """The base propery all properties and relations should inherit from."""
 
     def __init__(self, ns, name, required=False):
-        assert isinstance(ns, Namespace)
+        assert issubclass(ns, Namespace)
         self.ns = ns
         self.required = required
         self._name = name
 
     def full_uri(self):
         """Returns a full uri."""
-        return '{}{}'.format(self.ns.namespace, self._name)
+        return '{}{}'.format(self.ns.uri, self._name)
 
     def prefix_uri(self):
         """Returns a prefixed uri like prefix:name."""

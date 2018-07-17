@@ -3,9 +3,9 @@
 from neo4j.v1 import GraphDatabase
 from pypher import Pypher, Param, __
 
-from ocd_backend.models.definitions import PROV, PAV, MAPPING
+from ocd_backend.models.definitions import Prov, Pav, Mapping
 from ocd_backend.models.exceptions import QueryResultError
-from ocd_backend.models.misc import URI
+from ocd_backend.models.misc import Uri
 from ocd_backend.settings import NEO4J_URL, NEO4J_USER, NEO4J_PASSWORD
 
 
@@ -60,12 +60,12 @@ class Neo4jDatabase(object):
         """Creates constraints on identifiers in Neo4j"""
         self.session.run(
             'CREATE CONSTRAINT ON (x:Hot)'
-            'ASSERT x.`{}` IS UNIQUE'.format(URI(MAPPING, 'ori/identifier'))
+            'ASSERT x.`{}` IS UNIQUE'.format(Uri(Mapping, 'ori/identifier'))
         )
 
         self.session.run(
             'CREATE CONSTRAINT ON (x:Live)'
-            'ASSERT x.`{}` IS UNIQUE'.format(URI(MAPPING, 'ori/sourceLocator'))
+            'ASSERT x.`{}` IS UNIQUE'.format(Uri(Mapping, 'ori/sourceLocator'))
         )
 
     def get_identifier_by_source_id(self, model_object, source_id):
@@ -78,10 +78,10 @@ class Neo4jDatabase(object):
 
         q = Pypher()
         q.Match.node('n2', labels=['Cold', label],
-                     **{URI(MAPPING, 'ori/sourceLocator'): source_id}) \
+                     **{Uri(Mapping, 'ori/sourceLocator'): source_id}) \
             .rel() \
             .node('n1', labels=['Hot', label])
-        q.Return(__.n1.property(URI(MAPPING, 'ori/identifier'))) \
+        q.Return(__.n1.property(Uri(Mapping, 'ori/identifier'))) \
             .As('ori_identifier')
 
         result = self.query(str(q), **q.bound_params)
@@ -109,14 +109,14 @@ class Neo4jDatabase(object):
         The first and second query will match the `Cold` node based on the
         source_id.
         """
-        was_revision_of = URI(PROV, 'wasRevisionOf')
-        provided_by = URI(PAV, 'providedBy')
-        software_agent = URI(PROV, 'SoftwareAgent')
+        was_revision_of = Uri(Prov, 'wasRevisionOf')
+        provided_by = Uri(Pav, 'providedBy')
+        software_agent = Uri(Prov, 'SoftwareAgent')
 
         label = self.serializer.label(model_object)
         n2_props = self.serializer.deflate(model_object, props=True, rels=False)
         n2_match = {
-            URI(MAPPING, 'ori/sourceLocator'): model_object.source_locator
+            Uri(Mapping, 'ori/sourceLocator'): model_object.source_locator
         }
 
         # Add a new version if an older version already exists
@@ -167,7 +167,7 @@ class Neo4jDatabase(object):
 
         # n1_props = n2_props + ori_identifier
         n1_props = {
-            URI(MAPPING, 'ori/identifier'):
+            Uri(Mapping, 'ori/identifier'):
                 model_object.generate_ori_identifier()
         }
         n1_props.update(n2_props)
@@ -175,7 +175,7 @@ class Neo4jDatabase(object):
         # Create a new entity when no matching node seems to exist
         q = Pypher()
         q.Create.node('n1', labels=[self.HOT, label], **n1_props) \
-            .rel_out(labels=URI(PROV, 'wasDerivedFrom')) \
+            .rel_out(labels=Uri(Prov, 'wasDerivedFrom')) \
             .node('n2', labels=[self.COLD, label], **n2_props)
         q.Merge.node('n5', labels=[self.ARCHIVE, software_agent],
                      name=model_object.was_derived_from)
@@ -199,7 +199,7 @@ class Neo4jDatabase(object):
         """
         from .model import Model, Relationship
 
-        source_locator = URI(MAPPING, 'ori/sourceLocator')
+        source_locator = Uri(Mapping, 'ori/sourceLocator')
 
         r1_props = dict()
         if isinstance(that_object, Relationship):
@@ -230,7 +230,7 @@ class Neo4jDatabase(object):
         All relations between these nodes that do not already exist are copied.
         Only direct relations between `Cold` nodes are matched.
         """
-        was_derived_from = URI(PROV, 'wasDerivedFrom')
+        was_derived_from = Uri(Prov, 'wasDerivedFrom')
 
         q = Pypher()
         q.Match.node('n1', labels=self.HOT) \

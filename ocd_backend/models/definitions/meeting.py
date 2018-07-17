@@ -9,100 +9,100 @@ an assembly of people) discussion.
 
 import opengov
 import schema
-from ocd_backend.models.definitions import OPENGOV, SCHEMA, MEETING
+from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     Relation
 
 
-class Meeting(schema.Event):
+class Meeting(MeetingNS, schema.Event):
     """An assembly of people for a particular purpose, especially for formal
     discussion. Subclass of :class:`.schema.Event`
     """
-    agenda = Relation(MEETING, 'agenda')
-    attachment = Relation(MEETING, 'attachment')
-    motion = Relation(OPENGOV, 'motion')
-    attendee = Relation(SCHEMA, 'attendee')
-    audio = Relation(SCHEMA, 'audio')
-    description = StringProperty(SCHEMA, 'description')
-    status = Relation(SCHEMA, 'eventStatus')
-    location = StringProperty(SCHEMA, 'location')
-    name = StringProperty(SCHEMA, 'name', required=True)
-    organization = Relation(SCHEMA, 'organizer')
-    committee = Relation(MEETING, 'committee')
-    parent = Relation(SCHEMA, 'superEvent')
-    chair = StringProperty(MEETING, 'chair')
-    absentee = Relation(SCHEMA, 'absentee')
-    invitee = Relation(SCHEMA, 'invitee')
+    agenda = Relation(MeetingNS, 'agenda')
+    attachment = Relation(MeetingNS, 'attachment')
+    motion = Relation(Opengov, 'motion')
+    attendee = Relation(Schema, 'attendee')
+    audio = Relation(Schema, 'audio')
+    description = StringProperty(Schema, 'description')
+    status = Relation(Schema, 'eventStatus')
+    location = StringProperty(Schema, 'location')
+    name = StringProperty(Schema, 'name', required=True)
+    organization = Relation(Schema, 'organizer')
+    committee = Relation(MeetingNS, 'committee')
+    parent = Relation(Schema, 'superEvent')
+    chair = StringProperty(MeetingNS, 'chair')
+    absentee = Relation(Schema, 'absentee')
+    invitee = Relation(Schema, 'invitee')
 
 
-class Amendment(opengov.Motion):
+class Amendment(MeetingNS, opengov.Motion):
     """A proposal to modify another proposal. Subclass of
     :class:`.opengov.Motion`
     """
-    amends = Relation(MEETING, 'amends')
+    amends = Relation(MeetingNS, 'amends')
 
 
-class AgendaItem(schema.Event):
+class AgendaItem(MeetingNS, schema.Event):
     """An item in a list of topics to be discussed at an event. Subclass of
     :class:`.schema.Event`
     """
-    attachment = Relation(MEETING, 'attachment')
-    motion = Relation(OPENGOV, 'motion')
-    description = StringProperty(SCHEMA, 'description')
-    name = StringProperty(SCHEMA, 'name')
-    position = IntegerProperty(SCHEMA, 'position')
-    parent = Relation(SCHEMA, 'superEvent')
-    vote_event = Relation(OPENGOV, 'voteEvent')
-    attendee = Relation(SCHEMA, 'attendee')
-    absentee = Relation(SCHEMA, 'absentee')
-    agenda = Relation(MEETING, 'agenda')
+    attachment = Relation(MeetingNS, 'attachment')
+    motion = Relation(Opengov, 'motion')
+    description = StringProperty(Schema, 'description')
+    name = StringProperty(Schema, 'name')
+    position = IntegerProperty(Schema, 'position')
+    parent = Relation(Schema, 'superEvent')
+    vote_event = Relation(Opengov, 'voteEvent')
+    attendee = Relation(Schema, 'attendee')
+    absentee = Relation(Schema, 'absentee')
+    agenda = Relation(MeetingNS, 'agenda')
 
 
 # Result Individuals
-class ResultKept(Individual):
+class ResultKept(MeetingNS, Individual):
     """When a proposal is kept for later processing"""
     pass
 
 
-class ResultPostponed(Individual):
+class ResultPostponed(MeetingNS, Individual):
     """When a proposal is postponed to a later (unspecified) moment"""
     pass
 
 
-class ResultWithdrawn(Individual):
+class ResultWithdrawn(MeetingNS, Individual):
     """When a proposal is withdrawn by its author"""
     pass
 
 
-class ResultExpired(Individual):
+class ResultExpired(MeetingNS, Individual):
     """When a proposal has been expired"""
     pass
 
 
-class ResultDiscussed(Individual):
+class ResultDiscussed(MeetingNS, Individual):
     """When a proposal has been discussed"""
     pass
 
 
-class ResultPublished(Individual):
+class ResultPublished(MeetingNS, Individual):
     """When a proposal has been published"""
     pass
 
 
 # EventStatusType Individuals
-class EventCompleted(Individual):
+class EventCompleted(MeetingNS, Individual):
     """The event has taken place and has been completed"""
     pass
 
 
-class EventConfirmed(Individual):
+class EventConfirmed(MeetingNS, Individual):
     """The event will take place but has not been
     :class:`.schema.EventScheduled` yet
     """
     pass
 
 
-class EventUnconfirmed(Individual):
+class EventUnconfirmed(MeetingNS, Individual):
     """The event is not :class:`EventConfirmed` or is inactive"""
     pass

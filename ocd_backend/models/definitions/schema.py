@@ -3,84 +3,84 @@ http://schema.org/
 """
 
 import owl
-from ocd_backend.models.definitions import SCHEMA, OPENGOV
+from ocd_backend.models.definitions import Schema, Opengov
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     DateTimeProperty, ArrayProperty, Relation
 
 
-class MediaObject(owl.Thing):
-    name = StringProperty(SCHEMA, 'name')
-    url = StringProperty(SCHEMA, 'contentUrl')
-    size_in_bytes = IntegerProperty(SCHEMA, 'fileSize')
-    file_type = StringProperty(SCHEMA, 'fileType')
-    additional_type = StringProperty(SCHEMA, 'additionalType')
-    creator = Relation(SCHEMA, 'creator')
-    content_type = StringProperty(SCHEMA, 'fileFormat')
-    original_url = StringProperty(SCHEMA, 'isBasedOn')
-    text = StringProperty(SCHEMA, 'text')
+class MediaObject(Schema, owl.Thing):
+    name = StringProperty(Schema, 'name')
+    url = StringProperty(Schema, 'contentUrl')
+    size_in_bytes = IntegerProperty(Schema, 'fileSize')
+    file_type = StringProperty(Schema, 'fileType')
+    additional_type = StringProperty(Schema, 'additionalType')
+    creator = Relation(Schema, 'creator')
+    content_type = StringProperty(Schema, 'fileFormat')
+    original_url = StringProperty(Schema, 'isBasedOn')
+    text = StringProperty(Schema, 'text')
 
     class Meta:
         enricher_task = 'file_to_text'
 
 
-class AudioObject(owl.Thing):
-    contentUrl = StringProperty(SCHEMA, 'contentUrl')
+class AudioObject(Schema, owl.Thing):
+    contentUrl = StringProperty(Schema, 'contentUrl')
 
 
-class CreativeWork(owl.Thing):
-    legislative_session = Relation(OPENGOV, 'legislativeSession')
-    creator = Relation(SCHEMA, 'creator')
-    date_created = DateTimeProperty(SCHEMA, 'dateCreated')
-    name = StringProperty(SCHEMA, 'name')
-    organizer = Relation(SCHEMA, 'organizer')
-    text = StringProperty(SCHEMA, 'text')
+class CreativeWork(Schema, owl.Thing):
+    legislative_session = Relation(Opengov, 'legislativeSession')
+    creator = Relation(Schema, 'creator')
+    date_created = DateTimeProperty(Schema, 'dateCreated')
+    name = StringProperty(Schema, 'name')
+    organizer = Relation(Schema, 'organizer')
+    text = StringProperty(Schema, 'text')
 
 
-class Event(owl.Thing):
-    end_date = DateTimeProperty(SCHEMA, 'endDate')
-    start_date = DateTimeProperty(SCHEMA, 'startDate')
+class Event(Schema, owl.Thing):
+    end_date = DateTimeProperty(Schema, 'endDate')
+    start_date = DateTimeProperty(Schema, 'startDate')
 
 
-class ImageObject(owl.Thing):
-    content_url = StringProperty(SCHEMA, 'contentUrl')
-    is_based_on = StringProperty(SCHEMA, 'isBasedOn')
-    file_format = StringProperty(SCHEMA, 'fileFormat')
-    content_size = StringProperty(SCHEMA, 'contentSize')
-    encoding_format = StringProperty(SCHEMA, 'encodingFormat')
-    exif_data = ArrayProperty(SCHEMA, 'exifData')
-    width = StringProperty(SCHEMA, 'width')
-    height = StringProperty(SCHEMA, 'height')
+class ImageObject(Schema, owl.Thing):
+    content_url = StringProperty(Schema, 'contentUrl')
+    is_based_on = StringProperty(Schema, 'isBasedOn')
+    file_format = StringProperty(Schema, 'fileFormat')
+    content_size = StringProperty(Schema, 'contentSize')
+    encoding_format = StringProperty(Schema, 'encodingFormat')
+    exif_data = ArrayProperty(Schema, 'exifData')
+    width = StringProperty(Schema, 'width')
+    height = StringProperty(Schema, 'height')
 
     class Meta:
         enricher_task = 'image_metadata'
 
 
-class PropertyValue(owl.Thing):
-    name = StringProperty(SCHEMA, 'name')
-    value = StringProperty(SCHEMA, 'value')
+class PropertyValue(Schema, owl.Thing):
+    name = StringProperty(Schema, 'name')
+    value = StringProperty(Schema, 'value')
 
 
-class Place(owl.Thing):
+class Place(Schema, owl.Thing):
     pass
 
 
-class VideoObject(owl.Thing):
-    content_url = StringProperty(SCHEMA, 'contentUrl')
+class VideoObject(Schema, owl.Thing):
+    content_url = StringProperty(Schema, 'contentUrl')
 
 
 # EventStatusType Individuals
-class EventCancelled(Individual):
+class EventCancelled(Schema, Individual):
     pass
 
 
-class EventPostponed(Individual):
+class EventPostponed(Schema, Individual):
     pass
 
 
-class EventRescheduled(Individual):
+class EventRescheduled(Schema, Individual):
     pass
 
 
-class EventScheduled(Individual):
+class EventScheduled(Schema, Individual):
     pass

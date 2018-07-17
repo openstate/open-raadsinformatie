@@ -2,30 +2,16 @@
 
 import re
 
-import properties
 from ocd_backend import celery_app
+from ocd_backend.models.database import Neo4jDatabase
+from ocd_backend.models.definitions import Mapping, Prov
+from ocd_backend.models.exceptions import MissingProperty, ValidationError, \
+    QueryResultError
+from ocd_backend.models.properties import PropertyBase, Property, \
+    StringProperty, IntegerProperty, Relation
+from ocd_backend.models.serializers import Neo4jSerializer
+from ocd_backend.models.misc import Namespace
 from ocd_backend.utils.misc import iterate, load_object
-from .database import Neo4jDatabase
-from .definitions import MAPPING, PROV
-from .exceptions import MissingProperty, ValidationError, QueryResultError
-from .properties import StringProperty, IntegerProperty
-from .serializers import Neo4jSerializer
-
-
-class Singleton(dict):
-    def __new__(cls, model_class=None):
-        """Implement as a Singleton"""
-        if model_class and model_class.__name__ in ['Model', 'Individual']:
-            return
-
-        if not hasattr(cls, 'instance'):
-            cls.instance = super(Singleton, cls).__new__(cls)
-            cls.instance.full_uris = dict()
-
-        if model_class:
-            uri = model_class.full_uri()
-            cls.instance.full_uris[uri] = model_class
-        return cls.instance
 
 
 class ModelMetaclass(type):
@@ -36,18 +22,15 @@ class ModelMetaclass(type):
         # Collect fields from current class.
         definitions = dict()
         for key, value in list(attrs.items()):
-            if isinstance(value, properties.PropertyBase):
+            if isinstance(value, PropertyBase):
                 definitions[key] = value
                 attrs.pop(key)
         attrs['__definitions__'] = definitions
 
-        # Resolving namespace by module name
-        namespace_string = 'ocd_backend.models.definitions.%s' % \
-                           attrs['__module__'].rpartition('.')[2].upper()
-        try:
-            attrs['__namespace__'] = load_object(namespace_string)
-        except NameError:
-            attrs['__namespace__'] = None
+        if len(bases) > 1:
+            assert issubclass(bases[0], Namespace)
+            attrs['ns'] = bases[0]
+            bases = bases[1:]
 
         # attr = getattr(self, key)
         # if not isinstance(attr, PropertyBase):
@@ -74,14 +57,6 @@ class ModelMetaclass(type):
 
         new_class.__definitions__ = definitions
 
-        if not new_class.__namespace__:
-            try:
-                new_class.__namespace__ = new_class.Meta.namespace
-            except:
-                pass
-
-        a = Singleton(model_class=new_class)
-
         return new_class
 
 
@@ -89,9 +64,9 @@ class Model(object):
     __metaclass__ = ModelMetaclass
 
     # Top-level definitions
-    ori_identifier = IntegerProperty(MAPPING, 'ori/identifier')
-    source_locator = StringProperty(MAPPING, 'ori/sourceLocator')
-    was_derived_from = StringProperty(PROV, 'wasDerivedFrom')
+    ori_identifier = IntegerProperty(Mapping, 'ori/identifier')
+    source_locator = StringProperty(Mapping, 'ori/sourceLocator')
+    was_derived_from = StringProperty(Prov, 'wasDerivedFrom')
 
     class Meta:
         namespace = None
@@ -108,19 +83,19 @@ class Model(object):
 
     @classmethod
     def prefix_uri(cls):
-        return '%s:%s' % (cls.__namespace__.prefix, cls.name())
+        return '%s:%s' % (cls.ns.prefix, cls.name())
 
     @classmethod
     def full_uri(cls):
-        return '%s%s' % (cls.__namespace__.namespace, cls.name())
+        return '%s%s' % (cls.ns.uri, cls.name())
 
     @classmethod
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
         for name, definition in cls.__definitions__.items():  # pylint: disable=no-member
-            if (props and isinstance(definition, properties.Property) or
-                    (rels and isinstance(definition, properties.Relation))):
+            if (props and isinstance(definition, Property) or
+                    (rels and isinstance(definition, Relation))):
                 props_list.append((name, definition,))
         return props_list
 
@@ -171,7 +146,7 @@ class Model(object):
 
         if source:
             # identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
-            #  Organization(URI(MAPPING, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+            #  Organization(URI(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
             setattr(self, 'source_locator', source_id)
             setattr(self, 'was_derived_from', source)
 

@@ -8,24 +8,24 @@ the data.
 """
 
 import owl
-from ocd_backend.models.definitions import META, MEETING
+from ocd_backend.models.definitions import Meta, Meeting
 from ocd_backend.models.properties import StringProperty, DateTimeProperty
 
 
-class Metadata(owl.Thing):
+class Metadata(Meta, owl.Thing):
     # todo needs to be formalized in a ontology
-    status = StringProperty(META, 'status')
-    processing_started = DateTimeProperty(META, 'processingStarted')
-    source_id = StringProperty(META, 'sourceId')
-    collection = StringProperty(META, 'collection')
-    rights = StringProperty(META, 'rights')
+    status = StringProperty(Meta, 'status')
+    processing_started = DateTimeProperty(Meta, 'processingStarted')
+    source_id = StringProperty(Meta, 'sourceId')
+    collection = StringProperty(Meta, 'collection')
+    rights = StringProperty(Meta, 'rights')
 
     class Meta:
         skip_validation = True
 
 
-class Run(owl.Thing):
-    run_identifier = StringProperty(MEETING, 'runIdentifier')
+class Run(Meta, owl.Thing):
+    run_identifier = StringProperty(Meeting, 'runIdentifier')
 
     class Meta:
         skip_validation = True

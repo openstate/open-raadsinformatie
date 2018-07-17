@@ -3,7 +3,8 @@ http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#
 """
 
 import owl
+from ocd_backend.models.definitions import Ncal
 
 
-class Category(owl.Thing):
+class Category(Ncal, owl.Thing):
     pass

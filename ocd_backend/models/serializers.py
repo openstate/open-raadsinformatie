@@ -2,7 +2,7 @@ from rdflib import Literal, URIRef, Graph, BNode
 from rdflib.collection import Collection
 from rdflib.namespace import XSD, Namespace, NamespaceManager
 
-from ocd_backend.models.definitions import ALL, RDF, ORI
+from ocd_backend.models.definitions import ALL, Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
@@ -125,8 +125,8 @@ class Neo4jSerializer(BaseSerializer):
         pass
 
 
-class RDFSerializer(BaseSerializer):
-    """The `RDFSerializer` create a graph and add the properties as RDF triples.
+class RdfSerializer(BaseSerializer):
+    """The `Rdfserializer` create a graph and add the properties as Rdf triples.
 
     This uses rdflib to create a graph which can be serialized to the various
     formats that rdflib supports."""
@@ -134,25 +134,25 @@ class RDFSerializer(BaseSerializer):
     def __init__(self):
         """Set all properties in the Neo4j to be fully qualified."""
         self.g = Graph()
-        super(RDFSerializer, self).__init__('full')
+        super(RdfSerializer, self).__init__('full')
 
     def deflate(self, model_object, props, rels):
         """Overrides the `BaseSerializer` method to add graph logic."""
         namespace_manager = NamespaceManager(self.g)
         namespace_manager.bind(
-            ORI.prefix,
-            Namespace(ORI.namespace),
+            Ori.prefix,
+            Namespace(Ori.uri),
             override=False
         )
         namespace_manager.bind(
-            model_object.__namespace__.prefix,
-            Namespace(model_object.__namespace__.namespace),
+            model_object.ns.prefix,
+            Namespace(model_object.ns.uri),
             override=False
         )
 
-        s = URIRef('{}{}'.format(ORI.namespace,
+        s = URIRef('{}{}'.format(Ori.uri,
                                  model_object.get_ori_identifier()))
-        p = URIRef('{}type'.format(RDF.namespace))
+        p = URIRef('{}type'.format(Rdf.uri))
         o = URIRef(self.uri_format(model_object))
         self.g.add((s, p, o,))
 
@@ -167,7 +167,7 @@ class RDFSerializer(BaseSerializer):
 
                 namespace_manager.bind(
                     definition.ns.prefix,
-                    Namespace(definition.ns.namespace),
+                    Namespace(definition.ns.uri),
                     override=False
                 )
                 if type(o) != list:
@@ -181,7 +181,7 @@ class RDFSerializer(BaseSerializer):
                 )
 
     def serialize(self, model_object, format='turtle'):
-        """Serializes `model_object` to a  RDF `format`, defaults to 'turtle'.
+        """Serializes `model_object` to a  Rdf `format`, defaults to 'turtle'.
         """
         self.deflate(model_object, props=True, rels=True)
         return self.g.serialize(format=format)
@@ -192,7 +192,7 @@ class RDFSerializer(BaseSerializer):
         Most properties will returned as a rdflib `Literal`. Relations will be
         iterated and returned as `URIRef`.
         """
-        serialized = super(RDFSerializer, self).serialize_prop(prop, value)
+        serialized = super(RdfSerializer, self).serialize_prop(prop, value)
 
         if type(prop) == StringProperty:
             return Literal(serialized, datatype=XSD.string)
@@ -214,7 +214,7 @@ class RDFSerializer(BaseSerializer):
                 if isinstance(item, Relationship):
                     item = item.model
                 self.deflate(item, props=True, rels=True)
-                props.append(URIRef('{}{}'.format(ORI.namespace,
+                props.append(URIRef('{}{}'.format(Ori.uri,
                                                   item.get_ori_identifier())))
 
             if type(prop) == OrderedRelation:
@@ -248,7 +248,7 @@ class JsonSerializer(BaseSerializer):
                 if isinstance(item, Relationship):
                     item = item.model
 
-                props.append('{}:{}'.format(ORI.prefix, item.get_ori_identifier()))
+                props.append('{}:{}'.format(Ori.prefix, item.get_ori_identifier()))
 
             if len(props) == 1:
                 return props[0]
@@ -272,7 +272,7 @@ class JsonLDSerializer(JsonSerializer):
             # Temporary solution to include all namespaces in @context
             for ns in ALL:
                 context[ns.prefix] = {
-                    '@id': ns.namespace,
+                    '@id': ns.uri,
                     '@type': '@id',
                 }
 
