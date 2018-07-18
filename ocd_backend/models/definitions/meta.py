@@ -20,12 +20,10 @@ class Metadata(Meta, owl.Thing):
     collection = StringProperty(Meta, 'collection')
     rights = StringProperty(Meta, 'rights')
 
-    class Meta:
-        skip_validation = True
+    skip_validation = True
 
 
 class Run(Meta, owl.Thing):
     run_identifier = StringProperty(Meeting, 'runIdentifier')
 
-    class Meta:
-        skip_validation = True
+    skip_validation = True

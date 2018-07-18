@@ -160,9 +160,9 @@ class MediaEnricher(BaseEnricher):
         item.content_type = content_type
         item.size_in_bytes = content_length
 
-        enrich_tasks = item.Meta.enricher_task
+        enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, basestring):
-            enrich_tasks = [item.Meta.enricher_task]
+            enrich_tasks = [item.enricher_task]
 
         for task in enrich_tasks:
             # Seek to the beginning of the file before starting a task

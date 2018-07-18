@@ -70,7 +70,7 @@ class BaseSerializer(object):
                                                                  value)
                 except MissingProperty:
                     raise
-            elif definition.required and not model_object.Meta.skip_validation:
+            elif definition.required and not model_object.skip_validation:
                 raise RequiredProperty("Property '{}' is required for {}".format(
                     name, model_object.prefix_uri()))
         return props_list
@@ -175,7 +175,7 @@ class RdfSerializer(BaseSerializer):
                 else:
                     for oo in o:
                         self.g.add((s, p, oo,))
-            elif definition.required and not model_object.Meta.skip_validation:
+            elif definition.required and not model_object.skip_validation:
                 raise RequiredProperty("Property '{}' is required for {}".format(
                     name, model_object.prefix_uri())
                 )

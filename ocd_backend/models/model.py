@@ -11,11 +11,11 @@ from ocd_backend.models.properties import PropertyBase, Property, \
     StringProperty, IntegerProperty, Relation
 from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.misc import Namespace
-from ocd_backend.utils.misc import iterate, load_object
+from ocd_backend.utils.misc import iterate
 
 
 class ModelMetaclass(type):
-    db_class = Neo4jDatabase
+    database_class = Neo4jDatabase
     serializer_class = Neo4jSerializer
 
     def __new__(mcs, name, bases, attrs):
@@ -25,38 +25,26 @@ class ModelMetaclass(type):
             if isinstance(value, PropertyBase):
                 definitions[key] = value
                 attrs.pop(key)
-        attrs['__definitions__'] = definitions
 
+        namespace = None
         if len(bases) > 1:
             assert issubclass(bases[0], Namespace)
-            attrs['ns'] = bases[0]
+            namespace = bases[0]
             bases = bases[1:]
 
-        # attr = getattr(self, key)
-        # if not isinstance(attr, PropertyBase):
-        #     raise ValueError('Predefined attribute \'%s\' of class %s is not a'
-        #                      ' subclass of PropertyBase' % (key, type(attr).__name__))
-
         new_class = super(ModelMetaclass, mcs).__new__(mcs, name, bases, attrs)
-
-        new_class.serializer = mcs.serializer_class()
-        new_class.db = mcs.db_class(new_class)
 
         # Walk through the MRO.
         for base in reversed(new_class.__mro__):
             # Collect fields from base class.
-            if hasattr(base, '__definitions__'):
-                definitions.update(base.__definitions__)
+            if hasattr(base, '_definitions'):
+                # noinspection PyProtectedMember
+                definitions.update(base._definitions)
 
-            # Meta field shadowing.
-            for attr, value in base.__dict__.items():
-                if attr == 'Meta':
-                    for key, val in value.__dict__.items():
-                        if key[0:2] != '__' and key not in new_class.Meta.__dict__:
-                            setattr(new_class.Meta, key, val)
-
-        new_class.__definitions__ = definitions
-
+        new_class._definitions = definitions
+        new_class.ns = namespace
+        new_class.serializer = mcs.serializer_class()
+        new_class.db = mcs.database_class(new_class)
         return new_class
 
 
@@ -68,17 +56,10 @@ class Model(object):
     source_locator = StringProperty(Mapping, 'ori/sourceLocator')
     was_derived_from = StringProperty(Prov, 'wasDerivedFrom')
 
-    class Meta:
-        namespace = None
-        enricher_task = None
-        legacy_type = None
-        verbose_name = None
-        skip_validation = None
-
     @classmethod
     def name(cls):
-        if cls.Meta.verbose_name:
-            return cls.Meta.verbose_name
+        if hasattr(cls, 'verbose_name'):
+            return cls.verbose_name
         return cls.__name__
 
     @classmethod
@@ -93,16 +74,16 @@ class Model(object):
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
-        for name, definition in cls.__definitions__.items():  # pylint: disable=no-member
+        for name, definition in cls._definitions.items():  # pylint: disable=no-member
             if (props and isinstance(definition, Property) or
                     (rels and isinstance(definition, Relation))):
                 props_list.append((name, definition,))
         return props_list
 
     @classmethod
-    def get_definition(cls, name):
+    def definition(cls, name):
         try:
-            return cls.__definitions__[name]
+            return cls._definitions[name]
         except KeyError:
             return
 
@@ -117,52 +98,18 @@ class Model(object):
             except KeyError:
                 raise  # todo raise correct exception
 
-        # for namespaced, value in props.items():
-        #     ns_string, name = namespaced.split(':')
-        #
-        #     for definition_name, definition_object in cls.definitions(props=True, rels=True):
-        #         if name == definition_object.local_name and ns_string == definition_object.ns.prefix:
-        #             setattr(instance, definition_name, value)
-        #             break
-
-        # instance.__temporary__ = True
         return instance
 
-    # def serializer(self):
-    #     if not self.__serializer__:
-    #         self.__serializer__ = type(self).serializer_class(self)
-    #
-    #     return self.__serializer__
-
     def __init__(self, source=None, source_id=None, organization=None):
-        self.__temporary__ = None
-        self.__rel_params__ = None  # todo
-        self.__serializer__ = None
-
-        # self.db = type(self).db_class(self)
-
-        # if identifier_class and (not source_id or not organization):
-        #    raise MissingProperty("The identifier_value has not been given")
-
         if source:
-            # identifier_object = identifier_class.set_source(identifier_class, source_id, organization)
-            #  Organization(URI(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
             setattr(self, 'source_locator', source_id)
             setattr(self, 'was_derived_from', source)
 
-            # self.get_ori_identifier()
-
-        # self.set_source_locator(organization, identifier_class, source_id)
-
-    def __getitem__(self, item):
-        return self.__dict__[item]
-
     def __setattr__(self, key, value):
-        definition = self.get_definition(key)
+        definition = self.definition(key)
 
         # pylint: disable=no-member
-        if key[0:2] != '__' and not definition and \
-                (hasattr(self, '__temporary__') and not self.__temporary__):
+        if key[0:2] != '__' and not definition:
             raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
         # pylint: enable=no-member
 
@@ -184,7 +131,7 @@ class Model(object):
         return False
 
     def __repr__(self):
-        return '<%s Model>' % self.get_prefix_uri()
+        return '<%s Model>' % self.prefix_uri()
 
     def set_source_locator(self, organization, identifier_class, source_id):
         # software / org / resource class / id
@@ -215,8 +162,8 @@ class Model(object):
         return self.ori_identifier
 
     def get_popolo_type(self):
-        if self.Meta.legacy_type:
-            return self.Meta.legacy_type
+        if hasattr(self, 'legacy_type'):
+            return self.legacy_type
 
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', type(self).get_name())
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
@@ -225,31 +172,15 @@ class Model(object):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:2] != '__'}):
-            definition = self.get_definition(name)
+            definition = self.definition(name)
             if (props and not isinstance(prop, Model)) or \
                     (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
                 props_list.append((self.serializer.uri_format(definition), prop,))
         return props_list
 
-    # def deflate(self, props=True, rels=False):
-    #     """ Returns a serialized value for each model definition """
-    #     props_list = dict()
-    #     for name, definition in self.definitions(props=props, rels=rels):
-    #         value = self.__dict__.get(name, None)
-    #         if value:
-    #             namespaced = self.serializer.uri_format(definition)
-    #             props_list[namespaced] = self.serializer.serialize_prop(definition, value)
-    #         elif definition.required and not self.Meta.skip_validation:
-    #             raise RequiredProperty("Property '%s' is required for %s" %
-    #                                    (name, self.get_prefix_uri()))
-    #     return props_list
-
     def save(self):
         self.db.replace(self)
         self.attach_recursive()
-
-    # def replace(self):
-    #    self.db.replace(self.get_ori_identifier())
 
     def attach_recursive(self):
         attach = list()
@@ -289,22 +220,6 @@ class Individual(Model):
 
         instance.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
         return instance
-
-    # @classmethod
-    # def inflate(cls, **deflated_props):
-    #
-    #     props = dict()
-    #     for full_uri, value in deflated_props.items():
-    #         definitions_mapping = {v.full_uri(): k for k, v in cls.definitions()}
-    #         try:
-    #             prop_name = definitions_mapping[full_uri]
-    #             props[prop_name] = value
-    #         except KeyError:
-    #             raise  # todo raise correct exception
-    #
-    #     args = props['source_locator'].split('/')
-    #     instance = cls(*args)
-    #     return instance
 
 
 class Relationship(object):

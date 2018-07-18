@@ -20,8 +20,7 @@ class MediaObject(Schema, owl.Thing):
     original_url = StringProperty(Schema, 'isBasedOn')
     text = StringProperty(Schema, 'text')
 
-    class Meta:
-        enricher_task = 'file_to_text'
+    enricher_task = 'file_to_text'
 
 
 class AudioObject(Schema, owl.Thing):
@@ -52,8 +51,7 @@ class ImageObject(Schema, owl.Thing):
     width = StringProperty(Schema, 'width')
     height = StringProperty(Schema, 'height')
 
-    class Meta:
-        enricher_task = 'image_metadata'
+    enricher_task = 'image_metadata'
 
 
 class PropertyValue(Schema, owl.Thing):

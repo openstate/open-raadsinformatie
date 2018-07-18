@@ -43,7 +43,7 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
     def post_processing(doc):
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
-        doc.Meta.processing_finished = finished
+        # doc.Meta.processing_finished = finished
 
 
 class ElasticsearchLoader(BaseLoader):
@@ -76,7 +76,7 @@ class ElasticsearchLoader(BaseLoader):
 
         for prop, value in doc.properties(props=True, rels=True):
             try:
-                if not value.Meta.enricher_task or \
+                if not value.enricher_task or \
                         not hasattr(value, 'original_url') or \
                         not hasattr(value, 'content_type') or \
                         not hasattr(value, 'name'):

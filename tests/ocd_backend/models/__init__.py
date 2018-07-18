@@ -6,7 +6,6 @@ from ocd_backend.models import Meeting, Organization, AgendaItem, Person
 from ocd_backend.models.model import Model
 from ocd_backend.models.properties import Property, Namespace
 from ocd_backend.models.exceptions import RequiredProperty
-#ocd_backend.settings.NEO4J_GRAPH = Graph("http://neo4j:tests@localhost:7474/db/data/")
 from unittest import TestCase
 
 

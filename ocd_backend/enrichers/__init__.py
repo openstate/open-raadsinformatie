@@ -28,7 +28,7 @@ class BaseEnricher(celery_app.Task):
             try:
                 for prop, value in doc.properties(props=True, rels=True):
                     try:
-                        if not value.Meta.enricher_task:
+                        if not hasattr(value, 'enricher_task'):
                             continue
                     except AttributeError:
                         continue
