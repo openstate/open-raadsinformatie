@@ -144,8 +144,8 @@ class RdfSerializer(BaseSerializer):
             override=False
         )
         namespace_manager.bind(
-            model_object.ns.prefix,
-            Namespace(model_object.ns.uri),
+            model_object.prefix,
+            Namespace(model_object.uri),
             override=False
         )
 
@@ -165,8 +165,8 @@ class RdfSerializer(BaseSerializer):
                     raise
 
                 namespace_manager.bind(
-                    definition.ns.prefix,
-                    Namespace(definition.ns.uri),
+                    definition.prefix,
+                    Namespace(definition.uri),
                     override=False
                 )
                 if type(o) != list:

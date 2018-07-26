@@ -29,7 +29,7 @@ class Uri(str):
         assert issubclass(ns, Namespace)
         cls.ns = ns
         cls.local_name = local_name
-        return super(Uri, cls).__new__(cls, '{}{}'.format(cls.ns.uri,
+        return super(Uri, cls).__new__(cls, '{}{}'.format(ns.uri,
                                                           cls.local_name))
 
     def __init__(self, ns, local_name):

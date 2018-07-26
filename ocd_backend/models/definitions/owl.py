@@ -7,15 +7,11 @@ from ocd_backend.models.model import Model
 from ocd_backend.models.properties import Relation, StringProperty, ArrayProperty
 
 
-class ABC(object):
-    pass
-
-
 class Thing(Owl, Model):
     classification = ArrayProperty(Ncal, 'categories')  # todo fix with popolo
     meta = Relation(Meta, 'meta')
 
 
-class Identifier(Owl, Thing):
+class Identifier(Thing):
     identifier = StringProperty(Dcterms, 'identifier')
     represent = StringProperty(Meeting, 'represent')

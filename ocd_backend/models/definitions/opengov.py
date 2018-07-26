@@ -51,23 +51,23 @@ class Speech(Opengov, owl.Thing):
     video = StringProperty(Schema, 'video')
 
 
-class SpeechAnswer(Opengov, Speech):
+class SpeechAnswer(Speech):
     pass
 
 
-class SpeechNarrative(Opengov, Speech):
+class SpeechNarrative(Speech):
     pass
 
 
-class SpeechQuestion(Opengov, Speech):
+class SpeechQuestion(Speech):
     pass
 
 
-class SpeechScene(Opengov, Speech):
+class SpeechScene(Speech):
     pass
 
 
-class SpeechSummary(Opengov, Speech):
+class SpeechSummary(Speech):
     pass
 
 
@@ -76,27 +76,27 @@ class Count(Opengov, owl.Thing):
     group = Relation(Opengov, 'group')
 
 
-class YesCount(Opengov, Count):
+class YesCount(Count):
     pass
 
 
-class NoCount(Opengov, Count):
+class NoCount(Count):
     pass
 
 
-class AbsentCount(Opengov, Count):
+class AbsentCount(Count):
     pass
 
 
-class AbstainCount(Opengov, Count):
+class AbstainCount(Count):
     pass
 
 
-class NotVotingCount(Opengov, Count):
+class NotVotingCount(Count):
     pass
 
 
-class PairedCount(Opengov, Count):
+class PairedCount(Count):
     pass
 
 

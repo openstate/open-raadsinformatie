@@ -26,11 +26,9 @@ class ModelMetaclass(type):
                 definitions[key] = value
                 attrs.pop(key)
 
-        namespace = None
-        if len(bases) > 1:
-            assert issubclass(bases[0], Namespace)
-            namespace = bases[0]
-            bases = bases[1:]
+        if len(bases) > 1 and not issubclass(bases[0], Namespace):
+            raise ValueError('First argument of a Model subclass'
+                             'should be a Namespace')
 
         new_class = super(ModelMetaclass, mcs).__new__(mcs, name, bases, attrs)
 
@@ -42,7 +40,6 @@ class ModelMetaclass(type):
                 definitions.update(base._definitions)
 
         new_class._definitions = definitions
-        new_class.ns = namespace
         new_class.serializer = mcs.serializer_class()
         new_class.db = mcs.database_class(new_class)
         return new_class
@@ -57,11 +54,11 @@ class Model(object):
 
     @classmethod
     def absolute_uri(cls):
-        return '%s%s' % (cls.ns.uri, cls.verbose_name())
+        return '%s%s' % (cls.uri, cls.verbose_name())
 
     @classmethod
     def compact_uri(cls):
-        return '%s:%s' % (cls.ns.prefix, cls.verbose_name())
+        return '%s:%s' % (cls.prefix, cls.verbose_name())
 
     @classmethod
     def verbose_name(cls):
