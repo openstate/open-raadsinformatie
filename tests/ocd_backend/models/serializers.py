@@ -14,16 +14,27 @@ class SerializersTestCase(TestCase):
         pass
 
     def test_unsaved_model(self):
-        model = Organization(Uri(Mapping, 'cbs/identifier'), 'SomeID0123', 'Alkmaar')
+        source_defaults = {
+            'source': 'cbs',
+            'source_id_key': 'identifier',
+            'organization': 'alkmaar',
+        }
+
+        model = Organization('SomeID0123', **source_defaults)
 
         with self.assertRaises(MissingProperty):
             serializer = RdfSerializer()
             serializer.serialize(model)
 
     def test_rdf_serializer(self):
-        model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        source_defaults = {
+            'source': 'cbs',
+            'source_id_key': 'identifier',
+            'organization': 'alkmaar',
+        }
+
+        model = Organization('GM0361', **source_defaults)
         model.save()
 
         serializer = RdfSerializer()
-        a = serializer.serialize(model)
-        print a
+        serializer.serialize(model)

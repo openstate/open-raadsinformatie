@@ -15,8 +15,13 @@ class NotubizMeeting(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        event = Meeting(Uri(Mapping, 'notubiz/identifier'), self.original_item['id'], self.source_definition['municipality'])
-        #event.sourceDoc += (NotubizIdentifier, self.original_item['id'], event, 21312334223)
+        source_defaults = {
+            'source': 'notubiz',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['key'],
+        }
+
+        event = Meeting(self.original_item['id'], **source_defaults)
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
         event.name = 'Vergadering %s %s' % (self.original_item['attributes'].get('Titel'), event.start_date)
@@ -24,23 +29,15 @@ class NotubizMeeting(BaseItem):
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
 
-        # alkmaar/AlmanakOrganisationIdentifier/alkmaar (almanak_id)
-        #Organization.get_or_create('alkmaar', AlmanakOrganizationName, self.source_definition['municipality'])
-        # AlmanakOrganizationName('alkmaar', self.source_definition['municipality']).get_or_create()
-
-        # Organization(AlmanakOrganizationName, 'alkmaar', self.source_definition['municipality'])
-
-        event.organization = Organization(Uri(Mapping, 'notubiz/identifier'), self.original_item['organisation']['id'], self.source_definition['municipality'])
-        # event.organization.full_uri()
-
-        event.committee = Organization(Uri(Mapping, 'notubiz/identifier'), self.original_item['gremium']['id'])
+        event.organization = Organization(self.original_item['organisation']['id'], **source_defaults)
+        event.committee = Organization(self.original_item['gremium']['id'], **source_defaults)
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
             if not item['order']:
                 continue
 
-            agendaitem = AgendaItem(Uri(Mapping, 'notubiz/identifier'), item['id'])
+            agendaitem = AgendaItem(item['id'], **source_defaults)
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             agendaitem.description = item['type_data']['attributes'][0]['value']
             event.agenda.append(agendaitem)
@@ -49,15 +46,15 @@ class NotubizMeeting(BaseItem):
         #    self.original_item['last_modified'])
 
         if self.original_item['canceled']:
-            event.status = EventCancelled
+            event.status = EventCancelled()
         elif self.original_item['inactive']:
-            event.status = EventUnconfirmed
+            event.status = EventUnconfirmed()
         else:
-            event.status = EventConfirmed
+            event.status = EventConfirmed()
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):
-            attachment = MediaObject(Uri(Mapping, 'notubiz/identifier'), doc['id'])
+            attachment = MediaObject(doc['id'], **source_defaults)
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             event.attachment.append(attachment)

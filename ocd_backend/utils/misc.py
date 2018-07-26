@@ -468,3 +468,8 @@ def localize_datetime(date):
 
     tz = pytz.timezone(TIMEZONE)
     return tz.localize(date)
+
+
+def doc_type(name):
+    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()

@@ -95,7 +95,7 @@ class Pav(Namespace):
 
 
 class Ori(Namespace):
-    uri = 'https://api.openraadsinformatie.nl/id/'
+    uri = 'https://id.openraadsinformatie.nl/'
     prefix = 'ori'
 
 

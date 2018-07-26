@@ -10,17 +10,17 @@ class PropertyBase(object):
         self.required = required
         self._name = name
 
-    def full_uri(self):
+    def absolute_uri(self):
         """Returns a full uri."""
         return '{}{}'.format(self.ns.uri, self._name)
 
-    def prefix_uri(self):
+    def compact_uri(self):
         """Returns a prefixed uri like prefix:name."""
         return '{}:{}'.format(self.ns.prefix, self._name)
 
-    def name(self):
-        """Returns the name of the property"""
-        return self._name
+    # def term(self):
+    #     """Returns the name of the property"""
+    #     return self._name
 
     @staticmethod
     def sanitize(value):
@@ -32,7 +32,7 @@ class PropertyBase(object):
         return value
 
     def __repr__(self):
-        return '<{} {}>'.format(self.prefix_uri(), self.__class__.__name__)
+        return '<{} {}>'.format(self.compact_uri(), self.__class__.__name__)
 
 
 # Properties
@@ -47,7 +47,8 @@ class StringProperty(Property):
     @staticmethod
     def sanitize(value):
         """Strip the value of spaces and make it unicode"""
-        return unicode(value).strip()
+        if value:
+            return unicode(value).strip()
 
 
 class IntegerProperty(Property):
@@ -56,7 +57,8 @@ class IntegerProperty(Property):
     @staticmethod
     def sanitize(value):
         """Force cast to int. This will fail by design if not castable to int"""
-        return int(value)
+        if value:
+            return int(value)
 
 
 class DateTimeProperty(Property):

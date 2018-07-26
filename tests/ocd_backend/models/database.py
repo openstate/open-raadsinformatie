@@ -47,15 +47,21 @@ class DatabaseTestCase(TestCase):
     #     self.assertEqual(result[0]['rels'], 6)
 
     def test_replace_nodes(self):
-        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        source_defaults = {
+            'source': 'cbs',
+            'source_id_key': 'identifier',
+            'organization': 'alkmaar',
+        }
+
+        object_model = Organization('GM0361', **source_defaults)
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'De gemeente Alkmaar'
 
-        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization('CBSa', **source_defaults)
         a.name = 'a'
 
-        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
         object_model.parent = [a, b]
@@ -69,15 +75,15 @@ class DatabaseTestCase(TestCase):
         self.assertEqual(result[0]['rels'], 10)
 
         # Make a new object that matches everything but description
-        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        object_model = Organization('GM0361', **source_defaults)
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'De gemeente Alkmaar bestaat al lang'
 
-        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization('CBSa', **source_defaults)
         a.name = 'a'
 
-        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
         object_model.parent = [a, b]
@@ -90,15 +96,15 @@ class DatabaseTestCase(TestCase):
 
         second_identifier = object_model.get_ori_identifier()
 
-        object_model = Organization(Uri(Mapping, 'cbs/identifier'), 'GM0361', 'Alkmaar')
+        object_model = Organization('GM0361', **source_defaults)
         object_model.name = 'Alkmaar'
         object_model.classification = u'Municipality'
         object_model.description = 'MAAR NU CAPS'
 
-        a = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSa', 'Alkmaar')
+        a = Organization('CBSa', **source_defaults)
         a.name = 'a'
 
-        b = Organization(Uri(Mapping, 'cbs/identifier'), 'CBSb', 'Alkmaar')
+        b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
         object_model.parent = [a, b]

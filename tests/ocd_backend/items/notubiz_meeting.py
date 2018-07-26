@@ -4,9 +4,10 @@ import os
 import iso8601
 from mock import MagicMock
 from ocd_backend.items import BaseItem
-from ocd_backend.items.notubiz_meeting import Meeting
+from ocd_backend.items.notubiz_meeting import NotubizMeeting
 from ocd_backend.models import Meeting
 from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.models.serializers import RdfSerializer, JsonLDSerializer, JsonSerializer
 
 from . import ItemTestCase
 
@@ -42,6 +43,14 @@ class NotubizMeetingTestCase(ItemTestCase):
         self.meeting = json.loads(self.raw_item)
 
         self.model = self._instantiate_meeting().get_object_model()
+        self.model.save()
+
+        jsonld_serializer = JsonLDSerializer()
+        jsonld_data = jsonld_serializer.serialize(self.model)
+
+        json_serializer = JsonSerializer()
+        json_data = json_serializer.serialize(self.model)
+
         self.namespaced_data = self.model.deflate(namespaces=True, props=True, rels=True)
         self.not_namespaced_data = self.model.deflate(namespaces=False, props=True, rels=True)
 
@@ -145,7 +154,7 @@ class NotubizMeetingTestCase(ItemTestCase):
         """
         Instantiate the item from the raw and parsed item we have
         """
-        return Meeting(self.source_definition, 'application/json', self.raw_item, self.meeting, None)
+        return NotubizMeeting(self.source_definition, 'application/json', self.raw_item, self.meeting, None)
 
     def test_meeting_get_ori_id(self):
         self.assertEqual(self.model.get_ori_id(), self.expected_namespaced_result.get('govid:oriIdentifier'))

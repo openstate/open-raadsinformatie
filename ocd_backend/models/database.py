@@ -4,7 +4,7 @@ from neo4j.v1 import GraphDatabase
 from pypher import Pypher, Param, __
 
 from ocd_backend.models.definitions import Prov, Pav, Mapping
-from ocd_backend.models.exceptions import QueryResultError
+from ocd_backend.models.exceptions import QueryResultError, QueryEmptyResult
 from ocd_backend.models.misc import Uri
 from ocd_backend.settings import NEO4J_URL, NEO4J_USER, NEO4J_PASSWORD
 
@@ -78,7 +78,7 @@ class Neo4jDatabase(object):
 
         q = Pypher()
         q.Match.node('n2', labels=['Cold', label],
-                     **{Uri(Mapping, 'ori/sourceLocator'): source_id}) \
+                     **{Uri(Prov, 'hadPrimarySource'): source_id}) \
             .rel() \
             .node('n1', labels=['Hot', label])
         q.Return(__.n1.property(Uri(Mapping, 'ori/identifier'))) \
@@ -115,80 +115,94 @@ class Neo4jDatabase(object):
 
         label = self.serializer.label(model_object)
         n2_props = self.serializer.deflate(model_object, props=True, rels=False)
-        n2_match = {
-            Uri(Mapping, 'ori/sourceLocator'): model_object.source_locator
-        }
 
-        # Add a new version if an older version already exists
-        q = Pypher()
-        q.Match.node('n1', labels=[self.HOT, label]) \
-            .rel('r1') \
-            .node('n2', labels=[self.COLD, label], **n2_match) \
-            .rel('r2', labels=was_revision_of) \
-            .node('n3', labels=self.ARCHIVE)  # Match n2 node based on source_id
-        q.Merge.node('n2') \
-            .rel_out(labels=was_revision_of) \
-            .node('n4', labels=self.ARCHIVE) \
-            .rel_out(labels=was_revision_of) \
-            .node('n3')
-        q.Merge.node('n2') \
-            .rel_out(labels=provided_by) \
-            .node('n5', labels=[self.ARCHIVE, software_agent],
-                  name=model_object.was_derived_from)
-        q.Set(__.n4 == __.n2)
-        q.Set(__.n2 == Param(name='n2_props', value=n2_props))
-        q.Delete('r2')
+        if hasattr(model_object, 'had_primary_source'):
+            n2_match = {
+                Uri(Prov, 'hasPrimarySource'): model_object.had_primary_source
+            }
 
-        cursor = self.session.run(str(q), q.bound_params)
-        summary = cursor.summary()
-        if summary.counters.relationships_deleted > 0:
-            return
+            # Add a new version if an older version already exists
+            q = Pypher()
+            q.Match.node('n1', labels=[self.HOT, label]) \
+                .rel('r1') \
+                .node('n2', labels=[self.COLD, label], **n2_match) \
+                .rel('r2', labels=was_revision_of) \
+                .node('n3', labels=self.ARCHIVE)  # Match n2 node based on source_id
+            q.Merge.node('n2') \
+                .rel_out(labels=was_revision_of) \
+                .node('n4', labels=self.ARCHIVE) \
+                .rel_out(labels=was_revision_of) \
+                .node('n3')
+            q.Merge.node('n2') \
+                .rel_out(labels=provided_by) \
+                .node('n5', labels=[self.ARCHIVE, software_agent],
+                      name=model_object._source)
+            q.Set(__.n4 == __.n2)
+            q.Set(__.n2 == Param(name='n2_props', value=n2_props))
+            q.Delete('r2')
 
-        # Add a new version if no older version exists
-        q = Pypher()
-        q.Match.node('n1', labels=[self.HOT, label]) \
-            .rel('r1') \
-            .node('n2', labels=[self.COLD, label],
-                  **n2_match)  # Match node based on source_id
-        q.Merge.node('n2') \
-            .rel_out(labels=was_revision_of) \
-            .node('n4', labels=[self.ARCHIVE, label])
-        q.Merge.node('n2') \
-            .rel_out(labels=provided_by) \
-            .node('n5', labels=[self.ARCHIVE, software_agent],
-                  name=model_object.was_derived_from)
-        q.Set(__.n4 == __.n2)
-        q.Set(__.n2 == Param(name='n2_props', value=n2_props))
+            cursor = self.session.run(str(q), q.bound_params)
+            summary = cursor.summary()
+            if summary.counters.relationships_deleted > 0:
+                return
 
-        cursor = self.session.run(str(q), q.bound_params)
-        summary = cursor.summary()
-        if summary.counters.nodes_created > 0:
-            return
+            # Add a new version if no older version exists
+            q = Pypher()
+            q.Match.node('n1', labels=[self.HOT, label]) \
+                .rel('r1') \
+                .node('n2', labels=[self.COLD, label],
+                      **n2_match)  # Match node based on source_id
+            q.Merge.node('n2') \
+                .rel_out(labels=was_revision_of) \
+                .node('n4', labels=[self.ARCHIVE, label])
+            q.Merge.node('n2') \
+                .rel_out(labels=provided_by) \
+                .node('n5', labels=[self.ARCHIVE, software_agent],
+                      name=model_object._source)
+            q.Set(__.n4 == __.n2)
+            q.Set(__.n2 == Param(name='n2_props', value=n2_props))
 
-        # n1_props = n2_props + ori_identifier
-        n1_props = {
-            Uri(Mapping, 'ori/identifier'):
-                model_object.generate_ori_identifier()
-        }
-        n1_props.update(n2_props)
+            cursor = self.session.run(str(q), q.bound_params)
+            summary = cursor.summary()
+            if summary.counters.nodes_created > 0:
+                return
 
         # Create a new entity when no matching node seems to exist
         q = Pypher()
-        q.Create.node('n1', labels=[self.HOT, label], **n1_props) \
-            .rel_out(labels=Uri(Prov, 'wasDerivedFrom')) \
-            .node('n2', labels=[self.COLD, label], **n2_props)
-        q.Merge.node('n5', labels=[self.ARCHIVE, software_agent],
-                     name=model_object.was_derived_from)
-        q.Merge.node('n2') \
-            .rel_out(labels=provided_by) \
-            .node('n5')
+        q.Match.node('n1', labels=[self.HOT, label], **n2_props)
+        q.Return('n1')
 
         cursor = self.session.run(str(q), q.bound_params)
-        summary = cursor.summary()
-        if summary.counters.nodes_created > 0:
+
+        n1_props = n2_props
+        if len(cursor.data()) == 0:
+            # n1_props = n2_props + ori_identifier
+            n1_props.update({
+                Uri(Mapping, 'ori/identifier'):
+                    model_object.generate_ori_identifier()
+            })
+
+        # Create a new entity when no matching node seems to exist
+        q = Pypher()
+        q.Merge.node('n1', labels=[self.HOT, label], **n1_props) \
+            .rel_out(labels=Uri(Prov, 'wasDerivedFrom')) \
+            .node('n2', labels=[self.COLD, label], **n2_props)
+        if hasattr(model_object, '_source'):
+            q.Merge.node('n5', labels=[self.ARCHIVE, software_agent],
+                         name=model_object._source)
+            q.Merge.node('n2') \
+                .rel_out(labels=provided_by) \
+                .node('n5')
+        q.Return(__.n1.property(Uri(Mapping, 'ori/identifier'))) \
+            .As('ori_identifier')
+
+        cursor = self.session.run(str(q), q.bound_params)
+        a = cursor.data()
+        if len(a) > 0:
+            model_object.ori_identifier = a[0]['ori_identifier']
             return
 
-        raise QueryResultError('Replace queries failed')
+        raise QueryEmptyResult('No ori_identifier was returned')
 
     def attach(self, this_object, that_object, rel_type):
         """Attaches this_object to that_object model.
@@ -199,7 +213,7 @@ class Neo4jDatabase(object):
         """
         from .model import Model, Relationship
 
-        source_locator = Uri(Mapping, 'ori/sourceLocator')
+        had_primary_source = Uri(Prov, 'hadPrimarySource')
 
         r1_props = dict()
         if isinstance(that_object, Relationship):
@@ -212,11 +226,15 @@ class Neo4jDatabase(object):
         this_label = self.serializer.label(this_object)
         that_label = self.serializer.label(that_object)
 
+        that_had_primary_source = {}
+        if hasattr(that_object, 'had_primary_source'):
+            that_had_primary_source = {had_primary_source: that_object.had_primary_source}
+
         q = Pypher()
         q.Match.node('n2', labels=[self.COLD, this_label],
-                     **{source_locator: this_object.source_locator})
+                     **{had_primary_source: this_object.had_primary_source})
         q.Match.node('n3', labels=[self.COLD, that_label],
-                     **{source_locator: that_object.source_locator})
+                     **that_had_primary_source)
         q.Merge.node('n2') \
             .rel_out('r1', labels=rel_type) \
             .node('n3')

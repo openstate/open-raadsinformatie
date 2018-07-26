@@ -18,6 +18,10 @@ class QueryResultError(Exception):
     pass
 
 
+class QueryEmptyResult(Exception):
+    """Error thrown when the query yields no results"""
+
+
 class SerializerNotFound(Exception):
     """Thrown when a specific serializer could not be found."""
     pass

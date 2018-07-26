@@ -4,14 +4,14 @@ import re
 
 from ocd_backend import celery_app
 from ocd_backend.models.database import Neo4jDatabase
-from ocd_backend.models.definitions import Mapping, Prov
+from ocd_backend.models.definitions import Mapping, Prov, Ori
 from ocd_backend.models.exceptions import MissingProperty, ValidationError, \
     QueryResultError
 from ocd_backend.models.properties import PropertyBase, Property, \
     StringProperty, IntegerProperty, Relation
 from ocd_backend.models.serializers import Neo4jSerializer
-from ocd_backend.models.misc import Namespace
-from ocd_backend.utils.misc import iterate
+from ocd_backend.models.misc import Namespace, Uri
+from ocd_backend.utils.misc import iterate, doc_type
 
 
 class ModelMetaclass(type):
@@ -52,23 +52,22 @@ class Model(object):
     __metaclass__ = ModelMetaclass
 
     # Top-level definitions
-    ori_identifier = IntegerProperty(Mapping, 'ori/identifier')
-    source_locator = StringProperty(Mapping, 'ori/sourceLocator')
-    was_derived_from = StringProperty(Prov, 'wasDerivedFrom')
+    ori_identifier = StringProperty(Mapping, 'ori/identifier')
+    had_primary_source = StringProperty(Prov, 'hadPrimarySource')
 
     @classmethod
-    def name(cls):
-        if hasattr(cls, 'verbose_name'):
-            return cls.verbose_name
+    def absolute_uri(cls):
+        return '%s%s' % (cls.ns.uri, cls.verbose_name())
+
+    @classmethod
+    def compact_uri(cls):
+        return '%s:%s' % (cls.ns.prefix, cls.verbose_name())
+
+    @classmethod
+    def verbose_name(cls):
+        # if hasattr(cls, 'verbose_name'):
+        #     return cls.verbose_name
         return cls.__name__
-
-    @classmethod
-    def prefix_uri(cls):
-        return '%s:%s' % (cls.ns.prefix, cls.name())
-
-    @classmethod
-    def full_uri(cls):
-        return '%s%s' % (cls.ns.uri, cls.name())
 
     @classmethod
     def definitions(cls, props=True, rels=True):
@@ -90,37 +89,37 @@ class Model(object):
     @classmethod
     def inflate(cls, **deflated_props):
         instance = cls()
-        for full_uri, value in deflated_props.items():
-            definitions_mapping = {v.full_uri(): k for k, v in cls.definitions()}
+        for absolute_uri, value in deflated_props.items():
+            definitions_mapping = {v.absolute_uri(): k for k, v in cls.definitions()}
             try:
-                prop_name = definitions_mapping[full_uri]
+                prop_name = definitions_mapping[absolute_uri]
                 setattr(instance, prop_name, value)
             except KeyError:
                 raise  # todo raise correct exception
 
         return instance
 
-    def __init__(self, source=None, source_id=None, organization=None):
-        if source:
-            setattr(self, 'source_locator', source_id)
-            setattr(self, 'was_derived_from', source)
+    def __init__(self, source_id=None, organization=None, source=None, source_id_key=None):
+        # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
+        # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
+        if source_id:
+            assert organization
+            assert source
+            assert source_id_key
+            primary_source = Uri(Mapping, '{}/{}/{}/{}'.format(organization, source, source_id_key, source_id))
+            self.had_primary_source = primary_source
+            self._source = source
 
     def __setattr__(self, key, value):
         definition = self.definition(key)
 
-        # pylint: disable=no-member
-        if key[0:2] != '__' and not definition:
-            raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
-        # pylint: enable=no-member
+        if key[0:1] != '_' and not definition:
+            raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
 
         if definition:
             value = definition.sanitize(value)
 
         super(Model, self).__setattr__(key, value)
-
-    def __iter__(self):
-        for key, value in self.__dict__.items():
-            yield key, value
 
     def __contains__(self, item):
         try:
@@ -131,48 +130,33 @@ class Model(object):
         return False
 
     def __repr__(self):
-        return '<%s Model>' % self.prefix_uri()
-
-    def set_source_locator(self, organization, identifier_class, source_id):
-        # software / org / resource class / id
-        # software / org / resource class / software id
-        # utrecht/vergaderingen/357
-        # utrecht/ibabsMeetingIdentifier/357
-        # org / software / resource class / id
-
-        if not organization or not identifier_class or not source_id:
-            raise ValidationError("Invalid source locator specified", organization, identifier_class, source_id)
-
-        if type(identifier_class) != ModelMetaclass:
-            raise ValidationError("The 'identifier_class' is not a metaclass of ModelMetaclass: %s", identifier_class)
-
-        # self.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
+        return '<%s Model>' % self.compact_uri()
 
     def get_ori_identifier(self):
         if not hasattr(self, 'ori_identifier'):
             try:
-                self.ori_identifier = self.db.get_identifier_by_source_id(self, self.source_locator)
+                self.ori_identifier = self.db.get_identifier_by_source_id(
+                    self,
+                    self.had_primary_source,
+                )
+            except AttributeError:
+                raise
             except QueryResultError:
                 raise MissingProperty('OriIdentifier is not present, has the '
                                       'model been saved?')
         return self.ori_identifier
 
     def generate_ori_identifier(self):
-        self.ori_identifier = celery_app.backend.increment("ori_identifier_autoincrement")
+        self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
         return self.ori_identifier
-
-    def get_popolo_type(self):
-        if hasattr(self, 'legacy_type'):
-            return self.legacy_type
-
-        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', type(self).get_name())
-        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
     def properties(self, props=True, rels=True):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
-        for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:2] != '__'}):
+        for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:1] != '_'}):
             definition = self.definition(name)
+            if not definition:
+                continue
             if (props and not isinstance(prop, Model)) or \
                     (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
                 props_list.append((self.serializer.uri_format(definition), prop,))
@@ -181,6 +165,14 @@ class Model(object):
     def save(self):
         self.db.replace(self)
         self.attach_recursive()
+
+        # Recursive save
+        for _, value in self.properties(rels=True, props=False):
+            if isinstance(value, Model):
+                value.save()
+
+        # Todo needs to be executed only once
+        self.db.copy_relations()
 
     def attach_recursive(self):
         attach = list()
@@ -193,33 +185,11 @@ class Model(object):
             if self != other_object:
                 attach.extend(other_object.attach_recursive())
 
-        self.db.copy_relations()
         return attach
 
 
 class Individual(Model):
     __metaclass__ = ModelMetaclass
-
-    @classmethod
-    def set_source(cls, identifier_class, source_id, organization):
-        # software / org / resource class / id
-        # software / org / resource class / software id
-        # utrecht/vergaderingen/357
-        # utrecht/ibabsMeetingIdentifier/357
-        # org / software / resource class / id
-
-        instance = cls()
-
-        instance.__rel_params__ = None  # todo temp
-
-        if not organization or not identifier_class or not source_id:
-            raise ValidationError("Invalid source locator specified", organization, identifier_class, source_id)
-
-        if type(identifier_class) != ModelMetaclass:
-            raise ValidationError("The 'identifier_class' is not a metaclass of ModelMetaclass: %s", identifier_class)
-
-        instance.source_locator = '%s/%s/%s' % (organization, identifier_class.__name__, source_id)
-        return instance
 
 
 class Relationship(object):
