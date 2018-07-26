@@ -48,6 +48,10 @@ class ModelMetaclass(type):
 class Model(object):
     __metaclass__ = ModelMetaclass
 
+    # Class attributes
+    uri = None
+    prefix = None
+
     # Top-level definitions
     ori_identifier = StringProperty(Mapping, 'ori/identifier')
     had_primary_source = StringProperty(Prov, 'hadPrimarySource')
@@ -79,7 +83,7 @@ class Model(object):
     @classmethod
     def definition(cls, name):
         try:
-            return cls._definitions[name]
+            return cls._definitions[name]  # pylint: disable=no-member
         except KeyError:
             return
 
@@ -156,11 +160,11 @@ class Model(object):
                 continue
             if (props and not isinstance(prop, Model)) or \
                     (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
-                props_list.append((self.serializer.uri_format(definition), prop,))
+                props_list.append((self.serializer.uri_format(definition), prop,))  # pylint: disable=no-member
         return props_list
 
     def save(self):
-        self.db.replace(self)
+        self.db.replace(self)  # pylint: disable=no-member
         self.attach_recursive()
 
         # Recursive save
@@ -169,14 +173,14 @@ class Model(object):
                 value.save()
 
         # Todo needs to be executed only once
-        self.db.copy_relations()
+        self.db.copy_relations()  # pylint: disable=no-member
 
     def attach_recursive(self):
         attach = list()
         for rel_type, other_object in self.properties(rels=True, props=False):
 
-            self.db.replace(other_object)
-            attach.append(self.db.attach(self, other_object, rel_type))
+            self.db.replace(other_object)  # pylint: disable=no-member
+            attach.append(self.db.attach(self, other_object, rel_type))  # pylint: disable=no-member
 
             # End the recursive loop when self-referencing
             if self != other_object:

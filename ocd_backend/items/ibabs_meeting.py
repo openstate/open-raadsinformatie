@@ -17,37 +17,45 @@ class IBabsMeetingItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
+        source_defaults = {
+            'source': 'ibabs',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['index_name'],
+        }
+
         meeting = self.original_item
         if 'MeetingId' not in self.original_item:
-            item = Meeting('ibabs_identifier', self.original_item['Id'])
+            item = Meeting(self.original_item['Id'], **source_defaults)
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location'].strip()
-            organization = Organization.get_or_create(attribute='MeetingtypeId')
-            organization.value = meeting['MeetingtypeId']
+            organization = Organization(meeting['MeetingtypeId'],
+                                        **source_defaults)
             item.organization = organization
 
             if 'MeetingItems' in meeting:
                 item.agenda = list()
                 for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-                    agenda_item = AgendaItem.get_or_create(ibabs_identifier=mi['Id'])
+                    agenda_item = AgendaItem(mi['Id'], **source_defaults)
                     agenda_item.__rel_params__ = {'rdf': '_%i' % i}
                     item.agenda.append(agenda_item)
 
             item.invitee = list()
             for invitee in meeting['Invitees'] or []:
-                item.invitee.append(Person.get_or_create(ibabs_identifier=invitee['UniqueId']))
+                item.invitee.append(Person(invitee['UniqueId'],
+                                           **source_defaults))
         else:
             meeting = self.original_item['Meeting']
-            item = AgendaItem('ibabs_identifier', self.original_item['Id'])
+            item = AgendaItem(self.original_item['Id'], **source_defaults)
             item.name = u'%s: %s' % (
                 self.original_item['Features'],
                 self.original_item['Title'],
             )
             item.description = self.original_item['Explanation']
 
-            event = Meeting.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
-            event.attachment = MediaObject.get_or_create(ibabs_identifier=self.original_item['MeetingId'])
+            event = Meeting(self.original_item['MeetingId'], **source_defaults)
+            event.attachment = MediaObject(self.original_item['MeetingId'],
+                                           **source_defaults)
             item.parent = event
 
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
@@ -55,7 +63,7 @@ class IBabsMeetingItem(BaseItem):
 
         item.attachment = list()
         for document in self.original_item['Documents'] or []:
-            attachment = MediaObject('ibabs_identifier', document['Id'])
+            attachment = MediaObject(document['Id'], **source_defaults)
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']

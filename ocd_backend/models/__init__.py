@@ -45,6 +45,7 @@ Vote = definitions.opengov.Vote
 # http://schema.org/
 MediaObject = definitions.schema.MediaObject
 ImageObject = definitions.schema.ImageObject
+CreativeWork = definitions.schema.CreativeWork
 PropertyValue = definitions.schema.PropertyValue
 EventCancelled = definitions.schema.EventCancelled
 
