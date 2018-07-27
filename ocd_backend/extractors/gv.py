@@ -80,6 +80,32 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             results = self._fetch('GetModelsByQuery', params).json()
             print "Got %s items ..." % (len(results['objects']),)
             for result in results['objects']:
+                #pprint(result)
+                print "Object %s/%s has %s SETS and %s attachnments" % (
+                    result[u'default'][u'objecttype'],
+                    result[u'default'][u'objectname'],
+                    len(result.get(u'attachmentlist', [])),
+                    len(result.get(u'SETS', [])),)
+                if len(result.get(u'SETS', [])):
+                    print "Sets:"
+                    for key, osett in result[u'SETS'].iteritems():
+                        print "* %s %s/%s" % (
+                            osett[u'nodeorder'], osett[u'objecttype'],
+                            osett[u'objectname'],)
+                if len(result.get(u'attachmentlist', [])) > 0:
+                    print "Attachments:"
+                    for att_key, att in result[u'attachmentlist'].iteritems():
+                        print "* %s/%s" % (
+                            att[u'objecttype'], att[u'objectname'],)
+
+                for k, v in result.get(u'SETS', {}).iteritems():
+                    v[u'parent_objectid'] = result[u'default'][u'objectid']
+                    v[u'bis_vergaderdatum'] = result[
+                        u'default'][u'bis_vergaderdatum']
+
+                    result = {u'default': v}
+                    yield 'application/json', json.dumps(result)
+
                 yield 'application/json', json.dumps(result)
 
             params['start'] += len(results['objects'])
@@ -119,17 +145,3 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             self.source_definition['key'], self.start_date, self.end_date,))
         for item in super(GreenValleyMeetingsExtractor, self).run():
             yield item
-
-
-class GreenValleyMeetingItemsExtractor(GreenValleyMeetingsExtractor):
-    def _get_items(self, response):
-        results = []
-        for a, v in response[u'object'].get(u'SETS', {}).iteritems():
-            if v[u'objecttype'].lower() == u'agendapage':
-                v[u'bis_vergaderdatum'] = response[
-                    u'object'][u'default'][u'bis_vergaderdatum']
-                v[u'parent_objectid'] = response[
-                    u'object'][u'default'][u'objectid']
-                result = {u'object': {u'default': v}}
-                results.append(result)
-        return results

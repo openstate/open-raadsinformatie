@@ -61,15 +61,6 @@ _entities: &entities
     greenvalley_objecttypes:
       - agenda
 
-  - &meeting_items
-    <<: *entity_defaults
-    entity: meeting_items
-    doc_type: events
-    extractor: ocd_backend.extractors.gv.GreenValleyMeetingItemsExtractor
-    item: ocd_backend.items.gv.GreenValleyMeetingItem
-    greenvalley_objecttypes:
-      - agenda
-
   - &reports
     <<: *entity_defaults
     entity: reports

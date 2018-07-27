@@ -25,7 +25,10 @@ class GreenValleyItem(
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
             classification='Council')
-        return results[0]
+        try:
+            return results[0]
+        except TypeError:
+            return None
 
     def _find_meeting_type_id(self, org):
         results = [x for x in org['identifiers'] if x['scheme'] == u'iBabs']
@@ -45,16 +48,17 @@ class GreenValleyItem(
             return {}
 
     def _get_meeting_id(self, meeting):
-        hash_content = u'meeting-%s' % (
-            meeting[u'object'][u'default'][u'objectid'])
+        hash_content = u'%s-%s' % (
+            meeting[u'objecttype'],
+            meeting[u'objectid'])
         return sha1(hash_content.decode('utf8')).hexdigest()
 
     def get_object_id(self):
-        return self._get_meeting_id(self.original_item)
+        return self._get_meeting_id(self.original_item[u'default'])
 
     def get_original_object_id(self):
         return unicode(
-            self.original_item[u'object'][u'default'][u'objectid']).strip()
+            self.original_item[u'default'][u'objectid']).strip()
 
     def get_original_object_urls(self):
         # FIXME: what to do when there is not an original URL?
@@ -67,9 +71,17 @@ class GreenValleyItem(
         return unicode(self.source_definition['index_name'])
 
     def get_combined_index_data(self):
+        objecttype2classification = {
+            'agenda': 'Agenda',
+            'agendapage': 'Agendapunt'
+        }
+
+        council = self._get_council()
+        committees = self._get_committees()
+
         combined_index_data = {}
 
-        meeting = self.original_item[u'object'][u'default']
+        meeting = self.original_item[u'default']
 
         combined_index_data['id'] = unicode(self.get_object_id())
 
@@ -89,8 +101,13 @@ class GreenValleyItem(
         ]
 
         combined_index_data['classification'] = unicode(
-            meeting[u'objecttype'].capitalize())
+            objecttype2classification[meeting[u'objecttype'].lower()])
         combined_index_data['description'] = meeting[u'objectname']
+
+        if council is not None:
+            combined_index_data['organization_id'] = council['id']
+            combined_index_data['organization'] = council
+        combined_index_data['status'] = u'confirmed'
 
         if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
             combined_index_data['start_date'] = datetime.fromtimestamp(
@@ -107,20 +124,21 @@ class GreenValleyItem(
             pass
 
         children = []
-        for a, v in self.original_item[u'object'].get(u'SETS', {}).iteritems():
+        for a, v in self.original_item.get(u'SETS', {}).iteritems():
             if v[u'objecttype'].lower() == u'agendapage':
-                result = {u'object': {u'default': v}}
+                result = {u'default': v}
                 children.append(result)
 
         if len(children) > 0:
             combined_index_data['children'] = [
                 self._get_meeting_id(y) for y in sorted(
-                    children, key=lambda x: x[u'object'][u'default'][u'nodeorder'])]
+                    children, key=lambda x: x[u'default'][u'nodeorder'])]
 
         if u'parent_objectid' in meeting:
             combined_index_data['parent_id'] = unicode(self._get_meeting_id(
-                {u'object': {u'default': {
-                    u'objectid': meeting[u'parent_objectid']}}}))
+                {
+                    u'objectid': meeting[u'parent_objectid'],
+                    u'objecttype': 'AGENDA'}))
 
         combined_index_data['sources'] = []
 
@@ -166,8 +184,9 @@ class GreenValleyMeetingItem(GreenValleyItem):
         council = self._get_council()
         committees = self._get_committees()
 
-        combined_index_data['organization_id'] = council['id']
-        combined_index_data['organization'] = council
+        if council is not None:
+            combined_index_data['organization_id'] = council['id']
+            combined_index_data['organization'] = council
         combined_index_data['status'] = u'confirmed'
 
         return combined_index_data
