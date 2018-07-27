@@ -86,7 +86,7 @@ _gv: &gv
   index_name: "{key}"
   province: "{key!c}"
   entities: *entities
-  start_date: "2018-01-01T00:00:00"
+  start_date: "2010-01-01T00:00:00"
   end_date: "2018-06-01T00:00:00"
   <<: *source_defaults
 

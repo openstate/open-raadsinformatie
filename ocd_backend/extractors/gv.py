@@ -29,6 +29,7 @@ def printTree(tree, depth=0):
             print " " * depth, key
             printTree(val, depth+1)
 
+
 class GreenValleyBaseExtractor(BaseExtractor):
     def __init__(self, *args, **kwargs):
         super(GreenValleyBaseExtractor, self).__init__(*args, **kwargs)
@@ -74,20 +75,12 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
         fetch_next_page = True
 
         while fetch_next_page:
+            sleep(self.source_definition.get('greenvalley_extract_timeout', 5))
             print "Fetching items, starting from %s ..." % (params['start'],)
-            results = self._fetch('GetObjectsByQuery', params).json()
+            results = self._fetch('GetModelsByQuery', params).json()
+            print "Got %s items ..." % (len(results['objects']),)
             for result in results['objects']:
-                # pprint(self._get_meta())
-                print "Fetching model for %s" % (
-                    result[u'default'][u'objectid'],)
-                sleep(1)
-                actual = self._fetch(
-                    'GetModel', {
-                        'objectid': result[u'default'][u'objectid']}).json()
-                # printTree(actual)
-                # pprint(actual)
-                for item in self._get_items(actual):
-                    yield 'application/json', json.dumps(item)
+                yield 'application/json', json.dumps(result)
 
             params['start'] += len(results['objects'])
             fetch_next_page = (len(results['objects']) > 0)
