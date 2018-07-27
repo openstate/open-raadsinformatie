@@ -165,12 +165,13 @@ class Model(object):
 
     def save(self):
         self.db.replace(self)  # pylint: disable=no-member
-        self.attach_recursive()
 
         # Recursive save
         for _, value in self.properties(rels=True, props=False):
             if isinstance(value, Model):
                 value.save()
+
+        self.attach_recursive()
 
         # Todo needs to be executed only once
         self.db.copy_relations()  # pylint: disable=no-member
@@ -178,8 +179,6 @@ class Model(object):
     def attach_recursive(self):
         attach = list()
         for rel_type, other_object in self.properties(rels=True, props=False):
-
-            self.db.replace(other_object)  # pylint: disable=no-member
             attach.append(self.db.attach(self, other_object, rel_type))  # pylint: disable=no-member
 
             # End the recursive loop when self-referencing

@@ -118,7 +118,7 @@ class Neo4jDatabase(object):
 
         if hasattr(model_object, 'had_primary_source'):
             n2_match = {
-                Uri(Prov, 'hasPrimarySource'): model_object.had_primary_source
+                Uri(Prov, 'hadPrimarySource'): model_object.had_primary_source
             }
 
             # Add a new version if an older version already exists
