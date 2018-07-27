@@ -17,13 +17,19 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 
    $ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
+For running Elasticsearch make sure your ``vm.max_map_count=262144`` by running::
+
+   $ sudo sysctl -w vm.max_map_count=262144
+
+or setting this in ``/etc/sysctl.conf``, otherwise this will result in an error like ``max virtual memory areas vm.max_map_count [65530] likely too low, increase to at least [262144]``.
+
 The backend container is responsible for extraction using the python Celery project. Mind that the Celery backend must be running before any items can be extracted.
 
 It should take less than a minute to fire all containers up. It's recommended to include the ``docker-compose.dev.yml`` for local development, this will mount the local filesystem and enables local changes without having to rebuild the backend.
 
 The frontend however still needs to be rebuild in order to see the changes::
 
-   $ docker build . -t openstatefoundation/open-raadsinformatie-frontend
+   $ docker build ocd_frontend -t openstatefoundation/open-raadsinformatie-frontend
 
 Now, instead of pulling for docker hub, the local tagged image will be used when restarting.
 
@@ -63,6 +69,14 @@ Usage
 
 Some quick notes on how to use the Open Raadsinformatie API
 
+On a fresh Elasticsearch instance
+------------
+
+Put template and create indexes, so we don't get a ``KeyError: 'aggregations'`` (on ``/opt/ori/ocd_frontend/rest/views.py", line 259, in format_sources_results``) when querying ``/v0/sources``::
+
+   $ docker exec -it ori_backend_1 ./manage.py elasticsearch put_template
+   $ docker exec -it ori_backend_1 ./manage.py elasticsearch create_indexes es_mappings
+
 Running an extractor
 ------------
 
@@ -75,15 +89,15 @@ All sources can be shown by running::
 Currently, there are new new-style YAML and old-style JSON sources, as explained below.
 The extraction of new-style sources are started like this, with optional flags::
 
-   $ docker exec -it ocd_backend_1 ./manage.py extract start <source_name> -s <subsource> -e <entity>
-   $ docker exec -it ocd_backend_1 ./manage.py extract start ibabs -s amstelveen -e meetings
+   $ docker exec -it ori_backend_1 ./manage.py extract start <source_name> -s <subsource> -e <entity>
+   $ docker exec -it ori_backend_1 ./manage.py extract start ibabs -s amstelveen -e meetings
 
 If the ``-s`` flag is not specified, all subsources will be processed one by one.
 When the ``-e`` flag is not specified, all available entities for that subsource will be processed.
 
 Old-style sources are started a bit different::
 
-   $ docker exec -it ocd_backend_1 ./manage.py extract start <source_name>_<entity>
+   $ docker exec -it ori_backend_1 ./manage.py extract start <source_name>_<entity>
 
 Understanding sources and entities
 ------------
