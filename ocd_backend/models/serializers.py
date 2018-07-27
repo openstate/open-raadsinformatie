@@ -41,28 +41,24 @@ class BaseSerializer(object):
             )
         self.uri_format_type = uri_format_type
 
-    def uri_format(self, klass):
+    def uri_format(self, model_object):
         """Uses `klass` as an interface to return the specified uri_format."""
         if self.uri_format_type == 'absolute':
-            return klass.absolute_uri()
+            return model_object.absolute_uri()
         elif self.uri_format_type == 'compact':
-            return klass.compact_uri()
+            return model_object.compact_uri()
         elif self.uri_format_type == 'term':
             return
 
-    def label(self, model_class):
+    def label(self, model_object):
         """Returns the `uri_format` of class name for `model_class`."""
-        from .model import Model
-        if isinstance(model_class, Model):
-            model_class = type(model_class)
-
-        return self.uri_format(model_class)
+        return self.uri_format(model_object)
 
     def deflate(self, model_object, props, rels):
         """Returns a recurive serialized value for each model definition."""
         props_list = dict()
         for name, definition in model_object.definitions(props=props, rels=rels):
-            value = model_object.__dict__.get(name, None)
+            value = model_object.values.get(name, None)
             if value:
                 uri = self.uri_format(definition) or name
                 try:
@@ -156,7 +152,7 @@ class RdfSerializer(BaseSerializer):
         self.g.add((s, p, o,))
 
         for name, definition in model_object.definitions(props=props, rels=rels):
-            value = model_object.__dict__.get(name, None)
+            value = model_object.values.get(name, None)
             if value:
                 p = URIRef(self.uri_format(definition))
                 try:
@@ -165,8 +161,8 @@ class RdfSerializer(BaseSerializer):
                     raise
 
                 namespace_manager.bind(
-                    definition.prefix,
-                    Namespace(definition.uri),
+                    definition.ns.prefix,
+                    Namespace(definition.ns.uri),
                     override=False
                 )
                 if type(o) != list:
@@ -264,7 +260,7 @@ class JsonSerializer(BaseSerializer):
     def ori_uri(self, item):
         """Creates a full uri to an ori resource since json doesn't do prefixes.
         """
-        return '{}{}'.format(Ori.uri, item.get_ori_identifier())
+        return str(item.get_ori_identifier())
 
 
 class JsonLDSerializer(JsonSerializer):
@@ -291,8 +287,8 @@ class JsonLDSerializer(JsonSerializer):
         deflated['@type'] = model_object.verbose_name()
         return deflated
 
-    def ori_uri(self, item):
-        """Returns a non-prefixed uri to an ori resource. Needs to be a string
-        in order to be expanded to a full uri by @base in JsonLD.
-        """
-        return str(item.get_ori_identifier())
+    # def ori_uri(self, item):
+    #     """Returns a non-prefixed uri to an ori resource. Needs to be a string
+    #     in order to be expanded to a full uri by @base in JsonLD.
+    #     """
+    #     return str(item.get_ori_identifier())

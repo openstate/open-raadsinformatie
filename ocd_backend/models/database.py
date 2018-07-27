@@ -22,8 +22,8 @@ class Neo4jDatabase(object):
     COLD = 'Cold'
     ARCHIVE = 'Archive'
 
-    def __init__(self, model_class):
-        self.serializer = model_class.serializer
+    def __init__(self, model):
+        self.serializer = model.serializer
 
         if not self._driver:
             self._driver = GraphDatabase.driver(

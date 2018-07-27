@@ -48,27 +48,20 @@ class ModelMetaclass(type):
 class Model(object):
     __metaclass__ = ModelMetaclass
 
-    # Class attributes
-    uri = None
-    prefix = None
-
     # Top-level definitions
     ori_identifier = StringProperty(Mapping, 'ori/identifier')
     had_primary_source = StringProperty(Prov, 'hadPrimarySource')
 
-    @classmethod
-    def absolute_uri(cls):
-        return '%s%s' % (cls.uri, cls.verbose_name())
+    def absolute_uri(self):
+        return '%s%s' % (self.uri, self.verbose_name())
 
-    @classmethod
-    def compact_uri(cls):
-        return '%s:%s' % (cls.prefix, cls.verbose_name())
+    def compact_uri(self):
+        return '%s:%s' % (self.prefix, self.verbose_name())
 
-    @classmethod
-    def verbose_name(cls):
+    def verbose_name(self):
         # if hasattr(cls, 'verbose_name'):
         #     return cls.verbose_name
-        return cls.__name__
+        return type(self).__name__
 
     @classmethod
     def definitions(cls, props=True, rels=True):
@@ -101,6 +94,13 @@ class Model(object):
         return instance
 
     def __init__(self, source_id=None, organization=None, source=None, source_id_key=None):
+        # Set defaults
+        #self.uri = None
+        #self.prefix = None
+        self.skip_validation = None
+        # self.verbose_name = None
+        self.values = dict()
+
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
         # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
         if source_id:
@@ -111,14 +111,22 @@ class Model(object):
             self.had_primary_source = primary_source
             self._source = source
 
+    def __getattr__(self, item):
+        try:
+            return self.values[item]
+        except KeyError:
+            raise
+
     def __setattr__(self, key, value):
         definition = self.definition(key)
 
-        if key[0:1] != '_' and not definition:
-            raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
+        # if key[0:1] != '_' and not definition:
+        #     raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
 
         if definition:
             value = definition.sanitize(value)
+            self.values[key] = value
+            return
 
         super(Model, self).__setattr__(key, value)
 
@@ -154,7 +162,7 @@ class Model(object):
     def properties(self, props=True, rels=True):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
-        for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:1] != '_'}):
+        for name, prop in iterate({k: v for k, v in self.values.items() if k[0:1] != '_'}):
             definition = self.definition(name)
             if not definition:
                 continue
