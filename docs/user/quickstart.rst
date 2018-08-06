@@ -3,9 +3,13 @@
 Quickstart
 ===================
 
-Anxious to get started right away? This page provides you with a short introduction on how to get started with querying the Open Raadsinformatie API.
+Anxious to get started right away? This page provides you with a short introduction on how to get started with querying the Open Raadsinformatie and Open Stateninformatie API.
 
 The base URL of the API is :rest_api_v0:`v0`, but it won't return any data.
+
+.. attention::
+
+   We refer to `api.openraadsinformatie.nl` in the examples below, but you can also use `api.openstateninformatie.nl`.
 
 To see which sources there are and how many items they contain, simply open the following link in your browser:
 
