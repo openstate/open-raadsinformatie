@@ -97,6 +97,11 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
                     for att_key, att in result[u'attachmentlist'].iteritems():
                         print "* %s/%s" % (
                             att[u'objecttype'], att[u'objectname'],)
+                        # http://snake/proxy/dsresource?objectid=4600935b-01ea-4249-97c9-e121facb2d6d&&disposition=inline
+                        print "%s/dsresource?objectid=%s&disposition=inline" % (
+                            self.source_definition['greenvalley_base_url'],
+                            att[u'objectid']
+                        )
 
                 for k, v in result.get(u'SETS', {}).iteritems():
                     v[u'parent_objectid'] = result[u'default'][u'objectid']
