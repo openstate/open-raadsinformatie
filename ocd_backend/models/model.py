@@ -113,9 +113,11 @@ class Model(object):
 
     def __getattr__(self, item):
         try:
-            return self.values[item]
+            return self.values.get(item)
         except KeyError:
             raise
+        except:
+            return
 
     def __setattr__(self, key, value):
         definition = self.definition(key)
@@ -142,7 +144,7 @@ class Model(object):
         return '<%s Model>' % self.compact_uri()
 
     def get_ori_identifier(self):
-        if not hasattr(self, 'ori_identifier'):
+        if not self.values.get('ori_identifier'):
             try:
                 self.ori_identifier = self.db.get_identifier_by_source_id(
                     self,

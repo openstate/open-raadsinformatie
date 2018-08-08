@@ -17,5 +17,5 @@ translitcodec==0.4.0
 bugsnag
 python-json-logger==0.1.8
 rdflib==4.2.2
-python_cypher==0.10.0
 neo4j_driver==1.6.1
+py2neo==4.0.0
