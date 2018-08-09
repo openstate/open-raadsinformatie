@@ -107,17 +107,21 @@ class Model(object):
             assert organization
             assert source
             assert source_id_key
-            primary_source = Uri(Mapping, '{}/{}/{}/{}'.format(organization, source, source_id_key, source_id))
-            self.had_primary_source = primary_source
+            self.had_primary_source = Uri(Mapping, '{}/{}/{}/{}'.format(organization, source, source_id_key, source_id))
             self._source = source
+        else:
+            # Individuals also need a primary source or some queries will fail
+            # As a solution the definition will be set as the primary source
+            self.had_primary_source = self.absolute_uri()
 
     def __getattr__(self, item):
         try:
-            return self.values.get(item)
+            return self.__dict__['values'][item]
         except KeyError:
-            raise
-        except:
-            return
+            try:
+                return self.__dict__[item]
+            except KeyError:
+                raise AttributeError(item)
 
     def __setattr__(self, key, value):
         definition = self.definition(key)
@@ -152,7 +156,7 @@ class Model(object):
                 )
             except AttributeError:
                 raise
-            except QueryResultError:
+            except MissingProperty:
                 raise MissingProperty('OriIdentifier is not present, has the '
                                       'model been saved?')
         return self.ori_identifier
