@@ -4,9 +4,10 @@ from string import Formatter
 
 from neo4j.v1 import GraphDatabase
 from py2neo import cypher_escape
+from copy import copy
 
 from ocd_backend.models.definitions import Prov, Pav, Mapping
-from ocd_backend.models.exceptions import QueryResultError, QueryEmptyResult
+from ocd_backend.models.exceptions import QueryResultError, QueryEmptyResult, MissingProperty
 from ocd_backend.models.misc import Uri
 from ocd_backend.settings import NEO4J_URL, NEO4J_USER, NEO4J_PASSWORD
 
@@ -105,7 +106,7 @@ class Neo4jDatabase(object):
         params.update(self.default_params)
 
         clauses = [
-            u'MATCH (n2 :«n2_labels» {«had_primary_source»: $had_primary_source})--(n1 :«n1_labels»)',
+            u'MATCH (n2 :«n2_labels» {«had_primary_source»: $had_primary_source})<--(n1 :«n1_labels»)',
             u'RETURN n1.«ori_identifier» AS ori_identifier',
         ]
 
@@ -115,7 +116,7 @@ class Neo4jDatabase(object):
         )
 
         if not result:
-            raise QueryResultError('Does not exist')
+            raise MissingProperty('Does not exist')
 
         if len(result) > 1:
             raise QueryResultError('The number of results is greater than one!')
@@ -151,7 +152,7 @@ class Neo4jDatabase(object):
         }
         params.update(self.default_params)
 
-        if model_object.values.get('had_primary_source'):
+        if hasattr(model_object, '_source'):
             # Keep it readable
             # Expand labels
             # Same name variables
@@ -197,7 +198,6 @@ class Neo4jDatabase(object):
             if summary.counters.nodes_created > 0:
                 return
 
-        # Create a new entity when no matching node seems to exist
         clauses = [
             u'MATCH (n1 :«n1_labels» {«had_primary_source»: $had_primary_source})',
             u'RETURN n1',
@@ -205,21 +205,22 @@ class Neo4jDatabase(object):
 
         cursor = self.session.run(
             fmt.format(u'\n'.join(clauses), **params),
-            had_primary_source=model_object.had_primary_source,
+            had_primary_source=model_object.had_primary_source
         )
 
-        n1_props = n2_props
+        n1_props = copy(n2_props)
         if len(cursor.data()) == 0:
             # n1_props = n2_props + ori_identifier
             n1_props[str(Uri(Mapping, 'ori/identifier'))] = \
                 model_object.generate_ori_identifier()
 
         # Create a new entity when no matching node seems to exist
-        bound_params = dict()
         clauses = [
-            u'MERGE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})-[:«was_derived_from»]->(n2 :«n2_labels»)',
+            u'MERGE (n1 :«n1_labels» {«had_primary_source»: $had_primary_source})-[:«was_derived_from»]->(n2 :«n2_labels»)',
         ]
-        if model_object._source:
+        bound_params = {}
+
+        if hasattr(model_object, '_source'):
             clauses.extend([
                 u'MERGE (n5 :«n5_labels» {name: $name})',
                 u'MERGE (n2)-[:«provided_by»]->(n5)',
@@ -235,7 +236,7 @@ class Neo4jDatabase(object):
             fmt.format(u'\n'.join(clauses), **params),
             n1_props=n1_props,
             n2_props=n2_props,
-            ori_identifier=model_object.get_ori_identifier(),
+            had_primary_source=model_object.had_primary_source,
             **bound_params
         )
         result = cursor.data()
@@ -305,28 +306,25 @@ class Neo4jDatabase(object):
         params.update(self.default_params)
 
         clauses = [
-            u'MATCH (n1 :«n1_labels»)-[:«was_derived_from»]->(n2 :«n2_labels»)-[r]-(:«labels»)<-[:«was_derived_from»]-(n3 :«n1_labels»)',
-            u'WHERE NOT (n1)-->(n3)',
-            u'RETURN id(n1) AS id1, id(n2) AS id2, id(n3) AS id3, type(r) AS rel, id(startNode(r)) AS start',
+            u'MATCH (n1 :«n1_labels»)-[:«was_derived_from»]->(n2 :«n2_labels»)-[r]->(:«labels»)<-[:«was_derived_from»]-(n3 :«n3_labels»)',
+            u'WHERE NOT (n1)--(n3)',
+            u'RETURN id(n1) AS id1, id(n2) as id2, id(n3) AS id3, type(r) AS rel, id(startNode(r)) AS start',
         ]
 
         for result in self.query(fmt.format(u'\n'.join(clauses), **params)):
             clauses = [
-                u'MATCH (n1), (n2)',
+                u'MATCH (n1), (n3)',
                 u'WHERE id(n1) = $id1',
-                u'AND id(n2) = $id2',
+                u'AND id(n3) = $id3',
+                u'MERGE (n1)-[:«rel»]->(n3)'
             ]
-            if result['start'] == result['id2']:
-                clauses.append(
-                    u'MERGE (n1)-[:«was_derived_from»]->(n2)'
-                )
-            else:
-                clauses.append(
-                    u'MERGE (n1)<-[:«was_derived_from»]-(n2)'
-                )
 
             self.query(
-                fmt.format(u'\n'.join(clauses), **params),
+                fmt.format(
+                    u'\n'.join(clauses),
+                    rel=cypher_escape(result['rel']),
+                    **params
+                ),
                 id1=result['id1'],
-                id2=result['id2']
+                id3=result['id3']
             )
