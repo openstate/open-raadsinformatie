@@ -7,7 +7,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.items.notubiz_meeting import NotubizMeeting
 from ocd_backend.models import Meeting
 from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.models.serializers import RdfSerializer, JsonLDSerializer, JsonSerializer
+from ocd_backend.models.serializers import Neo4jSerializer, RdfSerializer, JsonLDSerializer, JsonSerializer
 from ocd_backend.models.database import Neo4jDatabase
 from ocd_backend.models.model import Model
 from ocd_backend import celery_app
@@ -40,7 +40,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'item': 'ocd_backend.items.notubiz_meeting.Meeting',
         }
 
-        self.db = Neo4jDatabase(Model())
+        self.db = Neo4jDatabase(Neo4jSerializer())
         self.cleanup_neo4j()
 
         celery_app.backend.remove("ori_identifier_autoincrement")

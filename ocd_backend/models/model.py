@@ -41,7 +41,7 @@ class ModelMetaclass(type):
 
         new_class._definitions = definitions
         new_class.serializer = mcs.serializer_class()
-        new_class.db = mcs.database_class(new_class)
+        new_class.db = mcs.database_class(new_class.serializer)
         return new_class
 
 

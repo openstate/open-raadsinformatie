@@ -9,7 +9,7 @@ from ocd_backend.models.definitions import Mapping
 
 class DatabaseTestCase(TestCase):
     def setUp(self):
-        self.db = Neo4jDatabase(Model())
+        self.db = Neo4jDatabase(Neo4jSerializer())
         self.db.query('MATCH (n) DETACH DELETE n')
 
         # Assure we are using the test.db
