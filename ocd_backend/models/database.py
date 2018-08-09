@@ -42,8 +42,8 @@ class Neo4jDatabase(object):
         'ori_identifier': cypher_escape(Uri(Mapping, 'ori/identifier')),
     }
 
-    def __init__(self, model):
-        self.serializer = model.serializer
+    def __init__(self, serializer):
+        self.serializer = serializer
 
         if not self._driver:
             self._driver = GraphDatabase.driver(

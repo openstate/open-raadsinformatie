@@ -4,7 +4,7 @@ from ocd_backend.models import Meeting, Organization, AgendaItem, Person
 from ocd_backend.models.model import Model
 from ocd_backend.models.properties import Property, Namespace
 from ocd_backend.models.exceptions import RequiredProperty
-from ocd_backend.models.serializers import JsonLDSerializer
+from ocd_backend.models.serializers import Neo4jSerializer, JsonLDSerializer
 from ocd_backend.models.database import Neo4jDatabase
 from unittest import TestCase
 
@@ -39,7 +39,7 @@ def get_event():
 
 class ModelTestCase(TestCase):
     def setUp(self):
-        self.db = Neo4jDatabase(Model())
+        self.db = Neo4jDatabase(Neo4jSerializer())
         self.cleanup_neo4j()
 
     def tearDown(self):

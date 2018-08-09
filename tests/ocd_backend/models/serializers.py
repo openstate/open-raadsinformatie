@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ocd_backend.models.serializers import RdfSerializer
+from ocd_backend.models.serializers import Neo4jSerializer, RdfSerializer
 from ocd_backend.models import Organization
 from ocd_backend.models.misc import Uri
 from ocd_backend.models.definitions import Mapping
@@ -10,7 +10,7 @@ from ocd_backend.models.exceptions import MissingProperty
 
 class SerializersTestCase(TestCase):
     def setUp(self):
-        self.db = Neo4jDatabase(Model())
+        self.db = Neo4jDatabase(Neo4jSerializer())
         self.cleanup_neo4j()
 
     def tearDown(self):
