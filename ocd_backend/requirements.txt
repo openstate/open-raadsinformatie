@@ -1,20 +1,20 @@
 celery[redis]==4.1.1
 click==2.1
 elasticsearch>=5.0.0,<6.0.0
-flower
+flower==0.9.2
 iso8601==0.1.10
 lxml==3.3.5
 msgpack-python==0.4.2
 -e git+https://github.com/izderadicka/pdfparser#egg=pdfparser
-Pillow==2.7.0
+Pillow==5.2.0
 python-dateutil==2.7.3
 python-magic==0.4.13
 pyyaml==3.12
-requests==2.5.1
+requests==2.19.1
 suds==0.4
 tika==1.13.1
 translitcodec==0.4.0
-bugsnag
+bugsnag==3.4.0
 python-json-logger==0.1.8
 rdflib==4.2.2
 neo4j_driver==1.6.1
