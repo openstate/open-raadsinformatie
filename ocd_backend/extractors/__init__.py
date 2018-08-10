@@ -1,13 +1,14 @@
+import errno
 import glob
 import os
 from datetime import datetime
 
-import errno
 import requests
+import urllib3
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util.retry import Retry
 
 from ocd_backend.exceptions import InvalidFile
 from ocd_backend.log import get_source_logger
@@ -149,7 +150,7 @@ class HttpRequestMixin(object):
         source_definition = getattr(self, 'source_definition', {})
         total_retries = source_definition.get('http_retries', 0)
         if not http_session:
-            requests.packages.urllib3.disable_warnings()
+            urllib3.disable_warnings()
             session = requests.Session()
             session.headers['User-Agent'] = USER_AGENT
 
