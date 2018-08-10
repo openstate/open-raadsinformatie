@@ -380,6 +380,7 @@ ibabs:
 
   voorschoten:
     key: voorschoten
+    municipality: Voorschoten
     almanak_id: 35396
     sitename: Duivenvoorde
     include: ".*[Vv]oorschoten$"
@@ -388,6 +389,7 @@ ibabs:
 
   wassenaar:
     key: wassenaar
+    municipality: Wassenaar
     almanak_id: 40204
     sitename: Duivenvoorde
     exclude: ".*[Vv]oorschoten$"
