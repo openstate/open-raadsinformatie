@@ -4,7 +4,7 @@ from tempfile import SpooledTemporaryFile
 
 from requests import Session
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util.retry import Retry
 
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
