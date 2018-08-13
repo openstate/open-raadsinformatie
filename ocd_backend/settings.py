@@ -220,8 +220,7 @@ ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 NEO4J_URL = os.getenv('NEO4J_URL', 'bolt://neo4j:7687')
-NEO4J_USER = os.getenv('NEO4J_USER', 'neo4j')
-NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'abc')
+NEO4J_USER, NEO4J_PASSWORD = os.getenv('NEO4J_AUTH', '').split('/')
 
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')

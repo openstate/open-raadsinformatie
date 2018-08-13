@@ -12,23 +12,22 @@ spec:
         app: backend
     spec:
       containers:
-      - image: openstatefoundation/open-raadsinformatie-backend
+      - image: {{ .Values.backendImage | quote }}
         imagePullPolicy: Always
         name: backend
-        ports:
-        - containerPort: 5555
         envFrom:
         - configMapRef:
-            name: appconfig
+            name: config
+        env:
+          - name: NEO4J_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: neo4j-auth
         volumeMounts:
         - mountPath: /opt/ori/data
           name: oridata
-        - mountPath: /opt/ori/ocd_backend/sources
-          name: sources
       volumes:
       - name: oridata
         persistentVolumeClaim:
           claimName: oridata
-      - name: sources
-        configMap:
-          name: sources

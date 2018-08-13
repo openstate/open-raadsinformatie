@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-discovery
+spec:
+  selector:
+    app: elastic
+  ports:
+  - name: "transport"
+    port: 9300
+    targetPort: 9300
+    protocol: TCP

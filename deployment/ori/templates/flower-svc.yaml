@@ -1,0 +1,19 @@
+{{ if .Values.flowerPort }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: flower
+spec:
+  selector:
+    app: flower
+  type: LoadBalancer
+  ports:
+  - name: "http"
+    port: {{ .Values.flowerPort }}
+    targetPort: 5555
+  loadBalancerIP: {{ .Values.publicIp }}
+  loadBalancerSourceRanges: |-
+    {{- range .Values.firewallWhitelist }}
+    - {{ . }}
+    {{- end }}
+{{ end }}

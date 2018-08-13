@@ -1,0 +1,46 @@
+# The external IP address used to access the service
+publicIp:
+
+# Firewall exceptions to interface directly on elastic and neo4j
+firewallWhitelist:
+  - 217.100.57.190/32 # Argu base
+  - 146.185.158.150/32 # Argu acceptation
+  - 188.166.75.88/32 # Argu production
+  - 188.166.45.86/32 # Argu production
+  - 188.166.60.95/32 # Argu production
+  - 188.166.51.169/32 # Argu production
+
+gceStackdriver: true
+bugsnag: d83215ad00143ac50873ac2265c2dabb
+resolverBaseUrl: http://beta.openraadsinformatie.nl/v1/resolve
+
+backendImage: openstatefoundation/open-raadsinformatie-backend
+backendStorage: 200Gi
+
+# Cronjob specification (i.e:  0 9 * * *) if empty the Cronjob won't be started
+backendSchedule:
+backendCommand:
+  - manage.py
+  - extract
+  - start
+  - notubiz
+
+frontendImage: openstatefoundation/open-raadsinformatie-frontend
+frontendPort: 80
+
+elasticStorage: 70Gi
+elasticPort: 9200
+
+redisStorage: 10Gi
+redisPort: 6379
+redisPassword:
+
+neo4jStorage: 50Gi
+neo4jBrowserPort: 7474
+neo4jDataPort: 7687
+
+# Password for user neo4j, generates a random password when empty. Do NOT commit fill and commit a password here.
+neo4jPassword:
+
+# Celery Flower GUI port, if empty the service won't be used.
+flowerPort:
