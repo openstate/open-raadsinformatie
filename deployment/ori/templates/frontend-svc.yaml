@@ -1,3 +1,4 @@
+{{ if .Values.frontendPort }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,3 +12,8 @@ spec:
     port: {{ .Values.frontendPort }}
     targetPort: 5000
   loadBalancerIP: {{ required "External IP needs to be set, or use 'null'" .Values.publicIp }}
+  loadBalancerSourceRanges:
+  {{- range .Values.firewallWhitelist }}
+  - {{ . }}
+  {{- end }}
+{{ end }}

@@ -3,6 +3,7 @@ conf
 docs
 dumps
 data
+deployment
 log/*
 install_pyav_deps.sh
 docker-compose*

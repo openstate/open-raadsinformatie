@@ -29,7 +29,10 @@ backendCommand:
   - notubiz
 
 frontendImage: openstatefoundation/open-raadsinformatie-frontend
-frontendPort: 80
+
+# Frontend service port, exposes frontend separate from the endpoints service.
+# If emtpy the service won't be used, frontend is still available via endpoints.
+frontendPort:
 
 elasticStorage: 70Gi
 elasticPort: 9200
