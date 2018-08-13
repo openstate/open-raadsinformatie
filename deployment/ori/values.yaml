@@ -1,6 +1,9 @@
 # The external IP address used to access the service
 publicIp:
 
+# Google Cloud Endpoints host for the Extensible Service Proxy (esp)
+endpointsHost: ori-staging.endpoints.open-raadsinformatie-52162.cloud.goog
+
 # Firewall exceptions to interface directly on elastic and neo4j
 firewallWhitelist:
   - 217.100.57.190/32 # Argu base

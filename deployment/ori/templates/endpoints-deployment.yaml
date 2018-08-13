@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: endpoints
+spec:
+  selector:
+    matchLabels:
+      app: endpoints
+  template:
+    metadata:
+      labels:
+        app: endpoints
+    spec:
+      containers:
+      - name: endpoints
+        image: gcr.io/endpoints-release/endpoints-runtime:1
+        args: [
+          "--http_port=80",
+          "--backend=frontend:5000",
+          "--service={{ .Values.endpointsHost }}",
+          "--rollout_strategy=managed",
+        ]
+        ports:
+        - containerPort: 80
+        - containerPort: 443
