@@ -4,12 +4,12 @@ The best way to manage kubernetes yaml files is by using [Helm](https://helm.sh/
 
 ```bash
 # Staging configuration
-$ helm install . --namespace=staging --set publicIp=<external-ip>
+$ helm install . --namespace=staging --set publicIp=<external-ip> --set neo4jPassword=<password>
 ```
 
 ```bash
 # Production configuration
-$ helm install . --namespace=production --values values-production.yaml --set publicIp=<external-ip>
+$ helm install . --namespace=production --values values-production.yaml --set publicIp=<external-ip>  --set neo4jPassword=<password>
 ```
 
 ```bash
