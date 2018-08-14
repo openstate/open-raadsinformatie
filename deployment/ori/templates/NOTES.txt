@@ -1,8 +1,3 @@
 Write down these passwords:
 
-{{- if .Values.neo4jPassword }}
-neo4j-auth: {{ cat "neo4j/" .Values.neo4jPassword }}
-{{- else }}
-{{ $pw := randAlphaNum 32 }}
-neo4j-auth: {{ cat "neo4j/" $pw }}
-{{- end }}
+neo4j-auth: {{ template "..neo4j-auth" }}
