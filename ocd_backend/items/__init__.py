@@ -3,6 +3,8 @@ from datetime import datetime
 
 from ocd_backend.exceptions import FieldNotAvailable
 from ocd_backend.models import Metadata
+from ocd_backend.models.misc import Uri
+from ocd_backend.models.definitions import Mapping
 
 
 class BaseItem(object):
@@ -34,41 +36,40 @@ class BaseItem(object):
 
         # On init, all data should be available to construct self.meta
         # and self.combined_item
-        self._store_object_data()
         self._construct_object_meta(processing_started)
+        self._store_object_data()
 
     def _construct_object_meta(self, processing_started=None):
-        meta = Metadata('ori_identifier', self.object_data.get_ori_id())
+        source_defaults = {
+            'source': 'ori/meta',
+            'source_id_key': 'identifier',
+            'organization': 'ori',
+        }
 
-        if not processing_started:
-            meta.processing_started = datetime.now()
-
-        meta.source_id = unicode(self.source_definition['id'])
-        meta.collection = self.get_collection()
-        meta.rights = self.get_rights()
-
-        if self.run_node:
-            self.object_data.attach('meta', self.run_node, rel_params=meta)
-
-        return meta
+        # meta = Metadata(1)
+        #
+        # if not processing_started:
+        #     meta.processing_started = datetime.now()
+        #
+        # meta.source_id = unicode(self.source_definition['id'])
+        # meta.collection = self.get_collection()
+        # meta.rights = self.get_rights()
+        #
+        # self.meta = meta
 
     def _store_object_data(self):
         object_data = self.get_object_model()
+        # object_data.meta = self.meta
 
-        # Temporary fix for testing
-        if type(self).__name__[0:4] != 'Test':
-            object_data.save()
+        object_data.save()
 
         self.object_data = object_data
 
     def get_object_model(self):
         """Construct the document that should be inserted into the index
         belonging to the item's source.
-
-        :returns: a dict ready for indexing.
-        :rtype: dict
         """
-        return self.object_data
+        raise NotImplementedError
 
     def get_collection(self):
         """Retrieves the name of the collection the item belongs to.

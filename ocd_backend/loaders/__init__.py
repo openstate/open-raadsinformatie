@@ -11,7 +11,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
                                 OCDBackendTaskFailureMixin)
 from ocd_backend.utils import json_encoder
-from ocd_backend.utils.misc import iterate, get_sha1_hash
+from ocd_backend.utils.misc import iterate, get_sha1_hash, doc_type
+from ocd_backend.models.serializers import JsonLDSerializer, JsonSerializer
 
 log = get_source_logger('loader')
 
@@ -42,7 +43,7 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
     def post_processing(doc):
         # Add the 'processing.finished' datetime to the documents
         finished = datetime.now()
-        doc.Meta.processing_finished = finished
+        # doc.Meta.processing_finished = finished
 
 
 class ElasticsearchLoader(BaseLoader):
@@ -65,34 +66,32 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(JsonLDSerializer().serialize(doc))
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
-        elasticsearch.index(index=self.index_name, doc_type=doc.get_popolo_type(),
-                            body=body, id=doc.get_ori_id())
+        elasticsearch.index(index=self.index_name, doc_type=doc_type(doc.verbose_name()),
+                            body=body, id=doc.get_ori_identifier())
 
-        for prop, value in doc.properties(props=True, rels=True):
-            try:
-                if not value.Meta.enricher_task or \
-                        not hasattr(value, 'original_url') or \
-                        not hasattr(value, 'content_type') or \
-                        not hasattr(value, 'name'):
-                    continue
-            except AttributeError:
-                continue
+        # Recursively index associated models like attachments
+        for _, value in doc.properties(rels=True, props=False):
+            self.load_item(value)
 
-            url_doc = {
-                'ori_identifier': value.get_ori_id(),
-                'original_url': value.original_url,
-                'content_type': value.content_type,
-                'file_name': value.name,
-            }
+            if 'enricher_task' in value:
+                # The value seems to be enriched so add to resolver
+                url_doc = {
+                    'ori_identifier': value.get_ori_identifier(),
+                    'original_url': value.original_url,
+                    'file_name': value.name,
+                }
 
-            # Update if already exists
-            elasticsearch.index(index=settings.RESOLVER_URL_INDEX, doc_type='url',
-                                id=get_sha1_hash(value.original_url), body=url_doc)
+                if 'content_type' in value:
+                    url_doc['content_type'] = value.content_type
+
+                # Update if already exists
+                elasticsearch.index(index=settings.RESOLVER_URL_INDEX, doc_type='url',
+                                    id=get_sha1_hash(value.original_url), body=url_doc)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
@@ -101,19 +100,19 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(JsonLDSerializer().serialize(doc))
 
         if doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_id(),
+            id=doc.get_ori_identifier(),
             index=self.index_name,
-            doc_type=doc.get_popolo_type(),
+            doc_type=doc_type(doc.verbose_name()),
             body={'doc': body},
         )
         # remember, resolver URLs are not update here to prevent too complex
@@ -126,19 +125,19 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
-        body = json_encoder.encode(doc.deflate(props=True, rels=True))
+        body = json_encoder.encode(JsonLDSerializer().serialize(doc))
 
         if doc == {}:
             log.info('Empty document ....')
             return
 
-        log.info('Indexing document id: %s' % doc.get_ori_id())
+        log.info('Indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_id(),
+            id=doc.get_ori_identifier(),
             index=self.index_name,
-            doc_type=doc.get_popolo_type(),
+            doc_type=doc_type(doc),
             body={
                 'doc': body,
                 'doc_as_upsert': True,
@@ -153,9 +152,9 @@ class DummyLoader(BaseLoader):
 
     def load_item(self, doc):
         log.debug('=' * 50)
-        log.debug('%s %s %s' % ('=' * 4, doc.get_ori_id(), '=' * 4))
+        log.debug('%s %s %s' % ('=' * 4, doc.get_ori_identifier(), '=' * 4))
         log.debug('%s %s %s' % ('-' * 20, 'doc', '-' * 25))
-        log.debug(doc.deflate(props=True, rels=True))
+        log.debug(JsonSerializer().serialize(doc))
         log.debug('=' * 50)
 
     @staticmethod
@@ -208,4 +207,4 @@ class PopitLoader(BaseLoader):
             headers=headers, data=json.dumps(item, default=json_serial))
 
     def load_item(self, doc):
-        resp = self._create_or_update_item(doc, doc.get_ori_id())
+        resp = self._create_or_update_item(doc, doc.get_ori_identifier())

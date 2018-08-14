@@ -1,7 +1,7 @@
 requests==2.5.1
 elasticsearch>=5.0.0,<6.0.0
 Flask==0.10.1
-Pillow
-bugsnag[flask]
+Pillow==5.2.0
+bugsnag[flask]==3.4.2
 gunicorn==19.8.1
 python-json-logger==0.1.8

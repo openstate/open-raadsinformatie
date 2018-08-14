@@ -1,75 +1,84 @@
+"""The classes in this schema module are derived from and described by:
+http://schema.org/
+"""
+
 import owl
-from ..property import StringProperty, DateTimeProperty, ArrayProperty, Relation, Instance
-from .namespaces import SCHEMA, OPENGOV, COUNCIL
+from ocd_backend.models.definitions import Schema, Opengov
+from ocd_backend.models.model import Individual
+from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+    DateTimeProperty, ArrayProperty, Relation
 
 
-class AudioObject(owl.Thing):
-    contentUrl = StringProperty(SCHEMA, 'contentUrl')
+class MediaObject(Schema, owl.Thing):
+    name = StringProperty(Schema, 'name')
+    url = StringProperty(Schema, 'contentUrl')
+    size_in_bytes = IntegerProperty(Schema, 'fileSize')
+    file_type = StringProperty(Schema, 'fileType')
+    additional_type = StringProperty(Schema, 'additionalType')
+    creator = Relation(Schema, 'creator')
+    content_type = StringProperty(Schema, 'fileFormat')
+    original_url = StringProperty(Schema, 'isBasedOn')
+    text = StringProperty(Schema, 'text')
 
-    class Meta:
-        namespace = SCHEMA
-
-
-class CreativeWork(owl.Thing):
-    legislative_session = Relation(OPENGOV, 'legislativeSession')
-    creator = Relation(SCHEMA, 'creator')
-    date_created = DateTimeProperty(SCHEMA, 'dateCreated')
-    name = StringProperty(SCHEMA, 'name')
-    organizer = Relation(SCHEMA, 'organizer')
-    text = StringProperty(SCHEMA, 'text')
-
-    class Meta:
-        namespace = SCHEMA
+    enricher_task = 'file_to_text'
 
 
-class Event(owl.Thing):
-    end_date = DateTimeProperty(SCHEMA, 'endDate')
-    start_date = DateTimeProperty(SCHEMA, 'startDate')
-
-    class Meta:
-        namespace = SCHEMA
+class AudioObject(Schema, owl.Thing):
+    contentUrl = StringProperty(Schema, 'contentUrl')
 
 
-class ImageObject(owl.Thing):
-    content_url = StringProperty(SCHEMA, 'contentUrl')
-    is_based_on = StringProperty(SCHEMA, 'isBasedOn')
-    file_format = StringProperty(SCHEMA, 'fileFormat')
-    content_size = StringProperty(SCHEMA, 'contentSize')
-    encoding_format = StringProperty(SCHEMA, 'encodingFormat')
-    exif_data = ArrayProperty(SCHEMA, 'exifData')
-    width = StringProperty(SCHEMA, 'width')
-    height = StringProperty(SCHEMA, 'height')
-
-    class Meta:
-        namespace = SCHEMA
-        enricher_task = 'image_metadata'
+class CreativeWork(Schema, owl.Thing):
+    legislative_session = Relation(Opengov, 'legislativeSession')
+    creator = Relation(Schema, 'creator')
+    date_created = DateTimeProperty(Schema, 'dateCreated')
+    name = StringProperty(Schema, 'name')
+    organizer = Relation(Schema, 'organizer')
+    text = StringProperty(Schema, 'text')
 
 
-class PropertyValue(owl.Thing):
-    name = StringProperty(SCHEMA, 'name')
-    value = StringProperty(SCHEMA, 'value')
-
-    class Meta:
-        namespace = SCHEMA
+class Event(Schema, owl.Thing):
+    end_date = DateTimeProperty(Schema, 'endDate')
+    start_date = DateTimeProperty(Schema, 'startDate')
 
 
-class Place(owl.Thing):
-    class Meta:
-        namespace = SCHEMA
+class ImageObject(Schema, owl.Thing):
+    content_url = StringProperty(Schema, 'contentUrl')
+    is_based_on = StringProperty(Schema, 'isBasedOn')
+    file_format = StringProperty(Schema, 'fileFormat')
+    content_size = StringProperty(Schema, 'contentSize')
+    encoding_format = StringProperty(Schema, 'encodingFormat')
+    exif_data = ArrayProperty(Schema, 'exifData')
+    width = StringProperty(Schema, 'width')
+    height = StringProperty(Schema, 'height')
+
+    enricher_task = 'image_metadata'
 
 
-class VideoObject(owl.Thing):
-    content_url = StringProperty(SCHEMA, 'contentUrl')
-
-    class Meta:
-        namespace = SCHEMA
+class PropertyValue(Schema, owl.Thing):
+    name = StringProperty(Schema, 'name')
+    value = StringProperty(Schema, 'value')
 
 
-# Instances EventStatusType
-EventCancelled = Instance(SCHEMA, 'EventCancelled')
-EventPostponed = Instance(SCHEMA, 'EventPostponed')
-EventRescheduled = Instance(SCHEMA, 'EventRescheduled')
-EventScheduled = Instance(SCHEMA, 'EventScheduled')
-EventCompleted = Instance(COUNCIL, 'EventCompleted')
-EventConfirmed = Instance(COUNCIL, 'EventConfirmed')
-EventInactive = Instance(COUNCIL, 'EventInactive')
+class Place(Schema, owl.Thing):
+    pass
+
+
+class VideoObject(Schema, owl.Thing):
+    content_url = StringProperty(Schema, 'contentUrl')
+
+
+# EventStatusType Individuals
+class EventCancelled(Schema, Individual):
+    pass
+
+
+class EventPostponed(Schema, Individual):
+    pass
+
+
+class EventRescheduled(Schema, Individual):
+    pass
+
+
+class EventScheduled(Schema, Individual):
+    pass

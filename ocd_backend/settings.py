@@ -5,12 +5,15 @@ import pickle
 from bugsnag.handlers import BugsnagHandler
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
+from version import __version__, __version_info__
 
 register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
 
-APP_VERSION = os.getenv('APP_VERSION', None)
+APP_VERSION = __version__
+MAJOR_VERSION = __version_info__[0]
+MINOR_VERSION = __version_info__[1]
 
 BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
@@ -165,10 +168,16 @@ LOGGING = {
             'level': 'WARNING',
             'propagate': False,
         },
+        'kombu': {
+            'handlers': ['default'],
+            'level': 'WARNING',
+            'propagate': False,
+        }
     },
     'root': {
         'handlers': ['default', 'bugsnag'],
-        'level': 'INFO',
+        'level': 'WARNING',
+        'propagate': False
     },
 }
 
@@ -210,7 +219,11 @@ logging.config.dictConfig(LOGGING)
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
-NEO4J_URL = os.getenv('NEO4J_URL', "http://neo4j:abc@neo4j:7474/db/data/")
+NEO4J_URL = os.getenv('NEO4J_URL', 'bolt://neo4j:7687')
+try:
+    NEO4J_USER, NEO4J_PASSWORD = os.getenv('NEO4J_AUTH', 'neo4j/development').split('/')
+except (ValueError, AttributeError):
+    NEO4J_USER, NEO4J_PASSWORD = None, None
 
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')
@@ -227,17 +240,17 @@ COMBINED_INDEX = 'ori_combined_index'
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
-RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'http://10.0.1.48:5000/v1/resolve')
+RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'http://api.openraadsinformatie.nl/v%s/resolve' % MAJOR_VERSION)
 RESOLVER_URL_INDEX = 'ori_resolver'
 
 # The User-Agent that is used when retrieving data from external sources
-USER_AGENT = 'Open Raadsinformatie/1.0 (+http://www.openraadsinformatie.nl/)'
+USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)
 
 # URL where of the API instance that should be used for management commands
 # Should include API version and a trailing slash.
 # Can be overridden in the CLI when required, for instance when the user wants
 # to download dumps from another API instance than the one hosted by OpenState
-API_URL = os.getenv('API_URL', 'http://frontend:5000/v1/')
+API_URL = os.getenv('API_URL', 'http://frontend:5000/v%s/' % MAJOR_VERSION)
 
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'

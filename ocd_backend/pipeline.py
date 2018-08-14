@@ -61,9 +61,9 @@ def setup_pipeline(source_definition):
 
     logger.debug('Starting run with identifier %s' % params['run_identifier'])
 
-    run = Run('run_identifier', params['run_identifier'])
-    run.save()
-    params['run_node'] = run
+    #run = Run(RunIdentifier, params['run_identifier'], 'ori')
+    #run.save()
+    #params['run_node'] = run
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])

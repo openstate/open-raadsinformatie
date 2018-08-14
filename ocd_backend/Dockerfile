@@ -9,8 +9,9 @@ COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 # package dependencies
 RUN apk add --update \
   build-base git tzdata \
-  libxml2-dev libxslt-dev poppler-dev \
+  libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic \
+  && pip install --upgrade pip \
   && pip install cython \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
@@ -19,31 +20,25 @@ RUN apk add --update \
   && apk del build-base git tzdata
 
 # Setup Celery
-RUN adduser -D -H celery \
-  && mkdir -p /var/run/celery \
-  && chown celery:celery /var/run/celery
-
-WORKDIR /opt/ori
-
+# Create static data folder shared with the frontend
 # Trick to redirect logs to process 1 when running multiple processes
-RUN mkdir /opt/ori/log \
+RUN adduser -D -H celery \
+  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/log \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
-
-# Create volume for shared static data with the frontend
-RUN mkdir -p /opt/ori/data/static
 
 # Copy all files, except for .dockerignore entries
 COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY ocd_backend /opt/ori/ocd_backend
+COPY version.py /opt/ori/ocd_backend/version.py
 
-# Change permissions before switching to user
-RUN chown -R celery:celery /opt/ori
-USER celery
+RUN chown -R 1000:1000 /opt/ori /var/run/celery
 
 # Specify the volume last
 # https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
 VOLUME /opt/ori/data
 
-CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
+WORKDIR /opt/ori
+USER celery
+CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=4

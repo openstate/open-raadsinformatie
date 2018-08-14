@@ -14,7 +14,7 @@ COPY .pylintrc /opt/ori/.pylintrc
 COPY tests/__init__.py  /opt/ori/tests/__init__.py
 COPY tests/ocd_frontend /opt/ori/tests/ocd_frontend
 
-RUN chown -R nobody:nobody tests
+RUN chown -R 1000:1000 tests .pylintrc
 
-# Switching back to nobody user
-USER nobody
+# Switching back to gunicorn user
+USER gunicorn

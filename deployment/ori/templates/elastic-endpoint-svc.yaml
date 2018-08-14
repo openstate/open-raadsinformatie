@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-endpoint
+spec:
+  selector:
+    app: elastic-endpoint
+  type: LoadBalancer
+  ports:
+  - name: "rest"
+    port: {{ .Values.elasticPort }}
+    targetPort: 9200
+  loadBalancerIP: {{ required "External IP needs to be set, or use 'null'" .Values.publicIp }}
+  loadBalancerSourceRanges:
+  {{- range .Values.firewallWhitelist }}
+  - {{ . }}
+  {{- end }}

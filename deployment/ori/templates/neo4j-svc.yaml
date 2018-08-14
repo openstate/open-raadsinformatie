@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: neo4j
+spec:
+  selector:
+    app: neo4j
+  type: LoadBalancer
+  ports:
+  - name: "browser"
+    port: {{ .Values.neo4jBrowserPort }}
+    targetPort: 7474
+  - name: "data"
+    port: {{ .Values.neo4jDataPort }}
+    targetPort: 7687
+  loadBalancerIP: {{ .Values.publicIp }}
+  loadBalancerSourceRanges:
+  {{- range .Values.firewallWhitelist }}
+  - {{ . }}
+  {{- end }}

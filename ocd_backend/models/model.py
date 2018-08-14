@@ -1,186 +1,140 @@
 # -*- coding: utf-8 -*-
 
-import os
 import re
-from hashlib import sha1
 
-from py2neo import Graph, ConstraintError
-
-import property
-from ocd_backend.settings import NEO4J_URL
-from ocd_backend.utils.misc import iterate
-from .exceptions import RequiredProperty, MissingProperty, \
+from ocd_backend import celery_app
+from ocd_backend.models.database import Neo4jDatabase
+from ocd_backend.models.definitions import Mapping, Prov, Ori
+from ocd_backend.models.exceptions import MissingProperty, ValidationError, \
     QueryResultError
-
-graph = None
-
-
-def get_graph():
-    global graph
-    if graph:
-        return graph
-    graph = Graph(NEO4J_URL)
-    return graph
+from ocd_backend.models.properties import PropertyBase, Property, \
+    StringProperty, IntegerProperty, Relation
+from ocd_backend.models.serializers import Neo4jSerializer
+from ocd_backend.models.misc import Namespace, Uri
+from ocd_backend.utils.misc import iterate, doc_type
 
 
-class ModelBaseMetaclass(type):
+class ModelMetaclass(type):
+    database_class = Neo4jDatabase
+    serializer_class = Neo4jSerializer
+
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
         definitions = dict()
         for key, value in list(attrs.items()):
-            if isinstance(value, property.PropertyBase):
+            if isinstance(value, PropertyBase):
                 definitions[key] = value
                 attrs.pop(key)
-        attrs['__definitions__'] = definitions
 
-        # attr = getattr(self, key)
-        # if not isinstance(attr, PropertyBase):
-        #     raise ValueError('Predefined attribute \'%s\' of class %s is not a'
-        #                      ' subclass of PropertyBase' % (key, type(attr).__name__))
+        if len(bases) > 1 and not issubclass(bases[0], Namespace):
+            raise ValueError('First argument of a Model subclass'
+                             'should be a Namespace')
 
-        new_class = super(ModelBaseMetaclass, mcs).__new__(mcs, name, bases, attrs)
+        new_class = super(ModelMetaclass, mcs).__new__(mcs, name, bases, attrs)
 
         # Walk through the MRO.
         for base in reversed(new_class.__mro__):
             # Collect fields from base class.
-            if hasattr(base, '__definitions__'):
-                definitions.update(base.__definitions__)
+            if hasattr(base, '_definitions'):
+                # noinspection PyProtectedMember
+                definitions.update(base._definitions)
 
-            # Meta field shadowing.
-            for attr, value in base.__dict__.items():
-                if attr == 'Meta':
-                    for key, val in value.__dict__.items():
-                        if key[0:2] != '__' and key not in new_class.Meta.__dict__:
-                            setattr(new_class.Meta, key, val)
-
-        new_class.__definitions__ = definitions
-
+        new_class._definitions = definitions
+        new_class.serializer = mcs.serializer_class()
+        new_class.db = mcs.database_class(new_class.serializer)
         return new_class
 
 
-class ModelBase(object):
-    __metaclass__ = ModelBaseMetaclass
+class Model(object):
+    __metaclass__ = ModelMetaclass
 
-    class Meta:
-        namespace = None
-        enricher_task = None
-        legacy_type = None
+    # Top-level definitions
+    ori_identifier = StringProperty(Mapping, 'ori/identifier')
+    had_primary_source = StringProperty(Prov, 'hadPrimarySource')
 
-    def get_object_hash(self, object_id):
-        hash_content = '%s-%s' % (self.get_prefix_uri(), unicode(object_id))  # temporary fix
-        return sha1(hash_content.decode('utf8')).hexdigest()
+    def absolute_uri(self):
+        return '%s%s' % (self.uri, self.verbose_name())
 
-    def get_ori_id(self):
-        return self.ori_identifier
+    def compact_uri(self):
+        return '%s:%s' % (self.prefix, self.verbose_name())
 
-    @classmethod
-    def get_prefix_uri(cls):
-        return '%s:%s' % (cls.Meta.namespace.prefix, cls.__name__)
-
-    def get_popolo_type(self):
-        if self.Meta.legacy_type:
-            return self.Meta.legacy_type
-
-        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', type(self).__name__)
-        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
-
-    @classmethod
-    def labels(cls):
-        return [
-            scls.get_prefix_uri()
-            for scls in cls.mro()
-            if issubclass(scls, ModelBase) and scls != ModelBase
-        ]
-
-    def properties(self, props=True, rels=True):
-        """ Returns namespaced properties with their inflated values """
-        props_list = list()
-        for name, prop in iterate({k: v for k, v in self.__dict__.items() if k[0:2] != '__'}):
-            definition = self.__definitions__[name]  # pylint: disable=no-member
-            if (props and not isinstance(prop, ModelBase)) or (rels and isinstance(prop, ModelBase)):
-                props_list.append((definition.get_prefix_uri(), prop,))
-        return props_list
+    def verbose_name(self):
+        # if hasattr(cls, 'verbose_name'):
+        #     return cls.verbose_name
+        return type(self).__name__
 
     @classmethod
     def definitions(cls, props=True, rels=True):
         """ Return properties and relations objects from model definitions """
         props_list = list()
-        for name, definition in cls.__definitions__.items():  # pylint: disable=no-member
-            if (props and isinstance(definition, property.Property) or
-                    (rels and isinstance(definition, property.Relation))):
+        for name, definition in cls._definitions.items():  # pylint: disable=no-member
+            if (props and isinstance(definition, Property) or
+                    (rels and isinstance(definition, Relation))):
                 props_list.append((name, definition,))
         return props_list
 
-    def deflate(self, namespaces=True, props=True, rels=False):
-        """ Returns a serialized value for each model definition """
-        props_list = dict()
-        for name, definition in self.definitions(props=props, rels=rels):
-            namespaced = name
-            if namespaces:
-                namespaced = definition.get_prefix_uri()
-
-            value = self.__dict__.get(name, None)
-
-            if value:
-                props_list[namespaced] = definition.serialize(value, namespaces=namespaces, props=props, rels=rels)
-            elif not self.__temporary__ and definition.required:
-                raise RequiredProperty("Property '%s' is required for %s" %
-                                       (name, self.get_prefix_uri()))
-        return props_list
+    @classmethod
+    def definition(cls, name):
+        try:
+            return cls._definitions[name]  # pylint: disable=no-member
+        except KeyError:
+            return
 
     @classmethod
-    def inflate(cls, props):
-        # todo inflate needs inflate relations and models as well
-        instance = cls(
-            'ori_identifier',
-            props[cls.__definitions__['ori_identifier'].get_prefix_uri()]  # pylint: disable=no-member
-        )
+    def inflate(cls, **deflated_props):
+        instance = cls()
+        for absolute_uri, value in deflated_props.items():
+            definitions_mapping = {v.absolute_uri(): k for k, v in cls.definitions()}
+            try:
+                prop_name = definitions_mapping[absolute_uri]
+                setattr(instance, prop_name, value)
+            except KeyError:
+                raise  # todo raise correct exception
 
-        for namespaced, value in props.items():
-            ns_string, name = namespaced.split(':')
-
-            for definition_name, definition_object in cls.definitions(props=True, rels=True):
-                if name == definition_object.local_name and ns_string == definition_object.ns.prefix:
-                    setattr(instance, definition_name, value)
-                    break
-
-        instance.__temporary__ = True
         return instance
 
+    def __init__(self, source_id=None, organization=None, source=None, source_id_key=None):
+        # Set defaults
+        #self.uri = None
+        #self.prefix = None
+        self.skip_validation = None
+        # self.verbose_name = None
+        self.values = dict()
+
+        # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
+        # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
+        if source_id:
+            assert organization
+            assert source
+            assert source_id_key
+            self.had_primary_source = Uri(Mapping, '{}/{}/{}/{}'.format(organization, source, source_id_key, source_id))
+            self._source = source
+        else:
+            # Individuals also need a primary source or some queries will fail
+            # As a solution the definition will be set as the primary source
+            self.had_primary_source = self.absolute_uri()
+
+    def __getattr__(self, item):
+        try:
+            return self.__dict__['values'][item]
+        except KeyError:
+            try:
+                return self.__dict__[item]
+            except KeyError:
+                raise AttributeError(item)
+
     def __setattr__(self, key, value):
-        # pylint: disable=no-member
-        if key[0:2] != '__' and key not in self.__definitions__ and \
-                (hasattr(self, '__temporary__') and not self.__temporary__):
-            raise AttributeError("'%s' is not defined in %s" % (key, self.get_prefix_uri()))
-        # pylint: enable=no-member
+        definition = self.definition(key)
 
-        super(ModelBase, self).__setattr__(key, value)
+        # if key[0:1] != '_' and not definition:
+        #     raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
 
-    def __init__(self, identifier_key=None, identifier_value=None, temporary=False, rel_params=None):
-        self.__temporary__ = temporary
-        self.__rel_params__ = rel_params
+        if definition:
+            value = definition.sanitize(value)
+            self.values[key] = value
+            return
 
-        if identifier_value:
-            setattr(self, identifier_key, identifier_value)
-
-        if identifier_key:
-            self.__identifier_key__ = identifier_key
-
-        ori_identifier = identifier_value
-        if not identifier_key:
-            random = os.urandom(16).encode('hex')
-            ori_identifier = self.get_object_hash(random)
-        elif identifier_key != 'ori_identifier':
-            ori_identifier = self.get_object_hash(identifier_value)
-
-        self.ori_identifier = ori_identifier
-
-    def __iter__(self):
-        for key, value in self.__dict__.items():
-            yield key, value
-
-    def __getitem__(self, item):
-        return self.__dict__[item]
+        super(Model, self).__setattr__(key, value)
 
     def __contains__(self, item):
         try:
@@ -191,115 +145,100 @@ class ModelBase(object):
         return False
 
     def __repr__(self):
-        return '<%s Model>' % self.get_prefix_uri()
+        return '<%s Model>' % self.compact_uri()
 
-    @classmethod
-    def get_or_create(cls, **kwargs):
-        if len(kwargs) < 1:
-            raise TypeError('get() takes exactly 1 keyword-argument')
-
-        definitions = dict(cls.definitions(props=True, rels=True))
-        params = list()
-        props = list()
-        for name, value in kwargs.items():
+    def get_ori_identifier(self):
+        if not self.values.get('ori_identifier'):
             try:
-                identifier = definitions[name].get_prefix_uri()
-                props.append((name, value,))
-                params.append(
-                    '`%(key)s`: \'%(value)s\'' % {
-                        'key': identifier,
-                        'value': value,
-                    }
+                self.ori_identifier = self.db.get_identifier_by_source_id(
+                    self,
+                    self.had_primary_source,
                 )
-            except KeyError:
-                raise MissingProperty("Cannot query '%s' since it's not defined in %s" % (name, cls.__name__))
+            except AttributeError:
+                raise
+            except MissingProperty:
+                raise MissingProperty('OriIdentifier is not present, has the '
+                                      'model been saved?')
+        return self.ori_identifier
 
-        # todo lazy returning only the id, instead everything must be inflated
-        query = 'MATCH (n {%s}) RETURN n.`govid:oriIdentifier` AS n' % ', '.join(params)
-        try:
-            result = get_graph().data(query)
-        except ConstraintError, e:
-            raise
+    def generate_ori_identifier(self):
+        self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
+        return self.ori_identifier
 
-        if len(result) > 1:
-            raise QueryResultError('The number of results is greater than one!')
-
-        if len(result) < 1:
-            instance = cls(*props[0])
-            instance.__temporary__ = True
-            return instance
-
-        return cls.inflate({'govid:oriIdentifier': result[0]['n']})
+    def properties(self, props=True, rels=True):
+        """ Returns namespaced properties with their inflated values """
+        props_list = list()
+        for name, prop in iterate({k: v for k, v in self.values.items() if k[0:1] != '_'}):
+            definition = self.definition(name)
+            if not definition:
+                continue
+            if (props and not isinstance(prop, Model)) or \
+                    (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
+                props_list.append((self.serializer.uri_format(definition), prop,))  # pylint: disable=no-member
+        return props_list
 
     def save(self):
-        self.replace()
-        self.attach_recursive(self)
-        return self
+        self.db.replace(self)  # pylint: disable=no-member
 
-    @staticmethod
-    def attach_recursive(model):
-        for key, prop in model.properties(rels=True, props=False):
-            model.attach(key, prop)
-            model.attach_recursive(prop)
+        # Recursive save
+        for _, value in self.properties(rels=True, props=False):
+            if isinstance(value, Model):
+                value.save()
 
-    def replace(self):
-        query = '''
-        MERGE (n :`%(labels)s` {`govid:oriIdentifier`: '%(identifier_value)s'})
-        SET n = $replace_params
-        WITH n
-        OPTIONAL MATCH (n)-[r]->()
-        DELETE r
-        WITH n
-        RETURN DISTINCT n
-        '''
+        self.attach_recursive()
 
-        try:
-            result = get_graph().data(
-                query % {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()},
-                replace_params=self.deflate(props=True, rels=False))
-        except ConstraintError, e:
-            # todo
-            raise
+        # Todo needs to be executed only once
+        self.db.copy_relations()  # pylint: disable=no-member
 
-        if len(result) != 1:
-            raise QueryResultError('The number of results is more or less than one!')
-        return result[0]['n']
+    def attach_recursive(self):
+        attach = list()
+        for rel_type, other_object in self.properties(rels=True, props=False):
+            attach.append(self.db.attach(self, other_object, rel_type))  # pylint: disable=no-member
 
-    def attach(self, rel_type, other, rel_params=None):
-        create_params = other.deflate()
-        rel_params = rel_params or other.__rel_params__ or {}
+            # End the recursive loop when self-referencing
+            if self != other_object:
+                attach.extend(other_object.attach_recursive())
 
-        if isinstance(rel_params, ModelBase):
-            rel_params = rel_params.deflate(props=True, rels=True)
+        return attach
 
-        query = 'MATCH (n :`%(labels)s` {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
-                {'labels': '`:`'.join(self.labels()), 'identifier_value': self.get_ori_id()}
-        query += 'MERGE (m {`govid:oriIdentifier`: \'%(identifier_value)s\'}) ' % \
-                 {'labels': '`:`'.join(other.labels()), 'identifier_value': other.get_ori_id()}
-        query += '''MERGE (n)-[r :`%(rel_type)s`]->(m)
-        ON CREATE SET m += $create_params
-        ON MATCH SET m += $create_params
-        SET m:`%(labels)s`
-        SET r = $rel_params
-        RETURN n
-        ''' % {'rel_type': rel_type, 'labels': '`:`'.join(other.labels())}
 
-        try:
-            result = get_graph().data(
-                query,
-                create_params=create_params,
-                rel_params=rel_params
-            )
-        except ConstraintError, e:
-            raise
+class Individual(Model):
+    __metaclass__ = ModelMetaclass
 
-        return result
 
-    def get_context(self):
-        context = {}
-        for name, prop in self.definitions():
-            context[name] = {
-                '@id': prop.get_full_uri(),
-                '@type': '@id',
-            }
-        return {'@context': context}
+class Relationship(object):
+    """
+    The Relationship model is used to explicitly specify one or more
+    object model relations and describe what the relationship is about. The
+    `rel` parameter is used to point to a object model that describes the
+    relation, in a graph this is the edge between nodes. Note that not all
+    serializers will make use of this.
+
+    Relationship can have multiple arguments in order to specify multiple
+    relations at once. Arguments of Relationship always relate to the property
+    the Relationship is assigned to, and not to each other.
+
+    ``
+    # Basic way to assign relations
+    object_model.parent = [a, b]
+
+    # Relationship adds a way to describe the relation
+    object_model.parent = Relationship(a, b, rel=c)
+
+    # Under water this is translated to a list
+    object_model.parent = [Relationship(a, rel=c), Relationship(b, rel=c)]
+    ``
+    """
+
+    def __new__(cls, *args, **kwargs):
+        if len(args) == 1:
+            return super(Relationship, cls).__new__(cls)
+
+        rel_list = list()
+        for arg in args:
+            rel_list.append(Relationship(arg, **kwargs))
+        return rel_list
+
+    def __init__(self, *args, **kwargs):
+        self.model = args[0]
+        self.rel = kwargs['rel']
