@@ -14,6 +14,7 @@ RUN mkdir -p /opt/ori/data/static \
   && adduser -D -H gunicorn
 
 # Copy all files, except for .dockerignore entries
+COPY version.py /opt/ori/version.py
 COPY ocd_frontend /opt/ori/ocd_frontend
 
 RUN chown -R 1000:1000 /opt/ori

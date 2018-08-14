@@ -5,11 +5,15 @@ import pickle
 from bugsnag.handlers import BugsnagHandler
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
-from .. import __version__, __version_info__
 
 register('ocd_serializer', pickle.dumps, pickle.loads,
          content_encoding='binary',
          content_type='application/x-pickle2')
+
+# Get the version information
+__version__ = __version_info__ = None
+with open('../version.py') as fh:
+    exec(fh.read())
 
 APP_VERSION = __version__
 MAJOR_VERSION = __version_info__[0]
