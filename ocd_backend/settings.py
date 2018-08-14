@@ -216,7 +216,7 @@ if BUGSNAG_APIKEY:
 # Configure python logging system with LOGGING dict
 logging.config.dictConfig(LOGGING)
 
-ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic-endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 NEO4J_URL = os.getenv('NEO4J_URL', 'bolt://neo4j:7687')
