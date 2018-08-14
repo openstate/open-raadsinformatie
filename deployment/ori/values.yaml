@@ -18,7 +18,7 @@ bugsnag: d83215ad00143ac50873ac2265c2dabb
 resolverBaseUrl: http://beta.openraadsinformatie.nl/v1/resolve
 
 backendImage: openstatefoundation/open-raadsinformatie-backend
-backendStorage: 200Gi
+backendStorage: 500Gi
 
 # Cronjob specification (i.e:  0 9 * * *) if empty the Cronjob won't be started
 backendSchedule:
