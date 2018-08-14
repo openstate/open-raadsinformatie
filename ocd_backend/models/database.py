@@ -47,7 +47,8 @@ class Neo4jDatabase(object):
         self.serializer = serializer
 
         if not self._driver:
-            self._driver = GraphDatabase.driver(
+            # Set driver on the class so all instances use the same driver
+            type(self)._driver = GraphDatabase.driver(
                 NEO4J_URL, auth=(NEO4J_USER, NEO4J_PASSWORD,)
             )
 
