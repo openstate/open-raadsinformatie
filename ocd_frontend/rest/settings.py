@@ -13,7 +13,7 @@ BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
 
 # Elasticsearch
-ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic_endpoint')
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic-endpoint')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 
 # The default number of hits to return for a search request via the REST API

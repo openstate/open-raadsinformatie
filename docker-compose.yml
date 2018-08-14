@@ -9,14 +9,14 @@ services:
     image: openstatefoundation/open-raadsinformatie-backend
     links:
       - redis:redis
-      - elastic_endpoint:elasticsearch
+      - elastic-endpoint:elasticsearch
       - frontend:frontend
     volumes:
       - oridata:/opt/ori/data
     depends_on:
       neo4j:
         condition: service_started
-      elastic_endpoint:
+      elastic-endpoint:
         condition: service_healthy
     mem_limit: 3g
   frontend:
@@ -29,9 +29,9 @@ services:
     volumes:
       - oridata:/opt/ori/data
     links:
-      - elastic_endpoint:elasticsearch
+      - elastic-endpoint:elasticsearch
     depends_on:
-      elastic_endpoint:
+      elastic-endpoint:
         condition: service_healthy
     ports:
       - "5000:5000"
@@ -42,8 +42,8 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     mem_limit: 4g
-  elastic_endpoint:
-    container_name: ori_elastic_endpoint
+  elastic-endpoint:
+    container_name: ori_elastic-endpoint
     extends:
       service: elastic
     environment:
@@ -58,7 +58,7 @@ services:
     image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
     environment:
       - network.host=0.0.0.0
-      - discovery.zen.ping.unicast.hosts=ori_elastic_endpoint
+      - discovery.zen.ping.unicast.hosts=ori_elastic-endpoint
       - discovery.zen.minimum_master_nodes=2
       - node.max_local_storage_nodes=20
       - cluster.name=docker-cluster
