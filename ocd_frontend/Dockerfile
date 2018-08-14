@@ -5,8 +5,9 @@ COPY ocd_frontend/requirements.txt /opt/ori/ocd_frontend/requirements.txt
 
 # Install build base for alpine including gcc for Pillow
 RUN apk add --update build-base python-dev py-pip jpeg-dev zlib-dev \
-    && pip install --no-cache-dir -r /opt/ori/ocd_frontend/requirements.txt \
-    && apk del build-base python-dev py-pip
+  && pip install --upgrade pip \
+  && pip install --no-cache-dir -r /opt/ori/ocd_frontend/requirements.txt \
+  && apk del build-base python-dev py-pip
 
 # Create static data folder shared with the backend
 RUN mkdir -p /opt/ori/data/static \
