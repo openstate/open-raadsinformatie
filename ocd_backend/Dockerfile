@@ -29,8 +29,8 @@ RUN adduser -D -H celery \
 COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
-COPY version.py /opt/ori/version.py
 COPY ocd_backend /opt/ori/ocd_backend
+COPY version.py /opt/ori/ocd_backend/version.py
 
 RUN chown -R 1000:1000 /opt/ori /var/run/celery
 
