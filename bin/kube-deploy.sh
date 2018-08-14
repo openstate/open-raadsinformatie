@@ -3,6 +3,8 @@
 set -euo pipefail
 
 main() {
+    APP_VERSION=$(python -c "import version; print version.__version__")
+
     export FULL_VERSION=v${APP_VERSION}.${BRANCH_NAME}-${SEMAPHORE_BUILD_NUMBER}
 
     kubectl set image deployment/backend \
