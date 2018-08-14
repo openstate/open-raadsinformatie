@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-export APP_VERSION=1.0.0
+APP_VERSION=$(python -c "import version; print version.__version__")
+
 curl https://build.bugsnag.com/ \
   --header "Content-Type: application/json" \
   --data "{
     'apiKey': '$BUGSNAG_APIKEY',
-    'appVersion': '$APP_VERSION.$SEMAPHORE_BUILD_NUMBER',
+    'appVersion': '$APP_VERSION',
     'releaseStage': '$SEMAPHORE_SERVER_NAME',
     'builderName': '$DEPLOY_AUTHOR_NAME',
     'sourceControl': {

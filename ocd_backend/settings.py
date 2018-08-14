@@ -17,10 +17,10 @@ MINOR_VERSION = __version_info__[1]
 
 BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
-RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'production')
+RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'development')
 
-REDIS_HOST = os.getenv('REDIS_HOST', "redis")
-REDIS_PORT = os.getenv('REDIS_PORT', "6379")
+REDIS_HOST = os.getenv('REDIS_SERVER_HOST', "redis")
+REDIS_PORT = os.getenv('REDIS_SERVER_PORT', "6379")
 REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
