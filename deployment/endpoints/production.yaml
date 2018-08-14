@@ -1,0 +1,224 @@
+swagger: "2.0"
+info:
+  description: |
+    The Open Raadsinformatie API is the place where data from dutch municipalities is made available for others to reuse.
+    For more general information about the Open Raadsinformatie project see the main website: http://www.openraadsinformatie.nl/
+  title: "Open Raadsinformatie API"
+  version: [ ! APP VERSION HERE ! ]
+  contact:
+    email: "jurrian@argu.co"
+  license:
+    name: "Creative Commons Attribution 4.0"
+    url: "https://creativecommons.org/licenses/by/4.0/"
+host: "ori-production.endpoints.open-raadsinformatie-52162.cloud.goog"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+externalDocs:
+  description: "Open Raadsinformatie Documentation"
+  url: "http://docs.openraadsinformatie.nl"
+tags:
+- name: "Collection overview and statistics"
+- name: "Searching within multiple collections"
+- name: "Searching within a single collection"
+- name: "Searching with scroll"
+- name: "Retrieving a single object"
+- name: "Similar items"
+- name: "Resolver"
+schemes:
+- "https"
+- "http"
+basePath: "/v1"
+paths:
+  /sources:
+    get:
+      tags:
+      - "Collection overview and statistics"
+      description: "Get a list of all available sources (collections) with item counts"
+      operationId: "sources"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Sources"
+
+  /search/{doc_type}:
+    post:
+      tags:
+      - "Searching within multiple collections"
+      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
+      operationId: "list_sources"
+      parameters:
+        - $ref: "#/parameters/doc_type"
+        - $ref: "#/parameters/body"
+
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+
+  /{source_id}/search:
+    $ref: '#/paths/~1{source_id}~1{doc_type}~1search'
+  /{source_id}/{doc_type}/search:
+    post:
+      tags:
+      - "Searching within a single collection"
+      description: |
+        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
+        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does.
+      operationId: "search"
+      parameters:
+        - $ref: "#/parameters/source_id"
+        - $ref: "#/parameters/doc_type"
+        - $ref: "#/parameters/body"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+        404:
+          description: "Not found. The requested source does not exist."
+
+  /{source_id}/{doc_type}/{object_id}:
+    get:
+      tags:
+      - "Retrieving a single object"
+      description: "Retrieve the contents of a single object. The doc_type needs to be specified."
+      operationId: "get_object"
+      parameters:
+        - $ref: "#/parameters/source_id"
+        - $ref: "#/parameters/doc_type"
+        - $ref: "#/parameters/object_id"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        404:
+          description: "Not found. The requested source does not exist."
+
+  /resolve/{url_hash}:
+    get:
+      tags:
+      - "Resolver"
+      description: |
+        The Open Raadsinformatie API provides all (media) urls as Resolver URLs. This will route all requests for content through the API, which will process
+        and validate the URL, and provide a redirect to the original content source. This will allow for caching or rate limiting on API level in the future,
+        to prevent excessive amounts of requests to the sources.
+      operationId: "resolve"
+      consumes:
+        - "text/html"
+        - "application/json"
+      produces:
+        - "image/png"
+        - "image/gif"
+        - "image/jpeg"
+        - "application/pdf"
+      parameters:
+        - name: "url_hash"
+          in: "path"
+          description: "The source_id for the available sources can be found by calling /sources"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Resolves the provided URL, returns the content if it is valid. Depending on the Accept header in the request, it returns a JSON-encoded response detailing what went wrong, or a HTML-page, allowing for transparent use in websites."
+        302:
+          description: "When the resource is not available locally in the cache, the request is redirected with a 302. Note that some resources are not available since some data suppliers require IP whitelisting."
+        404:
+          description: "If the resource is not found, a 404 is returned."
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: "URL is not available; the source may no longer be available"
+              status:
+                type: string
+                description: "error"
+definitions:
+  Sources:
+    type: "object"
+    properties:
+      sources:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            events:
+              type: "integer"
+              example: 607
+            id:
+              type: "string"
+              example: "amstelveen"
+            organizations:
+              type: "integer"
+              example: 15
+            persons:
+              type: "integer"
+              example: 54
+  Events:
+    type: "object"
+    properties:
+      events:
+        type: "array"
+        items:
+          type: object
+  Search:
+    type: "object"
+    properties:
+      query:
+        type: "string"
+      filters:
+        type: "object"
+
+      facets:
+        type: "object"
+      sort:
+        type: "object"
+        description: " Results are sorted by relevancy "
+      size:
+        type: "integer"
+        default: 10
+      from:
+        type: "integer"
+        default: 0
+
+parameters:
+  doc_type:
+    name: "doc_type"
+    in: "path"
+    description: ""
+    required: true
+    type: "string"
+    enum:
+    - persons
+    - organizations
+    - events
+    - motions
+    - vote_events
+  source_id:
+    name: "source_id"
+    in: "path"
+    description: "The source_id for the available sources can be found by calling /sources"
+    required: true
+    type: "string"
+  object_id:
+    name: "object_id"
+    in: "path"
+    description: "The object_id which is specified as id in the resource"
+    required: true
+    type: "string"
+  body:
+    name: "body"
+    in: "body"
+    schema:
+      $ref: "#/definitions/Search"

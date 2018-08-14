@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neo4j
+spec:
+  selector:
+    matchLabels:
+      app: neo4j
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: neo4j
+    spec:
+      containers:
+      - image: neo4j:3.2.1
+        name: neo4j
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 7474
+        - containerPort: 7687
+        env:
+          - name: NEO4J_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: neo4j-auth
+        volumeMounts:
+        - mountPath: /data
+          name: neodata
+      restartPolicy: Always
+      volumes:
+      - name: neodata
+        persistentVolumeClaim:
+          claimName: neodata

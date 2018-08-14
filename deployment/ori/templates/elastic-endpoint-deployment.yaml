@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-endpoint
+spec:
+  selector:
+    matchLabels:
+      app: elastic-endpoint
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: elastic-endpoint
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+      # init-container for setting the mmap count limit
+      - name: sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      containers:
+      - env:
+        - name: ES_JAVA_OPTS
+          value: -Xms512m -Xmx512m
+        - name: cluster.name
+          value: "docker-cluster"
+        - name: http.host
+          value: "0.0.0.0"
+        - name: node.master
+          value: "true"
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.monitoring.enabled
+          value: "false"
+        - name: bootstrap.memory_lock
+          value: "true"
+        - name: discovery.zen.minimum_master_nodes
+          value: "2"
+        - name: discovery.zen.ping.unicast.hosts
+          value: "elastic-discovery"
+        - name: network.host
+          value: "0.0.0.0"
+        - name: node.max_local_storage_nodes
+          value: "20"
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        image: anchormen/elasticsearch-kubernetes:5.6.0
+        name: elastic-endpoint
+        ports:
+        - containerPort: 9200
+        resources:
+          limits:
+            memory: "1073741824"
+        securityContext:
+          capabilities:
+            add:
+            # Lock memory (mlock(2), mlockall(2), mmap(2), shmctl(2))
+            - IPC_LOCK  
+            # Override resource Limits
+            - SYS_RESOURCE
+          privileged: true
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esdata
+      restartPolicy: Always
+      volumes:
+      - name: esdata
+        persistentVolumeClaim:
+          claimName: esdata

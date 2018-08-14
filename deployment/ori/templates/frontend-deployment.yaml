@@ -12,14 +12,14 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: openstatefoundation/open-raadsinformatie-frontend
+      - image: {{ .Values.frontendImage | quote }}
         imagePullPolicy: Always
         name: frontend
         ports:
         - containerPort: 5000
         envFrom:
         - configMapRef:
-            name: appconfig
+            name: config
         volumeMounts:
         - mountPath: /opt/ori/static
           name: oridata

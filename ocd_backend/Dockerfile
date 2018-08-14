@@ -26,13 +26,12 @@ RUN adduser -D -H celery \
   && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/log \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
-WORKDIR /opt/ori
-
 # Copy all files, except for .dockerignore entries
 COPY json/gemeenten.json /opt/ori/json/gemeenten.json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY ocd_backend /opt/ori/ocd_backend
+COPY version.py /opt/ori/ocd_backend/version.py
 
 RUN chown -R 1000:1000 /opt/ori /var/run/celery
 
@@ -40,5 +39,6 @@ RUN chown -R 1000:1000 /opt/ori /var/run/celery
 # https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
 VOLUME /opt/ori/data
 
+WORKDIR /opt/ori
 USER celery
 CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=4

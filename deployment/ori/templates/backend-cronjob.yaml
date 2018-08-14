@@ -1,0 +1,34 @@
+{{ if .Values.backendSchedule }}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: backend
+spec:
+  schedule: {{ .Values.backendSchedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: backend-job
+        spec:
+          containers:
+          - name: backend-job
+            image: {{ .Values.backendImage | quote }}
+            imagePullPolicy: Always
+            command: ["python"]
+            args: |-
+              {{- range .Values.backendCommand }}
+              - {{ . }}
+              {{- end }}
+            envFrom:
+            - configMapRef:
+                name: config
+            volumeMounts:
+            - mountPath: /opt/ori/data
+              name: oridata
+          volumes:
+          - name: oridata
+            persistentVolumeClaim:
+              claimName: oridata
+          restartPolicy: OnFailure
+{{ end }}
