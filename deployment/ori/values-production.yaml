@@ -12,6 +12,8 @@ firewallWhitelist:
   - 188.166.45.86/32 # Argu production
   - 188.166.60.95/32 # Argu production
   - 188.166.51.169/32 # Argu production
+  - 185.61.53.208/32 # OSF base
+  - 5.196.82.198/32 # OSF server
 
 gceStackdriver: true
 bugsnag: d83215ad00143ac50873ac2265c2dabb
