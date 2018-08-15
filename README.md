@@ -35,7 +35,7 @@ We use [Sphinx](http://sphinx-doc.org/) to create the documentation. The source 
 
 ## Contributing
 
-Please read through our [contributing guidelines](https://github.com/openstate/open-raadsinformatie/blob/master/docs/dev/getting_started.rst). Included are directions for opening issues, coding standards, and notes on development.
+Please read through our [contributing guidelines](https://github.com/openstate/open-raadsinformatie/blob/master/CONTRIBUTING.rst). Included are directions for opening issues, coding standards, and notes on development.
 
 ## Authors and contributors
 
