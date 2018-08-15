@@ -23,6 +23,9 @@ spec:
         volumeMounts:
         - mountPath: /opt/ori/static
           name: oridata
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
       volumes:
       - name: oridata
         persistentVolumeClaim:
