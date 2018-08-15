@@ -23,7 +23,7 @@ RUN apk add --update \
 # Create static data folder shared with the frontend
 # Trick to redirect logs to process 1 when running multiple processes
 RUN adduser -D -H celery \
-  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/log \
+  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/data/cache /opt/ori/log \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
 # Copy all files, except for .dockerignore entries
