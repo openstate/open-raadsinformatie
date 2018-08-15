@@ -15,10 +15,10 @@ spec:
       - name: endpoints
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
-          "--http_port=80",
-          "--backend=frontend:5000",
-          "--service={{ .Values.endpointsHost }}",
-          "--rollout_strategy=managed",
+          '--http_port=80',
+          '--backend=frontend:{{ required "frontendPort needs to be set" .Values.frontendPort }}',
+          '--service={{ required "endpointsHost needs to be set" .Values.endpointsHost }}',
+          '--rollout_strategy=managed',
         ]
         ports:
         - containerPort: 80
