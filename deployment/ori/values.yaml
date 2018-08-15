@@ -30,9 +30,8 @@ backendCommand:
 
 frontendImage: openstatefoundation/open-raadsinformatie-frontend
 
-# Frontend service port, exposes frontend separate from the endpoints service.
-# If emtpy the service won't be used, frontend is still available via endpoints.
-frontendPort:
+# Frontend service port, exposes frontend which is used by endpoints proxy.
+frontendPort: 5000
 
 elasticStorage: 70Gi
 elasticPort: 9200
