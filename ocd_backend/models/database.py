@@ -90,34 +90,44 @@ class Neo4jDatabase(object):
             'ASSERT x.`{}` IS UNIQUE'.format(Uri(Mapping, 'ori/sourceLocator'))
         )
 
-    def get_identifier_by_source_id(self, model_object, source_id):
-        """Returns the ori identifier based on the specified source identifier.
+    def get_identifier(self, model_object, **kwargs):
+        """Returns the ori identifier based on the specified keyword-argument.
 
         The ori identifier on a `Hot` node is queried by looking for the source
         identifier on `Cold` nodes. Should return exactly one int or a
         QueryResultError exception."""
-        fmt = AQuoteFormatter()
+        if len(kwargs) != 1:
+            raise TypeError('connect takes exactly 1 keyword-argument')
+
+        filter_key, filter_value = kwargs.items()[0]
 
         label = self.serializer.label(model_object)
+        definition = model_object.definition(filter_key)
 
         params = {
             'n1_labels': u':'.join([self.HOT, cypher_escape(label)]),
             'n2_labels': u':'.join([self.COLD, cypher_escape(label)]),
+            'filter_key': cypher_escape(definition.absolute_uri())
         }
         params.update(self.default_params)
 
         clauses = [
-            u'MATCH (n2 :«n2_labels» {«had_primary_source»: $had_primary_source})<--(n1 :«n1_labels»)',
+            u'MATCH (n2 :«n2_labels» {«filter_key»: $filter_value})<--(n1 :«n1_labels»)',
             u'RETURN n1.«ori_identifier» AS ori_identifier',
         ]
 
+        fmt = AQuoteFormatter()
+
         result = self.query(
             fmt.format(u'\n'.join(clauses), **params),
-            had_primary_source=source_id
+            filter_value=filter_value
         )
 
         if not result:
-            raise MissingProperty('Does not exist')
+            raise MissingProperty(
+                'Does not exist: %s with %s=%s' % (model_object.verbose_name(),
+                                                   filter_key, filter_value)
+            )
 
         if len(result) > 1:
             raise QueryResultError('The number of results is greater than one!')
