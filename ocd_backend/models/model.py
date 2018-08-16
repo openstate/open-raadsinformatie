@@ -11,7 +11,10 @@ from ocd_backend.models.properties import PropertyBase, Property, \
     StringProperty, IntegerProperty, Relation
 from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.misc import Namespace, Uri
-from ocd_backend.utils.misc import iterate, slugify, doc_type
+from ocd_backend.utils.misc import iterate, doc_type
+from ocd_backend.log import get_source_logger
+
+logger = get_source_logger('model')
 
 
 class ModelMetaclass(type):
@@ -162,9 +165,9 @@ class Model(object):
     def get_ori_identifier(self):
         if not self.values.get('ori_identifier'):
             try:
-                self.ori_identifier = self.db.get_identifier_by_source_id(
+                self.ori_identifier = self.db.get_identifier(
                     self,
-                    self.had_primary_source,
+                    had_primary_source=self.had_primary_source,
                 )
             except AttributeError:
                 raise
@@ -212,6 +215,21 @@ class Model(object):
                 attach.extend(other_object.attach_recursive())
 
         return attach
+
+    def connect(self, **kwargs):
+        """Takes one keyword-argument to filter, and set an ori_identifier.
+
+        Use this method to try connect the current model to an existing Hot
+        node by ori_identifier. This way we can create composites where one Hot
+        node can have several connected Cold nodes.
+
+        For example:
+        `organization.connect(name='some_name')`
+        """
+        try:
+            self.ori_identifier = self.db.get_identifier(self, **kwargs)
+        except MissingProperty, e:
+            logger.warning("Could not connect nodes. %s", e)
 
 
 class Individual(Model):
