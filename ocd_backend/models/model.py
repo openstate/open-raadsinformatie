@@ -78,7 +78,8 @@ class Model(object):
         try:
             return cls._definitions[name]  # pylint: disable=no-member
         except KeyError:
-            return
+            raise MissingProperty("The definition %s has not been defined" %
+                                  name)
 
     @classmethod
     def inflate(cls, **deflated_props):
@@ -132,7 +133,10 @@ class Model(object):
                 raise AttributeError(item)
 
     def __setattr__(self, key, value):
-        definition = self.definition(key)
+        try:
+            definition = self.definition(key)
+        except MissingProperty:
+            definition = None
 
         # if key[0:1] != '_' and not definition:
         #     raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
