@@ -209,25 +209,43 @@ class Neo4jDatabase(object):
             if summary.counters.nodes_created > 0:
                 return
 
-        clauses = [
-            u'MATCH (n1 :«n1_labels» {«had_primary_source»: $had_primary_source})',
-            u'RETURN n1',
-        ]
-
-        cursor = self.session.run(
-            fmt.format(u'\n'.join(clauses), **params),
-            had_primary_source=model_object.had_primary_source
-        )
+        try:
+            del n2_props[Uri(Mapping, 'ori/identifier')]
+        except KeyError:
+            pass
 
         n1_props = copy(n2_props)
-        if len(cursor.data()) == 0:
-            # n1_props = n2_props + ori_identifier
-            n1_props[str(Uri(Mapping, 'ori/identifier'))] = \
-                model_object.generate_ori_identifier()
+
+        try:
+            del n1_props[Uri(Prov, 'hadPrimarySource')]
+        except KeyError:
+            pass
+
+        if model_object.values.get('ori_identifier'):
+            ori_identifier = model_object.values.get('ori_identifier')
+        else:
+            clauses = [
+                u'MATCH (n1 :«n1_labels»)-[:«was_derived_from»]->(n2 :«n2_labels» {«had_primary_source»: $had_primary_source})',
+                u'RETURN n1.«ori_identifier» AS ori_identifier',
+            ]
+
+            cursor = self.session.run(
+                fmt.format(u'\n'.join(clauses), **params),
+                had_primary_source=model_object.had_primary_source
+            )
+
+            result = cursor.data()
+            if len(result) == 1:
+                ori_identifier = result[0]['ori_identifier']
+            else:
+                # n1_props = n2_props + ori_identifier
+                ori_identifier = model_object.generate_ori_identifier()
+                n1_props[str(Uri(Mapping, 'ori/identifier'))] = ori_identifier
 
         # Create a new entity when no matching node seems to exist
         clauses = [
-            u'MERGE (n1 :«n1_labels» {«had_primary_source»: $had_primary_source})-[:«was_derived_from»]->(n2 :«n2_labels»)',
+            u'MERGE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
+            u'CREATE (n1)-[:«was_derived_from»]->(n2 :«n2_labels»)',
         ]
         bound_params = {}
 
@@ -238,7 +256,7 @@ class Neo4jDatabase(object):
             ])
             bound_params['name'] = model_object._source
         clauses.extend([
-            u'SET n1 = $n1_props',
+            u'SET n1 += $n1_props',
             u'SET n2 = $n2_props',
             u'RETURN n1.«ori_identifier» AS ori_identifier',
         ])
@@ -247,7 +265,7 @@ class Neo4jDatabase(object):
             fmt.format(u'\n'.join(clauses), **params),
             n1_props=n1_props,
             n2_props=n2_props,
-            had_primary_source=model_object.had_primary_source,
+            ori_identifier=ori_identifier,
             **bound_params
         )
         result = cursor.data()
