@@ -30,7 +30,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Open Raadsinformatie API'
+project = u'Open Raadsinformatie API and Open Stateninformatie API'
 copyright = u'2015, Jurrian Tromp, Breyten Ernsting, Sicco van Sas, Bart de Goede and Justin van Wees; documentation is released under Creative Commons Attribution 4.0'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -178,7 +178,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'OpenRaadsinformatieAPI.tex', u'Open Raadsinformatie API',
+  ('index', 'OpenRaadsinformatieAPI.tex', u'Open Raadsinformatie API and Open Stateninformatie API',
    u'Sicco van Sas', 'manual'),
 ]
 
@@ -208,7 +208,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'openraadsinformatieapi', u'Open Raadsinformatie API',
+    ('index', 'openraadsinformatieapi', u'Open Raadsinformatie API and Open Stateninformatie API',
      [u'Sicco van Sas'], 1)
 ]
 
@@ -222,8 +222,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'OpenRaadsinformatieAPI', u'Open Raadsinformatie API',
-   u'Sicco van Sas', 'OpenRaadsinformatieAPI', 'Documentation of the pen Raadsinformatie API.',
+  ('index', 'OpenRaadsinformatieAPI', u'Open Raadsinformatie API and Open Stateninformatie API',
+   u'Sicco van Sas', 'OpenRaadsinformatieAPI', 'Documentation of the Open Raadsinformatie API and Open Stateninformatie API.',
    'documentation'),
 ]
 

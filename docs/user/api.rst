@@ -10,6 +10,10 @@ RESTful API
 General notes
 -------------
 
+.. attention::
+
+   We refer to `api.openraadsinformatie.nl` in the examples below, but you can also use `api.openstateninformatie.nl`.
+
 The API accepts requests with JSON content and returns JSON data in all of its responses (unless stated otherwise). Standard HTTP response codes are used to indicate errors. In case of an error, a more detailed description can be found in the JSON response body. UTF-8 character encoding is used in both requests and responses.
 
 All API URLs referenced in this documentation start with the following base part:
@@ -22,6 +26,7 @@ Arguments to an endpoint are placed behind the method definition, or supplied as
 
 Collection overview and statistics
 ----------------------------------
+
 
 .. http:get:: /sources
 

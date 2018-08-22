@@ -1,9 +1,16 @@
 Open Raadsinformatie Documentation
 ===================================
 
-Welcome to the documentation of the Open Raadsinformatie API. The Open Raadsinformatie API is the place where data from dutch municipalities is made available for others to reuse. For more general information about the Open Raadsinformatie project, see the main website: http://www.openraadsinformatie.nl/.
+Welcome to the documentation of the Open Raadsinformatie and Open Stateninformatie API. The Open Raadsinformatie API is the place where data from dutch municipalities is made available for others to reuse, while the Open Stateninformatie collects data from provinces. For more general information about the projects, see the following websites:
 
-There is an example application available which allows you to browse and query the data easily: http://zoek.openraadsinformatie.nl/
+- http://www.openraadsinformatie.nl/
+- http://www.openstateninformatie.nl/
+
+
+There are example applications available which allow you to browse and query the data easily:
+
+- http://zoek.openraadsinformatie.nl/
+- http://zoek.openstateninformatie.nl/
 
 Background
 ----------
