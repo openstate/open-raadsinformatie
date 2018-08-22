@@ -80,28 +80,35 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             results = self._fetch('GetModelsByQuery', params).json()
             print "Got %s items ..." % (len(results['objects']),)
             for result in results['objects']:
-                #pprint(result)
-                print "Object %s/%s has %s SETS and %s attachnments" % (
+                pprint(result[u'default'])
+                print "Object %s/%s has %s attachments and %s sets" % (
                     result[u'default'][u'objecttype'],
                     result[u'default'][u'objectname'],
                     len(result.get(u'attachmentlist', [])),
                     len(result.get(u'SETS', [])),)
+                printed_sets = 0
                 if len(result.get(u'SETS', [])):
                     print "Sets:"
                     for key, osett in result[u'SETS'].iteritems():
                         print "* %s %s/%s" % (
                             osett[u'nodeorder'], osett[u'objecttype'],
                             osett[u'objectname'],)
+                        if printed_sets == 0:
+                            pprint(osett)
+                            printed_sets += 1
+                printed_att = 0
                 if len(result.get(u'attachmentlist', [])) > 0:
                     print "Attachments:"
                     for att_key, att in result[u'attachmentlist'].iteritems():
-                        print "* %s/%s" % (
-                            att[u'objecttype'], att[u'objectname'],)
-                        # http://snake/proxy/dsresource?objectid=4600935b-01ea-4249-97c9-e121facb2d6d&&disposition=inline
-                        print "%s/dsresource?objectid=%s&disposition=inline" % (
-                            self.source_definition['greenvalley_base_url'],
-                            att[u'objectid']
-                        )
+                        if att[u'objecttype'] == 'AGENDAPAGE':
+                            print "* %s/%s" % (
+                                att[u'objecttype'], att[u'objectname'],)
+                        else:
+                            print " * %s/%s" % (
+                                att[u'objecttype'], att[u'objectname'],)
+                            if att[u'mimetype'] == u'application/pdf' and printed_att == 0:
+                                pprint(att)
+                                printed_att += 1
 
                 for k, v in result.get(u'SETS', {}).iteritems():
                     v[u'parent_objectid'] = result[u'default'][u'objectid']
