@@ -9,7 +9,7 @@ from unittest import TestCase
 import mock
 from nose.tools import raises, assert_raises
 from ocd_backend.exceptions import InvalidFile
-from ocd_backend.extractors import HTTPCachingMixin
+from ocd_backend.extractors import LocalCachingMixin
 from ocd_backend.settings import PROJECT_PATH
 from ocd_backend.utils.misc import get_sha1_hash, datetime_to_unixstamp, localize_datetime
 from requests.exceptions import HTTPError
@@ -35,7 +35,7 @@ class ExtractorTestCase(TestCase):
 class HTTPCachingMixinTestCase(ExtractorTestCase):
     def setUp(self):
         super(HTTPCachingMixinTestCase, self).setUp()
-        self.mixin = HTTPCachingMixin()
+        self.mixin = LocalCachingMixin()
         self.mixin.source_definition = self.source_definition
 
         self.test_cache_path = PROJECT_PATH + "/data/cache/test_index/"
@@ -108,7 +108,7 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
         result = '%s-%s' % self.mixin._latest_version("bf6af22c3383fca48c210b9272d76cd8f45ce532")
         self.assertEqual(result, "bf6af22c3383fca48c210b9272d76cd8f45ce532-1526575908")
 
-    @mock.patch.object(HTTPCachingMixin, '_download_file')
+    @mock.patch.object(LocalCachingMixin, '_download_file')
     def test_modified_data_source(self, mocked_download_file):
         with open(os.path.join(self.PWD, "..", "test_dumps/notubiz_meeting_amsterdam.json"), 'rb') as f:
             data1 = f.read()
@@ -133,7 +133,7 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
         file_count = len(glob.glob(base_path + "*"))
         self.assertEqual(file_count, 2)
 
-    @mock.patch.object(HTTPCachingMixin, '_download_file')
+    @mock.patch.object(LocalCachingMixin, '_download_file')
     def test_fetch_failed_download(self, mocked_download_file):
         mocked_download_file.side_effect = HTTPError
         with self.assertRaises(HTTPError):
