@@ -3,13 +3,13 @@ import json
 from requests.exceptions import HTTPError, RetryError
 from urllib3.exceptions import MaxRetryError
 
-from ocd_backend.extractors import BaseExtractor, HTTPCachingMixin
+from ocd_backend.extractors import BaseExtractor, LocalCachingMixin
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
 
 
-class NotubizBaseExtractor(BaseExtractor, HTTPCachingMixin):
+class NotubizBaseExtractor(BaseExtractor, LocalCachingMixin):
     """
     A base extractor for the Notubiz API. This base extractor just
     configures the base url to use for accessing the API.

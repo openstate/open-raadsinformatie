@@ -169,7 +169,7 @@ class HttpRequestMixin(object):
         return self._http_session
 
 
-class HTTPCachingMixin(HttpRequestMixin):
+class LocalCachingMixin(HttpRequestMixin):
     source_definition = None
 
     def base_path(self, file_name):
