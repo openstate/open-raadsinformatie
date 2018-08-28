@@ -1,0 +1,26 @@
+# All undescored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: false
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  transformer: ocd_backend.transformers.BaseTransformer
+  loader: ocd_backend.loaders.ElasticsearchLoader
+  cleanup: ocd_backend.tasks.CleanupElasticsearch
+
+_entities: &entities
+  - &motions
+    <<: *entity_defaults
+    entity: motions
+    doc_type: motions
+    extractor: ocd_backend.extractors.staticfile.StaticJSONDumpExtractor
+    item: ocd_backend.items.partijgedrag.PartijgedragMotion
+    dump_path: "./json/pg_motions.json"
+
+partijgedrag:
+  key: partijgedrag
+  index_name: partijgedrag
+  entities: *entities
+  <<: *source_defaults
