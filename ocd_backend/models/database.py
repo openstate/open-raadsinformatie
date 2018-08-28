@@ -48,7 +48,7 @@ class Neo4jDatabase(object):
 
         if not self._driver:
             # Set driver on the class so all instances use the same driver
-            type(self)._driver = GraphDatabase.driver(
+            self._driver = GraphDatabase.driver(
                 NEO4J_URL, auth=(NEO4J_USER, NEO4J_PASSWORD,)
             )
 
