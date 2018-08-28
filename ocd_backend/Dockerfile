@@ -27,7 +27,7 @@ RUN adduser -D -H celery \
   && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
 
 # Copy all files, except for .dockerignore entries
-COPY json/gemeenten.json /opt/ori/json/gemeenten.json
+COPY json /opt/ori/json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
 COPY ocd_backend /opt/ori/ocd_backend
