@@ -1,5 +1,6 @@
 import gzip
 import json
+import os
 
 from click import progressbar
 from lxml import etree
@@ -185,8 +186,17 @@ class StaticJSONDumpExtractor(BaseExtractor):
 
     @staticmethod
     def extract_items(dump_path):
-        with progressbar(
-                gzip.open(dump_path, 'rb'), label='Loading %s' % dump_path
-        ) as f:
-            for line in f:
-                yield 'application/json', line.strip()
+        if not os.path.isabs(dump_path):
+            dump_path = os.path.abspath(dump_path)
+
+        try:
+            with progressbar(
+                    gzip.open(dump_path, 'rb'), label='Loading %s' % dump_path
+            ) as data:
+                for line in data:
+                    yield 'application/json', line.strip()
+        except IOError:
+            with open(dump_path, 'r') as f:
+                data = json.load(f)
+            for line in data:
+                yield 'application/json', json.dumps(line)
