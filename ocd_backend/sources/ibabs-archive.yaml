@@ -481,3 +481,9 @@ ibabs-archive:
     key: raalte
     almanak_id: 25053
     <<: *ibabs
+
+  # Added on 5-9-2018
+  roermond:
+    key: roermond
+    almanak_id: 31636
+    <<: *ibabs

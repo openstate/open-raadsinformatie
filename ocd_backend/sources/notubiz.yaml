@@ -118,11 +118,6 @@ notubiz:
     organisation_id: 801
     <<: *notubiz
 
-  roermond:
-    key: roermond
-    organisation_id: 775
-    <<: *notubiz
-
   waalwijk:
     key: waalwijk
     organisation_id: 1429

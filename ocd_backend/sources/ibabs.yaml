@@ -542,3 +542,9 @@ ibabs:
     key: rheden
     almanak_id: 38004
     <<: *ibabs
+
+  # Added on 5-9-2018
+  roermond:
+    key: roermond
+    almanak_id: 31636
+    <<: *ibabs
