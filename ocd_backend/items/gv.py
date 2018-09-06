@@ -100,8 +100,12 @@ class GreenValleyItem(
             }
         ]
 
-        combined_index_data['classification'] = unicode(
-            objecttype2classification[meeting[u'objecttype'].lower()])
+        try:
+            combined_index_data['classification'] = unicode(
+                objecttype2classification[meeting[u'objecttype'].lower()])
+        except LookupError:
+            combined_index_data['classification'] = unicode(
+            meeting[u'objecttype'].capitalize())
         combined_index_data['description'] = meeting[u'objectname']
 
         if council is not None:
@@ -130,9 +134,13 @@ class GreenValleyItem(
                 children.append(result)
 
         if len(children) > 0:
-            combined_index_data['children'] = [
-                self._get_meeting_id(y) for y in sorted(
-                    children, key=lambda x: x[u'default'][u'nodeorder'])]
+            try:
+                combined_index_data['children'] = [
+                    self._get_meeting_id(y) for y in sorted(
+                        children, key=lambda x: x[u'default'][u'nodeorder'])]
+            except Exception as e:
+                pass
+                # print str(children)
 
         if u'parent_objectid' in meeting:
             combined_index_data['parent_id'] = unicode(self._get_meeting_id(
@@ -141,29 +149,25 @@ class GreenValleyItem(
                     u'objecttype': 'AGENDA'}))
 
         combined_index_data['sources'] = []
+        print "Document has %s attachments" % (
+            len(self.original_item.get(u'attachmentlist', {}),))
+        for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
+            if att[u'objecttype'] == 'AGENDAPAGE':
+                continue
 
-        # try:
-        #     documents = self.original_item['Documents']
-        # except KeyError as e:
-        #     documents = []
-        # if documents is None:
-        #     documents = []
-        #
-        # for document in documents:
-        #     sleep(1)
-        #     print u"%s: %s" % (
-        #         combined_index_data['name'], document['DisplayName'],)
-        #     public_download_url = document['PublicDownloadURL']
-        #     if not public_download_url.startswith('http'):
-        #         public_download_url = u'https://www.mijnbabs.nl' + public_download_url
-        #     description = self.file_get_contents(
-        #         public_download_url,
-        #         self.source_definition.get('pdf_max_pages', 20))
-        #     combined_index_data['sources'].append({
-        #         'url': public_download_url,
-        #         'note': document['DisplayName'],
-        #         'description': description
-        #     })
+            url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
+                att[u'objectid'],)
+
+            description = self.file_get_contents(
+                url,
+                self.source_definition.get('pdf_max_pages', 20)
+            )
+
+            combined_index_data['sources'].append({
+                'url': url,
+                'note': att[u'objectname'],
+                'description': description
+            })
 
         return combined_index_data
 

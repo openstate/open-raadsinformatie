@@ -80,43 +80,29 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             results = self._fetch('GetModelsByQuery', params).json()
             print "Got %s items ..." % (len(results['objects']),)
             for result in results['objects']:
-                pprint(result[u'default'])
                 print "Object %s/%s has %s attachments and %s sets" % (
                     result[u'default'][u'objecttype'],
                     result[u'default'][u'objectname'],
                     len(result.get(u'attachmentlist', [])),
                     len(result.get(u'SETS', [])),)
-                printed_sets = 0
-                if len(result.get(u'SETS', [])):
-                    print "Sets:"
-                    for key, osett in result[u'SETS'].iteritems():
-                        print "* %s %s/%s" % (
-                            osett[u'nodeorder'], osett[u'objecttype'],
-                            osett[u'objectname'],)
-                        if printed_sets == 0:
-                            pprint(osett)
-                            printed_sets += 1
-                printed_att = 0
-                if len(result.get(u'attachmentlist', [])) > 0:
-                    print "Attachments:"
-                    for att_key, att in result[u'attachmentlist'].iteritems():
-                        if att[u'objecttype'] == 'AGENDAPAGE':
-                            print "* %s/%s" % (
-                                att[u'objecttype'], att[u'objectname'],)
-                        else:
-                            print " * %s/%s" % (
-                                att[u'objecttype'], att[u'objectname'],)
-                            if att[u'mimetype'] == u'application/pdf' and printed_att == 0:
-                                pprint(att)
-                                printed_att += 1
+                # printed_sets = 0
+                # if len(result.get(u'SETS', [])):
+                #     print "Sets:"
+                #     for key, osett in result[u'SETS'].iteritems():
+                #         print "* %s %s/%s" % (
+                #             osett[u'nodeorder'], osett[u'objecttype'],
+                #             osett[u'objectname'],)
+                #         if printed_sets == 0:
+                #             pprint(osett)
+                #             printed_sets += 1
 
                 for k, v in result.get(u'SETS', {}).iteritems():
                     v[u'parent_objectid'] = result[u'default'][u'objectid']
                     v[u'bis_vergaderdatum'] = result[
                         u'default'][u'bis_vergaderdatum']
 
-                    result = {u'default': v}
-                    yield 'application/json', json.dumps(result)
+                    result2 = {u'default': v}
+                    yield 'application/json', json.dumps(result2)
 
                 yield 'application/json', json.dumps(result)
 
