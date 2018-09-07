@@ -144,6 +144,11 @@ class GreenValleyItem(
                 float(meeting[u'bis_vergaderdatum']) +
                 (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
                 (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
+        elif u'publishdate' in meeting:
+            combined_index_data['start_date'] = datetime.fromtimestamp(
+                float(meeting[u'publishdate']))
+            combined_index_data['end_date'] = datetime.fromtimestamp(
+                float(meeting[u'publishdate']))
         try:
             combined_index_data['location'] = meeting[u'bis_locatie'].strip()
         except (AttributeError, KeyError):
