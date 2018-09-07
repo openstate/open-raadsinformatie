@@ -3,7 +3,11 @@
 Introduction
 ============
 
-The API contains data from different sources. The API contains a combined index which allows for searching through the basics of each data source, i.e. the title, description, etc. It also has a separate index for each individual municipality or province. The API follows a common design (REST) and document format (JSON), known by many developers.
+.. attention::
+
+   Anytime Open Raadsinformatie is mentioned, please be aware that the same goes for the Open Stateninformatie API.
+
+The Open Raadsinformatie and Open Stateninformatie API contain data from different sources. There is a combined index which allows for searching through the basics of each data source, i.e. the title, description, etc. There are also separate indexes for each individual municipality or province. The APIs follow a common design (REST) and document format (JSON), known by many developers.
 
 Features
 --------

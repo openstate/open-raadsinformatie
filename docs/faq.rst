@@ -3,7 +3,18 @@
 Frequently Asked Questions
 ==========================
 
-This part of the documentation answers common questions about the Open Raadsinformatie API.
+.. attention::
+
+   Anytime Open Raadsinformatie is mentioned, please be aware that the same goes for the Open Stateninformatie API.
+
+This part of the documentation answers common questions about the Open Raadsinformatie and Open Stateninformatie and Open Stateninformatie API.
+
+.. _api_names:
+
+What is the difference between Open Raadsinformatie and Open Stateninformatie?
+-------------------------------------------------------------------------------
+
+They are  one and the same. The only difference is the URL, but you can query the Open Raadsinformatie API for provincial data and vice versa. The search applications are different though.
 
 .. _date_granularity:
 
