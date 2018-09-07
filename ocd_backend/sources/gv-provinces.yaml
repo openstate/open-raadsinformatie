@@ -60,6 +60,11 @@ _entities: &entities
     item: ocd_backend.items.gv.GreenValleyMeetingItem
     greenvalley_objecttypes:
       - agenda
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
+
 
   - &reports
     <<: *entity_defaults

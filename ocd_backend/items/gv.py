@@ -16,7 +16,29 @@ from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
 class GreenValleyItem(
-        EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
+        EventItem, HttpRequestMixin, FrontendAPIMixin):
+    def _get_documents_as_media_urls(self):
+        media_urls = {}
+        for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
+            if att[u'objecttype'] == 'AGENDAPAGE':
+                continue
+
+            url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
+                att[u'objectid'],)
+
+            doc_hash = unicode(sha1(
+                (url + u':' + att[u'objectname']).decode(
+                    'utf8')).hexdigest())
+            media_urls[doc_hash] = {
+                "url": "/v0/resolve/",
+                "note": att[u'objectname'],
+                "original_url": url
+            }
+        if media_urls:
+            return media_urls.values()
+        else:
+            return None
+
     def _get_council(self):
         """
         Gets the organisation that represents the council.
@@ -151,23 +173,25 @@ class GreenValleyItem(
         combined_index_data['sources'] = []
         print "Document has %s attachments" % (
             len(self.original_item.get(u'attachmentlist', {}),))
-        for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
-            if att[u'objecttype'] == 'AGENDAPAGE':
-                continue
+        # for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
+        #     if att[u'objecttype'] == 'AGENDAPAGE':
+        #         continue
+        #
+        #     url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
+        #         att[u'objectid'],)
+        #
+        #     description = self.file_get_contents(
+        #         url,
+        #         self.source_definition.get('pdf_max_pages', 20)
+        #     )
+        #
+        #     combined_index_data['sources'].append({
+        #         'url': url,
+        #         'note': att[u'objectname'],
+        #         'description': description
+        #     })
 
-            url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
-                att[u'objectid'],)
-
-            description = self.file_get_contents(
-                url,
-                self.source_definition.get('pdf_max_pages', 20)
-            )
-
-            combined_index_data['sources'].append({
-                'url': url,
-                'note': att[u'objectname'],
-                'description': description
-            })
+        combined_index_data['media_urls'] = self._get_documents_as_media_urls()
 
         return combined_index_data
 
