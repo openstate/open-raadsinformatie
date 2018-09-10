@@ -3,13 +3,13 @@ import json
 from requests.exceptions import HTTPError, RetryError
 from urllib3.exceptions import MaxRetryError
 
-from ocd_backend.extractors import BaseExtractor, LocalCachingMixin
+from ocd_backend.extractors import BaseExtractor, GCSCachingMixin
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
 
 
-class NotubizBaseExtractor(BaseExtractor, LocalCachingMixin):
+class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
     """
     A base extractor for the Notubiz API. This base extractor just
     configures the base url to use for accessing the API.
@@ -18,6 +18,7 @@ class NotubizBaseExtractor(BaseExtractor, LocalCachingMixin):
     def __init__(self, *args, **kwargs):
         super(NotubizBaseExtractor, self).__init__(*args, **kwargs)
         self.base_url = self.source_definition['base_url']
+        self.bucket_name = 'notubiz'
 
     def extractor(self, meeting_json):
         raise NotImplementedError
@@ -94,6 +95,7 @@ class NotubizBaseExtractor(BaseExtractor, LocalCachingMixin):
                             self.base_url,
                             item['id']
                         ),
+                        "events/meetings/%i" % item['id'],
                         item['last_modified'],
                     )
 
