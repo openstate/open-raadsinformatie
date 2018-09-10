@@ -1,5 +1,7 @@
+import cStringIO
 import errno
 import glob
+import gzip
 import os
 from datetime import datetime
 
@@ -7,6 +9,7 @@ import requests
 import urllib3
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from google.cloud import storage, exceptions
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
@@ -217,13 +220,13 @@ class LocalCachingMixin(HttpRequestMixin):
             self._check_path(latest_version_path)
         except OSError:
             # File does not exist, download and cache the url
-            data = self._download_file(url)
+            data, _ = self._download_file(url)
             self._write_to_cache(base_path, data, modified_date)
             return data
 
         if modified_date and modified_date > str_to_datetime(latest_version):
             # If file has been modified download it
-            data = self._download_file(url)
+            data, _ = self._download_file(url)
             self._write_to_cache(base_path, data, modified_date)
             return data
         else:
@@ -234,7 +237,7 @@ class LocalCachingMixin(HttpRequestMixin):
     def _download_file(self, url):
         resp = self.http_session.get(url)
         resp.raise_for_status()
-        return resp.content
+        return resp.content, resp.headers['Content-Type']
 
     @staticmethod
     def _write_to_cache(file_path, data, modified_date=None):
@@ -253,3 +256,61 @@ class LocalCachingMixin(HttpRequestMixin):
 
         with open('%s-%s' % (file_path, modified_date), 'w') as f:
             f.write(data)
+
+
+class GCSCachingMixin(LocalCachingMixin):
+    """Google Cloud Storage caching mixin.
+    """
+
+    storage_client = storage.Client()
+    bucket_name = None
+    _bucket = None
+
+    def get_bucket(self):
+        if self._bucket:
+            return self._bucket
+
+        if not self.bucket_name:
+            raise Exception("The 'bucket_name' needs to be set.")
+
+        try:
+            self._bucket = self.storage_client.get_bucket(self.bucket_name)
+        except exceptions.NotFound:
+            storage.Bucket(
+                self.storage_client,
+                name=self.bucket_name
+            ).create(location='europe-west4')
+            self._bucket = self.storage_client.get_bucket(self.bucket_name)
+
+        return self._bucket
+
+    def fetch(self, url, path, modified_date=None):
+        bucket = self.get_bucket()
+        blob = bucket.get_blob(path)
+        if not blob:
+            blob = bucket.blob(path)
+
+            # File does not exist
+            data, content_type = self._download_file(url)
+            self.compressed_upload(blob, data, content_type)
+            return data
+
+        modified_date = localize_datetime(str_to_datetime(modified_date))
+        if modified_date > blob.updated:
+            # Uploading newer file
+            data, content_type = self._download_file(url)
+            self.compressed_upload(blob, data, content_type)
+            return data
+        elif self.source_definition['force_old_files']:
+            # Downloading up-to-date file
+            return blob.download_as_string()
+
+    @staticmethod
+    def compressed_upload(blob, data, content_type):
+        f = cStringIO.StringIO()
+
+        with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
+            gf.write(data)
+
+        blob.content_encoding = 'gzip'
+        blob.upload_from_file(f, rewind=True, content_type=content_type)
