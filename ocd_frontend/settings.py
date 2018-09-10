@@ -68,17 +68,19 @@ SIMPLE_QUERY_FIELDS = {
     'organizations': ['name^4', 'description'],
     'events': [
         'name^4', 'description^3', 'location', 'organization.name',
-        'organization.description', 'sources.note^2', 'sources.description'],
+        'organization.description', 'sources.note^2', 'sources.description',
+        'media_urls.description'],
     'motions': [
         'name^4', 'text^3', 'organization.name', 'sources.note^2',
-        'sources.description'],
+        'sources.description', 'media_urls.description'],
     'vote_events': [
         'name^4', 'motion.text^3', 'organization.name', 'sources.note^2',
-        'sources.description'],
+        'sources.description', 'media_urls.description'],
     'items': [
         'name^4', 'description^3', 'location', 'organization.name',
         'organization.description', 'sources.note^2', 'sources.description',
-        'biography^4', 'other_names^2', 'memberships.organization.name^2']
+        'biography^4', 'other_names^2', 'memberships.organization.name^2',
+        'media_urls.description']
 }
 
 DOC_TYPE_DEFAULT = u'items'
