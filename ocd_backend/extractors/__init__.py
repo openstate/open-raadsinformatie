@@ -265,12 +265,9 @@ class GCSCachingMixin(HttpRequestMixin):
     Storage for caching purposes. When the resource has not changed, this
     mixin will serve from cache instead of doing a new request.
     """
-
     source_definition = None
-
-    storage_client = storage.Client()
-    default_content_type = None
     bucket_name = None
+    default_content_type = None
     _bucket = None
 
     def get_bucket(self):
@@ -284,10 +281,12 @@ class GCSCachingMixin(HttpRequestMixin):
         if not self.bucket_name:
             raise ValueError("The 'bucket_name' needs to be set.")
 
+        storage_client = storage.Client()
+
         try:
-            self._bucket = self.storage_client.get_bucket(self.bucket_name)
+            self._bucket = storage_client.get_bucket(self.bucket_name)
         except exceptions.NotFound:
-            bucket = storage.Bucket(self.storage_client, name=self.bucket_name)
+            bucket = storage.Bucket(storage_client, name=self.bucket_name)
             bucket.versioning_enabled = True
             bucket.lifecycle_rules = [{
                 'action': {'type': 'SetStorageClass', 'storageClass': 'NEARLINE'},
@@ -298,7 +297,7 @@ class GCSCachingMixin(HttpRequestMixin):
                 }
             }]
             bucket.create(location='europe-west4')
-            self._bucket = self.storage_client.get_bucket(self.bucket_name)
+            self._bucket = storage_client.get_bucket(self.bucket_name)
 
         return self._bucket
 
