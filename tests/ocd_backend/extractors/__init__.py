@@ -117,7 +117,11 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
             data2 = f.read()
 
         # The second and third call to _download_file will return the second data source
-        mocked_download_url.side_effect = [data1, data2, data2]
+        mocked_download_url.side_effect = [
+            (data1, 'application/json',),
+            (data2, 'application/json',),
+            (data2, 'application/json',),
+        ]
 
         # The download will be mocked so this is just for show
         url = "https://api.notubiz.nl/events/meetings/458902?format=json&version=1.10.8"
@@ -133,7 +137,7 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
         file_count = len(glob.glob(base_path + "*"))
         self.assertEqual(file_count, 2)
 
-    @mock.patch.object(LocalCachingMixin, '_download_url')
+    @mock.patch.object(LocalCachingMixin, 'download_url')
     def test_fetch_failed_download(self, mocked_download_url):
         mocked_download_url.side_effect = HTTPError
         with self.assertRaises(HTTPError):
