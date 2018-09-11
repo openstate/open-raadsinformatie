@@ -171,6 +171,11 @@ class HttpRequestMixin(object):
 
         return self._http_session
 
+    def download_url(self, url):
+        resp = self.http_session.get(url)
+        resp.raise_for_status()
+        return resp.content, resp.headers['Content-Type']
+
 
 class LocalCachingMixin(HttpRequestMixin):
     source_definition = None
@@ -220,24 +225,19 @@ class LocalCachingMixin(HttpRequestMixin):
             self._check_path(latest_version_path)
         except OSError:
             # File does not exist, download and cache the url
-            data, _ = self._download_file(url)
+            data, _ = self.download_url(url)
             self._write_to_cache(base_path, data, modified_date)
             return data
 
         if modified_date and modified_date > str_to_datetime(latest_version):
             # If file has been modified download it
-            data, _ = self._download_file(url)
+            data, _ = self.download_url(url)
             self._write_to_cache(base_path, data, modified_date)
             return data
         else:
             # todo force_old_files
             with open(latest_version_path, 'rb') as f:
                 return f.read()
-
-    def _download_file(self, url):
-        resp = self.http_session.get(url)
-        resp.raise_for_status()
-        return resp.content, resp.headers['Content-Type']
 
     @staticmethod
     def _write_to_cache(file_path, data, modified_date=None):
@@ -258,55 +258,97 @@ class LocalCachingMixin(HttpRequestMixin):
             f.write(data)
 
 
-class GCSCachingMixin(LocalCachingMixin):
+class GCSCachingMixin(HttpRequestMixin):
     """Google Cloud Storage caching mixin.
+
+    Fetch resources from a remote source while adding the data to Google Cloud
+    Storage for caching purposes. When the resource has not changed, this
+    mixin will serve from cache instead of doing a new request.
     """
 
+    source_definition = None
+
     storage_client = storage.Client()
+    default_content_type = None
     bucket_name = None
     _bucket = None
 
     def get_bucket(self):
+        """Get the bucket defined by 'bucket_name' from the storage_client.
+        Throws a ValueError when bucket_name is not set. If the bucket does not
+        exist in GCS, a new bucket will be created.
+        """
         if self._bucket:
             return self._bucket
 
         if not self.bucket_name:
-            raise Exception("The 'bucket_name' needs to be set.")
+            raise ValueError("The 'bucket_name' needs to be set.")
 
         try:
             self._bucket = self.storage_client.get_bucket(self.bucket_name)
         except exceptions.NotFound:
-            storage.Bucket(
-                self.storage_client,
-                name=self.bucket_name
-            ).create(location='europe-west4')
+            bucket = storage.Bucket(self.storage_client, name=self.bucket_name)
+            bucket.versioning_enabled = True
+            bucket.lifecycle_rules = [{
+                'action': {'type': 'SetStorageClass', 'storageClass': 'NEARLINE'},
+                'condition': {
+                    'numNewerVersions': 1,
+                    'matchesStorageClass': ['REGIONAL', 'STANDARD'],
+                    'age': 30
+                }
+            }]
+            bucket.create(location='europe-west4')
             self._bucket = self.storage_client.get_bucket(self.bucket_name)
 
         return self._bucket
 
-    def fetch(self, url, path, modified_date=None):
+    def fetch(self, url, path, modified_date):
+        """Fetch a resource url and save it to a path in GCS. The resource will
+        only be downloaded from the source when the file has been modified,
+        otherwise the file will be downloaded from cache if 'force_old_files'
+        has been set.
+        """
+
         bucket = self.get_bucket()
         blob = bucket.get_blob(path)
         if not blob:
             blob = bucket.blob(path)
 
             # File does not exist
-            data, content_type = self._download_file(url)
+            data, content_type = self.download_url(url)
             self.compressed_upload(blob, data, content_type)
             return data
 
         modified_date = localize_datetime(str_to_datetime(modified_date))
         if modified_date > blob.updated:
-            # Uploading newer file
-            data, content_type = self._download_file(url)
+            # Upload newer file
+            data, content_type = self.download_url(url)
             self.compressed_upload(blob, data, content_type)
             return data
         elif self.source_definition['force_old_files']:
-            # Downloading up-to-date file
+            # Download up-to-date file
             return blob.download_as_string()
 
-    @staticmethod
-    def compressed_upload(blob, data, content_type):
+    def save(self, path, data, content_type=None):
+        """Save data to a path in GCS. The content_type can be specified, or
+        will default to default_content_type.
+        """
+
+        bucket = self.get_bucket()
+        blob = bucket.get_blob(path)
+        self.compressed_upload(blob, data, content_type)
+
+    def compressed_upload(self, blob, data, content_type=None):
+        """Upload a gzip compressed file to GCS. If content_type is empty, the
+        default_content_type will be used. If both are empty a ValueError will
+        be raised.
+        """
+        if not content_type and self.default_content_type:
+            content_type = self.default_content_type
+        else:
+            raise ValueError("No 'content_type' or 'default_content_type' "
+                             "specified")
+
         f = cStringIO.StringIO()
 
         with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
