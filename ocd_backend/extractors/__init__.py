@@ -342,11 +342,13 @@ class GCSCachingMixin(HttpRequestMixin):
         default_content_type will be used. If both are empty a ValueError will
         be raised.
         """
-        if not content_type and self.default_content_type:
-            content_type = self.default_content_type
-        else:
-            raise ValueError("No 'content_type' or 'default_content_type' "
-                             "specified")
+
+        if not content_type:
+            if self.default_content_type:
+                content_type = self.default_content_type
+            else:
+                raise ValueError("No 'content_type' or 'default_content_type' "
+                                 "specified")
 
         f = cStringIO.StringIO()
 
