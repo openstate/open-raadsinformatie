@@ -13,7 +13,7 @@ from google.cloud import storage, exceptions
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from ocd_backend.exceptions import InvalidFile
+from ocd_backend.exceptions import InvalidFile, ItemAlreadyProcessed
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
 from ocd_backend.utils.misc import get_sha1_hash, localize_datetime, datetime_to_unixstamp, \
@@ -327,6 +327,11 @@ class GCSCachingMixin(HttpRequestMixin):
         elif self.source_definition.get('force_old_files'):
             # Download up-to-date file
             return blob.download_as_string()
+
+        raise ItemAlreadyProcessed("Item %s has already been processed on %s. "
+                                   "Set 'force_old_files' in source_definition "
+                                   "to download old files from cache." %
+                                   (url, blob.updated.strftime("%c")))
 
     def save(self, path, data, content_type=None):
         """Save data to a path in GCS. The content_type can be specified, or
