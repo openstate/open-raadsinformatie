@@ -4,6 +4,7 @@ from requests.exceptions import HTTPError, RetryError
 from urllib3.exceptions import MaxRetryError
 
 from ocd_backend.extractors import BaseExtractor, GCSCachingMixin
+from ocd_backend.exceptions import ItemAlreadyProcessed
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
@@ -100,7 +101,11 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
                     )
 
                     meeting_json = json.loads(data)['meeting']
-                except (HTTPError, RetryError), e:
+                except ItemAlreadyProcessed, e:
+                    meetings_skipped += 1
+                    log.debug(e)
+                    continue
+                except (HTTPError, RetryError, KeyError), e:
                     meetings_skipped += 1
                     log.warning('%s: %s' % (e, resp.request.url))
                     continue

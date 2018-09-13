@@ -47,3 +47,9 @@ class InvalidDatetime(ValueError):
 class InvalidFile(OSError):
     """Exception thrown when a file on the filesystem is corrupted
     or does not seem correct"""
+
+
+class ItemAlreadyProcessed(Exception):
+    """Item has been processed earlier and should not be processed again.
+    This should be overriden by 'force_old_files' in source_definition, for
+    example when everything must be reprocessed."""
