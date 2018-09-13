@@ -4,6 +4,8 @@ from requests import HTTPError
 from copy import copy
 from dateutil.parser import parse
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from requests.exceptions import HTTPError, RetryError
+
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
@@ -90,7 +92,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
                     try:
                         resp.raise_for_status()
                         meeting_json = resp.json()['meeting']
-                    except (HTTPError, KeyError), e:
+                    except (HTTPError, RetryError, KeyError), e:
                         log.warn('%s: %s' % (e, resp.request.url))
                         continue
                     except (ValueError, KeyError), e:
