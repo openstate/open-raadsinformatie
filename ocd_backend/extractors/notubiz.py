@@ -1,6 +1,6 @@
 import json
 
-from requests import HTTPError
+from requests.exceptions import HTTPError, RetryError
 
 from ocd_backend.extractors import BaseExtractor, HTTPCachingMixin
 from ocd_backend.log import get_source_logger
@@ -93,7 +93,7 @@ class NotubizBaseExtractor(BaseExtractor, HTTPCachingMixin):
                     )
 
                     meeting_json = json.loads(data)['meeting']
-                except (HTTPError, KeyError), e:
+                except (HTTPError, RetryError, KeyError), e:
                     meetings_skipped += 1
                     log.warning('%s: %s' % (e, resp.request.url))
                     continue
