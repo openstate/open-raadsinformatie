@@ -324,7 +324,7 @@ class GCSCachingMixin(HttpRequestMixin):
             data, content_type = self.download_url(url)
             self.compressed_upload(blob, data, content_type)
             return data
-        elif self.source_definition['force_old_files']:
+        elif self.source_definition.get('force_old_files'):
             # Download up-to-date file
             return blob.download_as_string()
 
