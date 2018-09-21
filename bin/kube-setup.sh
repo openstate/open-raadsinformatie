@@ -11,6 +11,10 @@ main() {
 	export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
 	echo "deb https://packages.cloud.google.com/apt ${CLOUD_SDK_REPO} main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+    # Temporary fix for https://github.com/travis-ci/travis-ci/issues/9361
+    sudo apt-get install -y dpkg
+
 	install-package --update-new google-cloud-sdk kubectl
 
 	gcloud --version
