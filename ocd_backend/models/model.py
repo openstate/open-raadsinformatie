@@ -11,7 +11,7 @@ from ocd_backend.models.properties import PropertyBase, Property, \
     StringProperty, IntegerProperty, Relation
 from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.misc import Namespace, Uri
-from ocd_backend.utils.misc import iterate, doc_type
+from ocd_backend.utils.misc import iterate, slugify, doc_type
 
 
 class ModelMetaclass(type):
@@ -107,7 +107,15 @@ class Model(object):
             assert organization
             assert source
             assert source_id_key
-            self.had_primary_source = Uri(Mapping, '{}/{}/{}/{}'.format(organization, source, source_id_key, source_id))
+            self.had_primary_source = Uri(
+                Mapping,
+                '{}/{}/{}/{}'.format(
+                    organization,
+                    source,
+                    source_id_key,
+                    slugify(source_id)
+                )
+            )
             self._source = source
         else:
             # Individuals also need a primary source or some queries will fail
