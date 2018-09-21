@@ -41,6 +41,11 @@ NoCount = definitions.opengov.NoCount
 AbstainCount = definitions.opengov.AbstainCount
 AbsentCount = definitions.opengov.AbsentCount
 Vote = definitions.opengov.Vote
+ResultFail = definitions.opengov.ResultFail
+ResultPass = definitions.opengov.ResultPass
+VoteOptionYes = definitions.opengov.VoteOptionYes
+VoteOptionNo = definitions.opengov.VoteOptionNo
+VoteOptionAbsent = definitions.opengov.VoteOptionAbsent
 
 # http://schema.org/
 MediaObject = definitions.schema.MediaObject
