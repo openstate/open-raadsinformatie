@@ -1,5 +1,5 @@
 from .misc import Namespace
-
+from ocd_backend.utils.misc import str_to_datetime
 
 class PropertyBase(object):
     """The base propery all properties and relations should inherit from."""
@@ -61,9 +61,24 @@ class IntegerProperty(Property):
             return int(value)
 
 
+class DateProperty(Property):
+    """A property which defines a date type."""
+
+    @staticmethod
+    def sanitize(value):
+        """Strip the value of spaces and make it unicode"""
+        if value:
+            return str_to_datetime(value)
+
+
 class DateTimeProperty(Property):
     """A property which defines a datetime type."""
-    pass
+
+    @staticmethod
+    def sanitize(value):
+        """Strip the value of spaces and make it unicode"""
+        if value:
+            return str_to_datetime(value)
 
 
 class ArrayProperty(Property):
