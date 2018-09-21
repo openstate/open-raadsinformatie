@@ -304,7 +304,7 @@ _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 def slugify(text, delim=u'-'):
     """Generates an ASCII-only slug."""
     result = []
-    for word in _punct_re.split(text.lower()):
+    for word in _punct_re.split(unicode(text).lower()):
         word = word.encode('translit/long')
         if word:
             result.append(word)
