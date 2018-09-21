@@ -6,7 +6,7 @@ from ocd_backend.models.definitions import ALL, Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
-    DateTimeProperty, ArrayProperty, Relation, OrderedRelation
+    DateProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
 
 
@@ -91,9 +91,11 @@ class BaseSerializer(object):
         elif type(prop) == IntegerProperty:
             return value
 
-        elif type(prop) == DateTimeProperty:
-            date_object = str_to_datetime(value)
-            return datetime_to_unixstamp(date_object)
+        elif type(prop) == DateProperty or type(prop) == DateTimeProperty:
+            try:
+                return value.isoformat()
+            except:
+                pass
 
         elif type(prop) == ArrayProperty:
             return value
