@@ -3,10 +3,10 @@ http://schema.org/
 """
 
 import owl
-from ocd_backend.models.definitions import Schema, Opengov
+from ocd_backend.models.definitions import Schema, Opengov, Dbo
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
-    DateTimeProperty, ArrayProperty, Relation
+    DateTimeProperty, DateProperty, ArrayProperty, Relation
 
 
 class MediaObject(Schema, owl.Thing):
@@ -16,7 +16,11 @@ class MediaObject(Schema, owl.Thing):
     file_type = StringProperty(Schema, 'fileType')
     additional_type = StringProperty(Schema, 'additionalType')
     creator = Relation(Schema, 'creator')
-    content_type = StringProperty(Schema, 'fileFormat')
+    content_type = StringProperty(Schema, 'encodingFormat')
+    upload_date = DateProperty(Schema, 'uploadDate')
+    caption = StringProperty(Schema, 'caption')
+    embed_url = StringProperty(Schema, 'embedUrl')
+    file_name = StringProperty(Dbo, 'filename')
     original_url = StringProperty(Schema, 'isBasedOn')
     text = StringProperty(Schema, 'text')
 

@@ -99,6 +99,11 @@ class Ori(Namespace):
     prefix = 'ori'
 
 
+class Dbo(Namespace):
+    uri = 'http://dbpedia.org/ontology/'
+    prefix = 'dbo'
+
+
 # class Opaque(Namespace):
 #     uri = 'https://argu.co/ns/opaque-model/'
 #     prefix = 'opaque'

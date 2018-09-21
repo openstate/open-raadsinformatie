@@ -8,7 +8,7 @@ from ocd_backend.models.definitions import Opengov, Schema, Meeting, Dcterms, \
     Ncal, Rdf, Rdfs, Skos, Bibframe
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
-    DateTimeProperty, ArrayProperty, Relation
+    DateProperty, DateTimeProperty, ArrayProperty, Relation
 
 
 class Motion(Opengov, owl.Thing):
@@ -18,7 +18,7 @@ class Motion(Opengov, owl.Thing):
     classification = StringProperty(Schema, 'additionalType')
     creator = Relation(Schema, 'creator')
     cocreator = Relation(Meeting, 'cocreator')
-    date = DateTimeProperty(Schema, 'dateSubmitted')
+    date = DateProperty(Schema, 'dateSubmitted')
     name = StringProperty(Schema, 'name')
     organization = Relation(Schema, 'publisher')
     text = StringProperty(Schema, 'text')
@@ -105,7 +105,7 @@ class Vote(Opengov, owl.Thing):
     role = StringProperty(Opengov, 'role')
     voter = Relation(Schema, 'agent')
     vote_event = Relation(Opengov, 'voteEvent')
-    option = Relation(Opengov, 'voteOption')
+    option = StringProperty(Opengov, 'voteOption')
     weight = IntegerProperty(Opengov, 'weight')
 
 
@@ -125,12 +125,12 @@ class Result(Opengov, owl.Thing):
 
 # Result Individuals
 class ResultFail(Opengov, Individual):
-    """When a decision is made in favor of a proposal"""
+    """When a decision is made against a proposal"""
     pass
 
 
 class ResultPass(Opengov, Individual):
-    """When a decision is made against a proposal"""
+    """When a decision is made in favor of a proposal"""
     pass
 
 
