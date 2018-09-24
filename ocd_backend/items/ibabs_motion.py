@@ -27,7 +27,8 @@ class IBabsMotionVotingMixin(
 
         results = self.api_request(
             self.source_definition['index_name'], 'organizations',
-            classification='Council')
+            classification='Council', sort='meta.processing_finished',
+            order='desc')
         return results[0]
 
     def _get_council_members(self):
