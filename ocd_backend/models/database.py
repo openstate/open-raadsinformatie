@@ -235,7 +235,7 @@ class Neo4jDatabase(object):
             )
 
             result = cursor.data()
-            if len(result) == 1:
+            if len(result) >= 1:
                 ori_identifier = result[0]['ori_identifier']
             else:
                 # n1_props = n2_props + ori_identifier
@@ -243,10 +243,18 @@ class Neo4jDatabase(object):
                 n1_props[str(Uri(Mapping, 'ori/identifier'))] = ori_identifier
 
         # Create a new entity when no matching node seems to exist
-        clauses = [
-            u'MERGE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
-            u'CREATE (n1)-[:«was_derived_from»]->(n2 :«n2_labels»)',
-        ]
+        from ocd_backend.models.model import Individual
+        if hasattr(model_object, '_source') or isinstance(model_object, Individual):
+            clauses = [
+                u'MERGE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
+            ]
+        else:
+            # "Blank nodes" are created every time and deleted when parent is replaced.
+            clauses = [
+                u'CREATE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
+            ]
+
+        clauses.append(u'CREATE (n1)-[:«was_derived_from»]->(n2 :«n2_labels»)')
         bound_params = {}
 
         if hasattr(model_object, '_source'):
