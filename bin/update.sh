@@ -7,6 +7,7 @@ cd /opt/ori
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     ./manage.py extract start $line
+    sleep 60
 done <.commands
 
 # ./manage.py extract start ibabs
