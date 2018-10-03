@@ -82,22 +82,19 @@ _gv: &gv
   index_name: "{key}"
   province: "{key!c}"
   entities: *entities
-  start_date: "2010-01-01T00:00:00"
-  end_date: "2018-06-01T00:00:00"
   <<: *source_defaults
 
 gv-provinces:
   zuid-holland:
+    # start_date: "2010-01-01T00:00:00"
+    # end_date: "2018-06-01T00:00:00"
     key: zuid-holland
     almanak_id: 17466
-    # greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
-    # greenvalley_username: openstate
-    # greenvalley_key: bbaab0a1-51b0-4344-8e49-91182df4139e
-    # greenvalley_hash: 9af2bb59b0d6ef3d62fa4f2e0157759c5f5c5ad2f2691ab0
-    greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
+    greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
+    # greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
+    greenvalley_key: bbaab0a1-51b0-4344-8e49-91182df4139e
+    greenvalley_hash: 9af2bb59b0d6ef3d62fa4f2e0157759c5f5c5ad2f2691ab0
     greenvalley_username: openstate
-    greenvalley_key: 3612fd98-1873-4a7b-b50f-4decee26d2c5
-    greenvalley_hash: 64584d206d56c1131eab9533ad5b29a5ec2f33fd0f4431fd
     greenvalley_extract_timeout: 5
     organizations_url: https://staten.zuid-holland.nl/Statenleden
     organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"

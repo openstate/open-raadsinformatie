@@ -95,7 +95,11 @@ class GreenValleyItem(
     def get_combined_index_data(self):
         objecttype2classification = {
             'agenda': 'Agenda',
-            'agendapage': 'Agendapunt'
+            'agendapage': 'Agendapunt',
+            'bestuurlijkstuk': 'Bestuurlijk stuk',
+            'notule': 'Verslag',
+            'ingekomenstuk': 'Ingekomen stuk',
+            'antwoordstuk': 'Antwoord'  # ?
         }
 
         council = self._get_council()
