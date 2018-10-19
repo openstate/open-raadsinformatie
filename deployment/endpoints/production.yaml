@@ -29,7 +29,6 @@ tags:
 schemes:
 - "https"
 - "http"
-basePath: "/v1"
 paths:
   /sources:
     get:
