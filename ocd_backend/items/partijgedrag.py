@@ -26,6 +26,9 @@ class PartijgedragMotion(BaseItem):
 
         if 'indieners' in self.original_item and len(self.original_item['indieners']) > 0:
             indiener_id, indiener_naam = self.original_item['indieners'][0]
+            if not indiener_id:
+                indiener_id = indiener_naam
+
             creator = Person(indiener_id, **source_defaults)
             creator.name = indiener_naam
             motion.creator = creator
@@ -33,6 +36,10 @@ class PartijgedragMotion(BaseItem):
         if 'indieners' in self.original_item and len(self.original_item['indieners']) > 1:
             motion.cocreator = list()
             for indiener_id, indiener_naam in self.original_item['indieners'][1:]:
+
+                if not indiener_id:
+                    indiener_id = indiener_naam
+
                 cocreator = Person(indiener_id, **source_defaults)
                 cocreator.name = indiener_naam
                 motion.cocreator.append(cocreator)
