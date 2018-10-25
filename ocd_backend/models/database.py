@@ -22,6 +22,9 @@ class AQuoteFormatter(Formatter):
                 yield result.group(1), result.group(2) or None, None, result.group(3) or None
 
 
+fmt = AQuoteFormatter()
+
+
 class Neo4jDatabase(object):
     """Database implementation for Neo4j graph database.
 
@@ -30,10 +33,6 @@ class Neo4jDatabase(object):
     has been used before.
     """
     _driver = None
-
-    HOT = 'Hot'
-    COLD = 'Cold'
-    ARCHIVE = 'Archive'
 
     default_params = {
         'was_revision_of': cypher_escape(Uri(Prov, 'wasRevisionOf')),
@@ -105,8 +104,8 @@ class Neo4jDatabase(object):
         definition = model_object.definition(filter_key)
 
         params = {
-            'n1_labels': u':'.join([self.HOT, cypher_escape(label)]),
-            'n2_labels': u':'.join([self.COLD, cypher_escape(label)]),
+            'n1_labels': cypher_escape(label),
+            'n2_labels': cypher_escape(label),
             'filter_key': cypher_escape(definition.absolute_uri())
         }
         params.update(self.default_params)
@@ -115,8 +114,6 @@ class Neo4jDatabase(object):
             u'MATCH (n2 :«n2_labels» {«filter_key»: $filter_value})<--(n1 :«n1_labels»)',
             u'RETURN n1.«ori_identifier» AS ori_identifier',
         ]
-
-        fmt = AQuoteFormatter()
 
         result = self.query(
             fmt.format(u'\n'.join(clauses), **params),
@@ -149,139 +146,155 @@ class Neo4jDatabase(object):
         The first and second query will match the `Cold` node based on the
         source_id.
         """
-        fmt = AQuoteFormatter()
-
-        label = self.serializer.label(model_object)
-        n2_props = self.serializer.deflate(model_object, props=True, rels=False)
+        labels = self.serializer.label(model_object)
 
         params = {
-            'n1_labels': u':'.join([self.HOT, cypher_escape(label)]),
-            'n2_labels': u':'.join([self.COLD, cypher_escape(label)]),
-            'n3_labels': self.ARCHIVE,
-            'n4_labels': self.ARCHIVE,
-            'n5_labels': u':'.join([self.ARCHIVE, cypher_escape(Uri(Prov, 'SoftwareAgent'))]),
+            'labels': cypher_escape(labels),
+            'had_primary_source': cypher_escape(Uri(Prov, 'hadPrimarySource')),
         }
         params.update(self.default_params)
 
-        if hasattr(model_object, '_source'):
-            # Keep it readable
-            # Expand labels
-            # Same name variables
-            # Escaping some variables
-            # Parameters
+        if not model_object.values.get('had_primary_source'):
 
-            # Add a new version if an older version already exists
-            clauses = [
-                u'MATCH (n1 :«n1_labels»)--(n2 :«n2_labels» {«had_primary_source»: $had_primary_source})-[r2 :«was_revision_of»]-(n3 :«n3_labels»)',
-                u'MERGE (n2)-[:«was_revision_of»]->(n4 :«n4_labels»)-[:«was_revision_of»]->(n3)',
-                u'MERGE (n2)-[:«provided_by»]->(n5 :«n5_labels» {name: $name})',
-                u'SET n4 = n2',
-                u'SET n2 = $n2_props',
-                u'DELETE r2',
-            ]
+            from ocd_backend.models.model import Individual
+            if isinstance(model_object, Individual):
+                if not model_object.values.get('ori_identifier'):
+                    model_object.generate_ori_identifier()
 
-            cursor = self.session.run(
-                fmt.format(u'\n'.join(clauses), **params),
-                n2_props=n2_props,
-                had_primary_source=model_object.had_primary_source,
-                name=model_object._source,
-            )
-            summary = cursor.summary()
-            if summary.counters.relationships_deleted > 0:
-                return
+                props = self.serializer.deflate(model_object, props=True, rels=False)
 
-            # Add a new version if no older version exists
-            clauses = [
-                u'MATCH (n1 :«n1_labels»)--(n2 :«n2_labels» {«had_primary_source»: $had_primary_source})',
-                u'MERGE (n2)-[:«was_revision_of»]->(n4 :«n4_labels»)',
-                u'MERGE (n2)-[:«provided_by»]->(n5 :«n5_labels» {name: $name})',
-                u'SET n4 = n2',
-                u'SET n2 = $n2_props',
-            ]
+                clauses = [
+                    u'MERGE (n :«labels»)',
+                    u'SET n += $props',
+                    u'RETURN n',
+                ]
 
-            cursor = self.session.run(
-                fmt.format(u'\n'.join(clauses), **params),
-                n2_props=n2_props,
-                had_primary_source=model_object.had_primary_source,
-                name=model_object._source,
-            )
-            summary = cursor.summary()
-            if summary.counters.nodes_created > 0:
-                return
-
-        try:
-            del n2_props[Uri(Mapping, 'ori/identifier')]
-        except KeyError:
-            pass
-
-        n1_props = copy(n2_props)
-
-        try:
-            del n1_props[Uri(Prov, 'hadPrimarySource')]
-        except KeyError:
-            pass
-
-        if model_object.values.get('ori_identifier'):
-            ori_identifier = model_object.values.get('ori_identifier')
-        else:
-            clauses = [
-                u'MATCH (n1 :«n1_labels»)-[:«was_derived_from»]->(n2 :«n2_labels» {«had_primary_source»: $had_primary_source})',
-                u'RETURN n1.«ori_identifier» AS ori_identifier',
-            ]
-
-            cursor = self.session.run(
-                fmt.format(u'\n'.join(clauses), **params),
-                had_primary_source=model_object.had_primary_source
-            )
-
-            result = cursor.data()
-            if len(result) >= 1:
-                ori_identifier = result[0]['ori_identifier']
+                cursor = self.session.run(
+                    fmt.format(u'\n'.join(clauses), **params),
+                    props=props,
+                )
+                summary = cursor.summary()
+                print
             else:
-                # n1_props = n2_props + ori_identifier
-                ori_identifier = model_object.generate_ori_identifier()
-                n1_props[str(Uri(Mapping, 'ori/identifier'))] = ori_identifier
-
-        # Create a new entity when no matching node seems to exist
-        from ocd_backend.models.model import Individual
-        if hasattr(model_object, '_source') or isinstance(model_object, Individual):
-            clauses = [
-                u'MERGE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
-            ]
+                self._create_blank_node(model_object)
         else:
-            # "Blank nodes" are created every time and deleted when parent is replaced.
-            clauses = [
-                u'CREATE (n1 :«n1_labels» {«ori_identifier»: $ori_identifier})',
-            ]
+            # if ori_identifier is already known use that to identify instead
+            if model_object.values.get('ori_identifier'):
+                self._merge(model_object)
+            else:
+                clauses = [
+                    u'MATCH (n :«labels»)',
+                    u'WHERE $had_primary_source IN n.«had_primary_source»',
+                    u'RETURN n.«ori_identifier» AS ori_identifier',
+                ]
 
-        clauses.append(u'CREATE (n1)-[:«was_derived_from»]->(n2 :«n2_labels»)')
-        bound_params = {}
+                cursor = self.session.run(
+                    fmt.format(u'\n'.join(clauses), **params),
+                    had_primary_source=model_object.had_primary_source,
+                )
+                result = cursor.data()
 
-        if hasattr(model_object, '_source'):
-            clauses.extend([
-                u'MERGE (n5 :«n5_labels» {name: $name})',
-                u'MERGE (n2)-[:«provided_by»]->(n5)',
-            ])
-            bound_params['name'] = model_object._source
-        clauses.extend([
-            u'SET n1 += $n1_props',
-            u'SET n2 = $n2_props',
-            u'RETURN n1.«ori_identifier» AS ori_identifier',
-        ])
+                if len(result) > 1:
+                    # Todo don't fail yet until unique constraints are solved
+                    # raise QueryResultError('The number of results is greater than one!')
+                    pass
+
+                try:
+                    ori_identifier = result[0]['ori_identifier']
+                except Exception:
+                    ori_identifier = None
+
+                if ori_identifier:
+                    model_object.ori_identifier = ori_identifier
+                    self._merge(model_object)
+                else:
+                    # if ori_identifier do merge otherwise create
+                    self._create_node(model_object)
+
+            # raise QueryEmptyResult('No ori_identifier was returned')
+
+    def _create_node(self, model_object):
+        if not model_object.values.get('ori_identifier'):
+            model_object.generate_ori_identifier()
+
+        labels = self.serializer.label(model_object)
+        props = self.serializer.deflate(model_object, props=True, rels=False)
+
+        params = {
+            'labels': cypher_escape(labels),
+        }
+        params.update(self.default_params)
+
+        clauses = [
+            u'CREATE (n :«labels» {«had_primary_source»: [$had_primary_source]})',
+            u'SET n += $props',
+            u'RETURN n',
+        ]
 
         cursor = self.session.run(
             fmt.format(u'\n'.join(clauses), **params),
-            n1_props=n1_props,
-            n2_props=n2_props,
-            ori_identifier=ori_identifier,
-            **bound_params
+            props=props,
+            had_primary_source=model_object.had_primary_source,
         )
-        result = cursor.data()
-        if len(result) > 0:
-            model_object.ori_identifier = result[0]['ori_identifier']
-            return
+        summary = cursor.summary()
 
-        raise QueryEmptyResult('No ori_identifier was returned')
+    def _create_blank_node(self, model_object):
+        if not model_object.values.get('ori_identifier'):
+            model_object.generate_ori_identifier()
+
+        labels = self.serializer.label(model_object)
+        props = self.serializer.deflate(model_object, props=True, rels=False)
+
+        params = {
+            'labels': cypher_escape(labels),
+        }
+        params.update(self.default_params)
+
+        clauses = [
+            u'CREATE (n :«labels»)',
+            u'SET n += $props',
+            u'RETURN n',
+        ]
+
+        cursor = self.session.run(
+            fmt.format(u'\n'.join(clauses), **params),
+            props=props,
+        )
+        summary = cursor.summary()
+
+    def _merge(self, model_object):
+        labels = self.serializer.label(model_object)
+        props = self.serializer.deflate(model_object, props=True, rels=False)
+
+        params = {
+            'labels': cypher_escape(labels),
+        }
+        params.update(self.default_params)
+
+        clauses = [
+            u'MERGE (n :«labels» {«ori_identifier»: $ori_identifier})',
+            u'SET n += $props',
+            u'SET(',  # Only add had_primary_source to array if doesn't exist
+            u'  CASE WHEN NOT $had_primary_source IN n.«had_primary_source» THEN n END',
+            u').«had_primary_source» = n.«had_primary_source» + $had_primary_source',
+            u'WITH n',
+            u'OPTIONAL MATCH (n)-->(m)',  # Remove all directly related blank nodes
+            u'WHERE NOT EXISTS(m.«had_primary_source»)',
+            u'DETACH DELETE m',
+            u'WITH n',
+            u'OPTIONAL MATCH (n)-[r]->()',  # Remove all outgoing relationships
+            u'DELETE r',
+            u'WITH n',
+            u'RETURN n',
+        ]
+
+        cursor = self.session.run(
+            fmt.format(u'\n'.join(clauses), **params),
+            had_primary_source=model_object.had_primary_source,
+            ori_identifier=model_object.ori_identifier,
+            props=props,
+        )
+        summary = cursor.summary()
 
     def attach(self, this_object, that_object, rel_type):
         """Attaches this_object to that_object model.
@@ -291,8 +304,6 @@ class Neo4jDatabase(object):
         nodes.
         """
         from .model import Model, Relationship
-
-        fmt = AQuoteFormatter()
 
         r1_props = dict()
         if isinstance(that_object, Relationship):
@@ -306,62 +317,22 @@ class Neo4jDatabase(object):
         that_label = self.serializer.label(that_object)
 
         params = {
-            'n2_labels': u':'.join([self.COLD, cypher_escape(this_label)]),
-            'n3_labels': u':'.join([self.COLD, cypher_escape(that_label)]),
+            'n2_labels': cypher_escape(this_label),
+            'n3_labels': cypher_escape(that_label),
             'r1_labels': cypher_escape(rel_type),
         }
         params.update(self.default_params)
 
         clauses = [
-            u'MATCH (n2 :«n2_labels» {«had_primary_source»: $had_primary_source1})',
-            u'MATCH (n3 :«n3_labels» {«had_primary_source»: $had_primary_source2})',
+            u'MATCH (n2 :«n2_labels» {«ori_identifier»: $ori_identifier1})',
+            u'MATCH (n3 :«n3_labels» {«ori_identifier»: $ori_identifier2})',
             u'MERGE (n2)-[r1 :«r1_labels»]->(n3)',
             u'SET r1 = $r1_props',
         ]
 
         self.query(
             fmt.format(u'\n'.join(clauses), **params),
-            had_primary_source1=this_object.had_primary_source,
-            had_primary_source2=that_object.had_primary_source,
+            ori_identifier1=this_object.ori_identifier,
+            ori_identifier2=that_object.ori_identifier,
             r1_props=r1_props
         )
-
-    def copy_relations(self):
-        """Copies the relations from Cold->Cold nodes to Hot->Hot nodes.
-
-        All relations between these nodes that do not already exist are copied.
-        Only direct relations between `Cold` nodes are matched.
-        """
-        fmt = AQuoteFormatter()
-
-        params = {
-            'labels': self.COLD,
-            'n1_labels': self.HOT,
-            'n2_labels': self.COLD,
-            'n3_labels': self.HOT,
-        }
-        params.update(self.default_params)
-
-        clauses = [
-            u'MATCH (n1 :«n1_labels»)-[:«was_derived_from»]->(n2 :«n2_labels»)-[r]->(:«labels»)<-[:«was_derived_from»]-(n3 :«n3_labels»)',
-            u'WHERE NOT (n1)--(n3)',
-            u'RETURN id(n1) AS id1, id(n2) as id2, id(n3) AS id3, type(r) AS rel, id(startNode(r)) AS start',
-        ]
-
-        for result in self.query(fmt.format(u'\n'.join(clauses), **params)):
-            clauses = [
-                u'MATCH (n1), (n3)',
-                u'WHERE id(n1) = $id1',
-                u'AND id(n3) = $id3',
-                u'MERGE (n1)-[:«rel»]->(n3)'
-            ]
-
-            self.query(
-                fmt.format(
-                    u'\n'.join(clauses),
-                    rel=cypher_escape(result['rel']),
-                    **params
-                ),
-                id1=result['id1'],
-                id3=result['id3']
-            )
