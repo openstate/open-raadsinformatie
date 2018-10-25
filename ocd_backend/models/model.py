@@ -13,6 +13,7 @@ from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.misc import Namespace, Uri
 from ocd_backend.utils.misc import iterate, doc_type
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.misc import slugify
 
 logger = get_source_logger('model')
 
@@ -97,7 +98,7 @@ class Model(object):
 
         return instance
 
-    def __init__(self, source_id=None, organization=None, source=None, source_id_key=None):
+    def __init__(self, source_id=False, organization=None, source=None, source_id_key=None):
         # Set defaults
         #self.uri = None
         #self.prefix = None
@@ -107,7 +108,8 @@ class Model(object):
 
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
         # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
-        if source_id:
+        if source_id is not False:
+            assert source_id
             assert organization
             assert source
             assert source_id_key
@@ -121,10 +123,6 @@ class Model(object):
                 )
             )
             self._source = source
-        else:
-            # Individuals also need a primary source or some queries will fail
-            # As a solution the definition will be set as the primary source
-            self.had_primary_source = self.absolute_uri()
 
     def __getattr__(self, item):
         try:
@@ -180,41 +178,49 @@ class Model(object):
         self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
         return self.ori_identifier
 
-    def properties(self, props=True, rels=True):
+    def properties(self, props=True, rels=True, parent=False):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate({k: v for k, v in self.values.items() if k[0:1] != '_'}):
+            if not parent and name == 'parent':
+                continue
+
             definition = self.definition(name)
             if not definition:
                 continue
+
             if (props and not isinstance(prop, Model)) or \
                     (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
                 props_list.append((self.serializer.uri_format(definition), prop,))  # pylint: disable=no-member
         return props_list
 
+    saving_flag = False
+
     def save(self):
-        self.db.replace(self)  # pylint: disable=no-member
+        if self.saving_flag:
+            return
+        self.saving_flag = True
 
-        # Recursive save
-        for _, value in self.properties(rels=True, props=False):
-            if isinstance(value, Model):
-                value.save()
+        try:
+            self.db.replace(self)  # pylint: disable=no-member
 
-        self.attach_recursive()
+            # Recursive save
+            for rel_type, value in self.properties(rels=True, props=False, parent=True):
+                if isinstance(value, Model):
+                    # Todo don't do parent setting for now, until first needed
+                    # Self-reference via parent attribute if not done explicitly
+                    # if 'parent' not in value:
+                    #     value.parent = self
+                    value.save()
 
-        # Todo needs to be executed only once
-        self.db.copy_relations()  # pylint: disable=no-member
-
-    def attach_recursive(self):
-        attach = list()
-        for rel_type, other_object in self.properties(rels=True, props=False):
-            attach.append(self.db.attach(self, other_object, rel_type))  # pylint: disable=no-member
-
-            # End the recursive loop when self-referencing
-            if self != other_object:
-                attach.extend(other_object.attach_recursive())
-
-        return attach
+                # End the recursive loop when self-referencing
+                if self != value:
+                    self.db.attach(self, value, rel_type)
+        except:
+            # Re-raise everything
+            raise
+        finally:
+            self.saving_flag = False
 
     def connect(self, **kwargs):
         """Takes one keyword-argument to filter, and set an ori_identifier.
