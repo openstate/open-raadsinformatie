@@ -31,12 +31,6 @@ _entities: &entities
     - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
       - # reserved for enricher_settings
 
-  - &meetingitems
-    <<: *meetings
-    entity: meetingitems
-    extractor: ocd_backend.extractors.notubiz.NotubizMeetingItemExtractor
-    item: ocd_backend.items.notubiz_meetingitem.NotubizMeetingItem
-
 _notubiz: &notubiz
   index_name: "{key}"
   sitename: "{key!c}"
