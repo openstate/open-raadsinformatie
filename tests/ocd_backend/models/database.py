@@ -71,8 +71,8 @@ class DatabaseTestCase(TestCase):
 
         result = self.db.query('MATCH (n) WITH COUNT(n) AS nodes '
                                'MATCH (m)-->() RETURN nodes, COUNT(m) AS rels')
-        self.assertEqual(7, result[0]['nodes'])
-        self.assertEqual(10, result[0]['rels'])
+        self.assertEqual(3, result[0]['nodes'])
+        self.assertEqual(2, result[0]['rels'])
 
         # Make a new object that matches everything but description
         object_model = Organization('GM0361', **source_defaults)
@@ -91,8 +91,8 @@ class DatabaseTestCase(TestCase):
 
         result = self.db.query('MATCH (n) WITH COUNT(n) AS nodes '
                                'MATCH (m)-->() RETURN nodes, COUNT(m) AS rels')
-        self.assertEqual(10, result[0]['nodes'])
-        self.assertEqual(13, result[0]['rels'])
+        self.assertEqual(3, result[0]['nodes'])
+        self.assertEqual(2, result[0]['rels'])
 
         second_identifier = object_model.get_ori_identifier()
 
@@ -112,7 +112,7 @@ class DatabaseTestCase(TestCase):
 
         result = self.db.query('MATCH (n) WITH COUNT(n) AS nodes '
                                'MATCH (m)-->() RETURN nodes, COUNT(m) AS rels')
-        self.assertEqual(13, result[0]['nodes'])
-        self.assertEqual(16, result[0]['rels'])
+        self.assertEqual(3, result[0]['nodes'])
+        self.assertEqual(2, result[0]['rels'])
 
         self.assertEqual(first_identifier, second_identifier)
