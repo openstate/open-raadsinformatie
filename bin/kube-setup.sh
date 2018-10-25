@@ -18,7 +18,7 @@ main() {
 	install-package --update-new google-cloud-sdk kubectl
 
 	gcloud --version
-	kubectl version -c
+	kubectl version --short
 	docker-compose --version
 
 	echo "Authenticating gcloud service account"
