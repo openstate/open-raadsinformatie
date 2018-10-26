@@ -56,7 +56,7 @@ class ModelTestCase(TestCase):
     def test_properties(self):
         mapping = {
             'http://schema.org/name': 'Test iBabs event',
-            'https://www.w3.org/TR/2013/REC-prov-o-20130430/#hadPrimarySource': 'https://argu.co/voc/mapping/alkmaar/notubiz/identifier/104ce628-b453-4fc1-9ab5-61383b6c9ab4',
+            'http://www.w3.org/ns/prov#': 'https://argu.co/voc/mapping/alkmaar/notubiz/identifier/104ce628-b453-4fc1-9ab5-61383b6c9ab4',
             'https://argu.co/voc/mapping/ori/identifier': None,
             'https://argu.co/ns/meeting/chair': 'Chairman',
             'http://schema.org/invitee': Person,
