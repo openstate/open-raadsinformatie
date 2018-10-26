@@ -85,7 +85,7 @@ class Bibframe(Namespace):
 
 
 class Prov(Namespace):
-    uri = 'https://www.w3.org/TR/2013/REC-prov-o-20130430/#'
+    uri = 'http://www.w3.org/ns/prov#'
     prefix = 'prov'
 
 
