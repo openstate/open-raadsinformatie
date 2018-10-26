@@ -114,7 +114,7 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'status': {'@id': 'http://schema.org/eventStatus', '@type': '@id'},
                 'name': {'@id': 'http://schema.org/name'},
                 'classification': {'@id': 'http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#categories'},
-                'had_primary_source': {'@id': 'https://www.w3.org/TR/2013/REC-prov-o-20130430/#hadPrimarySource'},
+                'had_primary_source': {'@id': 'http://www.w3.org/ns/prov#hadPrimarySource'},
                 '@base': 'https://id.openraadsinformatie.nl/',
                 'attachment': {'@id': 'https://argu.co/ns/meeting/attachment', '@type': '@id'},
                 'agenda': {'@id': 'https://argu.co/ns/meeting/agenda', '@type': '@id'},
