@@ -32,8 +32,6 @@ class Neo4jDatabase(object):
     existing nodes. When the class is initialized, it reuses the driver if it
     has been used before.
     """
-    _driver = None
-
     default_params = {
         'was_revision_of': cypher_escape(Uri(Prov, 'wasRevisionOf')),
         'was_derived_from': cypher_escape(Uri(Prov, 'wasDerivedFrom')),
@@ -42,23 +40,25 @@ class Neo4jDatabase(object):
         'ori_identifier': cypher_escape(Uri(Mapping, 'ori/identifier')),
     }
 
+    # Set driver on the class so all instances use the same driver
+    driver = GraphDatabase.driver(
+        NEO4J_URL, auth=(NEO4J_USER, NEO4J_PASSWORD,), encrypted=False,
+    )
+
     def __init__(self, serializer):
         self.serializer = serializer
-
-        if not self._driver:
-            # Set driver on the class so all instances use the same driver
-            self._driver = GraphDatabase.driver(
-                NEO4J_URL, auth=(NEO4J_USER, NEO4J_PASSWORD,), encrypted=False,
-            )
-
-        self.session = self._driver.session()
         self.tx = None
 
     def query(self, query, **params):
         """Executes a query and returns the result"""
-        cursor = self.session.run(query, **params)
-        result = cursor.data()
+        with self.driver.session() as session:
+            cursor = session.run(query, **params)
+            result = cursor.data()
         return result
+
+    @property
+    def session(self):
+        return self.driver.session()
 
     def transaction_query(self, query, **params):
         """Adds a query to be executed as a transaction. All queries called with
