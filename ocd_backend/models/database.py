@@ -174,7 +174,6 @@ class Neo4jDatabase(object):
                     props=props,
                 )
                 summary = cursor.summary()
-                print
             else:
                 self._create_blank_node(model_object)
         else:
