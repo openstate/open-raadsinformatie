@@ -30,7 +30,7 @@ class VoteEvent(Opengov, schema.Event):
     created_at = DateTimeProperty(Dcterms, 'created')
     updated_at = DateTimeProperty(Dcterms, 'modified')
     motion = Relation(Opengov, 'motion')
-    result = StringProperty(Opengov, 'result')
+    result = Relation(Opengov, 'result')
     organization = Relation(Schema, 'organizer')
     legislative_session = Relation(Schema, 'superEvent')
     votes = Relation(Opengov, 'vote')
@@ -105,7 +105,8 @@ class Vote(Opengov, owl.Thing):
     role = StringProperty(Opengov, 'role')
     voter = Relation(Schema, 'agent')
     vote_event = Relation(Opengov, 'voteEvent')
-    option = StringProperty(Opengov, 'voteOption')
+    option = Relation(Opengov, 'voteOption')
+    weight = IntegerProperty(Opengov, 'weight')
 
 
 class ContactDetail(Opengov, owl.Thing):
