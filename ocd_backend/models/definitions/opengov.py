@@ -105,7 +105,7 @@ class Vote(Opengov, owl.Thing):
     role = StringProperty(Opengov, 'role')
     voter = Relation(Schema, 'agent')
     vote_event = Relation(Opengov, 'voteEvent')
-    option = StringProperty(Opengov, 'voteOption')
+    option = Relation(Opengov, 'voteOption')
     weight = IntegerProperty(Opengov, 'weight')
 
 
