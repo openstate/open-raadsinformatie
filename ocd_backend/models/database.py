@@ -104,15 +104,14 @@ class Neo4jDatabase(object):
         definition = model_object.definition(filter_key)
 
         params = {
-            'n1_labels': cypher_escape(label),
-            'n2_labels': cypher_escape(label),
+            'labels': cypher_escape(label),
             'filter_key': cypher_escape(definition.absolute_uri())
         }
         params.update(self.default_params)
 
         clauses = [
-            u'MATCH (n2 :«n2_labels» {«filter_key»: $filter_value})<--(n1 :«n1_labels»)',
-            u'RETURN n1.«ori_identifier» AS ori_identifier',
+            u'MATCH (n :«labels» {«filter_key»: $filter_value})',
+            u'RETURN n.«ori_identifier» AS ori_identifier',
         ]
 
         result = self.query(
@@ -265,6 +264,9 @@ class Neo4jDatabase(object):
         labels = self.serializer.label(model_object)
         props = self.serializer.deflate(model_object, props=True, rels=False)
 
+        # todo this quickfix needs to be refactored
+        del props[Uri(Prov, 'hadPrimarySource')]
+
         params = {
             'labels': cypher_escape(labels),
         }
@@ -275,7 +277,7 @@ class Neo4jDatabase(object):
             u'SET n += $props',
             u'SET(',  # Only add had_primary_source to array if doesn't exist
             u'  CASE WHEN NOT $had_primary_source IN n.«had_primary_source» THEN n END',
-            u').«had_primary_source» = n.«had_primary_source» + $had_primary_source',
+            u').«had_primary_source» = n.«had_primary_source» + [$had_primary_source]',
             u'WITH n',
             u'OPTIONAL MATCH (n)-->(m)',  # Remove all directly related blank nodes
             u'WHERE NOT EXISTS(m.«had_primary_source»)',
