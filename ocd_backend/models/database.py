@@ -157,22 +157,40 @@ class Neo4jDatabase(object):
 
             from ocd_backend.models.model import Individual
             if isinstance(model_object, Individual):
-                if not model_object.values.get('ori_identifier'):
-                    model_object.generate_ori_identifier()
-
-                props = self.serializer.deflate(model_object, props=True, rels=False)
-
                 clauses = [
-                    u'MERGE (n :«labels»)',
-                    u'SET n += $props',
-                    u'RETURN n',
+                    u'MATCH (n :«labels»)',
+                    u'RETURN n.«ori_identifier» AS ori_identifier',
                 ]
 
                 cursor = self.session.run(
                     fmt.format(u'\n'.join(clauses), **params),
-                    props=props,
                 )
-                summary = cursor.summary()
+                result = cursor.data()
+
+                if len(result) > 1:
+                    raise QueryResultError('The number of results is greater than one!')
+
+                elif len(result) < 1:
+                    model_object.generate_ori_identifier()
+                    props = self.serializer.deflate(model_object, props=True, rels=False)
+
+                    clauses = [
+                        u'MERGE (n :«labels»)',
+                        u'SET n += $props',
+                        u'RETURN n.«ori_identifier» AS ori_identifier',
+                    ]
+
+                    cursor = self.session.run(
+                        fmt.format(u'\n'.join(clauses), **params),
+                        props=props,
+                    )
+                    cursor.summary()
+
+                else:
+                    try:
+                        model_object.ori_identifier = result[0]['ori_identifier']
+                    except Exception:
+                        raise QueryResultError('No ori_identifier was returned')
             else:
                 self._create_blank_node(model_object)
         else:
@@ -234,7 +252,7 @@ class Neo4jDatabase(object):
             props=props,
             had_primary_source=model_object.had_primary_source,
         )
-        summary = cursor.summary()
+        cursor.summary()
 
     def _create_blank_node(self, model_object):
         if not model_object.values.get('ori_identifier'):
@@ -258,7 +276,7 @@ class Neo4jDatabase(object):
             fmt.format(u'\n'.join(clauses), **params),
             props=props,
         )
-        summary = cursor.summary()
+        cursor.summary()
 
     def _merge(self, model_object):
         labels = self.serializer.label(model_object)
@@ -295,7 +313,7 @@ class Neo4jDatabase(object):
             ori_identifier=model_object.ori_identifier,
             props=props,
         )
-        summary = cursor.summary()
+        cursor.summary()
 
     def attach(self, this_object, that_object, rel_type):
         """Attaches this_object to that_object model.
