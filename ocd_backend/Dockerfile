@@ -41,4 +41,4 @@ VOLUME /opt/ori/data
 
 WORKDIR /opt/ori
 USER celery
-CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=4
+CMD celery --app=ocd_backend:celery_app worker --loglevel=info --concurrency=1
