@@ -58,9 +58,14 @@ class PartijgedragMotion(BaseItem):
                     vote = Vote()
 
                     if 'kamerlid' in vote_party:
-                        vote.voter = Person(vote_party['kamerlid'], **source_defaults)
+                        voter = Person(vote_party['kamerlid'], **source_defaults)
+                        voter.name = vote_party['kamerlid']
+                        vote.voter = voter
 
-                    vote.group = Organization(vote_party['partij'], **source_defaults)
+                    group = Organization(vote_party['partij'], **source_defaults)
+                    group.name = vote_party['partij']
+                    vote.group = group
+
                     vote.weight = vote_party['aantal']
 
                     if vote_option == 'voor':
