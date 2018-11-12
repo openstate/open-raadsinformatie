@@ -1,6 +1,7 @@
 import json
 
 from requests.exceptions import HTTPError, RetryError
+from urllib3.exceptions import MaxRetryError
 
 from ocd_backend.extractors import BaseExtractor, HTTPCachingMixin
 from ocd_backend.log import get_source_logger
@@ -55,17 +56,21 @@ class NotubizBaseExtractor(BaseExtractor, HTTPCachingMixin):
 
         page = 1
         while True:
-            resp = self.http_session.get(
-                "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                "&format=json&version=1.10.8&page=%i" %
-                (
-                    self.base_url,
-                    self.source_definition['organisation_id'],
-                    start_date.strftime("%Y-%m-%d %H:%M:%S"),
-                    end_date.strftime("%Y-%m-%d %H:%M:%S"),
-                    page
+            try:
+                resp = self.http_session.get(
+                    "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
+                    "&format=json&version=1.10.8&page=%i" %
+                    (
+                        self.base_url,
+                        self.source_definition['organisation_id'],
+                        start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        end_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        page
+                    )
                 )
-            )
+            except (HTTPError, RetryError), e:
+                log.warning('%s: %s' % (e, resp.request.url))
+                break
 
             try:
                 resp.raise_for_status()
@@ -93,7 +98,7 @@ class NotubizBaseExtractor(BaseExtractor, HTTPCachingMixin):
                     )
 
                     meeting_json = json.loads(data)['meeting']
-                except (HTTPError, RetryError, KeyError), e:
+                except (HTTPError, RetryError), e:
                     meetings_skipped += 1
                     log.warning('%s: %s' % (e, resp.request.url))
                     continue
