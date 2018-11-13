@@ -187,13 +187,13 @@ def format_search_results(results, doc_type='items'):
         # del hit['_index']
         # del hit['_type']
         # del hit['_source']['hidden']
-        kwargs = {
-            'object_id': hit['_id'],
-            'source_id': hit['_source']['meta']['collection'],
-            'doc_type': hit['_type'],
-            '_external': True
-        }
-        hit['_source']['meta']['ocd_url'] = url_for('api.get_object', **kwargs)
+        # kwargs = {
+        #     'object_id': hit['_id'],
+        #     'source_id': hit['_source']['meta']['collection'],
+        #     'doc_type': hit['_type'],
+        #     '_external': True
+        # }
+        #hit['_source']['meta']['ocd_url'] = url_for('api.get_object', **kwargs)
         for key in current_app.config['EXCLUDED_FIELDS_ALWAYS']:
             try:
                 del hit['_source'][key]
@@ -271,9 +271,9 @@ def format_sources_results(results):
 def list_sources():
     es_q = {
         'query': {
-            "bool": {
-                "must": {
-                    "term": {"hidden": False}
+            'bool': {
+                'must_not': {
+                    'terms': {'_type': ['url', 'search']}
                 }
             }
         },
@@ -388,7 +388,7 @@ def search(doc_type=u'items'):
     hit_log = []
     for hit in es_r['hits']['hits']:
         hit_log.append({
-            'source_id': hit['_source']['meta']['source_id'],
+            # 'source_id': hit['_source']['meta']['source_id'],
             'object_id': hit['_id'],
             'score': hit['_score']
         })
@@ -483,7 +483,7 @@ def search_source(source_id, doc_type=u'items'):
     hit_log = []
     for hit in es_r['hits']['hits']:
         hit_log.append({
-            'source_id': hit['_source']['meta']['source_id'],
+            # 'source_id': hit['_source']['meta']['source_id'],
             'object_id': hit['_id'],
             'score': hit['_score']
         })
