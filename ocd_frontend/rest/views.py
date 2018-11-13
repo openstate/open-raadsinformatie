@@ -54,11 +54,13 @@ def parse_search_request(data, doc_type, mlt=False):
     n_from, n_size = validate_from_and_size(data)
 
     # Check if 'sort' was specified, if not, fallback to '_score'
-    sort = data.get('sort', '_score')
-    if sort not in current_app.config['SORTABLE_FIELDS'][doc_type]:
-        raise OcdApiError(
-            'Invalid value for \'sort\', sortable fields are: %s'
-            % ', '.join(current_app.config['SORTABLE_FIELDS'][doc_type]), 400)
+    sort = '_score'
+    if data.get('sort'):
+        sort = data.get('sort', '_score')
+        if sort not in current_app.config['SORTABLE_FIELDS'].get(doc_type, []):
+            raise OcdApiError(
+                'Invalid value for \'sort\', sortable fields are: %s'
+                % ', '.join(current_app.config['SORTABLE_FIELDS'].get(doc_type, [])), 400)
 
     # Check if 'order' was specified, if not, fallback to desc
     order = data.get('order', 'desc')
@@ -73,7 +75,7 @@ def parse_search_request(data, doc_type, mlt=False):
 
     facets = {}
     available_facets = copy.deepcopy(
-        current_app.config['AVAILABLE_FACETS'][doc_type])
+        current_app.config['AVAILABLE_FACETS'].get(doc_type, {}))
     available_facets.update(current_app.config['COMMON_FACETS'])
 
     # Inspect all requested facets and override the default settings
@@ -325,7 +327,8 @@ def search(doc_type=u'items'):
     # the fields we want to highlight in the Elasticsearch response
     highlighted_fields = current_app.config['COMMON_HIGHLIGHTS']
     highlighted_fields.update(
-        current_app.config['AVAILABLE_HIGHLIGHTS'][doc_type])
+        current_app.config['AVAILABLE_HIGHLIGHTS'].get(doc_type, {})
+    )
 
     # Construct the query we are going to send to Elasticsearch
     es_q = {
@@ -335,8 +338,7 @@ def search(doc_type=u'items'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields': current_app.config[
-                            'SIMPLE_QUERY_FIELDS'][doc_type]
+                        'fields': current_app.config['SIMPLE_QUERY_FIELDS'].get(doc_type)
                     }
                 },
                 'filter': {}
@@ -437,8 +439,7 @@ def search_source(source_id, doc_type=u'items'):
                     'simple_query_string': {
                         'query': search_req['query'],
                         'default_operator': 'AND',
-                        'fields': current_app.config[
-                            'SIMPLE_QUERY_FIELDS'][doc_type]
+                        'fields': current_app.config['SIMPLE_QUERY_FIELDS'].get(doc_type),
                         # 'fields': [
                         #     'title^3',
                         #     'authors^2',
