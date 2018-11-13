@@ -258,11 +258,6 @@ def format_sources_results(results):
         source = {d['key']: d['doc_count']
                   for d in bucket['doc_type']['buckets']}
         source['id'] = u'_'.join(bucket['key'].split('_')[1:-1])
-
-        # FIXME: quick hack
-        if source['id'] == u'combined':
-            source['id'] = u'combined_index'
-
         sources.append(source)
 
     return {
@@ -379,14 +374,14 @@ def search(doc_type=u'items'):
         if scroll_id is None:
             es_r = current_app.es.search(
                 body=es_q,
-                index=current_app.config['COMBINED_INDEX'],
+                index='_all',
                 doc_type=request_doc_type, scroll=scroll)
             scroll_id = es_r['_scroll_id']
         es_r = current_app.es.get_esclient().scroll(scroll=scroll, scroll_id=scroll_id)
     else:
         es_r = current_app.es.search(
             body=es_q,
-            index=current_app.config['COMBINED_INDEX'],
+            index='_all',
             doc_type=request_doc_type)
 
     # Log a 'search' event if usage logging is enabled
@@ -702,7 +697,7 @@ def similar(object_id, source_id=None, doc_type=u'items'):
         index_name = '%s_%s' % (current_app.config['DEFAULT_INDEX_PREFIX'],
                                 source_id)
     else:
-        index_name = current_app.config['COMBINED_INDEX']
+        index_name = '_all'
 
     excluded_fields = validate_included_fields(
         include_fields=search_params['include_fields'],

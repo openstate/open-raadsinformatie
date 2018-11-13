@@ -22,9 +22,6 @@ DEFAULT_SEARCH_SIZE = 10
 # The max. number of hits to return for a search request via the REST API
 MAX_SEARCH_SIZE = 100
 
-# The name of the index containing documents from all sources
-COMBINED_INDEX = 'ori_combined_index'
-
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
@@ -58,15 +55,13 @@ SORTABLE_FIELDS = {
 }
 
 # EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
-#                            'media_urls.original_url',
-#                            'combined_index_data']
+#                            'media_urls.original_url']
 # EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
 #
 # ALLOWED_INCLUDE_FIELDS_DEFAULT = ['all_text', 'source_data']
 # ALLOWED_INCLUDE_FIELDS_SEARCH = ['all_text']
 
-EXCLUDED_FIELDS_ALWAYS = [
-    'combined_index_data', 'enrichments', 'hidden']
+EXCLUDED_FIELDS_ALWAYS = ['enrichments', 'hidden']
 EXCLUDED_FIELDS_DEFAULT = ['all_text', 'source_data',
                            'media_urls.original_url']
 EXCLUDED_FIELDS_SEARCH = ['all_text', 'media_urls.original_url']
