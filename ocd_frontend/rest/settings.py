@@ -27,24 +27,29 @@ DEFAULT_INDEX_PREFIX = 'ori'
 
 # The fields which can be used for sorting results via the REST API
 SORTABLE_FIELDS = {
-    'persons': [
+    'person': [
         'meta.source_id', 'meta.processing_started',
         'meta.processing_finished',
         'start_date', '_score', 'gender', 'name'],
-    'organizations': [
+    'organization': [
         'meta.source_id', 'meta.processing_started',
         'meta.processing_finished',
         'start_date', '_score', 'classification', 'name'],
-    'events': [
+    'meeting': [
         'meta.source_id', 'meta.processing_started',
         'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'start_date',
         'location'],
-    'motions': [
+    'agenda_item': [
+        'meta.source_id', 'meta.processing_started',
+        'meta.processing_finished',
+        'start_date', '_score', 'classification', 'name', 'start_date',
+        'location'],
+    'motion': [
         'meta.source_id', 'meta.processing_started',
         'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'date'],
-    'vote_events': [
+    'vote_event': [
         'meta.source_id', 'meta.processing_started',
         'meta.processing_finished',
         'start_date', '_score', 'classification', 'name', 'start_date'],
@@ -70,18 +75,21 @@ ALLOWED_INCLUDE_FIELDS_DEFAULT = []
 ALLOWED_INCLUDE_FIELDS_SEARCH = []
 
 SIMPLE_QUERY_FIELDS = {
-    'persons': [
+    'person': [
         'biography^4', 'name^3', 'other_names^2',
         'memberships.organization.name^2',
         'memberships.role'],
-    'organizations': ['name^4', 'description'],
-    'events': [
+    'organization': ['name^4', 'description'],
+    'meeting': [
         'name^4', 'description^3', 'location', 'organization.name',
         'organization.description', 'sources.note^2', 'sources.description'],
-    'motions': [
+    'agenda_item': [
+        'name^4', 'description^3', 'location', 'organization.name',
+        'organization.description', 'sources.note^2', 'sources.description'],
+    'motion': [
         'name^4', 'text^3', 'organization.name', 'sources.note^2',
         'sources.description'],
-    'vote_events': [
+    'vote_event': [
         'name^4', 'motion.text^3', 'organization.name', 'sources.note^2',
         'sources.description'],
     'items': [
@@ -146,7 +154,7 @@ COMMON_FACETS = {
 }
 
 AVAILABLE_FACETS = {
-    'organizations': {
+    'organization': {
         'classification': {
             'terms': {
                 'field': 'classification',
@@ -154,7 +162,7 @@ AVAILABLE_FACETS = {
             }
         }
     },
-    'persons': {
+    'person': {
         'gender': {
             'terms': {
                 'field': 'gender',
@@ -168,7 +176,7 @@ AVAILABLE_FACETS = {
             }
         }
     },
-    'events': {
+    'meeting': {
         'classification': {
             'terms': {
                 'field': 'classification',
@@ -206,7 +214,45 @@ AVAILABLE_FACETS = {
             }
         }
     },
-    'motions': {
+    'agenda_item': {
+        'classification': {
+            'terms': {
+                'field': 'classification',
+                'size': 10
+            }
+        },
+        'organization_id': {
+            'terms': {
+                'field': 'organization_id',
+                'size': 10
+            }
+        },
+        'location': {
+            'terms': {
+                'field': 'location',
+                'size': 10
+            }
+        },
+        'status': {
+            'terms': {
+                'field': 'status',
+                'size': 10
+            }
+        },
+        'start_date': {
+            'date_histogram': {
+                'field': 'start_date',
+                'interval': 'month'
+            }
+        },
+        'end_date': {
+            'date_histogram': {
+                'field': 'end_date',
+                'interval': 'month'
+            }
+        }
+    },
+    'motion': {
         'classification': {
             'terms': {
                 'field': 'classification',
@@ -250,7 +296,7 @@ AVAILABLE_FACETS = {
             }
         }
     },
-    'vote_events': {
+    'vote_event': {
         'classification': {
             'terms': {
                 'field': 'classification',
@@ -292,56 +338,6 @@ AVAILABLE_FACETS = {
     }
 }
 
-# AVAILABLE_FACETS = {
-#     # 'retrieved_at': {
-#     #     'date_histogram': {
-#     #         'field': 'retrieved_at',
-#     #         'interval': 'month'
-#     #     }
-#     # },
-#     'rights': {
-#         'terms': {
-#             'field': 'meta.rights',
-#             'size': 10
-#         }
-#     },
-#     'source_id': {
-#         'terms': {
-#             'field': 'meta.source_id',
-#             'size': 10
-#         }
-#     },
-#     'collection': {
-#         'terms': {
-#             'field': 'meta.collection'
-#         }
-#     },
-#     'author': {
-#         'terms': {
-#             'field': 'authors.untouched',
-#             'size': 10
-#         }
-#     },
-#     'date': {
-#         'date_histogram': {
-#             'field': 'date',
-#             'interval': 'month'
-#         }
-#     },
-#     'date_granularity': {
-#         'terms': {
-#             'field': 'date_granularity',
-#             'size': 10
-#         }
-#     },
-#     'media_content_type': {
-#         'terms': {
-#             'field': 'media_urls.content_type',
-#             'size': 10
-#         }
-#     }
-# }
-
 
 # For highlighting
 COMMON_HIGHLIGHTS = {
@@ -351,17 +347,17 @@ COMMON_HIGHLIGHTS = {
 }
 
 AVAILABLE_HIGHLIGHTS = {
-    'organizations': {
+    'organization': {
         'classification': {},
         'name': {},
         'description': {}
     },
-    'persons': {
+    'person': {
         'name': {},
         'memberships.role': {},
         'area.name': {}
     },
-    'events': {
+    'meeting': {
         'classification': {},
         'location': {},
         'organization.name': {},
@@ -369,14 +365,22 @@ AVAILABLE_HIGHLIGHTS = {
         'sources.note': {},
         'sources.description': {}
     },
-    'motions': {
+    'agenda_item': {
+        'classification': {},
+        'location': {},
+        'organization.name': {},
+        'description': {},
+        'sources.note': {},
+        'sources.description': {}
+    },
+    'motion': {
         'classification': {},
         'organization.name': {},
         'creator.name': {},
         'text': {},
         'sources.description': {}
     },
-    'vote_events': {
+    'vote_event': {
         'classification': {},
         'organization.name': {},
         'creator.name': {},
