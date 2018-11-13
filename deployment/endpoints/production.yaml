@@ -35,7 +35,7 @@ paths:
       tags:
       - "Collection overview and statistics"
       description: "Get a list of all available sources (collections) with item counts"
-      operationId: "sources"
+      operationId: "list_sources"
       produces:
       - "application/json"
       responses:
@@ -45,11 +45,32 @@ paths:
             $ref: "#/definitions/Sources"
 
   /search/{doc_type}:
+    get:
+      tags:
+      - "Searching within multiple collections"
+      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
+      operationId: "search_get"
+      parameters:
+        - $ref: "#/parameters/doc_type"
+        - $ref: "#/parameters/query"
+        - $ref: "#/parameters/sort"
+        - $ref: "#/parameters/size"
+        - $ref: "#/parameters/from"
+        - $ref: "#/parameters/scroll"
+        - $ref: "#/parameters/scroll_id"
+
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
     post:
       tags:
       - "Searching within multiple collections"
       description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
-      operationId: "list_sources"
+      operationId: "search_post"
       parameters:
         - $ref: "#/parameters/doc_type"
         - $ref: "#/parameters/body"
@@ -65,13 +86,37 @@ paths:
   /{source_id}/search:
     $ref: '#/paths/~1{source_id}~1{doc_type}~1search'
   /{source_id}/{doc_type}/search:
-    post:
+    get:
       tags:
       - "Searching within a single collection"
       description: |
         Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
         only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does.
-      operationId: "search"
+      operationId: "search_source_get"
+      parameters:
+        - $ref: "#/parameters/source_id"
+        - $ref: "#/parameters/doc_type"
+        - $ref: "#/parameters/query"
+        - $ref: "#/parameters/sort"
+        - $ref: "#/parameters/size"
+        - $ref: "#/parameters/from"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+        404:
+          description: "Not found. The requested source does not exist."
+
+    post:
+      tags:
+      - "Searching within a single collection"
+      description: |
+        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
+        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does. Scroll parameters do NOT apply for this query.
+      operationId: "search_source_post"
       parameters:
         - $ref: "#/parameters/source_id"
         - $ref: "#/parameters/doc_type"
@@ -171,25 +216,47 @@ definitions:
         type: "array"
         items:
           type: object
+      meta:
+        type: "object"
+        properties:
+          took:
+            type: integer
+            example: 233
+          total:
+            type: integer
+            example: 3123123
+          scroll:
+            type: string
+            example: "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAS0a4WbXotX0JRdGFSVENUTUxLTmNGbEk1Zw=="
   Search:
     type: "object"
     properties:
       query:
         type: "string"
+        description: "One or more keywords"
       filters:
         type: "object"
-
+        description: "An object with field and values to filter on"
       facets:
         type: "object"
+        description: "An object with fields for which to return facets"
       sort:
         type: "object"
-        description: " Results are sorted by relevancy "
+        description: "Results are sorted by relevancy"
       size:
         type: "integer"
+        description: "The maximum number of documents to return"
         default: 10
       from:
         type: "integer"
+        description: "The offset from the first result"
         default: 0
+      scroll:
+        type: "string"
+        description: "The scroll window (eg. 1m)."
+      scroll_id:
+        type: "integer"
+        description: "The scroll cursor which was returned in previous calls"
 
 parameters:
   doc_type:
@@ -221,3 +288,35 @@ parameters:
     in: "body"
     schema:
       $ref: "#/definitions/Search"
+  query:
+    name: "query"
+    in: "query"
+    type: "string"
+    description: "One or more keywords"
+  sort:
+    name: "sort"
+    in: "query"
+    type: "string"
+    description: "The field the search results are sorted on. By default, results are sorted by relevancy to the query"
+  size:
+    name: "size"
+    in: "query"
+    type: "integer"
+    description: "The maximum number of documents to return"
+    default: 10
+  from:
+    name: "from"
+    in: "query"
+    type: "integer"
+    description: "The offset from the first result"
+    default: 0
+  scroll:
+    name: "scroll"
+    in: "query"
+    type: "string"
+    description: "The scroll window (eg. 1m)."
+  scroll_id:
+    name: "scroll_id"
+    in: "query"
+    type: "integer"
+    description: "The scroll cursor which was returned in previous calls"
