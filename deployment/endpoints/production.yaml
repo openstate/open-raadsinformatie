@@ -43,7 +43,8 @@ paths:
           description: "Successful operation"
           schema:
             $ref: "#/definitions/Sources"
-
+  /search:
+    $ref: '#/paths/~1search~1{doc_type}'
   /search/{doc_type}:
     get:
       tags:
