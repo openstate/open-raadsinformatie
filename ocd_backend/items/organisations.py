@@ -20,6 +20,7 @@ class MunicipalityOrganisationItem(BaseItem):
         object_model.name = unicode(self.original_item['Title'])
         object_model.classification = u'Municipality'
         object_model.description = self.original_item['Description']
+        object_model.collection = self.get_collection()
         return object_model
 
 
@@ -40,4 +41,5 @@ class AlmanakOrganisationItem(BaseItem):
         object_model = Organization(self.original_item['name'], **source_defaults)
         object_model.name = self.original_item['name']  # todo dubbel?
         object_model.classification = self.original_item['classification']
+        object_model.collection = self.get_collection()
         return object_model
