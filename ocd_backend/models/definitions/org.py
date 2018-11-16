@@ -5,7 +5,7 @@ http://www.w3.org/ns/org#
 import foaf
 import owl
 from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
-    Schema, Rdf
+    Schema, Rdf, Meta
 from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
     Relation, OrderedRelation
 
@@ -36,3 +36,4 @@ class Organization(Org, foaf.Agent):
     image = StringProperty(Schema, 'image')
     alt_label = StringProperty(Skos, 'altLabel')
     name = StringProperty(Skos, 'prefLabel')
+    collection = StringProperty(Meta, 'collection')
