@@ -294,3 +294,8 @@ class JsonLDSerializer(JsonSerializer):
     #     in order to be expanded to a full uri by @base in JsonLD.
     #     """
     #     return str(item.get_ori_identifier())
+
+    def ori_uri(self, item):
+        """Creates a full uri to an ori resource since json doesn't do prefixes.
+        """
+        return item.get_short_identifier()

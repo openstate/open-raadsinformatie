@@ -35,3 +35,6 @@ class Uri(str):
     def __init__(self, ns, local_name):
         """Just here to match the signature"""
         super(Uri, self).__init__()
+
+    def short(self):
+        return self.local_name
