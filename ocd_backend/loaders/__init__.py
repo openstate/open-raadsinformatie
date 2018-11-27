@@ -72,7 +72,7 @@ class ElasticsearchLoader(BaseLoader):
 
         # Index documents into new index
         elasticsearch.index(index=self.index_name, doc_type=doc_type(doc.verbose_name()),
-                            body=body, id=doc.get_ori_identifier())
+                            body=body, id=doc.get_short_identifier())
 
         # Recursively index associated models like attachments
         for _, value in doc.properties(rels=True, props=False):
@@ -81,7 +81,7 @@ class ElasticsearchLoader(BaseLoader):
             if 'enricher_task' in value:
                 # The value seems to be enriched so add to resolver
                 url_doc = {
-                    'ori_identifier': value.get_ori_identifier(),
+                    'ori_identifier': value.get_short_identifier(),
                     'original_url': value.original_url,
                     'file_name': value.name,
                 }
@@ -110,7 +110,7 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_identifier(),
+            id=doc.get_short_identifier(),
             index=self.index_name,
             doc_type=doc_type(doc.verbose_name()),
             body={'doc': body},
@@ -135,7 +135,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
 
         # Index documents into new index
         elasticsearch.update(
-            id=doc.get_ori_identifier(),
+            id=doc.get_short_identifier(),
             index=self.index_name,
             doc_type=doc_type(doc),
             body={
@@ -207,4 +207,4 @@ class PopitLoader(BaseLoader):
             headers=headers, data=json.dumps(item, default=json_serial))
 
     def load_item(self, doc):
-        resp = self._create_or_update_item(doc, doc.get_ori_identifier())
+        resp = self._create_or_update_item(doc, doc.get_short_identifier())

@@ -174,6 +174,12 @@ class Model(object):
                                       'model been saved?')
         return self.ori_identifier
 
+    def get_short_identifier(self):
+        ori_identifier = self.get_ori_identifier()
+        _, _, identifier = ori_identifier.partition(Ori.uri)
+        assert len(identifier) > 0
+        return identifier
+
     def generate_ori_identifier(self):
         self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
         return self.ori_identifier
