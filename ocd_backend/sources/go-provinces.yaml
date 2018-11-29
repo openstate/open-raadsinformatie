@@ -69,6 +69,17 @@ _entities: &entities
       - tasks:
         - file_to_text
 
+  - &documents
+    <<: *entity_defaults
+    entity: documents
+    doc_type: events
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
+    item: ocd_backend.items.goapi_document.Document
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
+
   - &meetingitems
     <<: *meetings
     entity: meetingitems
@@ -85,12 +96,12 @@ _go: &go
 go-provinces:
   provincie-utrecht:
     key: provincie-utrecht
-    base_url: "https://www.stateninformatie.provincie-utrecht.nl/api/v1"
+    base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     almanak_id: 17166
     <<: *go
 
   flevoland:
     key: flevoland
-    base_url: "https://stateninformatie.flevoland.nl/api/v1"
+    base_url: "https://stateninformatie.flevoland.nl/api"
     almanak_id: 14866
     <<: *go

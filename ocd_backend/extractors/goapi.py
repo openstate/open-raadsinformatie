@@ -27,7 +27,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         resp = self.http_session.get(
-            u'%s/dmus' % self.base_url, verify=False)
+            u'%s/v1/dmus' % self.base_url, verify=False)
 
         if resp.status_code == 200:
             static_json = json.loads(resp.content)
@@ -47,7 +47,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
         for start_date, end_date in self.interval_generator():
 
             resp = self.http_session.get(
-                u'%s/meetings?date_from=%i&date_to=%i' % (
+                u'%s/v1/meetings?date_from=%i&date_to=%i' % (
                     self.base_url,
                     (start_date - datetime(1970, 1, 1)).total_seconds(),
                     (end_date - datetime(1970, 1, 1)).total_seconds()
@@ -75,7 +75,7 @@ class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor)
         for start_date, end_date in self.interval_generator():
 
             resp = self.http_session.get(
-                u'%s/meetings?date_from=%i&date_to=%i' % (
+                u'%s/v1/meetings?date_from=%i&date_to=%i' % (
                     self.base_url,
                     (start_date - datetime(1970, 1, 1)).total_seconds(),
                     (end_date - datetime(1970, 1, 1)).total_seconds()
@@ -100,3 +100,33 @@ class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor)
             log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
             log.info("Extracted total of %d meetings." % meeting_count)
             sleep(1)
+
+
+class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
+    """
+    Extracts documents from the GemeenteOplossingen API.
+    """
+
+    def run(self):
+        meeting_count = 0
+        for start_date, end_date in self.interval_generator():
+
+            resp = self.http_session.get(
+                # u'%s/v2/documents?publicationDate_from=%i&publicationDate_to=%i' % (
+                #     self.base_url,
+                #     (start_date - datetime(1970, 1, 1)).total_seconds(),
+                #     (end_date - datetime(1970, 1, 1)).total_seconds()
+                # ), verify=False
+                u'%s/v2/documents' % (self.base_url,), verify=False
+            )
+
+            if resp.status_code == 200:
+                print resp.content
+                static_json = json.loads(resp.content)
+
+                for meeting in static_json['result']['documents']:
+                    yield 'application/json', json.dumps(meeting)
+                    meeting_count += 1
+
+            log.info("Now processing documents from %s to %s" % (start_date, end_date,))
+            log.info("Extracted total of %d documents." % meeting_count)
