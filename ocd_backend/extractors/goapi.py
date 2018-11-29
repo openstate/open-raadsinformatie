@@ -112,16 +112,15 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
         for start_date, end_date in self.interval_generator():
 
             resp = self.http_session.get(
-                # u'%s/v2/documents?publicationDate_from=%i&publicationDate_to=%i' % (
-                #     self.base_url,
-                #     (start_date - datetime(1970, 1, 1)).total_seconds(),
-                #     (end_date - datetime(1970, 1, 1)).total_seconds()
-                # ), verify=False
-                u'%s/v2/documents' % (self.base_url,), verify=False
+                u'%s/v2/documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
+                    self.base_url,
+                    start_date.isoformat(),
+                    end_date.isoformat()
+                ), verify=False
             )
 
             if resp.status_code == 200:
-                print resp.content
+                print resp.url
                 static_json = json.loads(resp.content)
 
                 for meeting in static_json['result']['documents']:
