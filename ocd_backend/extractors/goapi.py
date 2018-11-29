@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from time import sleep
 
 from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
 from ocd_backend.log import get_source_logger
@@ -26,7 +27,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         resp = self.http_session.get(
-            u'%s/dmus' % self.base_url)
+            u'%s/dmus' % self.base_url, verify=False)
 
         if resp.status_code == 200:
             static_json = json.loads(resp.content)
@@ -50,7 +51,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                     self.base_url,
                     (start_date - datetime(1970, 1, 1)).total_seconds(),
                     (end_date - datetime(1970, 1, 1)).total_seconds()
-                )
+                ), verify=False
             )
 
             if resp.status_code == 200:
@@ -78,7 +79,7 @@ class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor)
                     self.base_url,
                     (start_date - datetime(1970, 1, 1)).total_seconds(),
                     (end_date - datetime(1970, 1, 1)).total_seconds()
-                )
+                ), verify=False
             )
 
             if resp.status_code == 200:
@@ -98,3 +99,4 @@ class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor)
 
             log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
             log.info("Extracted total of %d meetings." % meeting_count)
+            sleep(1)

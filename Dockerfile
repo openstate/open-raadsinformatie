@@ -9,8 +9,9 @@ COPY ocd_backend/requirements.txt /opt/ori/requirements.txt
 # package dependencies
 RUN apk add --update \
   build-base git tzdata \
-  libxml2-dev libxslt-dev poppler-dev \
+  libxml2-dev libxslt-dev poppler-dev openssl-dev \
   inotify-tools libmagic \
+  && pip install --upgrade pip \
   && pip install cython \
   && pip install --no-cache-dir -r /opt/ori/requirements.txt \
   && pip uninstall -y cython \
