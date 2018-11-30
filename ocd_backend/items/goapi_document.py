@@ -1,5 +1,6 @@
 from hashlib import sha1
 import iso8601
+import pytz
 
 from ocd_backend.items.popolo import EventItem
 from ocd_backend.extractors import HttpRequestMixin
@@ -63,10 +64,21 @@ class Document(
             }
         ]
 
-        # TODO: include timezone in response
+        try:
+            date_tz = pytz.timezone(
+                self.original_item['publicationDate']['timezone'])
+        except Exception:
+            date_tz = None
         combined_index_data['start_date'] = iso8601.parse_date(
             self.original_item['publicationDate']['date'].replace(' ', 'T'))
+        if date_tz is not None:
+            try:
+                combined_index_data['start_date'] = combined_index_data[
+                    'start_date'].astimezone(date_tz)
+            except Exception:
+                pass
 
+        combined_index_data['end_date'] = combined_index_data['start_date']
         combined_index_data['sources'] = []
 
         url = u"%s/download" % (current_permalink,)
