@@ -550,3 +550,9 @@ ibabs:
     key: roermond
     almanak_id: 31636
     <<: *ibabs
+
+  # Added on 11-01-2019
+  haarlemmermeer:
+    key: haarlemmermeer
+    almanak_id: 25768
+    <<: *ibabs

@@ -136,3 +136,10 @@ go:
     base_url: "https://gemeentebestuur.beemster.net/api"
     almanak_id: 31527
     <<: *go
+
+  # Added on 11-01-2019
+  bloemendaal:
+    key: bloemendaal
+    base_url: "https://gemeenteraad.bloemendaal.nl/api/v1"
+    almanak_id: 35480
+    <<: *go
