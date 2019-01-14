@@ -328,3 +328,14 @@ notubiz-archive:
     key: losser
     organisation_id: 628
     <<: *notubiz
+
+  # Added on 10-04-2018
+  zwartewaterland:
+    key: zwartewaterland
+    organisation_id: 438
+    <<: *notubiz
+
+  ede:
+    key: ede
+    organisation_id: 794
+    <<: *notubiz

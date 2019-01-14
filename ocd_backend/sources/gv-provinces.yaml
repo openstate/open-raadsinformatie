@@ -77,6 +77,10 @@ _entities: &entities
       - besluitenlijst
       - ingekomenstuk
       - notule
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
 
 _gv: &gv
   index_name: "{key}"

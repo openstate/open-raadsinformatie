@@ -121,3 +121,20 @@ New-style sources containing subsources can be recognised by an ``-s``.
 In order to link entities the project currently searches for existing entities in Elasticsearch.
 Therefore the order as specified above must be maintained, an organization entity needs to be extracted *before* the meeting entity since the meeting refers to an organization, which would not yet been indexed.
 This behaviour will change when Elasticsearch is replaced by Neo4j which is currently being developed.
+
+Debugging
+------------
+
+In the ``log`` directory check the ``backend.log`` and ``celery.log`` files for log output. You can also check ``docker-compose logs``. Sometimes extractors can hang with a 'Waiting for last chain to finish' message in ``backend.log``, you can sometimes fix this by removing the compiled Python files by running ``find . -name "*.pyc" -exec rm -f {} \;``.
+
+You can check the values in Redis as follows::
+
+   $ docker exec -it ori_redis_1 sh
+   $ redis-cli
+   $ KEYS *
+
+You can clear Redis by running::
+
+   $ docker exec -it ori_redis_1 sh
+   $ redis-cli
+   $ FLUSHALL

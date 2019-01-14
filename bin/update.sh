@@ -3,7 +3,7 @@
 # source /opt/bin/activate
 cd /opt/ori
 
-./manage.py extract list_sources |awk 'NR > 1 {print $0}' |grep '\-s' |grep -v archive |grep -v 'zuid-holland' |cut -c 4- >.commands
+./manage.py extract list_sources |awk 'NR > 1 {print $0}' |grep '\-s' |grep -v archive |cut -c 4- >.commands
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
     ./manage.py extract start $line

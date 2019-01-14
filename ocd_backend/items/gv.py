@@ -19,21 +19,37 @@ class GreenValleyItem(
         EventItem, HttpRequestMixin, FrontendAPIMixin):
     def _get_documents_as_media_urls(self):
         media_urls = {}
-        for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
-            if att[u'objecttype'] == 'AGENDAPAGE':
-                continue
+        if u'attachmentlist' in self.original_item:
+            for att_key, att in self.original_item.get(u'attachmentlist', {}).iteritems():
+                if att[u'objecttype'] == 'AGENDAPAGE':
+                    continue
 
-            url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
-                att[u'objectid'],)
+                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
+                    att[u'objectid'].encode('utf8'),)
 
-            doc_hash = unicode(sha1(
-                (url + u':' + att[u'objectname']).decode(
-                    'utf8')).hexdigest())
-            media_urls[doc_hash] = {
-                "url": "/v0/resolve/",
-                "note": att[u'objectname'],
-                "original_url": url
-            }
+                doc_hash = unicode(
+		    sha1(url + ':' + att[u'objectname'].encode('utf8')).hexdigest()
+                )
+                media_urls[doc_hash] = {
+                    "url": "/v0/resolve/",
+                    "note": att[u'objectname'],
+                    "original_url": url
+                }
+        else:
+            default = self.original_item['default']
+            if default[u'objecttype'] != 'AGENDAPAGE':
+                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
+                    default[u'objectid'].encode('utf8'),)
+
+                doc_hash = unicode(
+                    sha1(url + ':' + default[u'objectname'].encode('utf8')).hexdigest()
+                )
+                media_urls[doc_hash] = {
+                    "url": "/v0/resolve/",
+                    "note": default[u'objectname'],
+                    "original_url": url
+                }
+
         if media_urls:
             return media_urls.values()
         else:
@@ -70,10 +86,10 @@ class GreenValleyItem(
             return {}
 
     def _get_meeting_id(self, meeting):
-        hash_content = u'%s-%s' % (
-            meeting[u'objecttype'],
-            meeting[u'objectid'])
-        return sha1(hash_content.decode('utf8')).hexdigest()
+        hash_content = '%s-%s' % (
+            meeting[u'objecttype'].encode('utf8'),
+            meeting[u'objectid'].encode('utf8'))
+        return unicode(sha1(hash_content).hexdigest())
 
     def get_object_id(self):
         return self._get_meeting_id(self.original_item[u'default'])
