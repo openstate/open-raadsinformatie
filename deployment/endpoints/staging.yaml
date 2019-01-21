@@ -50,7 +50,42 @@ paths:
           schema:
             $ref: "#/definitions/Sources"
   /search:
-    $ref: '#/paths/~1search~1{doc_type}'
+    get:
+      tags:
+      - "Searching within multiple collections"
+      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
+      operationId: "search_short_get"
+      parameters:
+        - $ref: "#/parameters/query"
+        - $ref: "#/parameters/sort"
+        - $ref: "#/parameters/size"
+        - $ref: "#/parameters/from"
+        - $ref: "#/parameters/scroll"
+        - $ref: "#/parameters/scroll_id"
+
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+    post:
+      tags:
+      - "Searching within multiple collections"
+      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
+      operationId: "search_short_post"
+      parameters:
+        - $ref: "#/parameters/body"
+
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+
   /search/{doc_type}:
     get:
       tags:
@@ -91,7 +126,49 @@ paths:
           description: "Bad Request. An accompanying error message will explain why the request was invalid."
 
   /{source_id}/search:
-    $ref: '#/paths/~1{source_id}~1{doc_type}~1search'
+    get:
+      tags:
+      - "Searching within a single collection"
+      description: |
+        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
+        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does.
+      operationId: "search_source_short_get"
+      parameters:
+        - $ref: "#/parameters/source_id"
+        - $ref: "#/parameters/query"
+        - $ref: "#/parameters/sort"
+        - $ref: "#/parameters/size"
+        - $ref: "#/parameters/from"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+        404:
+          description: "Not found. The requested source does not exist."
+
+    post:
+      tags:
+      - "Searching within a single collection"
+      description: |
+        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
+        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does. Scroll parameters do NOT apply for this query.
+      operationId: "search_source_short_post"
+      parameters:
+        - $ref: "#/parameters/source_id"
+        - $ref: "#/parameters/body"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Events"
+        400:
+          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+        404:
+          description: "Not found. The requested source does not exist."
+
   /{source_id}/{doc_type}/search:
     get:
       tags:
