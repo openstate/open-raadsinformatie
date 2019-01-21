@@ -5,7 +5,7 @@ import glob
 import gzip
 import os
 from datetime import datetime
-from tempfile import SpooledTemporaryFile
+from tempfile import NamedTemporaryFile
 
 import requests
 import urllib3
@@ -91,8 +91,7 @@ class HttpRequestMixin(object):
 
         # Create a temporary file to store the media item, write the file
         # to disk if it is larger than 1 MB.
-        media_file = SpooledTemporaryFile(max_size=1024 * 1024, prefix='ocd_m_',
-                                          suffix='.tmp', dir=TEMP_DIR_PATH)
+        media_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
 
         # When a partial fetch is requested, request up to two MB
         partial_target_size = 1024 * 1024 * 2
@@ -290,7 +289,7 @@ class GCSCachingMixin(HttpRequestMixin):
             return content_type, content_length, media_file
         elif self.source_definition.get('force_old_files'):
             # Download up-to-date file
-            media_file = cStringIO.StringIO()
+            media_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
             blob.download_to_file(media_file)
             media_file.seek(0, 0)
             return blob.content_type, blob.size, media_file
