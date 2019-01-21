@@ -1,6 +1,6 @@
 import json
 
-from ocd_backend.extractors import HttpRequestMixin
+from ocd_backend.utils.http import HttpRequestMixin
 from .staticfile import StaticJSONExtractor
 
 

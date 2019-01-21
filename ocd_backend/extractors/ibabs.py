@@ -5,9 +5,9 @@ from suds.client import Client  # pylint: disable=import-error
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
-from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
+from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
@@ -80,7 +80,6 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
             meeting_types[o.Id] = o.Description
         return meeting_types
-
 
     def run(self):
         meeting_count = 0
@@ -259,8 +258,8 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         if meeting['votes'] is not None:
             try:
                 return (
-                    len(meeting['votes']) ==
-                    int(self.source_definition['council_members_count']))
+                        len(meeting['votes']) ==
+                        int(self.source_definition['council_members_count']))
             except ValueError:
                 pass
         return False

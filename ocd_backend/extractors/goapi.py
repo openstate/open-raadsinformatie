@@ -1,8 +1,9 @@
 import json
 from datetime import datetime
 
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('extractor')
 

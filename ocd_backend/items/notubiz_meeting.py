@@ -1,4 +1,3 @@
-from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.utils.api import FrontendAPIMixin

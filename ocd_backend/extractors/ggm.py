@@ -9,9 +9,10 @@ from urlparse import urlparse, urlunparse, parse_qs
 import dateutil.parser
 import redis
 
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import REDIS_HOST, REDIS_PORT, DATA_DIR_PATH
+from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.misc import get_secret
 
 log = get_source_logger('loader')
@@ -89,7 +90,7 @@ class GegevensmagazijnFeedExtractor(GegevensmagazijnBaseExtractor):
                         yield 'application/xml', data
                 else:
                     log.warning("The GGM feed featured an entry that had no "
-                             "'updated' field. Exiting. %s" % entry)
+                                "'updated' field. Exiting. %s" % entry)
                     break
 
             try:
