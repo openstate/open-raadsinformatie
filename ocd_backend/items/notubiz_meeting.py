@@ -1,9 +1,5 @@
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
-from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.models.misc import Uri
-from ocd_backend.models.definitions import Mapping
 
 
 class NotubizMeeting(BaseItem):
@@ -65,8 +61,10 @@ class NotubizMeeting(BaseItem):
         event.attachment = []
         for doc in self.original_item.get('documents', []):
             attachment = MediaObject(doc['id'], **source_defaults)
+            attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['title']
+            attachment.date_modified = doc['last_modified']
             event.attachment.append(attachment)
 
         return event
