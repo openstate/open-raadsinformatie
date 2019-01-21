@@ -10,7 +10,13 @@ info:
   license:
     name: "Creative Commons Attribution 4.0"
     url: "https://creativecommons.org/licenses/by/4.0/"
-host: "ori-staging.endpoints.open-raadsinformatie-52162.cloud.goog"
+host: "beta.openraadsinformatie.nl"
+x-google-api-name: "staging"
+x-google-endpoints:
+- name: "beta.openraadsinformatie.nl"
+  allowCors: "true"
+  target: "35.204.67.167"
+x-google-allow: "all"
 consumes:
 - "application/json"
 produces:
