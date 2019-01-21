@@ -41,6 +41,16 @@ class NotubizMeeting(BaseItem):
             agendaitem = AgendaItem(item['id'], **source_defaults)
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             agendaitem.description = item['type_data']['attributes'][0]['value']
+
+            # If it's a 'label' type some attributes do not exist
+            if item['type'] == 'label':
+                agendaitem.name = item['type_data']['title']
+                event.agenda.append(agendaitem)
+                continue
+
+            agendaitem.name = self.original_item['attributes']['Titel']
+            agendaitem.position = self.original_item['order']
+
             event.agenda.append(agendaitem)
 
         # object_model['last_modified'] = iso8601.parse_date(
