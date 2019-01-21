@@ -91,8 +91,9 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
     content_types = '*'
 
     def enrich_item(self, media_item, content_type, file_object):
-        path = os.path.realpath(file_object.name)
-        media_item.text = self.file_to_text(path)
+        if os.path.exists(file_object.name):
+            path = os.path.realpath(file_object.name)
+            media_item.text = self.file_to_text(path)
 
         if media_item.text:
             self.process_text(media_item.text, media_item)

@@ -28,7 +28,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
     item: ocd_backend.items.notubiz_meeting.NotubizMeeting
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.GCSStaticMediaEnricher
       - # reserved for enricher_settings
 
 _notubiz: &notubiz

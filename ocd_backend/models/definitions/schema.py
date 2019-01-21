@@ -21,6 +21,7 @@ class MediaObject(Schema, owl.Thing):
     caption = StringProperty(Schema, 'caption')
     embed_url = StringProperty(Schema, 'embedUrl')
     file_name = StringProperty(Dbo, 'filename')
+    date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = StringProperty(Schema, 'isBasedOn')
     text = StringProperty(Schema, 'text')
 

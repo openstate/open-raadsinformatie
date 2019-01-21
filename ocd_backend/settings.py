@@ -225,11 +225,11 @@ try:
 except (ValueError, AttributeError):
     NEO4J_USER, NEO4J_PASSWORD = None, None
 
-# The path of the directory used to store temporary files
-TEMP_DIR_PATH = os.path.join(ROOT_PATH, 'temp')
-
 # The path of the directory used to store static files
 DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
+
+# The path of the directory used to store temporary files
+TEMP_DIR_PATH = os.path.join(DATA_DIR_PATH, 'temp')
 
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
