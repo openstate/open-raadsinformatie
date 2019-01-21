@@ -1,9 +1,9 @@
 from lxml import etree
 
-from ocd_backend.extractors import HttpRequestMixin
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.models.model import Relationship
+from ocd_backend.utils.http import HttpRequestMixin
 
 
 class AlmanakPersonItem(HttpRequestMixin, BaseItem):

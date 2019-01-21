@@ -6,7 +6,8 @@ from click import progressbar
 from lxml import etree
 
 from ocd_backend.exceptions import ConfigurationError
-from ocd_backend.extractors import BaseExtractor, HttpRequestMixin
+from ocd_backend.extractors import BaseExtractor
+from ocd_backend.utils.http import HttpRequestMixin
 
 
 class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):

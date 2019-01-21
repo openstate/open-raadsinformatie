@@ -3,9 +3,10 @@ import json
 from requests.exceptions import HTTPError, RetryError
 from urllib3.exceptions import MaxRetryError
 
-from ocd_backend.extractors import BaseExtractor, GCSCachingMixin
 from ocd_backend.exceptions import ItemAlreadyProcessed
+from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.http import GCSCachingMixin
 
 log = get_source_logger('extractor')
 
@@ -90,7 +91,7 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
 
             for item in event_json[self.source_definition['doc_type']]:
                 try:
-                    data = self.fetch(
+                    data = self.fetch_data(
                         "%s/events/meetings/%i?format=json&version=1.10.8" %
                         (
                             self.base_url,
