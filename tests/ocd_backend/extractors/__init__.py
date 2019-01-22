@@ -1,3 +1,4 @@
+import base64
 import datetime
 import glob
 import os
@@ -7,12 +8,12 @@ from time import sleep
 from unittest import TestCase
 
 import mock
-from nose.tools import raises, assert_raises
-from ocd_backend.exceptions import InvalidFile
-from ocd_backend.extractors import LocalCachingMixin
-from ocd_backend.settings import PROJECT_PATH
-from ocd_backend.utils.misc import get_sha1_hash, datetime_to_unixstamp, localize_datetime
 from requests.exceptions import HTTPError
+
+from ocd_backend.exceptions import InvalidFile
+from ocd_backend.settings import PROJECT_PATH
+from ocd_backend.utils.http import LocalCachingMixin
+from ocd_backend.utils.misc import datetime_to_unixstamp, localize_datetime
 
 
 class ExtractorTestCase(TestCase):
@@ -28,7 +29,8 @@ class ExtractorTestCase(TestCase):
             'item': 'ocd_backend.items.LocalDumpItem',
             'loader': 'ocd_backend.loaders.ElasticsearchLoader',
             'dump_path': dump_path,
-            'index_name': 'test_index'
+            'index_name': 'test_index',
+            'force_old_files': True,
         }
 
 
@@ -110,29 +112,27 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
 
     @mock.patch.object(LocalCachingMixin, 'download_url')
     def test_modified_data_source(self, mocked_download_url):
-        with open(os.path.join(self.PWD, "..", "test_dumps/notubiz_meeting_amsterdam.json"), 'rb') as f:
-            data1 = f.read()
-
-        with open(os.path.join(self.PWD, "..", "test_dumps/notubiz_meeting_amsterdam_update1.json"), 'rb') as f:
-            data2 = f.read()
+        data1 = open(os.path.join(self.PWD, "..", "test_dumps/notubiz_meeting_amsterdam.json"), 'rb')
+        data2 = open(os.path.join(self.PWD, "..", "test_dumps/notubiz_meeting_amsterdam_update1.json"), 'rb')
 
         # The second and third call to _download_file will return the second data source
         mocked_download_url.side_effect = [
-            (data1, 'application/json',),
-            (data2, 'application/json',),
-            (data2, 'application/json',),
+            (11100, 'application/json', data1),
+            (11100, 'application/json', data2),
+            (11100, 'application/json', data2),
         ]
 
         # The download will be mocked so this is just for show
         url = "https://api.notubiz.nl/events/meetings/458902?format=json&version=1.10.8"
-        self.mixin.fetch(url, datetime.datetime(2018, 11, 30, 12, 0))
+        path = "api.notubiz.nl/events/meetings/458902"
+        self.mixin.fetch(url, path, datetime.datetime(2018, 11, 30, 12, 0))
         sleep(1)
-        self.mixin.fetch(url, datetime.datetime(2018, 11, 30, 12, 1))
+        self.mixin.fetch(url, path, datetime.datetime(2018, 11, 30, 12, 1))
         sleep(1)
-        self.mixin.fetch(url, datetime.datetime(2018, 11, 30, 12, 1))
+        self.mixin.fetch(url, path, datetime.datetime(2018, 11, 30, 12, 1))
 
-        url_hash = get_sha1_hash(url)
-        base_path = self.mixin.base_path(url_hash)
+        path_hash = base64.urlsafe_b64encode(path)
+        base_path = self.mixin.base_path(path_hash)
 
         file_count = len(glob.glob(base_path + "*"))
         self.assertEqual(file_count, 2)
@@ -141,7 +141,7 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
     def test_fetch_failed_download(self, mocked_download_url):
         mocked_download_url.side_effect = HTTPError
         with self.assertRaises(HTTPError):
-            self.mixin.fetch("http://example.com/some/not/existing/url", datetime.datetime(2018, 11, 30, 12, 0))
+            self.mixin.fetch("http://example.com/some/not/existing/url", "", datetime.datetime(2018, 11, 30, 12, 0))
 
     def test_check_path_file(self):
         path = self.test_cache_path + "ab/ab/"
