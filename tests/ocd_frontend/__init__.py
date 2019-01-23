@@ -4,7 +4,7 @@ from unittest import TestCase as UnittestTestCase
 
 import mock
 from flask import url_for, current_app
-from flask.ext.testing import TestCase
+from flask_testing import TestCase
 
 from ocd_frontend.rest import tasks
 from .mixins import OcdRestTestCaseMixin
