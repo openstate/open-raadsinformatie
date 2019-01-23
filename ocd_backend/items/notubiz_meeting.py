@@ -20,7 +20,6 @@ class NotubizMeeting(BaseItem):
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
         event.name = self.original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
-        # event.description =
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
 
@@ -33,16 +32,13 @@ class NotubizMeeting(BaseItem):
             if not item['order']:
                 continue
 
+            # If it's a 'label' type skip the item for now, since it only gives little information about what is to come
+            if item['type'] == 'label':
+                continue
+
             agendaitem = AgendaItem(item['id'], **source_defaults)
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             agendaitem.description = item['type_data']['attributes'][0]['value']
-
-            # If it's a 'label' type some attributes do not exist
-            if item['type'] == 'label':
-                agendaitem.name = item['type_data']['title']
-                event.agenda.append(agendaitem)
-                continue
-
             agendaitem.name = self.original_item['attributes']['Titel']
             agendaitem.position = self.original_item['order']
 
