@@ -47,47 +47,55 @@ notubiz:
 
   groningen:
     key: groningen
-    sitename: Groningen (gemeente)
+    municipality: "Groningen (gemeente)"
     organisation_id: 655
     <<: *notubiz
 
   amsterdam:
     key: amsterdam
+    municipality: "Amsterdam"
     organisation_id: 281
     <<: *notubiz
 
   amsterdam_centrum:
     key: amsterdam_centrum
+    municipality: "Amsterdam"
     organisation_id: 547
     <<: *notubiz
 
   amsterdam_zuid:
     key: amsterdam_zuid
+    municipality: "Amsterdam"
     organisation_id: 1424
     <<: *notubiz
 
   amsterdam_noord:
     key: amsterdam_noord
+    municipality: "Amsterdam"
     organisation_id: 977
     <<: *notubiz
 
   amsterdam_west:
     key: amsterdam_west
+    municipality: "Amsterdam"
     organisation_id: 1413
     <<: *notubiz
 
   amsterdam_oost:
     key: amsterdam_oost
+    municipality: "Amsterdam"
     organisation_id: 1425
     <<: *notubiz
 
   amsterdam_zuidoost:
     key: amsterdam_zuidoost
+    municipality: "Amsterdam"
     organisation_id: 2122
     <<: *notubiz
 
   amsterdam_nieuwwest:
     key: amsterdam_nieuwwest
+    municipality: "Amsterdam"
     organisation_id: 2328
     <<: *notubiz
 
@@ -193,13 +201,13 @@ notubiz:
 
   denhaag:
     key: denhaag
-    sitename: "'s-Gravenhage (gemeente)"
+    municipality: "'s-Gravenhage (gemeente)"
     organisation_id: 318
     <<: *notubiz
 
   krimpenadijssel:
     key: krimpenadijssel
-    sitename: Krimpen aan den IJssel
+    municipality: "Krimpen aan den IJssel"
     organisation_id: 1273
     <<: *notubiz
 
