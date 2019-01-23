@@ -25,7 +25,7 @@ class NotubizMeeting(BaseItem):
         event.location = self.original_item['attributes'].get('Locatie')
 
         event.organization = Organization(self.original_item['organisation']['id'], **source_defaults)
-        event.organization.connect(name=self.source_definition['sitename'])
+        event.organization.connect(name=self.source_definition['municipality'])
         event.committee = Organization(self.original_item['gremium']['id'], **source_defaults)
 
         event.agenda = []
