@@ -31,8 +31,9 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
-    mem_limit: 4g
+    mem_limit: 8g
     restart: always
+    command: redis-server --appendonly yes --save ''
   elastic_endpoint:
     container_name: ori_elastic_endpoint
     extends:

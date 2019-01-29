@@ -287,7 +287,8 @@ def list_sources():
         'aggregations': {
             'index': {
                 'terms': {
-                    'field': '_index'
+                    'field': '_index',
+                    'size': 10000
                 },
                 'aggregations': {
                     'doc_type': {

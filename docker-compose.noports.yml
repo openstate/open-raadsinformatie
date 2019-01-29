@@ -26,6 +26,7 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     mem_limit: 8g
+    command: redis-server --appendonly yes --save ''
   elastic_endpoint:
     container_name: ori_elastic_endpoint
     extends:
@@ -33,6 +34,7 @@ services:
     environment:
       - http.host=0.0.0.0
       - node.master=true
+    restart: always
   elastic:
     image: "docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}"
     environment:
@@ -60,7 +62,7 @@ services:
       interval: 15s
       timeout: 10s
       retries: 3
-
+    restart: always
 volumes:
   esdata:
     driver: local
