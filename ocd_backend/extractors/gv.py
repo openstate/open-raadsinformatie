@@ -120,12 +120,14 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
                 "values": self.source_definition['greenvalley_objecttypes']
                 # ["agenda"]
             }, {
-                "metaname": "bis_vergaderdatum",
+                "metaname": self.source_definition.get(
+                    'greenvalley_date_key', "bis_vergaderdatum"),
                 "operator": ">",
                 "type": "date",
                 "values": ["%s000" % (self.start_date.strftime('%s'),)]
             }, {
-                "metaname": "bis_vergaderdatum",
+                "metaname": self.source_definition.get(
+                    'greenvalley_date_key', "bis_vergaderdatum"),
                 "operator": "<",
                 "type": "date",
                 "values": ["%s000" % (self.end_date.strftime('%s'),)]

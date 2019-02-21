@@ -70,8 +70,9 @@ _entities: &entities
     <<: *entity_defaults
     entity: reports
     doc_type: events
-    extractor: ocd_backend.extractors.gv.GreenValleyExtractor
+    extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     item: ocd_backend.items.gv.GreenValleyItem
+    greenvalley_date_key: publishdate
     greenvalley_objecttypes:
       - antwoordstuk
       - besluitenlijst
