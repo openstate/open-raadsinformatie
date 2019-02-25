@@ -23,8 +23,10 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         html = etree.HTML(static_content)
 
         council = {
-            'name': u' '.join(html.xpath('string(//div[@id="content"]//h2)').split()).strip(),
-            'classification': u'Council'}
+            'name': u' '.join(html.xpath(
+                'string(//div[@id="content"]//h2)').split()).strip(),
+            'classification': self.source_definition.get(
+                'classification', u'Council')}
         organisations[council['name']] = council
 
         for link in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
