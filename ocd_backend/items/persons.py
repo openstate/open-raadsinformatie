@@ -4,7 +4,9 @@ from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 from ocd_backend.models.model import Relationship
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.log import get_source_logger
 
+log = get_source_logger('persons')
 
 class AlmanakPersonItem(HttpRequestMixin, BaseItem):
     def get_rights(self):
@@ -72,8 +74,6 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        html = self.original_item
-
         person = Person(self._get_name(), **source_defaults)
         person.name = self._get_name()
 
@@ -81,12 +81,17 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
         # person.email = html.xpath('string(//a[starts-with(@href,"mailto:")]/text())').strip().split(' ')[0]
         # person.gender = u'male' if person.name.startswith(u'Dhr. ') else u'female'
 
-        # TODO: fix party membership
-        # municipality = Organization(self.source_definition['almanak_id'], **source_defaults)
-        # party = Organization(html.xpath('string(//ul[@class="definitie"]/li/ul/li)').strip(), **source_defaults)
+        # municipality = Organization(
+        #     self.source_definition['almanak_id'], **source_defaults)
+
+        # party = Organization(
+        #     u''.join(self.original_item.xpath(
+        #         self.source_definition['organization_xpath'])),
+        #             **source_defaults)
         #
         # municipality_member = Membership()
         # municipality_member.organization = municipality
+        # municipality_member.role = 'Fractielid'
         # municipality_member.role = html.xpath('string(//div[@id="content"]//h3/text())').strip()
         #
         # party_member = Membership()

@@ -51,6 +51,7 @@ _entities: &entities
     item: ocd_backend.items.persons.HTMLPersonItem
     file_url: "{persons_url}"
     item_xpath: "{persons_item_xpath}"
+    organization_xpath: "{persons_party_xpath}"
 
   - &meetings
     <<: *entity_defaults
@@ -107,4 +108,5 @@ gv-provinces:
     persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
     persons_name_xpath: ".//a/span//text()"
     persons_id_xpath: ".//a/@href"
+    persons_party_xpath: "./../../h2/a//text()"
     <<: *gv
