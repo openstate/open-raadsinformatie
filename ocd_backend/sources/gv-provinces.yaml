@@ -48,7 +48,7 @@ _entities: &entities
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.persons.HTMLPersonItem
+    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
     file_url: "{persons_url}"
     item_xpath: "{persons_item_xpath}"
     organization_xpath: "{persons_party_xpath}"
@@ -108,5 +108,6 @@ gv-provinces:
     persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
     persons_name_xpath: ".//a/span//text()"
     persons_id_xpath: ".//a/@href"
-    persons_party_xpath: "./../../h2/a//text()"
+    persons_link_path: "//li/a/@href"
+    persons_party_xpath: "//*[contains(@class, \"breadcrumbs\")]/a[3]//text()"
     <<: *gv
