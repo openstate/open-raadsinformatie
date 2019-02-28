@@ -57,7 +57,7 @@ class GreenValleyItem(BaseItem):
 
         meeting = self.original_item[u'default']
 
-        event = Meeting(smeeting[u'objectid'], **source_defaults)
+        event = Meeting(meeting[u'objectid'], **source_defaults)
 
         if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
             event.start_date = datetime.fromtimestamp(
@@ -73,7 +73,6 @@ class GreenValleyItem(BaseItem):
                 float(meeting[u'publishdate']))
             event.end_date = datetime.fromtimestamp(
                 float(meeting[u'publishdate']))
-
 
         event.name = meeting[u'objectname']
 
@@ -91,20 +90,19 @@ class GreenValleyItem(BaseItem):
                 objecttype2classification[meeting[u'objecttype'].lower()])]
         except LookupError:
             event.classification = [unicode(
-            meeting[u'objecttype'].capitalize())]
+                meeting[u'objecttype'].capitalize())]
         event.description = meeting[u'objectname']
 
-
-
-        event.location = self.original_item['attributes'].get('Locatie')
         try:
             event.location = meeting[u'bis_locatie'].strip()
         except (AttributeError, KeyError):
             pass
 
         try:
-            event.organization = Organization(meeting[u'bis_orgaan'], **source_defaults)
-            event.committee = Organization(meeting[u'bis_orgaan'], **source_defaults)
+            event.organization = Organization(
+                meeting[u'bis_orgaan'], **source_defaults)
+            event.committee = Organization(
+                meeting[u'bis_orgaan'], **source_defaults)
         except LookupError as e:
             pass
 
@@ -151,7 +149,8 @@ class GreenValleyMeeting(GreenValleyItem):
         for item in children:
             meeting = item[u'default']
             agendaitem = AgendaItem(meeting['objectid'], **source_defaults)
-            agendaitem.__rel_params__ = {'rdf': '_%i' % meeting['agendapagenumber']}
+            agendaitem.__rel_params__ = {
+                'rdf': '_%i' % int(meeting['agendapagenumber'])}
             agendaitem.description = meeting[u'objectname']
             agendaitem.name = meeting[u'objectname']
             agendaitem.position = int(meeting['agendapagenumber'])
