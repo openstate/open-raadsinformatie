@@ -62,7 +62,7 @@ _entities: &entities
     greenvalley_objecttypes:
       - agenda
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
 
@@ -80,7 +80,7 @@ _entities: &entities
       - ingekomenstuk
       - notule
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
 
