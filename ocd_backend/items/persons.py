@@ -76,7 +76,9 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        person = Person(self._get_name(), **source_defaults)
+        pname = self._get_name()
+        print pname
+        person = Person(pname, **source_defaults)
         person.name = self._get_name()
 
         return person
