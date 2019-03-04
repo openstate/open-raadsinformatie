@@ -100,6 +100,7 @@ go-provinces:
   provincie-utrecht:
     key: provincie-utrecht
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
+    api_version: v2
     almanak_id: 17166
     organizations_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling
     organizations_item_xpath: "//h2/a"
