@@ -53,7 +53,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     item: ocd_backend.items.goapi_meeting.Meeting
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
 
@@ -73,66 +73,66 @@ _go: &go
 go:
   goirle:
     key: goirle
-    base_url: "https://raad.goirle.nl/api/v1"
+    base_url: "https://raad.goirle.nl/api"
     almanak_id: 30496
     <<: *go
 
   den_helder:
     key: den_helder
-    base_url: "https://gemeenteraad.denhelder.nl/api/v1"
+    base_url: "https://gemeenteraad.denhelder.nl/api"
     almanak_id: 24611
     <<: *go
 
   doetinchem:
     key: doetinchem
-    base_url: "https://besluitvorming.doetinchem.nl/api/v1"
+    base_url: "https://besluitvorming.doetinchem.nl/api"
     almanak_id: 36726
     <<: *go
 
   noordoostpolder:
     key: noordoostpolder
-    base_url: "https://raad.noordoostpolder.nl/api/v1"
+    base_url: "https://raad.noordoostpolder.nl/api"
     almanak_id: 26440
     <<: *go
 
   steenbergen:
     key: steenbergen
-    base_url: "https://raad.gemeente-steenbergen.nl/api/v1"
+    base_url: "https://raad.gemeente-steenbergen.nl/api"
     almanak_id: 34909
     <<: *go
 
   borne:
     key: borne
-    base_url: "https://gemeenteraad.borne.nl/api/v1"
+    base_url: "https://gemeenteraad.borne.nl/api"
     almanak_id: 25660
     <<: *go
 
   molenwaard:
     key: molenwaard
-    base_url: "https://raad.gemeentemolenwaard.nl/api/v1"
+    base_url: "https://raad.gemeentemolenwaard.nl/api"
     almanak_id: 27268
     <<: *go
 
   leiderdorp:
     key: leiderdorp
-    base_url: "https://www.raadleiderdorp.nl/api/v1"
+    base_url: "https://www.raadleiderdorp.nl/api"
     almanak_id: 39225
     <<: *go
 
   leusden:
     key: leusden
-    base_url: "https://gemeentebestuur.leusden.nl/api/v1"
+    base_url: "https://gemeentebestuur.leusden.nl/api"
     almanak_id: 29800
     <<: *go
 
   roosendaal:
     key: roosendaal
-    base_url: "https://raad.roosendaal.nl/api/v1"
+    base_url: "https://raad.roosendaal.nl/api"
     almanak_id: 39382
     <<: *go
 
   beemster:
     key: beemster
-    base_url: "https://gemeentebestuur.beemster.net/api/v1"
+    base_url: "https://gemeentebestuur.beemster.net/api"
     almanak_id: 31527
     <<: *go
