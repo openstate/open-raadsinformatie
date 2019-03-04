@@ -36,6 +36,8 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
             if self.api_version == 'v1':
                 return len(static_json), static_json
             else:
+                # V2 api has meta data in the outer object and the results
+                # in an inner key which depends on the call being made
                 parts = path.split('/')
                 if len(parts) > 1:
                     model = parts[0]
@@ -55,7 +57,6 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         total, static_json = self._request('dmus')
-        pprint(static_json)
         for dmu in static_json:
             pprint(dmu)
             yield 'application/json', json.dumps(dmu)
@@ -129,7 +130,7 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
         for start_date, end_date in self.interval_generator():
 
             total, docs = self._request(
-                u'%s/v2/documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
+                u'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
                     start_date.isoformat(),
                     end_date.isoformat()))
 
