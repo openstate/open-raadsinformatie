@@ -60,34 +60,17 @@ _entities: &entities
     item_xpath: "{persons_item_xpath}"
     organization_xpath: "{persons_party_xpath}"
 
-  # - &organizations
-  #   <<: *entity_defaults
-  #   entity: organizations
-  #   doc_type: organizations
-  #   extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
-  #   item: ocd_backend.items.organisations.AlmanakOrganisationItem
-  #   file_url: https://almanak.overheid.nl/{almanak_id}/a
-  #   item_xpath: //
-  #
-  # - &persons
-  #   <<: *entity_defaults
-  #   entity: persons
-  #   doc_type: persons
-  #   extractor: ocd_backend.extractors.almanak.PersonsExtractor
-  #   item: ocd_backend.items.persons.AlmanakPersonItem
-  #   file_url: https://almanak.overheid.nl/{almanak_id}/a
-  #   item_xpath: //
 
-  # - &meetings
-  #   <<: *entity_defaults
-  #   entity: meetings
-  #   doc_type: events
-  #   extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
-  #   item: ocd_backend.items.goapi_meeting.Meeting
-  #   enrichers:
-  #   - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
-  #     - tasks:
-  #       - file_to_text
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
+    item: ocd_backend.items.goapi_meeting.Meeting
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+      - tasks:
+        - file_to_text
   #
   # - &documents
   #   <<: *entity_defaults
@@ -132,12 +115,12 @@ go-provinces:
     key: flevoland
     base_url: "https://stateninformatie.flevoland.nl/api"
     almanak_id: 14866
-    organizations_url: https://staten.zuid-holland.nl/Statenleden
-    organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"
-    persons_url: https://staten.zuid-holland.nl/Statenleden
-    persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
-    persons_name_xpath: ".//a/span//text()"
+    organizations_url: https://stateninformatie.flevoland.nl/Organisatie
+    organizations_item_xpath: "//h2/a"
+    persons_url: https://stateninformatie.flevoland.nl/Organisatie
+    persons_item_xpath: "//div[contains(@class, \"medewerkers\")]//div[contains(@class, \"medewerker\")]"
+    persons_name_xpath: "//a[contains(@class, \"name\")]//text()"
     persons_id_xpath: ".//a/@href"
-    persons_link_path: "//li/a/@href"
-    persons_party_xpath: "//*[contains(@class, \"breadcrumbs\")]/a[3]//text()"
+    persons_link_path: "//a/@href"
+    persons_party_xpath: "(//*[contains(@class, \"groupmeta\")])[last()]//span[contains(@class, \"name\")]//text()"
     <<: *go
