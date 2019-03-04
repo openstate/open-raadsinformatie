@@ -68,20 +68,20 @@ _entities: &entities
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     item: ocd_backend.items.goapi_meeting.Meeting
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
   #
-  # - &documents
-  #   <<: *entity_defaults
-  #   entity: documents
-  #   doc_type: events
-  #   extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
-  #   item: ocd_backend.items.goapi_document.Document
-  #   enrichers:
-  #   - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
-  #     - tasks:
-  #       - file_to_text
+  - &documents
+    <<: *entity_defaults
+    entity: documents
+    doc_type: events
+    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
+    item: ocd_backend.items.goapi_document.Document
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
+      - tasks:
+        - file_to_text
   #
   # - &meetingitems
   #   <<: *meetings
