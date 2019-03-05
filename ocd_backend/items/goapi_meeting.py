@@ -1,142 +1,123 @@
-# todo needs revision v1
-# from hashlib import sha1
-#
-# import iso8601
-# from ocd_backend.items.popolo import EventItem
-#
-# from ocd_backend.extractors import HttpRequestMixin
-# from ocd_backend.utils.api import FrontendAPIMixin
-# from ocd_backend.utils.file_parsing import FileToTextMixin
-#
-#
-# class Meeting(EventItem, HttpRequestMixin, FrontendAPIMixin, FileToTextMixin):
-#     def _get_current_permalink(self):
-#         return u'%s/meetings/%i' % (self.source_definition[
-#                                         'base_url'], self.original_item['id'])
-#
-#     @staticmethod
-#     def _find_meeting_type_id(org):
-#         results = [x for x in org['identifiers']
-#                    if x['scheme'] == u'GemeenteOplossingen']
-#         return results[0]['identifier']
-#
-#     def _get_committees(self):
-#         """
-#         Gets the committees that are active for the council.
-#         """
-#
-#         results = self.api_request(
-#             self.source_definition['index_name'], 'organizations',
-#             classification=['committee', 'subcommittee'])
-#         return {self._find_meeting_type_id(c): c for c in results}
-#
-#     @staticmethod
-#     def get_meeting_id(meeting):
-#         hash_content = u'meeting-%s' % (meeting['id'])
-#         return unicode(sha1(hash_content.decode('utf8')).hexdigest())
-#
-#     def get_object_id(self):
-#         return self.get_meeting_id(self.original_item)
-#
-#     def get_original_object_id(self):
-#         return unicode(self.original_item['id']).strip()
-#
-#     def get_original_object_urls(self):
-#         return {"html": self._get_current_permalink()}
-#
-#     @staticmethod
-#     def get_rights():
-#         return u'undefined'
-#
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
-#     def get_object_model(self):
-#         object_model = {}
-#
-#         committees = self._get_committees()
-#         current_permalink = self._get_current_permalink()
-#
-#         object_model['id'] = unicode(self.get_object_id())
-#
-#         object_model['hidden'] = self.source_definition['hidden']
-#
-#         if self.original_item['description']:
-#             object_model['name'] = self.original_item['description']
-#         else:
-#             object_model['name'] = 'Vergadering %s' % \
-#                                    self.original_item['dmu']['name']
-#
-#         object_model['classification'] = u'Agenda'
-#
-#         object_model['identifiers'] = [
-#             {
-#                 'identifier': unicode(self.original_item['id']),
-#                 'scheme': u'GemeenteOplossingen'
-#             },
-#             {
-#                 'identifier': self.get_object_id(),
-#                 'scheme': u'ORI'
-#             }
-#         ]
-#
-#         try:
-#             object_model['organization'] = committees[
-#                 self.original_item['dmu']['id']]
-#         except KeyError:
-#             pass
-#
-#         object_model['organization_id'] = unicode(
-#             self.original_item['dmu']['id'])
-#
-#         object_model['start_date'] = iso8601.parse_date(
-#             self.original_item['date'])
-#
-#         object_model['location'] = self.original_item['location']
-#         object_model['status'] = u'confirmed'
-#         object_model['sources'] = [
-#             {
-#                 'url': current_permalink,
-#                 'note': u''
-#             }
-#         ]
-#
-#         if 'items' in self.original_item:
-#             object_model['children'] = [
-#                 self.get_meeting_id(mi) for mi in self.original_item['items']]
-#
-#         object_model['sources'] = []
-#
-#         try:
-#             documents = self.original_item['documents']
-#         except KeyError:
-#             documents = []
-#
-#         if documents is None:
-#             documents = []
-#
-#         for document in documents:
-#             # sleep(1)
-#             url = u"%s/documents/%s" % (current_permalink, document['id'])
-#             description = self.file_get_contents(
-#                 url,
-#                 self.source_definition.get('pdf_max_pages', 20)
-#             )
-#
-#             object_model['sources'].append({
-#                 'url': url,
-#                 'note': document['filename'],
-#                 'description': description
-#             })
-#
-#         return object_model
-#
-#     @staticmethod
-#     def get_index_data():
-#         return {}
-#
-#     @staticmethod
-#     def get_all_text():
-#         text_items = []
-#
-#         return u' '.join(text_items)
+from datetime import datetime
+from hashlib import sha1
+from pprint import pprint
+
+import iso8601
+
+from ocd_backend.items import BaseItem
+from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('goapi_meeting')
+
+
+class GemeenteOplossingenMeeting(BaseItem):
+    def _get_current_permalink(self):
+        api_version = self.source_definition.get('api_version', 'v1')
+        base_url = '%s/%s' % (
+            self.source_definition['base_url'], api_version,)
+
+        return u'%s/meetings/%i' % (base_url, self.original_item[u'id'],)
+
+    def get_rights(self):
+        return u'undefined'
+
+    def get_collection(self):
+        return unicode(self.source_definition['index_name'])
+
+    def _get_documents_as_media_urls(self, documents):
+        current_permalink = self._get_current_permalink()
+
+        output = []
+        for document in documents:
+            # sleep(1)
+            url = u"%s/documents/%s" % (current_permalink, document['id'])
+            output.append({
+                'url': url,
+                'note': document[u'filename']})
+        return output
+
+    def get_object_model(self):
+        source_defaults = {
+            'source': 'gemeenteoplossingen',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['key'],
+        }
+
+        print(source_defaults)
+        event = Meeting(self.original_item[u'id'], **source_defaults)
+
+        # dates in v1 have a time in them and in v2 they don't
+        if ':' in self.original_item['date']:
+            start_date = self.original_item['date']
+        else:
+            start_date = "%sT%s:00" % (
+                self.original_item['date'],
+                self.original_item.get('startTime', '00:00',))
+
+        event.start_date = iso8601.parse_date(start_date)
+        event.end_date = event.start_date  # ?
+
+        event.name = self.original_item[u'description']
+
+        event.classification = [u'Agenda']
+        event.description = self.original_item[u'description']
+
+        try:
+            event.location = self.original_item[u'location'].strip()
+        except (AttributeError, KeyError):
+            pass
+
+        try:
+            event.organization = Organization(
+                self.original_item[u'dmu'][u'id'], **source_defaults)
+            event.committee = Organization(
+                self.original_item[u'dmu'][u'id'], **source_defaults)
+        except LookupError as e:
+            pass
+
+        # object_model['last_modified'] = iso8601.parse_date(
+        #    self.original_item['last_modified'])
+
+        # if self.original_item['canceled']:
+        #     event.status = EventCancelled()
+        # elif self.original_item['inactive']:
+        #     event.status = EventUnconfirmed()
+        # else:
+        #     event.status = EventConfirmed()
+        event.status = EventConfirmed()
+
+        event.agenda = []
+        for item in self.original_item.get('items', []):
+            if not item['sortorder']:
+                continue
+
+            agendaitem = AgendaItem(item['id'], **source_defaults)
+            agendaitem.__rel_params__ = {'rdf': '_%i' % item['sortorder']}
+            agendaitem.description = item['description']
+            agendaitem.name = '%s: %s' % (item['number'], item['title'],)
+            agendaitem.position = item['sortorder']
+            agendaitem.attachment = []
+
+            for doc in self._get_documents_as_media_urls(
+                item.get('documents', [])
+            ):
+                attachment = MediaObject(doc['url'], **source_defaults)
+                attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
+                attachment.original_url = doc['url']
+                attachment.name = doc['note']
+                agendaitem.attachment.append(attachment)
+
+            event.agenda.append(agendaitem)
+
+        event.attachment = []
+        for doc in self._get_documents_as_media_urls(
+            self.original_item.get('documents', [])
+        ):
+            attachment = MediaObject(doc['url'], **source_defaults)
+            attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
+            attachment.original_url = doc['url']
+            attachment.name = doc['note']
+            event.attachment.append(attachment)
+
+        return event
