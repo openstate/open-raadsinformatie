@@ -77,17 +77,11 @@ _entities: &entities
     entity: documents
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
-    item: ocd_backend.items.goapi_document.Document
+    item: ocd_backend.items.goapi_document.GemeenteOplossingenDocument
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
-  #
-  # - &meetingitems
-  #   <<: *meetings
-  #   entity: meetingitems
-  #   extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor
-  #   item: ocd_backend.items.goapi_meetingitem.MeetingItem
 
 _go: &go
   index_name: "{key}"
@@ -115,6 +109,7 @@ go-provinces:
   flevoland:
     key: flevoland
     base_url: "https://stateninformatie.flevoland.nl/api"
+    api_version: v2
     almanak_id: 14866
     organizations_url: https://stateninformatie.flevoland.nl/Organisatie
     organizations_item_xpath: "//h2/a"
