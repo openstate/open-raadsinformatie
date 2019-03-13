@@ -482,6 +482,7 @@ ibabs:
   emmen:
     key: emmen
     almanak_id: 22781
+    start_date: "2018-01-01" # Due to agreement with Frank te Winkel
     <<: *ibabs
 
   oldambt:
