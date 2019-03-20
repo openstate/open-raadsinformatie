@@ -16,6 +16,11 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
     def __init__(self, *args, **kwargs):
         super(GreenValleyBaseExtractor, self).__init__(*args, **kwargs)
 
+        self.base_url = None
+        self.username = None
+        self.key = None
+        self.hash = None
+
         for opt in ['base_url', 'username', 'key', 'hash']:
             opt_key = 'greenvalley_%s' % (opt,)
             if opt_key not in self.source_definition:
