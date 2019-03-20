@@ -4,7 +4,7 @@ from time import sleep
 from requests.exceptions import HTTPError, RetryError
 from urllib3.exceptions import MaxRetryError
 
-from ocd_backend.exceptions import ItemAlreadyProcessed
+from ocd_backend.exceptions import ItemAlreadyProcessed, ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import GCSCachingMixin, HttpRequestMixin
