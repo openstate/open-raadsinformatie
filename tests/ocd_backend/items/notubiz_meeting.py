@@ -23,7 +23,7 @@ class NotubizMeetingTestCase(ItemTestCase):
         self.source_definition = {
             'organisation_id': 281,
             'keep_index_on_update': True,
-            'enrichers': [['ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher', None]],
+            'enrichers': [['ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher', None]],
             'cleanup': 'ocd_backend.tasks.CleanupElasticsearch',
             'doc_type': 'events',
             'sitename': 'Amsterdam',

@@ -56,7 +56,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     item: ocd_backend.items.goapi_meeting.Meeting
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
 
