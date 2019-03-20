@@ -94,7 +94,7 @@
     "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
     "enrichers": [
       [
-        "ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher",
+        "ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher",
         {
           "tasks": [
             "image_metadata"
@@ -124,7 +124,7 @@
     "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
     "enrichers": [
       [
-        "ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher",
+        "ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher",
         {
           "tasks": [
             "ggm_motion_text"
@@ -176,7 +176,7 @@
     "transformer": "ocd_backend.transformers.ggm.GegevensmagazijnTransformer",
     "enrichers": [
       [
-        "ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher",
+        "ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher",
         {
           "tasks": [
             "ggm_motion_text"
