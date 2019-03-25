@@ -68,18 +68,22 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     """
 
     def _meetingtypes_as_dict(self):
-        meeting_types = {}
-        for o in self.client.service.GetMeetingtypes(self.source_definition['sitename']).Meetingtypes[0]:
-            include_regex = self.source_definition.get('include', None)
-            if include_regex and not re.search(include_regex, o.Description):
-                continue
+        meeting_types = self.client.service.GetMeetingtypes(self.source_definition['sitename'])
 
-            exclude_regex = self.source_definition.get('exclude', None)
-            if exclude_regex and re.search(exclude_regex, o.Description):
-                continue
+        if meeting_types.Meetingtypes:
+            for o in meeting_types.Meetingtypes[0]:
+                include_regex = self.source_definition.get('include', None)
+                if include_regex and not re.search(include_regex, o.Description):
+                    continue
 
-            meeting_types[o.Id] = o.Description
-        return meeting_types
+                exclude_regex = self.source_definition.get('exclude', None)
+                if exclude_regex and re.search(exclude_regex, o.Description):
+                    continue
+
+                meeting_types[o.Id] = o.Description
+                return meeting_types
+        else:
+            log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
 
     def run(self):
         meeting_count = 0
