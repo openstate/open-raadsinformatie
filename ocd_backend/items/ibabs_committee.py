@@ -10,7 +10,13 @@ class CommitteeItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        committee = Organization('ibabs_identifier', self.original_item['Id'])
+        source_defaults = {
+            'source': 'ibabs',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['index_name'],
+        }
+
+        committee = Organization(self.original_item['Id'], **source_defaults)
         committee.name = self.original_item['Meetingtype']
 
         if 'sub' in self.original_item['Meetingtype']:

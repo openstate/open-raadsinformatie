@@ -29,9 +29,9 @@ class IBabsMeetingItem(BaseItem):
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location'].strip()
-            organization = Organization(meeting['MeetingtypeId'],
+            item.organization = Organization(meeting['MeetingtypeId'],
                                         **source_defaults)
-            item.organization = organization
+            item.organization.connect(collection=self.source_definition['key'])
 
             if 'MeetingItems' in meeting:
                 item.agenda = list()
@@ -53,13 +53,14 @@ class IBabsMeetingItem(BaseItem):
             )
             item.description = self.original_item['Explanation']
 
-            event = Meeting(self.original_item['MeetingId'], **source_defaults)
-            event.attachment = MediaObject(self.original_item['MeetingId'],
-                                           **source_defaults)
-            item.parent = event
-
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
-        item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+
+        if 'EndTime' in meeting:
+            meeting_date, _, _ = meeting['MeetingDate'].partition('T')
+            meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
+            item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
+        else:
+            item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
         item.attachment = list()
         for document in self.original_item['Documents'] or []:
