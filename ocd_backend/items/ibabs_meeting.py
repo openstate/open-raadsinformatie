@@ -29,8 +29,7 @@ class IBabsMeetingItem(BaseItem):
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location'].strip()
-            item.organization = Organization(meeting['MeetingtypeId'],
-                                        **source_defaults)
+            item.organization = Organization(meeting['MeetingtypeId'], **source_defaults)
             item.organization.connect(collection=self.source_definition['key'])
 
             if 'MeetingItems' in meeting:
@@ -74,7 +73,7 @@ class IBabsMeetingItem(BaseItem):
 
 
 class IBabsReportItem(BaseItem):
-    #todo om naar motion
+
     def get_rights(self):
         return u'undefined'
 
@@ -82,7 +81,13 @@ class IBabsReportItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
-        report = CreativeWork('ibabs_identifier', self.original_item['id'][0])  # todo
+        source_defaults = {
+            'source': 'ibabs',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['index_name'],
+        }
+
+        report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
 
         report_name = self.original_item['_ReportName'].split(r'\s+')[0]
         report.classification = report_name
@@ -106,7 +111,9 @@ class IBabsReportItem(BaseItem):
 
         # Temporary binding reports to municipality as long as events and agendaitems are not
         # referenced in the iBabs API
-        report.organization = Organization('cbs_identifier', self.source_definition['almanak_id'])
+        report.creator = Organization(self.source_definition['key'], **source_defaults)
+        # TODO: This doesn't work yet / may not be necesary?
+        # report.creator.connect(collection=self.source_definition['key'])
 
         try:
             name_field = self.source_definition['fields'][report_name]['description']
@@ -139,10 +146,10 @@ class IBabsReportItem(BaseItem):
 
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
-            attachment = MediaObject('ibabs_identifier', document['Id'])
-            attachment.original_url = document['PublicDownloadURL']
-            attachment.size_in_bytes = document['FileSize']
-            attachment.name = document['DisplayName']
-            report.attachment.append(attachment)
+            attachment_file = MediaObject(document['Id'], **source_defaults)
+            attachment_file.original_url = document['PublicDownloadURL']
+            attachment_file.size_in_bytes = document['FileSize']
+            attachment_file.name = document['DisplayName']
+            report.attachment.append(attachment_file)
 
         return report
