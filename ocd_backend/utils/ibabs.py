@@ -148,8 +148,12 @@ def meeting_type_to_dict(mt):
 
 
 def _list_response_field_to_val(r):
-    if isinstance(r, list):
-        return [unicode(l) for l in r]
+    if r is None:
+        return None
+    elif hasattr(r, '__iter__'):
+        if len(r) == 1:
+            return {k: _list_response_field_to_val(v) for k, v in r}
+        return [_list_response_field_to_val(l) for l in r]
     else:
         return unicode(r)
 
