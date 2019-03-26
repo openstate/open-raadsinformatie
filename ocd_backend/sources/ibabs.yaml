@@ -37,6 +37,13 @@ _entities: &entities
     file_url: https://almanak.overheid.nl/{almanak_id}/a
     item_xpath: //
 
+  - &ibabs_persons
+    <<: *entity_defaults
+    entity: ibabs_persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
+    item: ocd_backend.items.ibabs_person.IbabsPerson
+
   - &meetings
     <<: *entity_defaults
     entity: meetings
@@ -139,6 +146,7 @@ ibabs:
     - *municipality
     - *committees
     - *persons
+    - *ibabs_persons
     - *meetings
     - *reports
     - *videotulen

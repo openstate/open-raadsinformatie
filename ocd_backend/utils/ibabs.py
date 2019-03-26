@@ -148,8 +148,12 @@ def meeting_type_to_dict(mt):
 
 
 def _list_response_field_to_val(r):
-    if isinstance(r, list):
-        return [unicode(l) for l in r]
+    if r is None:
+        return None
+    elif hasattr(r, '__iter__'):
+        if len(r) == 1:
+            return {k: _list_response_field_to_val(v) for k, v in r}
+        return [_list_response_field_to_val(l) for l in r]
     else:
         return unicode(r)
 
@@ -178,3 +182,10 @@ def list_entry_response_to_dict(m):
             unicode(y.Key): unicode(y.Value) if y.Value is not None else None for y in x[0]}
     }
     return _ibabs_to_dict(m, fields)
+
+
+def person_profile_to_dict(p):
+    """
+    Converts an iBabsListEntryBasic to a JSON serializable dict
+    """
+    return {k[0]: _list_response_field_to_val(k[1]) for k in p}
