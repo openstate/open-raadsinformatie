@@ -28,15 +28,6 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
     item: ocd_backend.items.ibabs_committee.CommitteeItem
 
-  - &organizations
-    <<: *entity_defaults
-    entity: organizations
-    doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
-    item_xpath: //
-
   - &persons
     <<: *entity_defaults
     entity: persons
@@ -147,7 +138,6 @@ ibabs:
     - *popit_persons
     - *municipality
     - *committees
-    - *organizations
     - *persons
     - *meetings
     - *reports
