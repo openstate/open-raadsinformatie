@@ -11,7 +11,7 @@ from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, meeting_item_to_dict,
     meeting_type_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict, votes_to_dict)
+    list_entry_response_to_dict, votes_to_dict, person_profile_to_dict)
 from ocd_backend.utils.misc import full_normalized_motion_id
 
 log = get_source_logger('extractor')
@@ -475,3 +475,31 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 total_count += result_count
                 active_page_nr += 1
             log.info("%s -- total: %s, results %s, yielded %s" % (l.Value, total_count, result_count, yield_count,))
+
+
+class IbabsPersonsExtractor(IBabsBaseExtractor):
+    """
+    Extracts person profiles from the iBabs SOAP service.
+    """
+
+    def run(self):
+        users = self.client.service.GetUsers(
+            self.source_definition['sitename']
+        )
+
+        if users.Users:
+            for user in users.Users[0]:
+                identifier = user['UniqueId']
+
+                user_details = self.client.service.GetUser(
+                    self.source_definition['sitename'],
+                    identifier
+                )
+
+                profile = person_profile_to_dict(user_details.User.PublicProfile)
+                yield 'application/json', json.dumps(profile)
+
+        elif users.Message == 'No users found!':
+            log.info('No ibabs users were found for %s' % self.source_definition['index_name'])
+        else:
+            log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
