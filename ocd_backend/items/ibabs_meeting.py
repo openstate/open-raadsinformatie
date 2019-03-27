@@ -54,7 +54,8 @@ class IBabsMeetingItem(BaseItem):
 
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
-        if 'EndTime' in meeting:
+        # Double check because sometimes 'EndTime' is in meeting but it is set to None
+        if 'EndTime' in meeting and meeting['EndTime']:
             meeting_date, _, _ = meeting['MeetingDate'].partition('T')
             meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
             item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
