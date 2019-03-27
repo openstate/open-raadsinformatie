@@ -23,6 +23,7 @@ class IbabsPerson(BaseItem):
         person.family_name = self.original_item['LastName']
         person.biography = self.original_item['AboutMe']
         person.email = self.original_item['Email']
+        person.phone = self.original_item['Phone']
 
         municipality = Organization(self.source_definition['almanak_id'], **source_defaults)
         municipality.name = self.source_definition['sitename']
