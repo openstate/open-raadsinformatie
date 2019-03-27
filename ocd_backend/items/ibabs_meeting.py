@@ -28,7 +28,7 @@ class IBabsMeetingItem(BaseItem):
             item = Meeting(self.original_item['Id'], **source_defaults)
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
-            item.location = meeting['Location'].strip()
+            item.location = meeting['Location']
             item.organization = Organization(meeting['MeetingtypeId'], **source_defaults)
             item.organization.connect(collection=self.source_definition['key'])
 

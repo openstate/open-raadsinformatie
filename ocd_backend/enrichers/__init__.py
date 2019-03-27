@@ -44,10 +44,9 @@ class BaseEnricher(celery_app.Task):
                 # serious problem might occur.
                 bugsnag.notify(e, severity="error")
                 log.critical(e)
-            except Exception, e:
+            except Exception as e:
                 bugsnag.notify(e, severity="warning")
-                log.warning('Unexpected error: %s, reason: %s'
-                         % (self.__class__.__name__, e))
+                log.warning('Unexpected error: %s, reason: %s' % (self.__class__.__name__, e))
 
         return args
 
