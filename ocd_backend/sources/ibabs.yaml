@@ -376,8 +376,8 @@ ibabs:
     almanak_id: 38409
     <<: *ibabs
 
-  noordwijkerhout:
-    key: noordwijkerhout
+  noordwijk:
+    key: noordwijk
     almanak_id: 34729
     <<: *ibabs
 
