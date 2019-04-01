@@ -71,6 +71,8 @@ class GemeenteOplossingenMeeting(BaseItem):
         try:
             event.organization = Organization(
                 self.original_item[u'dmu'][u'id'], **source_defaults)
+            # Connect to parent node in Neoj
+            event.organization.connect(collection=self.source_definition['key'])
             event.committee = Organization(
                 self.original_item[u'dmu'][u'id'], **source_defaults)
         except LookupError as e:
