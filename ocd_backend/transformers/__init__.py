@@ -9,6 +9,7 @@ from ocd_backend.utils.misc import load_object
 
 
 class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
+
     def run(self, *args, **kwargs):
         """Start transformation of a single item.
 
@@ -19,7 +20,7 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         :returns: the output of :py:meth:`~BaseTransformer.transform_item`
         """
         self.source_definition = kwargs['source_definition']
-        self.item_class = load_object(kwargs['source_definition']['item'])
+        self.item_class = load_object(self.source_definition['item'])
         self.run_node = kwargs.get('run_node')
 
         item = self.deserialize_item(*args)  # pylint: disable=no-value-for-parameter
@@ -54,7 +55,11 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             for the combined index (as a dict) and the item item structured
             for the source specific index.
         """
-        item = self.item_class(self.source_definition, raw_item_content_type,
-                               raw_item, item, self.run_node)
 
-        return item.object_data
+        transformed_item = self.item_class(source_definition=self.source_definition,
+                                           data_content_type=raw_item_content_type,
+                                           data=raw_item,
+                                           item=item,
+                                           run_node=self.run_node)
+
+        return transformed_item.object_data
