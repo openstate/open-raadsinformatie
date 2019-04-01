@@ -4,7 +4,7 @@
 # from ocd_backend.items.popolo import OrganisationItem
 #
 #
-# class CommitteeItem(OrganisationItem):
+# class GemeenteOplossingenCommittee(OrganisationItem):
 #     def _get_current_permalink(self):
 #         return u'%s/dmus' % (self.source_definition['base_url'])
 #

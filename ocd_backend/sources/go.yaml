@@ -21,12 +21,12 @@ _entities: &entities
     filter:
       Title: "{municipality}"
 
-  - &committees
-    <<: *entity_defaults
-    entity: committees
-    doc_type: organizations
-    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
-    item: ocd_backend.items.goapi_committee.CommitteeItem
+#  - &committees
+#    <<: *entity_defaults
+#    entity: committees
+#    doc_type: organizations
+#    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
+#    item: ocd_backend.items.goapi_committee.CommitteeItem
 
   - &organizations
     <<: *entity_defaults
