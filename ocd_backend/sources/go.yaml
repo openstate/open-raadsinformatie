@@ -28,14 +28,14 @@ _entities: &entities
 #    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
 #    item: ocd_backend.items.goapi_committee.CommitteeItem
 
-  - &organizations
-    <<: *entity_defaults
-    entity: organizations
-    doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
-    item_xpath: //
+#  - &organizations
+#    <<: *entity_defaults
+#    entity: organizations
+#    doc_type: organizations
+#    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+#    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+#    file_url: https://almanak.overheid.nl/{almanak_id}/a
+#    item_xpath: //
 
   - &persons
     <<: *entity_defaults
