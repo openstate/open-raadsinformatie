@@ -45,6 +45,8 @@ class AlmanakOrganisationItem(BaseItem):
         object_model.name = self.original_item['name']  # todo dubbel?
         object_model.classification = self.original_item['classification']
         object_model.collection = self.get_collection()
+        # Connect to municipality node
+        object_model.parent = Organization(self.source_definition['index_name'], **source_defaults)
         return object_model
 
 

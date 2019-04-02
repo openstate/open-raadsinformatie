@@ -10,36 +10,25 @@ log = get_source_logger('extractor')
 
 class OrganisationsExtractor(StaticHtmlExtractor):
     """
-    Extract items from an OData Feed.
+    Extract organisations (parties) from an Almanak.
     """
 
     def extract_items(self, static_content):
         """
-        Extracts items from a JSON file. It is assumed to be an array
-        of items.
+        Extracts organisations from the Almanak page source HTML.
         """
 
         organisations = {}
         html = etree.HTML(static_content)
 
-        council = {
-            'name': u' '.join(html.xpath(
-                'string(//div[@id="content"]//h2)').split()).strip(),
-            'classification': self.source_definition.get(
-                'classification', u'Council')}
-        organisations[council['name']] = council
-
-        for link in html.xpath('//ul[@class="definitie"][2]//ul//li//a'):
-            line = u''.join(link.xpath('.//text()'))[2:]
+        # Parties are listed in TR's in the first TABLE after the H2 element with id 'functies-organisatie'
+        for element in html.xpath('//*[@id="functies-organisatie"]/following::table[1]//tr'):
             try:
-                person, party = [l.strip() for l in line.split(u'\n', 1)]
-                if party[1:-1].strip() != "":
-                    organisations[party[1:-1]] = (
-                        {'name': party[1:-1], 'classification': u'Party'})
+                # Extract the party name from within the "(" and ")" characters
+                party = etree.tostring(element).split('(')[1].split(')')[0]
+                organisations[party] = ({'name': party, 'classification': u'Party'})
             except:
                 pass
-
-        # log.debug(organisations)
 
         for item in organisations.values():
             yield 'application/json', json.dumps(item)
