@@ -21,6 +21,15 @@ _entities: &entities
     filter:
       Title: "{municipality}"
 
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    item_xpath: //
+
   - &committees
     <<: *entity_defaults
     entity: committees
