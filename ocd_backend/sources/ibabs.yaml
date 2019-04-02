@@ -1,4 +1,4 @@
-# All undescored root keys are excluded
+# All underscored root keys are excluded
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
@@ -508,4 +508,9 @@ ibabs:
   steenwijkerland:
     key: steenwijkerland
     almanak_id: 24145
+    <<: *ibabs
+
+  houten:
+    key: houten
+    almanak_id: 38261
     <<: *ibabs
