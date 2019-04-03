@@ -11,12 +11,10 @@ class IbabsPerson(BaseItem):
 
     def get_object_model(self):
         source_defaults = {
-            'source': 'notubiz',
+            'source': 'ibabs',
             'source_id_key': 'identifier',
             'organization': self.source_definition['key'],
         }
-
-        # Todo more properties can be extracted
 
         person = Person(self.original_item['UserId'], **source_defaults)
         person.name = self.original_item['Name']
@@ -27,6 +25,7 @@ class IbabsPerson(BaseItem):
 
         municipality = Organization(self.source_definition['almanak_id'], **source_defaults)
         municipality.name = self.source_definition['sitename']
+        municipality.connect(name=self.source_definition['sitename'])
 
         municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality
@@ -35,6 +34,11 @@ class IbabsPerson(BaseItem):
         person.member_of = [municipality_member]
 
         if self.original_item['PoliticalPartyId']:
+            # Currently there is no way to merge parties from the Almanak with parties from ibabs because
+            # they do not share any consistent identifiers, so new nodes will be created for parties that ibabs
+            # persons are linked to. This causes ibabs sources that have persons to have duplicate party nodes.
+            # These duplicate nodes are necessary to cover ibabs sources that have no persons, otherwise those
+            # sources would not have any parties.
             party = Organization(self.original_item['PoliticalPartyId'], **source_defaults)
             party.name = self.original_item['PoliticalPartyName']
 
