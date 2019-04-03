@@ -502,4 +502,4 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
         elif users.Message == 'No users found!':
             log.info('No ibabs users were found for %s' % self.source_definition['index_name'])
         else:
-            log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
+            log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], users.Message))
