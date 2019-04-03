@@ -10,7 +10,8 @@ from ocd_backend.log import get_source_logger
 
 log = get_source_logger('persons')
 
-class AlmanakPersonItem(HttpRequestMixin, BaseItem):
+
+class AlmanakPersonItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
@@ -24,34 +25,29 @@ class AlmanakPersonItem(HttpRequestMixin, BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        request_url = u'https://almanak.overheid.nl%s' % (
-            unicode(self.original_item['url']),)
-
-        r = self.http_session.get(request_url, verify=False)
-        r.raise_for_status()
-        html = etree.HTML(r.content)
-
         person = Person(self.original_item['id'], **source_defaults)
-        person.name = html.xpath('string(//div[@id="content"]/h2/text())').strip()
-        person.email = html.xpath('string(//a[starts-with(@href,"mailto:")]/text())').strip().split(' ')[0]
-        person.gender = u'male' if person.name.startswith(u'Dhr. ') else u'female'
+        person.name = self.original_item['name']
+        person.email = self.original_item['email']
+        person.gender = self.original_item['gender']
 
         municipality = Organization(self.source_definition['almanak_id'], **source_defaults)
-        party = Organization(html.xpath('string(//ul[@class="definitie"]/li/ul/li)').strip(), **source_defaults)
+        municipality.name = self.source_definition['sitename']
 
-        municipality_member = Membership()
+        municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality
-        municipality_member.role = html.xpath('string(//div[@id="content"]//h3/text())').strip()
+        municipality_member.role = self.original_item['role']
 
-        party_member = Membership()
-        party_member.organization = party
-        party_member.role = 'Member'
+        person.member_of = [municipality_member]
 
-        # person.member_of = [municipality_member, party_member]
+        if self.original_item['party']:
+            party = Organization(self.original_item['party'], **source_defaults)
+            party.name = self.original_item['party']
 
-        # person.member_of(municipality_member, party_member, rel=party)
+            party_member = Membership(**source_defaults)
+            party_member.organization = party
+            party_member.role = self.original_item['role']
 
-        person.member_of = Relationship(municipality, rel=party)
+            person.member_of.append(party_member)
 
         return person
 
