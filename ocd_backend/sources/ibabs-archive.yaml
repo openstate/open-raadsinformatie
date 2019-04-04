@@ -1,4 +1,4 @@
-# All undescored root keys are excluded
+# All underscored root keys are excluded
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
