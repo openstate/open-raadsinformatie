@@ -11,7 +11,7 @@ class CommitteeItem(BaseItem):
 
     def get_object_model(self):
         source_defaults = {
-            'source': 'ibabs',
+            'source': 'gemeenteoplossingen',
             'source_id_key': 'identifier',
             'organization': self.source_definition['index_name'],
         }
@@ -20,8 +20,9 @@ class CommitteeItem(BaseItem):
         committee.name = self.original_item['name']
         committee.classification = self.original_item['name']
 
-        # Connect committee to municipality node
-        # committee.connect(collection=self.source_definition['key'])
+        # Attach the committee node to the municipality node
+        committee.parent = Organization(self.source_definition['key'], **source_defaults)
+        committee.parent.merge(collection=self.source_definition['key'])
 
         # if 'sub' in self.original_item['Meetingtype']:
         #     committee.classification = u'subcommittee'

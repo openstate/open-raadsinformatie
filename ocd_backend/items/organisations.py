@@ -5,6 +5,10 @@ from ocd_backend.models import Organization
 
 
 class MunicipalityOrganisationItem(BaseItem):
+    """
+    Extracts municipality information from the Almanak.
+    """
+
     def get_rights(self):
         return u'undefined'
 
@@ -23,10 +27,15 @@ class MunicipalityOrganisationItem(BaseItem):
         object_model.classification = u'Municipality'
         object_model.description = self.original_item['Description']
         object_model.collection = self.get_collection()
+
         return object_model
 
 
 class AlmanakOrganisationItem(BaseItem):
+    """
+    Extracts organizations (parties) from the Almanak.
+    """
+
     def get_rights(self):
         return u'undefined'
 
@@ -40,8 +49,7 @@ class AlmanakOrganisationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(
-            self.original_item['name'], **source_defaults)
+        object_model = Organization(self.original_item['name'], **source_defaults)
         object_model.name = self.original_item['name']  # todo dubbel?
         object_model.classification = self.original_item['classification']
         object_model.parent = Organization(self.source_definition['almanak_id'], **source_defaults)

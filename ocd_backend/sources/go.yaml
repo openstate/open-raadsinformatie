@@ -17,7 +17,7 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.odata.ODataExtractor
     item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-    file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
+    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
     filter:
       Title: "{municipality}"
 

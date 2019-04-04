@@ -56,10 +56,13 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
     """
 
     def run(self):
+        committee_count = 1
         total, static_json = self._request('dmus')
         for dmu in static_json:
-            pprint(dmu)
             yield 'application/json', json.dumps(dmu)
+            committee_count += 1
+
+        log.info("Extracted total of %d committees." % committee_count)
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -70,11 +73,11 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
     def run(self):
         meeting_count = 0
         for start_date, end_date in self.interval_generator():
-            total, static_json = self._request(
-                'meetings?date_from=%i&date_to=%i' % (
+            url = 'meetings?date_from=%i&date_to=%i' % (
                     (start_date - datetime(1970, 1, 1)).total_seconds(),
                     (end_date - datetime(1970, 1, 1)).total_seconds()
-                ))
+                )
+            total, static_json = self._request(url)
 
             for meeting in static_json:
                 yield 'application/json', json.dumps(meeting)
