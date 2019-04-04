@@ -19,6 +19,10 @@ class CommitteeItem(BaseItem):
         committee = Organization(self.original_item['Id'], **source_defaults)
         committee.name = self.original_item['Meetingtype']
 
+        # Attach the committee node to the municipality node
+        committee.parent = Organization(self.source_definition['key'], **source_defaults)
+        committee.parent.merge(collection=self.source_definition['key'])
+
         if 'sub' in self.original_item['Meetingtype']:
             committee.classification = u'subcommittee'
         else:

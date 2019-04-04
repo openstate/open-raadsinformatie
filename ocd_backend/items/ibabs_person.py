@@ -29,7 +29,11 @@ class IbabsPerson(BaseItem):
 
         municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality
-        municipality_member.role = self.original_item['FunctionName']
+        # FunctionName is often set to 'None' in the source, in that case we fall back to 'Member'
+        if self.original_item['FunctionName'] == 'None':
+            municipality_member.role = 'Member'
+        else:
+            municipality_member.role = self.original_item['FunctionName']
 
         person.member_of = [municipality_member]
 

@@ -29,8 +29,17 @@ class IBabsMeetingItem(BaseItem):
             item.name = meeting['Meetingtype']
             item.chair = meeting['Chairman']
             item.location = meeting['Location']
-            item.organization = Organization(meeting['MeetingtypeId'], **source_defaults)
-            item.organization.connect(collection=self.source_definition['key'])
+
+            # Attach the meeting to the municipality node
+            item.organization = Organization(self.source_definition['key'], **source_defaults)
+            item.organization.merge(collection=self.source_definition['key'])
+
+            # Attach the meeting to the committee node
+            item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+            # Re-attach the committee node to the municipality node
+            # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+            item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+            item.committee.parent.merge(collection=self.source_definition['key'])
 
             if 'MeetingItems' in meeting:
                 item.agenda = list()
@@ -142,7 +151,7 @@ class IBabsReportItem(BaseItem):
             report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
             report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
-        report.status = EventConfirmed
+        report.status = EventConfirmed()
 
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
