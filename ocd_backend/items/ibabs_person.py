@@ -25,7 +25,7 @@ class IbabsPerson(BaseItem):
 
         municipality = Organization(self.source_definition['almanak_id'], **source_defaults)
         municipality.name = self.source_definition['sitename']
-        municipality.connect(name=self.source_definition['sitename'])
+        municipality.merge(name=self.source_definition['sitename'])
 
         municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality

@@ -45,11 +45,13 @@ class AlmanakOrganisationItem(BaseItem):
         object_model.name = self.original_item['name']  # todo dubbel?
         object_model.classification = self.original_item['classification']
         object_model.parent = Organization(self.source_definition['almanak_id'], **source_defaults)
-        object_model.parent.connect(collection=self.source_definition['index_name'])
+        object_model.parent.merge(collection=self.source_definition['index_name'])
+
         return object_model
 
 
 class HTMLOrganisationItem(BaseItem):
+
     def _get_name(self):
         name = unicode(u''.join(self.original_item.xpath('.//text()'))).strip()
         name = re.sub(r'\s*\(\d+ zetels?\)\s*', '', name)
@@ -74,4 +76,5 @@ class HTMLOrganisationItem(BaseItem):
         object_model.classification = unicode(
             self.source_definition.get('classification', 'Party'))
         object_model.collection = self.get_collection()
+
         return object_model
