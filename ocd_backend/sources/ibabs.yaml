@@ -524,3 +524,9 @@ ibabs:
     key: houten
     almanak_id: 38261
     <<: *ibabs
+
+  # Added on 04-04-2019
+  haarlemmermeer:
+    key: haarlemmermeer
+    almanak_id: 25768
+    <<: *ibabs
