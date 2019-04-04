@@ -58,7 +58,8 @@ class GemeenteOplossingenMeeting(BaseItem):
         event.start_date = iso8601.parse_date(start_date)
         event.end_date = event.start_date  # ?
 
-        event.name = self.original_item[u'description']
+        # Some meetings are missing a name...
+        event.name = self.original_item[u'description'] or 'None'
 
         event.classification = [u'Agenda']
         event.description = self.original_item[u'description']
@@ -68,13 +69,16 @@ class GemeenteOplossingenMeeting(BaseItem):
         except (AttributeError, KeyError):
             pass
 
-        try:
-            event.organization = Organization(
-                self.original_item[u'dmu'][u'id'], **source_defaults)
-            event.committee = Organization(
-                self.original_item[u'dmu'][u'id'], **source_defaults)
-        except LookupError as e:
-            pass
+        # Attach the meeting to the municipality node
+        event.organization = Organization(self.source_definition['key'], **source_defaults)
+        event.organization.merge(collection=self.source_definition['key'])
+
+        # Attach the meeting to the committee node
+        event.committee = Organization(self.original_item[u'dmu'][u'id'], **source_defaults)
+        # Re-attach the committee node to the municipality node
+        # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+        event.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+        event.committee.parent.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
@@ -85,6 +89,7 @@ class GemeenteOplossingenMeeting(BaseItem):
         #     event.status = EventUnconfirmed()
         # else:
         #     event.status = EventConfirmed()
+
         event.status = EventConfirmed()
 
         event.agenda = []
