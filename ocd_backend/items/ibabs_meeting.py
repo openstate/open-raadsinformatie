@@ -34,12 +34,15 @@ class IBabsMeetingItem(BaseItem):
             item.organization = Organization(self.source_definition['key'], **source_defaults)
             item.organization.merge(collection=self.source_definition['key'])
 
-            # Attach the meeting to the committee node
-            item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
-            # Re-attach the committee node to the municipality node
-            # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
-            item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
-            item.committee.parent.merge(collection=self.source_definition['key'])
+            # Check if this is a committee meeting and if so connect it to the committee node
+            committee_designator = self.source_definition.get('committee_designator', 'commissie')
+            if committee_designator in meeting['Meetingtype'].lower():
+                # Attach the meeting to the committee node
+                item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+                # Re-attach the committee node to the municipality node
+                # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+                item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+                item.committee.parent.merge(collection=self.source_definition['key'])
 
             if 'MeetingItems' in meeting:
                 item.agenda = list()
