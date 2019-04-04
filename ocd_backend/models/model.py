@@ -228,12 +228,11 @@ class Model(object):
         finally:
             self.saving_flag = False
 
-    def connect(self, **kwargs):
+    def merge(self, **kwargs):
         """Takes one keyword-argument to filter, and set an ori_identifier.
 
-        Use this method to try connect the current model to an existing Hot
-        node by ori_identifier. This way we can create composites where one Hot
-        node can have several connected Cold nodes.
+        Use this method to try and merge the current node with an existing node
+        by ori_identifier.
 
         For example:
         `organization.connect(name='some_name')`

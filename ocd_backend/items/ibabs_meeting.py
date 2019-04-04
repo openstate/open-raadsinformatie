@@ -113,7 +113,7 @@ class IBabsReportItem(BaseItem):
         # Temporary binding reports to municipality as long as events and agendaitems are not
         # referenced in the iBabs API
         report.creator = Organization(self.source_definition['key'], **source_defaults)
-        report.creator.connect(collection=self.source_definition['key'])
+        report.creator.merge(collection=self.source_definition['key'])
 
         try:
             name_field = self.source_definition['fields'][report_name]['description']
