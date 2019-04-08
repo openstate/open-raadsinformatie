@@ -530,3 +530,9 @@ ibabs:
     key: haarlemmermeer
     almanak_id: 25768
     <<: *ibabs
+
+  # Added on 08-04-2019
+  zeewolde:
+    key: zeewolde
+    almanak_id: 35858
+    <<: *ibabs

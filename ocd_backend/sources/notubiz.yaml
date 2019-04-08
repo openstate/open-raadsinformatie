@@ -338,3 +338,19 @@ notubiz:
     key: ede
     organisation_id: 794
     <<: *notubiz
+
+#  # Added on 08-04-2019
+#  blaricum:
+#    key: blaricum
+#    organisation_id: 2063
+#    <<: *notubiz
+#
+#  eemnes:
+#    key: eemnes
+#    organisation_id: 2022
+#    <<: *notubiz
+#
+#  laren:
+#    key: laren
+#    organisation_id: 2046
+#    <<: *notubiz
