@@ -73,7 +73,9 @@ class GemeenteOplossingenMeeting(BaseItem):
         event.organization = Organization(self.source_definition['key'], **source_defaults)
         event.organization.merge(collection=self.source_definition['key'])
 
-        # Attach the meeting to the committee node
+        # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
+        # if it is a non-committee meeting so we can attach it to a committee node without any extra checks
+        # as opposed to iBabs
         event.committee = Organization(self.original_item[u'dmu'][u'id'], **source_defaults)
         # Re-attach the committee node to the municipality node
         # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
