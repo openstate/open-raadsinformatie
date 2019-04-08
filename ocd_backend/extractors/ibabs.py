@@ -41,7 +41,8 @@ class IBabsBaseExtractor(BaseExtractor):
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
     """
     Extracts committees from the iBabs SOAP service. This is done by checking
-    if the meeting type contains the word 'commissie'.
+    if the meeting type contains the word 'commissie' or a custom 'committee_designator'
+    which can be defined in the source file.
     """
 
     def run(self):
@@ -81,7 +82,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     continue
 
                 meeting_types[o.Id] = o.Description
-                return meeting_types
+            return meeting_types
         else:
             log.warning('SOAP service error for %s: %s' % (self.source_definition['index_name'], meeting_types.Message))
 

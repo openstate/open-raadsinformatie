@@ -34,13 +34,24 @@ class IBabsMeetingItem(BaseItem):
             item.organization = Organization(self.source_definition['key'], **source_defaults)
             item.organization.merge(collection=self.source_definition['key'])
 
-            # Check if this is a committee meeting and if so connect it to the committee node
+            # Check if this is a committee meeting and if so connect it to the committee node. If it is
+            # not a committee meeting we attach it to the 'Gemeenteraad' committee node
             committee_designator = self.source_definition.get('committee_designator', 'commissie')
             if committee_designator in meeting['Meetingtype'].lower():
                 # Attach the meeting to the committee node
                 item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
                 # Re-attach the committee node to the municipality node
                 # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+                item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+                item.committee.parent.merge(collection=self.source_definition['key'])
+            else:
+                # This is not a committee meeting, so attach it to the 'Gemeenteraad' committee node
+                item.committee = Organization('gemeenteraad', **source_defaults)
+                item.committee.name = 'Gemeenteraad'
+                item.committee.collection = self.source_definition['key'] + '-gemeenteraad'
+                item.committee.merge(collection=self.source_definition['key'] + '-gemeenteraad')
+                # Re-attach the 'Gemeenteraad' committee node to the municipality node
+                # TODO: Same problem as above
                 item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
                 item.committee.parent.merge(collection=self.source_definition['key'])
 
