@@ -123,7 +123,7 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'start_date': {'@id': 'http://schema.org/startDate'},
                 'committee': {'@id': 'https://argu.co/ns/meeting/committee', '@type': '@id'}
             },
-            'organization': '45',
+            'organization': '46',
             'start_date': '2018-02-08T13:30:00+01:00',
             'committee': '44'
         }
@@ -179,7 +179,7 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'https://id.openraadsinformatie.nl/42',
                 'https://id.openraadsinformatie.nl/43'
             ],
-            'organization': 'https://id.openraadsinformatie.nl/45',
+            'organization': 'https://id.openraadsinformatie.nl/46',
             'start_date': '2018-02-08T13:30:00+01:00',
             'committee': 'https://id.openraadsinformatie.nl/44'
         }
