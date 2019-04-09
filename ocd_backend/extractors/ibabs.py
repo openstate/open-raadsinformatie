@@ -106,7 +106,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 for meeting in meetings.Meetings[0]:
                     meeting_dict = meeting_to_dict(meeting)
 
-                    # sometimes a meetingtype is actualy a meeting for some
+                    # sometimes a meetingtype is actually a meeting for some
                     # reason. Let's ignore these for now
                     if meeting_dict['MeetingtypeId'] not in meeting_types:
                         meetings_skipped += 1

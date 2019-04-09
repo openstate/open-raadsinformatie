@@ -11,7 +11,7 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('goapi_meeting')
 
 
-class GemeenteOplossingenMeeting(BaseItem):
+class GemeenteOplossingenMeetingItem(BaseItem):
     def _get_current_permalink(self):
         api_version = self.source_definition.get('api_version', 'v1')
         base_url = '%s/%s' % (

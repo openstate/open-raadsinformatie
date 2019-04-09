@@ -2,7 +2,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 
 
-class NotubizMeeting(BaseItem):
+class NotubizMeetingItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 

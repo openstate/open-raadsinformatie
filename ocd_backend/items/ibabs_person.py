@@ -2,7 +2,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.models import *
 
 
-class IbabsPerson(BaseItem):
+class IbabsPersonItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
