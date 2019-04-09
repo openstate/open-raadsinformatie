@@ -4,7 +4,7 @@ import os
 import iso8601
 from mock import MagicMock
 from ocd_backend.items import BaseItem
-from ocd_backend.items.notubiz_meeting import NotubizMeeting
+from ocd_backend.items.notubiz_meeting import NotubizMeetingItem
 from ocd_backend.models import Meeting
 from ocd_backend.utils.file_parsing import FileToTextMixin
 from ocd_backend.models.serializers import Neo4jSerializer, RdfSerializer, JsonLDSerializer, JsonSerializer
@@ -197,7 +197,7 @@ class NotubizMeetingTestCase(ItemTestCase):
         """
         Instantiate the item from the raw and parsed item we have
         """
-        meeting = NotubizMeeting(self.source_definition, 'application/json', self.raw_item, self.meeting, None)
+        meeting = NotubizMeetingItem(self.source_definition, 'application/json', self.raw_item, self.meeting, None)
         return meeting
 
     def test_meeting_get_ori_id(self):
