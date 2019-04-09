@@ -42,7 +42,7 @@ _entities: &entities
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
-    item: ocd_backend.items.ibabs_person.IbabsPerson
+    item: ocd_backend.items.ibabs_person.IbabsPersonItem
 
   - &meetings
     <<: *entity_defaults
