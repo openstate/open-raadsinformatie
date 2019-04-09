@@ -95,32 +95,26 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 #     def run(self):
 #         meeting_count = 0
 #         for start_date, end_date in self.interval_generator():
-#
-#             resp = self.http_session.get(
-#                 u'%s/v1/meetings?date_from=%i&date_to=%i' % (
-#                     self.base_url,
+#             url = 'meetings?date_from=%i&date_to=%i' % (
 #                     (start_date - datetime(1970, 1, 1)).total_seconds(),
 #                     (end_date - datetime(1970, 1, 1)).total_seconds()
 #                 )
-#             )
 #
-#             if resp.status_code == 200:
-#                 static_json = json.loads(resp.content)
+#             total, static_json = self._request(url)
+#             for meeting in static_json:
+#                 if 'items' in meeting:
+#                     for item in meeting['items']:
 #
-#                 for meeting in static_json:
-#                     if 'items' in meeting:
-#                         for item in meeting['items']:
+#                         # Temporary hack to inherit meetingitem date from meeting
+#                         if 'date' not in item:
+#                             item['date'] = meeting['date']
 #
-#                             # Temporary hack to inherit meetingitem date from meeting
-#                             if 'date' not in item:
-#                                 item['date'] = meeting['date']
+#                         kv = {meeting['id']: item}
+#                         yield 'application/json', json.dumps(kv)
+#                         meeting_count += 1
 #
-#                             kv = {meeting['id']: item}
-#                             yield 'application/json', json.dumps(kv)
-#                             meeting_count += 1
-#
-#             log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
-#             log.info("Extracted total of %d meetings." % meeting_count)
+#             log.info("Now processing meeting items from %s to %s" % (start_date, end_date,))
+#             log.info("Extracted total of %d meeting items." % meeting_count)
 
 
 class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):

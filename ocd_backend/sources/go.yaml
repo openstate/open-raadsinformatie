@@ -51,17 +51,11 @@ _entities: &entities
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
-    item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeeting
+    item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeetingItem
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
-
-  - &meetingitems
-    <<: *meetings
-    entity: meetingitems
-    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingItemsExtractor
-    item: ocd_backend.items.goapi_meetingitem.MeetingItem
 
 _go: &go
   index_name: "{key}"
