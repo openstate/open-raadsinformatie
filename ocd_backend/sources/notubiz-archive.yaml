@@ -28,18 +28,12 @@ _entities: &entities
     <<: *entity_defaults
     entity: meetings
     doc_type: events
-    extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
-    item: ocd_backend.items.notubiz_meeting.NotubizMeeting
+    extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
+    item: ocd_backend.items.notubiz_meeting.NotubizMeetingItem
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
-
-  - &meetingitems
-    <<: *meetings
-    entity: meetingitems
-    extractor: ocd_backend.extractors.notubiz.NotubizMeetingItemExtractor
-    item: ocd_backend.items.notubiz_meetingitem.NotubizMeetingItem
 
 _notubiz: &notubiz
   index_name: "{key}"

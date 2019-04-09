@@ -21,11 +21,18 @@ _entities: &entities
     filter:
       Title: "{municipality}"
 
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.notubiz.NotubizCommitteesExtractor
+    item: ocd_backend.items.notubiz_committee.CommitteeItem
+
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
-    extractor: ocd_backend.extractors.notubiz.NotubizMeetingExtractor
+    extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     item: ocd_backend.items.notubiz_meeting.NotubizMeetingItem
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.GCSStaticMediaEnricher

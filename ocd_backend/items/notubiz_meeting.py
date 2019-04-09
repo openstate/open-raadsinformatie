@@ -23,9 +23,16 @@ class NotubizMeetingItem(BaseItem):
         event.classification = [u'Agenda']
         event.location = self.original_item['attributes'].get('Locatie')
 
+        # Attach the meeting to the municipality node
         event.organization = Organization(self.original_item['organisation']['id'], **source_defaults)
-        event.organization.merge(name=self.source_definition['municipality'])
+        event.organization.merge(collection=self.source_definition['index_name'])
+
+        # Attach the meeting to the committee node
         event.committee = Organization(self.original_item['gremium']['id'], **source_defaults)
+        # Re-attach the committee node to the municipality node
+        # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+        event.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+        event.committee.parent.merge(collection=self.source_definition['index_name'])
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
