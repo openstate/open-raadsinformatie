@@ -1,7 +1,3 @@
-from datetime import datetime
-from hashlib import sha1
-from pprint import pprint
-
 import iso8601
 
 from ocd_backend.items import BaseItem
@@ -85,14 +81,15 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
-        # if self.original_item['canceled']:
-        #     event.status = EventCancelled()
-        # elif self.original_item['inactive']:
-        #     event.status = EventUnconfirmed()
-        # else:
-        #     event.status = EventConfirmed()
-
-        event.status = EventConfirmed()
+        # TODO: This is untested so we log any cases that are not the default
+        if 'canceled' in self.original_item:
+            log.info('Found a GOAPI event with status EventCancelled: %s').format(str(event.values))
+            event.status = EventCancelled()
+        elif 'inactive' in self.original_item:
+            log.info('Found a GOAPI event with status EventUnconmfirmed: %s').format(str(event.values))
+            event.status = EventUnconfirmed()
+        else:
+            event.status = EventConfirmed()
 
         event.agenda = []
         for item in self.original_item.get('items', []):
