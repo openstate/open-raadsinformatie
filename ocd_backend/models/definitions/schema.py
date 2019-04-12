@@ -43,8 +43,7 @@ class CreativeWork(Schema, owl.Thing):
 
 class Event(Schema, owl.Thing):
     end_date = DateTimeProperty(Schema, 'endDate')
-    start_date = DateTimeProperty(Schema, 'startDate')
-
+    start_date = DateTimeProperty(Schema, 'startDate', required=True)
 
 class ImageObject(Schema, owl.Thing):
     content_url = StringProperty(Schema, 'contentUrl')

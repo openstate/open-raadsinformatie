@@ -104,6 +104,8 @@ class GemeenteOplossingenMeetingItem(BaseItem):
             agendaitem.description = item['description']
             agendaitem.name = '%s: %s' % (item['number'], item['title'],)
             agendaitem.position = item['sortorder']
+            agendaitem.parent = event
+            agendaitem.start_date = event.start_date
             agendaitem.attachment = []
 
             for doc in self._get_documents_as_media_urls(
