@@ -18,7 +18,12 @@ class CommitteeItem(BaseItem):
 
         committee = Organization(self.original_item['id'], **source_defaults)
         committee.name = self.original_item['title']
+        if self.original_item['title'] == 'Gemeenteraad':
+            committee.classification = 'Council'
+        else:
+            committee.classification = 'Committee'
 
+        # Attach the committee node to the municipality node
         committee.parent = Organization(self.source_definition['key'], **source_defaults)
         committee.parent.merge(collection=self.source_definition['index_name'])
 
