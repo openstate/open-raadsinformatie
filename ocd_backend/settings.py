@@ -241,7 +241,7 @@ COMBINED_INDEX = 'ori_combined_index'
 DEFAULT_INDEX_PREFIX = 'ori'
 
 RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'http://api.openraadsinformatie.nl/v%s/resolve' % MAJOR_VERSION)
-RESOLVER_URL_INDEX = 'ori_resolver'
+RESOLVER_URL_INDEX = 'resolver'
 
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)
