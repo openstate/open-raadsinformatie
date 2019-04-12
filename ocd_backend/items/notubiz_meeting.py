@@ -1,5 +1,8 @@
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('notubiz_meeting')
 
 
 class NotubizMeetingItem(BaseItem):
@@ -56,9 +59,12 @@ class NotubizMeetingItem(BaseItem):
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
-        if self.original_item['canceled']:
+        # TODO: This is untested so we log any cases that are not the default
+        if 'canceled' in self.original_item:
+            log.info('Found a Notubiz event with status EventCancelled: %s').format(str(event.values))
             event.status = EventCancelled()
-        elif self.original_item['inactive']:
+        elif 'inactive' in self.original_item:
+            log.info('Found a Notubiz event with status EventUncomfirmed: %s').format(str(event.values))
             event.status = EventUnconfirmed()
         else:
             event.status = EventConfirmed()

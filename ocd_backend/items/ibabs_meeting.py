@@ -6,7 +6,7 @@ from ocd_backend.items import BaseItem
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 
-log = get_source_logger('item')
+log = get_source_logger('ibabs_meeting')
 
 
 class IBabsMeetingItem(BaseItem):
@@ -23,6 +23,7 @@ class IBabsMeetingItem(BaseItem):
             'organization': self.source_definition['index_name'],
         }
 
+        # Sometimes the meeting is contained in a sub-dictionary called 'Meeting'
         if 'Meeting' in self.original_item:
             meeting = self.original_item['Meeting']
         else:
@@ -33,6 +34,16 @@ class IBabsMeetingItem(BaseItem):
         item.chair = meeting['Chairman']
         item.location = meeting['Location']
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+
+        # TODO: This is untested so we log any cases that are not the default
+        if 'canceled' in meeting:
+            log.info('Found an iBabs event with status EventCancelled: %s').format(str(item.values))
+            item.status = EventCancelled()
+        elif 'inactive' in meeting:
+            log.info('Found an iBabs event with status EventUnconfirmed: %s').format(str(item.values))
+            item.status = EventUnconfirmed()
+        else:
+            item.status = EventConfirmed()
 
         # Attach the meeting to the municipality node
         item.organization = Organization(self.source_definition['key'], **source_defaults)
