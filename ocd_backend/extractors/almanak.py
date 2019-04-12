@@ -10,7 +10,7 @@ log = get_source_logger('extractor')
 
 class OrganisationsExtractor(StaticHtmlExtractor):
     """
-    Extract organisations (parties) from an Almanak.
+    Extract organisations (parties) from the Almanak.
     """
 
     def extract_items(self, static_content):
@@ -18,25 +18,20 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         Extracts organisations from the Almanak page source HTML.
         """
 
-        organisations = {}
+        parties = set()
         html = etree.HTML(static_content)
 
-        # Parties are listed in TR's in the first TABLE after the H2 element with id 'functies-organisatie'
-        for element in html.xpath('//*[@id="functies-organisatie"]/following::table[1]//tr'):
-            try:
-                # Extract the party name from within the "(" and ")" characters
-                party = etree.tostring(element).split('(')[1].split(')')[0]
-                organisations[party] = ({'name': party, 'classification': u'Party'})
-            except:
-                pass
+        # Parties are listed in TD's with the attribute 'data-before="Partij"'
+        for party in html.xpath('.//td[@data-before="Partij"]/text()'):
+            parties.add(party)
 
-        for item in organisations.values():
-            yield 'application/json', json.dumps(item)
+        for party in parties:
+            yield 'application/json', json.dumps({'name': party, 'classification': u'Party'})
 
 
 class PersonsExtractor(StaticHtmlExtractor):
     """
-    Extract persons from an Almanak.
+    Extract persons from the Almanak.
     """
 
     def extract_items(self, static_content):
@@ -47,8 +42,8 @@ class PersonsExtractor(StaticHtmlExtractor):
         html = etree.HTML(static_content)
         persons = []
 
-        for element in html.xpath('//*[@id="functies-organisatie"]/following::table[1]//tr'):
-            name = element.xpath('.//a/text()')[0].strip()
+        for element in html.xpath('//*[@id="functies-organisatie"]/following::table[1]//td//a'):
+            name = element.xpath('text()')[0].strip()
             if name.lower() == 'vacant':
                 # Exclude vacant positions
                 break
@@ -67,6 +62,8 @@ class PersonsExtractor(StaticHtmlExtractor):
 
             if party:
                 # Extraction of role requires a HTTP request to a separate page
+                # TODO: With the new Almanak layout this could be done without an extra request by taking the role
+                # from the previous TD element
                 request_url = u'https://almanak.overheid.nl%s' % (unicode(url),)
                 response = self.http_session.get(request_url, verify=False)
                 response.raise_for_status()
