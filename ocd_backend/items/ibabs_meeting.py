@@ -23,59 +23,56 @@ class IBabsMeetingItem(BaseItem):
             'organization': self.source_definition['index_name'],
         }
 
-        meeting = self.original_item
-        if 'MeetingId' not in self.original_item:
-            item = Meeting(self.original_item['Id'], **source_defaults)
-            item.name = meeting['Meetingtype']
-            item.chair = meeting['Chairman']
-            item.location = meeting['Location']
-
-            # Attach the meeting to the municipality node
-            item.organization = Organization(self.source_definition['key'], **source_defaults)
-            item.organization.merge(collection=self.source_definition['key'])
-
-            # Check if this is a committee meeting and if so connect it to the committee node. If it is
-            # not a committee meeting we attach it to the 'Gemeenteraad' committee node
-            committee_designator = self.source_definition.get('committee_designator', 'commissie')
-            if committee_designator in meeting['Meetingtype'].lower():
-                # Attach the meeting to the committee node
-                item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
-                # Re-attach the committee node to the municipality node
-                # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
-                item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
-                item.committee.parent.merge(collection=self.source_definition['key'])
-            else:
-                # This is not a committee meeting, so attach it to the 'Gemeenteraad' committee node
-                item.committee = Organization('gemeenteraad', **source_defaults)
-                item.committee.name = 'Gemeenteraad'
-                item.committee.collection = self.source_definition['key'] + '-gemeenteraad'
-                item.committee.merge(collection=self.source_definition['key'] + '-gemeenteraad')
-                # Re-attach the 'Gemeenteraad' committee node to the municipality node
-                # TODO: Same problem as above
-                item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
-                item.committee.parent.merge(collection=self.source_definition['key'])
-
-            if 'MeetingItems' in meeting:
-                item.agenda = list()
-                for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-                    agenda_item = AgendaItem(mi['Id'], **source_defaults)
-                    agenda_item.__rel_params__ = {'rdf': '_%i' % i}
-                    item.agenda.append(agenda_item)
-
-            item.invitee = list()
-            for invitee in meeting['Invitees'] or []:
-                item.invitee.append(Person(invitee['UniqueId'],
-                                           **source_defaults))
-        else:
+        if 'Meeting' in self.original_item:
             meeting = self.original_item['Meeting']
-            item = AgendaItem(self.original_item['Id'], **source_defaults)
-            item.name = u'%s: %s' % (
-                self.original_item['Features'],
-                self.original_item['Title'],
-            )
-            item.description = self.original_item['Explanation']
+        else:
+            meeting = self.original_item
 
+        item = Meeting(meeting['Id'], **source_defaults)
+        item.name = meeting['Meetingtype']
+        item.chair = meeting['Chairman']
+        item.location = meeting['Location']
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+
+        # Attach the meeting to the municipality node
+        item.organization = Organization(self.source_definition['key'], **source_defaults)
+        item.organization.merge(collection=self.source_definition['key'])
+
+        # Check if this is a committee meeting and if so connect it to the committee node. If it is
+        # not a committee meeting we attach it to the 'Gemeenteraad' committee node
+        committee_designator = self.source_definition.get('committee_designator', 'commissie')
+        if committee_designator in meeting['Meetingtype'].lower():
+            # Attach the meeting to the committee node
+            item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+            # Re-attach the committee node to the municipality node
+            # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
+            item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+            item.committee.parent.merge(collection=self.source_definition['key'])
+        else:
+            # This is not a committee meeting, so attach it to the 'Gemeenteraad' committee node
+            item.committee = Organization('gemeenteraad', **source_defaults)
+            item.committee.name = 'Gemeenteraad'
+            item.committee.collection = self.source_definition['key'] + '-gemeenteraad'
+            item.committee.merge(collection=self.source_definition['key'] + '-gemeenteraad')
+            # Re-attach the 'Gemeenteraad' committee node to the municipality node
+            # TODO: Same problem as above
+            item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
+            item.committee.parent.merge(collection=self.source_definition['key'])
+
+        if 'MeetingItems' in meeting:
+            item.agenda = list()
+            for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
+                agenda_item = AgendaItem(mi['Id'], **source_defaults)
+                agenda_item.parent = item
+                agenda_item.name = mi['Title']
+                agenda_item.start_date = item.start_date
+                agenda_item.__rel_params__ = {'rdf': '_%i' % i}
+                item.agenda.append(agenda_item)
+
+        item.invitee = list()
+        for invitee in meeting['Invitees'] or []:
+            item.invitee.append(Person(invitee['UniqueId'],
+                                       **source_defaults))
 
         # Double check because sometimes 'EndTime' is in meeting but it is set to None
         if 'EndTime' in meeting and meeting['EndTime']:
@@ -86,7 +83,7 @@ class IBabsMeetingItem(BaseItem):
             item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
         item.attachment = list()
-        for document in self.original_item['Documents'] or []:
+        for document in meeting['Documents'] or []:
             attachment = MediaObject(document['Id'], **source_defaults)
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']

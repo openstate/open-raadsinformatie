@@ -1,12 +1,15 @@
 import copy
+import datetime
+from unittest import TestCase
+
 from nose.tools import eq_, assert_raises
+
 from ocd_backend.models import Meeting, Organization, AgendaItem, Person
 from ocd_backend.models.model import Model
 from ocd_backend.models.properties import Property, Namespace
 from ocd_backend.models.exceptions import RequiredProperty
 from ocd_backend.models.serializers import Neo4jSerializer, JsonLDSerializer
 from ocd_backend.models.database import Neo4jDatabase
-from unittest import TestCase
 
 
 def get_event():
@@ -20,14 +23,21 @@ def get_event():
     item.name = 'Test iBabs event'
     item.chair = 'Chairman'
     item.location = 'Somewhere'
+    item.start_date = datetime.datetime(2019, 3, 1, 12, 15)
+
 
     organization = Organization('MeetingtypeId', **source_defaults)
     item.organization = organization
 
-    item.agenda = [
-        AgendaItem('204ce628-b453-4fc1-9ab5-61383b6c9ab4', **source_defaults),
-        AgendaItem('304ce628-b453-4fc1-9ab5-61383b6c9ab4', **source_defaults),
-    ]
+    agenda_item1 = AgendaItem('204ce628-b453-4fc1-9ab5-61383b6c9ab4', **source_defaults)
+    agenda_item1.name = 'Test 1'
+    agenda_item1.start_date = datetime.datetime(2019, 3, 1, 12, 15)
+
+    agenda_item2 = AgendaItem('304ce628-b453-4fc1-9ab5-61383b6c9ab4', **source_defaults)
+    agenda_item2.name = 'Test 2'
+    agenda_item2.start_date = datetime.datetime(2019, 3, 1, 12, 15)
+
+    item.agenda = [agenda_item1, agenda_item2]
 
     item.invitee = [
         Person('404ce628-b453-4fc1-9ab5-61383b6c9ab4', **source_defaults),
@@ -63,6 +73,7 @@ class ModelTestCase(TestCase):
             'http://schema.org/location': 'Somewhere',
             'https://argu.co/ns/meeting/agenda': AgendaItem,
             'http://schema.org/organizer': Organization,
+            'http://schema.org/startDate': datetime.datetime(2019, 3, 1, 12, 15),
         }
         expected = copy.copy(mapping)
 

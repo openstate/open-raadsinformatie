@@ -48,6 +48,8 @@ class NotubizMeetingItem(BaseItem):
             agendaitem.description = item['type_data']['attributes'][0]['value']
             agendaitem.name = self.original_item['attributes']['Titel']
             agendaitem.position = self.original_item['order']
+            agendaitem.parent = event
+            agendaitem.start_date = event.start_date
 
             event.agenda.append(agendaitem)
 
