@@ -55,6 +55,11 @@ class IBabsMeetingItem(BaseItem):
         if committee_designator in meeting['Meetingtype'].lower():
             # Attach the meeting to the committee node
             item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+            item.committee.name = meeting['Meetingtype']
+            if 'sub' in meeting['MeetingtypeId']:
+                item.committee.classification = u'Subcommittee'
+            else:
+                item.committee.classification = u'Committee'
             # Re-attach the committee node to the municipality node
             # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
             item.committee.parent = Organization(self.source_definition['key'], **source_defaults)
@@ -63,6 +68,7 @@ class IBabsMeetingItem(BaseItem):
             # This is not a committee meeting, so attach it to the 'Gemeenteraad' committee node
             item.committee = Organization('gemeenteraad', **source_defaults)
             item.committee.name = 'Gemeenteraad'
+            item.committee.classification = 'Council'
             item.committee.collection = self.source_definition['key'] + '-gemeenteraad'
             item.committee.merge(collection=self.source_definition['key'] + '-gemeenteraad')
             # Re-attach the 'Gemeenteraad' committee node to the municipality node
@@ -122,7 +128,7 @@ class IBabsReportItem(BaseItem):
         report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
 
         report_name = self.original_item['_ReportName'].split(r'\s+')[0]
-        report.classification = report_name
+        report.classification = u'Report'
 
         name_field = None
         try:
