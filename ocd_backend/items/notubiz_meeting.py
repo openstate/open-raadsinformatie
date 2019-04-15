@@ -59,12 +59,11 @@ class NotubizMeetingItem(BaseItem):
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
 
-        # TODO: This is untested so we log any cases that are not the default
-        if 'canceled' in self.original_item:
-            log.info('Found a Notubiz event with status EventCancelled: %s').format(str(event.values))
+        if 'canceled' in self.original_item and self.original_item['canceled']:
+            log.info('Found a Notubiz event with status EventCancelled: %s' % str(event.values))
             event.status = EventCancelled()
-        elif 'inactive' in self.original_item:
-            log.info('Found a Notubiz event with status EventUncomfirmed: %s').format(str(event.values))
+        elif 'inactive' in self.original_item and self.original_item['inactive']:
+            log.info('Found a Notubiz event with status EventUncomfirmed: %s' % str(event.values))
             event.status = EventUnconfirmed()
         else:
             event.status = EventConfirmed()
