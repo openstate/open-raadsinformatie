@@ -36,11 +36,11 @@ class IBabsMeetingItem(BaseItem):
         item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
         # TODO: This is untested so we log any cases that are not the default
-        if 'canceled' in meeting:
-            log.info('Found an iBabs event with status EventCancelled: %s').format(str(item.values))
+        if 'canceled' in meeting and meeting['canceled']:
+            log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
             item.status = EventCancelled()
-        elif 'inactive' in meeting:
-            log.info('Found an iBabs event with status EventUnconfirmed: %s').format(str(item.values))
+        elif 'inactive' in meeting and meeting['inactive']:
+            log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
             item.status = EventUnconfirmed()
         else:
             item.status = EventConfirmed()
