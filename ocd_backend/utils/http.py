@@ -265,39 +265,38 @@ class GCSCachingMixin(HttpRequestMixin):
     def fetch(self, url, path, modified_date):
         """Fetch a resource url and save it to a path in GCS. The resource will
         only be downloaded from the source when the file has been modified,
-        otherwise the file will be downloaded from cache if 'force_old_files'
+        otherwise the file will be downloaded from cache unless 'force_old_files'
         has been set.
         """
 
         bucket = self.get_bucket()
         blob = bucket.get_blob(path)
-        if not blob:
-            blob = bucket.blob(path)
 
-            # File does not exist
+        if not blob or self.source_definition.get('force_old_files'):
+            # File does not exist or we want to ignore the cache with force_old_files
+            blob = bucket.blob(path)
             content_type, content_length, media_file = self.download_url(url)
             data = media_file.read()
+            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
+            media_file.seek(0, 0)
             self.compressed_upload(blob, data, content_type)
             return content_type, content_length, media_file
 
         modified_date = localize_datetime(str_to_datetime(modified_date))
         if modified_date > blob.updated:
+            # TODO: This is pretty much untested
             # Upload newer file
             content_type, content_length, media_file = self.download_url(url)
             data = media_file.read()
+            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
+            media_file.seek(0, 0)
             self.compressed_upload(blob, data, content_type)
             return content_type, content_length, media_file
-        elif self.source_definition.get('force_old_files'):
-            # Download up-to-date file
-            media_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
-            blob.download_to_file(media_file)
-            media_file.seek(0, 0)
-            return blob.content_type, blob.size, media_file
-
-        raise ItemAlreadyProcessed("Item %s has already been processed on %s. "
-                                   "Set 'force_old_files' in source_definition "
-                                   "to download old files from cache." %
-                                   (url, blob.updated.strftime("%c")))
+        else:
+            raise ItemAlreadyProcessed(
+                "item %s has already been processed on %s. "
+                "Set 'force_old_files' in the source_definition "
+                "to ignore cached files." % (url, blob.updated.strftime("%c")))
 
     def save(self, path, data, content_type=None):
         """Save data to a path in GCS. The content_type can be specified, or
