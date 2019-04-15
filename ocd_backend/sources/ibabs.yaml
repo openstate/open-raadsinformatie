@@ -536,3 +536,9 @@ ibabs:
     key: zeewolde
     almanak_id: 35858
     <<: *ibabs
+
+  # Added on 15-04-2019
+  losser:
+    key: losser
+    almanak_id: 27430
+    <<: *ibabs

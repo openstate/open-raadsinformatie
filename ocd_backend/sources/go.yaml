@@ -137,3 +137,10 @@ go:
     base_url: "https://gemeenteraad.bloemendaal.nl/api/"
     almanak_id: 35480
     <<: *go
+
+  # Added on 15-04-2019
+  stichtsevecht:
+    key: stichtsevecht
+    base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
+    almanak_id: 34861
+    <<: *go
