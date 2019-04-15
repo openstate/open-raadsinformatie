@@ -128,19 +128,14 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         "events/meetings/%i" % item['id'],
                         item['last_modified'],
                     )
-
                     meeting_json = json.loads(data)['meeting']
                 except ItemAlreadyProcessed, e:
                     meetings_skipped += 1
-                    log.debug(e)
+                    log.info(e)
                     continue
-                except (HTTPError, RetryError, KeyError), e:
+                except Exception as e:
                     meetings_skipped += 1
                     log.warning('%s: %s' % (e, response.request.url))
-                    continue
-                except (ValueError, KeyError), e:
-                    meetings_skipped += 1
-                    log.error('%s: %s' % (e, response.request.url))
                     continue
 
                 organization = self.organizations[self.source_definition['organisation_id']]
