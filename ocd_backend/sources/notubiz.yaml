@@ -295,8 +295,8 @@ notubiz:
     organisation_id: 427
     <<: *notubiz
 
-  cappelleadijssel:
-    key: cappelleadijssel
+  capelleadijssel:
+    key: capelleadijssel
     municipality: "Capelle aan den IJssel"
     organisation_id: 1517
     <<: *notubiz

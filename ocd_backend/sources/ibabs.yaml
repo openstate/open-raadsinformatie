@@ -542,3 +542,9 @@ ibabs:
     key: losser
     almanak_id: 27430
     <<: *ibabs
+
+  # Added on 16-04-2019
+  drimmelen:
+    key: drimmelen
+    almanak_id: 25896
+    <<: *ibabs
