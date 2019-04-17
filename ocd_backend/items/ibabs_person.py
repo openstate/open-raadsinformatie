@@ -29,6 +29,8 @@ class IbabsPersonItem(BaseItem):
 
         municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality
+        # TODO: Setting member = person causes infinite recursion
+        # municipality_member.member = person
         # FunctionName is often set to 'None' in the source, in that case we fall back to 'Member'
         if self.original_item['FunctionName'] == 'None':
             municipality_member.role = 'Member'
@@ -48,6 +50,8 @@ class IbabsPersonItem(BaseItem):
 
             party_member = Membership(**source_defaults)
             party_member.organization = party
+            # TODO: Setting member = person causes infinite recursion
+            # party_member.member = person
             party_member.role = 'Member'
 
             person.member_of.append(party_member)

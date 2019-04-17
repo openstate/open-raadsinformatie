@@ -35,6 +35,8 @@ class AlmanakPersonItem(BaseItem):
 
         municipality_member = Membership(**source_defaults)
         municipality_member.organization = municipality
+        # TODO: Setting member = person causes infinite recursion
+        # municipality_member.member = person
         municipality_member.role = self.original_item['role']
 
         person.member_of = [municipality_member]
@@ -45,6 +47,8 @@ class AlmanakPersonItem(BaseItem):
 
             party_member = Membership(**source_defaults)
             party_member.organization = party
+            # TODO: Setting member = person causes infinite recursion
+            # party_member.member = person
             party_member.role = self.original_item['role']
 
             person.member_of.append(party_member)
@@ -129,11 +133,15 @@ class HTMLPersonFromLinkItem(HTMLPersonItem):
         #
         municipality_member = Membership()
         municipality_member.organization = municipality
+        # TODO: Setting member = person causes infinite recursion
+        # municipality_member.member = person
         municipality_member.role = 'Fractielid'
         # municipality_member.role = html.xpath('string(//div[@id="content"]//h3/text())').strip()
         #
         party_member = Membership()
         party_member.organization = party
+        # TODO: Setting member = person causes infinite recursion
+        # party_member.member = person
         party_member.role = 'Member'
 
         person.member_of = [municipality_member, party_member]
