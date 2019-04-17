@@ -130,6 +130,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     )
                     meeting_json = json.loads(data)['meeting']
                 except ItemAlreadyProcessed, e:
+                    # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1
                     log.info(e)
                     continue

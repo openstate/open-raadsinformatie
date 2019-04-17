@@ -273,30 +273,22 @@ class GCSCachingMixin(HttpRequestMixin):
         blob = bucket.get_blob(path)
 
         if not blob or self.source_definition.get('force_old_files'):
-            # File does not exist or we want to ignore the cache with force_old_files
+            # File does not exist in the cache or we want to ignore the cache with force_old_files
             blob = bucket.blob(path)
             content_type, content_length, media_file = self.download_url(url)
             data = media_file.read()
             # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
             media_file.seek(0, 0)
             self.compressed_upload(blob, data, content_type)
-            return content_type, content_length, media_file
-
-        modified_date = localize_datetime(str_to_datetime(modified_date))
-        if modified_date > blob.updated:
-            # TODO: This is pretty much untested
-            # Upload newer file
-            content_type, content_length, media_file = self.download_url(url)
-            data = media_file.read()
-            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
-            media_file.seek(0, 0)
-            self.compressed_upload(blob, data, content_type)
+            log.debug('Uploaded file %s to cache' % path)
             return content_type, content_length, media_file
         else:
-            raise ItemAlreadyProcessed(
-                "item %s has already been processed on %s. "
-                "Set 'force_old_files' in the source_definition "
-                "to ignore cached files." % (url, blob.updated.strftime("%c")))
+            # Retrieve and return the cached file
+            media_file = cStringIO.StringIO()
+            blob.download_to_file(media_file)
+            media_file.seek(0, 0)
+            log.debug('Retrieved file %s from cache' % path)
+            return blob.content_type, blob.size, media_file
 
     def save(self, path, data, content_type=None):
         """Save data to a path in GCS. The content_type can be specified, or
