@@ -4,7 +4,7 @@ Open Raadsinformatie API install notes
 .. contents::
 
 Install using Docker
-=============
+====================
 
 Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a development environment and get started with contributing to the Open Raadsinformatie API. The following has been tested to work with Docker 17.06.0.
 
@@ -59,12 +59,12 @@ Some useful Docker commands::
    Also, if attached to a container, either via run, start -a or attach, you can detach by typing CTRL+p CTRL+q
 
 Usage
-============
+=====
 
 Some quick notes on how to use the Open Raadsinformatie API
 
 Running an extractor
-------------
+--------------------
 
 When the containers are started as described above, we can run an extraction. In another terminal run the following commands for extraction:
 
@@ -86,7 +86,7 @@ Old-style sources are started a bit different::
    $ docker exec -it ocd_backend_1 ./manage.py extract start <source_name>_<entity>
 
 Understanding sources and entities
-------------
+----------------------------------
 
 New sources can be added to ``ocd_backend/sources`` in either the new-style YAML or the old-style JSON format.
 It's important to understand how YAML aliases and anchors work to know how these YAML sources are expanded.
