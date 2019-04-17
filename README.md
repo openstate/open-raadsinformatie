@@ -17,7 +17,7 @@ Develop: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinfor
  - [Open Raadsinformatie homepage](http://www.openraadsinformatie.nl/)
  - [Official source code repo](https://github.com/openstate/open-raadsinformatie/)
  - [Documentation](http://docs.openraadsinformatie.nl/)
- - [Issue tracker](https://github.com/openstate/open-raadsinformatieissues)
+ - [Issue tracker](https://github.com/openstate/open-raadsinformatie/issues)
 
 ## Bugs and feature requests
 
@@ -46,7 +46,7 @@ Authors:
 * Bart de Goede ([@bartdegoede](https://twitter.com/bartdegoede))
 * Justin van Wees ([@justin_v_w](https://twitter.com/justin_v_w))
 * Breyten Ernsting ([@breyten](https://twitter.com/breyten))
-* Sicco van Sas([@siccovansas](https://twitter.com/siccovansas))
+* Sicco van Sas ([@siccovansas](https://twitter.com/siccovansas))
 * Jurrian Tromp ([@jurrian](https://github.com/jurrian))
 
 Contributors:

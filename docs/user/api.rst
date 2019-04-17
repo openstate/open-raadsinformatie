@@ -87,7 +87,7 @@ Collection overview and statistics
 .. _rest_queryparams:
 
 Query parameters
---------
+----------------
 
 The POST requests listed below accept query parameters:
 
