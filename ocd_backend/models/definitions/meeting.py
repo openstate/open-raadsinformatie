@@ -12,14 +12,14 @@ import schema
 from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
-    Relation
+    Relation, OrderedRelation
 
 
 class Meeting(MeetingNS, schema.Event):
     """An assembly of people for a particular purpose, especially for formal
     discussion. Subclass of :class:`.schema.Event`
     """
-    agenda = Relation(MeetingNS, 'agenda')
+    agenda = OrderedRelation(MeetingNS, 'agenda')
     attachment = Relation(MeetingNS, 'attachment')
     motion = Relation(Opengov, 'motion')
     attendee = Relation(Schema, 'attendee')

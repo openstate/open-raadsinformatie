@@ -289,11 +289,15 @@ class JsonLDSerializer(JsonSerializer):
         deflated['@type'] = model_object.verbose_name()
         return deflated
 
-    # def ori_uri(self, item):
-    #     """Returns a non-prefixed uri to an ori resource. Needs to be a string
-    #     in order to be expanded to a full uri by @base in JsonLD.
-    #     """
-    #     return str(item.get_ori_identifier())
+    def serialize_prop(self, prop, value):
+        """Serializes all OrderedRelation props with an @list attribute
+        """
+        serialized = super(JsonLDSerializer, self).serialize_prop(prop, value)
+
+        if type(prop) == OrderedRelation and type(serialized) == list:
+            return {'@list': serialized}
+
+        return serialized
 
     def ori_uri(self, item):
         """Creates a full uri to an ori resource since json doesn't do prefixes.
