@@ -20,13 +20,13 @@ def file_parser(fname, pages=None):
                 for f in p:
                     for b in f:
                         for l in b:
-                            text_array.append(l.text.encode('UTF-8'))
+                            text_array.append(unicode(l.text))
 
                 if i >= pages:  # break after x pages
                     break
 
             log.debug("Processed %i pages (%i max)", i, pages)
-            return '\n'.join(text_array)
+            return text_array
         except:
             # reraise everything
             raise
@@ -44,11 +44,6 @@ class FileToTextMixin(object):
     Interface for converting a PDF file into text format using pdftotext
     """
 
-    @staticmethod
-    def file_clean_text(text):
-        return text
-        # return re.sub(r'\s+', u' ', text)
-
     def file_get_contents(self, url, max_pages=20):
         """
         Convenience method to download a PDF file and converting it to text.
@@ -60,7 +55,7 @@ class FileToTextMixin(object):
         if tf is not None:
             return self.file_to_text(tf.name, max_pages)
         else:
-            return u''  # FIXME: should be something else ...
+            return []  # FIXME: should be something else ...
 
     def file_download(self, url):
         """
@@ -85,9 +80,4 @@ class FileToTextMixin(object):
         Method to convert a given PDF file into text file using a subprocess
         """
 
-        try:
-            content = file_parser(path, max_pages)
-            text = self.file_clean_text(content.decode('utf-8'))
-            return unicode(text)
-        except AttributeError:
-            return
+        return file_parser(path, max_pages)
