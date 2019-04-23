@@ -69,7 +69,7 @@ class NotubizMeetingTestCase(ItemTestCase):
                 '3',
                 '4'
             ],
-            'agenda': [
+            'agenda': {'@list': [
                 '5',
                 '6',
                 '7',
@@ -109,7 +109,7 @@ class NotubizMeetingTestCase(ItemTestCase):
                 '41',
                 '42',
                 '43'
-            ],
+            ]},
             '@context': {
                 'status': {'@id': 'http://schema.org/eventStatus', '@type': '@id'},
                 'name': {'@id': 'http://schema.org/name'},
