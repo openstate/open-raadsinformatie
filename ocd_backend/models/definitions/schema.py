@@ -23,7 +23,7 @@ class MediaObject(Schema, owl.Thing):
     file_name = StringProperty(Dbo, 'filename')
     date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = StringProperty(Schema, 'isBasedOn')
-    text = StringProperty(Schema, 'text')
+    text = ArrayProperty(Schema, 'text')
 
     enricher_task = 'file_to_text'
 
