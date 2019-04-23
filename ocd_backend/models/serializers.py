@@ -284,6 +284,7 @@ class JsonLDSerializer(JsonSerializer):
 
         deflated = self.deflate(model_object, props=True, rels=True)
         deflated['@context'] = {k: v for k, v in context.items() if k in deflated}
+        deflated['@context']['ori_identifier'] = '@id'
         deflated['@context']['@base'] = Ori.uri
         deflated['@context'][model_object.verbose_name()] = model_object.absolute_uri()
         deflated['@type'] = model_object.verbose_name()
