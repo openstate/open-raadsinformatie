@@ -295,8 +295,11 @@ class JsonLDSerializer(JsonSerializer):
         """
         serialized = super(JsonLDSerializer, self).serialize_prop(prop, value)
 
-        if type(prop) == OrderedRelation and type(serialized) == list:
-            return {'@list': serialized}
+        if type(prop) == OrderedRelation:
+            if type(serialized) == list:
+                return {'@list': serialized}
+            else:
+                return {'@list': [serialized]}
 
         return serialized
 
