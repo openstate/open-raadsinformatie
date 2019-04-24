@@ -99,7 +99,8 @@ _ibabs: &ibabs
   sitename: "{key!c}"
   municipality: "{sitename}"
   entities: *entities
-  #start_date: "2016-01-01T00:00:00"
+  months_interval: 4
+  start_date: "2000-01-01T00:00:00"
   #end_date: "2016-06-01T00:00:00"
   <<: *source_defaults
 
