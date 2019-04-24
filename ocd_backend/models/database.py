@@ -126,7 +126,10 @@ class Neo4jDatabase(object):
             )
 
         if len(result) > 1:
-            raise QueryResultError('The number of results is greater than one!')
+            raise QueryResultError(
+                'The number of %s results is greater than one with %s=%s'
+                % (model_object.verbose_name(), filter_key, filter_value)
+            )
 
         return result[0]['ori_identifier']
 
@@ -168,7 +171,10 @@ class Neo4jDatabase(object):
                 result = cursor.data()
 
                 if len(result) > 1:
-                    raise QueryResultError('The number of results is greater than one!')
+                    raise QueryResultError(
+                        'The number of %s results is greater than one'
+                        % model_object.verbose_name()
+                    )
 
                 elif len(result) < 1:
                     model_object.generate_ori_identifier()
