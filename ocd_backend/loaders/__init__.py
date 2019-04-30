@@ -71,8 +71,7 @@ class ElasticsearchLoader(BaseLoader):
         log.info('ElasticsearchLoader indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
-        elasticsearch.index(index=self.index_name, doc_type=doc_type(doc.verbose_name()),
-                            body=body, id=doc.get_short_identifier())
+        elasticsearch.index(index=self.index_name, body=body, id=doc.get_short_identifier())
 
         # Recursively index associated models like attachments
         for _, value in doc.properties(rels=True, props=False):
@@ -90,7 +89,7 @@ class ElasticsearchLoader(BaseLoader):
                     url_doc['content_type'] = value.content_type
 
                 # Update if already exists
-                elasticsearch.index(index=settings.RESOLVER_URL_INDEX, doc_type='url',
+                elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
                                     id=get_sha1_hash(value.original_url), body=url_doc)
 
 
@@ -112,7 +111,6 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
         elasticsearch.update(
             id=doc.get_short_identifier(),
             index=self.index_name,
-            doc_type=doc_type(doc.verbose_name()),
             body={'doc': body},
         )
         # remember, resolver URLs are not update here to prevent too complex
@@ -137,7 +135,6 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
         elasticsearch.update(
             id=doc.get_short_identifier(),
             index=self.index_name,
-            doc_type=doc_type(doc),
             body={
                 'doc': body,
                 'doc_as_upsert': True,
