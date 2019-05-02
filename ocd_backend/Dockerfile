@@ -30,6 +30,7 @@ RUN adduser -D -H celery \
 COPY json /opt/ori/json
 COPY bin /opt/ori/bin
 COPY manage.py /opt/ori/manage.py
+COPY es_mappings /opt/ori/es_mappings
 COPY ocd_backend /opt/ori/ocd_backend
 COPY version.py /opt/ori/ocd_backend/version.py
 
