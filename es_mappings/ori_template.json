@@ -1,231 +1,35 @@
 {
-    "template": "ori_*",
-    "settings": {
-        "index": {
-            "number_of_shards": 5,
-            "number_of_replicas": 1,
-            "query": {
-                "default_field": "all_text"
-            },
-            "analysis": {
-                "analyzer": {
-                    "default": {
-                      "type": "dutch"
-                    },
-                    "text_nl": {
-                        "type": "custom",
-                        "filter": [
-                            "asciifolding",
-                            "lowercase",
-                            "custom_word_delimiter"
-                        ],
-                        "tokenizer": "standard"
-                    }
-                },
-                "filter": {
-                    "custom_word_delimiter": {
-                        "type": "word_delimiter",
-                        "split_on_numerics": false,
-                        "generate_number_parts": true,
-                        "preserve_original": true,
-                        "stem_english_possesive": false,
-                        "catenate_words": false,
-                        "catenate_numbers": true,
-                        "split_on_case_change": false,
-                        "generate_word_parts": true
-                    }
-                }
-            }
-        }
-    },
-    "mappings": {
-        "_default_": {
-            "_all": {
-                "enabled": false
-            },
-            "dynamic_templates": [
-                {
-                    "original_object_urls": {
-                        "path_match": "meta.original_object_urls.*",
-                        "mapping": {
-                            "type": "keyword",
-                            "index": "false"
-                        }
-                    }
-                }
-            ],
-            "properties": {
-                "meta": {
-                    "type": "object",
-                    "properties": {
-                        "source_id": {
-                            "type": "keyword"
-                        },
-                        "collection": {
-                            "type": "keyword"
-                        },
-                        "original_object_id": {
-                            "type": "keyword"
-                        },
-                        "rights": {
-                            "type": "keyword"
-                        },
-                        "original_object_urls": {
-                            "type": "object"
-                        },
-                        "processing_started": {
-                            "type": "date",
-                            "format": "dateOptionalTime"
-                        },
-                        "processing_finished": {
-                            "type": "date",
-                            "format": "dateOptionalTime"
-                        }
-                    }
-                },
-                "all_text": {
-                    "type": "text",
-                    "analyzer": "text_nl"
-                },
-                "title": {
-                    "type": "text",
-                    "analyzer": "text_nl"
-                },
-                "description": {
-                    "type": "text",
-                    "analyzer": "text_nl"
-                },
-                "classification": {
-                    "type": "keyword"
-                },
-                "date": {
-                    "type": "date",
-                    "format": "dateOptionalTime"
-                },
-                "date_granularity": {
-                    "type": "short"
-                },
-                "gender": {
-                    "type": "keyword"
-                },
-                "organization_id": {
-                    "type": "keyword"
-                },
-                "location": {
-                    "type": "keyword"
-                },
-                "status": {
-                    "type": "keyword"
-                },
-                "identifiers": {
-                    "type": "object",
-                    "properties": {
-                        "identifier": {
-                            "type": "keyword"
-                        },
-                        "scheme": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "authors": {
-                    "type": "text",
-                    "fields": {
-                        "authors": {
-                            "type" : "text",
-                            "analyzer": "text_nl"
-                        },
-                        "untouched": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "media_urls": {
-                    "properties": {
-                        "url": {
-                            "type": "keyword",
-                            "index": "false"
-                        },
-                        "original_url": {
-                            "type": "keyword",
-                            "index": "false"
-                        },
-                        "width": {
-                            "type": "integer"
-                        },
-                        "height": {
-                            "type": "integer"
-                        },
-                        "content_type": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "enrichments": {
-                    "type": "object",
-                    "properties": {
-                        "media_urls": {
-                            "properties": {
-                                "url": {
-                                    "type": "keyword",
-                                    "index": "false"
-                                },
-                                "original_url": {
-                                    "type": "keyword",
-                                    "index": "false"
-                                },
-                                "media_type": {
-                                    "type": "keyword"
-                                },
-                                "content_type": {
-                                    "type": "keyword"
-                                },
-                                "size_in_bytes": {
-                                    "type": "integer"
-                                },
-                                "resolution": {
-                                    "type": "object",
-                                    "properties": {
-                                        "width": {
-                                            "type": "integer"
-                                        },
-                                        "height": {
-                                            "type": "integer"
-                                        },
-                                        "total_pixels": {
-                                            "type": "integer"
-                                        }
-                                    }
-                                },
-                                "image_format": {
-                                    "type": "keyword"
-                                },
-                                "image_mode": {
-                                    "type": "keyword"
-                                }
-                            }
-                        }
-                    }
-                },
-                "source_data": {
-                    "type": "object",
-                    "properties": {
-                        "data": {
-                            "type": "text",
-                            "index": "false",
-                            "doc_values": "false"
-                        },
-                        "content_type": {
-                            "type": "keyword"
-                        }
-                    }
-                },
-                "combined_index_data": {
-                    "type": "text",
-                    "index": "false",
-                    "doc_values": "false"
-                }
-            }
-        }
+  "template": "ori_*",
+  "settings": {
+    "index": {
+      "number_of_shards": 3,
+      "number_of_replicas": 1
     }
+  },
+  "mappings": {
+    "dynamic_templates": [
+      {
+        "strings": {
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "keyword"
+          }
+        }
+      }
+    ],
+    "properties": {
+      "text": {
+        "type": "text"
+      },
+      "title": {
+        "type": "text"
+      },
+      "name": {
+        "type": "text"
+      },
+      "description": {
+        "type": "text"
+      }
+    }
+  }
 }
