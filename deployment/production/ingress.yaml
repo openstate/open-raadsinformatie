@@ -1,0 +1,68 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: ingress
+  namespace: production
+spec:
+  rules:
+  - host: api.openraadsinformatie.nl
+    http:
+      paths:
+      - path: /v1
+        backend:
+          serviceName: endpoints
+          servicePort: 8000
+      - path: /v1/elastic
+        backend:
+          serviceName: elastic
+          servicePort: 9200
+      - path: /v1/neo4j/*
+        backend:
+          serviceName: neo4j
+          servicePort: 6379
+      - path: /v0
+        backend:
+          serviceName: openstate
+          servicePort: 80
+  - host: api.openstateninformatie.nl
+    http:
+      paths:
+      - path: /v1
+        backend:
+          serviceName: endpoints
+          servicePort: 8000
+      - path: /v0
+        backend:
+          serviceName: openstate
+          servicePort: 80
+  - host: zoek.openraadsinformatie.nl
+    http:
+      paths:
+      - backend:
+          serviceName: openstate
+          servicePort: 80
+  - host: zoek.openstateninformatie.nl
+    http:
+      paths:
+      - backend:
+          serviceName: openstate
+          servicePort: 80
+  - host: docs.openraadsinformatie.nl
+    http:
+      paths:
+      - backend:
+          serviceName: openstate
+          servicePort: 80
+  - host: static.openraadsinformatie.nl
+    http:
+      paths:
+      - backend:
+          serviceName: static
+          servicePort: 80
+
+  tls:
+  - secretName: tls-certificate

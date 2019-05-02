@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: production
 spec:
   selector:
     matchLabels:
@@ -12,7 +13,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: {{ .Values.frontendImage | quote }}
+      - image: openstatefoundation/open-raadsinformatie-frontend
         imagePullPolicy: Always
         name: frontend
         ports:

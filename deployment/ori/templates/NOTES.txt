@@ -1,3 +1,0 @@
-Write down these passwords:
-
-neo4j-auth: {{ template "..neo4j-auth" . }}

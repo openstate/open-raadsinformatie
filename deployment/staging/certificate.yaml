@@ -1,0 +1,32 @@
+# Copyright 2018 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: tls-certificate
+  namespace: staging
+spec:
+  secretName: tls-certificate
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: beta.openraadsinformatie.nl
+  dnsNames:
+  - beta.openraadsinformatie.nl
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - beta.openraadsinformatie.nl

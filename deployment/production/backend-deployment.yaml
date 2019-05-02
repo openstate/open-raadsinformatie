@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - image: openstatefoundation/open-raadsinformatie-backend
+        imagePullPolicy: Always
+        name: backend
+        envFrom:
+        - configMapRef:
+            name: config
+        env:
+          - name: NEO4J_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: neo4j-auth
+        volumeMounts:
+        - mountPath: /opt/ori/data
+          name: oridata
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      volumes:
+      - name: oridata
+        persistentVolumeClaim:
+          claimName: oridata

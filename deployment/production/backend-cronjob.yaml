@@ -1,10 +1,10 @@
-{{ if .Values.backendSchedule }}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: backend
+  namespace: production
 spec:
-  schedule: {{ .Values.backendSchedule | quote }}
+  schedule: "0 9 * * *"
   jobTemplate:
     spec:
       template:
@@ -13,13 +13,14 @@ spec:
         spec:
           containers:
           - name: backend-job
-            image: {{ .Values.backendImage | quote }}
+            image: openstatefoundation/open-raadsinformatie-backend
             imagePullPolicy: Always
             command: ["python"]
             args: |-
-              {{- range .Values.backendCommand }}
-              - {{ . }}
-              {{- end }}
+              - manage.py
+              - extract
+              - start
+              - notubiz
             envFrom:
             - configMapRef:
                 name: config
@@ -34,4 +35,3 @@ spec:
             persistentVolumeClaim:
               claimName: oridata
           restartPolicy: OnFailure
-{{ end }}
