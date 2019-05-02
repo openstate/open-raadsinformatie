@@ -1,10 +1,11 @@
-apiVersion: v1
+apiVersion: v1nginx
 kind: PersistentVolumeClaim
 metadata:
-  name: oridata
+  name: esdata
+  namespace: production
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: {{ .Values.backendStorage }}
+      storage: 6Gi

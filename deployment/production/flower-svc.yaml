@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: flower
+  namespace: production
+spec:
+  selector:
+    app: flower
+  type: LoadBalancer
+  ports:
+  - name: "http"
+    port: 5555
+    targetPort: 5555

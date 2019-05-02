@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: config
-data:
-  BUGSNAG_APIKEY: {{ .Values.bugsnag }}
-  GCE_STACKDRIVER: {{ quote .Values.gceStackdriver }}
-  RELEASE_STAGE: {{ .Release.Namespace }}
-  RESOLVER_BASE_URL: {{ .Values.resolverBaseUrl }}

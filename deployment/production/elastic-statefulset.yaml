@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elastic
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: elastic
+  replicas: 3
+  serviceName: "elastic"
+  template:
+    metadata:
+      labels:
+        app: elastic
+    spec:
+      containers:
+      - name: elastic
+        image: elasticsearch:7.0.0
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xms1g -Xmx1g
+        - name: cluster.name
+          value: "docker-cluster"
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.monitoring.enabled
+          value: "false"
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: network.host
+          value: "0.0.0.0"
+        - name: discovery.seed_hosts
+          value: "elastic-discovery"
+        - name: cluster.initial_master_nodes
+          value: "elastic-0,elastic-1,elastic-2"
+        - name: node.max_local_storage_nodes
+          value: "20"
+        - name: http.cors.enabled
+          value: "true"
+        - name: http.cors.allow-origin
+          value: "*"
+        - name: http.cors.allow-headers
+          value: "Content-Type,Content-Length,Authorization"
+        - name: http.cors.allow-credentials
+          value: "true"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            add:
+            # Lock memory (mlock(2), mlockall(2), mmap(2), shmctl(2))
+            - IPC_LOCK  
+            # Override resource Limits
+            - SYS_RESOURCE
+          privileged: true
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esdata
+      restartPolicy: Always
+      volumes:
+      - name: esdata
+        persistentVolumeClaim:
+          claimName: esdata

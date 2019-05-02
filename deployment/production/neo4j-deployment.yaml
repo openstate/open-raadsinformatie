@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: neo4j
+  namespace: production
 spec:
   selector:
     matchLabels:
-      app: backend
+      app: neo4j
+  replicas: 1
   template:
     metadata:
       labels:
-        app: backend
+        app: neo4j
     spec:
       containers:
-      - image: {{ .Values.backendImage | quote }}
+      - image: neo4j:3.2.1
+        name: neo4j
         imagePullPolicy: Always
-        name: backend
-        envFrom:
-        - configMapRef:
-            name: config
+        ports:
+        - containerPort: 7474
+        - containerPort: 7687
         env:
           - name: NEO4J_AUTH
             valueFrom:
@@ -25,12 +27,10 @@ spec:
                 name: secrets
                 key: neo4j-auth
         volumeMounts:
-        - mountPath: /opt/ori/data
-          name: oridata
-      securityContext:
-        runAsUser: 1000
-        fsGroup: 1000
+        - mountPath: /data
+          name: neodata
+      restartPolicy: Always
       volumes:
-      - name: oridata
+      - name: neodata
         persistentVolumeClaim:
-          claimName: oridata
+          claimName: neodata

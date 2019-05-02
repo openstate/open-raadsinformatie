@@ -63,6 +63,8 @@ local_dumps/*
 ocd_frontend/.thumbnail-cache/*
 log/*
 es-licence.json
+activate
 
 # Do NOT commit your secrets!
 ocd_backend/secrets.py
+**/secrets*

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: production
+data:
+  BUGSNAG_APIKEY: d83215ad00143ac50873ac2265c2dabb
+  GCE_STACKDRIVER: "true"
+  RELEASE_STAGE: production
+  RESOLVER_BASE_URL: https://api.openraadsinformatie.nl/v1/resolve
