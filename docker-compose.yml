@@ -57,7 +57,7 @@ services:
       test: wget -q -O - http://127.0.0.1:9200/_cat/health
       interval: 15s
       timeout: 10s
-      retries: 3
+      retries: 5
     environment:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       # Discovery
