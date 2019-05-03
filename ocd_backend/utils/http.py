@@ -9,6 +9,7 @@ from tempfile import NamedTemporaryFile
 
 import requests
 import urllib3
+from google.auth.exceptions import GoogleAuthError
 from google.cloud import storage, exceptions
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -224,6 +225,12 @@ class GCSCachingMixin(HttpRequestMixin):
     Storage for caching purposes. When the resource has not changed, this
     mixin will serve from cache instead of doing a new request.
     """
+    try:
+        storage_client = storage.Client()
+    except GoogleAuthError as e:
+        log.warning('GCSCachingMixin: storage client failed, using HttpRequestMixin instead. %s', e)
+        storage_client = False
+
     bucket_name = None
     default_content_type = None
     _bucket = None
@@ -239,12 +246,10 @@ class GCSCachingMixin(HttpRequestMixin):
         if not self.bucket_name:
             raise ValueError("The 'bucket_name' needs to be set.")
 
-        storage_client = storage.Client()
-
         try:
-            self._bucket = storage_client.get_bucket(self.bucket_name)
+            self._bucket = self.storage_client.get_bucket(self.bucket_name)
         except (exceptions.NotFound, exceptions.Forbidden):
-            bucket = storage.Bucket(storage_client, name=self.bucket_name)
+            bucket = storage.Bucket(self.storage_client, name=self.bucket_name)
             bucket.versioning_enabled = True
             bucket.lifecycle_rules = [{
                 'action': {'type': 'SetStorageClass', 'storageClass': 'NEARLINE'},
@@ -258,7 +263,7 @@ class GCSCachingMixin(HttpRequestMixin):
                 bucket.create(location='europe-west4')
             except exceptions.Conflict:
                 raise
-            self._bucket = storage_client.get_bucket(self.bucket_name)
+            self._bucket = self.storage_client.get_bucket(self.bucket_name)
 
         return self._bucket
 
@@ -268,6 +273,10 @@ class GCSCachingMixin(HttpRequestMixin):
         otherwise the file will be downloaded from cache unless 'force_old_files'
         has been set.
         """
+
+        # If the storage_client has not been loaded fall back to HttpRequestMixin fetch
+        if not self.storage_client:
+            return super(GCSCachingMixin, self).fetch(url, path, modified_date)
 
         bucket = self.get_bucket()
         blob = bucket.get_blob(path)
