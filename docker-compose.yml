@@ -9,14 +9,14 @@ services:
     image: openstatefoundation/open-raadsinformatie-backend
     links:
       - redis:redis
-      - elastic-endpoint:elasticsearch
+      - elastic:elasticsearch
       - frontend:frontend
     volumes:
       - oridata:/opt/ori/data
     depends_on:
       neo4j:
         condition: service_started
-      elastic-endpoint:
+      elastic:
         condition: service_healthy
     mem_limit: 3g
   frontend:
@@ -29,9 +29,9 @@ services:
     volumes:
       - oridata:/opt/ori/data
     links:
-      - elastic-endpoint:elasticsearch
+      - elastic:elasticsearch
     depends_on:
-      elastic-endpoint:
+      elastic:
         condition: service_healthy
     ports:
       - "5000:5000"
@@ -42,23 +42,8 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     mem_limit: 4g
-  elastic-endpoint:
-    container_name: ori_elastic-endpoint
-    extends:
-      service: elastic
-    environment:
-      - http.host=0.0.0.0
-      - node.master=true
-    healthcheck:
-      test: wget -q -O - http://127.0.0.1:9200/_cat/health
-      interval: 15s
-      timeout: 10s
-      retries: 3
   elastic:
-    build:
-      context: elasticsearch
-    environment:
-      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
+    image: elasticsearch:7.0.0
     ulimits:
       memlock:
         soft: -1
@@ -68,6 +53,32 @@ services:
       - IPC_LOCK
     volumes:
       - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: wget -q -O - http://127.0.0.1:9200/_cat/health
+      interval: 15s
+      timeout: 10s
+      retries: 3
+    environment:
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      # Discovery
+      - network.host=127.0.0.1
+      - http.host=0.0.0.0
+      - cluster.name=docker-cluster
+
+      # Disable xpack features
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+
+      # Enable CORS for all origins
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      - http.cors.allow-headers=Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+
+      # Other settings
+      - node.max_local_storage_nodes=20
+      - bootstrap.memory_lock=false
+      - reindex.remote.whitelist=c-open-raadsinformatie:9200
   neo4j:
     image: "neo4j:${NEO4J_VERSION}"
     volumes:
