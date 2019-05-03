@@ -75,8 +75,8 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         event.committee = Organization(self.original_item[u'dmu'][u'id'], **source_defaults)
         # Re-attach the committee node to the municipality node
         # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
-        event.committee.parent = Organization(self.source_definition['key'], **source_defaults)
-        event.committee.parent.merge(collection=self.source_definition['key'])
+        event.committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+        event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])

@@ -24,7 +24,7 @@ class CommitteeItem(BaseItem):
             committee.classification = 'Committee'
 
         # Attach the committee node to the municipality node
-        committee.parent = Organization(self.source_definition['key'], **source_defaults)
-        committee.parent.merge(collection=self.source_definition['index_name'])
+        committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+        committee.subOrganizationOf.merge(collection=self.source_definition['index_name'])
 
         return committee
