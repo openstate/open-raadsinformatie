@@ -52,8 +52,8 @@ class AlmanakOrganisationItem(BaseItem):
         object_model = Organization(self.original_item['name'], **source_defaults)
         object_model.name = self.original_item['name']  # todo dubbel?
         object_model.classification = self.original_item['classification']
-        object_model.parent = Organization(self.source_definition['almanak_id'], **source_defaults)
-        object_model.parent.merge(collection=self.source_definition['index_name'])
+        object_model.subOrganizationOf = Organization(self.source_definition['almanak_id'], **source_defaults)
+        object_model.subOrganizationOf.merge(collection=self.source_definition['index_name'])
 
         return object_model
 

@@ -64,7 +64,7 @@ class DatabaseTestCase(TestCase):
         b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
-        object_model.parent = [a, b]
+        object_model.subOrganizationOf = [a, b]
         object_model.save()
 
         first_identifier = object_model.get_ori_identifier()
@@ -86,7 +86,7 @@ class DatabaseTestCase(TestCase):
         b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
-        object_model.parent = [a, b]
+        object_model.subOrganizationOf = [a, b]
         object_model.save()
 
         result = self.db.query('MATCH (n) WITH COUNT(n) AS nodes '
@@ -107,7 +107,7 @@ class DatabaseTestCase(TestCase):
         b = Organization('CBSb', **source_defaults)
         b.name = 'b'
 
-        object_model.parent = [a, b]
+        object_model.subOrganizationOf = [a, b]
         object_model.save()
 
         result = self.db.query('MATCH (n) WITH COUNT(n) AS nodes '

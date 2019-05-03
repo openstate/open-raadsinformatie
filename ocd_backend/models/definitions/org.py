@@ -28,7 +28,7 @@ class Organization(Org, foaf.Agent):
     abstract = StringProperty(Dcterms, 'abstract')
     description = StringProperty(Dcterms, 'description')
     classification = StringProperty(Org, 'classification')
-    parent = OrderedRelation(Org, 'subOrganizationOf')
+    subOrganizationOf = OrderedRelation(Org, 'subOrganizationOf')
     other_names = StringProperty(Opengov, 'otherName')
     links = StringProperty(Rdf, 'seeAlso')
     dissolution_date = StringProperty(Schema, 'dissolutionDate')
