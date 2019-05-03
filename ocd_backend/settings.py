@@ -3,8 +3,10 @@ import os
 import pickle
 
 from bugsnag.handlers import BugsnagHandler
+from kombu import Exchange, Queue
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
+
 from version import __version__, __version_info__
 
 register('ocd_serializer', pickle.dumps, pickle.loads,
@@ -31,6 +33,9 @@ DUMPS_DIR = os.path.join(PROJECT_PATH, 'dumps')
 # Use this timezone as default for timezone unaware dates
 TIMEZONE = 'Europe/Amsterdam'
 
+fast_exchange = Exchange('fast', type='direct')
+slow_exchange = Exchange('slow', type='direct')
+
 CELERY_CONFIG = {
     'BROKER_URL': REDIS_URL,
     'CELERY_ACCEPT_CONTENT': ['ocd_serializer'],
@@ -48,7 +53,36 @@ CELERY_CONFIG = {
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
     'CELERY_TASK_RESULT_EXPIRES': 1800,
-    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO'
+    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO',
+    'CELERY_ROUTES': {
+        'ocd_backend.transformers.*': {
+            'queue': 'slow',
+            'routing_key': 'slow',
+            'priority': 9,
+        },
+        'ocd_backend.enrichers.*': {
+            'queue': 'slow',
+            'routing_key': 'slow',
+            'priority': 6,
+        },
+        'ocd_backend.loaders.*': {
+            'queue': 'fast',
+            'routing_key': 'fast',
+            'priority': 3,
+        },
+        'ocd_backend.tasks.*': {
+            'queue': 'fast',
+            'routing_key': 'fast',
+            'priority': 0,
+        },
+    },
+    'CELERY_QUEUES': (
+        Queue('fast', fast_exchange, routing_key='fast'),
+        Queue('slow', slow_exchange, routing_key='slow'),
+    ),
+    'CELERY_DEFAULT_QUEUE': 'slow',
+    'CELERY_DEFAULT_EXCHANGE': 'slow',
+    'CELERY_DEFAULT_ROUTING_KEY': 'slow',
 }
 
 
