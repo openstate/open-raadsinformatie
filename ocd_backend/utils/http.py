@@ -177,6 +177,8 @@ class LocalCachingMixin(HttpRequestMixin):
             # File does not exist, download and cache the url
             content_type, content_length, media_file = self.download_url(url)
             data = media_file.read()
+            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
+            media_file.seek(0, 0)
             self._write_to_cache(base_path, data, modified_date)
             return content_type, content_length, media_file
 
@@ -184,6 +186,7 @@ class LocalCachingMixin(HttpRequestMixin):
             # If file has been modified download it
             content_type, content_length, media_file = self.download_url(url)
             data = media_file.read()
+            media_file.seek(0, 0)
             self._write_to_cache(base_path, data, modified_date)
             return content_type, content_length, media_file
         else:
