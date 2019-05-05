@@ -84,6 +84,15 @@ class IBabsMeetingItem(BaseItem):
                 agenda_item.name = mi['Title']
                 agenda_item.start_date = item.start_date
                 agenda_item.__rel_params__ = {'rdf': '_%i' % i}
+
+                agenda_item.attachment = list()
+                for document in meeting['Documents'] or []:
+                    attachment = MediaObject(document['Id'], **source_defaults)
+                    attachment.original_url = document['PublicDownloadURL']
+                    attachment.size_in_bytes = document['FileSize']
+                    attachment.name = document['DisplayName']
+                    agenda_item.attachment.append(attachment)
+
                 item.agenda.append(agenda_item)
 
         item.invitee = list()
