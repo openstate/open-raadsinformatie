@@ -54,6 +54,15 @@ class NotubizMeetingItem(BaseItem):
             agendaitem.parent = event
             agendaitem.start_date = event.start_date
 
+            agendaitem.attachment = []
+            for doc in item.get('documents', []):
+                attachment = MediaObject(doc['id'], **source_defaults)
+                attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
+                attachment.original_url = doc['url']
+                attachment.name = doc['title']
+                attachment.date_modified = doc['last_modified']
+                agendaitem.attachment.append(attachment)
+
             event.agenda.append(agendaitem)
 
         # object_model['last_modified'] = iso8601.parse_date(
