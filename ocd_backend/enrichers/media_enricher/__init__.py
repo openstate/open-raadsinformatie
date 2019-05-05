@@ -45,7 +45,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         try:
             identifier = item.identifier_url
         except AttributeError:
-            identifier = None  # todo
+            raise Exception('No identifier_url for item: %s', item)
 
         content_type, content_length, media_file = self.fetch(
             item.original_url,
@@ -53,7 +53,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
             item.date_modified,
         )
 
-        item.url = '%s/%s' % (RESOLVER_BASE_URL, get_sha1_hash(item.original_url))
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, identifier)
         item.content_type = content_type
         item.size_in_bytes = content_length
 
