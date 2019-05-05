@@ -5,6 +5,7 @@ from string import Formatter
 from neo4j.v1 import GraphDatabase
 from py2neo import cypher_escape
 from copy import copy
+from lock import Lock
 
 from ocd_backend.models.definitions import Prov, Pav, Mapping
 from ocd_backend.models.exceptions import QueryResultError, QueryEmptyResult, MissingProperty
@@ -160,80 +161,83 @@ class Neo4jDatabase(object):
 
             from ocd_backend.models.model import Individual
             if isinstance(model_object, Individual):
-                clauses = [
-                    u'MATCH (n :«labels»)',
-                    u'RETURN n.«ori_identifier» AS ori_identifier',
-                ]
 
-                cursor = self.session.run(
-                    fmt.format(u'\n'.join(clauses), **params),
-                )
-                result = cursor.data()
-
-                if len(result) > 1:
-                    raise QueryResultError(
-                        'The number of %s results is greater than one'
-                        % model_object.verbose_name()
-                    )
-
-                elif len(result) < 1:
-                    model_object.generate_ori_identifier()
-                    props = self.serializer.deflate(model_object, props=True, rels=False)
-
+                with Lock(labels):
                     clauses = [
-                        u'MERGE (n :«labels»)',
-                        u'SET n += $props',
+                        u'MATCH (n :«labels»)',
                         u'RETURN n.«ori_identifier» AS ori_identifier',
                     ]
 
                     cursor = self.session.run(
                         fmt.format(u'\n'.join(clauses), **params),
-                        props=props,
                     )
-                    cursor.summary()
+                    result = cursor.data()
 
-                else:
-                    try:
-                        model_object.ori_identifier = result[0]['ori_identifier']
-                    except Exception:
-                        raise QueryResultError('No ori_identifier was returned')
+                    if len(result) > 1:
+                        raise QueryResultError(
+                            'The number of %s results is greater than one'
+                            % model_object.verbose_name()
+                        )
+
+                    elif len(result) < 1:
+                        model_object.generate_ori_identifier()
+                        props = self.serializer.deflate(model_object, props=True, rels=False)
+
+                        clauses = [
+                            u'MERGE (n :«labels»)',
+                            u'SET n += $props',
+                            u'RETURN n.«ori_identifier» AS ori_identifier',
+                        ]
+
+                        cursor = self.session.run(
+                            fmt.format(u'\n'.join(clauses), **params),
+                            props=props,
+                        )
+                        cursor.summary()
+
+                    else:
+                        try:
+                            model_object.ori_identifier = result[0]['ori_identifier']
+                        except Exception:
+                            raise QueryResultError('No ori_identifier was returned')
             else:
                 self._create_blank_node(model_object)
         else:
-            # if ori_identifier is already known use that to identify instead
-            if model_object.values.get('ori_identifier'):
-                self._merge(model_object)
-            else:
-                clauses = [
-                    u'MATCH (n :«labels»)',
-                    u'WHERE $had_primary_source IN n.«had_primary_source»',
-                    u'RETURN n.«ori_identifier» AS ori_identifier',
-                ]
-
-                cursor = self.session.run(
-                    fmt.format(u'\n'.join(clauses), **params),
-                    had_primary_source=model_object.had_primary_source,
-                )
-                result = cursor.data()
-
-                if len(result) > 1:
-                    # Todo don't fail yet until unique constraints are solved
-                    # raise QueryResultError('The number of results is greater than one!')
-                    pass
-
-                try:
-                    ori_identifier = result[0]['ori_identifier']
-                except Exception:
-                    ori_identifier = None
-
-                if ori_identifier:
-                    model_object.ori_identifier = ori_identifier
+            with Lock(model_object.values.get('had_primary_source')):
+                # if ori_identifier is already known use that to identify instead
+                if model_object.values.get('ori_identifier'):
                     self._merge(model_object)
                 else:
-                    # if ori_identifier do merge otherwise create
-                    self._create_node(model_object)
+                    clauses = [
+                        u'MATCH (n :«labels»)',
+                        u'WHERE $had_primary_source IN n.«had_primary_source»',
+                        u'RETURN n.«ori_identifier» AS ori_identifier',
+                    ]
 
-            # raise QueryEmptyResult('No ori_identifier was returned')
+                    cursor = self.session.run(
+                        fmt.format(u'\n'.join(clauses), **params),
+                        had_primary_source=model_object.had_primary_source,
+                    )
+                    result = cursor.data()
+
+                    if len(result) > 1:
+                        # Todo don't fail yet until unique constraints are solved
+                        # raise QueryResultError('The number of results is greater than one!')
+                        pass
+
+                    try:
+                        ori_identifier = result[0]['ori_identifier']
+                    except Exception:
+                        ori_identifier = None
+
+                    if ori_identifier:
+                        model_object.ori_identifier = ori_identifier
+                        self._merge(model_object)
+                    else:
+                        # if ori_identifier do merge otherwise create
+                        self._create_node(model_object)
+
+                # raise QueryEmptyResult('No ori_identifier was returned')
 
     def _create_node(self, model_object):
         if not model_object.values.get('ori_identifier'):
