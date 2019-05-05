@@ -1,17 +1,11 @@
 import json
 import os
 
-import iso8601
-from mock import MagicMock
-from ocd_backend.items import BaseItem
+from ocd_backend import celery_app
 from ocd_backend.items.notubiz_meeting import NotubizMeetingItem
 from ocd_backend.models import Meeting
-from ocd_backend.utils.file_parsing import FileToTextMixin
-from ocd_backend.models.serializers import Neo4jSerializer, RdfSerializer, JsonLDSerializer, JsonSerializer
 from ocd_backend.models.database import Neo4jDatabase
-from ocd_backend.models.model import Model
-from ocd_backend import celery_app
-
+from ocd_backend.models.serializers import Neo4jSerializer, JsonLDSerializer, JsonSerializer
 from . import ItemTestCase
 
 
@@ -65,51 +59,12 @@ class NotubizMeetingTestCase(ItemTestCase):
             'classification': [u'Agenda'],
             'had_primary_source': u'https://argu.co/voc/mapping/amsterdam/notubiz/identifier/458902',
             '@type': 'Meeting',
-            'attachment': [
-                '3',
-                '4'
-            ],
-            'agenda': {'@list': [
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                '10',
-                '11',
-                '12',
-                '13',
-                '14',
-                '15',
-                '16',
-                '17',
-                '18',
-                '19',
-                '20',
-                '21',
-                '22',
-                '23',
-                '24',
-                '25',
-                '26',
-                '27',
-                '28',
-                '29',
-                '30',
-                '31',
-                '32',
-                '33',
-                '34',
-                '35',
-                '36',
-                '37',
-                '38',
-                '39',
-                '40',
-                '41',
-                '42',
-                '43'
-            ]},
+            'attachment': ['3', '4'],
+            'agenda': {
+                '@list': ['5', '6', '7', '8', '9', '10', '12', '14', '20', '22', '23', '24', '25', '26', '27', '30',
+                          '33', '34', '37', '40', '41', '42', '43', '46', '51', '52', '55', '58', '61', '64', '69',
+                          '72', '76', '77', '80', '81', '85', '88', '92']
+            },
             '@context': {
                 'status': {'@id': 'http://schema.org/eventStatus', '@type': '@id'},
                 'name': {'@id': 'http://schema.org/name'},
@@ -123,9 +78,9 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'start_date': {'@id': 'http://schema.org/startDate'},
                 'committee': {'@id': 'https://argu.co/ns/meeting/committee', '@type': '@id'}
             },
-            'organization': '46',
+            'organization': '95',
             'start_date': '2018-02-08T13:30:00+01:00',
-            'committee': '44'
+            'committee': '93'
         }
 
         self.expected_json = {
@@ -138,50 +93,29 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'https://id.openraadsinformatie.nl/3',
                 'https://id.openraadsinformatie.nl/4'
             ],
-            'agenda': [
-                'https://id.openraadsinformatie.nl/5',
-                'https://id.openraadsinformatie.nl/6',
-                'https://id.openraadsinformatie.nl/7',
-                'https://id.openraadsinformatie.nl/8',
-                'https://id.openraadsinformatie.nl/9',
-                'https://id.openraadsinformatie.nl/10',
-                'https://id.openraadsinformatie.nl/11',
-                'https://id.openraadsinformatie.nl/12',
-                'https://id.openraadsinformatie.nl/13',
-                'https://id.openraadsinformatie.nl/14',
-                'https://id.openraadsinformatie.nl/15',
-                'https://id.openraadsinformatie.nl/16',
-                'https://id.openraadsinformatie.nl/17',
-                'https://id.openraadsinformatie.nl/18',
-                'https://id.openraadsinformatie.nl/19',
-                'https://id.openraadsinformatie.nl/20',
-                'https://id.openraadsinformatie.nl/21',
-                'https://id.openraadsinformatie.nl/22',
-                'https://id.openraadsinformatie.nl/23',
-                'https://id.openraadsinformatie.nl/24',
-                'https://id.openraadsinformatie.nl/25',
-                'https://id.openraadsinformatie.nl/26',
-                'https://id.openraadsinformatie.nl/27',
-                'https://id.openraadsinformatie.nl/28',
-                'https://id.openraadsinformatie.nl/29',
-                'https://id.openraadsinformatie.nl/30',
-                'https://id.openraadsinformatie.nl/31',
-                'https://id.openraadsinformatie.nl/32',
-                'https://id.openraadsinformatie.nl/33',
-                'https://id.openraadsinformatie.nl/34',
-                'https://id.openraadsinformatie.nl/35',
-                'https://id.openraadsinformatie.nl/36',
-                'https://id.openraadsinformatie.nl/37',
-                'https://id.openraadsinformatie.nl/38',
-                'https://id.openraadsinformatie.nl/39',
-                'https://id.openraadsinformatie.nl/40',
-                'https://id.openraadsinformatie.nl/41',
-                'https://id.openraadsinformatie.nl/42',
-                'https://id.openraadsinformatie.nl/43'
-            ],
-            'organization': 'https://id.openraadsinformatie.nl/46',
+            'agenda': ['https://id.openraadsinformatie.nl/5', 'https://id.openraadsinformatie.nl/6',
+                       'https://id.openraadsinformatie.nl/7', 'https://id.openraadsinformatie.nl/8',
+                       'https://id.openraadsinformatie.nl/9', 'https://id.openraadsinformatie.nl/10',
+                       'https://id.openraadsinformatie.nl/12', 'https://id.openraadsinformatie.nl/14',
+                       'https://id.openraadsinformatie.nl/20', 'https://id.openraadsinformatie.nl/22',
+                       'https://id.openraadsinformatie.nl/23', 'https://id.openraadsinformatie.nl/24',
+                       'https://id.openraadsinformatie.nl/25', 'https://id.openraadsinformatie.nl/26',
+                       'https://id.openraadsinformatie.nl/27', 'https://id.openraadsinformatie.nl/30',
+                       'https://id.openraadsinformatie.nl/33', 'https://id.openraadsinformatie.nl/34',
+                       'https://id.openraadsinformatie.nl/37', 'https://id.openraadsinformatie.nl/40',
+                       'https://id.openraadsinformatie.nl/41', 'https://id.openraadsinformatie.nl/42',
+                       'https://id.openraadsinformatie.nl/43', 'https://id.openraadsinformatie.nl/46',
+                       'https://id.openraadsinformatie.nl/51', 'https://id.openraadsinformatie.nl/52',
+                       'https://id.openraadsinformatie.nl/55', 'https://id.openraadsinformatie.nl/58',
+                       'https://id.openraadsinformatie.nl/61', 'https://id.openraadsinformatie.nl/64',
+                       'https://id.openraadsinformatie.nl/69', 'https://id.openraadsinformatie.nl/72',
+                       'https://id.openraadsinformatie.nl/76', 'https://id.openraadsinformatie.nl/77',
+                       'https://id.openraadsinformatie.nl/80', 'https://id.openraadsinformatie.nl/81',
+                       'https://id.openraadsinformatie.nl/85', 'https://id.openraadsinformatie.nl/88',
+                       'https://id.openraadsinformatie.nl/92'],
+            'organization': 'https://id.openraadsinformatie.nl/95',
             'start_date': '2018-02-08T13:30:00+01:00',
-            'committee': 'https://id.openraadsinformatie.nl/44'
+            'committee': 'https://id.openraadsinformatie.nl/93'
         }
 
         self.rights = u'undefined'  # for now ...
