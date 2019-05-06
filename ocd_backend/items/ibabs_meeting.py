@@ -88,6 +88,7 @@ class IBabsMeetingItem(BaseItem):
                 agenda_item.attachment = list()
                 for document in meeting['Documents'] or []:
                     attachment = MediaObject(document['Id'], **source_defaults)
+                    attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                     attachment.original_url = document['PublicDownloadURL']
                     attachment.size_in_bytes = document['FileSize']
                     attachment.name = document['DisplayName']
@@ -111,6 +112,7 @@ class IBabsMeetingItem(BaseItem):
         item.attachment = list()
         for document in meeting['Documents'] or []:
             attachment = MediaObject(document['Id'], **source_defaults)
+            attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']
