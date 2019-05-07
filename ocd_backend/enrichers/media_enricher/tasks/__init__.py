@@ -1,8 +1,11 @@
+import cStringIO
 import os
+from tempfile import NamedTemporaryFile
 
 from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
+from ocd_backend.settings import TEMP_DIR_PATH
 from ocd_backend.utils.file_parsing import FileToTextMixin
 
 
@@ -91,6 +94,13 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
     content_types = '*'
 
     def enrich_item(self, media_item, content_type, file_object):
+        # Make sure file_object is actually on the disk for pdf parsing
+        if isinstance(file_object, cStringIO.OutputType):
+            temporary_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
+            temporary_file.write(file_object.read())
+            temporary_file.seek(0, 0)
+            file_object = temporary_file
+
         if os.path.exists(file_object.name):
             path = os.path.realpath(file_object.name)
             media_item.text = self.file_to_text(path)
