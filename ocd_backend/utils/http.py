@@ -270,7 +270,7 @@ class GCSCachingMixin(HttpRequestMixin):
 
         return self._bucket
 
-    def fetch(self, url, path, modified_date):
+    def fetch(self, url, path, modified_date=None):
         """Fetch a resource url and save it to a path in GCS. The resource will
         only be downloaded from the source when the file has been modified,
         otherwise the file will be downloaded from cache unless 'force_old_files'
