@@ -47,10 +47,15 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         except AttributeError:
             raise Exception('No identifier_url for item: %s', item)
 
+        try:
+            date_modified = item.date_modified
+        except AttributeError:
+            date_modified = None
+
         content_type, content_length, media_file = self.fetch(
             item.original_url,
             identifier,
-            item.date_modified,
+            date_modified,
         )
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, identifier)
