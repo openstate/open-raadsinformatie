@@ -13,20 +13,22 @@ log = get_source_logger('file_parser')
 def file_parser(fname, pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         try:
-            text_array = []
+            result_pages = []
             i = 0
             d = pdf.Document(fname)
             for i, p in enumerate(d, start=1):
+                text_array = []
                 for f in p:
                     for b in f:
                         for l in b:
                             text_array.append(unicode(l.text))
+                result_pages.append('\n'.join(text_array))
 
                 if i >= pages:  # break after x pages
                     break
 
             log.debug("Processed %i pages (%i max)", i, pages)
-            return text_array
+            return result_pages
         except:
             # reraise everything
             raise
