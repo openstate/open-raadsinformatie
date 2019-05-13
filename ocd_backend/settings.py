@@ -280,12 +280,6 @@ RESOLVER_URL_INDEX = 'resolver'
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)
 
-# URL where of the API instance that should be used for management commands
-# Should include API version and a trailing slash.
-# Can be overridden in the CLI when required, for instance when the user wants
-# to download dumps from another API instance than the one hosted by OpenState
-API_URL = os.getenv('API_URL', 'http://frontend:5000/v%s/' % MAJOR_VERSION)
-
 # The endpoint for the iBabs API
 IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
 
