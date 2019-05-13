@@ -17,7 +17,7 @@ spec:
         image: gcr.io/endpoints-release/endpoints-runtime:1
         args: [
           '--http_port=8000',
-          '--backend=frontend:5000',
+          '--backend=elastic:9200',
           '--service=api.openraadsinformatie.nl',
           '--rollout_strategy=managed',
         ]
