@@ -16,10 +16,6 @@ spec:
         backend:
           serviceName: endpoints
           servicePort: 8000
-      - path: /v1/elastic
-        backend:
-          serviceName: elastic
-          servicePort: 9200
       - path: /v1/neo4j/*
         backend:
           serviceName: neo4j
