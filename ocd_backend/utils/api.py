@@ -1,35 +1,21 @@
-import json
-
-import requests
-
-from ocd_backend import settings
+from ocd_backend.es import elasticsearch as es
 
 
 class FrontendAPIMixin(object):
     """
-    Interface for the frontend API.
+    Deprecated. Legacy interface for emulating the old frontend API.
     """
 
     def api_request(self, index_name, doc_type, query=None, *args, **kwargs):
-
-        if doc_type:
-            api_url = u'%s%s/%s/search' % (
-                self.source_definition.get('frontend_api_url', settings.API_URL),
-                index_name, doc_type,)
-        else:
-            api_url = u'%s%s/search' % (
-                self.source_definition.get('frontend_api_url', settings.API_URL),
-                index_name,)
-
-        # TODO: facets (better), sorting
         api_query = {
-            "facets": {},
             "filters": {},
             "from": 0,
             "size": 10,
             "sort": "_score",
             "order": "asc"
         }
+
+        kwargs['@type'] = doc_type
 
         if query is not None:
             api_query["query"] = query
@@ -45,34 +31,4 @@ class FrontendAPIMixin(object):
                 else:
                     api_query["filters"][k] = v
 
-        r = self.http_session.post(
-            api_url,
-            data=json.dumps(api_query)
-        )
-        try:
-            r.raise_for_status()
-        except requests.HTTPError:
-            return None
-
-        if doc_type:
-            try:
-                return r.json()[doc_type]
-            except KeyError:
-                return None
-        return r.json()
-
-    def api_request_object(self, index_name, doc_type, object_id, *args,
-                           **kwargs):
-        api_url = u'%s%s/%s/%s' % (
-            self.source_definition.get('frontend_api_url',
-                                       settings.API_URL), index_name, doc_type,
-            object_id)
-        r = self.http_session.get(
-            api_url
-        )
-        try:
-            r.raise_for_status()
-        except requests.HTTPError:
-            return None
-
-        return r.json()
+        return es.search(index=index_name, body=api_query)

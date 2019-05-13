@@ -10,7 +10,6 @@ docker-compose*
 *.rst
 *.md
 ocd_backend/secrets.py
-ocd_frontend/.thumbnail-cache
 .*
 .semaphore-cache
 **/*.pyc
