@@ -60,7 +60,6 @@ local_dumps/
 dumps/*log
 data/*
 local_dumps/*
-ocd_frontend/.thumbnail-cache/*
 log/*
 es-licence.json
 activate

@@ -20,18 +20,12 @@ Using `Docker <http://www.docker.com/>`_ is by far the easiest way to spin up a 
 The backend container is responsible for extraction using the python Celery project. Mind that the Celery backend must be running before any items can be extracted.
 
 It should take less than a minute to fire all containers up. It's recommended to include the ``docker-compose.dev.yml`` for local development, this will mount the local filesystem and enables local changes without having to rebuild the backend.
-
-The frontend however still needs to be rebuild in order to see the changes::
-
-   $ docker build . -t openstatefoundation/open-raadsinformatie-frontend
-
 Now, instead of pulling for docker hub, the local tagged image will be used when restarting.
 
 The following services are now accessible locally in the Docker container via ``http://127.0.0.1``, or from the host via ``http://<CONTAINER IP ADDRESS>`` (look up the container's IP address using ``docker inspect`` as shown below):
 
 * Elasticsearch (:9200)
 * Celery Flower GUI (:5555)
-* ORI Frontend API (:5000)
 
 Some useful Docker commands::
 

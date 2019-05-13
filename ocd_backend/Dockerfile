@@ -20,7 +20,6 @@ RUN apk add --update \
   && apk del build-base git tzdata
 
 # Setup Celery
-# Create static data folder shared with the frontend
 # Trick to redirect logs to process 1 when running multiple processes
 RUN adduser -D -H celery \
   && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/data/cache /opt/ori/log \
