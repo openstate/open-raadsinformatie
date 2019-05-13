@@ -172,11 +172,6 @@ def extract():
 
 
 @cli.group()
-def frontend():
-    """Front-end API"""
-
-
-@cli.group()
 def dumps():
     """Create and load dumps of indices"""
 
