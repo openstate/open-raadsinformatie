@@ -10,7 +10,6 @@ services:
     links:
       - redis:redis
       - elastic:elasticsearch
-      - frontend:frontend
     volumes:
       - oridata:/opt/ori/data
     depends_on:
@@ -19,22 +18,6 @@ services:
       elastic:
         condition: service_healthy
     mem_limit: 3g
-  frontend:
-    build:
-      context: .
-      dockerfile: ocd_frontend/Dockerfile
-      cache_from:
-        - openstatefoundation/open-raadsinformatie-frontend:build-tmp
-    image: openstatefoundation/open-raadsinformatie-frontend
-    volumes:
-      - oridata:/opt/ori/data
-    links:
-      - elastic:elasticsearch
-    depends_on:
-      elastic:
-        condition: service_healthy
-    ports:
-      - "5000:5000"
   redis:
     image: "redis:${REDIS_VERSION}"
     volumes:

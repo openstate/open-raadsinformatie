@@ -6,10 +6,6 @@ services:
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
-  frontend:
-    volumes:
-      - ./ocd_frontend:/opt/ori/ocd_frontend
-    command: python ocd_frontend/wsgi.py
   elastic:
     ports:
       - "9200:9200"
