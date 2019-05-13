@@ -14,9 +14,15 @@ host: "beta.openraadsinformatie.nl"
 x-google-api-name: "staging"
 x-google-endpoints:
 - name: "beta.openraadsinformatie.nl"
-  allowCors: "true"
+  allowCors: true
   target: "35.204.67.167"
 x-google-allow: "all"
+security: []
+securityDefinitions:
+  admin_key:
+    type: "apiKey"
+    name: "admin_key"
+    in: "header"
 consumes:
 - "application/json"
 produces:
@@ -25,382 +31,124 @@ externalDocs:
   description: "Open Raadsinformatie Documentation"
   url: "http://docs.openraadsinformatie.nl"
 tags:
-- name: "Collection overview and statistics"
-- name: "Searching within multiple collections"
-- name: "Searching within a single collection"
-- name: "Searching with scroll"
-- name: "Retrieving a single object"
-- name: "Similar items"
-- name: "Resolver"
+- name: "Elasticsearch API"
+- name: "Elasticsearch API (admin)"
 schemes:
 - "https"
 - "http"
 paths:
-  /sources:
+  /elastic/{index}/_search:
     get:
       tags:
-      - "Collection overview and statistics"
-      description: "Get a list of all available sources (collections) with item counts"
-      operationId: "list_sources"
-      produces:
-      - "application/json"
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Sources"
-  /search:
-    get:
-      tags:
-      - "Searching within multiple collections"
-      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
-      operationId: "search_short_get"
+        - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for searching. See https://elastic.co/guide/en/elasticsearch/reference/current/search-search.html for more information.
+      operationId: "elastic_search_get"
       parameters:
-        - $ref: "#/parameters/query"
-        - $ref: "#/parameters/sort"
-        - $ref: "#/parameters/size"
-        - $ref: "#/parameters/from"
-        - $ref: "#/parameters/scroll"
-        - $ref: "#/parameters/scroll_id"
-
+        - $ref: "#/parameters/index"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+          description: ""
     post:
       tags:
-      - "Searching within multiple collections"
-      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
-      operationId: "search_short_post"
+       - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for searching. See https://elastic.co/guide/en/elasticsearch/reference/current/search-search.html for more information.
+      operationId: "elastic_search_post"
       parameters:
-        - $ref: "#/parameters/body"
-
+        - $ref: "#/parameters/index"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+          description: ""
 
-  /search/{doc_type}:
+  /elastic/{index}/_msearch:
     get:
       tags:
-      - "Searching within multiple collections"
-      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
-      operationId: "search_get"
+        - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for multi search. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html for more information.
+      operationId: "elastic_msearch_get"
       parameters:
-        - $ref: "#/parameters/doc_type"
-        - $ref: "#/parameters/query"
-        - $ref: "#/parameters/sort"
-        - $ref: "#/parameters/size"
-        - $ref: "#/parameters/from"
-        - $ref: "#/parameters/scroll"
-        - $ref: "#/parameters/scroll_id"
-
+        - $ref: "#/parameters/index"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+          description: ""
     post:
       tags:
-      - "Searching within multiple collections"
-      description: "Search for items through all indexed datasets. The search can be limited on a certain document type."
-      operationId: "search_post"
+        - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for multi search. See https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html for more information.
+      operationId: "elastic_msearch_post"
       parameters:
-        - $ref: "#/parameters/doc_type"
-        - $ref: "#/parameters/body"
-
+        - $ref: "#/parameters/index"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
+          description: ""
 
-  /{source_id}/search:
+  /elastic/{path}:
     get:
       tags:
-      - "Searching within a single collection"
+        - "Elasticsearch API (admin)"
       description: |
-        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
-        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does.
-      operationId: "search_source_short_get"
+        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
+      operationId: "elastic_get"
       parameters:
-        - $ref: "#/parameters/source_id"
-        - $ref: "#/parameters/query"
-        - $ref: "#/parameters/sort"
-        - $ref: "#/parameters/size"
-        - $ref: "#/parameters/from"
+        - $ref: "#/parameters/path"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
-        404:
-          description: "Not found. The requested source does not exist."
-
+          description: ""
+      security:
+      - admin_key: []
     post:
       tags:
-      - "Searching within a single collection"
+        - "Elasticsearch API (admin)"
       description: |
-        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
-        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does. Scroll parameters do NOT apply for this query.
-      operationId: "search_source_short_post"
+        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
+      operationId: "elastic_post"
       parameters:
-        - $ref: "#/parameters/source_id"
-        - $ref: "#/parameters/body"
+        - $ref: "#/parameters/path"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
-        404:
-          description: "Not found. The requested source does not exist."
-
-  /{source_id}/{doc_type}/search:
-    get:
+          description: ""
+      security:
+      - admin_key: []
+    put:
       tags:
-      - "Searching within a single collection"
+        - "Elasticsearch API (admin)"
       description: |
-        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
-        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does.
-      operationId: "search_source_get"
+        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
+      operationId: "elastic_put"
       parameters:
-        - $ref: "#/parameters/source_id"
-        - $ref: "#/parameters/doc_type"
-        - $ref: "#/parameters/query"
-        - $ref: "#/parameters/sort"
-        - $ref: "#/parameters/size"
-        - $ref: "#/parameters/from"
+        - $ref: "#/parameters/path"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
-        404:
-          description: "Not found. The requested source does not exist."
-
-    post:
+          description: ""
+      security:
+      - admin_key: []
+    delete:
       tags:
-      - "Searching within a single collection"
+        - "Elasticsearch API (admin)"
       description: |
-        Search for objects within a specific dataset. The objects returned by this method may also include fields that are specific to the queried dataset, rather than
-        only those fields that all indexed datasets have in common. The search can be restricted to a certain doc_type, in the same way as the previous API call does. Scroll parameters do NOT apply for this query.
-      operationId: "search_source_post"
+        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
+      operationId: "elastic_delete"
       parameters:
-        - $ref: "#/parameters/source_id"
-        - $ref: "#/parameters/doc_type"
-        - $ref: "#/parameters/body"
+        - $ref: "#/parameters/path"
       responses:
         200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        400:
-          description: "Bad Request. An accompanying error message will explain why the request was invalid."
-        404:
-          description: "Not found. The requested source does not exist."
-
-  /{source_id}/{doc_type}/{object_id}:
-    get:
-      tags:
-      - "Retrieving a single object"
-      description: "Retrieve the contents of a single object. The doc_type needs to be specified."
-      operationId: "get_object"
-      parameters:
-        - $ref: "#/parameters/source_id"
-        - $ref: "#/parameters/doc_type"
-        - $ref: "#/parameters/object_id"
-      responses:
-        200:
-          description: "Successful operation"
-          schema:
-            $ref: "#/definitions/Events"
-        404:
-          description: "Not found. The requested source does not exist."
-
-  /resolve/{url_hash}:
-    get:
-      tags:
-      - "Resolver"
-      description: |
-        The Open Raadsinformatie API provides all (media) urls as Resolver URLs. This will route all requests for content through the API, which will process
-        and validate the URL, and provide a redirect to the original content source. This will allow for caching or rate limiting on API level in the future,
-        to prevent excessive amounts of requests to the sources.
-      operationId: "resolve"
-      consumes:
-        - "text/html"
-        - "application/json"
-      produces:
-        - "image/png"
-        - "image/gif"
-        - "image/jpeg"
-        - "application/pdf"
-      parameters:
-        - name: "url_hash"
-          in: "path"
-          description: "The source_id for the available sources can be found by calling /sources"
-          required: true
-          type: "string"
-      responses:
-        200:
-          description: "Resolves the provided URL, returns the content if it is valid. Depending on the Accept header in the request, it returns a JSON-encoded response detailing what went wrong, or a HTML-page, allowing for transparent use in websites."
-        302:
-          description: "When the resource is not available locally in the cache, the request is redirected with a 302. Note that some resources are not available since some data suppliers require IP whitelisting."
-        404:
-          description: "If the resource is not found, a 404 is returned."
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: "URL is not available; the source may no longer be available"
-              status:
-                type: string
-                description: "error"
-definitions:
-  Sources:
-    type: "object"
-    properties:
-      sources:
-        type: "array"
-        items:
-          type: "object"
-          properties:
-            events:
-              type: "integer"
-              example: 607
-            id:
-              type: "string"
-              example: "amstelveen"
-            organizations:
-              type: "integer"
-              example: 15
-            persons:
-              type: "integer"
-              example: 54
-  Events:
-    type: "object"
-    properties:
-      events:
-        type: "array"
-        items:
-          type: object
-      meta:
-        type: "object"
-        properties:
-          took:
-            type: integer
-            example: 233
-          total:
-            type: integer
-            example: 3123123
-          scroll:
-            type: string
-            example: "DXF1ZXJ5QW5kRmV0Y2gBAAAAAAAS0a4WbXotX0JRdGFSVENUTUxLTmNGbEk1Zw=="
-  Search:
-    type: "object"
-    properties:
-      query:
-        type: "string"
-        description: "One or more keywords"
-      filters:
-        type: "object"
-        description: "An object with field and values to filter on"
-      facets:
-        type: "object"
-        description: "An object with fields for which to return facets"
-      sort:
-        type: "object"
-        description: "Results are sorted by relevancy"
-      size:
-        type: "integer"
-        description: "The maximum number of documents to return"
-        default: 10
-      from:
-        type: "integer"
-        description: "The offset from the first result"
-        default: 0
-      scroll:
-        type: "string"
-        description: "The scroll window (eg. 1m)."
-      scroll_id:
-        type: "integer"
-        description: "The scroll cursor which was returned in previous calls"
+          description: ""
+      security:
+      - admin_key: []
 
 parameters:
-  doc_type:
-    name: "doc_type"
+  index:
+    name: "index"
     in: "path"
-    description: ""
+    description: "The Elasticsearch index to search in. For all indices use _all"
     required: true
     type: "string"
-    enum:
-    - persons
-    - organizations
-    - events
-    - motions
-    - vote_events
-  source_id:
-    name: "source_id"
+  path:
+    name: "path"
     in: "path"
-    description: "The source_id for the available sources can be found by calling /sources"
+    description: "The Elasticsearch path to use"
     required: true
     type: "string"
-  object_id:
-    name: "object_id"
-    in: "path"
-    description: "The object_id which is specified as id in the resource"
-    required: true
-    type: "string"
-  body:
-    name: "body"
-    in: "body"
-    schema:
-      $ref: "#/definitions/Search"
-  query:
-    name: "query"
-    in: "query"
-    type: "string"
-    description: "One or more keywords"
-  sort:
-    name: "sort"
-    in: "query"
-    type: "string"
-    description: "The field the search results are sorted on. By default, results are sorted by relevancy to the query"
-  size:
-    name: "size"
-    in: "query"
-    type: "integer"
-    description: "The maximum number of documents to return"
-    default: 10
-  from:
-    name: "from"
-    in: "query"
-    type: "integer"
-    description: "The offset from the first result"
-    default: 0
-  scroll:
-    name: "scroll"
-    in: "query"
-    type: "string"
-    description: "The scroll window (eg. 1m)."
-  scroll_id:
-    name: "scroll_id"
-    in: "query"
-    type: "integer"
-    description: "The scroll cursor which was returned in previous calls"
