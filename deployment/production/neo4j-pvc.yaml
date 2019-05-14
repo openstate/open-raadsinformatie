@@ -4,8 +4,9 @@ metadata:
   name: neodata
   namespace: production
 spec:
+  storageClassName: ssd
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 60Gi
