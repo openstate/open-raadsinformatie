@@ -25,7 +25,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: secrets
-                key: neo4j-auth
+                key: NEO4J_AUTH
         volumeMounts:
         - mountPath: /data
           name: neodata

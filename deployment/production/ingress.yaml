@@ -59,6 +59,11 @@ spec:
       - backend:
           serviceName: static
           servicePort: 80
-
+  - host: id.openraadsinformatie.nl
+    http:
+      paths:
+      - backend:
+          serviceName: ori-api
+          servicePort: 3000
   tls:
   - secretName: tls-certificate
