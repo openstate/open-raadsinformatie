@@ -35,3 +35,5 @@ spec:
       - name: oridata
         persistentVolumeClaim:
           claimName: oridata
+      nodeSelector:
+        cloud.google.com/gke-nodepool: preemptible
