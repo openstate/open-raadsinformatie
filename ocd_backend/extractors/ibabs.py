@@ -464,12 +464,12 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         extra_info_item)
                     # if dict_item['kenmerk'][0].startswith('2018 M67'):
                     #     log.debug(dict_item)
-                    try:
-                        # this should be the motion's unique identifier
-                        log.debug(full_normalized_motion_id(
-                            dict_item['_Extra']['Values'][u'Onderwerp']))
-                    except (KeyError, AttributeError) as e:
-                        pass
+                    # try:
+                    #     # this should be the motion's unique identifier
+                    #     log.debug(full_normalized_motion_id(
+                    #         dict_item['_Extra']['Values'][u'Onderwerp']))
+                    # except (KeyError, AttributeError) as e:
+                    #     pass
                     yield 'application/json', json.dumps(dict_item)
                     yield_count += 1
                     result_count += 1
