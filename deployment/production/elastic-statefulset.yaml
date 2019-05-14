@@ -16,6 +16,13 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: init-sysctl
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
       containers:
       - name: elastic
         image: elasticsearch:7.0.0
@@ -50,13 +57,19 @@ spec:
           value: "Content-Type,Content-Length,Authorization"
         - name: http.cors.allow-credentials
           value: "true"
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /_cluster/health?local=true
+            port: 9200
+          initialDelaySeconds: 5
         securityContext:
           runAsNonRoot: true
           runAsUser: 1000
           capabilities:
             add:
             # Lock memory (mlock(2), mlockall(2), mmap(2), shmctl(2))
-            - IPC_LOCK  
+            - IPC_LOCK
             # Override resource Limits
             - SYS_RESOURCE
           privileged: true
