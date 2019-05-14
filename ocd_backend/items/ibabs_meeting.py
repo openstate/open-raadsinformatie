@@ -86,7 +86,7 @@ class IBabsMeetingItem(BaseItem):
                 agenda_item.__rel_params__ = {'rdf': '_%i' % i}
 
                 agenda_item.attachment = list()
-                for document in meeting['Documents'] or []:
+                for document in mi['Documents'] or []:
                     attachment = MediaObject(document['Id'], **source_defaults)
                     attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                     attachment.original_url = document['PublicDownloadURL']
