@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ori-api
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: ori-api
+  template:
+    metadata:
+      labels:
+        app: ori-api
+    spec:
+      containers:
+      - name: ori-api
+        image: ontola/ori_api:4
+        imagePullPolicy: Always
+        env:
+        - name: NEO_URL
+          value: ""
+        - name: RAILS_SERVE_STATIC_FILES
+          value: "true"
+        - name: SECRET_KEY_BASE
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: ORI_API_SECRET_KEY_BASE
+        - name: POSTGRESQL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: ORI_API_POSTGRESQL_USERNAME
+        - name: POSTGRESQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: ORI_API_POSTGRESQL_PASSWORD
+        - name: ORI_API_DATABASE
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: ORI_API_POSTGRESQL_DATABASE
+        - name: POSTGRESQL_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: ORI_API_POSTGRESQL_ADDRESS
+        - name: RAILS_LOG_TO_STDOUT
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: ORI_API_RAILS_LOG_TO_STDOUT
+
+      - name: postgres
+        image: postgres:latest
+        imagePullPolicy: Always
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: ORI_API_POSTGRESQL_PASSWORD
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgredb
+          subPath: postgres
+
+      volumes:
+      - name: postgredb
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim

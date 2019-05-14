@@ -8,3 +8,7 @@ data:
   GCE_STACKDRIVER: "true"
   RELEASE_STAGE: production
   RESOLVER_BASE_URL: https://api.openraadsinformatie.nl/v1/resolve
+  BACKEND_CRONJOB_ARGS: manage.py
+  ORI_API_POSTGRESQL_ADDRESS: localhost
+  ORI_API_POSTGRESQL_DATABASE: ori_api_db
+  ORI_API_RAILS_LOG_TO_STDOUT: truthy
