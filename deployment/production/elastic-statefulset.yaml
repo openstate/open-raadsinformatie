@@ -14,6 +14,8 @@ spec:
       labels:
         app: elastic
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
       - name: elastic
         image: elasticsearch:7.0.0
@@ -62,7 +64,12 @@ spec:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata
       restartPolicy: Always
-      volumes:
-      - name: esdata
-        persistentVolumeClaim:
-          claimName: esdata
+
+  volumeClaimTemplates:
+    - metadata:
+        name: esdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 30Gi
