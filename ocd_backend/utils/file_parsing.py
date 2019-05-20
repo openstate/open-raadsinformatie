@@ -15,7 +15,7 @@ def file_parser(fname, pages=None):
         try:
             result_pages = []
             i = 0
-            d = pdf.Document(fname)
+            d = pdf.Document(fname, quiet=True)
             for i, p in enumerate(d, start=1):
                 text_array = []
                 for f in p:
