@@ -97,6 +97,12 @@ go:
     almanak_id: 34909
     <<: *go
 
+  oude_ijsselstreek:
+    key: oude_ijsselstreek
+    base_url: "https://raad.oude-ijsselstreek.nl/api/"
+    almanak_id: 36780
+    <<: *go
+
   borne:
     key: borne
     base_url: "https://gemeenteraad.borne.nl/api"
