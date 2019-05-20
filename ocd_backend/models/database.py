@@ -2,7 +2,7 @@
 import re
 from string import Formatter
 
-from neo4j.v1 import GraphDatabase
+from neo4j import GraphDatabase
 from py2neo import cypher_escape
 from copy import copy
 from lock import Lock

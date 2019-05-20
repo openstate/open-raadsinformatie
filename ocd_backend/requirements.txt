@@ -8,7 +8,7 @@ google-cloud-storage==1.11.0
 iso8601==0.1.10
 lxml==4.3.3
 msgpack-python==0.4.2
-neo4j_driver==1.6.1
+neo4j==1.7.4
 -e git+https://github.com/izderadicka/pdfparser#egg=pdfparser
 Pillow==5.2.0
 py2neo==4.0.0
