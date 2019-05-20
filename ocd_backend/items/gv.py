@@ -123,6 +123,7 @@ class GreenValleyItem(BaseItem):
             attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['original_url']
             attachment.name = doc['note']
+            attachment.isReferencedBy = event
             event.attachment.append(attachment)
 
         return event

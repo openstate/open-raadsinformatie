@@ -112,6 +112,7 @@ class GemeenteOplossingenMeetingItem(BaseItem):
                 attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
                 attachment.original_url = doc['url']
                 attachment.name = doc['note']
+                attachment.isReferencedBy = agendaitem
                 agendaitem.attachment.append(attachment)
 
             event.agenda.append(agendaitem)
@@ -124,6 +125,7 @@ class GemeenteOplossingenMeetingItem(BaseItem):
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['note']
+            attachment.isReferencedBy = event
             event.attachment.append(attachment)
 
         return event

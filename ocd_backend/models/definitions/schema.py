@@ -3,7 +3,7 @@ http://schema.org/
 """
 
 import owl
-from ocd_backend.models.definitions import Schema, Opengov, Dbo
+from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms
 from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, Relation
@@ -24,6 +24,7 @@ class MediaObject(Schema, owl.Thing):
     date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = StringProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
+    isReferencedBy = Relation(Dcterms, 'isReferencedBy')
 
     enricher_task = 'file_to_text'
 
@@ -44,6 +45,7 @@ class CreativeWork(Schema, owl.Thing):
 class Event(Schema, owl.Thing):
     end_date = DateTimeProperty(Schema, 'endDate')
     start_date = DateTimeProperty(Schema, 'startDate', required=True)
+
 
 class ImageObject(Schema, owl.Thing):
     content_url = StringProperty(Schema, 'contentUrl')
