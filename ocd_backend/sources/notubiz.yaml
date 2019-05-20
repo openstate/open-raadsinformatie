@@ -128,11 +128,6 @@ notubiz:
     organisation_id: 801
     <<: *notubiz
 
-  roermond:
-    key: roermond
-    organisation_id: 775
-    <<: *notubiz
-
   waalwijk:
     key: waalwijk
     organisation_id: 1429
@@ -307,7 +302,6 @@ notubiz:
     key: dewolden
     municipality: "De Wolden"
     organisation_id: 1317
-    almanak_id: 21391
     <<: *notubiz
 
   oostgelre:
