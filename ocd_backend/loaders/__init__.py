@@ -68,7 +68,7 @@ class ElasticsearchLoader(BaseLoader):
     def load_item(self, doc):
         body = json_encoder.encode(JsonLDSerializer().serialize(doc))
 
-        log.info('ElasticsearchLoader indexing document id: %s' % doc.get_ori_identifier())
+        log.debug('ElasticsearchLoader indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.index(index=self.index_name, body=body, id=doc.get_short_identifier())
@@ -105,7 +105,7 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
             log.info('Empty document ....')
             return
 
-        log.info('ElasticsearchUpdateOnlyLoader indexing document id: %s' % doc.get_ori_identifier())
+        log.debug('ElasticsearchUpdateOnlyLoader indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
@@ -129,7 +129,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
             log.info('Empty document ....')
             return
 
-        log.info('ElasticsearchUpsertLoader indexing document id: %s' % doc.get_ori_identifier())
+        log.debug('ElasticsearchUpsertLoader indexing document id: %s' % doc.get_ori_identifier())
 
         # Index documents into new index
         elasticsearch.update(
