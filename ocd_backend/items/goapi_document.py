@@ -87,6 +87,7 @@ class GemeenteOplossingenDocument(BaseItem):
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['note']
+            attachment.isReferencedBy = event
             event.attachment.append(attachment)
 
         return event

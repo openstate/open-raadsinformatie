@@ -92,6 +92,7 @@ class IBabsMeetingItem(BaseItem):
                     attachment.original_url = document['PublicDownloadURL']
                     attachment.size_in_bytes = document['FileSize']
                     attachment.name = document['DisplayName']
+                    attachment.isReferencedBy = agenda_item
                     agenda_item.attachment.append(attachment)
 
                 item.agenda.append(agenda_item)
@@ -116,6 +117,7 @@ class IBabsMeetingItem(BaseItem):
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']
+            attachment.isReferencedBy = item
             item.attachment.append(attachment)
 
         return item
@@ -198,6 +200,7 @@ class IBabsReportItem(BaseItem):
             attachment_file.original_url = document['PublicDownloadURL']
             attachment_file.size_in_bytes = document['FileSize']
             attachment_file.name = document['DisplayName']
+            attachment_file.isReferencedBy = report
             report.attachment.append(attachment_file)
 
         return report

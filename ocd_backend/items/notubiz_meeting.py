@@ -61,6 +61,7 @@ class NotubizMeetingItem(BaseItem):
                 attachment.original_url = doc['url']
                 attachment.name = doc['title']
                 attachment.date_modified = doc['last_modified']
+                attachment.isReferencedBy = agendaitem
                 agendaitem.attachment.append(attachment)
 
             event.agenda.append(agendaitem)
@@ -84,6 +85,7 @@ class NotubizMeetingItem(BaseItem):
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             attachment.date_modified = doc['last_modified']
+            attachment.isReferencedBy = event
             event.attachment.append(attachment)
 
         return event
