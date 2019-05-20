@@ -13,14 +13,31 @@ spec:
       labels:
         app: neo4j
     spec:
+      initContainers:
+        - name: init-sysctl
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
       containers:
-      - image: neo4j:3.2.1
+      - image: neo4j:3.5.5
         name: neo4j
         imagePullPolicy: Always
         ports:
         - containerPort: 7474
         - containerPort: 7687
         env:
+          - name: NEO4J_CACHE_MEMORY
+            value: "4G"
+          - name: NEO4J_HEAP_MEMORY
+            value: "4G"
+          - name: NEO4J_dbms_memory_heap_max__size
+            value: "4G"
+          - name: NEO4J_dbms_memory_heap_initial__size
+            value: "4G"
+          - name: NEO4J_dbms_memory_pagecache_size
+            value: "20G"
           - name: NEO4J_AUTH
             valueFrom:
               secretKeyRef:
@@ -29,6 +46,9 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: neodata
+        resources:
+          requests:
+            memory: 4Gi
       restartPolicy: Always
       volumes:
       - name: neodata
