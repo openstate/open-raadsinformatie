@@ -73,6 +73,9 @@ spec:
             # Override resource Limits
             - SYS_RESOURCE
           privileged: true
+        resources:
+          requests:
+            memory: 1.5Gi
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata
