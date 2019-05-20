@@ -62,9 +62,6 @@ services:
       - rest.action.multi.allow_explicit_index=false
       - script.allowed_types=none
       - script.allowed_contexts=none
-      - script.inline=false
-      - script.indexed=false
-      - script.file=false
 
       # Other settings
       - node.max_local_storage_nodes=20
