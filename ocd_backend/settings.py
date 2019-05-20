@@ -170,7 +170,7 @@ LOGGING = {
             'handlers': ['default'],
             'level': 'INFO',
             'propagate': False,
-            'filters': ['set_debug']
+            # 'filters': ['set_debug']
         },
         'neo4j.bolt': {
             'handlers': ['default'],
