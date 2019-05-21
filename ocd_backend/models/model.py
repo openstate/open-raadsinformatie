@@ -184,13 +184,10 @@ class Model(object):
         self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
         return self.ori_identifier
 
-    def properties(self, props=True, rels=True, parent=False):
+    def properties(self, props=True, rels=True):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate({k: v for k, v in self.values.items() if k[0:1] != '_'}):
-            if not parent and name == 'parent':
-                continue
-
             definition = self.definition(name)
             if not definition:
                 continue
@@ -211,7 +208,7 @@ class Model(object):
             self.db.replace(self)  # pylint: disable=no-member
 
             # Recursive save
-            for rel_type, value in self.properties(rels=True, props=False, parent=True):
+            for rel_type, value in self.properties(rels=True, props=False):
                 if isinstance(value, Model):
                     # Todo don't do parent setting for now, until first needed
                     # Self-reference via parent attribute if not done explicitly

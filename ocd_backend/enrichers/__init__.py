@@ -26,7 +26,7 @@ class BaseEnricher(celery_app.Task):
 
         for _, doc in iterate(args):
             try:
-                for prop, value in doc.properties(props=True, rels=True):
+                for prop, value in doc.properties(props=True, rels=True, parent=True):
                     try:
                         if not hasattr(value, 'enricher_task'):
                             continue
