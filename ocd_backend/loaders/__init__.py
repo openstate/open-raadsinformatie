@@ -66,31 +66,29 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).run(*args, **kwargs)
 
     def load_item(self, doc):
-        body = json_encoder.encode(JsonLDSerializer().serialize(doc))
-
-        log.debug('ElasticsearchLoader indexing document id: %s' % doc.get_ori_identifier())
-
-        # Index documents into new index
-        elasticsearch.index(index=self.index_name, body=body, id=doc.get_short_identifier())
-
         # Recursively index associated models like attachments
-        for _, value in doc.properties(rels=True, props=False):
-            self.load_item(value)
+        for model in doc.traverse():
+            body = json_encoder.encode(JsonLDSerializer().serialize(model))
 
-            if 'enricher_task' in value:
+            log.debug('ElasticsearchLoader indexing document id: %s' % model.get_ori_identifier())
+
+            # Index documents into new index
+            elasticsearch.index(index=self.index_name, body=body, id=model.get_short_identifier())
+
+            if 'enricher_task' in model:
                 # The value seems to be enriched so add to resolver
                 url_doc = {
-                    'ori_identifier': value.get_short_identifier(),
-                    'original_url': value.original_url,
-                    'file_name': value.name,
+                    'ori_identifier': model.get_short_identifier(),
+                    'original_url': model.original_url,
+                    'file_name': model.name,
                 }
 
-                if 'content_type' in value:
-                    url_doc['content_type'] = value.content_type
+                if 'content_type' in model:
+                    url_doc['content_type'] = model.content_type
 
                 # Update if already exists
                 elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
-                                    id=get_sha1_hash(value.original_url), body=url_doc)
+                                    id=get_sha1_hash(model.original_url), body=url_doc)
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
