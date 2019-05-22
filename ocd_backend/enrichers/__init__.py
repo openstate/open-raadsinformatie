@@ -25,28 +25,27 @@ class BaseEnricher(celery_app.Task):
         self.enricher_settings = kwargs['enricher_settings']
 
         for _, doc in iterate(args):
-            try:
-                for prop, value in doc.properties(props=True, rels=True, parent=True):
-                    try:
-                        if not hasattr(value, 'enricher_task'):
-                            continue
-                    except AttributeError:
+            for model in doc.traverse():
+                try:
+                    if not hasattr(model, 'enricher_task'):
                         continue
+                except AttributeError:
+                    continue
 
-                    self.enrich_item(value)
-
-            except SkipEnrichment as e:
-                bugsnag.notify(e, severity="info")
-                log.info('Skipping %s, reason: %s'
-                         % (self.__class__.__name__, e.message))
-            except IOError as e:
-                # In the case of an IOError, disk space or some other
-                # serious problem might occur.
-                bugsnag.notify(e, severity="error")
-                log.critical(e)
-            except Exception as e:
-                bugsnag.notify(e, severity="warning")
-                log.warning('Unexpected error: %s, reason: %s' % (self.__class__.__name__, e))
+                try:
+                    self.enrich_item(model)
+                except SkipEnrichment as e:
+                    bugsnag.notify(e, severity="info")
+                    log.info('Skipping %s, reason: %s'
+                             % (self.__class__.__name__, e.message))
+                except IOError as e:
+                    # In the case of an IOError, disk space or some other
+                    # serious problem might occur.
+                    bugsnag.notify(e, severity="error")
+                    log.critical(e)
+                except Exception as e:
+                    bugsnag.notify(e, severity="warning")
+                    log.warning('Unexpected error: %s, reason: %s' % (self.__class__.__name__, e))
 
         return args
 
