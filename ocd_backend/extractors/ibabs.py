@@ -89,7 +89,6 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     def run(self):
         meeting_count = 0
         meetings_skipped = 0
-        meeting_item_count = 0
         for start_date, end_date in self.interval_generator():
             log.info("%s: Now processing meetings from %s to %s" % (
                 self.source_definition['sitename'], start_date, end_date,))
@@ -116,20 +115,10 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                         meeting_dict['MeetingtypeId']]
                     yield 'application/json', json.dumps(meeting_dict)
 
-                    if meeting.MeetingItems is not None:
-                        for meeting_item in meeting.MeetingItems[0]:
-                            meeting_item_dict = meeting_item_to_dict(
-                                meeting_item)
-                            # This is a bit hacky, but we need to know this
-                            meeting_item_dict['MeetingId'] = meeting_dict['Id']
-                            meeting_item_dict['Meeting'] = meeting_dict
-                            yield 'application/json', json.dumps(
-                                meeting_item_dict)
-                            meeting_item_count += 1
                     meeting_count += 1
 
-            log.info("Extracted total of %d meetings and %d meeting items. Also "
-                     "Skipped %d meetings in total." % (meeting_count, meeting_item_count, meetings_skipped,))
+            log.info("Extracted total of %d meetings. Also "
+                     "Skipped %d meetings in total." % (meeting_count, meetings_skipped,))
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
