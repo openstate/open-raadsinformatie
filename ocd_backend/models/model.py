@@ -199,6 +199,24 @@ class Model(object):
 
     saving_flag = False
 
+    def traverse(self):
+        """Returns all associated models that been attached to this model as properties"""
+        rels_list = []
+
+        def inner(model):
+            # Prevent circular recursion
+            if model in rels_list:
+                return
+
+            rels_list.append(model)
+
+            for _, prop in iterate(model.values.items()):
+                if isinstance(prop, Model) or isinstance(prop, Relationship):
+                    inner(prop)
+
+        inner(self)
+        return rels_list
+
     def save(self):
         if self.saving_flag:
             return
