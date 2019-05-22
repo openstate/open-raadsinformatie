@@ -33,8 +33,9 @@ DUMPS_DIR = os.path.join(PROJECT_PATH, 'dumps')
 # Use this timezone as default for timezone unaware dates
 TIMEZONE = 'Europe/Amsterdam'
 
-fast_exchange = Exchange('fast', type='direct')
-slow_exchange = Exchange('slow', type='direct')
+transformers_exchange = Exchange('transformers', type='direct')
+enrichers_exchange = Exchange('enrichers', type='direct')
+loaders_exchange = Exchange('loaders', type='direct')
 
 CELERY_CONFIG = {
     'BROKER_URL': REDIS_URL,
@@ -56,33 +57,34 @@ CELERY_CONFIG = {
     'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO',
     'CELERY_ROUTES': {
         'ocd_backend.transformers.*': {
-            'queue': 'slow',
-            'routing_key': 'slow',
-            'priority': 9,
-        },
-        'ocd_backend.enrichers.*': {
-            'queue': 'slow',
-            'routing_key': 'slow',
+            'queue': 'transformers',
+            'routing_key': 'transformers',
             'priority': 6,
         },
+        'ocd_backend.enrichers.*': {
+            'queue': 'enrichers',
+            'routing_key': 'enrichers',
+            'priority': 9,
+        },
         'ocd_backend.loaders.*': {
-            'queue': 'fast',
-            'routing_key': 'fast',
+            'queue': 'loaders',
+            'routing_key': 'loaders',
             'priority': 3,
         },
         'ocd_backend.tasks.*': {
-            'queue': 'fast',
-            'routing_key': 'fast',
+            'queue': 'loaders',
+            'routing_key': 'loaders',
             'priority': 0,
         },
     },
     'CELERY_QUEUES': (
-        Queue('fast', fast_exchange, routing_key='fast'),
-        Queue('slow', slow_exchange, routing_key='slow'),
+        Queue('transformers', transformers_exchange, routing_key='transformers'),
+        Queue('enrichers', enrichers_exchange, routing_key='enrichers'),
+        Queue('loaders', loaders_exchange, routing_key='loaders'),
     ),
-    'CELERY_DEFAULT_QUEUE': 'slow',
-    'CELERY_DEFAULT_EXCHANGE': 'slow',
-    'CELERY_DEFAULT_ROUTING_KEY': 'slow',
+    'CELERY_DEFAULT_QUEUE': 'transformers',
+    'CELERY_DEFAULT_EXCHANGE': 'transformers',
+    'CELERY_DEFAULT_ROUTING_KEY': 'transformers',
 }
 
 
@@ -152,7 +154,7 @@ LOGGING = {
     'loggers': {
         'ocd_backend': {
             'handlers': ['default'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
         },
         'celery': {
