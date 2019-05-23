@@ -8,6 +8,7 @@ import os
 import requests
 import sys
 
+import redis
 import click
 from click.core import Command
 from click.decorators import _make_command
@@ -17,7 +18,7 @@ from elasticsearch.exceptions import RequestError
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
-    DEFAULT_INDEX_PREFIX, DUMPS_DIR
+    DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
 from ocd_backend.utils.misc import load_sources_config
 
 
@@ -378,6 +379,67 @@ def extract_start(source_id, subitem, entiteit, sources_config):
                 setup_pipeline(new_source)
 
 
+@command('enabled')
+@click.option('--source_path', default='*')
+@click.option('--sources_config', default=SOURCES_CONFIG_FILE)
+def extract_enabled(source_path, sources_config):
+    """
+    Start extraction based on the flags in Redis.
+    It uses the source_path in db 1 to identify which municipalities should be extracted.
+    A municipality can be set using 'SET ori.ibabs.arnhem enabled'.
+    Currently, possible values are: enabled, disabled and archived.
+
+    :param source_path: path in redis to search, i.e. ori.ibabs.arnhem. Defaults to *
+    :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
+    """
+    available_sources = load_sources_config(sources_config)
+
+    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1)
+    sources = redis_client.keys(source_path)
+
+    if not sources:
+        click.echo('No sources found in redis')
+        return None
+
+    enabled = []
+    disabled = []  # todo
+    archived = []  # todo
+    entities = {}
+
+    for source in sources:
+        source_value = redis_client.get(source)
+        if source_value.startswith('enabled'):
+            enabled.append(source)
+        elif source_value.startswith('disabled'):
+            disabled.append(source)
+        elif source_value.startswith('archived'):
+            archived.append(source)
+        else:
+            click.echo('Invalid value %s in redis for source %s' % source_value, source)
+            continue
+
+        source_entities = source_value.split(' ')
+        if len(source_entities) > 1:
+            entities[source] = source_entities[1:]
+
+    for source in enabled:
+        try:
+            project, provider, source_name = source.split('.')
+            available_source = available_sources[provider][source_name]
+            enabled_entities = entities.get(source)
+
+            for entity in available_source['entities']:
+                if not enabled_entities or entity.get('entity') in enabled_entities:
+                    new_source = deepcopy(available_source)
+                    new_source.update(entity)
+                    # print source, new_source
+                    setup_pipeline(new_source)
+        except ValueError:
+            click.echo('Invalid source format %s in redis' % source)
+        except KeyError:
+            click.echo('Source %s in redis does not exist in available sources' % source)
+
+
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
 elasticsearch.add_command(es_put_template)
@@ -388,6 +450,7 @@ elasticsearch.add_command(available_indices)
 
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)
+extract.add_command(extract_enabled)
 
 
 if __name__ == '__main__':
