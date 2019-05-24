@@ -1,13 +1,10 @@
 import json
 from time import sleep
 
-from requests.exceptions import HTTPError, RetryError
-from urllib3.exceptions import MaxRetryError
-
-from ocd_backend.exceptions import ItemAlreadyProcessed, ConfigurationError
+from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.http import GCSCachingMixin, HttpRequestMixin
+from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('extractor')
 
@@ -128,7 +125,13 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             if self.start_date is None:
                 self.start_date = cur_start
             self.end_date = cur_end
-        log.info("%s: Now processing meetings from %s to %s" % (
-            self.source_definition['key'], self.start_date, self.end_date,))
+        log.debug("[%s] Now processing meetings from %s to %s" % (
+            self.source_definition['sitename'], self.start_date, self.end_date,))
+
+        total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
             yield item
+            total_meetings += 1
+
+        log.info("[%s] Extracting total of %d GreenValley meetings" % (
+            self.source_definition['sitename'], total_meetings))

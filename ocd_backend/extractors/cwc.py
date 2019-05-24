@@ -104,3 +104,5 @@ class VideotulenExtractor(CompanyWebcastBaseExtractor):
                 result_count = 0
 
             current_page += 1
+
+        log.info("[%s] Extracted total of %d CWC results" % (self.source_definition['index_name'], result_count))

@@ -66,8 +66,12 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
         committees = self._get_committees()
         # log.debug(committees)
 
-        for c in self._get_committees():
+        total_committees = 0
+        for c in committees:
             yield 'application/json', json.dumps(c)
+            total_committees += 1
+
+        log.info("[%s] Extracted a total of %d GO scraper committees" % (self.source_definition['index_name'], total_committees))
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -177,6 +181,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                     }
 
                     yield 'application/json', json.dumps(meeting_item_obj)
+
+        log.info("[%s] Extracted a total of %d GO scraper meetings" % (self.source_definition['index_name'], total_committees))
 
 
 class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtractor):
