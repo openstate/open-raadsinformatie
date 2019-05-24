@@ -26,7 +26,7 @@ class ODataExtractor(StaticJSONExtractor):
             static_json = json.load(gem_file)
 
         item_filter = self.source_definition['filter']
-        log.info("Searching for: %s" % (item_filter,))
+        log.debug("[%s] OData searching for: %s" % (self.source_definition['sitename'], item_filter,))
 
         for item in static_json['value']:
             # log.debug(item)

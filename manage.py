@@ -372,11 +372,18 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 
     # Processing each item
     for source_id, source in selected_sources.items():
+        click.echo('[%s] Start extract for %s' % (source_id, source_id))
+
+        selected_entities = []
         for item in source.get('entities'):
             if (not entiteit and item) or (entiteit and item.get('entity') in entiteit):
+                selected_entities.append(item.get('entity'))
+
                 new_source = deepcopy(source)
                 new_source.update(item)
                 setup_pipeline(new_source)
+
+        click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
 
 @command('enabled')
@@ -385,7 +392,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 def extract_enabled(source_path, sources_config):
     """
     Start extraction based on the flags in Redis.
-    It uses the source_path in db 1 to identify which municipalities should be extracted.
+    It uses the source_path in Redis db 1 to identify which municipalities should be extracted.
     A municipality can be set using 'SET ori.ibabs.arnhem enabled'.
     Currently, possible values are: enabled, disabled and archived.
 
@@ -428,12 +435,19 @@ def extract_enabled(source_path, sources_config):
             available_source = available_sources[provider][source_name]
             enabled_entities = entities.get(source)
 
+            click.echo('[%s] Start extract for %s' % source_name)
+
+            selected_entities = []
             for entity in available_source['entities']:
                 if not enabled_entities or entity.get('entity') in enabled_entities:
+                    selected_entities.append(entity.get('entity'))
+
                     new_source = deepcopy(available_source)
                     new_source.update(entity)
                     # print source, new_source
                     setup_pipeline(new_source)
+
+            click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
         except ValueError:
             click.echo('Invalid source format %s in redis' % source)
         except KeyError:

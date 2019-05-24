@@ -25,8 +25,12 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         for party in html.xpath('.//td[@data-before="Partij"]/text()'):
             parties.add(party)
 
+        party_total = 0
         for party in parties:
             yield 'application/json', json.dumps({'name': party, 'classification': u'Party'})
+            party_total += 1
+
+        log.info("[%s] Extracted total of %d almanak organizations" % (self.source_definition['sitename'], party_total))
 
 
 class PersonsExtractor(StaticHtmlExtractor):
@@ -81,5 +85,9 @@ class PersonsExtractor(StaticHtmlExtractor):
                 'role': role,
             })
 
+        person_total = 0
         for person in persons:
             yield 'application/json', json.dumps(person)
+            person_total += 1
+
+        log.info("[%s] Extracted total of %d almanak persons" % (self.source_definition['sitename'], person_total))
