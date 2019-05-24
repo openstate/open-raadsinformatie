@@ -1,7 +1,6 @@
 import json
 from datetime import datetime
 from urlparse import urljoin
-from pprint import pprint
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
@@ -27,7 +26,7 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
             self.source_definition['base_url'], self.api_version,)
 
     def _request(self, path):
-        log.info('Now retrieving: %s' % (urljoin(self.base_url, path),))
+        log.debug('Now retrieving: %s' % (urljoin(self.base_url, path),))
         resp = self.http_session.get(
             urljoin(self.base_url, path), verify=False)
 
@@ -62,7 +61,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
             yield 'application/json', json.dumps(dmu)
             committee_count += 1
 
-        log.info("Extracted total of %d committees." % committee_count)
+        log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['sitename'], committee_count))
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -83,8 +82,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 yield 'application/json', json.dumps(meeting)
                 meeting_count += 1
 
-            log.info("Now processing meetings from %s to %s" % (start_date, end_date,))
-            log.info("Extracted total of %d meetings." % meeting_count)
+            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
+        log.info("[%s] Extracted total of %d GO API meetings." % (self.source_definition['sitename'], meeting_count))
 
 
 # class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor):
@@ -135,5 +134,5 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
                 yield 'application/json', json.dumps(doc)
                 meeting_count += 1
 
-            log.info("Now processing documents from %s to %s" % (start_date, end_date,))
-            log.info("Extracted total of %d documents." % meeting_count)
+            log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
+        log.info("[%s] Extracted total of %d GO API documents." % (self.source_definition['sitename'], meeting_count))

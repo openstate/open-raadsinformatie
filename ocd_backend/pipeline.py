@@ -15,7 +15,7 @@ logger = get_source_logger('pipeline')
 
 
 def setup_pipeline(source_definition):
-    logger.info('Starting pipeline for source: %s' % source_definition.get('id'))
+    logger.debug('Starting pipeline for source: %s' % source_definition.get('id'))
 
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
