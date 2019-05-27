@@ -140,6 +140,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
     def run(self):
         pages = self._get_pages()
 
+        total_meetings = 0
         for page in pages:
             if self.source_definition.get('upcoming', True):
                 meetings = self._get_upcoming_meetings(page)
@@ -168,6 +169,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                 }
 
                 yield 'application/json', json.dumps(meeting_obj)
+                total_meetings += 1
 
                 if not self.source_definition.get('extract_meeting_items', False):
                     continue
@@ -182,7 +184,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 
                     yield 'application/json', json.dumps(meeting_item_obj)
 
-        log.info("[%s] Extracted a total of %d GO scraper meetings" % (self.source_definition['index_name'], total_committees))
+        log.info("[%s] Extracted a total of %d GO scraper meetings" % (self.source_definition['index_name'], total_meetings))
 
 
 class GemeenteOplossingenResolutionsExtractor(GemeenteOplossingenMeetingsExtractor):
