@@ -386,56 +386,67 @@ def extract_start(source_id, subitem, entiteit, sources_config):
         click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
 
-@command('enabled')
+@command('process')
+@click.argument('modus')
 @click.option('--source_path', default='*')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
-def extract_enabled(source_path, sources_config):
+def extract_process(modus, source_path, sources_config):
     """
     Start extraction based on the flags in Redis.
     It uses the source_path in Redis db 1 to identify which municipalities should be extracted.
     A municipality can be set using 'SET ori.ibabs.arnhem enabled'.
     Currently, possible values are: enabled, disabled and archived.
 
+    :param modus: the configuration to use for processing, starting with an underscore. i.e. _enabled, _archived, _disabled. Looks for configuration in redis like _custom.start_date
     :param source_path: path in redis to search, i.e. ori.ibabs.arnhem. Defaults to *
     :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
     """
-    available_sources = load_sources_config(sources_config)
-
     redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1)
-    sources = redis_client.keys(source_path)
 
-    if not sources:
+    available_sources = load_sources_config(sources_config)
+    redis_sources = redis_client.keys(source_path)
+
+    if not redis_sources:
         click.echo('No sources found in redis')
         return None
 
-    enabled = []
-    disabled = []  # todo
-    archived = []  # todo
+    sources = []
     entities = {}
 
-    for source in sources:
-        source_value = redis_client.get(source)
-        if source_value.startswith('enabled'):
-            enabled.append(source)
-        elif source_value.startswith('disabled'):
-            disabled.append(source)
-        elif source_value.startswith('archived'):
-            archived.append(source)
-        else:
-            click.echo('Invalid value %s in redis for source %s' % source_value, source)
+    for redis_source in redis_sources:
+        if redis_source[0:1] == '_':
+            # Settings are underscored so we skip them
             continue
+
+        source_value = redis_client.get(redis_source)
+        if source_value.startswith('disabled'):
+            # If value equals disabled we will not process the source
+            continue
+        elif source_value.startswith(modus):
+            sources.append(redis_source)
 
         source_entities = source_value.split(' ')
         if len(source_entities) > 1:
-            entities[source] = source_entities[1:]
+            entities[redis_source] = source_entities[1:]
 
-    for source in enabled:
+    settings_path = '_%s.*' % modus
+    setting_keys = redis_client.keys(settings_path)
+    if not setting_keys:
+        click.echo('No settings found in redis for %s' % settings_path)
+        return
+
+    settings = {}
+    for key in setting_keys:
+        _, _, name = key.rpartition('.')
+        settings[name] = redis_client.get(key)
+
+    for source in sources:
         try:
             project, provider, source_name = source.split('.')
-            available_source = available_sources[provider][source_name]
+            available_source = available_sources['%s.%s' % (project, provider)][source_name]
             enabled_entities = entities.get(source)
 
-            click.echo('[%s] Start extract for %s' % source_name)
+            click.echo('[%s] Start extract for %s' % (source_name, source_name))
 
             selected_entities = []
             for entity in available_source['entities']:
@@ -444,7 +455,7 @@ def extract_enabled(source_path, sources_config):
 
                     new_source = deepcopy(available_source)
                     new_source.update(entity)
-                    # print source, new_source
+                    new_source.update(settings)
                     setup_pipeline(new_source)
 
             click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
@@ -464,7 +475,7 @@ elasticsearch.add_command(available_indices)
 
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)
-extract.add_command(extract_enabled)
+extract.add_command(extract_process)
 
 
 if __name__ == '__main__':
