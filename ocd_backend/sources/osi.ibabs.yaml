@@ -2,7 +2,7 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
-  wait_until_finished: true
+  wait_until_finished: false
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -117,8 +117,7 @@ _entities_voting: &entities_voting
     council_members_count: 1
     reverse_chronological: true
     max_processed_meetings: 1
-    start_date: '2018-01-01T00:00:00'
-    end_date: '2018-03-21T00:00:00'
+
 
   - &persons_voting
     <<: *entity_defaults
@@ -134,8 +133,6 @@ _entities_voting: &entities_voting
     council_members_count: 1
     reverse_chronological: true
     max_processed_meetings: 1
-    start_date: '2018-01-01T00:00:00'
-    end_date: '2018-04-01T00:00:00'
 
   - &meetings_voting
     <<: *meetings
@@ -152,8 +149,6 @@ _ibabs: &ibabs
   sitename: "{key!c}"
   province: "{sitename}"
   entities: *entities
-  #start_date: "2016-01-01T00:00:00"
-  #end_date: "2016-06-01T00:00:00"
   <<: *source_defaults
 
 _ibabs_voting: &ibabs_voting
@@ -161,11 +156,9 @@ _ibabs_voting: &ibabs_voting
   sitename: "{key!c}"
   province: "{sitename}"
   entities: *entities_voting
-  #start_date: "2016-01-01T00:00:00"
-  #end_date: "2016-06-01T00:00:00"
   <<: *source_defaults
 
-ibabs-provinces:
+osi.ibabs:
   # Added before 17-11-2017
   noord-holland:
     key: noord-holland
@@ -238,6 +231,4 @@ ibabs-provinces:
       <<: *motions_and_amendments_voting_defaults
 
     - &voting_rounds
-      start_date: '2018-01-01T00:00:00'
-      end_date: '2018-04-01T00:00:00'
       <<: *voting_rounds_defaults

@@ -2,7 +2,7 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
-  wait_until_finished: true
+  wait_until_finished: false
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -67,23 +67,6 @@ _entities: &entities
     pdf_max_pages: 0
     max_pages: 1
 
-_popit: &popit
-  - &popit_organizations
-    <<: *entity_defaults
-    entity: popit_organizations
-    doc_type: organizations
-    extractor: ocd_backend.extractors.popit.PopItExtractor
-    item: ocd_backend.items.popit.PopitOrganisationItem
-    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/organizations
-
-  - &popit_persons
-    <<: *entity_defaults
-    entity: popit_persons
-    doc_type: persons
-    extractor: ocd_backend.extractors.popit.PopItExtractor
-    item: ocd_backend.items.popit.PopitOrganisationItem
-    file_url: http://{index_name}.openraadsinformatie.nl/api/v0.1/persons
-
 _cwc: &cwc
   - &videotulen
     <<: *entity_defaults
@@ -99,12 +82,9 @@ _ibabs: &ibabs
   sitename: "{key!c}"
   municipality: "{sitename}"
   entities: *entities
-  months_interval: 4
-  start_date: "2000-01-01T00:00:00"
-  #end_date: "2016-06-01T00:00:00"
   <<: *source_defaults
 
-ibabs:
+ori.ibabs:
   # Added before 17-11-2017
   amstelveen:
     key: amstelveen
@@ -142,9 +122,8 @@ ibabs:
     cwc_username: overbetuwe_read_svc
     cwc_password: NFd!N39K
     entities:
-    - *popit_organizations
-    - *popit_persons
     - *municipality
+    - *organizations
     - *committees
     - *persons
     - *meetings
@@ -167,15 +146,7 @@ ibabs:
     entities:
     - *municipality
     - *committees
-
-    - entity: meetings
-      doc_type: events
-      extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
-      item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
-      enrichers:
-      - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
-        - # reserved for enricher_settings
-      <<: *entity_defaults
+    - *meetings
 
     - entity: reports
       doc_type: events
@@ -560,4 +531,10 @@ ibabs:
   drimmelen:
     key: drimmelen
     almanak_id: 25896
+    <<: *ibabs
+
+  # Added on 27-05-2019
+  nijmegen:
+    key: nijmegen
+    almanak_id: 33391
     <<: *ibabs

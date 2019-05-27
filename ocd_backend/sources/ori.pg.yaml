@@ -19,7 +19,7 @@ _entities: &entities
     item: ocd_backend.items.partijgedrag.PartijgedragMotion
     dump_path: "./json/pg_motions.json"
 
-partijgedrag:
+ori.pg:
   key: partijgedrag
   index_name: partijgedrag
   entities: *entities

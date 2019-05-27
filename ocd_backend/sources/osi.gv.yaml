@@ -2,7 +2,7 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
-  wait_until_finished: true
+  wait_until_finished: false
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -90,10 +90,8 @@ _gv: &gv
   entities: *entities
   <<: *source_defaults
 
-gv-provinces:
+osi.gv:
   zuid-holland:
-    # start_date: "2010-01-01T00:00:00"
-    # end_date: "2018-06-01T00:00:00"
     key: zuid-holland
     almanak_id: 17466
     greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy

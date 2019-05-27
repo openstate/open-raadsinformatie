@@ -44,11 +44,9 @@ _notubiz: &notubiz
   municipality: "{sitename}"
   base_url: "https://api.notubiz.nl"
   entities: *entities
-  months_interval: 4
-  start_date: "2000-01-01T00:00:00"
   <<: *source_defaults
 
-notubiz:
+ori.notubiz:
   alkmaar:
     key: alkmaar
     organisation_id: 987
@@ -324,12 +322,6 @@ notubiz:
     key: binnenmaas
     organisation_id: 823
     <<: *notubiz
-
-#  Appears missing in API
-#  losser:
-#    key: losser
-#    organisation_id: 628
-#    <<: *notubiz
 
   # Added on 10-04-2018
   zwartewaterland:
