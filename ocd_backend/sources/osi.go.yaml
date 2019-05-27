@@ -2,7 +2,7 @@
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
-  wait_until_finished: true
+  wait_until_finished: false
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -90,9 +90,9 @@ _go: &go
   entities: *entities
   <<: *source_defaults
 
-go-provinces:
-  provincie-utrecht:
-    key: provincie-utrecht
+osi.go:
+  utrecht:
+    key: utrecht
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     api_version: v2
     almanak_id: 17166
