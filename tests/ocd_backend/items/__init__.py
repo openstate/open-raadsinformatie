@@ -15,7 +15,7 @@ class ItemTestCase(TestCase):
             ),
             'transformer': 'ocd_backend.transformers.BaseTransformer',
             'item': 'ocd_backend.items.LocalDumpItem',
-            'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
             'dump_path': dump_path,
             'index_name': 'openbeelden'
         }

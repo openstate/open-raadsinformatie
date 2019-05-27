@@ -30,7 +30,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'key': 'amsterdam',
             'wait_until_finished': True,
             'hidden': False,
-            'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
             'item': 'ocd_backend.items.notubiz_meeting.Meeting',
         }
 

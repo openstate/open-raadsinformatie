@@ -15,7 +15,7 @@ class BaseTransformerTestCase(TransformerTestCase):
             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
             'transformer': 'ocd_backend.transformers.BaseTransformer',
             'item': 'ocd_backend.items.LocalDumpItem',
-            'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
             'dump_path': dump_path,
             'index_name': 'openbeelden'
         }

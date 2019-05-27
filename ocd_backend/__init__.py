@@ -15,7 +15,9 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.transformers.ggm',
     'ocd_backend.enrichers.media_enricher',
     'ocd_backend.enrichers.media_enricher.static',
-    'ocd_backend.loaders',
+    'ocd_backend.loaders.elasticsearch',
+    'ocd_backend.loaders.dummy',
+    'ocd_backend.loaders.popit',
     'ocd_backend.tasks',
 ])
 
