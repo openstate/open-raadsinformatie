@@ -25,7 +25,7 @@
 #             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
 #             'transformer': 'ocd_backend.transformers.BaseTransformer',
 #             'item': 'ocd_backend.items.go_meeting.MeetingItem',
-#             'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+#             'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
 #             'hidden': False,
 #             'index_name': 'den_helder',
 #             'base_url': 'https://gemeenteraad.denhelder.nl'

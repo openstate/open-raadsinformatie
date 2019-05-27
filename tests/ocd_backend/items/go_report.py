@@ -22,7 +22,7 @@
 #             "transformer": "ocd_backend.transformers.BaseTransformer",
 #             "item": "ocd_backend.items.go_meeting.ReportItem",
 #             "enrichers": [],
-#             "loader": "ocd_backend.loaders.ElasticsearchLoader",
+#             "loader": "ocd_backend.loaders.elasticsearch.ElasticsearchLoader",
 #             "cleanup": "ocd_backend.tasks.CleanupElasticsearch",
 #             "hidden": False,
 #             "index_name": "den_helder",
