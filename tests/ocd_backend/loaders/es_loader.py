@@ -2,7 +2,7 @@ import json
 import os.path
 
 from ocd_backend.exceptions import ConfigurationError
-from ocd_backend.loaders import ElasticsearchLoader
+from ocd_backend.loaders.elasticsearch import ElasticsearchLoader
 from . import LoaderTestCase
 
 
@@ -25,7 +25,7 @@ class ESLoaderTestCase(LoaderTestCase):
             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
             'transformer': 'ocd_backend.transformers.BaseTransformer',
             'item': 'ocd_backend.items.LocalDumpItem',
-            'loader': 'ocd_backend.loaders.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
             'dump_path': dump_path
         }
         self.loader = ElasticsearchLoader()
