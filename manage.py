@@ -406,13 +406,7 @@ def extract_process(modus, source_path, sources_config):
     available_sources = load_sources_config(sources_config)
     redis_sources = redis_client.keys(source_path)
 
-    if not redis_sources:
-        click.echo('No sources found in redis')
-        return None
-
     sources = []
-    entities = {}
-
     for redis_source in redis_sources:
         if redis_source[0:1] == '_':
             # Settings are underscored so we skip them
@@ -422,12 +416,15 @@ def extract_process(modus, source_path, sources_config):
         if source_value.startswith('disabled'):
             # If value equals disabled we will not process the source
             continue
-        elif source_value.startswith(modus):
+        elif modus in source_value:
             sources.append(redis_source)
 
-        source_entities = source_value.split(' ')
-        if len(source_entities) > 1:
-            entities[redis_source] = source_entities[1:]
+    if not redis_sources:
+        click.echo('No sources found in redis')
+        return
+    elif not sources:
+        click.echo('Redis sources found but non match the modus %s' % modus)
+        return
 
     settings_path = '_%s.*' % modus
     setting_keys = redis_client.keys(settings_path)
@@ -436,15 +433,19 @@ def extract_process(modus, source_path, sources_config):
         return
 
     settings = {}
+    enabled_entities = []
     for key in setting_keys:
         _, _, name = key.rpartition('.')
-        settings[name] = redis_client.get(key)
+        value = redis_client.get(key)
+        if name == 'entities':
+            enabled_entities = value.split(' ')
+        else:
+            settings[name] = value
 
     for source in sources:
         try:
             project, provider, source_name = source.split('.')
             available_source = available_sources['%s.%s' % (project, provider)][source_name]
-            enabled_entities = entities.get(source)
 
             click.echo('[%s] Start extract for %s' % (source_name, source_name))
 
@@ -453,9 +454,11 @@ def extract_process(modus, source_path, sources_config):
                 if not enabled_entities or entity.get('entity') in enabled_entities:
                     selected_entities.append(entity.get('entity'))
 
-                    new_source = deepcopy(available_source)
+                    # Redis settings are overruled by source definitions, for some sources a start_date must be enforced
+                    new_source = deepcopy(settings)
+                    new_source.update(deepcopy(available_source))
                     new_source.update(entity)
-                    new_source.update(settings)
+
                     setup_pipeline(new_source)
 
             click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
