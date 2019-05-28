@@ -78,7 +78,7 @@ def setup_pipeline(source_definition):
         if 'id' not in pipeline:
             raise ConfigurationError("Each pipeline must have an id field.")
 
-        # adjusted source definitionsv per pipeline. This way you can for
+        # adjusted source definitions per pipeline. This way you can for
         # example change the index on a pipeline basis
         pipeline_definitions[pipeline['id']] = deepcopy(source_definition)
         pipeline_definitions[pipeline['id']].update(pipeline)

@@ -2,8 +2,7 @@ from datetime import datetime
 
 from ocd_backend import celery_app
 from ocd_backend.log import get_source_logger
-from ocd_backend.mixins import (OCDBackendTaskSuccessMixin,
-                                OCDBackendTaskFailureMixin)
+from ocd_backend.mixins import OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin
 from ocd_backend.utils.misc import iterate
 
 log = get_source_logger('loader')

@@ -292,6 +292,12 @@ CWC_WSDL = u'https://services.companywebcast.com/meta/1.2/metaservice.svc?single
 PDF_TO_TEXT = u'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
 
+# Kafka settings for DeltaLoader
+KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost:9092')
+KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
+KAFKA_GROUP = os.getenv('KAFKA_GROUP', 'ori_api')
+KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
+
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
 # defined per machine.
