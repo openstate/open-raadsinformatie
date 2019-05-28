@@ -100,8 +100,8 @@ ori.notubiz:
     organisation_id: 2122
     <<: *notubiz
 
-  amsterdam_nieuwwest:
-    key: amsterdam_nieuwwest
+  amsterdam_nieuw-west:
+    key: amsterdam_nieuw-west
     municipality: "Amsterdam"
     organisation_id: 2328
     <<: *notubiz
@@ -201,14 +201,14 @@ ori.notubiz:
     organisation_id: 330
     <<: *notubiz
 
-  denhaag:
-    key: denhaag
+  den_haag:
+    key: den_haag
     municipality: "'s-Gravenhage (gemeente)"
     organisation_id: 318
     <<: *notubiz
 
-  krimpenadijssel:
-    key: krimpenadijssel
+  krimpen_ad_ijssel:
+    key: krimpen_ad_ijssel
     municipality: "Krimpen aan den IJssel"
     organisation_id: 1273
     <<: *notubiz
@@ -273,14 +273,14 @@ ori.notubiz:
     organisation_id: 1357
     <<: *notubiz
 
-  hendrikidoambacht:
-    key: hendrikidoambacht
+  hendrik-ido-ambacht:
+    key: hendrik-ido-ambacht
     municipality: "Hendrik-Ido-Ambacht"
     organisation_id: 1781
     <<: *notubiz
 
-  stichtsevecht:
-    key: stichtsevecht
+  stichtse_vecht:
+    key: stichtse_vecht
     municipality: "Stichtse Vecht"
     organisation_id: 1770
     <<: *notubiz
@@ -290,20 +290,20 @@ ori.notubiz:
     organisation_id: 427
     <<: *notubiz
 
-  capelleadijssel:
-    key: capelleadijssel
+  capelle_ad_ijssel:
+    key: capelle_ad_ijssel
     municipality: "Capelle aan den IJssel"
     organisation_id: 1517
     <<: *notubiz
 
-  dewolden:
-    key: dewolden
+  de_wolden:
+    key: de_wolden
     municipality: "De Wolden"
     organisation_id: 1317
     <<: *notubiz
 
-  oostgelre:
-    key: oostgelre
+  oost_gelre:
+    key: oost_gelre
     municipality: "Oost Gelre"
     organisation_id: 341
     <<: *notubiz
