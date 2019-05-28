@@ -145,8 +145,8 @@ ori.go:
     <<: *go
 
   # Added on 15-04-2019
-  stichtsevecht:
-    key: stichtsevecht
+  stichtse_vecht:
+    key: stichtse_vecht
     base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
     almanak_id: 34861
     <<: *go

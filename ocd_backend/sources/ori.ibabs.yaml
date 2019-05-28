@@ -382,8 +382,8 @@ ori.ibabs:
     almanak_id: 26403
     <<: *ibabs
 
-  loonopzand:
-    key: loonopzand
+  loon_op_zand:
+    key: loon_op_zand
     sitename: Loon op Zand
     almanak_id: 25473
     <<: *ibabs
@@ -413,8 +413,8 @@ ori.ibabs:
     almanak_id: 37823
     <<: *ibabs
 
-  hollandskroon:
-    key: hollandskroon
+  hollands_kroon:
+    key: hollands_kroon
     municipality: "Hollands Kroon"
     almanak_id: 24449
     <<: *ibabs
@@ -425,20 +425,19 @@ ori.ibabs:
     <<: *ibabs
 
   # Added on 29-12-2017
-
   buren:
     key: buren
     almanak_id: 40352
     <<: *ibabs
 
-  edamvolendam:
-    key: edamvolendam
+  edam-volendam:
+    key: edam-volendam
     municipality: "Edam-Volendam"
     almanak_id: 22102
     <<: *ibabs
 
-  ettenleur:
-    key: ettenleur
+  etten-leur:
+    key: etten-leur
     municipality: "Etten-Leur"
     almanak_id: 21760
     <<: *ibabs
