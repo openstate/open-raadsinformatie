@@ -1,5 +1,6 @@
 bugsnag==3.4.0
 celery[redis]==4.1.1
+confluent-kafka==1.0.0
 redis==3.2
 click==2.1
 elasticsearch>=7.0.0,<8.0.0
@@ -12,6 +13,7 @@ neo4j==1.7.4
 -e git+https://github.com/izderadicka/pdfparser#egg=pdfparser
 Pillow==5.2.0
 py2neo==4.0.0
+PyLD==1.0.5
 python-dateutil==2.7.3
 python-json-logger==0.1.8
 python-magic==0.4.13
