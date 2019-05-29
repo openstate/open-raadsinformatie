@@ -25,6 +25,16 @@ spec:
               secretKeyRef:
                 name: secrets
                 key: NEO4J_AUTH
+          - name: KAFKA_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: KAFKA_USERNAME
+          - name: KAFKA_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: KAFKA_PASSWORD
         volumeMounts:
         - mountPath: /opt/ori/data
           name: oridata
