@@ -191,7 +191,7 @@ ori.ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
       item: ocd_backend.items.popit.PopitOrganisationItem
-      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
       vote_entity: organizations
       pdf_max_pages: 20
@@ -207,7 +207,7 @@ ori.ibabs:
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
       transformer: ocd_backend.transformers.BaseTransformer
       item: ocd_backend.items.popit.PopitPersonItem
-      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
       cleanup: ocd_backend.tasks.CleanupElasticsearch
       vote_entity: persons
       pdf_max_pages: 20
@@ -221,7 +221,7 @@ ori.ibabs:
       doc_type: motions
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-      loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
       include: moties
       pdf_max_pages: 20
       max_pages: 1
@@ -281,7 +281,7 @@ ori.ibabs:
       doc_type: vote_events
       extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
       item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-      loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpdateOnlyLoader
       reverse_chronological: false
       max_processed_meetings: 0
       # start_date: '2018-02-01T00:00:00'
