@@ -12,6 +12,24 @@ log = get_source_logger('delta_loader')
 class DeltaLoader(BaseLoader):
     """Serializes a model to N-Quads and then sends it to a Kafka bus."""
 
+    config = {
+        'bootstrap.servers': settings.KAFKA_HOST,
+        'session.timeout.ms': settings.KAFKA_SESSION_TIMEOUT,
+        'group.id': settings.KAFKA_GROUP
+    }
+
+    if settings.KAFKA_USERNAME:
+        config['api.version.request'] = True
+        config['broker.version.fallback'] = '0.10.0.0'
+        config['api.version.fallback.ms'] = 0
+        config['sasl.mechanisms'] = 'PLAIN'
+        config['security.protocol'] = 'SASL_SSL'
+        # config['ssl.ca.location'] = '/usr/local/etc/openssl/cert.pem'
+        config['sasl.username'] = settings.KAFKA_USERNAME
+        config['sasl.password'] = settings.KAFKA_PASSWORD
+
+    kafka_producer = Producer(config)
+
     def load_item(self, doc):
         # Recursively index associated models like attachments
         for model in doc.traverse():
@@ -28,10 +46,7 @@ class DeltaLoader(BaseLoader):
 
             # Send document to the Kafka bus
             log.debug('DeltaLoader sending document id %s to Kafka' % model.get_ori_identifier())
-            kafka_producer = Producer({'bootstrap.servers': settings.KAFKA_HOST,
-                                       'session.timeout.ms': settings.KAFKA_SESSION_TIMEOUT,
-                                       'group.id': settings.KAFKA_GROUP})
-            kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'))
+            self.kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'))
 
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
