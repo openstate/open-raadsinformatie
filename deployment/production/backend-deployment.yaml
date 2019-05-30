@@ -38,6 +38,11 @@ spec:
         volumeMounts:
         - mountPath: /opt/ori/data
           name: oridata
+        resources:
+          requests:
+            memory: 120Mi
+          limits:
+            memory: 300Mi
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
@@ -46,4 +51,4 @@ spec:
         persistentVolumeClaim:
           claimName: oridata
       nodeSelector:
-        cloud.google.com/gke-nodepool: preemptible
+        cloud.google.com/gke-preemptible: "true"

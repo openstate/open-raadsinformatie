@@ -63,7 +63,7 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: ori-api
-          servicePort: 3000
+          serviceName: api-serve
+          servicePort: 80
   tls:
   - secretName: tls-certificate
