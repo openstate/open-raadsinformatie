@@ -109,13 +109,6 @@ ori.go:
     almanak_id: 25660
     <<: *go
 
-  # Removed. Merged with Molenlanden on 1-1-2019
-  #  molenwaard:
-  #    key: molenwaard
-  #    base_url: "https://raad.gemeentemolenwaard.nl/api"
-  #    almanak_id: 27268
-  #    <<: *go
-
   leiderdorp:
     key: leiderdorp
     base_url: "https://www.raadleiderdorp.nl/api"
