@@ -417,7 +417,7 @@ ori.ibabs:
 
   hollands_kroon:
     key: hollands_kroon
-    municipality: "Hollands Kroon"
+    sitename: Hollands Kroon
     almanak_id: 24449
     <<: *ibabs
 
