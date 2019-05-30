@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: esdata
+  name: apidata
   namespace: production
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 6Gi
+      storage: 20Gi

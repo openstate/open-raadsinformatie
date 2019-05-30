@@ -1,37 +1,83 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: backend
+  name: cron-daily
   namespace: production
 spec:
-  schedule: "0 9 * * *"
+  schedule: "0 22 * * *" # Each day 22:00 UTC
+  successfulJobsHistoryLimit: 10
+  concurrencyPolicy: Replace
   jobTemplate:
     spec:
+      backoffLimit: 2
       template:
         metadata:
-          name: backend-job
+          name: cron-daily
         spec:
           containers:
-          - name: backend-job
+          - name: backend
             image: openstatefoundation/open-raadsinformatie-backend
             imagePullPolicy: Always
             command: ["python"]
-            args: |-
+            args:
               - manage.py
               - extract
-              - start
-              - notubiz
+              - process
+              - daily
             envFrom:
             - configMapRef:
                 name: config
-            volumeMounts:
-            - mountPath: /opt/ori/data
-              name: oridata
+            env:
+            - name: NEO4J_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: NEO4J_AUTH
           securityContext:
             runAsUser: 1000
             fsGroup: 1000
-          volumes:
-          - name: oridata
-            persistentVolumeClaim:
-              claimName: oridata
-          restartPolicy: OnFailure
+          restartPolicy: Never
+          nodeSelector:
+            cloud.google.com/gke-preemptible: "true"
+---
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron-monthly
+  namespace: production
+spec:
+  schedule: "0 21 1 * *" # First day of the month 21:00 UTC
+  successfulJobsHistoryLimit: 10
+  concurrencyPolicy: Replace
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          name: cron-monthly
+        spec:
+          containers:
+          - name: backend
+            image: openstatefoundation/open-raadsinformatie-backend
+            imagePullPolicy: Always
+            command: ["python"]
+            args:
+              - manage.py
+              - extract
+              - process
+              - monthly
+            envFrom:
+            - configMapRef:
+                name: config
+            env:
+            - name: NEO4J_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: NEO4J_AUTH
+          securityContext:
+            runAsUser: 1000
+            fsGroup: 1000
+          restartPolicy: Never
+          nodeSelector:
+            cloud.google.com/gke-preemptible: "true"
