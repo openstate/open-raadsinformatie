@@ -40,7 +40,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        print(source_defaults)
         event = Meeting(self.original_item[u'id'], **source_defaults)
 
         # dates in v1 have a time in them and in v2 they don't
@@ -54,8 +53,13 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         event.start_date = iso8601.parse_date(start_date)
         event.end_date = event.start_date  # ?
 
-        # Some meetings are missing a name...
-        event.name = self.original_item[u'description'] or 'None'
+        # Some meetings are missing a name because some municipalities do not always fill the description field.
+        # In this case we create the name from the name of the commission and the start date of the meeting.
+        # See issue #124.
+        if self.original_item['description'] == '':
+            event.name = 'Vergadering - %s - %s' % (self.original_item[u'dmu'][u'name'], event.start_date)
+        else:
+            event.name = self.original_item[u'description']
 
         event.classification = [u'Agenda']
         event.description = self.original_item[u'description']
