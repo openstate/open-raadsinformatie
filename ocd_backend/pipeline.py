@@ -19,7 +19,7 @@ def setup_pipeline(source_definition):
 
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
-        prefix=settings.DEFAULT_INDEX_PREFIX,
+        prefix=source_definition.get('es_prefix', settings.DEFAULT_INDEX_PREFIX),
         index_name=source_definition.get('index_name',
                                          source_definition.get('id'))
     )
