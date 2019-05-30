@@ -45,6 +45,7 @@ class PartijgedragMotion(BaseItem):
                 motion.cocreator.append(cocreator)
 
         vote_event = VoteEvent(self.original_item['identifier'], **source_defaults)
+        vote_event.start_date = self.original_item.get('issuedate')
 
         if self.original_item['uitslag']:
             vote_event.result = ResultPass()
