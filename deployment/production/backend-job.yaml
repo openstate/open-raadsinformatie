@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backend-job
+  namespace: production
+spec:
+  template:
+    metadata:
+      name: backend-job
+    spec:
+      containers:
+      - name: backend-job
+        image: openstatefoundation/open-raadsinformatie-backend
+        imagePullPolicy: Always
+        command: ["python"]
+        args:
+          - manage.py
+          - extract
+          - process
+          - all
+        envFrom:
+        - configMapRef:
+            name: config
+        env:
+        - name: NEO4J_AUTH
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: NEO4J_AUTH
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      restartPolicy: Never
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"

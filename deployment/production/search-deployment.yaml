@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: search
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      containers:
+      - name: ori-search
+        args:
+        - /usr/src/app/server.js
+        command:
+        - node
+        image: argu/ori-search
+        imagePullPolicy: Always
