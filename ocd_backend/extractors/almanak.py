@@ -10,27 +10,28 @@ log = get_source_logger('extractor')
 
 class AlmanakOrganisationsExtractor(StaticHtmlExtractor):
     """
-    Extract organisations (parties) from the Almanak.
+    Extract organisations from the Almanak based on the source file's extractor_xpath.
     """
 
     def extract_items(self, static_content):
-        """
-        Extracts organisations from the Almanak page source HTML.
-        """
 
-        parties = set()
+        organisations = set()
         html = etree.HTML(static_content)
 
-        # Parties are listed in TD's with the attribute 'data-before="Partij"'
-        for party in html.xpath('.//td[@data-before="Partij"]/text()'):
-            parties.add(party)
+        if not self.source_definition['extractor_xpath']:
+            raise ValueError('You must set an extractor_xpath in the source file to use AlmanakOrganisationsExtractor.')
 
-        party_total = 0
-        for party in parties:
-            yield 'application/json', json.dumps({'name': party, 'classification': u'Party'})
-            party_total += 1
+        for organisation in html.xpath(self.source_definition['extractor_xpath']):
+            organisations.add(organisation)
 
-        log.info("[%s] Extracted total of %d almanak organizations" % (self.source_definition['sitename'], party_total))
+        organisations_total = 0
+        for organisation in organisations:
+            yield 'application/json', json.dumps(organisation)
+            organisations_total += 1
+
+        log.info("[%s] Extracted total of %d almanak %s organizations" % (self.source_definition['sitename'],
+                                                                          organisations_total,
+                                                                          self.source_definition['classification']))
 
 
 class AlmanakPersonsExtractor(StaticHtmlExtractor):

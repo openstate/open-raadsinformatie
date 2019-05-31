@@ -45,6 +45,7 @@ def _generate_for_organisations(name, almanak):
     }, {
         "id": "%s_organisations" % (name.lower(),),
         "extractor": "ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor",
+        "extractor_xpath": "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
         "enrichers": [],
