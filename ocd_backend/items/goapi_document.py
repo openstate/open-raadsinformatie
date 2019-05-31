@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('goapi_meeting')
 
 
-class GemeenteOplossingenDocument(BaseItem):
+class GemeenteOplossingenDocumentItem(BaseItem):
     def _get_current_permalink(self):
         api_version = self.source_definition.get('api_version', 'v1')
         base_url = '%s/%s' % (
@@ -46,6 +46,9 @@ class GemeenteOplossingenDocument(BaseItem):
         }
 
         event = Meeting(self.original_item[u'id'], **source_defaults)
+
+        event.organization = Organization(self.source_definition['key'], **source_defaults)
+        event.organization.merge(collection=self.source_definition['key'])
 
         try:
             date_tz = pytz.timezone(
