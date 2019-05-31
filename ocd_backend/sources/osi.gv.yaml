@@ -19,6 +19,7 @@ _entities: &entities
     entity: province
     doc_type: organizations
     extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
+    extractor_xpath: "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()"
     item: ocd_backend.items.organisations.AlmanakOrganisationItem
     file_url: https://almanak.overheid.nl/{almanak_id}/a
     item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
@@ -89,6 +90,7 @@ _entities: &entities
 
 _gv: &gv
   index_name: "{key}"
+  sitename: "{key!c}"
   province: "{key!c}"
   entities: *entities
   <<: *source_defaults
