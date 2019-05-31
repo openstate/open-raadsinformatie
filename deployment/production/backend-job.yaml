@@ -21,6 +21,8 @@ spec:
         envFrom:
         - configMapRef:
             name: config
+        - secretRef:
+            name: backend-credentials
         env:
         - name: NEO4J_AUTH
           valueFrom:
