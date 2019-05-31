@@ -8,7 +8,7 @@ from .staticfile import StaticHtmlExtractor
 log = get_source_logger('extractor')
 
 
-class OrganisationsExtractor(StaticHtmlExtractor):
+class AlmanakOrganisationsExtractor(StaticHtmlExtractor):
     """
     Extract organisations (parties) from the Almanak.
     """
@@ -33,7 +33,7 @@ class OrganisationsExtractor(StaticHtmlExtractor):
         log.info("[%s] Extracted total of %d almanak organizations" % (self.source_definition['sitename'], party_total))
 
 
-class PersonsExtractor(StaticHtmlExtractor):
+class AlmanakPersonsExtractor(StaticHtmlExtractor):
     """
     Extract persons from the Almanak.
     """

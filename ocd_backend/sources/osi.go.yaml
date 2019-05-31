@@ -18,7 +18,7 @@ _entities: &entities
     <<: *entity_defaults
     entity: province
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
     item: ocd_backend.items.organisations.AlmanakOrganisationItem
     file_url: https://almanak.overheid.nl/{almanak_id}/a
     item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
@@ -69,7 +69,7 @@ _entities: &entities
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
-    item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeeting
+    item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeetingItem
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
