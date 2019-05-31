@@ -16,13 +16,6 @@ x-google-endpoints:
 - name: "api.openraadsinformatie.nl"
   allowCors: true
   target: "35.204.67.167"
-x-google-allow: "all"
-security: []
-securityDefinitions:
-  admin_key:
-    type: "apiKey"
-    name: "admin_key"
-    in: "header"
 consumes:
 - "application/json"
 produces:
@@ -32,12 +25,11 @@ externalDocs:
   url: "http://docs.openraadsinformatie.nl"
 tags:
 - name: "Elasticsearch API"
-- name: "Elasticsearch API (admin)"
 schemes:
 - "https"
 - "http"
 paths:
-  /elastic/_cat/indices:
+  /_cat/indices:
     get:
       tags:
         - "Elasticsearch API"
@@ -49,7 +41,7 @@ paths:
         200:
           description: ""
 
-  /elastic/{index}/_search:
+  /{index}/_search:
     get:
       tags:
         - "Elasticsearch API"
@@ -75,7 +67,7 @@ paths:
         200:
           description: ""
 
-  /elastic/{index}/_msearch:
+  /{index}/_msearch:
     get:
       tags:
         - "Elasticsearch API"
@@ -101,70 +93,10 @@ paths:
         200:
           description: ""
 
-  /elastic/{path}:
-    get:
-      tags:
-        - "Elasticsearch API (admin)"
-      description: |
-        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
-      operationId: "elastic_get"
-      parameters:
-        - $ref: "#/parameters/path"
-      responses:
-        200:
-          description: ""
-      security:
-      - admin_key: []
-    post:
-      tags:
-        - "Elasticsearch API (admin)"
-      description: |
-        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
-      operationId: "elastic_post"
-      parameters:
-        - $ref: "#/parameters/path"
-      responses:
-        200:
-          description: ""
-      security:
-      - admin_key: []
-    put:
-      tags:
-        - "Elasticsearch API (admin)"
-      description: |
-        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
-      operationId: "elastic_put"
-      parameters:
-        - $ref: "#/parameters/path"
-      responses:
-        200:
-          description: ""
-      security:
-      - admin_key: []
-    delete:
-      tags:
-        - "Elasticsearch API (admin)"
-      description: |
-        Elasticsearch endpoint for direct admin access of the Elasticsearch API. An api_key header is required.
-      operationId: "elastic_delete"
-      parameters:
-        - $ref: "#/parameters/path"
-      responses:
-        200:
-          description: ""
-      security:
-      - admin_key: []
-
 parameters:
   index:
     name: "index"
     in: "path"
     description: "The Elasticsearch index to search in. For all indices use _all"
-    required: true
-    type: "string"
-  path:
-    name: "path"
-    in: "path"
-    description: "The Elasticsearch path to use"
     required: true
     type: "string"
