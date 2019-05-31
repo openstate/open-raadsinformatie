@@ -72,10 +72,17 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
     def run(self):
         meeting_count = 0
         for start_date, end_date in self.interval_generator():
-            url = 'meetings?date_from=%i&date_to=%i' % (
-                    (start_date - datetime(1970, 1, 1)).total_seconds(),
-                    (end_date - datetime(1970, 1, 1)).total_seconds()
+            # v2 requires dates in YYYY-MM-DD format, instead of a unix timestamp
+            if self.source_definition.get('api_version') == 'v2':
+                url = 'meetings?date_from=%s&date_to=%s' % (
+                    start_date.strftime('%Y-%m-%d'),
+                    end_date.strftime('%Y-%m-%d')
                 )
+            else:
+                url = 'meetings?date_from=%i&date_to=%i' % (
+                        (start_date - datetime(1970, 1, 1)).total_seconds(),
+                        (end_date - datetime(1970, 1, 1)).total_seconds()
+                    )
             total, static_json = self._request(url)
 
             for meeting in static_json:
