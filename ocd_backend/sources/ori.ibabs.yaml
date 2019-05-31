@@ -123,8 +123,6 @@ ori.ibabs:
   overbetuwe:
     key: overbetuwe
     almanak_id: 26937
-    cwc_username: overbetuwe_read_svc
-    cwc_password: NFd!N39K
     entities:
     - *municipality
     - *organizations
@@ -144,8 +142,6 @@ ori.ibabs:
     key: utrecht
     municipality: "Utrecht (gemeente)"
     almanak_id: 38122
-    cwc_username: utrecht_api
-    cwc_password: U@nG5rfp
     <<: *ibabs
     entities:
     - *municipality
