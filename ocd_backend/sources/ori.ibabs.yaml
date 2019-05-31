@@ -27,7 +27,7 @@ _entities: &entities
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.OrganisationsExtractor
+    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
     item: ocd_backend.items.organisations.AlmanakOrganisationItem
     file_url: https://almanak.overheid.nl/{almanak_id}/a
     item_xpath: //
