@@ -541,3 +541,16 @@ ori.ibabs:
     key: nijmegen
     almanak_id: 33391
     <<: *ibabs
+
+  harderwijk:
+    key: harderwijk
+    almanak_id: 32835
+    entities:
+    - *municipality
+    - *organizations
+    - *committees
+    - *persons
+    - *meetings
+    - *reports
+    - *videotulen
+    <<: *ibabs
