@@ -44,7 +44,7 @@ def _generate_for_organisations(name, almanak):
         "keep_index_on_update": True
     }, {
         "id": "%s_organisations" % (name.lower(),),
-        "extractor": "ocd_backend.extractors.almanak.OrganisationsExtractor",
+        "extractor": "ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
         "enrichers": [],
@@ -63,7 +63,7 @@ def _generate_for_organisations(name, almanak):
 def _generate_for_persons(name, almanak):
     persons = [{
         "id": "%s_persons" % (name.lower(),),
-        "extractor": "ocd_backend.extractors.almanak.PersonsExtractor",
+        "extractor": "ocd_backend.extractors.almanak.AlmanakPersonsExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
         "item": "ocd_backend.items.persons.AlmanakPersonItem",
         "enrichers": [],
