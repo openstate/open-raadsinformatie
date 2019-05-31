@@ -8,6 +8,9 @@ from lxml import etree
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('extractor')
 
 
 class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
@@ -46,9 +49,6 @@ class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
 
     def run(self):
         # Retrieve the static content from the source
-        # TODO: disable ssl verification fro now since the
-        # almanak implementation (of ssl) is broken.
-
         try:
             r = self.http_session.get(self.file_url, verify=False)
             static_content = r.content
@@ -145,8 +145,15 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
             except KeyError as e:
                 pass
 
+        item_total = 0
         for item in tree.xpath(self.item_xpath, namespaces=self.namespaces):
             yield 'application/html', etree.tostring(item)
+            item_total += 1
+
+        log.info("[%s] Extracted total of %d %s %s items" % (self.source_definition['sitename'],
+                                                          item_total,
+                                                          self.source_definition.get('classification', ''),
+                                                          self.source_definition['entity']))
 
 
 class StaticJSONExtractor(StaticFileBaseExtractor):
