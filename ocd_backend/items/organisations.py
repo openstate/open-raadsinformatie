@@ -33,7 +33,8 @@ class MunicipalityOrganisationItem(BaseItem):
 
 class AlmanakOrganisationItem(BaseItem):
     """
-    Extracts organizations (parties) from the Almanak.
+    Extracts organizations from the Almanak. The source file calling this item must set a `classification`
+    for the entity because there are serveral types of organisations (councils, parties, etc.)
     """
 
     def get_rights(self):
@@ -43,26 +44,35 @@ class AlmanakOrganisationItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
+
+        if not self.source_definition['classification']:
+            raise ValueError('You must set a classification in the source file to use AlmanakOrganisationItem.')
+
         source_defaults = {
             'source': 'almanak',
             'source_id_key': 'identifier',
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(self.original_item['name'], **source_defaults)
-        object_model.name = self.original_item['name']  # todo dubbel?
-        object_model.classification = self.original_item['classification']
-        object_model.subOrganizationOf = Organization(self.source_definition['almanak_id'], **source_defaults)
-        object_model.subOrganizationOf.merge(collection=self.source_definition['index_name'])
+        object_model = Organization(self.original_item, **source_defaults)
+        object_model.name = self.original_item  # todo dubbel?
+        object_model.classification = self.source_definition['classification']
+
+        if self.source_definition['classification'] == "Province":
+            object_model.collection = self.source_definition['key']
+
+        if self.source_definition['classification'] != "Province":
+            object_model.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+            object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
 
 
 class HTMLOrganisationItem(BaseItem):
 
-    def _get_name(self):
-        name = unicode(u''.join(self.original_item.xpath('.//text()'))).strip()
-        name = re.sub(r'\s*\(\d+ zetels?\)\s*', '', name)
+    def _get_name(self, item):
+        name = unicode(u''.join(item.xpath('.//text()'))).strip()
+        # name = re.sub(r'\s*\(\d+ zetels?\)\s*', '', name)
         return unicode(name)
 
     def get_rights(self):
@@ -72,17 +82,22 @@ class HTMLOrganisationItem(BaseItem):
         return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
+
+        if not self.source_definition['classification']:
+            raise ValueError('You must set a classification in the source file to use HTMLOrganisationItem.')
+
         source_defaults = {
             'source': 'almanak',
             'source_id_key': 'identifier',
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(
-            self._get_name(), **source_defaults)
-        object_model.name = self._get_name()  # todo dubbel?
-        object_model.classification = unicode(
-            self.source_definition.get('classification', 'Party'))
-        object_model.collection = self.get_collection()
+        object_model = Organization(self._get_name(self.original_item), **source_defaults)
+        object_model.name = self._get_name(self.original_item)
+        object_model.classification = self.source_definition['classification']
+
+        if self.source_definition['classification'] != "Province":
+            object_model.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+            object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
