@@ -77,7 +77,6 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
         }
 
         pname = self._get_name()
-        print pname
         person = Person(pname, **source_defaults)
         person.name = self._get_name()
 
@@ -127,17 +126,14 @@ class HTMLPersonFromLinkItem(HTMLPersonItem):
 
         party_name = u''.join(html.xpath(
             self.source_definition['organization_xpath']))
-        log.info('Found party %s on personal page based on name' % (party_name,))
         party = Organization(party_name, **source_defaults)
-        log.info('Found party %s on NEO4j' % (party,))
-        #
+
         municipality_member = Membership()
         municipality_member.organization = municipality
         # TODO: Setting member = person causes infinite recursion
         # municipality_member.member = person
         municipality_member.role = 'Fractielid'
         # municipality_member.role = html.xpath('string(//div[@id="content"]//h3/text())').strip()
-        #
         party_member = Membership()
         party_member.organization = party
         # TODO: Setting member = person causes infinite recursion
