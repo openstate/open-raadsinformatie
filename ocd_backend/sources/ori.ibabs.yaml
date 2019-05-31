@@ -341,6 +341,7 @@ ori.ibabs:
   voorschoten:
     key: voorschoten
     almanak_id: 35396
+    municipality: Voorschoten
     sitename: Duivenvoorde
     include: ".*[Vv]oorschoten$"
     exclude: ".*[Ww]assenaar$"
@@ -349,6 +350,7 @@ ori.ibabs:
   wassenaar:
     key: wassenaar
     almanak_id: 40204
+    municipality: Wassenaar
     sitename: Duivenvoorde
     include: ".*[Ww]assenaar$"
     exclude: ".*[Vv]oorschoten$"

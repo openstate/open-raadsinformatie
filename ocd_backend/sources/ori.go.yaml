@@ -75,6 +75,7 @@ ori.go:
 
   den_helder:
     key: den_helder
+    municipality: Den Helder
     base_url: "https://gemeenteraad.denhelder.nl/api"
     almanak_id: 24611
     <<: *go
@@ -99,6 +100,7 @@ ori.go:
 
   oude_ijsselstreek:
     key: oude_ijsselstreek
+    municipality: Oude IJsselstreek
     base_url: "https://raad.oude-ijsselstreek.nl/api/"
     almanak_id: 36780
     <<: *go
