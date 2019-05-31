@@ -78,13 +78,13 @@ _entities: &entities
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
-  #
+
   - &documents
     <<: *entity_defaults
     entity: documents
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
-    item: ocd_backend.items.goapi_document.GemeenteOplossingenDocument
+    item: ocd_backend.items.goapi_document.GemeenteOplossingenDocumentItem
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
