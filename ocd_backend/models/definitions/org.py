@@ -37,3 +37,19 @@ class Organization(Org, foaf.Agent):
     alt_label = StringProperty(Skos, 'altLabel')
     name = StringProperty(Skos, 'prefLabel')
     collection = StringProperty(Meta, 'collection')
+
+
+class TopLevelOrganization(Org, foaf.TopLevelAgent):
+    area = Relation(Opengov, 'area')
+    contact_details = Relation(Opengov, 'contactDetail')
+    abstract = StringProperty(Dcterms, 'abstract')
+    description = StringProperty(Dcterms, 'description')
+    classification = StringProperty(Org, 'classification')
+    other_names = StringProperty(Opengov, 'otherName')
+    links = StringProperty(Rdf, 'seeAlso')
+    dissolution_date = StringProperty(Schema, 'dissolutionDate')
+    founding_date = StringProperty(Schema, 'foundingDate')
+    image = StringProperty(Schema, 'image')
+    alt_label = StringProperty(Skos, 'altLabel')
+    name = StringProperty(Skos, 'prefLabel')
+    collection = StringProperty(Meta, 'collection')
