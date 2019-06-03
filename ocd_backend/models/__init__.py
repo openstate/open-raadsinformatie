@@ -58,6 +58,7 @@ EventCancelled = definitions.schema.EventCancelled
 Person = definitions.person.Person
 
 # http://www.w3.org/ns/org#
+TopLevelOrganization = definitions.org.TopLevelOrganization
 Organization = definitions.org.Organization
 Membership = definitions.org.Membership
 
