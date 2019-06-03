@@ -118,14 +118,12 @@ class HTMLPersonFromLinkItem(HTMLPersonItem):
         # TODO: not sure how to determine gender
         # person.gender = u'male' if person.name.startswith(u'Dhr. ') else u'female'
 
-        municipality = Organization(
-            self.source_definition['almanak_id'], **source_defaults)
+        municipality = Organization(self.source_definition['key'], **source_defaults)
         if municipality is None:
             log.debug('Could not find almanak organization')
             return person
 
-        party_name = u''.join(html.xpath(
-            self.source_definition['organization_xpath']))
+        party_name = u''.join(html.xpath(self.source_definition['organization_xpath']))
         party = Organization(party_name, **source_defaults)
 
         municipality_member = Membership()
