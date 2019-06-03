@@ -1,7 +1,7 @@
 import re
 
 from ocd_backend.items import BaseItem
-from ocd_backend.models import Organization
+from ocd_backend.models import TopLevelOrganization, Organization
 
 
 class MunicipalityOrganisationItem(BaseItem):
@@ -22,7 +22,7 @@ class MunicipalityOrganisationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(self.original_item['Key'], **source_defaults)
+        object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         object_model.name = unicode(self.original_item['Title'])
         object_model.classification = u'Municipality'
         object_model.description = self.original_item['Description']
@@ -55,6 +55,9 @@ class AlmanakOrganisationItem(BaseItem):
         }
 
         object_model = Organization(self.original_item, **source_defaults)
+        object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.has_organization_name.merge(collection=self.source_definition['key'])
+
         object_model.name = self.original_item  # todo dubbel?
         object_model.classification = self.source_definition['classification']
 
@@ -62,7 +65,7 @@ class AlmanakOrganisationItem(BaseItem):
             object_model.collection = self.source_definition['key']
 
         if self.source_definition['classification'] != "Province":
-            object_model.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+            object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
