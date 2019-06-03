@@ -104,6 +104,11 @@ class Dbo(Namespace):
     prefix = 'dbo'
 
 
+class Vcard(Namespace):
+    uri = 'http://www.w3.org/2006/vcard/ns#'
+    prefix = 'vcard'
+
+
 # class Opaque(Namespace):
 #     uri = 'https://argu.co/ns/opaque-model/'
 #     prefix = 'opaque'
@@ -111,5 +116,5 @@ class Dbo(Namespace):
 
 ALL = [
     Foaf, Ncal, Opengov, Org, Meeting, Mapping, Meta, Owl, Person,
-    Schema, Rdf, Rdfs, Dcterms, Skos, Bio, Bibframe, Prov, Ori
+    Schema, Rdf, Rdfs, Dcterms, Skos, Bio, Bibframe, Prov, Ori, Vcard
 ]
