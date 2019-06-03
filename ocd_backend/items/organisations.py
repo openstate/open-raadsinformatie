@@ -34,7 +34,7 @@ class MunicipalityOrganisationItem(BaseItem):
 class AlmanakOrganisationItem(BaseItem):
     """
     Extracts organizations from the Almanak. The source file calling this item must set a `classification`
-    for the entity because there are serveral types of organisations (councils, parties, etc.)
+    for the entity because there are several types of organisations (councils, parties, etc.)
     """
 
     def get_rights(self):

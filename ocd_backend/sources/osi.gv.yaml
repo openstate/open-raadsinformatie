@@ -47,15 +47,15 @@ _entities: &entities
     file_url: "{organizations_url}"
     item_xpath: "{organizations_item_xpath}"
 
-  - &persons
-    <<: *entity_defaults
-    entity: persons
-    doc_type: persons
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
-    file_url: "{persons_url}"
-    item_xpath: "{persons_item_xpath}"
-    organization_xpath: "{persons_party_xpath}"
+#  - &persons
+#    <<: *entity_defaults
+#    entity: persons
+#    doc_type: persons
+#    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+#    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
+#    file_url: "{persons_url}"
+#    item_xpath: "{persons_item_xpath}"
+#    organization_xpath: "{persons_party_xpath}"
 
   - &meetings
     <<: *entity_defaults
@@ -69,7 +69,6 @@ _entities: &entities
     - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
       - tasks:
         - file_to_text
-
 
   - &reports
     <<: *entity_defaults
@@ -101,8 +100,8 @@ osi.gv:
     almanak_id: 17466
     greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
     # greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
-    greenvalley_key: bbaab0a1-51b0-4344-8e49-91182df4139e
-    greenvalley_hash: 9af2bb59b0d6ef3d62fa4f2e0157759c5f5c5ad2f2691ab0
+    greenvalley_key: 51cc806d-3108-45c9-ade4-a18a6207a054
+    greenvalley_hash: 3600416d177d8526dfdf5c197c1a0bdb7dab714433ae43dd
     greenvalley_username: openstate
     greenvalley_extract_timeout: 5
     organizations_url: https://staten.zuid-holland.nl/Statenleden
