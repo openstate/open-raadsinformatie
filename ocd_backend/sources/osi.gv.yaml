@@ -47,15 +47,15 @@ _entities: &entities
     file_url: "{organizations_url}"
     item_xpath: "{organizations_item_xpath}"
 
-#  - &persons
-#    <<: *entity_defaults
-#    entity: persons
-#    doc_type: persons
-#    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-#    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
-#    file_url: "{persons_url}"
-#    item_xpath: "{persons_item_xpath}"
-#    organization_xpath: "{persons_party_xpath}"
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
+    file_url: "{persons_url}"
+    item_xpath: "{persons_item_xpath}"
+    organization_xpath: "{persons_party_xpath}"
 
   - &meetings
     <<: *entity_defaults
