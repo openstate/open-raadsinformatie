@@ -46,6 +46,7 @@ class GemeenteOplossingenDocumentItem(BaseItem):
         }
 
         event = Meeting(self.original_item[u'id'], **source_defaults)
+        event.has_organization_name = Organization(self.source_definition['key'], **source_defaults)
 
         event.organization = Organization(self.source_definition['key'], **source_defaults)
         event.organization.merge(collection=self.source_definition['key'])
@@ -65,9 +66,7 @@ class GemeenteOplossingenDocumentItem(BaseItem):
 
         event.start_date = start_date
         event.end_date = event.start_date  # ?
-
         event.name = self.original_item[u'description']
-
         event.classification = [self.original_item['documentTypeLabel']]
         event.description = self.original_item[u'description']
 
@@ -87,6 +86,7 @@ class GemeenteOplossingenDocumentItem(BaseItem):
             self.original_item.get('documents', [])
         ):
             attachment = MediaObject(doc['url'], **source_defaults)
+            attachment.has_organization_name = Organization(self.source_definition['key'], **source_defaults)
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['note']
