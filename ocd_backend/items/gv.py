@@ -46,7 +46,7 @@ class GreenValleyItem(BaseItem):
         if media_urls:
             return media_urls.values()
         else:
-            return None
+            return []
 
     def get_object_model(self):
         source_defaults = {
@@ -98,13 +98,14 @@ class GreenValleyItem(BaseItem):
         except (AttributeError, KeyError):
             pass
 
-        try:
-            event.organization = Organization(
-                meeting[u'bis_orgaan'], **source_defaults)
-            event.committee = Organization(
-                meeting[u'bis_orgaan'], **source_defaults)
-        except LookupError as e:
-            pass
+        event.organization = Organization(self.source_definition['key'], **source_defaults)
+        event.organization.merge(collection=self.source_definition['key'])
+
+        if 'bis_orgaan' in meeting:
+            if meeting['bis_orgaan'] != '':
+                event.committee = Organization(meeting[u'bis_orgaan'], **source_defaults)
+                event.committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+                event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
@@ -155,6 +156,9 @@ class GreenValleyMeeting(GreenValleyItem):
             agendaitem.description = meeting[u'objectname']
             agendaitem.name = meeting[u'objectname']
             agendaitem.position = int(meeting['agendapagenumber'])
+            agendaitem.parent = event
+            # AgendaItem requires a start_date because it derives from Meeting
+            agendaitem.start_date = event.start_date
 
             event.agenda.append(agendaitem)
 
