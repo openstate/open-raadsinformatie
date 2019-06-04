@@ -55,7 +55,9 @@ class FileToTextMixin(object):
 
         tf = self.file_download(url)
         if tf is not None:
-            return self.file_to_text(tf.name, max_pages)
+            name = tf.name
+            tf.close()
+            return self.file_to_text(name, max_pages)
         else:
             return []  # FIXME: should be something else ...
 
