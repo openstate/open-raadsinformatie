@@ -162,9 +162,21 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
+        'celery.worker': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': False,
+            'filters': ['set_debug']
+        },
         'celery.worker.strategy': {
             'handlers': ['default'],
             'level': 'INFO',
+            'propagate': False,
+            'filters': ['set_debug']
+        },
+        'celery.worker.control': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
             'propagate': False,
             'filters': ['set_debug']
         },
