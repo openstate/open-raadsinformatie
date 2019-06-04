@@ -80,7 +80,9 @@ class HttpRequestMixin(object):
 
     def fetch_data(self, url, path, modified_date):
         _, _, media_file = self.fetch(url, path, modified_date)
-        return media_file.read()
+        data = media_file.read()
+        media_file.close()
+        return data
 
     def download_url(self, url, partial_fetch=False):
         http_resp = self.http_session.get(url, stream=True, timeout=(60, 120))
