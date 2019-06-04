@@ -23,7 +23,7 @@ class JSONSerializerPython2(serializer.JSONSerializer):
 
 
 def setup_elasticsearch(host=ELASTICSEARCH_HOST, port=ELASTICSEARCH_PORT):
-    return Elasticsearch([{'host': host, 'port': port, 'timeout': 20}],
+    return Elasticsearch([{'host': host, 'port': port, 'timeout': 600}],
                          serializer=JSONSerializerPython2())
 
 
