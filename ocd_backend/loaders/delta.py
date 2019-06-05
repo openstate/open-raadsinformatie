@@ -15,13 +15,9 @@ class DeltaLoader(BaseLoader):
     config = {
         'bootstrap.servers': settings.KAFKA_HOST,
         'session.timeout.ms': settings.KAFKA_SESSION_TIMEOUT,
-        'group.id': settings.KAFKA_GROUP
     }
 
     if settings.KAFKA_USERNAME:
-        config['api.version.request'] = True
-        config['broker.version.fallback'] = '0.10.0.0'
-        config['api.version.fallback.ms'] = 0
         config['sasl.mechanisms'] = 'PLAIN'
         config['security.protocol'] = 'SASL_SSL'
         # config['ssl.ca.location'] = '/usr/local/etc/openssl/cert.pem'
