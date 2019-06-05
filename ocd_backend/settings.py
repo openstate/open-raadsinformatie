@@ -309,7 +309,6 @@ KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost:9092')
 KAFKA_USERNAME = os.getenv('KAFKA_USERNAME')
 KAFKA_PASSWORD = os.getenv('KAFKA_PASSWORD')
 KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
-KAFKA_GROUP = os.getenv('KAFKA_GROUP', 'ori_api')
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
 
 # Allow any settings to be defined in local_settings.py which should be
