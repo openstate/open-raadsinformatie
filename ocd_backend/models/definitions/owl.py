@@ -10,12 +10,8 @@ from ocd_backend.models.properties import Relation, StringProperty, ArrayPropert
 class Thing(Owl, Model):
     classification = ArrayProperty(Ncal, 'categories')  # todo fix with popolo
     meta = Relation(Meta, 'meta')
-    has_organization_name = Relation(Vcard, 'hasOrganizationName', required=True)
-
-
-class TopLevelThing(Owl, Model):
-    classification = ArrayProperty(Ncal, 'categories')  # todo fix with popolo
-    meta = Relation(Meta, 'meta')
+    # has_organization_name is used to set the municipality or province ID on every item (see issue #141)
+    has_organization_name = Relation(Vcard, 'hasOrganizationName')
 
 
 class Identifier(Thing):

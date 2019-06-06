@@ -30,6 +30,9 @@ class IBabsMeetingItem(BaseItem):
             meeting = self.original_item
 
         item = Meeting(meeting['Id'], **source_defaults)
+        item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        item.has_organization_name.merge(collection=self.source_definition['key'])
+
         item.name = meeting['Meetingtype']
         item.chair = meeting['Chairman']
         item.location = meeting['Location']
@@ -46,40 +49,34 @@ class IBabsMeetingItem(BaseItem):
             item.status = EventConfirmed()
 
         # Attach the meeting to the municipality node
-        item.organization = Organization(self.source_definition['key'], **source_defaults)
+        item.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         item.organization.merge(collection=self.source_definition['key'])
 
-        # Check if this is a committee meeting and if so connect it to the committee node. If it is
-        # not a committee meeting we attach it to the 'Gemeenteraad' committee node
+        # Check if this is a committee meeting and if so connect it to the committee node.
         committee_designator = self.source_definition.get('committee_designator', 'commissie')
         if committee_designator in meeting['Meetingtype'].lower():
             # Attach the meeting to the committee node
             item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+            item.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            item.committee.has_organization_name.merge(collection=self.source_definition['key'])
+
             item.committee.name = meeting['Meetingtype']
             if 'sub' in meeting['MeetingtypeId']:
                 item.committee.classification = u'Subcommittee'
             else:
                 item.committee.classification = u'Committee'
+
             # Re-attach the committee node to the municipality node
-            # TODO: Why does the committee node get detached from the municipality node when meetings are attached to it?
-            item.committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
-            item.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
-        else:
-            # This is not a committee meeting, so attach it to the 'Gemeenteraad' committee node
-            item.committee = Organization('gemeenteraad', **source_defaults)
-            item.committee.name = 'Gemeenteraad'
-            item.committee.classification = 'Council'
-            item.committee.collection = self.source_definition['key'] + '-gemeenteraad'
-            item.committee.merge(collection=self.source_definition['key'] + '-gemeenteraad')
-            # Re-attach the 'Gemeenteraad' committee node to the municipality node
-            # TODO: Same problem as above
-            item.committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+            item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             item.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         if 'MeetingItems' in meeting:
             item.agenda = list()
             for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
                 agenda_item = AgendaItem(mi['Id'], **source_defaults)
+                agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                agenda_item.has_organization_name.merge(collection=self.source_definition['key'])
+
                 agenda_item.parent = item
                 agenda_item.name = mi['Title']
                 agenda_item.start_date = item.start_date
@@ -88,6 +85,9 @@ class IBabsMeetingItem(BaseItem):
                 agenda_item.attachment = list()
                 for document in mi['Documents'] or []:
                     attachment = MediaObject(document['Id'], **source_defaults)
+                    attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                    attachment.has_organization_name.merge(collection=self.source_definition['key'])
+
                     attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                     attachment.original_url = document['PublicDownloadURL']
                     attachment.size_in_bytes = document['FileSize']
@@ -99,8 +99,10 @@ class IBabsMeetingItem(BaseItem):
 
         item.invitee = list()
         for invitee in meeting['Invitees'] or []:
-            item.invitee.append(Person(invitee['UniqueId'],
-                                       **source_defaults))
+            invitee_item = Person(invitee['UniqueId'], **source_defaults)
+            invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            invitee_item.has_organization_name.merge(collection=self.source_definition['key'])
+            item.invitee.append(invitee_item)
 
         # Double check because sometimes 'EndTime' is in meeting but it is set to None
         if 'EndTime' in meeting and meeting['EndTime']:
@@ -113,6 +115,9 @@ class IBabsMeetingItem(BaseItem):
         item.attachment = list()
         for document in meeting['Documents'] or []:
             attachment = MediaObject(document['Id'], **source_defaults)
+            attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment.has_organization_name.merge(collection=self.source_definition['key'])
+
             attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
