@@ -55,7 +55,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
     """
 
     def run(self):
-        committee_count = 1
+        committee_count = 0
         total, static_json = self._request('dmus')
         for dmu in static_json:
             yield 'application/json', json.dumps(dmu)
