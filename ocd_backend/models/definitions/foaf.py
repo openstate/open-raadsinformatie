@@ -10,8 +10,3 @@ from ocd_backend.models.properties import Relation
 class Agent(Foaf, owl.Thing):
     has_member = Relation(Org, 'hasMember')
     member_of = Relation(Org, 'memberOf')
-
-
-class TopLevelAgent(Foaf, owl.TopLevelThing):
-    has_member = Relation(Org, 'hasMember')
-    member_of = Relation(Org, 'memberOf')

@@ -1,6 +1,5 @@
 from datetime import datetime
 from hashlib import sha1
-# import iso8601
 
 from ocd_backend.items import BaseItem
 from ocd_backend.models import *
@@ -58,6 +57,8 @@ class GreenValleyItem(BaseItem):
         meeting = self.original_item[u'default']
 
         event = Meeting(meeting[u'objectid'], **source_defaults)
+        event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        event.has_organization_name.merge(collection=self.source_definition['key'])
 
         if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
             event.start_date = datetime.fromtimestamp(
@@ -98,13 +99,14 @@ class GreenValleyItem(BaseItem):
         except (AttributeError, KeyError):
             pass
 
-        event.organization = Organization(self.source_definition['key'], **source_defaults)
+        event.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         event.organization.merge(collection=self.source_definition['key'])
 
         if 'bis_orgaan' in meeting:
             if meeting['bis_orgaan'] != '':
                 event.committee = Organization(meeting[u'bis_orgaan'], **source_defaults)
-                event.committee.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+                event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
@@ -121,6 +123,9 @@ class GreenValleyItem(BaseItem):
         event.attachment = []
         for doc in self._get_documents_as_media_urls():
             attachment = MediaObject(doc['original_url'], **source_defaults)
+            attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment.has_organization_name.merge(collection=self.source_definition['key'])
+
             attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['original_url']
             attachment.name = doc['note']
@@ -151,6 +156,9 @@ class GreenValleyMeeting(GreenValleyItem):
         for item in children:
             meeting = item[u'default']
             agendaitem = AgendaItem(meeting['objectid'], **source_defaults)
+            agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
+
             agendaitem.__rel_params__ = {
                 'rdf': '_%i' % int(meeting['agendapagenumber'])}
             agendaitem.description = meeting[u'objectname']
