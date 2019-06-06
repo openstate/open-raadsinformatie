@@ -24,9 +24,9 @@ class DeltaLoader(BaseLoader):
         config['sasl.username'] = settings.KAFKA_USERNAME
         config['sasl.password'] = settings.KAFKA_PASSWORD
 
-    kafka_producer = Producer(config)
-
     def load_item(self, doc):
+        kafka_producer = Producer(self.config)
+
         # Recursively index associated models like attachments
         for model in doc.traverse():
             # Serialize the body to JSON-LD
@@ -42,12 +42,13 @@ class DeltaLoader(BaseLoader):
 
             # Send document to the Kafka bus
             log.debug('DeltaLoader sending document id %s to Kafka' % model.get_ori_identifier())
-            message_key_id = '%s_%s' % (settings.KAFKA_MESSAGE_KEY, model.get_ori_identifier())
-            self.kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'), message_key_id, callback=delivery_report)
-            self.kafka_producer.flush()
+            message_key_id = '%s_%s' % (settings.KAFKA_MESSAGE_KEY, model.get_short_identifier())
+            kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'), message_key_id, callback=delivery_report)
 
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
+
+        kafka_producer.flush()
 
 
 def delivery_report(err, msg):
