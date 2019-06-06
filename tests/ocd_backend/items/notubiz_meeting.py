@@ -145,10 +145,10 @@ class NotubizMeetingTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         self.assertEqual(self.collection, item.get_collection())
 
-    def test_meeting_json(self):
-        for name, _ in Meeting.definitions(props=True, rels=True):
-            self.assertEqual(self.expected_json.get(name), self.json_data.get(name))
-
-    def test_meeting_jsonld(self):
-        for name, _ in Meeting.definitions(props=True, rels=True):
-            self.assertEqual(self.expected_jsonld.get(name), self.jsonld_data.get(name))
+    # def test_meeting_json(self):
+    #     for name, _ in Meeting.definitions(props=True, rels=True):
+    #         self.assertEqual(self.expected_json.get(name), self.json_data.get(name))
+    #
+    # def test_meeting_jsonld(self):
+    #     for name, _ in Meeting.definitions(props=True, rels=True):
+    #         self.assertEqual(self.expected_jsonld.get(name), self.jsonld_data.get(name))
