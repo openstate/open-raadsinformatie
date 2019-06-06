@@ -56,18 +56,20 @@ class NotubizMeetingTestCase(ItemTestCase):
             'ori_identifier': 'https://id.openraadsinformatie.nl/1',
             'status': 'https://argu.co/ns/meeting/EventConfirmed',
             'name': u'raadscommissie Financi\xebn',
+            'has_organization_name': '3',
             'classification': [u'Agenda'],
             'had_primary_source': u'https://argu.co/voc/mapping/amsterdam/notubiz/identifier/458902',
             '@type': 'Meeting',
-            'attachment': ['3', '4'],
+            'attachment': ['4', '5'],
             'agenda': {
-                '@list': ['5', '6', '7', '8', '9', '10', '12', '14', '20', '22', '23', '24', '25', '26', '27', '30',
-                          '33', '34', '37', '40', '41', '42', '43', '46', '51', '52', '55', '58', '61', '64', '69',
-                          '72', '76', '77', '80', '81', '85', '88', '92']
+                '@list': ['6', '7', '8', '9', '10', '11', '13', '15', '21', '23', '24', '25', '26', '27', '28',
+                          '31', '34', '35', '38', '41', '42', '43', '44', '47', '52', '53', '56', '59', '62', '65',
+                          '70', '73', '77', '78', '81', '82', '86', '89', '93']
             },
             '@context': {
                 'status': {'@id': 'http://schema.org/eventStatus', '@type': '@id'},
                 'name': {'@id': 'http://schema.org/name'},
+                'has_organization_name': {'@id': 'http://www.w3.org/2006/vcard/ns#hasOrganizationName', '@type': '@id'},
                 'classification': {'@id': 'http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#categories'},
                 'had_primary_source': {'@id': 'http://www.w3.org/ns/prov#hadPrimarySource'},
                 '@base': 'https://id.openraadsinformatie.nl/',
@@ -78,44 +80,64 @@ class NotubizMeetingTestCase(ItemTestCase):
                 'start_date': {'@id': 'http://schema.org/startDate'},
                 'committee': {'@id': 'https://argu.co/ns/meeting/committee', '@type': '@id'}
             },
-            'organization': '95',
+            'organization': '3',
             'start_date': '2018-02-08T13:30:00+01:00',
-            'committee': '93'
+            'committee': '94'
         }
 
         self.expected_json = {
             'ori_identifier': 'https://id.openraadsinformatie.nl/1',
             'status': 'https://argu.co/ns/meeting/EventConfirmed',
             'name': u'raadscommissie Financi\xebn',
+            'has_organization_name': 'https://id.openraadsinformatie.nl/3',
             'classification': [u'Agenda'],
             'had_primary_source': u'https://argu.co/voc/mapping/amsterdam/notubiz/identifier/458902',
             'attachment': [
-                'https://id.openraadsinformatie.nl/3',
-                'https://id.openraadsinformatie.nl/4'
+                'https://id.openraadsinformatie.nl/4',
+                'https://id.openraadsinformatie.nl/5'
             ],
-            'agenda': ['https://id.openraadsinformatie.nl/5', 'https://id.openraadsinformatie.nl/6',
-                       'https://id.openraadsinformatie.nl/7', 'https://id.openraadsinformatie.nl/8',
-                       'https://id.openraadsinformatie.nl/9', 'https://id.openraadsinformatie.nl/10',
-                       'https://id.openraadsinformatie.nl/12', 'https://id.openraadsinformatie.nl/14',
-                       'https://id.openraadsinformatie.nl/20', 'https://id.openraadsinformatie.nl/22',
-                       'https://id.openraadsinformatie.nl/23', 'https://id.openraadsinformatie.nl/24',
-                       'https://id.openraadsinformatie.nl/25', 'https://id.openraadsinformatie.nl/26',
-                       'https://id.openraadsinformatie.nl/27', 'https://id.openraadsinformatie.nl/30',
-                       'https://id.openraadsinformatie.nl/33', 'https://id.openraadsinformatie.nl/34',
-                       'https://id.openraadsinformatie.nl/37', 'https://id.openraadsinformatie.nl/40',
-                       'https://id.openraadsinformatie.nl/41', 'https://id.openraadsinformatie.nl/42',
-                       'https://id.openraadsinformatie.nl/43', 'https://id.openraadsinformatie.nl/46',
-                       'https://id.openraadsinformatie.nl/51', 'https://id.openraadsinformatie.nl/52',
-                       'https://id.openraadsinformatie.nl/55', 'https://id.openraadsinformatie.nl/58',
-                       'https://id.openraadsinformatie.nl/61', 'https://id.openraadsinformatie.nl/64',
-                       'https://id.openraadsinformatie.nl/69', 'https://id.openraadsinformatie.nl/72',
-                       'https://id.openraadsinformatie.nl/76', 'https://id.openraadsinformatie.nl/77',
-                       'https://id.openraadsinformatie.nl/80', 'https://id.openraadsinformatie.nl/81',
-                       'https://id.openraadsinformatie.nl/85', 'https://id.openraadsinformatie.nl/88',
-                       'https://id.openraadsinformatie.nl/92'],
-            'organization': 'https://id.openraadsinformatie.nl/95',
+            'agenda': ['https://id.openraadsinformatie.nl/6',
+                       'https://id.openraadsinformatie.nl/7',
+                       'https://id.openraadsinformatie.nl/8',
+                       'https://id.openraadsinformatie.nl/9',
+                       'https://id.openraadsinformatie.nl/10',
+                       'https://id.openraadsinformatie.nl/11',
+                       'https://id.openraadsinformatie.nl/13',
+                       'https://id.openraadsinformatie.nl/15',
+                       'https://id.openraadsinformatie.nl/21',
+                       'https://id.openraadsinformatie.nl/23',
+                       'https://id.openraadsinformatie.nl/24',
+                       'https://id.openraadsinformatie.nl/25',
+                       'https://id.openraadsinformatie.nl/26',
+                       'https://id.openraadsinformatie.nl/27',
+                       'https://id.openraadsinformatie.nl/28',
+                       'https://id.openraadsinformatie.nl/31',
+                       'https://id.openraadsinformatie.nl/34',
+                       'https://id.openraadsinformatie.nl/35',
+                       'https://id.openraadsinformatie.nl/38',
+                       'https://id.openraadsinformatie.nl/41',
+                       'https://id.openraadsinformatie.nl/42',
+                       'https://id.openraadsinformatie.nl/43',
+                       'https://id.openraadsinformatie.nl/44',
+                       'https://id.openraadsinformatie.nl/47',
+                       'https://id.openraadsinformatie.nl/52',
+                       'https://id.openraadsinformatie.nl/53',
+                       'https://id.openraadsinformatie.nl/56',
+                       'https://id.openraadsinformatie.nl/59',
+                       'https://id.openraadsinformatie.nl/62',
+                       'https://id.openraadsinformatie.nl/65',
+                       'https://id.openraadsinformatie.nl/70',
+                       'https://id.openraadsinformatie.nl/73',
+                       'https://id.openraadsinformatie.nl/77',
+                       'https://id.openraadsinformatie.nl/78',
+                       'https://id.openraadsinformatie.nl/81',
+                       'https://id.openraadsinformatie.nl/82',
+                       'https://id.openraadsinformatie.nl/86',
+                       'https://id.openraadsinformatie.nl/89',
+                       'https://id.openraadsinformatie.nl/93'],
+            'organization': 'https://id.openraadsinformatie.nl/3',
             'start_date': '2018-02-08T13:30:00+01:00',
-            'committee': 'https://id.openraadsinformatie.nl/93'
+            'committee': 'https://id.openraadsinformatie.nl/94'
         }
 
         self.rights = u'undefined'  # for now ...
@@ -145,10 +167,10 @@ class NotubizMeetingTestCase(ItemTestCase):
         item = self._instantiate_meeting()
         self.assertEqual(self.collection, item.get_collection())
 
-    # def test_meeting_json(self):
-    #     for name, _ in Meeting.definitions(props=True, rels=True):
-    #         self.assertEqual(self.expected_json.get(name), self.json_data.get(name))
-    #
-    # def test_meeting_jsonld(self):
-    #     for name, _ in Meeting.definitions(props=True, rels=True):
-    #         self.assertEqual(self.expected_jsonld.get(name), self.jsonld_data.get(name))
+    def test_meeting_json(self):
+        for name, _ in Meeting.definitions(props=True, rels=True):
+            self.assertEqual(self.expected_json.get(name), self.json_data.get(name))
+
+    def test_meeting_jsonld(self):
+        for name, _ in Meeting.definitions(props=True, rels=True):
+            self.assertEqual(self.expected_jsonld.get(name), self.jsonld_data.get(name))
