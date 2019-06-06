@@ -58,8 +58,9 @@ EventCancelled = definitions.schema.EventCancelled
 Person = definitions.person.Person
 
 # http://www.w3.org/ns/org#
-TopLevelOrganization = definitions.org.TopLevelOrganization
 Organization = definitions.org.Organization
+# TopLevelOrganization is an alias for Organization
+TopLevelOrganization = definitions.org.Organization
 Membership = definitions.org.Membership
 
 # https://argu.co/ns/meta#

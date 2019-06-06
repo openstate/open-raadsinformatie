@@ -86,6 +86,8 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
 
         pname = self._get_name()
         person = Person(pname, **source_defaults)
+        person.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        person.has_organization_name.merge(collection=self.source_definition['key'])
         person.name = self._get_name()
 
         return person
@@ -101,8 +103,6 @@ class HTMLPersonFromLinkItem(HTMLPersonItem):
             'organization': self.source_definition['key'],
         }
 
-        # log.info(etree.tostring(self.original_item))
-        # log.info('Persons URL path: %s' % (self.source_definition['persons_link_path'],))
         try:
             request_url = urljoin(
                 self.source_definition['file_url'],
@@ -123,33 +123,30 @@ class HTMLPersonFromLinkItem(HTMLPersonItem):
         except LookupError:
             pass
 
-        # TODO: not sure how to determine gender
-        # person.gender = u'male' if person.name.startswith(u'Dhr. ') else u'female'
-
-        municipality = Organization(self.source_definition['key'], **source_defaults)
-        if municipality is None:
-            log.debug('Could not find almanak organization')
-            return person
+        municipality = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        municipality.merge(collection=self.source_definition['key'])
 
         party_name = u''.join(html.xpath(self.source_definition['organization_xpath']))
         party = Organization(party_name, **source_defaults)
+        party.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        party.has_organization_name.merge(collection=self.source_definition['key'])
 
         municipality_member = Membership()
+        municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        municipality_member.has_organization_name.merge(collection=self.source_definition['key'])
+
         municipality_member.organization = municipality
-        # TODO: Setting member = person causes infinite recursion
-        # municipality_member.member = person
+        municipality_member.member = person
         municipality_member.role = 'Fractielid'
-        # municipality_member.role = html.xpath('string(//div[@id="content"]//h3/text())').strip()
+
         party_member = Membership()
+        party_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        party_member.has_organization_name.merge(collection=self.source_definition['key'])
+
         party_member.organization = party
-        # TODO: Setting member = person causes infinite recursion
-        # party_member.member = person
+        party_member.member = person
         party_member.role = 'Member'
 
         person.member_of = [municipality_member, party_member]
-
-        # person.member_of(municipality_member, party_member, rel=party)
-
-        # person.member_of = Relationship(municipality, rel=party)
 
         return person

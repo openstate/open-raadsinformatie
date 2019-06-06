@@ -54,17 +54,17 @@ class AlmanakOrganisationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(self.original_item, **source_defaults)
-        object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        object_model.has_organization_name.merge(collection=self.source_definition['key'])
-
-        object_model.name = self.original_item  # todo dubbel?
-        object_model.classification = self.source_definition['classification']
-
         if self.source_definition['classification'] == "Province":
+            object_model = TopLevelOrganization(self.original_item, **source_defaults)
+            object_model.name = self.original_item
+            object_model.classification = self.source_definition['classification']
             object_model.collection = self.source_definition['key']
-
-        if self.source_definition['classification'] != "Province":
+        else:
+            object_model = Organization(self.original_item, **source_defaults)
+            object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            object_model.has_organization_name.merge(collection=self.source_definition['key'])
+            object_model.name = self.original_item
+            object_model.classification = self.source_definition['classification']
             object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
@@ -95,12 +95,18 @@ class HTMLOrganisationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(self._get_name(self.original_item), **source_defaults)
-        object_model.name = self._get_name(self.original_item)
-        object_model.classification = self.source_definition['classification']
-
-        if self.source_definition['classification'] != "Province":
-            object_model.subOrganizationOf = Organization(self.source_definition['key'], **source_defaults)
+        if self.source_definition['classification'] == "Province":
+            object_model = TopLevelOrganization(self._get_name(self.original_item), **source_defaults)
+            object_model.name = self._get_name(self.original_item)
+            object_model.collection = self.source_definition['key']
+            object_model.classification = self.source_definition['classification']
+        else:
+            object_model = Organization(self._get_name(self.original_item), **source_defaults)
+            object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            object_model.has_organization_name.merge(collection=self.source_definition['key'])
+            object_model.name = self._get_name(self.original_item)
+            object_model.classification = self.source_definition['classification']
+            object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
