@@ -154,7 +154,7 @@ LOGGING = {
     'loggers': {
         'ocd_backend': {
             'handlers': ['default'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
         'celery': {
