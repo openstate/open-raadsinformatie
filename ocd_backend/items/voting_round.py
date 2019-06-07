@@ -49,9 +49,6 @@
 #     def get_rights(self):
 #         return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     def _get_result(self):
 #         if not self.original_item['entry']['ListCanVote']:
 #             return "Motie aangehouden"
