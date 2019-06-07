@@ -69,7 +69,6 @@ def setup_pipeline(source_definition):
 
     pipeline_definitions = {}
     pipeline_extractors = {}
-    pipeline_extensions = {}
     pipeline_transformers = {}
     pipeline_enrichers = {}
     pipeline_loaders = {}
@@ -86,10 +85,6 @@ def setup_pipeline(source_definition):
         # initialize the ETL classes, per pipeline
         pipeline_extractors[pipeline['id']] = load_object(
             pipeline_definitions[pipeline['id']]['extractor'])
-
-        pipeline_extensions[pipeline['id']] = [
-            load_object(cls) for cls in
-            pipeline_definitions[pipeline['id']].get('extensions', [])]
 
         if pipeline.get('transformer'):
             pipeline_transformers[pipeline['id']] = load_object(
@@ -118,17 +113,6 @@ def setup_pipeline(source_definition):
                 celery_app.backend.add_value_to_set(
                     set_name=run_identifier_chains,
                     value=params['chain_id'])
-
-                # Remaining extractors
-                for extension in pipeline_extensions[pipeline['id']]:
-                    step_chain.append(extension().s(
-                        *item,
-                        source_definition=pipeline_definitions[pipeline['id']],
-                        **params
-                    )
-                    )
-                    # Prevent old item being passed down to next steps
-                    item = []
 
                 # Transformers
                 if pipeline_transformers.get(pipeline['id']):
