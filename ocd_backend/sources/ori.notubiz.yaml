@@ -17,11 +17,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: municipality
     doc_type: organizations
-    extractor: ocd_backend.extractors.odata.ODataExtractor
-    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-    file_url: "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"
-    filter:
-      Title: "{municipality}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
 
   - &committees
     <<: *entity_defaults
@@ -43,311 +40,360 @@ _entities: &entities
 _notubiz: &notubiz
   index_name: "{key}"
   sitename: "{key!c}"
-  municipality: "{sitename}"
   base_url: "https://api.notubiz.nl"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
 ori.notubiz:
   alkmaar:
     key: alkmaar
-    organisation_id: 987
+    allmanak_id: 38624
+    notubiz_organization_id: 987
     <<: *notubiz
 
   groningen:
     key: groningen
-    municipality: "Groningen (gemeente)"
-    organisation_id: 655
+    allmanak_id: 24194
+    notubiz_organization_id: 655
     <<: *notubiz
 
   amsterdam:
     key: amsterdam
-    municipality: "Amsterdam"
-    organisation_id: 281
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 25698
+    notubiz_organization_id: 281
     <<: *notubiz
 
   amsterdam_centrum:
     key: amsterdam_centrum
-    municipality: "Amsterdam"
-    organisation_id: 547
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 21915
+    notubiz_organization_id: 547
     <<: *notubiz
 
   amsterdam_zuid:
     key: amsterdam_zuid
-    municipality: "Amsterdam"
-    organisation_id: 1424
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 40007
+    notubiz_organization_id: 1424
     <<: *notubiz
 
   amsterdam_noord:
     key: amsterdam_noord
-    municipality: "Amsterdam"
-    organisation_id: 977
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 39732
+    notubiz_organization_id: 977
     <<: *notubiz
 
   amsterdam_west:
     key: amsterdam_west
-    municipality: "Amsterdam"
-    organisation_id: 1413
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 39885
+    notubiz_organization_id: 1413
     <<: *notubiz
 
   amsterdam_oost:
     key: amsterdam_oost
-    municipality: "Amsterdam"
-    organisation_id: 1425
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 39963
+    notubiz_organization_id: 1425
     <<: *notubiz
 
   amsterdam_zuidoost:
     key: amsterdam_zuidoost
-    municipality: "Amsterdam"
-    organisation_id: 2122
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 39832
+    notubiz_organization_id: 2122
     <<: *notubiz
 
   amsterdam_nieuw-west:
     key: amsterdam_nieuw-west
-    municipality: "Amsterdam"
-    organisation_id: 2328
+    municipality_prefix: "Amsterdam"
+    allmanak_id: 40084
+    notubiz_organization_id: 2328
     <<: *notubiz
 
   castricum:
     key: castricum
-    organisation_id: 1812
+    allmanak_id: 35518
+    notubiz_organization_id: 1812
     <<: *notubiz
 
   wageningen:
     key: wageningen
-    organisation_id: 1451
+    allmanak_id: 32273
+    notubiz_organization_id: 1451
     <<: *notubiz
 
   hardenberg:
     key: hardenberg
-    organisation_id: 793
+    allmanak_id: 32576
+    notubiz_organization_id: 793
     <<: *notubiz
 
   zaanstad:
     key: zaanstad
-    organisation_id: 801
+    allmanak_id:
+    notubiz_organization_id: 801
     <<: *notubiz
 
   waalwijk:
     key: waalwijk
-    organisation_id: 1429
+    allmanak_id: 27115
+    notubiz_organization_id: 1429
     <<: *notubiz
 
   voorst:
     key: voorst
-    organisation_id: 742
+    allmanak_id: 30397
+    notubiz_organization_id: 742
     <<: *notubiz
 
   zandvoort:
     key: zandvoort
-    organisation_id: 924
+    allmanak_id: 28231
+    notubiz_organization_id: 924
     <<: *notubiz
 
   hilvarenbeek:
     key: hilvarenbeek
-    organisation_id: 545
+    allmanak_id: 31842
+    notubiz_organization_id: 545
     <<: *notubiz
 
   rhenen:
     key: rhenen
-    organisation_id: 1266
+    allmanak_id: 31352
+    notubiz_organization_id: 1266
     <<: *notubiz
 
   baarn:
     key: baarn
-    organisation_id: 1742
+    allmanak_id: 35974
+    notubiz_organization_id: 1742
     <<: *notubiz
 
   zeist:
     key: zeist
-    organisation_id: 1696
+    allmanak_id: 28557
+    notubiz_organization_id: 1696
     <<: *notubiz
 
   soest:
     key: soest
-    organisation_id: 1674
+    allmanak_id: 38312
+    notubiz_organization_id: 1674
     <<: *notubiz
 
   noordwijk:
     key: noordwijk
-    organisation_id: 574
+    allmanak_id: 27985
+    notubiz_organization_id: 574
     <<: *notubiz
 
   amersfoort:
     key: amersfoort
-    organisation_id: 867
+    allmanak_id: 35134
+    notubiz_organization_id: 867
     <<: *notubiz
 
   oisterwijk:
     key: oisterwijk
-    organisation_id: 531
+    allmanak_id: 26989
+    notubiz_organization_id: 531
     <<: *notubiz
 
   hulst:
     key: hulst
-    organisation_id: 885
+    allmanak_id: 34650
+    notubiz_organization_id: 885
     <<: *notubiz
 
   maassluis:
     key: maassluis
-    organisation_id: 269
+    allmanak_id: 30349
+    notubiz_organization_id: 269
     <<: *notubiz
 
   epe:
     key: epe
-    organisation_id: 429
+    allmanak_id: 30232
+    notubiz_organization_id: 429
     <<: *notubiz
 
   leeuwarden:
     key: leeuwarden
-    organisation_id: 330
+    allmanak_id: 32728
+    notubiz_organization_id: 330
     <<: *notubiz
 
   den_haag:
     key: den_haag
-    municipality: "'s-Gravenhage (gemeente)"
-    organisation_id: 318
+    allmanak_id: 24873
+    notubiz_organization_id: 318
     <<: *notubiz
 
   krimpen_ad_ijssel:
     key: krimpen_ad_ijssel
-    municipality: "Krimpen aan den IJssel"
-    organisation_id: 1273
+    allmanak_id: 31244
+    notubiz_organization_id: 1273
     <<: *notubiz
 
   moerdijk:
     key: moerdijk
-    organisation_id: 659
+    allmanak_id: 30656
+    notubiz_organization_id: 659
     <<: *notubiz
 
   dongen:
     key: dongen
-    organisation_id: 503
+    allmanak_id: 35200
+    notubiz_organization_id: 503
     <<: *notubiz
 
   schiedam:
     key: schiedam
-    organisation_id: 1062
+    allmanak_id: 23681
+    notubiz_organization_id: 1062
     <<: *notubiz
 
   leiden:
     key: leiden
-    organisation_id: 271
+    allmanak_id: 26226
+    notubiz_organization_id: 271
     <<: *notubiz
 
   vlaardingen:
     key: vlaardingen
-    organisation_id: 262
+    allmanak_id: 30793
+    notubiz_organization_id: 262
     <<: *notubiz
 
   ommen:
     key: ommen
-    organisation_id: 434
+    allmanak_id: 26754
+    notubiz_organization_id: 434
     <<: *notubiz
 
   maastricht:
     key: maastricht
-    organisation_id: 258
+    allmanak_id: 32664
+    notubiz_organization_id: 258
     <<: *notubiz
 
   culemborg:
     key: culemborg
-    organisation_id: 1643
+    allmanak_id: 26183
+    notubiz_organization_id: 1643
     <<: *notubiz
 
   schagen:
     key: schagen
-    organisation_id: 1834
+    allmanak_id: 28858
+    notubiz_organization_id: 1834
     <<: *notubiz
 
   almere:
     key: almere
-    organisation_id: 952
+    allmanak_id: 28393
+    notubiz_organization_id: 952
     <<: *notubiz
 
   katwijk:
     key: katwijk
-    organisation_id: 1660
+    allmanak_id: 27030
+    notubiz_organization_id: 1660
     <<: *notubiz
 
   rucphen:
     key: rucphen
-    organisation_id: 1357
+    allmanak_id: 27671
+    notubiz_organization_id: 1357
     <<: *notubiz
 
   hendrik-ido-ambacht:
     key: hendrik-ido-ambacht
-    municipality: "Hendrik-Ido-Ambacht"
-    organisation_id: 1781
+    allmanak_id: 33795
+    notubiz_organization_id: 1781
     <<: *notubiz
 
   stichtse_vecht:
     key: stichtse_vecht
-    municipality: "Stichtse Vecht"
-    organisation_id: 1770
+    allmanak_id: 34861
+    notubiz_organization_id: 1770
     <<: *notubiz
 
   deventer:
     key: deventer
-    organisation_id: 427
+    allmanak_id: 36571
+    notubiz_organization_id: 427
     <<: *notubiz
 
   capelle_ad_ijssel:
     key: capelle_ad_ijssel
-    municipality: "Capelle aan den IJssel"
-    organisation_id: 1517
+    allmanak_id: 22846
+    notubiz_organization_id: 1517
     <<: *notubiz
 
   de_wolden:
     key: de_wolden
-    municipality: "De Wolden"
-    organisation_id: 1317
+    allmanak_id: 21391
+    notubiz_organization_id: 1317
     <<: *notubiz
 
   oost_gelre:
     key: oost_gelre
-    municipality: "Oost Gelre"
-    organisation_id: 341
+    allmanak_id: 36871
+    notubiz_organization_id: 341
     <<: *notubiz
 
   vlissingen:
     key: vlissingen
-    organisation_id: 1631
+    allmanak_id: 27711
+    notubiz_organization_id: 1631
     <<: *notubiz
 
   veenendaal:
     key: veenendaal
-    organisation_id: 1000
+    allmanak_id: 32921
+    notubiz_organization_id: 1000
     <<: *notubiz
 
   binnenmaas:
     key: binnenmaas
-    organisation_id: 823
+    allmanak_id: 30982
+    notubiz_organization_id: 823
     <<: *notubiz
 
   # Added on 10-04-2018
   zwartewaterland:
     key: zwartewaterland
-    organisation_id: 438
+    allmanak_id: 24016
+    notubiz_organization_id: 438
     <<: *notubiz
 
   ede:
     key: ede
-    organisation_id: 794
+    allmanak_id: 32407
+    notubiz_organization_id: 794
     <<: *notubiz
 
 #  # Added on 08-04-2019
 #  blaricum:
 #    key: blaricum
-#    organisation_id: 2063
+#    allmanak_id: 31318
+#    notubiz_organization_id: 2063
 #    <<: *notubiz
 #
 #  eemnes:
 #    key: eemnes
-#    organisation_id: 2022
+#    allmanak_id: 29645
+#    notubiz_organization_id: 2022
 #    <<: *notubiz
 #
 #  laren:
 #    key: laren
-#    organisation_id: 2046
+#    allmanak_id: 29164
+#    notubiz_organization_id: 2046
 #    <<: *notubiz

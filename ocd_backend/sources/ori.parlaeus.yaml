@@ -17,11 +17,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: municipality
     doc_type: organizations
-    extractor: ocd_backend.extractors.odata.ODataExtractor
-    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
-    filter:
-      Title: "{municipality}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
 
   - &committees
     <<: *entity_defaults
@@ -54,12 +51,9 @@ _entities: &entities
         - tasks:
           - file_to_text
 
-
-
 _parlaeus: &parlaeus
   index_name: "{key}"
   sitename: "{key!c}"
-  municipality: "{sitename}"
   base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
   session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
   entities: *entities
@@ -69,5 +63,5 @@ ori.parlaeus:
   bodegraven_reeuwijk:
     key: bodegravenreeuwijk
     sitename: Bodegraven-Reeuwijk
-    almanak_id: 33912
+    allmanak_id: 33912
     <<: *parlaeus

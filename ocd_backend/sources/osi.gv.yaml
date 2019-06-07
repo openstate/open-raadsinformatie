@@ -18,20 +18,15 @@ _entities: &entities
     <<: *entity_defaults
     entity: province
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-    extractor_xpath: "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()"
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
-    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
-    classification: Province
-    prefix: "{classification}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    item: ocd_backend.items.organizations.AllmanakProvinceItem
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    item: ocd_backend.items.organizations.HTMLOrganisationItem
     classification: Party
     file_url: "{organizations_url}"
     item_xpath: "{organizations_item_xpath}"
@@ -79,14 +74,14 @@ _entities: &entities
 _gv: &gv
   index_name: "{key}"
   sitename: "{key!c}"
-  province: "{key!c}"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
 osi.gv:
   zuid-holland:
     key: zuid-holland
-    almanak_id: 17466
+    allmanak_id: 17466
     greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
     # greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
     greenvalley_key: 51cc806d-3108-45c9-ade4-a18a6207a054

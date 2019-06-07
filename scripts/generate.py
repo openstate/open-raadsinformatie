@@ -27,9 +27,9 @@ def command(name=None, cls=None, **attrs):
 def _generate_for_organisations(name, almanak):
     organisations = [{
         "id": "%s_municipality" % (name.lower(),),
-        "extractor": "ocd_backend.extractors.odata.ODataExtractor",
-        "transformer": "ocd_backend.transformers.transformer",
-        "item": "ocd_backend.items.organisations.MunicipalityOrganisationItem",
+        "extractor": "ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organizations.MunicipalityOrganizationItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.elasticsearch.elasticsearch_loader",
         "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
@@ -46,8 +46,8 @@ def _generate_for_organisations(name, almanak):
         "id": "%s_organisations" % (name.lower(),),
         "extractor": "ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor",
         "extractor_xpath": "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()",
-        "transformer": "ocd_backend.transformers.transformer",
-        "item": "ocd_backend.items.organisations.AlmanakOrganisationItem",
+        "transformer": "ocd_backend.transformers.BaseTransformer",
+        "item": "ocd_backend.items.organizations.AlmanakOrganisationItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.elasticsearch.elasticsearch_loader",
         "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
