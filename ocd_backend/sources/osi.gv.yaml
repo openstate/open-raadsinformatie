@@ -19,17 +19,14 @@ _entities: &entities
     entity: province
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
-    item: ocd_backend.items.organizations.AllmanakProvinceItem
+    item: ocd_backend.items.organizations.ProvinceOrganizationItem
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organizations.HTMLOrganisationItem
-    classification: Party
-    file_url: "{organizations_url}"
-    item_xpath: "{organizations_item_xpath}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
 
   - &persons
     <<: *entity_defaults
@@ -88,8 +85,6 @@ osi.gv:
     greenvalley_hash: 3600416d177d8526dfdf5c197c1a0bdb7dab714433ae43dd
     greenvalley_username: openstate
     greenvalley_extract_timeout: 5
-    organizations_url: https://staten.zuid-holland.nl/Statenleden
-    organizations_item_xpath: "//div[contains(@class, \"grey\")]/h2/a"
     persons_url: https://staten.zuid-holland.nl/Statenleden
     persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
     persons_name_xpath: ".//a/span//text()"

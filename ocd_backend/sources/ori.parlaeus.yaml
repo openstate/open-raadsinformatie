@@ -27,6 +27,13 @@ _entities: &entities
     extractor: ocd_backend.extractors.parlaeus.ParlaeusCommitteesExtractor
     item: ocd_backend.items.parlaeus.Committee
 
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
+
   - &persons
     <<: *entity_defaults
     entity: persons

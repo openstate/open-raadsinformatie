@@ -26,7 +26,7 @@ class AllmanakBaseExtractor(BaseExtractor, HttpRequestMixin):
             static_json = json.loads(response.content)
             return len(static_json), static_json
         else:
-            log.error('[%s] Failed to extract municipality from Allmanak path %s' % (
+            log.error('[%s] Failed to extract from Allmanak path %s' % (
                 self.source_definition['sitename'], urljoin(self.base_url, path))
                       )
             return 0, []
@@ -70,3 +70,23 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
         else:
             yield 'application/json', json.dumps(static_json[0])
             log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['sitename'])
+
+
+class AllmanakPartiesExtractor(AllmanakBaseExtractor):
+    """
+    Extracts parties from the OpenState Allmanak.
+    """
+
+    def run(self):
+        path = self.base_url + 'overheidsorganisatie?systemid=eq.%s&select=zetels' % self.source_definition['allmanak_id']
+
+        total, static_json = self._request(path)
+
+        if static_json[0]['zetels']:
+            total_parties = 0
+            for party in static_json[0]['zetels']:
+                yield 'application/json', json.dumps(party)
+                total_parties += 1
+            log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['sitename'], total_parties))
+        else:
+            log.warning('[%s] Allmanak does not list any parties for this source.' % self.source_definition['sitename'])

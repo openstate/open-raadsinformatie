@@ -62,69 +62,24 @@ class ProvinceOrganizationItem(BaseItem):
         return object_model
 
 
-class AlmanakOrganisationItem(BaseItem):
+class PartyItem(BaseItem):
     """
-    Extracts organizations from the Almanak. The source file calling this item must set a `classification`
-    for the entity because there are several types of organisations (councils, parties, etc.)
+    Creates a Party (Organization) item.
     """
 
     def get_object_model(self):
-
-        if not self.source_definition['classification']:
-            raise ValueError('You must set a classification in the source file to use AlmanakOrganisationItem.')
-
         source_defaults = {
-            'source': 'almanak',
+            'source': 'allmanak',
             'source_id_key': 'identifier',
             'organization': self.source_definition['key'],
         }
 
-        if self.source_definition['classification'] == "Province":
-            object_model = TopLevelOrganization(self.original_item, **source_defaults)
-            object_model.name = self.original_item
-            object_model.classification = self.source_definition['classification']
-            object_model.collection = self.source_definition['key']
-        else:
-            object_model = Organization(self.original_item, **source_defaults)
-            object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            object_model.has_organization_name.merge(collection=self.source_definition['key'])
-            object_model.name = self.original_item
-            object_model.classification = self.source_definition['classification']
-            object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
-
-        return object_model
-
-
-class HTMLOrganisationItem(BaseItem):
-
-    def _get_name(self, item):
-        name = unicode(u''.join(item.xpath('.//text()'))).strip()
-        # name = re.sub(r'\s*\(\d+ zetels?\)\s*', '', name)
-        return unicode(name)
-
-    def get_object_model(self):
-        if not self.source_definition['classification']:
-            raise ValueError('You must set a classification in the source file to use HTMLOrganisationItem.')
-
-        source_defaults = {
-            'source': 'almanak',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
-        }
-
-        if self.source_definition['classification'] == "Province":
-            object_model = TopLevelOrganization(self._get_name(self.original_item), **source_defaults)
-            object_model.name = self._get_name(self.original_item)
-            object_model.collection = self.source_definition['key']
-            object_model.classification = self.source_definition['classification']
-        else:
-            object_model = Organization(self._get_name(self.original_item), **source_defaults)
-            object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            object_model.has_organization_name.merge(collection=self.source_definition['key'])
-            object_model.name = self._get_name(self.original_item)
-            object_model.classification = self.source_definition['classification']
-            object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
+        object_model = Organization(self.original_item['partij'], **source_defaults)
+        object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.has_organization_name.merge(collection=self.source_definition['key'])
+        object_model.name = self.original_item['partij']
+        object_model.classification = 'Party'
+        object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
