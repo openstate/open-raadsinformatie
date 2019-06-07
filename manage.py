@@ -353,7 +353,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 
     # Check for old-style json sources
     if 'id' in source:
-        setup_pipeline(source)
+        setup_pipeline.delay(source)
         return
 
     # New-style behaviour
@@ -381,7 +381,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 
                 new_source = deepcopy(source)
                 new_source.update(item)
-                setup_pipeline(new_source)
+                setup_pipeline.delay(new_source)
 
         click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
@@ -459,7 +459,7 @@ def extract_process(modus, source_path, sources_config):
                     new_source.update(deepcopy(available_source))
                     new_source.update(entity)
 
-                    setup_pipeline(new_source)
+                    setup_pipeline.delay(new_source)
 
             click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
         except ValueError:
