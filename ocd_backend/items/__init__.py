@@ -46,17 +46,6 @@ class BaseItem(object):
             'organization': 'ori',
         }
 
-        # meta = Metadata(1)
-        #
-        # if not processing_started:
-        #     meta.processing_started = datetime.now()
-        #
-        # meta.source_id = unicode(self.source_definition['id'])
-        # meta.collection = self.source_definition['key']
-        # meta.rights = self.get_rights()
-        #
-        # self.meta = meta
-
     def _store_object_data(self):
         object_data = self.get_object_model()
         # object_data.meta = self.meta
@@ -68,19 +57,6 @@ class BaseItem(object):
     def get_object_model(self):
         """Construct the document that should be inserted into the index
         belonging to the item's source.
-        """
-        raise NotImplementedError
-
-    def get_rights(self):
-        """Retrieves the rights of the item as defined by the source.
-        With 'rights' we mean information about copyright, licenses,
-        instructions for reuse, etcetera. "Creative Commons Zero" is an
-        example of a possible value of rights.
-
-        This method should be implemented by the class that inherits from
-        :class:`.BaseItem`.
-
-        :rtype: unicode.
         """
         raise NotImplementedError
 
@@ -97,12 +73,6 @@ class BaseItem(object):
 #         if not collection:
 #             raise FieldNotAvailable('collection')
 #         return collection
-#
-#     def get_rights(self):
-#         rights = self.original_item['_source'].get('meta', {}).get('rights')
-#         if not rights:
-#             raise FieldNotAvailable('rights')
-#         return rights
 #
 #     def get_object_model(self):
 #         combined_index_data = self.original_item['_source'] \

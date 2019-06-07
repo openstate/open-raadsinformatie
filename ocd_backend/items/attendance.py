@@ -26,12 +26,6 @@
 #         except KeyError as e:
 #             return {'html': self.original_item['html_url']}
 #
-#     def get_rights(self):
-#         try:
-#             return self.original_item['meta']['rights']
-#         except KeyError as e:
-#             return u'undefined'
-#
 #     def _get_vote_event(self, event_id):
 #         try:
 #             results = self.api_request(

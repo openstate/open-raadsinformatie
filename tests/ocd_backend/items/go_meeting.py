@@ -213,14 +213,6 @@
 #     #     self.assertDictEqual(
 #     #         item.get_original_object_urls(), self.meeting_item_object_urls)
 #     #
-#     # def test_meeting_get_rights(self):
-#     #     item = self._instantiate_meeting()
-#     #     self.assertEqual(item.get_rights(), self.rights)
-#     #
-#     # def test_meeting_item_get_rights(self):
-#     #     item = self._instantiate_meeting_item()
-#     #     self.assertEqual(item.get_rights(), self.rights)
-#     #
 #     # def test_meeting_name(self):
 #     #     item = self._instantiate_meeting()
 #     #     data = item.get_object_model()
