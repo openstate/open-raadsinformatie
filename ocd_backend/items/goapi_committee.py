@@ -6,14 +6,11 @@ class CommitteeItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'gemeenteoplossingen',
             'source_id_key': 'identifier',
-            'organization': self.source_definition['index_name'],
+            'organization': self.source_definition['key'],
         }
 
         committee = Organization(self.original_item['id'], **source_defaults)

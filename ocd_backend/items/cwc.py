@@ -37,9 +37,6 @@
 #     def get_rights():
 #         return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     def get_object_model(self):
 #         object_model = {}
 #         council = self._get_council()
@@ -53,7 +50,7 @@
 #             object_model['name'] = u'%s' % (
 #                 unicode(self.original_item['Webcast']['Title']),)
 #         else:
-#             object_model['name'] = self.get_collection()
+#             object_model['name'] = self.source_definition['key']
 #
 #         object_model['identifiers'] = [
 #             {

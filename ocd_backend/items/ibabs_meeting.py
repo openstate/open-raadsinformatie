@@ -13,14 +13,11 @@ class IBabsMeetingItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'ibabs',
             'source_id_key': 'identifier',
-            'organization': self.source_definition['index_name'],
+            'organization': self.source_definition['key'],
         }
 
         # Sometimes the meeting is contained in a sub-dictionary called 'Meeting'
@@ -133,14 +130,11 @@ class IBabsReportItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'ibabs',
             'source_id_key': 'identifier',
-            'organization': self.source_definition['index_name'],
+            'organization': self.source_definition['key'],
         }
 
         report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo

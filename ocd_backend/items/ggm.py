@@ -49,9 +49,6 @@
 #     def get_rights(self):
 #         return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     @staticmethod
 #     def get_index_data():
 #         return {}

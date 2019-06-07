@@ -9,9 +9,6 @@ class GreenValleyItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
-
     def _get_documents_as_media_urls(self):
         media_urls = {}
         if u'attachmentlist' in self.original_item:

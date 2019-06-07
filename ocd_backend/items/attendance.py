@@ -32,9 +32,6 @@
 #         except KeyError as e:
 #             return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     def _get_vote_event(self, event_id):
 #         try:
 #             results = self.api_request(
