@@ -10,9 +10,6 @@ log = get_source_logger('ibabs_meeting')
 
 
 class IBabsMeetingItem(BaseItem):
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'ibabs',
@@ -126,10 +123,6 @@ class IBabsMeetingItem(BaseItem):
 
 
 class IBabsReportItem(BaseItem):
-
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'ibabs',

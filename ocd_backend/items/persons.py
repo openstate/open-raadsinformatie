@@ -11,9 +11,6 @@ log = get_source_logger('persons')
 
 
 class AlmanakPersonItem(BaseItem):
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'almanak',
@@ -67,9 +64,6 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
             self.original_item.xpath(
                 self.source_definition.get(
                     'persons_name_xpath', './/h2//text()'))).strip()
-
-    def get_rights(self):
-        return u'undefined'
 
     def get_object_model(self):
         source_defaults = {

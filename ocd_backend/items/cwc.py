@@ -33,10 +33,6 @@
 #     def get_original_object_urls(self):
 #         return {"html": unicode(self.original_item['Webcast']['RegisterUrl']).strip()}
 #
-#     @staticmethod
-#     def get_rights():
-#         return u'undefined'
-#
 #     def get_object_model(self):
 #         object_model = {}
 #         council = self._get_council()

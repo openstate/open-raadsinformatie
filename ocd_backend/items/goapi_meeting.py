@@ -15,9 +15,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
         return u'%s/meetings/%i' % (base_url, self.original_item[u'id'],)
 
-    def get_rights(self):
-        return u'undefined'
-
     def _get_documents_as_media_urls(self, documents):
         current_permalink = self._get_current_permalink()
 
