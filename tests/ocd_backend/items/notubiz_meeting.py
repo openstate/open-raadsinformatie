@@ -17,8 +17,8 @@ class NotubizMeetingTestCase(ItemTestCase):
         self.source_definition = {
             'organisation_id': 281,
             'keep_index_on_update': True,
-            'enrichers': [['ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher', None]],
-            'cleanup': 'ocd_backend.tasks.CleanupElasticsearch',
+            'enrichers': [['ocd_backend.enrichers.media_enricher.static.local_static_media_enricher', None]],
+            'cleanup': 'ocd_backend.tasks.cleanup_elasticsearch',
             'doc_type': 'events',
             'sitename': 'Amsterdam',
             'municipality': 'Amsterdam',
@@ -30,7 +30,7 @@ class NotubizMeetingTestCase(ItemTestCase):
             'key': 'amsterdam',
             'wait_until_finished': True,
             'hidden': False,
-            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.elasticsearch_loader',
             'item': 'ocd_backend.items.notubiz_meeting.Meeting',
         }
 

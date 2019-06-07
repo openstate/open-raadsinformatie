@@ -7,11 +7,11 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.BaseTransformer
+  transformer: ocd_backend.transformers.transformer
   loaders:
-    - ocd_backend.loaders.elasticsearch.ElasticsearchLoader
-    - ocd_backend.loaders.delta.DeltaLoader
-  cleanup: ocd_backend.tasks.CleanupElasticsearch
+    - ocd_backend.loaders.elasticsearch.elasticsearch_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities
   - &province
@@ -76,7 +76,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeetingItem
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.local_static_media_enricher
       - tasks:
         - file_to_text
 
@@ -87,7 +87,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
     item: ocd_backend.items.goapi_document.GemeenteOplossingenDocumentItem
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.LocalStaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.local_static_media_enricher
       - tasks:
         - file_to_text
 

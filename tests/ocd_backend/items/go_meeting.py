@@ -23,9 +23,9 @@
 #         self.source_definition = {
 #             'id': 'test_definition',
 #             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
-#             'transformer': 'ocd_backend.transformers.BaseTransformer',
+#             'transformer': 'ocd_backend.transformers.transformer',
 #             'item': 'ocd_backend.items.go_meeting.MeetingItem',
-#             'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
+#             'loader': 'ocd_backend.loaders.elasticsearch.elasticsearch_loader',
 #             'hidden': False,
 #             'index_name': 'den_helder',
 #             'base_url': 'https://gemeenteraad.denhelder.nl'

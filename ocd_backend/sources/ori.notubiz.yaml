@@ -6,11 +6,11 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.BaseTransformer
+  transformer: ocd_backend.transformers.transformer
   loaders:
-    - ocd_backend.loaders.elasticsearch.ElasticsearchLoader
-    - ocd_backend.loaders.delta.DeltaLoader
-  cleanup: ocd_backend.tasks.CleanupElasticsearch
+    - ocd_backend.loaders.elasticsearch.elasticsearch_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities
   - &municipality
@@ -37,7 +37,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     item: ocd_backend.items.notubiz_meeting.NotubizMeetingItem
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.GCSStaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
       - # reserved for enricher_settings
 
 _notubiz: &notubiz

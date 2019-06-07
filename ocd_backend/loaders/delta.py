@@ -1,10 +1,11 @@
-from pyld import jsonld
 from confluent_kafka import Producer
+from pyld import jsonld
 
+from ocd_backend import celery_app
 from ocd_backend import settings
+from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.serializers import JsonLDSerializer
-from ocd_backend.loaders import BaseLoader
 
 log = get_source_logger('delta_loader')
 
@@ -58,3 +59,8 @@ def delivery_report(err, msg):
         log.warning('Message delivery failed: {}'.format(err))
     else:
         log.debug('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
+
+
+@celery_app.task(bind=True, base=DeltaLoader, autoretry_for=(Exception,), retry_backoff=True)
+def delta_loader(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
