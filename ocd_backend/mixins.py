@@ -13,7 +13,7 @@ class OCDBackendTaskMixin(object):
     """
 
     def cleanup(self, **kwargs):
-        cleanup_task = load_object(self.source_definition.get('cleanup'))()
+        cleanup_task = load_object(self.source_definition.get('cleanup'))
         cleanup_task.delay(**kwargs)
 
 

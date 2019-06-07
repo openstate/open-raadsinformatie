@@ -11,7 +11,7 @@ log = get_source_logger('enricher')
 class BaseEnricher(celery_app.Task):
     """The base class that enrichers should inherit."""
 
-    def run(self, *args, **kwargs):
+    def start(self, *args, **kwargs):
         """Start enrichment of a single item.
 
         This method is called by the transformer or by another enricher

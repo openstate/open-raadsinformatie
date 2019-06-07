@@ -1,11 +1,12 @@
+from ocd_backend import celery_app
 from ocd_backend import settings
 from ocd_backend.es import elasticsearch
 from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
+from ocd_backend.models.serializers import JsonLDSerializer
 from ocd_backend.utils import json_encoder
 from ocd_backend.utils.misc import get_sha1_hash
-from ocd_backend.models.serializers import JsonLDSerializer
-from ocd_backend.loaders import BaseLoader
 
 log = get_source_logger('elasticsearch_loader')
 
@@ -21,13 +22,13 @@ class ElasticsearchLoader(BaseLoader):
     ``RESOLVER_URL_INDEX`` (if it doesn't already exist).
     """
 
-    def run(self, *args, **kwargs):
+    def start(self, *args, **kwargs):
         self.index_name = kwargs.get('new_index_name')
 
         if not self.index_name:
             raise ConfigurationError('The name of the index is not provided')
 
-        return super(ElasticsearchLoader, self).run(*args, **kwargs)
+        return super(ElasticsearchLoader, self).start(*args, **kwargs)
 
     def load_item(self, doc):
         # Recursively index associated models like attachments
@@ -102,3 +103,18 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
                 'doc_as_upsert': True,
             },
         )
+
+
+@celery_app.task(bind=True, base=ElasticsearchLoader, autoretry_for=(Exception,), retry_backoff=True)
+def elasticsearch_loader(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
+
+
+@celery_app.task(bind=True, base=ElasticsearchUpdateOnlyLoader, autoretry_for=(Exception,), retry_backoff=True)
+def elasticsearch_update_only_loader(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
+
+
+@celery_app.task(bind=True, base=ElasticsearchUpsertLoader, autoretry_for=(Exception,), retry_backoff=True)
+def elasticsearch_upsert_loader(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
