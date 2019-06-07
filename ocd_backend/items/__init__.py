@@ -52,7 +52,7 @@ class BaseItem(object):
         #     meta.processing_started = datetime.now()
         #
         # meta.source_id = unicode(self.source_definition['id'])
-        # meta.collection = self.get_collection()
+        # meta.collection = self.source_definition['key']
         # meta.rights = self.get_rights()
         #
         # self.meta = meta
@@ -68,16 +68,6 @@ class BaseItem(object):
     def get_object_model(self):
         """Construct the document that should be inserted into the index
         belonging to the item's source.
-        """
-        raise NotImplementedError
-
-    def get_collection(self):
-        """Retrieves the name of the collection the item belongs to.
-
-        This method should be implemented by the class that inherits from
-        :class:`.BaseItem`.
-
-        :rtype: unicode.
         """
         raise NotImplementedError
 

@@ -26,9 +26,6 @@ class MunicipalityOrganizationItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['key'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'allmanak',
@@ -38,7 +35,7 @@ class MunicipalityOrganizationItem(BaseItem):
 
         object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         object_model.classification = u'Municipality'
-        object_model.collection = self.get_collection()
+        object_model.collection = self.source_definition['key']
         object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(self.original_item['naam'])])
         object_model.description = self.original_item['omvatplaats']
         # object_model.contact_details = transform_contact_details(self.original_item['contact'])
@@ -54,9 +51,6 @@ class ProvinceOrganizationItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['key'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'allmanak',
@@ -66,7 +60,7 @@ class ProvinceOrganizationItem(BaseItem):
 
         object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         object_model.classification = u'Province'
-        object_model.collection = self.get_collection()
+        object_model.collection = self.source_definition['key']
         object_model.name = unicode(self.original_item['naam'])
         object_model.description = self.original_item['omvatplaats']
         # object_model.contact_details = transform_contact_details(self.original_item['contact'])
@@ -82,9 +76,6 @@ class AlmanakOrganisationItem(BaseItem):
 
     def get_rights(self):
         return u'undefined'
-
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
 
@@ -123,9 +114,6 @@ class HTMLOrganisationItem(BaseItem):
 
     def get_rights(self):
         return u'undefined'
-
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
 

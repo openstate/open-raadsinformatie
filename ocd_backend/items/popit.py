@@ -45,9 +45,6 @@
 #         except (TypeError, KeyError) as e:
 #             return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     def get_object_model(self):
 #         object_model = {
 #             'hidden': self.source_definition['hidden']
