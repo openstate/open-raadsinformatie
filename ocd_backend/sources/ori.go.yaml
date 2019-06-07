@@ -17,11 +17,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: municipality
     doc_type: organizations
-    extractor: ocd_backend.extractors.odata.ODataExtractor
-    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
-    filter:
-      Title: "{municipality}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
 
   - &committees
     <<: *entity_defaults
@@ -36,9 +33,9 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
     extractor_xpath: ".//td[@data-before=\"Partij\"]/text()"
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    item: ocd_backend.items.organizations.AlmanakOrganisationItem
     classification: Party
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    file_url: https://almanak.overheid.nl/{allmanak_id}/a
     item_xpath: //
 
   - &persons
@@ -47,7 +44,7 @@ _entities: &entities
     doc_type: persons
     extractor: ocd_backend.extractors.almanak.AlmanakPersonsExtractor
     item: ocd_backend.items.persons.AlmanakPersonItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    file_url: https://almanak.overheid.nl/{allmanak_id}/a
     item_xpath: //
 
   - &meetings
@@ -64,7 +61,7 @@ _entities: &entities
 _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
-  municipality: "{sitename}"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
@@ -72,81 +69,79 @@ ori.go:
   goirle:
     key: goirle
     base_url: "https://raad.goirle.nl/api"
-    almanak_id: 30496
+    allmanak_id: 30496
     <<: *go
 
   den_helder:
     key: den_helder
-    municipality: Den Helder
     base_url: "https://gemeenteraad.denhelder.nl/api"
-    almanak_id: 24611
+    allmanak_id: 24611
     <<: *go
 
   doetinchem:
     key: doetinchem
     base_url: "https://besluitvorming.doetinchem.nl/api"
-    almanak_id: 36726
+    allmanak_id: 36726
     <<: *go
 
   noordoostpolder:
     key: noordoostpolder
     base_url: "https://raad.noordoostpolder.nl/api"
-    almanak_id: 26440
+    allmanak_id: 26440
     <<: *go
 
   steenbergen:
     key: steenbergen
     base_url: "https://raad.gemeente-steenbergen.nl/api"
-    almanak_id: 34909
+    allmanak_id: 34909
     <<: *go
 
   oude_ijsselstreek:
     key: oude_ijsselstreek
-    municipality: Oude IJsselstreek
     base_url: "https://raad.oude-ijsselstreek.nl/api/"
-    almanak_id: 36780
+    allmanak_id: 36780
     <<: *go
 
   borne:
     key: borne
     base_url: "https://gemeenteraad.borne.nl/api"
-    almanak_id: 25660
+    allmanak_id: 25660
     <<: *go
 
   leiderdorp:
     key: leiderdorp
     base_url: "https://www.raadleiderdorp.nl/api"
-    almanak_id: 39225
+    allmanak_id: 39225
     <<: *go
 
   leusden:
     key: leusden
     base_url: "https://gemeentebestuur.leusden.nl/api"
-    almanak_id: 29800
+    allmanak_id: 29800
     <<: *go
 
   roosendaal:
     key: roosendaal
     base_url: "https://raad.roosendaal.nl/api"
-    almanak_id: 39382
+    allmanak_id: 39382
     <<: *go
 
   beemster:
     key: beemster
     base_url: "https://gemeentebestuur.beemster.net/api"
-    almanak_id: 31527
+    allmanak_id: 31527
     <<: *go
 
   # Added on 28-03-2019
   bloemendaal:
     key: bloemendaal
     base_url: "https://gemeenteraad.bloemendaal.nl/api/"
-    almanak_id: 35480
+    allmanak_id: 35480
     <<: *go
 
   # Added on 15-04-2019
   stichtse_vecht:
     key: stichtse_vecht
     base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
-    almanak_id: 34861
+    allmanak_id: 34861
     <<: *go

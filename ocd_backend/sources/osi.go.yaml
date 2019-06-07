@@ -18,13 +18,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: province
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-    extractor_xpath: "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()"
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
-    classification: Province
-    prefix: "{classification}"
-    item_xpath: //
+    extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
+    item: ocd_backend.items.organizations.ProvinceOrganizationItem
 
   - &committees
     <<: *entity_defaults
@@ -38,7 +33,7 @@ _entities: &entities
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    item: ocd_backend.items.organizations.HTMLOrganisationItem
     classification: Party
     file_url: "{organizations_url}"
     item_xpath: "{organizations_item_xpath}"
@@ -79,7 +74,7 @@ _entities: &entities
 _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
-  province: "{sitename}"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
@@ -88,7 +83,7 @@ osi.go:
     key: provincie-utrecht
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     api_version: v2
-    almanak_id: 17166
+    allmanak_id: 17166
     organizations_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling
     organizations_item_xpath: "//h2/a"
     persons_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling/Statenleden
@@ -103,7 +98,7 @@ osi.go:
     key: flevoland
     base_url: "https://stateninformatie.flevoland.nl/api"
     api_version: v2
-    almanak_id: 14866
+    allmanak_id: 14866
     organizations_url: https://stateninformatie.flevoland.nl/Organisatie
     organizations_item_xpath: "//h2/a"
     persons_url: https://stateninformatie.flevoland.nl/Organisatie

@@ -59,7 +59,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
     def run(self):
         response = self.http_session.get(
             "%s/organisations/%s/gremia"
-            "?format=json&version=1.10.8" % (self.base_url, self.source_definition['organisation_id'])
+            "?format=json&version=1.10.8" % (self.base_url, self.source_definition['notubiz_organization_id'])
         )
         response.raise_for_status()
 
@@ -93,7 +93,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     "&format=json&version=1.10.8&page=%i" %
                     (
                         self.base_url,
-                        self.source_definition['organisation_id'],
+                        self.source_definition['notubiz_organization_id'],
                         start_date.strftime("%Y-%m-%d %H:%M:%S"),
                         end_date.strftime("%Y-%m-%d %H:%M:%S"),
                         page
@@ -139,7 +139,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     log.warning('[%s] %s: %s' % (self.source_definition['sitename'], e, response.request.url))
                     continue
 
-                organization = self.organizations[self.source_definition['organisation_id']]
+                organization = self.organizations[self.source_definition['notubiz_organization_id']]
 
                 attributes = {}
                 for meeting in meeting_json['attributes']:
