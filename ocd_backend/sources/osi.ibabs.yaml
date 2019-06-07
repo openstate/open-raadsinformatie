@@ -52,11 +52,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organizations.HTMLOrganisationItem
-    classification: Party
-    file_url: "{organizations_url}"
-    item_xpath: "{organizations_item_xpath}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
 
   - &persons
     <<: *entity_defaults
@@ -150,8 +147,6 @@ osi.ibabs:
   noord-holland:
     key: noord-holland
     allmanak_id: 16412
-    organizations_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Provinciale_Staten
-    organizations_item_xpath: "//div[contains(@class, \"document\")]//ul[2]/li/a"
     persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
     persons_item_xpath: "//ul[contains(@class, \"two\")]//li"
     <<: *ibabs

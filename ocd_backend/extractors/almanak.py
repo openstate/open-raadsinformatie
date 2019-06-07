@@ -8,32 +8,6 @@ from .staticfile import StaticHtmlExtractor
 log = get_source_logger('extractor')
 
 
-class AlmanakOrganisationsExtractor(StaticHtmlExtractor):
-    """
-    Extract organisations from the Almanak based on the source file's extractor_xpath.
-    """
-
-    def extract_items(self, static_content):
-
-        organisations = set()
-        html = etree.HTML(static_content)
-
-        if not self.source_definition['extractor_xpath']:
-            raise ValueError('You must set an extractor_xpath in the source file to use AlmanakOrganisationsExtractor.')
-
-        for organisation in html.xpath(self.source_definition['extractor_xpath']):
-            organisations.add(organisation)
-
-        organisations_total = 0
-        for organisation in organisations:
-            yield 'application/json', json.dumps(organisation)
-            organisations_total += 1
-
-        log.info("[%s] Extracted total of %d almanak %s organizations" % (self.source_definition['sitename'],
-                                                                          organisations_total,
-                                                                          self.source_definition['classification']))
-
-
 class AlmanakPersonsExtractor(StaticHtmlExtractor):
     """
     Extract persons from the Almanak.
