@@ -38,13 +38,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: province
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-    extractor_xpath: "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()"
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
-    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
-    classification: Province
-    prefix: "{classification}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
+    item: ocd_backend.items.organizations.ProvinceOrganizationItem
 
   - &committees
     <<: *entity_defaults
@@ -58,7 +53,7 @@ _entities: &entities
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organisations.HTMLOrganisationItem
+    item: ocd_backend.items.organizations.HTMLOrganisationItem
     classification: Party
     file_url: "{organizations_url}"
     item_xpath: "{organizations_item_xpath}"
@@ -139,14 +134,14 @@ _entities_voting: &entities_voting
 _ibabs: &ibabs
   index_name: "{key}"
   sitename: "{key!c}"
-  province: "{sitename}"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
 _ibabs_voting: &ibabs_voting
   index_name: "{key}"
   sitename: "{key!c}"
-  province: "{sitename}"
+  allmanak_api_version: "v0"
   entities: *entities_voting
   <<: *source_defaults
 
@@ -154,7 +149,7 @@ osi.ibabs:
   # Added before 17-11-2017
   noord-holland:
     key: noord-holland
-    almanak_id: 16412
+    allmanak_id: 16412
     organizations_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Provinciale_Staten
     organizations_item_xpath: "//div[contains(@class, \"document\")]//ul[2]/li/a"
     persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
@@ -163,7 +158,7 @@ osi.ibabs:
 
   limburg:
     key: limburg
-    almanak_id: 16071
+    allmanak_id: 16071
 
     _fields_limburg: &fields_limburg
       fields:

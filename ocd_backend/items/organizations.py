@@ -1,32 +1,75 @@
-import re
-
 from ocd_backend.items import BaseItem
 from ocd_backend.models import TopLevelOrganization, Organization
 
 
-class MunicipalityOrganisationItem(BaseItem):
+def transform_contact_details(data):
     """
-    Extracts municipality information from the Almanak.
+    Takes a dictionary of contact details and flattens every entry to {key: {label: label, value: value} .
+    """
+
+    transformed_data = {}
+    for key, value in data.items():
+        if 'label' in value:
+            transformed_data[key] = value
+        else:
+            for key2, value2 in value.items():
+                transformed_data['%s_%s' % (key, key2)] = {'label': key2, 'value': value2}
+
+    return transformed_data
+
+
+class MunicipalityOrganizationItem(BaseItem):
+    """
+    Creates a Municipality item.
     """
 
     def get_rights(self):
         return u'undefined'
 
     def get_collection(self):
-        return unicode(self.source_definition['index_name'])
+        return unicode(self.source_definition['key'])
 
     def get_object_model(self):
         source_defaults = {
-            'source': 'cbs',
+            'source': 'allmanak',
             'source_id_key': 'identifier',
             'organization': self.source_definition['key'],
         }
 
         object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        object_model.name = unicode(self.original_item['Title'])
         object_model.classification = u'Municipality'
-        object_model.description = self.original_item['Description']
         object_model.collection = self.get_collection()
+        object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(self.original_item['naam'])])
+        object_model.description = self.original_item['omvatplaats']
+        # object_model.contact_details = transform_contact_details(self.original_item['contact'])
+
+        return object_model
+
+
+class ProvinceOrganizationItem(BaseItem):
+    """
+    Creates a Province item.
+    """
+
+    def get_rights(self):
+        return u'undefined'
+
+    def get_collection(self):
+        return unicode(self.source_definition['key'])
+
+    def get_object_model(self):
+        source_defaults = {
+            'source': 'allmanak',
+            'source_id_key': 'identifier',
+            'organization': self.source_definition['key'],
+        }
+
+        object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.classification = u'Province'
+        object_model.collection = self.get_collection()
+        object_model.name = unicode(self.original_item['naam'])
+        object_model.description = self.original_item['omvatplaats']
+        # object_model.contact_details = transform_contact_details(self.original_item['contact'])
 
         return object_model
 
