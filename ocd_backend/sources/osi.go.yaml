@@ -32,11 +32,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.organizations.HTMLOrganisationItem
-    classification: Party
-    file_url: "{organizations_url}"
-    item_xpath: "{organizations_item_xpath}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
 
   - &persons
     <<: *entity_defaults
@@ -84,8 +81,6 @@ osi.go:
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     api_version: v2
     allmanak_id: 17166
-    organizations_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling
-    organizations_item_xpath: "//h2/a"
     persons_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling/Statenleden
     persons_item_xpath: "//div[contains(@class, \"medewerkers\")]//div[contains(@class, \"medewerker\")]"
     persons_name_xpath: "//a[contains(@class, \"name\")]//text()"
@@ -99,8 +94,6 @@ osi.go:
     base_url: "https://stateninformatie.flevoland.nl/api"
     api_version: v2
     allmanak_id: 14866
-    organizations_url: https://stateninformatie.flevoland.nl/Organisatie
-    organizations_item_xpath: "//h2/a"
     persons_url: https://stateninformatie.flevoland.nl/Organisatie
     persons_item_xpath: "//div[contains(@class, \"medewerkers\")]//div[contains(@class, \"medewerker\")]"
     persons_name_xpath: "//a[contains(@class, \"name\")]//text()"
