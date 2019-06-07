@@ -7,11 +7,11 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.BaseTransformer
+  transformer: ocd_backend.transformers.transformer
   loaders:
-    - ocd_backend.loaders.elasticsearch.ElasticsearchLoader
-    - ocd_backend.loaders.delta.DeltaLoader
-  cleanup: ocd_backend.tasks.CleanupElasticsearch
+    - ocd_backend.loaders.elasticsearch.elasticsearch_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
   <<: *entity_defaults
@@ -112,10 +112,10 @@ _entities_voting: &entities_voting
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    transformer: ocd_backend.transformers.BaseTransformer
+    transformer: ocd_backend.transformers.transformer
     item: ocd_backend.items.popit.PopitOrganisationItem
     loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-    cleanup: ocd_backend.tasks.CleanupElasticsearch
+    cleanup: ocd_backend.tasks.cleanup_elasticsearch
     vote_entity: organizations
     pdf_max_pages: 20
     council_members_count: 1
@@ -128,10 +128,10 @@ _entities_voting: &entities_voting
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    transformer: ocd_backend.transformers.BaseTransformer
+    transformer: ocd_backend.transformers.transformer
     item: ocd_backend.items.popit.PopitPersonItem
     loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-    cleanup: ocd_backend.tasks.CleanupElasticsearch
+    cleanup: ocd_backend.tasks.cleanup_elasticsearch
     vote_entity: persons
     pdf_max_pages: 20
     council_members_count: 1

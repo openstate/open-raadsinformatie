@@ -6,11 +6,11 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.BaseTransformer
+  transformer: ocd_backend.transformers.transformer
   loaders:
-    - ocd_backend.loaders.elasticsearch.ElasticsearchLoader
-    - ocd_backend.loaders.delta.DeltaLoader
-  cleanup: ocd_backend.tasks.CleanupElasticsearch
+    - ocd_backend.loaders.elasticsearch.elasticsearch_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities
   - &municipality
@@ -55,7 +55,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.GCSStaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
       - # reserved for enricher_settings
 
   - &reports
@@ -65,7 +65,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     item: ocd_backend.items.ibabs_meeting.IBabsReportItem
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.GCSStaticMediaEnricher
+    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
       - # reserved for enricher_settings
     regex: ".*"
     pdf_max_pages: 0
@@ -187,10 +187,10 @@ ori.ibabs:
       entity: organizations
       doc_type: organizations
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      transformer: ocd_backend.transformers.BaseTransformer
+      transformer: ocd_backend.transformers.transformer
       item: ocd_backend.items.popit.PopitOrganisationItem
       loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      cleanup: ocd_backend.tasks.cleanup_elasticsearch
       vote_entity: organizations
       pdf_max_pages: 20
       council_members_count: 45
@@ -203,10 +203,10 @@ ori.ibabs:
       entity: persons
       doc_type: persons
       extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      transformer: ocd_backend.transformers.BaseTransformer
+      transformer: ocd_backend.transformers.transformer
       item: ocd_backend.items.popit.PopitPersonItem
       loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-      cleanup: ocd_backend.tasks.CleanupElasticsearch
+      cleanup: ocd_backend.tasks.cleanup_elasticsearch
       vote_entity: persons
       pdf_max_pages: 20
       council_members_count: 45

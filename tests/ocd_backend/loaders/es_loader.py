@@ -2,7 +2,7 @@ import json
 import os.path
 
 from ocd_backend.exceptions import ConfigurationError
-from ocd_backend.loaders.elasticsearch import ElasticsearchLoader
+from ocd_backend.loaders.elasticsearch import elasticsearch_loader
 from . import LoaderTestCase
 
 
@@ -23,12 +23,12 @@ class ESLoaderTestCase(LoaderTestCase):
         self.source_definition = {
             'id': 'test_definition',
             'extractor': 'ocd_backend.extractors.staticfile.StaticJSONDumpExtractor',
-            'transformer': 'ocd_backend.transformers.BaseTransformer',
+            'transformer': 'ocd_backend.transformers.transformer',
             'item': 'ocd_backend.items.LocalDumpItem',
-            'loader': 'ocd_backend.loaders.elasticsearch.ElasticsearchLoader',
+            'loader': 'ocd_backend.loaders.elasticsearch.elasticsearch_loader',
             'dump_path': dump_path
         }
-        self.loader = ElasticsearchLoader()
+        self.loader = elasticsearch_loader
 
     def test_throws_configuration_error_without_index_name(self):
         # self.loader.run(source_definition=self.source_definition)
