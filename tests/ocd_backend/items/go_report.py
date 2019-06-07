@@ -123,10 +123,6 @@
 #         item = self._instantiate_meeting()
 #         self.assertEqual(item.get_rights(), self.rights)
 #
-#     def test_meeting_get_collection(self):
-#         item = self._instantiate_meeting()
-#         self.assertEqual(item.get_collection(), self.collection)
-#
 #     def test_meeting_name(self):
 #         item = self._instantiate_meeting()
 #         data = item.get_object_model()

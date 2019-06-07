@@ -143,9 +143,6 @@
 #     def get_rights():
 #         return u'undefined'
 #
-#     def get_collection(self):
-#         return unicode(self.source_definition['index_name'])
-#
 #     def _get_motion_data(self, council, members, parties):
 #         object_model = dict()
 #

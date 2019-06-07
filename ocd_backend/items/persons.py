@@ -14,9 +14,6 @@ class AlmanakPersonItem(BaseItem):
     def get_rights(self):
         return u'undefined'
 
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
-
     def get_object_model(self):
         source_defaults = {
             'source': 'almanak',
@@ -73,9 +70,6 @@ class HTMLPersonItem(HttpRequestMixin, BaseItem):
 
     def get_rights(self):
         return u'undefined'
-
-    def get_collection(self):
-        return unicode(self.source_definition['index_name'])
 
     def get_object_model(self):
         source_defaults = {
