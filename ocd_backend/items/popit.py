@@ -39,12 +39,6 @@
 #             pass
 #         return {}
 #
-#     def get_rights(self):
-#         try:
-#             return self.original_item['meta']['rights']
-#         except (TypeError, KeyError) as e:
-#             return u'undefined'
-#
 #     def get_object_model(self):
 #         object_model = {
 #             'hidden': self.source_definition['hidden']

@@ -3,9 +3,6 @@ from ocd_backend.models import *
 
 
 class IbabsPersonItem(BaseItem):
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'ibabs',
