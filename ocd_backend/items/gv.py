@@ -6,9 +6,6 @@ from ocd_backend.models import *
 
 
 class GreenValleyItem(BaseItem):
-    def get_rights(self):
-        return u'undefined'
-
     def _get_documents_as_media_urls(self):
         media_urls = {}
         if u'attachmentlist' in self.original_item:

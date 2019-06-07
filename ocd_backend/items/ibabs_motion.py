@@ -139,10 +139,6 @@
 #         # FIXME: what to do when there is not an original URL?
 #         return {"html": settings.IBABS_WSDL}
 #
-#     @staticmethod
-#     def get_rights():
-#         return u'undefined'
-#
 #     def _get_motion_data(self, council, members, parties):
 #         object_model = dict()
 #

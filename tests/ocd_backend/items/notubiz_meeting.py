@@ -159,10 +159,6 @@ class NotubizMeetingTestCase(ItemTestCase):
     def test_meeting_get_ori_id(self):
         self.assertEqual('https://id.openraadsinformatie.nl/1', self.meeting_ins.object_data.get_ori_identifier())
 
-    def test_meeting_get_rights(self):
-        item = self._instantiate_meeting()
-        self.assertEqual(self.rights, item.get_rights())
-
     def test_meeting_json(self):
         for name, _ in Meeting.definitions(props=True, rels=True):
             self.assertEqual(self.expected_json.get(name), self.json_data.get(name))

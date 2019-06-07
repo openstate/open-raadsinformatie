@@ -6,9 +6,6 @@ log = get_source_logger('notubiz_meeting')
 
 
 class NotubizMeetingItem(BaseItem):
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'notubiz',

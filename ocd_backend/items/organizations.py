@@ -23,9 +23,6 @@ class MunicipalityOrganizationItem(BaseItem):
     Creates a Municipality item.
     """
 
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
         source_defaults = {
             'source': 'allmanak',
@@ -47,9 +44,6 @@ class ProvinceOrganizationItem(BaseItem):
     """
     Creates a Province item.
     """
-
-    def get_rights(self):
-        return u'undefined'
 
     def get_object_model(self):
         source_defaults = {
@@ -73,9 +67,6 @@ class AlmanakOrganisationItem(BaseItem):
     Extracts organizations from the Almanak. The source file calling this item must set a `classification`
     for the entity because there are several types of organisations (councils, parties, etc.)
     """
-
-    def get_rights(self):
-        return u'undefined'
 
     def get_object_model(self):
 
@@ -112,11 +103,7 @@ class HTMLOrganisationItem(BaseItem):
         # name = re.sub(r'\s*\(\d+ zetels?\)\s*', '', name)
         return unicode(name)
 
-    def get_rights(self):
-        return u'undefined'
-
     def get_object_model(self):
-
         if not self.source_definition['classification']:
             raise ValueError('You must set a classification in the source file to use HTMLOrganisationItem.')
 

@@ -46,9 +46,6 @@
 #     def get_original_object_urls(self):
 #         return {"xml": self._get_current_permalink()}
 #
-#     def get_rights(self):
-#         return u'undefined'
-#
 #     @staticmethod
 #     def get_index_data():
 #         return {}

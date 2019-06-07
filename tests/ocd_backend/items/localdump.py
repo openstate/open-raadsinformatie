@@ -35,11 +35,6 @@
 #             u'html': u'http://openbeelden.nl/media/749181/'
 #         }
 #
-#     def test_get_rights(self):
-#         item = LocalDumpItem(self.source_definition, 'application/json',
-#                              self.raw_item, self.item, None)
-#         self.assertEqual(item.get_rights(), self.rights)
-#
 #     def test_get_original_object_id(self):
 #         item = LocalDumpItem(self.source_definition, 'application/json',
 #                              self.raw_item, self.item, None)

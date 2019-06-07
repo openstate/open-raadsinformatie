@@ -46,9 +46,6 @@
 #     def get_original_object_urls():
 #         return {"html": settings.IBABS_WSDL}
 #
-#     def get_rights(self):
-#         return u'undefined'
-#
 #     def _get_result(self):
 #         if not self.original_item['entry']['ListCanVote']:
 #             return "Motie aangehouden"
