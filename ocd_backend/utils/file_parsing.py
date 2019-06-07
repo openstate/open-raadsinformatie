@@ -76,8 +76,10 @@ class FileToTextMixin(object):
             return tf
         except HTTPError as e:
             log.info("Something went wrong downloading %s", url)
+            raise
         except Exception as e:
             log.warning("Some other exception %s", url)
+            raise
 
     def file_to_text(self, path, max_pages=20):
         """
