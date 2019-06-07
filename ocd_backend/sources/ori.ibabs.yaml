@@ -17,11 +17,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: municipality
     doc_type: organizations
-    extractor: ocd_backend.extractors.odata.ODataExtractor
-    item: ocd_backend.items.organisations.MunicipalityOrganisationItem
-    file_url: http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten
-    filter:
-      Title: "{municipality}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
 
   - &organizations
     <<: *entity_defaults
@@ -29,9 +26,9 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
     extractor_xpath: ".//td[@data-before=\"Partij\"]/text()"
-    item: ocd_backend.items.organisations.AlmanakOrganisationItem
+    item: ocd_backend.items.organizations.AlmanakOrganisationItem
     classification: Party
-    file_url: https://almanak.overheid.nl/{almanak_id}/a
+    file_url: https://almanak.overheid.nl/{allmanak_id}/a
     item_xpath: //
 
   - &committees
@@ -84,7 +81,7 @@ _cwc: &cwc
 _ibabs: &ibabs
   index_name: "{key}"
   sitename: "{key!c}"
-  municipality: "{sitename}"
+  allmanak_api_version: "v0"
   entities: *entities
   <<: *source_defaults
 
@@ -92,37 +89,37 @@ ori.ibabs:
   # Added before 17-11-2017
   amstelveen:
     key: amstelveen
-    almanak_id: 28270
+    allmanak_id: 28270
     <<: *ibabs
 
   enschede:
     key: enschede
-    almanak_id: 25100
+    allmanak_id: 25100
     <<: *ibabs
 
   gouda:
     key: gouda
-    almanak_id: 28975
+    allmanak_id: 28975
     <<: *ibabs
 
   heerde:
     key: heerde
-    almanak_id: 23411
+    allmanak_id: 23411
     <<: *ibabs
 
   medemblik:
     key: medemblik
-    almanak_id: 23294
+    allmanak_id: 23294
     <<: *ibabs
 
   oss:
     key: oss
-    almanak_id: 37907
+    allmanak_id: 37907
     <<: *ibabs
 
   overbetuwe:
     key: overbetuwe
-    almanak_id: 26937
+    allmanak_id: 26937
     entities:
     - *municipality
     - *organizations
@@ -135,13 +132,12 @@ ori.ibabs:
 
   zoetermeer:
     key: zoetermeer
-    almanak_id: 28493
+    allmanak_id: 28493
     <<: *ibabs
 
   utrecht:
     key: utrecht
-    municipality: "Utrecht (gemeente)"
-    almanak_id: 38122
+    allmanak_id: 38122
     <<: *ibabs
     entities:
     - *municipality
@@ -303,43 +299,42 @@ ori.ibabs:
   # Added on 17-11-2017
   barneveld:
     key: barneveld
-    almanak_id: 27179
+    allmanak_id: 27179
     <<: *ibabs
 
   krimpenerwaard:
     key: krimpenerwaard
-    almanak_id: 129780
+    allmanak_id: 129780
     <<: *ibabs
 
   teylingen:
     key: teylingen
-    almanak_id: 29957
+    allmanak_id: 29957
     <<: *ibabs
 
   arnhem:
     key: arnhem
-    almanak_id: 32510
+    allmanak_id: 32510
     <<: *ibabs
 
   heemskerk:
     key: heemskerk
-    almanak_id: 23365
+    allmanak_id: 23365
     <<: *ibabs
 
   oosterhout:
     key: oosterhout
-    almanak_id: 22438
+    allmanak_id: 22438
     <<: *ibabs
 
   landsmeer:
     key: landsmeer
-    almanak_id: 21723
+    allmanak_id: 21723
     <<: *ibabs
 
   voorschoten:
     key: voorschoten
-    almanak_id: 35396
-    municipality: Voorschoten
+    allmanak_id: 35396
     sitename: Duivenvoorde
     include: ".*[Vv]oorschoten$"
     exclude: ".*[Ww]assenaar$"
@@ -347,8 +342,7 @@ ori.ibabs:
 
   wassenaar:
     key: wassenaar
-    almanak_id: 40204
-    municipality: Wassenaar
+    allmanak_id: 40204
     sitename: Duivenvoorde
     include: ".*[Ww]assenaar$"
     exclude: ".*[Vv]oorschoten$"
@@ -356,193 +350,190 @@ ori.ibabs:
 
   aalsmeer:
     key: aalsmeer
-    almanak_id: 38409
+    allmanak_id: 38409
     <<: *ibabs
 
   noordwijk:
     key: noordwijk
-    almanak_id: 34729
+    allmanak_id: 34729
     <<: *ibabs
 
   texel:
     key: texel
-    almanak_id: 22715
+    allmanak_id: 22715
     <<: *ibabs
 
   staphorst:
     key: staphorst
-    almanak_id: 24378
+    allmanak_id: 24378
     <<: *ibabs
 
   almelo:
     key: almelo
-    almanak_id: 26572
+    allmanak_id: 26572
     <<: *ibabs
 
   nieuwkoop:
     key: nieuwkoop
-    almanak_id: 26403
+    allmanak_id: 26403
     <<: *ibabs
 
   loon_op_zand:
     key: loon_op_zand
     sitename: Loon op Zand
-    almanak_id: 25473
+    allmanak_id: 25473
     <<: *ibabs
 
   hilversum:
     key: hilversum
-    almanak_id: 28797
+    allmanak_id: 28797
     <<: *ibabs
 
   meppel:
     key: meppel
-    almanak_id: 41121
+    allmanak_id: 41121
     <<: *ibabs
 
   diemen:
     key: diemen
-    almanak_id: 21518
+    allmanak_id: 21518
     <<: *ibabs
 
   nieuwegein:
     key: nieuwegein
-    almanak_id: 24713
+    allmanak_id: 24713
     <<: *ibabs
 
   lingewaard:
     key: lingewaard
-    almanak_id: 37823
+    allmanak_id: 37823
     <<: *ibabs
 
   hollands_kroon:
     key: hollands_kroon
     sitename: Hollands Kroon
-    almanak_id: 24449
+    allmanak_id: 24449
     <<: *ibabs
 
   meierijstad:
     key: meierijstad
-    almanak_id: 29116
+    allmanak_id: 29116
     <<: *ibabs
 
   # Added on 29-12-2017
   buren:
     key: buren
-    almanak_id: 40352
+    allmanak_id: 40352
     <<: *ibabs
 
   edam-volendam:
     key: edam-volendam
-    municipality: "Edam-Volendam"
-    almanak_id: 22102
+    allmanak_id: 22102
     <<: *ibabs
 
   etten-leur:
     key: etten-leur
-    municipality: "Etten-Leur"
-    almanak_id: 21760
+    allmanak_id: 21760
     <<: *ibabs
 
   velsen:
     key: velsen
-    almanak_id: 38811
+    allmanak_id: 38811
     <<: *ibabs
 
   emmen:
     key: emmen
-    almanak_id: 22781
+    allmanak_id: 22781
     start_date: "2018-01-01" # Due to agreement with Frank te Winkel
     <<: *ibabs
 
   oldambt:
     key: oldambt
-    almanak_id: 33197
+    allmanak_id: 33197
     <<: *ibabs
 
   rijswijk:
     key: rijswijk
-    municipality: "Rijswijk (ZH.)"
-    almanak_id: 27300
+    allmanak_id: 27300
     <<: *ibabs
 
   zwolle:
     key: zwolle
-    almanak_id: 33731
+    allmanak_id: 33731
     <<: *ibabs
 
   raalte:
     key: raalte
-    almanak_id: 25053
+    allmanak_id: 25053
     <<: *ibabs
 
   # Added on 10-04-2018
   boxmeer:
     key: boxmeer
-    almanak_id: 30610
+    allmanak_id: 30610
     <<: *ibabs
 
   nijkerk:
     key: nijkerk
-    almanak_id: 31196
+    allmanak_id: 31196
     <<: *ibabs
 
   steenwijkerland:
     key: steenwijkerland
-    almanak_id: 24145
+    allmanak_id: 24145
     <<: *ibabs
 
   # Added on 02-04-2019
   houten:
     key: houten
-    almanak_id: 38261
+    allmanak_id: 38261
     <<: *ibabs
 
   # Added on 25-12-2018
   rheden:
     key: rheden
-    almanak_id: 38004
+    allmanak_id: 38004
     <<: *ibabs
 
   # Added on 5-9-2018
   roermond:
     key: roermond
-    almanak_id: 31636
+    allmanak_id: 31636
     <<: *ibabs
 
   # Added on 04-04-2019
   haarlemmermeer:
     key: haarlemmermeer
-    almanak_id: 25768
+    allmanak_id: 25768
     <<: *ibabs
 
   # Added on 08-04-2019
   zeewolde:
     key: zeewolde
-    almanak_id: 35858
+    allmanak_id: 35858
     <<: *ibabs
 
   # Added on 15-04-2019
   losser:
     key: losser
-    almanak_id: 27430
+    allmanak_id: 27430
     <<: *ibabs
 
   # Added on 16-04-2019
   drimmelen:
     key: drimmelen
-    almanak_id: 25896
+    allmanak_id: 25896
     <<: *ibabs
 
   # Added on 27-05-2019
   nijmegen:
     key: nijmegen
-    almanak_id: 33391
+    allmanak_id: 33391
     <<: *ibabs
 
   harderwijk:
     key: harderwijk
-    almanak_id: 32835
+    allmanak_id: 32835
     entities:
     - *municipality
     - *organizations
