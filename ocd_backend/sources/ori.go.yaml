@@ -31,12 +31,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
-    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-    extractor_xpath: ".//td[@data-before=\"Partij\"]/text()"
-    item: ocd_backend.items.organizations.AlmanakOrganisationItem
-    classification: Party
-    file_url: https://almanak.overheid.nl/{allmanak_id}/a
-    item_xpath: //
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
 
   - &persons
     <<: *entity_defaults

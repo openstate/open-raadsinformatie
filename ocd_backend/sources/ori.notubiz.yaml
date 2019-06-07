@@ -27,6 +27,13 @@ _entities: &entities
     extractor: ocd_backend.extractors.notubiz.NotubizCommitteesExtractor
     item: ocd_backend.items.notubiz_committee.CommitteeItem
 
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    item: ocd_backend.items.organizations.PartyItem
+
   - &meetings
     <<: *entity_defaults
     entity: meetings

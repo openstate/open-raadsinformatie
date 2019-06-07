@@ -35,25 +35,18 @@ def _generate_for_organisations(name, almanak):
         "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
         "hidden": False,
         "index_name": name.lower(),
-        "file_url": (
-            "http://dataderden.cbs.nl/ODataApi/OData/45006NED/Gemeenten"),
         "doc_type": "organizations",
-        "filter": {
-            "Title": name.lower()
-        },
         "keep_index_on_update": True
     }, {
         "id": "%s_organisations" % (name.lower(),),
-        "extractor": "ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor",
-        "extractor_xpath": "//h1[@data-roo-element=\"element-naam-en-afkorting\"]/text()",
+        "extractor": "ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor",
         "transformer": "ocd_backend.transformers.BaseTransformer",
-        "item": "ocd_backend.items.organizations.AlmanakOrganisationItem",
+        "item": "ocd_backend.items.organizations.MunicipalityOrganizationItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.elasticsearch.elasticsearch_loader",
         "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
         "hidden": False,
         "index_name": name.lower(),
-        "file_url": almanak,
         "doc_type": "organizations",
         "item_xpath": "//",
         "keep_index_on_update": True
