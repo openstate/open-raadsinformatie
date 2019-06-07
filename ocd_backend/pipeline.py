@@ -87,18 +87,17 @@ def setup_pipeline(source_definition):
             pipeline_definitions[pipeline['id']]['extractor'])
 
         if pipeline.get('transformer'):
-            pipeline_transformers[pipeline['id']] = load_object(
-                pipeline['transformer'])()
+            pipeline_transformers[pipeline['id']] = load_object(pipeline['transformer'])
 
         pipeline_enrichers[pipeline['id']] = [
-            (load_object(enricher[0])(), enricher[1] or {}) for enricher in
+            (load_object(enricher[0]), enricher[1] or {}) for enricher in
             pipeline_definitions[pipeline['id']].get('enrichers', [])]
 
         pipeline_loaders[pipeline['id']] = list()
         for cls in pipeline_definitions[pipeline['id']].get('loaders', None) or \
                 [pipeline_definitions[pipeline['id']].get('loader', None)]:
             if cls:
-                pipeline_loaders[pipeline['id']].append(load_object(cls)())
+                pipeline_loaders[pipeline['id']].append(load_object(cls))
 
     result = None
     for pipeline in pipelines:

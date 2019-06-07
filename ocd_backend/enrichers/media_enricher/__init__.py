@@ -1,3 +1,4 @@
+from ocd_backend import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
     MediaType, FileToText
@@ -7,7 +8,6 @@ from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL
 from ocd_backend.utils.http import HttpRequestMixin
-from ocd_backend.utils.misc import get_sha1_hash
 
 log = get_source_logger('enricher')
 
@@ -81,3 +81,8 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
             media_file.close()
 
         item.save()
+
+
+@celery_app.task(bind=True, base=MediaEnricher, autoretry_for=(Exception,), retry_backoff=True)
+def media_enricher(self, *args, **kwargs):
+    return self.start(*args, **kwargs)

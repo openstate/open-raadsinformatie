@@ -9,7 +9,7 @@ log = get_source_logger('ocd_backend.tasks')
 class BaseCleanup(celery_app.Task):
     ignore_result = True
 
-    def run(self, *args, **kwargs):
+    def start(self, *args, **kwargs):
         run_identifier = kwargs.get('run_identifier')
         run_identifier_chains = '{}_chains'.format(run_identifier)
         self._remove_chain(run_identifier_chains, kwargs.get('chain_id'))
@@ -74,3 +74,13 @@ class CleanupElasticsearch(BaseCleanup):
 class DummyCleanup(BaseCleanup):
     def run_finished(self, run_identifier, **kwargs):
         log.info('Finished run {}.'.format(run_identifier))
+
+
+@celery_app.task(bind=True, base=CleanupElasticsearch, autoretry_for=(Exception,), retry_backoff=True)
+def cleanup_elasticsearch(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
+
+
+@celery_app.task(bind=True, base=DummyCleanup, autoretry_for=(Exception,), retry_backoff=True)
+def dummy_cleanup(self, *args, **kwargs):
+    return self.start(*args, **kwargs)

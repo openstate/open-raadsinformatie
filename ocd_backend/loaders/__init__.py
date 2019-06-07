@@ -12,7 +12,7 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
                  celery_app.Task):
     """The base class that other loaders should inherit."""
 
-    def run(self, *args, **kwargs):
+    def start(self, *args, **kwargs):
         """Start loading of a single item.
 
         This method is called by the transformer and expects args to
