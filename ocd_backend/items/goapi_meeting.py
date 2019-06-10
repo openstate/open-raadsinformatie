@@ -76,8 +76,7 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         event.organization.merge(collection=self.source_definition['key'])
 
         # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
-        # if it is a non-committee meeting so we can attach it to a committee node without any extra checks
-        # as opposed to iBabs
+        # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
         event.committee = Organization(self.original_item[u'dmu'][u'id'], **source_defaults)
         event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         event.committee.has_organization_name.merge(collection=self.source_definition['key'])
