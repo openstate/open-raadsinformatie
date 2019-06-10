@@ -46,17 +46,6 @@ _entities: &entities
     classification: Province
     prefix: "{classification}"
 
-#  - &province_council
-#    <<: *entity_defaults
-#    entity: council
-#    doc_type: organizations
-#    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-#    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-#    file_url: https://almanak.overheid.nl/{almanak_id}/a
-#    item_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
-#    classification: Council
-#    prefix: "{classification}"
-
   - &committees
     <<: *entity_defaults
     entity: committees
@@ -121,7 +110,6 @@ _entities_voting: &entities_voting
     council_members_count: 1
     reverse_chronological: true
     max_processed_meetings: 1
-
 
   - &persons_voting
     <<: *entity_defaults
