@@ -26,21 +26,6 @@ _entities: &entities
     prefix: "{classification}"
     item_xpath: //
 
-# The Council is automatically created in GOAPI when processing meetings (see
-# items.goapi_meeting.GemeenteOplossingenMeetingItem)
-#
-#  - &province_council
-#    <<: *entity_defaults
-#    entity: council
-#    doc_type: organizations
-#    extractor: ocd_backend.extractors.almanak.AlmanakOrganisationsExtractor
-#    extractor_xpath: "//div[@id=\"content\"]/ul//li/a/text()"
-#    item: ocd_backend.items.organisations.AlmanakOrganisationItem
-#    file_url: https://almanak.overheid.nl/{almanak_id}/a
-#    classification: Council
-#    prefix: "{classification}"
-#    item_xpath: //
-
   - &committees
     <<: *entity_defaults
     entity: committees
