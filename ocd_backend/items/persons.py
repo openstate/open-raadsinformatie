@@ -26,7 +26,10 @@ class AllmanakPersonItem(BaseItem):
         municipality = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         municipality.merge(collection=self.source_definition['key'])
 
-        municipality_member = Membership(**source_defaults)
+        # The source ID for the municipality membership is constructed by combining the person's Allmanak ID and the
+        # key of the source
+        municipality_membership_id = '%s_%s' % (self.original_item['systemid'], self.source_definition['key'])
+        municipality_member = Membership(municipality_membership_id, **source_defaults)
         municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         municipality_member.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -41,8 +44,12 @@ class AllmanakPersonItem(BaseItem):
             party.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             party.has_organization_name.merge(collection=self.source_definition['key'])
 
-            party.name = self.original_item['party']
-            party_member = Membership(**source_defaults)
+            party.name = self.original_item['partij']
+
+            # The source ID for the party membership is constructed by combining the person's Allmanak ID and the
+            # name of the party
+            party_membership_id = '%s_%s' % (self.original_item['systemid'], self.original_item['partij'])
+            party_member = Membership(party_membership_id, **source_defaults)
             party_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             party_member.has_organization_name.merge(collection=self.source_definition['key'])
 
