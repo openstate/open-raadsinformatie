@@ -48,7 +48,7 @@ Authors:
 * Breyten Ernsting ([@breyten](https://twitter.com/breyten))
 * Sicco van Sas ([@siccovansas](https://twitter.com/siccovansas))
 * Jurrian Tromp ([@jurrian](https://github.com/jurrian), [@ontola](https://github.com/ontola))
-* Jorrit van Belzen ([@jorritb](https://github.com/jurrian), [@ontola](https://github.com/ontola))
+* Jorrit van Belzen ([@jorritb](https://github.com/jorritb), [@ontola](https://github.com/ontola))
 
 Contributors:
 
