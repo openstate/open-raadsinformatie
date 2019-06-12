@@ -131,6 +131,8 @@ class IBabsReportItem(BaseItem):
         }
 
         report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
+        report.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        report.has_organization_name.merge(collection=self.source_definition['key'])
 
         report_name = self.original_item['_ReportName'].split(r'\s+')[0]
         report.classification = u'Report'
@@ -154,7 +156,7 @@ class IBabsReportItem(BaseItem):
 
         # Temporary binding reports to municipality as long as events and agendaitems are not
         # referenced in the iBabs API
-        report.creator = Organization(self.source_definition['key'], **source_defaults)
+        report.creator = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         report.creator.merge(collection=self.source_definition['key'])
 
         try:
@@ -189,6 +191,9 @@ class IBabsReportItem(BaseItem):
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
             attachment_file = MediaObject(document['Id'], **source_defaults)
+            attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment_file.has_organization_name.merge(collection=self.source_definition['key'])
+
             attachment_file.original_url = document['PublicDownloadURL']
             attachment_file.size_in_bytes = document['FileSize']
             attachment_file.name = document['DisplayName']
