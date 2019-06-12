@@ -57,9 +57,9 @@ def _generate_for_organisations(name, almanak):
 def _generate_for_persons(name, almanak):
     persons = [{
         "id": "%s_persons" % (name.lower(),),
-        "extractor": "ocd_backend.extractors.almanak.AlmanakPersonsExtractor",
+        "extractor": "ocd_backend.extractors.allmanak.AllmanakPersonsExtractor",
         "transformer": "ocd_backend.transformers.transformer",
-        "item": "ocd_backend.items.persons.AlmanakPersonItem",
+        "item": "ocd_backend.items.persons.AllmanakPersonItem",
         "enrichers": [],
         "loader": "ocd_backend.loaders.elasticsearch.elasticsearch_loader",
         "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",

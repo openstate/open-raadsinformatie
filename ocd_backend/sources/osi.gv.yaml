@@ -32,11 +32,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: persons
     doc_type: persons
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
-    file_url: "{persons_url}"
-    item_xpath: "{persons_item_xpath}"
-    organization_xpath: "{persons_party_xpath}"
+    extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
+    item: ocd_backend.items.persons.AllmanakPersonItem
 
   - &meetings
     <<: *entity_defaults
@@ -85,10 +82,4 @@ osi.gv:
     greenvalley_hash: 3600416d177d8526dfdf5c197c1a0bdb7dab714433ae43dd
     greenvalley_username: openstate
     greenvalley_extract_timeout: 5
-    persons_url: https://staten.zuid-holland.nl/Statenleden
-    persons_item_xpath: "//div[contains(@class, \"statenleden\")]//ul/li"
-    persons_name_xpath: ".//a/span//text()"
-    persons_id_xpath: ".//a/@href"
-    persons_link_path: "//li/a/@href"
-    persons_party_xpath: "//*[contains(@class, \"breadcrumbs\")]/a[3]//text()"
     <<: *gv

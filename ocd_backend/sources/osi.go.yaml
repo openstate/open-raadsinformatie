@@ -39,12 +39,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: persons
     doc_type: persons
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.persons.HTMLPersonFromLinkItem
-    file_url: "{persons_url}"
-    item_xpath: "{persons_item_xpath}"
-    organization_xpath: "{persons_party_xpath}"
-
+    extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
+    item: ocd_backend.items.persons.AllmanakPersonItem
 
   - &meetings
     <<: *entity_defaults
@@ -81,12 +77,6 @@ osi.go:
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     api_version: v2
     allmanak_id: 17166
-    persons_url: https://www.stateninformatie.provincie-utrecht.nl/Samenstelling/Statenleden
-    persons_item_xpath: "//div[contains(@class, \"medewerkers\")]//div[contains(@class, \"medewerker\")]"
-    persons_name_xpath: "//a[contains(@class, \"name\")]//text()"
-    persons_id_xpath: ".//a/@href"
-    persons_link_path: "//a/@href"
-    persons_party_xpath: "(//*[contains(@class, \"groupmeta\")])[last()]//span[contains(@class, \"name\")]//text()"
     <<: *go
 
   flevoland:
@@ -94,10 +84,4 @@ osi.go:
     base_url: "https://stateninformatie.flevoland.nl/api"
     api_version: v2
     allmanak_id: 14866
-    persons_url: https://stateninformatie.flevoland.nl/Organisatie
-    persons_item_xpath: "//div[contains(@class, \"medewerkers\")]//div[contains(@class, \"medewerker\")]"
-    persons_name_xpath: "//a[contains(@class, \"name\")]//text()"
-    persons_id_xpath: ".//a/@href"
-    persons_link_path: "//a/@href"
-    persons_party_xpath: "(//*[contains(@class, \"groupmeta\")])[last()]//span[contains(@class, \"name\")]//text()"
     <<: *go
