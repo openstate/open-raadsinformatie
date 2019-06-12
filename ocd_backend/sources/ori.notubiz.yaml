@@ -34,6 +34,13 @@ _entities: &entities
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     item: ocd_backend.items.organizations.PartyItem
 
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
+    item: ocd_backend.items.persons.AllmanakPersonItem
+
   - &meetings
     <<: *entity_defaults
     entity: meetings

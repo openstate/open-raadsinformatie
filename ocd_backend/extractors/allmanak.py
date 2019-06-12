@@ -90,3 +90,25 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
             log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['sitename'], total_parties))
         else:
             log.warning('[%s] Allmanak does not list any parties for this source.' % self.source_definition['sitename'])
+
+
+class AllmanakPersonsExtractor(AllmanakBaseExtractor):
+    """
+    Extracts persons from the OpenState Allmanak.
+    """
+
+    def run(self):
+        path = self.base_url + 'overheidsorganisatie?systemid=eq.%s&select=naam,functies(functie:functieid' \
+                               '(naam,medewerkers(persoon:persoonid(systemid,naam,partij))))' \
+                               '&functies.functie.naam=eq.Raadslid' % self.source_definition['allmanak_id']
+
+        total, static_json = self._request(path)
+
+        if static_json[0]['functies']:
+            total_persons = 0
+            for person in static_json[0]['functies'][4]['functie']['medewerkers']:
+                yield 'application/json', json.dumps(person['persoon'])
+                total_persons += 1
+            log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['sitename'], total_persons))
+        else:
+            log.warning('[%s] Allmanak does not list any persons for this source.' % self.source_definition['sitename'])
