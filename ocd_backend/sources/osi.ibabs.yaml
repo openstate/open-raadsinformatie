@@ -59,10 +59,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: persons
     doc_type: persons
-    extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-    item: ocd_backend.items.persons.HTMLPersonItem
-    file_url: "{persons_url}"
-    item_xpath: "{persons_item_xpath}"
+    extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
+    item: ocd_backend.items.ibabs_person.IbabsPersonItem
 
   - &meetings
     <<: *entity_defaults
@@ -147,8 +145,6 @@ osi.ibabs:
   noord-holland:
     key: noord-holland
     allmanak_id: 16412
-    persons_url: http://noord-holland.nl/Bestuur/Provinciale_Staten/Statenleden
-    persons_item_xpath: "//ul[contains(@class, \"two\")]//li"
     <<: *ibabs
 
   limburg:

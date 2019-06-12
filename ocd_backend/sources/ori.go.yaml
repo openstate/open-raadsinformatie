@@ -38,10 +38,8 @@ _entities: &entities
     <<: *entity_defaults
     entity: persons
     doc_type: persons
-    extractor: ocd_backend.extractors.almanak.AlmanakPersonsExtractor
-    item: ocd_backend.items.persons.AlmanakPersonItem
-    file_url: https://almanak.overheid.nl/{allmanak_id}/a
-    item_xpath: //
+    extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
+    item: ocd_backend.items.persons.AllmanakPersonItem
 
   - &meetings
     <<: *entity_defaults
