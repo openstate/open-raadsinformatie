@@ -129,6 +129,10 @@ class HttpRequestMixin(object):
             media_file
         )
 
+    def save(self, path, data, content_type=None):
+        """Save is only implemented for GCSCachingMixin"""
+        pass
+
 
 class LocalCachingMixin(HttpRequestMixin):
 
@@ -308,6 +312,10 @@ class GCSCachingMixin(HttpRequestMixin):
         """Save data to a path in GCS. The content_type can be specified, or
         will default to default_content_type.
         """
+
+        # If the storage_client has not been loaded fall back to HttpRequestMixin save
+        if not self.storage_client:
+            return super(GCSCachingMixin, self).save(path, data, content_type)
 
         bucket = self.get_bucket()
         blob = bucket.get_blob(path)
