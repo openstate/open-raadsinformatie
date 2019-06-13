@@ -26,3 +26,5 @@ spec:
       - name: redisdata
         persistentVolumeClaim:
           claimName: redisdata
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
