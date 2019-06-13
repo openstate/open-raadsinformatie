@@ -57,6 +57,8 @@ spec:
           value: "Content-Type,Content-Length,Authorization"
         - name: http.cors.allow-credentials
           value: "true"
+        - name: http.max_initial_line_length
+          value: "8kb"
         readinessProbe:
           httpGet:
             scheme: HTTP
@@ -80,6 +82,8 @@ spec:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata
       restartPolicy: Always
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
 
   volumeClaimTemplates:
     - metadata:
