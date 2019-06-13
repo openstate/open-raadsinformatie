@@ -43,7 +43,11 @@ class Neo4jDatabase(object):
 
     # Set driver on the class so all instances use the same driver
     driver = GraphDatabase.driver(
-        NEO4J_URL, auth=(NEO4J_USER, NEO4J_PASSWORD,), encrypted=False,
+        NEO4J_URL,
+        auth=(NEO4J_USER, NEO4J_PASSWORD,),
+        encrypted=False,
+        connection_timeout=600,
+        max_retry_time=60,
     )
 
     def __init__(self, serializer):
