@@ -29,28 +29,46 @@ spec:
         - containerPort: 7687
         env:
           - name: NEO4J_CACHE_MEMORY
-            value: "4G"
+            value: "2G"
           - name: NEO4J_HEAP_MEMORY
-            value: "4G"
+            value: "2G"
           - name: NEO4J_dbms_memory_heap_max__size
-            value: "4G"
+            value: "2G"
           - name: NEO4J_dbms_memory_heap_initial__size
-            value: "4G"
+            value: "2G"
           - name: NEO4J_dbms_memory_pagecache_size
-            value: "20G"
+            value: "6G"
           - name: NEO4J_AUTH
             valueFrom:
               secretKeyRef:
                 name: secrets
                 key: NEO4J_AUTH
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /browser/
+            port: 7474
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /browser/
+            port: 7474
+          initialDelaySeconds: 1200
+          periodSeconds: 1200
         volumeMounts:
         - mountPath: /data
           name: neodata
         resources:
           requests:
-            memory: 4Gi
+            memory: 10.5G
+          limits:
+            memory: 10.5G
       restartPolicy: Always
       volumes:
       - name: neodata
         persistentVolumeClaim:
           claimName: neodata
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
