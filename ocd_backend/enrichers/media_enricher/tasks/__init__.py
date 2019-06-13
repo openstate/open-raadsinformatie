@@ -95,6 +95,7 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
 
     def enrich_item(self, media_item, content_type, file_object):
         # Make sure file_object is actually on the disk for pdf parsing
+        temporary_file = None
         if isinstance(file_object, cStringIO.OutputType):
             temporary_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
             temporary_file.write(file_object.read())
@@ -112,6 +113,9 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
             # meta.status = u'Unable to download or parse this file'
             # media_item.meta = meta
             pass
+
+        if temporary_file:
+            temporary_file.close()
 
     def process_text(self, text, media_item):
         pass
