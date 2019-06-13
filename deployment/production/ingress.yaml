@@ -4,7 +4,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/default-backend: nginx
+    kubernetes.io/ingress.global-static-ip-name: nl
   name: ingress
   namespace: production
 spec:
@@ -12,57 +14,44 @@ spec:
   - host: api.openraadsinformatie.nl
     http:
       paths:
-      - path: /v1
+      - path: /v1/elastic/(.*)
         backend:
           serviceName: endpoints
           servicePort: 8000
-      - path: /v1/neo4j/*
-        backend:
-          serviceName: neo4j
-          servicePort: 6379
-      - path: /v0
+      - path: /v0/(.*)
         backend:
           serviceName: openstate
           servicePort: 80
   - host: api.openstateninformatie.nl
     http:
       paths:
-      - path: /v1
+      - path: /v1/elastic/(.*)
         backend:
           serviceName: endpoints
           servicePort: 8000
-      - path: /v0
+      - path: /v0/(.*)
         backend:
           serviceName: openstate
           servicePort: 80
   - host: zoek.openraadsinformatie.nl
     http:
       paths:
-      - backend:
+      - path: /(.*)
+        backend:
           serviceName: openstate
           servicePort: 80
   - host: zoek.openstateninformatie.nl
     http:
       paths:
-      - backend:
+      - path: /(.*)
+        backend:
           serviceName: openstate
-          servicePort: 80
-  - host: docs.openraadsinformatie.nl
-    http:
-      paths:
-      - backend:
-          serviceName: openstate
-          servicePort: 80
-  - host: static.openraadsinformatie.nl
-    http:
-      paths:
-      - backend:
-          serviceName: static
           servicePort: 80
   - host: id.openraadsinformatie.nl
     http:
       paths:
-      - backend:
+      - path: /(.*)
+        backend:
           serviceName: api-serve
           servicePort: 80
   tls:
