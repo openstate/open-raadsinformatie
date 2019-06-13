@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: production
+data:
+  redirects.conf: |
+    server {
+        listen 80;
+        server_name api.openraadsinformatie.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
+        server_name docs.openraadsinformatie.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
+        server_name api.openstateninformatie.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
+        server_name docs.openstateninformatie.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }

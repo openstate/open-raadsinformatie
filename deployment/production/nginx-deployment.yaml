@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx:mainline-alpine
+        name: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-conf
+          mountPath: /etc/nginx/conf.d
+      restartPolicy: Always
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
