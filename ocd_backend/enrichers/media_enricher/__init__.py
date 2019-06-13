@@ -78,7 +78,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
                                          item.original_url))
                 continue
 
-            media_file.close()
+        media_file.close()
 
         item.save()
 
