@@ -76,6 +76,11 @@ CELERY_CONFIG = {
             'routing_key': 'loaders',
             'priority': 0,
         },
+        'ocd_backend.pipeline.*': {
+            'queue': 'loaders',
+            'routing_key': 'loaders',
+            'priority': 0,
+        },
     },
     'CELERY_QUEUES': (
         Queue('transformers', transformers_exchange, routing_key='transformers'),
