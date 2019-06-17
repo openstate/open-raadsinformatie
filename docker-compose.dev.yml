@@ -13,3 +13,19 @@ services:
     ports:
       - "7474:7474"
       - "7687:7687"
+  postgres:
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: "dpage/pgadmin4:4"
+    ports:
+      - "8081:80"
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL=noreply@argu.co"
+      - "PGADMIN_DEFAULT_PASSWORD=pgadmin"
+    volumes:
+      - pgadmindata:/var/lib/pgadmin
+
+volumes:
+  pgadmindata:
+    driver: local
