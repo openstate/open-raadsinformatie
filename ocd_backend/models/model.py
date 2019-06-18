@@ -1,19 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import re
-
-from ocd_backend import celery_app
-from ocd_backend.models.database import Neo4jDatabase
+from ocd_backend.models.neo4j_database import Neo4jDatabase
 from ocd_backend.models.definitions import Mapping, Prov, Ori
-from ocd_backend.models.exceptions import MissingProperty, ValidationError, \
-    QueryResultError
-from ocd_backend.models.properties import PropertyBase, Property, \
-    StringProperty, IntegerProperty, Relation
+from ocd_backend.models.exceptions import MissingProperty
+from ocd_backend.models.properties import PropertyBase, Property, StringProperty, Relation
 from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.misc import Namespace, Uri
-from ocd_backend.utils.misc import iterate, doc_type
+from ocd_backend.utils.misc import iterate
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import slugify
+from ocd_backend.models.postgres_database import PostgresDatabase
 
 logger = get_source_logger('model')
 
@@ -46,6 +42,7 @@ class ModelMetaclass(type):
         new_class._definitions = definitions
         new_class.serializer = mcs.serializer_class()
         new_class.db = mcs.database_class(new_class.serializer)
+        new_class.postgres_db = PostgresDatabase()
         return new_class
 
 
@@ -163,16 +160,11 @@ class Model(object):
     def get_ori_identifier(self):
         if not self.values.get('ori_identifier'):
             try:
-                self.ori_identifier = self.db.get_identifier(
-                    self,
-                    had_primary_source=self.had_primary_source,
-                )
+                self.ori_identifier = self.postgres_db.get_ori_identifier(iri=self.had_primary_source)
             except AttributeError:
-                raise
-            except MissingProperty:
-                raise MissingProperty('OriIdentifier is not present, has the '
-                                      'model been saved?')
-        return self.ori_identifier
+                raise AttributeError('Ori Identifier is not present, has the model been saved?')
+        else:
+            return self.ori_identifier
 
     def get_short_identifier(self):
         ori_identifier = self.get_ori_identifier()
@@ -181,7 +173,7 @@ class Model(object):
         return identifier
 
     def generate_ori_identifier(self):
-        self.ori_identifier = Uri(Ori, celery_app.backend.increment("ori_identifier_autoincrement"))
+        self.ori_identifier = self.postgres_db.generate_ori_identifier()
         return self.ori_identifier
 
     def properties(self, props=True, rels=True):
