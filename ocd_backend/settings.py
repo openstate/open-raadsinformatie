@@ -317,6 +317,12 @@ KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
 KAFKA_MESSAGE_KEY = os.getenv('KAFKA_MESSAGE_KEY', 'ori_delta_message')
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
 
+# Postgres settings
+POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost:5432')
+POSTGRES_DATABASE = os.getenv('POSTGRES_DATABASE', 'ori')
+POSTGRES_USERNAME = os.getenv('POSTGRES_USERNAME', 'ori_postgres_user')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
+
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
 # defined per machine.
