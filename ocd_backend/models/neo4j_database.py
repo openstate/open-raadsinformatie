@@ -4,13 +4,13 @@ from string import Formatter
 
 from neo4j import GraphDatabase
 from py2neo import cypher_escape
-from copy import copy
 from lock import Lock
 
 from ocd_backend.models.definitions import Prov, Pav, Mapping
-from ocd_backend.models.exceptions import QueryResultError, QueryEmptyResult, MissingProperty
+from ocd_backend.models.exceptions import QueryResultError, MissingProperty
 from ocd_backend.models.misc import Uri
 from ocd_backend.settings import NEO4J_URL, NEO4J_USER, NEO4J_PASSWORD
+from ocd_backend.models.postgres_database import PostgresDatabase
 
 
 class AQuoteFormatter(Formatter):
@@ -212,27 +212,7 @@ class Neo4jDatabase(object):
                 if model_object.values.get('ori_identifier'):
                     self._merge(model_object)
                 else:
-                    clauses = [
-                        u'MATCH (n :«labels»)',
-                        u'WHERE $had_primary_source IN n.«had_primary_source»',
-                        u'RETURN n.«ori_identifier» AS ori_identifier',
-                    ]
-
-                    cursor = self.session.run(
-                        fmt.format(u'\n'.join(clauses), **params),
-                        had_primary_source=model_object.had_primary_source,
-                    )
-                    result = cursor.data()
-
-                    if len(result) > 1:
-                        # Todo don't fail yet until unique constraints are solved
-                        # raise QueryResultError('The number of results is greater than one!')
-                        pass
-
-                    try:
-                        ori_identifier = result[0]['ori_identifier']
-                    except Exception:
-                        ori_identifier = None
+                    ori_identifier = PostgresDatabase().get_ori_identifier(model_object.values.get('had_primary_source'))
 
                     if ori_identifier:
                         model_object.ori_identifier = ori_identifier

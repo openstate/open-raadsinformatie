@@ -1,8 +1,9 @@
 from .misc import Namespace
 from ocd_backend.utils.misc import str_to_datetime
 
+
 class PropertyBase(object):
-    """The base propery all properties and relations should inherit from."""
+    """The base property all properties and relations should inherit from."""
 
     def __init__(self, ns, name, required=False):
         assert issubclass(ns, Namespace)
