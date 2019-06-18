@@ -4,7 +4,7 @@ import os
 from ocd_backend import celery_app
 from ocd_backend.items.notubiz_meeting import NotubizMeetingItem
 from ocd_backend.models import Meeting
-from ocd_backend.models.database import Neo4jDatabase
+from ocd_backend.models.neo4j_database import Neo4jDatabase
 from ocd_backend.models.serializers import Neo4jSerializer, JsonLDSerializer, JsonSerializer
 from . import ItemTestCase
 

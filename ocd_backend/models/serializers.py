@@ -7,7 +7,7 @@ from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     DateProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
-from ocd_backend.utils.misc import iterate, str_to_datetime, datetime_to_unixstamp
+from ocd_backend.utils.misc import iterate
 
 
 def get_serializer_class(format=None):

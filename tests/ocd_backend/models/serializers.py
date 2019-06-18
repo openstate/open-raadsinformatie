@@ -3,7 +3,7 @@ from ocd_backend.models.serializers import Neo4jSerializer, RdfSerializer
 from ocd_backend.models import Organization
 from ocd_backend.models.misc import Uri
 from ocd_backend.models.definitions import Mapping
-from ocd_backend.models.database import Neo4jDatabase
+from ocd_backend.models.neo4j_database import Neo4jDatabase
 from ocd_backend.models.model import Model
 from ocd_backend.models.exceptions import MissingProperty
 
