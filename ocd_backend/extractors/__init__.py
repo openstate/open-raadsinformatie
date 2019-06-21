@@ -44,7 +44,7 @@ class BaseExtractor(object):
         """
         months = 1  # Max 1 months intervals by default
         if 'months_interval' in self.source_definition:
-            months = self.source_definition['months_interval']
+            months = int(self.source_definition['months_interval'])
 
         if (months / 2.0) < 1.0:
             days = (months / 2.0) * 30
