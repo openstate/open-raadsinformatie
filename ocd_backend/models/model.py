@@ -161,7 +161,7 @@ class Model(object):
         if not self.values.get('ori_identifier'):
             try:
                 self.ori_identifier = self.postgres_db.get_ori_identifier(iri=self.had_primary_source)
-            except AttributeError:
+            except:
                 raise AttributeError('Ori Identifier is not present, has the model been saved?')
         else:
             return self.ori_identifier
@@ -172,8 +172,8 @@ class Model(object):
         assert len(identifier) > 0
         return identifier
 
-    def generate_ori_identifier(self):
-        self.ori_identifier = self.postgres_db.generate_ori_identifier()
+    def generate_ori_identifier(self, iri):
+        self.ori_identifier = self.postgres_db.generate_ori_identifier(iri=iri)
         return self.ori_identifier
 
     def properties(self, props=True, rels=True):
