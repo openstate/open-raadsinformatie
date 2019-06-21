@@ -8,7 +8,7 @@ _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
   transformer: ocd_backend.transformers.transformer
   loaders:
-    - ocd_backend.loaders.elasticsearch.elasticsearch_loader
+    - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
