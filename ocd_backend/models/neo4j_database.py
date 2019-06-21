@@ -184,7 +184,7 @@ class Neo4jDatabase(object):
                         )
 
                     elif len(result) < 1:
-                        model_object.generate_ori_identifier()
+                        model_object.generate_ori_identifier(iri=None)
                         props = self.serializer.deflate(model_object, props=True, rels=False)
 
                         clauses = [
@@ -225,7 +225,7 @@ class Neo4jDatabase(object):
 
     def _create_node(self, model_object):
         if not model_object.values.get('ori_identifier'):
-            model_object.generate_ori_identifier()
+            model_object.generate_ori_identifier(model_object.values.get('had_primary_source'))
 
         labels = self.serializer.label(model_object)
         props = self.serializer.deflate(model_object, props=True, rels=False)
@@ -250,7 +250,7 @@ class Neo4jDatabase(object):
 
     def _create_blank_node(self, model_object):
         if not model_object.values.get('ori_identifier'):
-            model_object.generate_ori_identifier()
+            model_object.generate_ori_identifier(model_object.values.get('had_primary_source'))
 
         labels = self.serializer.label(model_object)
         props = self.serializer.deflate(model_object, props=True, rels=False)
