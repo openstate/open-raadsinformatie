@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Sequence, Integer, String, ForeignKey
+from sqlalchemy import Column, Sequence, Integer, String, Text, ForeignKey, Boolean, DateTime, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+
+from sqlalchemy_utils.types import UUIDType
 
 
 Base = declarative_base()
@@ -24,3 +26,20 @@ class Resource(Base):
     source_iri_id = Column(Integer, ForeignKey("source.id"), nullable=False)
 
     source = relationship("Source", back_populates="resources")
+    properties = relationship("Property", back_populates="resource")
+
+
+class Property(Base):
+    __tablename__ = 'property'
+
+    id = Column(UUIDType(), primary_key=True)
+    resource_id = Column(Integer, ForeignKey("resource.id"), nullable=False)
+    predicate = Column(String, nullable=False)
+    prop_resource = Column(Integer, ForeignKey("resource.id"), nullable=True)
+    prop_bool = Column(Boolean, nullable=True)
+    prop_string = Column(String, nullable=True)
+    prop_text = Column(Text, nullable=True)
+    prop_datetime = Column(DateTime, nullable=True)
+    prop_integer = Column(BigInteger, nullable=True)
+
+    resource = relationship("Resource", back_populates="properties")
