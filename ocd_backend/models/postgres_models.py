@@ -1,18 +1,6 @@
-from sqlalchemy import create_engine, Column, Sequence, Integer, String, ForeignKey
+from sqlalchemy import Column, Sequence, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-from ocd_backend import settings
-
-
-connection_string = 'postgresql://%s:%s@%s/%s' % (
-    settings.POSTGRES_USERNAME,
-    settings.POSTGRES_PASSWORD,
-    settings.POSTGRES_HOST,
-    settings.POSTGRES_DATABASE)
-
-
-engine = create_engine(connection_string)
 
 
 Base = declarative_base()
@@ -36,6 +24,3 @@ class Resource(Base):
     source_iri_id = Column(Integer, ForeignKey("source.id"), nullable=False)
 
     source = relationship("Source", back_populates="resources")
-
-
-Base.metadata.create_all(engine)
