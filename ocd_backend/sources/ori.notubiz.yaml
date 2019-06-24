@@ -148,13 +148,13 @@ ori.notubiz:
 
   zaanstad:
     key: zaanstad
-    allmanak_id:
+    allmanak_id: 27115
     notubiz_organization_id: 801
     <<: *notubiz
 
   waalwijk:
     key: waalwijk
-    allmanak_id: 27115
+    allmanak_id: 29448
     notubiz_organization_id: 1429
     <<: *notubiz
 
