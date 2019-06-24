@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import exists
 
 from ocd_backend import settings
 from ocd_backend.models.postgres_models import Source, Resource
