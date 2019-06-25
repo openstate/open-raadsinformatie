@@ -15,7 +15,6 @@ class NotubizMeetingItem(BaseItem):
 
         event = Meeting(self.original_item['id'], **source_defaults)
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.has_organization_name.merge(collection=self.source_definition['key'])
 
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
@@ -25,16 +24,13 @@ class NotubizMeetingItem(BaseItem):
 
         # Attach the meeting to the municipality node
         event.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.organization.merge(collection=self.source_definition['key'])
 
         # Attach the meeting to the committee node
         event.committee = Organization(self.original_item['gremium']['id'], **source_defaults)
         event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
         # Re-attach the committee node to the municipality node
         event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.committee.subOrganizationOf.merge(collection=self.source_definition['index_name'])
 
         event.agenda = []
         for item in self.original_item.get('agenda_items', []):
@@ -47,7 +43,6 @@ class NotubizMeetingItem(BaseItem):
 
             agendaitem = AgendaItem(item['id'], **source_defaults)
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
 
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
             agendaitem.description = item['type_data']['attributes'][0]['value']
@@ -60,7 +55,6 @@ class NotubizMeetingItem(BaseItem):
             for doc in item.get('documents', []):
                 attachment = MediaObject(doc['id'], **source_defaults)
                 attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-                attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
                 attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
                 attachment.original_url = doc['url']
@@ -87,7 +81,6 @@ class NotubizMeetingItem(BaseItem):
         for doc in self.original_item.get('documents', []):
             attachment = MediaObject(doc['id'], **source_defaults)
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
