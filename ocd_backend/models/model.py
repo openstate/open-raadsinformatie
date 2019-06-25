@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from ocd_backend.models.neo4j_database import Neo4jDatabase
 from ocd_backend.models.definitions import Mapping, Prov, Ori
 from ocd_backend.models.exceptions import MissingProperty
 from ocd_backend.models.properties import PropertyBase, Property, StringProperty, Relation
-from ocd_backend.models.serializers import Neo4jSerializer
+from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.models.misc import Namespace, Uri
 from ocd_backend.utils.misc import iterate
 from ocd_backend.log import get_source_logger
@@ -15,8 +14,8 @@ logger = get_source_logger('model')
 
 
 class ModelMetaclass(type):
-    database_class = Neo4jDatabase
-    serializer_class = Neo4jSerializer
+    database_class = PostgresDatabase
+    serializer_class = PostgresSerializer
 
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
@@ -42,7 +41,6 @@ class ModelMetaclass(type):
         new_class._definitions = definitions
         new_class.serializer = mcs.serializer_class()
         new_class.db = mcs.database_class(new_class.serializer)
-        new_class.postgres_db = PostgresDatabase()
         return new_class
 
 
@@ -160,7 +158,7 @@ class Model(object):
     def get_ori_identifier(self):
         if not self.values.get('ori_identifier'):
             try:
-                self.ori_identifier = self.postgres_db.get_ori_identifier(iri=self.had_primary_source)
+                self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
             except:
                 raise AttributeError('Ori Identifier is not present, has the model been saved?')
         else:
@@ -171,10 +169,6 @@ class Model(object):
         _, _, identifier = ori_identifier.partition(Ori.uri)
         assert len(identifier) > 0
         return identifier
-
-    def generate_ori_identifier(self, iri):
-        self.ori_identifier = self.postgres_db.generate_ori_identifier(iri=iri)
-        return self.ori_identifier
 
     def properties(self, props=True, rels=True):
         """ Returns namespaced properties with their inflated values """
@@ -215,39 +209,16 @@ class Model(object):
         self.saving_flag = True
 
         try:
-            self.db.replace(self)  # pylint: disable=no-member
-
-            # Recursive save
+            self.db.save(self)  # pylint: disable=no-member
+            # Recursive saving of related models
             for rel_type, value in self.properties(rels=True, props=False):
                 if isinstance(value, Model):
-                    # Todo don't do parent setting for now, until first needed
-                    # Self-reference via parent attribute if not done explicitly
-                    # if 'parent' not in value:
-                    #     value.parent = self
                     value.save()
-
-                # End the recursive loop when self-referencing
-                if self != value:
-                    self.db.attach(self, value, rel_type)
         except:
             # Re-raise everything
             raise
         finally:
             self.saving_flag = False
-
-    def merge(self, **kwargs):
-        """Takes one keyword-argument to filter, and set an ori_identifier.
-
-        Use this method to try and merge the current node with an existing node
-        by ori_identifier.
-
-        For example:
-        `organization.connect(name='some_name')`
-        """
-        try:
-            self.ori_identifier = self.db.get_identifier(self, **kwargs)
-        except MissingProperty, e:
-            logger.warning("Could not connect nodes. %s", e)
 
 
 class Individual(Model):

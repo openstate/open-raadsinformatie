@@ -55,7 +55,7 @@ class BaseSerializer(object):
         return self.uri_format(model_object)
 
     def deflate(self, model_object, props, rels):
-        """Returns a recurive serialized value for each model definition."""
+        """Returns a recursive serialized value for each model definition."""
         props_list = dict()
         for name, definition in model_object.definitions(props=props, rels=rels):
             value = model_object.values.get(name, None)
@@ -106,16 +106,15 @@ class BaseSerializer(object):
             )
 
 
-class Neo4jSerializer(BaseSerializer):
-    """The `Neo4jSerializer` is just a basic subclass of the `BaseSerializer`.
+class PostgresSerializer(BaseSerializer):
+    """The `PostgresSerializer` is just a basic subclass of the `BaseSerializer`.
 
     This serializer is used to turn the models in full URI properties that can
-    be inserted in Neo4j.
+    be inserted in Postgres.
     """
 
     def __init__(self):
-        """Currently all properties in the Neo4j are fully qualified."""
-        super(Neo4jSerializer, self).__init__('absolute')
+        super(PostgresSerializer, self).__init__('absolute')
 
     def serialize(self, model_object=None):
         """No high-level serialize method available, use `deflate` instead."""
@@ -129,7 +128,7 @@ class RdfSerializer(BaseSerializer):
     formats that rdflib supports."""
 
     def __init__(self):
-        """Set all properties in the Neo4j to be fully qualified."""
+        """Set all properties to be fully qualified."""
         self.g = Graph()
         super(RdfSerializer, self).__init__('absolute')
 
@@ -147,8 +146,7 @@ class RdfSerializer(BaseSerializer):
             override=False
         )
 
-        s = URIRef('{}{}'.format(Ori.uri,
-                                 model_object.get_ori_identifier()))
+        s = URIRef('{}{}'.format(Ori.uri, model_object.get_ori_identifier()))
         p = URIRef('{}type'.format(Rdf.uri))
         o = URIRef(self.uri_format(model_object))
         self.g.add((s, p, o,))

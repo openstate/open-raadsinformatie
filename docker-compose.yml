@@ -13,8 +13,6 @@ services:
     volumes:
       - oridata:/opt/ori/data
     depends_on:
-      neo4j:
-        condition: service_started
       elastic:
         condition: service_healthy
       postgres:
@@ -69,13 +67,6 @@ services:
       - node.max_local_storage_nodes=20
       - bootstrap.memory_lock=false
       - reindex.remote.whitelist=c-open-raadsinformatie:9200
-  neo4j:
-    image: "neo4j:${NEO4J_VERSION}"
-    volumes:
-      - neodata:/data
-    environment:
-      - "NEO4J_AUTH=neo4j/development"
-      - "NEO4J_dbms_memory_heap_maxSize=1g"
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
     volumes:
@@ -87,8 +78,6 @@ volumes:
   redisdata:
     driver: local
   oridata:
-    driver: local
-  neodata:
     driver: local
   pgdata:
     driver: local

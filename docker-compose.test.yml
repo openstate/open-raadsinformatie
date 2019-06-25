@@ -5,9 +5,6 @@ services:
       context: .
       dockerfile: ocd_backend/Dockerfile.test
     image: "openstatefoundation/open-raadsinformatie-backend:${BRANCH_NAME-latest}-test"
-  neo4j:
-    environment:
-      - "NEO4J_dbms_active__database=test.db"
   bootstrap:
     image: appropriate/curl
     volumes:
