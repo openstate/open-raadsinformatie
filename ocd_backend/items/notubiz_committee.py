@@ -12,7 +12,6 @@ class CommitteeItem(BaseItem):
 
         committee = Organization(self.original_item['id'], **source_defaults)
         committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], *source_defaults)
-        committee.has_organization_name.merge(collection=self.source_definition['key'])
 
         committee.name = self.original_item['title']
         if self.original_item['title'] == 'Gemeenteraad':
@@ -22,6 +21,5 @@ class CommitteeItem(BaseItem):
 
         # Attach the committee node to the municipality node
         committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return committee

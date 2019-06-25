@@ -36,7 +36,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
         event = Meeting(self.original_item[u'id'], **source_defaults)
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.has_organization_name.merge(collection=self.source_definition['key'])
 
         # dates in v1 have a time in them and in v2 they don't
         if ':' in self.original_item['date']:
@@ -67,16 +66,13 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
         # Attach the meeting to the municipality node
         event.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.organization.merge(collection=self.source_definition['key'])
 
         # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
         # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
         event.committee = Organization(self.original_item[u'dmu'][u'id'], **source_defaults)
         event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
         event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
@@ -98,7 +94,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
             agendaitem = AgendaItem(item['id'], **source_defaults)
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
 
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['sortorder']}
             agendaitem.description = item['description']
@@ -113,7 +108,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
             ):
                 attachment = MediaObject(doc['url'], **source_defaults)
                 attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-                attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
                 attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
                 attachment.original_url = doc['url']
@@ -129,7 +123,6 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         ):
             attachment = MediaObject(doc['url'], **source_defaults)
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
