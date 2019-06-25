@@ -9,10 +9,6 @@ services:
   elastic:
     ports:
       - "9200:9200"
-  neo4j:
-    ports:
-      - "7474:7474"
-      - "7687:7687"
   postgres:
     ports:
       - "5432:5432"

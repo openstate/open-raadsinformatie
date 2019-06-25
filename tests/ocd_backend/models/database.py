@@ -1,6 +1,4 @@
 from unittest import TestCase
-from ocd_backend.models.neo4j_database import Neo4jDatabase
-from ocd_backend.models.serializers import Neo4jSerializer
 from ocd_backend.models.model import Model
 from ocd_backend.models import Organization
 from ocd_backend.models.misc import Uri
