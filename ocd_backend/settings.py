@@ -191,11 +191,6 @@ LOGGING = {
             'propagate': False,
             # 'filters': ['set_debug']
         },
-        'neo4j.bolt': {
-            'handlers': ['default'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
         'httpstream': {
             'handlers': ['default'],
             'level': 'WARNING',
@@ -271,12 +266,6 @@ logging.config.dictConfig(LOGGING)
 
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic')
 ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
-
-NEO4J_URL = os.getenv('NEO4J_URL', 'bolt://neo4j:7687')
-try:
-    NEO4J_USER, NEO4J_PASSWORD = os.getenv('NEO4J_AUTH', 'neo4j/development').split('/')
-except (ValueError, AttributeError):
-    NEO4J_USER, NEO4J_PASSWORD = None, None
 
 # The path of the directory used to store static files
 DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')

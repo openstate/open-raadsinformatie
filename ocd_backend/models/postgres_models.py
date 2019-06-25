@@ -26,7 +26,7 @@ class Resource(Base):
     source_iri_id = Column(Integer, ForeignKey("source.id"), nullable=False)
 
     source = relationship("Source", back_populates="resources")
-    properties = relationship("Property", back_populates="resource")
+    properties = relationship("Property", back_populates="resource", foreign_keys="Property.resource_id")
 
 
 class Property(Base):
@@ -42,4 +42,4 @@ class Property(Base):
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
 
-    resource = relationship("Resource", back_populates="properties")
+    resource = relationship("Resource", back_populates="properties", foreign_keys=resource_id)
