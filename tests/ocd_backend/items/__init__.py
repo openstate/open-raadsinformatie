@@ -23,7 +23,7 @@ class ItemTestCase(TestCase):
 
 # Import test modules here so the noserunner can pick them up, and the
 # ExtractorTestCase is parsed. Add additional testcases when required
-#from .localdump import LocalDumpItemTestCase
-#from .go_meeting import MeetingItemTestCase
-from .notubiz_meeting import NotubizMeetingTestCase
-#from .go_report import ReportItemTestCase
+# from .localdump import LocalDumpItemTestCase
+# from .go_meeting import MeetingItemTestCase
+# from .notubiz_meeting import NotubizMeetingTestCase
+# from .go_report import ReportItemTestCase
