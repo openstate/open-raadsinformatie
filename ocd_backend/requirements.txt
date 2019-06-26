@@ -12,7 +12,7 @@ lxml==4.3.3
 msgpack-python==0.4.2
 -e git+https://github.com/izderadicka/pdfparser#egg=pdfparser
 Pillow==5.2.0
-psycopg2-binary==2.8.3
+psycopg2==2.8.3
 PyLD==1.0.5
 python-dateutil==2.7.3
 python-json-logger==0.1.8
