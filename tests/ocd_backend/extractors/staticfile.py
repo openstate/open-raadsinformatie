@@ -2,9 +2,7 @@ import gzip
 import json
 
 from ocd_backend.exceptions import ConfigurationError
-from ocd_backend.extractors.staticfile import (
-    StaticJSONDumpExtractor, StaticJSONExtractor
-)
+from ocd_backend.extractors.staticfile import StaticJSONDumpExtractor, StaticJSONExtractor
 from . import ExtractorTestCase
 
 
