@@ -12,6 +12,7 @@ RUN apk add --update \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic \
   && apk add librdkafka-dev --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
+  && apk add postgresql-dev gcc python3-dev musl-dev \
   && pip install --upgrade pip \
   && pip install cython \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
