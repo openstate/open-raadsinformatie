@@ -1,4 +1,5 @@
 import uuid
+import datetime
 
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
@@ -92,11 +93,24 @@ class PostgresDatabase(object):
             for predicate, value in serialized_properties.iteritems():
                 # TODO
                 self.map_column_type(value)
-                resource.properties.append(Property(id=uuid.uuid4(), predicate=predicate, prop_string=value))
+                property = (Property(id=uuid.uuid4(), predicate=predicate))
+                setattr(property, self.map_column_type(value), value)
+                resource.properties.append(property)
             session.commit()
 
             session.close()
 
     @staticmethod
     def map_column_type(value):
-        pass
+        if isinstance(value, bool):
+            return 'prop_boolean'
+        elif isinstance(value, int):
+            return 'prop_integer'
+        elif isinstance(value, float):
+            return 'prop_float'
+        elif isinstance(value, (datetime.date, datetime.datetime)):
+            return 'prop_datetime'
+        elif isinstance(value, (str, unicode)):
+            return 'prop_string'
+        else:
+            raise ValueError('Unable to map property value of type %s to a column.' % type(value))

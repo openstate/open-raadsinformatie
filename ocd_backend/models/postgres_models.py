@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, Integer, String, Text, ForeignKey, Boolean, DateTime, BigInteger
+from sqlalchemy import Column, Sequence, Integer, String, Float, ForeignKey, Boolean, DateTime, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -35,10 +35,9 @@ class Property(Base):
     id = Column(UUIDType(), primary_key=True)
     resource_id = Column(Integer, ForeignKey("resource.id"), nullable=False)
     predicate = Column(String, nullable=False)
-    prop_resource = Column(Integer, ForeignKey("resource.id"), nullable=True)
     prop_bool = Column(Boolean, nullable=True)
     prop_string = Column(String, nullable=True)
-    prop_text = Column(Text, nullable=True)
+    prop_float = Column(Float, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
 
