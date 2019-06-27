@@ -25,5 +25,6 @@ class PostgresDatabaseTestCase(TestCase):
         for value in values:
             self.assertEqual(function(value), 'prop_datetime')
 
-        value = "Testing with a text string"
-        self.assertEqual(function(value), 'prop_string')
+        values = (str("Test string"), unicode("Test unicode string"), [1, 3, 5])
+        for value in values:
+            self.assertEqual(function(value), 'prop_string')
