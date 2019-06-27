@@ -10,6 +10,7 @@ iso8601==0.1.10
 lxml==4.3.3
 msgpack-python==0.4.2
 neo4j==1.7.4
+nose2==0.9.1
 -e git+https://github.com/izderadicka/pdfparser#egg=pdfparser
 Pillow==5.2.0
 py2neo==4.0.0
