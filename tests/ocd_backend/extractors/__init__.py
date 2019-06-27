@@ -168,6 +168,6 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
 
 # Import test modules here so the noserunner can pick them up, and the
 # ExtractorTestCase is parsed. Add additional testcases when required
-from .test_staticfile import (
+from .staticfile import (
     StaticfileExtractorTestCase, StaticJSONExtractorTestCase
 )
