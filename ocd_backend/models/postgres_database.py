@@ -110,7 +110,7 @@ class PostgresDatabase(object):
             return 'prop_float'
         elif isinstance(value, (datetime.date, datetime.datetime)):
             return 'prop_datetime'
-        elif isinstance(value, (str, unicode)):
+        elif isinstance(value, (str, unicode, list)):
             return 'prop_string'
         else:
             raise ValueError('Unable to map property value of type %s to a column.' % type(value))
