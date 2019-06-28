@@ -1,11 +1,11 @@
 import os.path
+from unittest import TestCase
 
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.transformers import transformer
-from . import TransformerTestCase
 
 
-class BaseTransformerTestCase(TransformerTestCase):
+class BaseTransformerTestCase(TestCase):
     def setUp(self):
         super(BaseTransformerTestCase, self).setUp()
         self.PWD = os.path.dirname(__file__)

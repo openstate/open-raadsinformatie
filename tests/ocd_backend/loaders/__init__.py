@@ -15,8 +15,3 @@ class LoaderTestCase(TestCase):
             'dump_path': dump_path,
             'index_name': 'openbeelden'
         }
-
-
-# Import test modules here so the noserunner can pick them up, and the
-# ExtractorTestCase is parsed. Add additional testcases when required
-from .es_loader import ESLoaderTestCase
