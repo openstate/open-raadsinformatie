@@ -1,3 +1,4 @@
 #!/bin/sh
 
-nose2 -v -t ../ -s ../tests
+cd /opt/ori
+nose2 -v -s tests
