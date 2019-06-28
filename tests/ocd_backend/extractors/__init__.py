@@ -164,10 +164,3 @@ class HTTPCachingMixinTestCase(ExtractorTestCase):
 
         with self.assertRaises(InvalidFile):
             self.mixin._check_path(self.test_cache_path + "ab/ab/small_file")
-
-
-# Import test modules here so the noserunner can pick them up, and the
-# ExtractorTestCase is parsed. Add additional testcases when required
-from .staticfile import (
-    StaticfileExtractorTestCase, StaticJSONExtractorTestCase
-)
