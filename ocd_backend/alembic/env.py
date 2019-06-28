@@ -8,7 +8,7 @@ from sqlalchemy import pool
 from alembic import context
 
 # This needs to be added to allow the Alembic CLI to find the ocd_backend modules
-parent_dir = os.path.abspath(os.path.join(os.getcwd(), ".."))
+parent_dir = os.path.abspath(os.path.join(os.getcwd(), "../.."))
 sys.path.append(parent_dir)
 
 from ocd_backend.settings import POSTGRES_USERNAME, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DATABASE

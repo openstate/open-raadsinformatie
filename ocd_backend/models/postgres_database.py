@@ -37,9 +37,6 @@ class PostgresDatabase(object):
             raise MultipleResultsFound('Multiple resources found for IRI %s' % iri)
         except NoResultFound:
             return self.generate_ori_identifier(iri=iri)
-        except:
-            session.rollback()
-            raise
         finally:
             session.close()
 
@@ -55,16 +52,13 @@ class PostgresDatabase(object):
         try:
             # If the source already exists, create the resource as a child of the source
             source = session.query(Source).filter(Source.iri == iri).one()
-            source.resources.append(Resource(id=new_id, ori_id=new_id, iri=iri))
+            source.resources.append(Resource(ori_id=new_id, iri=new_identifier))
             session.flush()
         except NoResultFound:
             # If the source does not exist, create source and resource together
-            source = Source(iri=iri, resources=[Resource(id=new_id, ori_id=new_id, iri=iri)])
+            source = Source(iri=iri, resources=[Resource(ori_id=new_id, iri=new_identifier)])
             session.add(source)
             session.commit()
-        except:
-            session.rollback()
-            raise
 
         session.close()
         return new_identifier
@@ -79,7 +73,7 @@ class PostgresDatabase(object):
             if not model_object.values.get('ori_identifier'):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.values.get('had_primary_source'))
 
-            serialized_properties = self.serializer.deflate(model_object, props=True, rels=False)
+            serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
             session = self.Session()
             resource = session.query(Resource).filter(Resource.ori_id == model_object.ori_identifier.partition(Ori.uri)[2]).one()
@@ -91,7 +85,6 @@ class PostgresDatabase(object):
 
             # Save new properties
             for predicate, value in serialized_properties.iteritems():
-                # TODO
                 self.map_column_type(value)
                 property = (Property(id=uuid.uuid4(), predicate=predicate))
                 setattr(property, self.map_column_type(value), value)

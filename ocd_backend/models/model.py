@@ -159,6 +159,7 @@ class Model(object):
         if not self.values.get('ori_identifier'):
             try:
                 self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
+                return self.ori_identifier
             except:
                 raise AttributeError('Ori Identifier is not present, has the model been saved?')
         else:
