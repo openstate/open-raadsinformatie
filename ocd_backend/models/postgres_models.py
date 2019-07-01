@@ -13,8 +13,9 @@ class Source(Base):
 
     id = Column(Integer, Sequence('source_id_seq'), primary_key=True)
     iri = Column(String, unique=True)
+    resource_ori_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
 
-    resources = relationship("Resource", back_populates="source")
+    resource = relationship("Resource", back_populates="sources")
 
 
 class Resource(Base):
@@ -22,9 +23,8 @@ class Resource(Base):
 
     ori_id = Column(Integer, Sequence('ori_id_seq'), primary_key=True)
     iri = Column(String)
-    source_iri_id = Column(Integer, ForeignKey("source.id"), nullable=False)
 
-    source = relationship("Source", back_populates="resources")
+    sources = relationship("Source", back_populates="resource")
     properties = relationship("Property", back_populates="resource", foreign_keys="Property.resource_id")
 
 
