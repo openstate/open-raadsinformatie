@@ -31,7 +31,7 @@ class PostgresDatabase(object):
 
         session = self.Session()
         try:
-            resource = session.query(Resource).filter(Resource.iri == iri).one()
+            resource = session.query(Resource).join(Source).filter(Source.iri == iri).one()
             return Uri(Ori, resource.ori_id)
         except MultipleResultsFound:
             raise MultipleResultsFound('Multiple resources found for IRI %s' % iri)
@@ -50,17 +50,18 @@ class PostgresDatabase(object):
         new_identifier = Uri(Ori, new_id)
 
         try:
-            # If the source already exists, create the resource as a child of the source
-            source = session.query(Source).filter(Source.iri == iri).one()
-            source.resources.append(Resource(ori_id=new_id, iri=new_identifier))
+            # If the resource already exists, create the source as a child of the resource
+            resource = session.query(Source).filter(Source.iri == iri).one().resource
+            resource.sources.append(Source(iri=iri))
             session.flush()
         except NoResultFound:
-            # If the source does not exist, create source and resource together
-            source = Source(iri=iri, resources=[Resource(ori_id=new_id, iri=new_identifier)])
-            session.add(source)
+            # If the resource does not exist, create resource and source together
+            resource = Resource(ori_id=new_id, iri=new_identifier, sources=[Source(iri=iri)])
+            session.add(resource)
             session.commit()
+        finally:
+            session.close()
 
-        session.close()
         return new_identifier
 
     def save(self, model_object):
@@ -80,15 +81,17 @@ class PostgresDatabase(object):
 
             # Delete properties that are about to be updated
             predicates = [predicate for predicate, _ in serialized_properties.iteritems()]
-            session.query(Property).filter(Property.resource_id==resource.id, Property.predicate.in_(predicates)).delete(synchronize_session='fetch')
+            session.query(Property).filter(Property.resource_id==resource.ori_id,
+                                           Property.predicate.in_(predicates)
+                                           ).delete(synchronize_session='fetch')
             session.commit()
 
             # Save new properties
             for predicate, value in serialized_properties.iteritems():
                 self.map_column_type(value)
-                property = (Property(id=uuid.uuid4(), predicate=predicate))
-                setattr(property, self.map_column_type(value), value)
-                resource.properties.append(property)
+                new_property = (Property(id=uuid.uuid4(), predicate=predicate))
+                setattr(new_property, self.map_column_type(value), value)
+                resource.properties.append(new_property)
             session.commit()
 
             session.close()
