@@ -58,7 +58,8 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
         committee_count = 0
         total, static_json = self._request('dmus')
         for dmu in static_json:
-            yield 'application/json', json.dumps(dmu)
+            dmu['entity'] = urljoin(self.base_url, 'dmus')
+            yield 'application/json', json.dumps(dmu), dmu
             committee_count += 1
 
         log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['sitename'], committee_count))
@@ -86,7 +87,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             total, static_json = self._request(url)
 
             for meeting in static_json:
-                yield 'application/json', json.dumps(meeting)
+                meeting['entity'] = urljoin(self.base_url, 'meetings/%s' % meeting['id'])
+                yield 'application/json', json.dumps(meeting), meeting
                 meeting_count += 1
 
             log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
@@ -138,7 +140,10 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
                     end_date.isoformat()))
 
             for doc in docs:
-                yield 'application/json', json.dumps(doc)
+                api_version = self.source_definition.get('api_version', 'v1')
+                base_url = '%s/%s' % (self.source_definition['base_url'], api_version,)
+                doc['entity'] = u'%s/documents/%i' % (base_url, doc[u'id'],)
+                yield 'application/json', json.dumps(doc), doc
                 meeting_count += 1
 
             log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))

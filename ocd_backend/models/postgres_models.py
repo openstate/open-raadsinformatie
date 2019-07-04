@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, Integer, String, Float, ForeignKey, Boolean, DateTime, BigInteger
+from sqlalchemy import Column, Sequence, Integer, String, Float, ForeignKey, Boolean, DateTime, BigInteger, func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -14,6 +14,11 @@ class Source(Base):
     id = Column(Integer, Sequence('source_id_seq'), primary_key=True)
     iri = Column(String, unique=True)
     resource_ori_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
+    type = Column(String)
+    entity = Column(String)
+    used_file = Column(String)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now())
 
     resource = relationship("Resource", back_populates="sources")
 

@@ -75,6 +75,7 @@ _cwc: &cwc
     cwc_paging: false
 
 _ibabs: &ibabs
+  source_type: "SOAP"
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"

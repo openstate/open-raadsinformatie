@@ -48,7 +48,8 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
                 self.source_definition['sitename'])
                       )
         else:
-            yield 'application/json', json.dumps(static_json[0])
+            static_json[0]['entity'] = path
+            yield 'application/json', json.dumps(static_json[0]), static_json
             log.info("[%s] Extracted 1 Allmanak municipality." % self.source_definition['sitename'])
 
 
@@ -68,7 +69,8 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
                 self.source_definition['sitename'])
                       )
         else:
-            yield 'application/json', json.dumps(static_json[0])
+            static_json[0]['entity'] = path
+            yield 'application/json', json.dumps(static_json[0]), static_json
             log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['sitename'])
 
 
@@ -85,7 +87,8 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
         if static_json[0]['zetels']:
             total_parties = 0
             for party in static_json[0]['zetels']:
-                yield 'application/json', json.dumps(party)
+                party['entity'] = path
+                yield 'application/json', json.dumps(party), static_json
                 total_parties += 1
             log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['sitename'], total_parties))
         else:
@@ -107,7 +110,8 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
         if static_json[0]['functies']:
             total_persons = 0
             for person in static_json[0]['functies'][4]['functie']['medewerkers']:
-                yield 'application/json', json.dumps(person['persoon'])
+                person['persoon']['entity'] = path
+                yield 'application/json', json.dumps(person['persoon']), static_json
                 total_persons += 1
             log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['sitename'], total_persons))
         else:

@@ -66,6 +66,7 @@ _entities: &entities
         - file_to_text
 
 _gv: &gv
+  source_type: "HTTP"
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
