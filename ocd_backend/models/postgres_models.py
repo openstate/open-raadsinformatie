@@ -12,7 +12,7 @@ class Source(Base):
     __tablename__ = 'source'
 
     id = Column(Integer, Sequence('source_id_seq'), primary_key=True)
-    iri = Column(String, unique=True)
+    iri = Column(String)
     resource_ori_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
     type = Column(String)
     entity = Column(String)
