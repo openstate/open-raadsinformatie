@@ -15,6 +15,7 @@ class NotubizMeetingItem(BaseItem):
 
         event = Meeting(self.original_item['id'], **source_defaults)
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        # TODO: Merge
 
         event.start_date = self.original_item['plannings'][0]['start_date']
         event.end_date = self.original_item['plannings'][0]['end_date']
@@ -45,7 +46,13 @@ class NotubizMeetingItem(BaseItem):
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
 
             agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
-            agendaitem.description = item['type_data']['attributes'][0]['value']
+            try:
+                agendaitem.description = item['type_data']['attributes'][0]['value']
+            except KeyError:
+                try:
+                    agendaitem.description = item['type_data']['attributes'][1]['value']
+                except KeyError:
+                    pass
             agendaitem.name = self.original_item['attributes']['Titel']
             agendaitem.position = self.original_item['order']
             agendaitem.parent = event
