@@ -3,7 +3,7 @@ from ocd_backend.models import *
 
 
 class IbabsPersonItem(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'ibabs',
             'source_id_key': 'identifier',

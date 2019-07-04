@@ -33,7 +33,7 @@
 #     def get_original_object_urls(self):
 #         return {"html": unicode(self.original_item['Webcast']['RegisterUrl']).strip()}
 #
-#     def get_object_model(self):
+#     def transform(self):
 #         object_model = {}
 #         council = self._get_council()
 #         committees = self._get_committees()

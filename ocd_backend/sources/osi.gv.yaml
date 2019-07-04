@@ -10,7 +10,7 @@ _entity_defaults: &entity_defaults
   transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
-    - ocd_backend.loaders.delta.delta_loader
+    # - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities
@@ -66,7 +66,7 @@ _entities: &entities
         - file_to_text
 
 _gv: &gv
-  source_type: "HTTP"
+  source_type: "GVCMSProxy"
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
