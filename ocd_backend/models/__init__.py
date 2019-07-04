@@ -6,7 +6,6 @@ By mapping these names definitions can be remapped if needed later on.
 import definitions.foaf
 import definitions.mapping
 import definitions.meeting
-import definitions.meta
 import definitions.ncal
 import definitions.opengov
 import definitions.org
@@ -62,7 +61,3 @@ Organization = definitions.org.Organization
 # TopLevelOrganization is an alias for Organization
 TopLevelOrganization = definitions.org.Organization
 Membership = definitions.org.Membership
-
-# https://argu.co/ns/meta#
-Metadata = definitions.meta.Metadata
-Run = definitions.meta.Run

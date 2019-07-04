@@ -4,7 +4,7 @@ from ocd_backend.models import Motion, Organization, VoteEvent, ResultPass,\
 
 
 class PartijgedragMotion(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'partijgedrag',
             'source_id_key': 'identifier',

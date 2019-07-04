@@ -28,7 +28,7 @@ class GemeenteOplossingenDocumentItem(BaseItem):
                 'note': document[u'filename']})
         return output
 
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'gemeenteoplossingen',
             'source_id_key': 'identifier',
