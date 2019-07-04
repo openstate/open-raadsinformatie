@@ -1,30 +1,32 @@
 import json
 
 from lxml import etree
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from ocd_backend import celery_app
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.mixins import OCDBackendTaskFailureMixin
 from ocd_backend.utils.misc import load_object
+from ocd_backend.models.postgres_models import Source
+from ocd_backend import settings
 
 
 class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
 
-    def start(self, *args, **kwargs):
-        """Start transformation of a single item.
+    def start(self, raw_item_content_type, raw_item, source_item, **kwargs):
+        """Start transformation of a single item."""
 
-        This method is called by the extractor and expects args to
-        contain the content-type and the original item (as a string).
-        Kwargs should contain the ``source_definition`` dict.
-
-        :returns: the output of :py:meth:`~BaseTransformer.transform_item`
-        """
         self.source_definition = kwargs['source_definition']
         self.item_class = load_object(self.source_definition['item'])
         self.run_node = kwargs.get('run_node')
 
-        item = self.deserialize_item(*args)  # pylint: disable=no-value-for-parameter
-        return self.transform_item(*args, item=item)  # pylint: disable=no-value-for-parameter
+        item = self.deserialize_item(raw_item_content_type, raw_item)  # pylint: disable=no-value-for-parameter
+        transformed_item = self.transform_item(raw_item_content_type, raw_item, item=item)  # pylint: disable=no-value-for-parameter
+        self.update_source(ori_id=transformed_item.get_short_identifier(),
+                           entity=item['entity'],
+                           source_item=source_item)
+        return transformed_item
 
     @staticmethod
     def deserialize_item(raw_item_content_type, raw_item):
@@ -35,26 +37,10 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         elif raw_item_content_type == 'application/html':
             return etree.HTML(raw_item)
         else:
-            raise NoDeserializerAvailable('Item with content_type %s'
-                                          % raw_item_content_type)
+            raise NoDeserializerAvailable('Item with content_type %s' % raw_item_content_type)
 
     def transform_item(self, raw_item_content_type, raw_item, item):
-        """Transforms a single item.
-
-        The output of this method serves as input of a loader.
-
-        :type raw_item_content_type: string
-        :param raw_item_content_type: the content-type of the data
-            retrieved from the source (e.g. ``application/json``)
-        :type raw_item: string
-        :param raw_item: the data in it's original format, as retrieved
-            from the source (as a string)
-        :type item: dict
-        :param item: the deserialized item
-        :returns: a tuple containing the new object id, the item structured
-            for the combined index (as a dict) and the item item structured
-            for the source specific index.
-        """
+        """Transforms a single item."""
 
         transformed_item = self.item_class(source_definition=self.source_definition,
                                            data_content_type=raw_item_content_type,
@@ -63,6 +49,22 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
                                            run_node=self.run_node)
 
         return transformed_item.object_data
+
+    def update_source(self, ori_id, entity, source_item):
+        connection_string = 'postgresql://%s:%s@%s/%s' % (
+                            settings.POSTGRES_USERNAME,
+                            settings.POSTGRES_PASSWORD,
+                            settings.POSTGRES_HOST,
+                            settings.POSTGRES_DATABASE)
+        engine = create_engine(connection_string)
+        Session = sessionmaker(bind=engine)
+
+        session = Session()
+        source = session.query(Source).filter(Source.resource_ori_id == ori_id).one()
+        source.type = self.source_definition['source_type']
+        source.entity = entity
+        session.commit()
+        session.close()
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)

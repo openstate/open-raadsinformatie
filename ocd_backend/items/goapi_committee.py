@@ -12,6 +12,7 @@ class CommitteeItem(BaseItem):
 
         committee = Organization('committee-' + str(self.original_item['id']), **source_defaults)
         committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        # TODO: Merge
 
         committee.name = self.original_item['name']
         if self.original_item['name'] == 'Gemeenteraad':

@@ -52,6 +52,7 @@ _entities: &entities
       - # reserved for enricher_settings
 
 _notubiz: &notubiz
+  source_type: "HTTP"
   index_name: "{key}"
   sitename: "{key!c}"
   base_url: "https://api.notubiz.nl"
