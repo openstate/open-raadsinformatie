@@ -10,7 +10,7 @@ log = get_source_logger('ibabs_meeting')
 
 
 class IBabsMeetingItem(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'ibabs',
             'source_id_key': 'identifier',
@@ -115,7 +115,7 @@ class IBabsMeetingItem(BaseItem):
 
 
 class IBabsReportItem(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'ibabs',
             'source_id_key': 'identifier',

@@ -209,7 +209,7 @@
 #
 #         return object_model
 #
-#     def get_object_model(self):
+#     def transform(self):
 #         council = self._get_council()
 #         members = self._get_council_members()
 #         parties = self._get_council_parties()
@@ -232,7 +232,7 @@
 #
 #
 # class IBabsVoteEventItem(IBabsMotionVotingMixin, VotingEventItem):
-#     def get_object_model(self):
+#     def transform(self):
 #         object_model = {}
 #         council = self._get_council()
 #         members = self._get_council_members()

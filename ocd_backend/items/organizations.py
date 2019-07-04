@@ -23,7 +23,7 @@ class MunicipalityOrganizationItem(BaseItem):
     Creates a Municipality item.
     """
 
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'allmanak',
             'source_id_key': 'identifier',
@@ -45,7 +45,7 @@ class ProvinceOrganizationItem(BaseItem):
     Creates a Province item.
     """
 
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'allmanak',
             'source_id_key': 'identifier',
@@ -67,7 +67,7 @@ class PartyItem(BaseItem):
     Creates a Party (Organization) item.
     """
 
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'allmanak',
             'source_id_key': 'identifier',

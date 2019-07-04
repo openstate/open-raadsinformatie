@@ -39,7 +39,7 @@
 #             pass
 #         return {}
 #
-#     def get_object_model(self):
+#     def transform(self):
 #         object_model = {
 #             'hidden': self.source_definition['hidden']
 #         }

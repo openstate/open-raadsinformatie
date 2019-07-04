@@ -107,7 +107,7 @@
 #             'option': "yes" if v['Vote'] else "no"
 #         } for v in self.original_item['votes']]
 #
-#     def get_object_model(self):
+#     def transform(self):
 #         object_model = dict()
 #
 #         object_model['id'] = self.original_item['motion_id']

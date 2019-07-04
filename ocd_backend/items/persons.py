@@ -6,7 +6,7 @@ log = get_source_logger('persons')
 
 
 class AllmanakPersonItem(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'allmanak',
             'source_id_key': 'identifier',

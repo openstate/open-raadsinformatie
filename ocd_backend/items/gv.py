@@ -41,7 +41,7 @@ class GreenValleyItem(BaseItem):
         else:
             return []
 
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'greenvalley',
             'source_id_key': 'identifier',
@@ -126,8 +126,8 @@ class GreenValleyItem(BaseItem):
 
 
 class GreenValleyMeeting(GreenValleyItem):
-    def get_object_model(self):
-        event = super(GreenValleyMeeting, self).get_object_model()
+    def transform(self):
+        event = super(GreenValleyMeeting, self).transform()
 
         source_defaults = {
             'source': 'greenvalley',

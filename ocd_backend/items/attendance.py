@@ -46,7 +46,7 @@
 #
 #         return [{'id': p['voter_id']} for p in vote_event['votes']]
 #
-#     def get_object_model(self):
+#     def transform(self):
 #         object_model = dict()
 #
 #         object_model['id'] = self.original_item['id']

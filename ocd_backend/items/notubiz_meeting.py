@@ -6,7 +6,7 @@ log = get_source_logger('notubiz_meeting')
 
 
 class NotubizMeetingItem(BaseItem):
-    def get_object_model(self):
+    def transform(self):
         source_defaults = {
             'source': 'notubiz',
             'source_id_key': 'identifier',
