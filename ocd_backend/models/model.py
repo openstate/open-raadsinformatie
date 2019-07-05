@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+
 from ocd_backend.models.definitions import Mapping, Prov, Ori
 from ocd_backend.models.exceptions import MissingProperty
 from ocd_backend.models.properties import PropertyBase, Property, StringProperty, Relation
@@ -217,6 +219,13 @@ class Model(object):
             raise
         finally:
             self.saving_flag = False
+
+    def merge(self, **kwargs):
+        """Tries to set the ORI identifier of an existing Resource on the model."""
+        try:
+            self.ori_identifier = self.db.get_mergeable_resource_identifier(self, **kwargs)
+        except (NoResultFound, MultipleResultsFound), e:
+            logger.warning("Unable to merge: %s", e)
 
 
 class Individual(Model):

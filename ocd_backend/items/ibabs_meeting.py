@@ -25,6 +25,7 @@ class IBabsMeetingItem(BaseItem):
 
         item = Meeting(meeting['Id'], **source_defaults)
         item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        item.has_organization_name.merge(collection=self.source_definition['key'])
 
         item.name = meeting['Meetingtype']
         item.chair = meeting['Chairman']
@@ -43,6 +44,7 @@ class IBabsMeetingItem(BaseItem):
 
         # Attach the meeting to the municipality node
         item.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        item.organization.merge(collection=self.source_definition['key'])
 
         # Check if this is a committee meeting and if so connect it to the committee node.
         committee_designator = self.source_definition.get('committee_designator', 'commissie')
@@ -50,6 +52,7 @@ class IBabsMeetingItem(BaseItem):
             # Attach the meeting to the committee node
             item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
             item.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            item.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
             item.committee.name = meeting['Meetingtype']
             if 'sub' in meeting['MeetingtypeId']:
@@ -59,12 +62,14 @@ class IBabsMeetingItem(BaseItem):
 
             # Re-attach the committee node to the municipality node
             item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            item.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         if 'MeetingItems' in meeting:
             item.agenda = list()
             for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
                 agenda_item = AgendaItem(mi['Id'], **source_defaults)
                 agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                agenda_item.has_organization_name.merge(collection=self.source_definition['key'])
 
                 agenda_item.parent = item
                 agenda_item.name = mi['Title']
@@ -75,6 +80,7 @@ class IBabsMeetingItem(BaseItem):
                 for document in mi['Documents'] or []:
                     attachment = MediaObject(document['Id'], **source_defaults)
                     attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                    attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
                     attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                     attachment.original_url = document['PublicDownloadURL']
@@ -89,6 +95,7 @@ class IBabsMeetingItem(BaseItem):
         for invitee in meeting['Invitees'] or []:
             invitee_item = Person(invitee['UniqueId'], **source_defaults)
             invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            invitee_item.has_organization_name.merge(collection=self.source_definition['key'])
             item.invitee.append(invitee_item)
 
         # Double check because sometimes 'EndTime' is in meeting but it is set to None
@@ -103,6 +110,7 @@ class IBabsMeetingItem(BaseItem):
         for document in meeting['Documents'] or []:
             attachment = MediaObject(document['Id'], **source_defaults)
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
             attachment.original_url = document['PublicDownloadURL']
@@ -124,6 +132,7 @@ class IBabsReportItem(BaseItem):
 
         report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
         report.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        report.has_organization_name.merge(collection=self.source_definition['key'])
 
         report_name = self.original_item['_ReportName'].split(r'\s+')[0]
         report.classification = u'Report'
@@ -148,6 +157,7 @@ class IBabsReportItem(BaseItem):
         # Temporary binding reports to municipality as long as events and agendaitems are not
         # referenced in the iBabs API
         report.creator = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        report.creator.merge(collection=self.source_definition['key'])
 
         try:
             name_field = self.source_definition['fields'][report_name]['description']
@@ -182,6 +192,7 @@ class IBabsReportItem(BaseItem):
         for document in self.original_item['_Extra']['Documents'] or []:
             attachment_file = MediaObject(document['Id'], **source_defaults)
             attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment_file.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment_file.original_url = document['PublicDownloadURL']
             attachment_file.size_in_bytes = document['FileSize']
