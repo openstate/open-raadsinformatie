@@ -52,6 +52,7 @@ class GreenValleyItem(BaseItem):
 
         event = Meeting(meeting[u'objectid'], **source_defaults)
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        event.has_organization_name.merge(collection=self.source_definition['key'])
 
         if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
             event.start_date = datetime.fromtimestamp(
@@ -93,12 +94,14 @@ class GreenValleyItem(BaseItem):
             pass
 
         event.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        event.organization.merge(collection=self.source_definition['key'])
 
         if 'bis_orgaan' in meeting:
             if meeting['bis_orgaan'] != '':
                 event.committee = Organization(meeting[u'bis_orgaan'], **source_defaults)
                 event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         # object_model['last_modified'] = iso8601.parse_date(
         #    self.original_item['last_modified'])
@@ -115,6 +118,7 @@ class GreenValleyItem(BaseItem):
         for doc in self._get_documents_as_media_urls():
             attachment = MediaObject(doc['original_url'], **source_defaults)
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['original_url']
@@ -147,6 +151,7 @@ class GreenValleyMeeting(GreenValleyItem):
             meeting = item[u'default']
             agendaitem = AgendaItem(meeting['objectid'], **source_defaults)
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
 
             agendaitem.__rel_params__ = {
                 'rdf': '_%i' % int(meeting['agendapagenumber'])}

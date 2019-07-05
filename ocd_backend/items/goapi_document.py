@@ -37,8 +37,10 @@ class GemeenteOplossingenDocumentItem(BaseItem):
 
         event = Meeting(self.original_item[u'id'], **source_defaults)
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        event.has_organization_name.merge(collection=self.source_definition['key'])
 
         event.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        event.organization.merge(collection=self.source_definition['key'])
 
         try:
             date_tz = pytz.timezone(
@@ -65,6 +67,7 @@ class GemeenteOplossingenDocumentItem(BaseItem):
         ):
             attachment = MediaObject(doc['url'], **source_defaults)
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
