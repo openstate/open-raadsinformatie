@@ -95,10 +95,7 @@ class Model(object):
 
     def __init__(self, source_id=False, organization=None, source=None, source_id_key=None):
         # Set defaults
-        #self.uri = None
-        #self.prefix = None
         self.skip_validation = None
-        # self.verbose_name = None
         self.values = dict()
 
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
