@@ -12,6 +12,7 @@ class IbabsPersonItem(BaseItem):
 
         person = Person(self.original_item['UserId'], **source_defaults)
         person.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        person.has_organization_name.merge(collection=self.source_definition['key'])
 
         person.name = self.original_item['Name']
         person.family_name = self.original_item['LastName']
@@ -20,9 +21,11 @@ class IbabsPersonItem(BaseItem):
         person.phone = self.original_item['Phone']
 
         municipality = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        municipality.merge(collection=self.source_definition['key'])
 
         municipality_member = Membership(**source_defaults)
         municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        municipality_member.has_organization_name.merge(collection=self.source_definition['key'])
 
         municipality_member.organization = municipality
         municipality_member.member = person
@@ -43,11 +46,13 @@ class IbabsPersonItem(BaseItem):
             # sources would not have any parties.
             party = Organization(self.original_item['PoliticalPartyId'], **source_defaults)
             party.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            party.has_organization_name.merge(collection=self.source_definition['key'])
 
             party.name = self.original_item['PoliticalPartyName']
 
             party_member = Membership(**source_defaults)
             party_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+            party_member.has_organization_name.merge(collection=self.source_definition['key'])
 
             party_member.organization = party
             party_member.member = person

@@ -41,6 +41,35 @@ class PostgresDatabase(object):
         finally:
             session.close()
 
+    def get_mergeable_resource_identifier(self, model_object, **kwargs):
+        """
+        Queries the database to find the ORI identifier of the Resource linked to the Property with the given
+        predicate and value.
+
+        TODO: Currently only works for values that are in the `prop_string` field.
+        """
+
+        if len(kwargs) != 1:
+            raise TypeError('get_mergeable_resource_identifier takes exactly 1 keyword argument')
+
+        filter_key, filter_value = kwargs.items()[0]
+        definition = model_object.definition(filter_key)
+
+        session = self.Session()
+        try:
+            # TODO: This currently only works if the filter_value is in the prop_string field.
+            resource_property = session.query(Property).filter(Property.predicate == definition.absolute_uri(),
+                                                               Property.prop_string == filter_value).one()
+            return resource_property.resource.iri
+        except MultipleResultsFound:
+            raise MultipleResultsFound('Multiple properties found for predicate %s with value %s' %
+                                       (filter_key, filter_value))
+        except NoResultFound:
+            raise NoResultFound('No property found for predicate %s with value %s' %
+                                (filter_key, filter_value))
+        finally:
+            session.close()
+
     def generate_ori_identifier(self, iri):
         """
         Generates a Resource with an ORI identifier and adds the IRI as a Source if it does not already exist.

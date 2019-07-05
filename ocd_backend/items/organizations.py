@@ -79,5 +79,6 @@ class PartyItem(BaseItem):
         object_model.name = self.original_item['partij']
         object_model.classification = 'Party'
         object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
 
         return object_model
