@@ -31,9 +31,9 @@ class BaseSerializer(object):
         """Initialize the serializer with a specified format.
 
         Options for uri_format_type are:
-          - 'full': Fully quantified URI (ie. http://schema.org/example)
-          - 'prefix': A property that is prefixed (ie. schema:example)
-          - 'name': Just the name of the property
+          - 'absolute': Fully quantified URI (ie. http://schema.org/example)
+          - 'compact': A property that is prefixed (ie. schema:example)
+          - 'term': Just the name of the property
         """
         if uri_format_type not in ['absolute', 'compact', 'term']:
             raise ValueError(
@@ -107,11 +107,7 @@ class BaseSerializer(object):
 
 
 class PostgresSerializer(BaseSerializer):
-    """The `PostgresSerializer` is just a basic subclass of the `BaseSerializer`.
-
-    This serializer is used to turn the models in full URI properties that can
-    be inserted in Postgres.
-    """
+    """This serializer is used to turn models into full URI properties that can be inserted into Postgres."""
 
     def __init__(self):
         super(PostgresSerializer, self).__init__('absolute')
@@ -120,9 +116,60 @@ class PostgresSerializer(BaseSerializer):
         """No high-level serialize method available, use `deflate` instead."""
         pass
 
+    def deflate(self, model_object, props, rels):
+        """Returns a recursive serialized value for each model definition.
+
+        This serializer also returns the property type in the form of {uri: (value, property_type)} . The property
+        type information is needed by the Postgres database to map the property value to the appropriate column.
+        """
+        props_list = dict()
+        for name, definition in model_object.definitions(props=props, rels=rels):
+            value = model_object.values.get(name, None)
+            if value:
+                uri = self.uri_format(definition) or name
+                try:
+                    props_list[uri] = (self.serialize_prop(definition, value), definition.__class__)
+                except MissingProperty:
+                    raise
+            elif definition.required and not model_object.skip_validation:
+                raise RequiredProperty("Property '{}' is required for {}".format(
+                    name, model_object.compact_uri()))
+        return props_list
+
+    def serialize_prop(self, prop, value):
+        """Serializes `Relation` and `OrderedRelation` as a short identifier when they are Relationships.
+        For Individuals, the compact or absolute IRI of the label is returned.
+
+        For all other properties the super method is called as a fallback.
+        """
+        if type(prop) == Relation or type(prop) == OrderedRelation:
+            props = list()
+            for _, item in iterate(value):
+                from .model import Individual, Relationship
+                if isinstance(item, Relationship):
+                    item = item.model
+
+                if isinstance(item, Individual):
+                    if self.uri_format_type == 'compact':
+                        props.append(item.compact_uri())
+                    else:
+                        props.append(item.absolute_uri())
+                else:
+                    props.append(self.ori_uri(item))
+
+            if len(props) == 1:
+                return props[0]
+            return props
+
+        return super(PostgresSerializer, self).serialize_prop(prop, value)
+
+    def ori_uri(self, item):
+        """Gets the short identifier of a resource"""
+        return item.get_short_identifier()
+
 
 class RdfSerializer(BaseSerializer):
-    """The `Rdfserializer` create a graph and add the properties as Rdf triples.
+    """The `Rdfserializer` create a graph and adds the properties as Rdf triples.
 
     This uses rdflib to create a graph which can be serialized to the various
     formats that rdflib supports."""
@@ -184,7 +231,7 @@ class RdfSerializer(BaseSerializer):
     def serialize_prop(self, prop, value):
         """Calls the super method and applies rdflib specific logic on it.
 
-        Most properties will returned as a rdflib `Literal`. Relations will be
+        Most properties will be returned as a rdflib `Literal`. Relations will be
         iterated and returned as `URIRef`.
         """
         serialized = super(RdfSerializer, self).serialize_prop(prop, value)
@@ -258,8 +305,7 @@ class JsonSerializer(BaseSerializer):
         return super(JsonSerializer, self).serialize_prop(prop, value)
 
     def ori_uri(self, item):
-        """Creates a full uri to an ori resource since json doesn't do prefixes.
-        """
+        """Creates a full uri to an ori resource since json doesn't do prefixes."""
         return str(item.get_ori_identifier())
 
 
@@ -289,8 +335,7 @@ class JsonLDSerializer(JsonSerializer):
         return deflated
 
     def serialize_prop(self, prop, value):
-        """Serializes all OrderedRelation props with an @list attribute
-        """
+        """Serializes all OrderedRelation props with an @list attribute."""
         serialized = super(JsonLDSerializer, self).serialize_prop(prop, value)
 
         if type(prop) == OrderedRelation:

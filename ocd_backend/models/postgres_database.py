@@ -1,5 +1,4 @@
 import uuid
-import datetime
 
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
@@ -8,6 +7,8 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from ocd_backend import settings
 from ocd_backend.models.postgres_models import Source, Resource, Property
 from ocd_backend.models.definitions import Ori
+from ocd_backend.models.properties import StringProperty, IntegerProperty, DateProperty, DateTimeProperty, \
+    ArrayProperty, Relation, OrderedRelation
 from ocd_backend.models.misc import Uri
 
 
@@ -87,26 +88,32 @@ class PostgresDatabase(object):
             session.commit()
 
             # Save new properties
-            for predicate, value in serialized_properties.iteritems():
-                self.map_column_type(value)
+            for predicate, value_and_property_type in serialized_properties.iteritems():
                 new_property = (Property(id=uuid.uuid4(), predicate=predicate))
-                setattr(new_property, self.map_column_type(value), value)
+                setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
                 resource.properties.append(new_property)
             session.commit()
 
             session.close()
 
     @staticmethod
-    def map_column_type(value):
-        if isinstance(value, bool):
-            return 'prop_boolean'
-        elif isinstance(value, int):
-            return 'prop_integer'
-        elif isinstance(value, float):
-            return 'prop_float'
-        elif isinstance(value, (datetime.date, datetime.datetime)):
-            return 'prop_datetime'
-        elif isinstance(value, (str, unicode, list)):
+    def map_column_type(value_and_property_type):
+        """Maps the property type to a column."""
+        value = value_and_property_type[0]
+        property_type = value_and_property_type[1]
+
+        if property_type in (StringProperty, ArrayProperty):
             return 'prop_string'
+        elif property_type is IntegerProperty:
+            return 'prop_integer'
+        elif property_type in (DateProperty, DateTimeProperty):
+            return 'prop_datetime'
+        elif property_type in (Relation, OrderedRelation):
+            # Slight hack to intercept Individuals that have no ORI identifier
+            try:
+                int(value)
+                return 'prop_resource'
+            except (ValueError, TypeError):
+                return 'prop_string'
         else:
-            raise ValueError('Unable to map property value of type %s to a column.' % type(value))
+            raise ValueError('Unable to map property of type %s to a column.' % property_type)
