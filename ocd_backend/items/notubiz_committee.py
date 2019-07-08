@@ -10,8 +10,11 @@ class CommitteeItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        committee = Organization('committee-' + str(self.original_item['id']), **source_defaults)
-        committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], *source_defaults)
+        committee = Organization('committee-' + str(self.original_item['id']),
+                                 self.source_definition,
+                                 **source_defaults)
+        committee.entity = self.entity
+        committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         committee.has_organization_name.merge(collection=self.source_definition['key'])
 
         committee.name = self.original_item['title']

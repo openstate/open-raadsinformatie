@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from ocd_backend.models.definitions import Mapping, Prov, Ori
+from ocd_backend.models.definitions import Mapping, Prov, Ori, Meta
 from ocd_backend.models.exceptions import MissingProperty
 from ocd_backend.models.properties import PropertyBase, Property, StringProperty, Relation
 from ocd_backend.models.serializers import PostgresSerializer
@@ -52,6 +52,7 @@ class Model(object):
     # Top-level definitions
     ori_identifier = StringProperty(Mapping, 'ori/identifier')
     had_primary_source = StringProperty(Prov, 'hadPrimarySource')
+    entity = StringProperty(Meta, 'entity')
 
     def absolute_uri(self):
         return '%s%s' % (self.uri, self.verbose_name())
@@ -95,15 +96,17 @@ class Model(object):
 
         return instance
 
-    def __init__(self, source_id=False, organization=None, source=None, source_id_key=None):
+    def __init__(self, source_id=None, source_definition=None, organization=None, source=None, source_id_key=None):
         # Set defaults
         self.skip_validation = None
         self.values = dict()
 
+        if source_definition:
+            self.source_definition = source_definition
+
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
         # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
-        if source_id is not False:
-            assert source_id
+        if source_id:
             assert organization
             assert source
             assert source_id_key
@@ -116,7 +119,7 @@ class Model(object):
                     slugify(source_id)
                 )
             )
-            self._source = source
+            # self._source = source
 
     def __getattr__(self, item):
         try:

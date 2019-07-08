@@ -58,8 +58,10 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
         committee_count = 0
         total, static_json = self._request('dmus')
         for dmu in static_json:
-            dmu['entity'] = urljoin(self.base_url, 'dmus')
-            yield 'application/json', json.dumps(dmu), dmu
+            yield 'application/json', \
+                  json.dumps(dmu), \
+                  urljoin(self.base_url, 'dmus'), \
+                  dmu
             committee_count += 1
 
         log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['sitename'], committee_count))
@@ -87,8 +89,10 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             total, static_json = self._request(url)
 
             for meeting in static_json:
-                meeting['entity'] = urljoin(self.base_url, 'meetings/%s' % meeting['id'])
-                yield 'application/json', json.dumps(meeting), meeting
+                yield 'application/json', \
+                      json.dumps(meeting), \
+                      urljoin(self.base_url, 'meetings/%s' % meeting['id']), \
+                      meeting
                 meeting_count += 1
 
             log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
@@ -142,8 +146,10 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
             for doc in docs:
                 api_version = self.source_definition.get('api_version', 'v1')
                 base_url = '%s/%s' % (self.source_definition['base_url'], api_version,)
-                doc['entity'] = u'%s/documents/%i' % (base_url, doc[u'id'],)
-                yield 'application/json', json.dumps(doc), doc
+                yield 'application/json', \
+                      json.dumps(doc), \
+                      u'%s/documents/%i' % (base_url, doc[u'id'],), \
+                      doc
                 meeting_count += 1
 
             log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))

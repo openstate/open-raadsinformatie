@@ -31,6 +31,8 @@ class BaseExtractor(object):
           ``application/json``)
         - the data in it's original format, as retrieved from the source
           (as a string)
+        - the entity URL
+        - the representation of the original item used
         """
         raise NotImplementedError
 

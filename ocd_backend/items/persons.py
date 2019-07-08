@@ -13,7 +13,10 @@ class AllmanakPersonItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        person = Person(self.original_item['systemid'], **source_defaults)
+        person = Person(self.original_item['systemid'],
+                        self.source_definition,
+                        **source_defaults)
+        person.entity = self.entity
         person.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         person.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -29,7 +32,10 @@ class AllmanakPersonItem(BaseItem):
         # The source ID for the municipality membership is constructed by combining the person's Allmanak ID and the
         # key of the source
         municipality_membership_id = '%s_%s' % (self.original_item['systemid'], self.source_definition['key'])
-        municipality_member = Membership(municipality_membership_id, **source_defaults)
+        municipality_member = Membership(municipality_membership_id,
+                                         self.source_definition,
+                                         **source_defaults)
+        municipality_member.entity = self.entity
         municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         municipality_member.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -49,7 +55,10 @@ class AllmanakPersonItem(BaseItem):
             # The source ID for the party membership is constructed by combining the person's Allmanak ID and the
             # name of the party
             party_membership_id = '%s_%s' % (self.original_item['systemid'], self.original_item['partij'])
-            party_member = Membership(party_membership_id, **source_defaults)
+            party_member = Membership(party_membership_id,
+                                      self.source_definition,
+                                      **source_defaults)
+            party_member.entity = self.entity
             party_member.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             party_member.has_organization_name.merge(collection=self.source_definition['key'])
 
