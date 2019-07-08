@@ -170,7 +170,10 @@ class LocalCachingMixin(HttpRequestMixin):
             raise InvalidFile
 
     def fetch(self, url, path, modified_date):
-        modified_date = localize_datetime(str_to_datetime(modified_date))
+        if modified_date:
+            modified_date = localize_datetime(str_to_datetime(modified_date))
+        else:
+            modified_date = None
 
         url_hash = base64.urlsafe_b64encode(path)
         base_path = self.base_path(url_hash)
