@@ -30,7 +30,10 @@ class MunicipalityOrganizationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model = TopLevelOrganization(self.source_definition['key'],
+                                            self.source_definition,
+                                            **source_defaults)
+        object_model.entity = self.entity
         object_model.classification = u'Municipality'
         object_model.collection = self.source_definition['key']
         object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(self.original_item['naam'])])
@@ -52,7 +55,10 @@ class ProvinceOrganizationItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model = TopLevelOrganization(self.source_definition['key'],
+                                            self.source_definition,
+                                            **source_defaults)
+        object_model.entity = self.entity
         object_model.classification = u'Province'
         object_model.collection = self.source_definition['key']
         object_model.name = unicode(self.original_item['naam'])
@@ -74,7 +80,10 @@ class PartyItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        object_model = Organization(self.original_item['partij'], **source_defaults)
+        object_model = Organization(self.original_item['partij'],
+                                    self.source_definition,
+                                    **source_defaults)
+        object_model.entity = self.entity
         object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         object_model.name = self.original_item['partij']
         object_model.classification = 'Party'
