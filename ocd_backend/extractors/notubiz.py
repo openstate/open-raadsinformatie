@@ -65,11 +65,14 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
         committee_count = 0
         for committee in json.loads(response.content)['gremia']:
-            committee['entity'] = '%s/organisations/%s/gremia/%s?format=json&version=1.10.8' % (
+            entity = '%s/organisations/%s/gremia/%s?format=json&version=1.10.8' % (
                 self.base_url,
                 self.source_definition['notubiz_organization_id'],
                 committee['id'])
-            yield 'application/json', json.dumps(committee), committee
+            yield 'application/json', \
+                  json.dumps(committee), \
+                  entity, \
+                  committee
             committee_count += 1
 
         log.info("[%s] Extracted total of %d notubiz committees." % (self.source_definition['sitename'], committee_count))
@@ -153,8 +156,10 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
-                meeting_json['entity'] = meeting_json['self']
-                yield 'application/json', json.dumps(meeting_json), meeting_json
+                yield 'application/json', \
+                      json.dumps(meeting_json), \
+                      meeting_json['self'], \
+                      meeting_json
                 meeting_count += 1
 
             page += 1

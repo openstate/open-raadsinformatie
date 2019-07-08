@@ -35,7 +35,10 @@ class GemeenteOplossingenDocumentItem(BaseItem):
             'organization': self.source_definition['key'],
         }
 
-        event = Meeting(self.original_item[u'id'], **source_defaults)
+        event = Meeting(self.original_item[u'id'],
+                        self.source_definition,
+                        **source_defaults)
+        event.entity = self.entity
         event.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         event.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -65,7 +68,10 @@ class GemeenteOplossingenDocumentItem(BaseItem):
         for doc in self._get_documents_as_media_urls(
             self.original_item.get('documents', [])
         ):
-            attachment = MediaObject(doc['url'], **source_defaults)
+            attachment = MediaObject(doc['url'],
+                                     self.source_definition,
+                                     **source_defaults)
+            attachment.entity = doc['url']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment.has_organization_name.merge(collection=self.source_definition['key'])
 

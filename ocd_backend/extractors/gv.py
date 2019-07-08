@@ -85,10 +85,9 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
                     v[u'bis_vergaderdatum'] = result[u'default'][u'bis_vergaderdatum']
 
                     result2 = {u'default': v}
-                    yield 'application/json', json.dumps(result2)
+                    yield 'application/json', json.dumps(result2), result2['default']['objectid'], result2
 
-                result['entity'] = result['id']
-                yield 'application/json', json.dumps(result)
+                yield 'application/json', json.dumps(result), result['default']['objectid'], result
 
             params['start'] += len(results['objects'])
             fetch_next_page = (len(results['objects']) > 0)
@@ -130,7 +129,7 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
 
         total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
-            yield item[0], item[1], item[1]
+            yield item[0], item[1], item[2], item[3]
             total_meetings += 1
 
         log.info("[%s] Extracting total of %d GreenValley meetings" % (
