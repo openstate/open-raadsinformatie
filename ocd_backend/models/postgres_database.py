@@ -104,6 +104,17 @@ class PostgresDatabase(object):
             if not model_object.values.get('ori_identifier'):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.values.get('had_primary_source'))
 
+            # Handle entity and source
+            if model_object.values.get('entity'):
+                # This needs to be done with a try/except because of the way Model overrides __getitem__
+                try:
+                    _ = model_object.source_definition
+                except AttributeError:
+                    raise ValueError('Model instances that set an entity must also pass their source definition to '
+                                     'the constructor.')
+                self.update_source(model_object)
+                del model_object.values['entity']
+
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
             session = self.Session()
@@ -146,3 +157,13 @@ class PostgresDatabase(object):
                 return 'prop_string'
         else:
             raise ValueError('Unable to map property of type %s to a column.' % property_type)
+
+    def update_source(self, model_object):
+        """TODO"""
+
+        session = self.Session()
+        source = session.query(Source).filter(Source.resource_ori_id == model_object.get_short_identifier()).one()
+        source.type = model_object.source_definition['source_type']
+        source.entity = model_object.values['entity']
+        session.commit()
+        session.close()
