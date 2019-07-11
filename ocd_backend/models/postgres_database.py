@@ -159,7 +159,7 @@ class PostgresDatabase(object):
             raise ValueError('Unable to map property of type %s to a column.' % property_type)
 
     def update_source(self, model_object):
-        """TODO"""
+        """Updates the source type and entity of the Source of the corresponding model object."""
 
         session = self.Session()
         source = session.query(Source).filter(Source.resource_ori_id == model_object.get_short_identifier()).one()
