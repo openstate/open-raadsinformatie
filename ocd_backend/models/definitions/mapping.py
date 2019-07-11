@@ -7,7 +7,6 @@ suppliers. This way, our data contains references to the original data in the
 spirit of linked open data.
 """
 from ocd_backend.models.definitions import Mapping
-from ocd_backend.models.model import Individual
 
 # currently not used
 

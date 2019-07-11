@@ -1,6 +1,5 @@
 from ocd_backend.items import BaseItem
-from ocd_backend.models import Motion, Organization, VoteEvent, ResultPass,\
-    ResultFail, Vote, Person, VoteOptionYes, VoteOptionNo, VoteOptionAbsent
+from ocd_backend.models import Motion, Organization, VoteEvent, Vote, Person, VoteOption, VoteResult
 
 
 class PartijgedragMotion(BaseItem):
@@ -42,9 +41,9 @@ class PartijgedragMotion(BaseItem):
         vote_event.start_date = self.original_item.get('issuedate')
 
         if self.original_item['uitslag']:
-            vote_event.result = ResultPass()
+            vote_event.result = VoteResult.PASSED
         elif not self.original_item['uitslag']:
-            vote_event.result = ResultFail()
+            vote_event.result = VoteResult.FAILED
 
         if 'votes' in self.original_item:
             votes = list()
@@ -64,11 +63,11 @@ class PartijgedragMotion(BaseItem):
                     vote.weight = vote_party['aantal']
 
                     if vote_option == 'voor':
-                        vote.option = VoteOptionYes()
+                        vote.option = VoteOption.OPTION_YES
                     elif vote_option == 'tegen':
-                        vote.option = VoteOptionNo()
+                        vote.option = VoteOption.OPTION_NO
                     elif vote_option == 'afwezig':
-                        vote.option = VoteOptionAbsent()
+                        vote.option = VoteOption.ABSENT
 
                     votes.append(vote)
 

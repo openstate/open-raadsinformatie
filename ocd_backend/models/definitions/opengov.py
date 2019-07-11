@@ -2,13 +2,15 @@
 http://www.w3.org/ns/opengov#
 """
 
+from aenum import Constant
+
 import owl
 import schema
 from ocd_backend.models.definitions import Opengov, Schema, Meeting, Dcterms, \
     Ncal, Rdf, Rdfs, Skos, Bibframe
-from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     DateProperty, DateTimeProperty, ArrayProperty, Relation
+from ocd_backend.models.misc import Uri
 
 
 class Motion(Opengov, owl.Thing):
@@ -123,46 +125,15 @@ class Result(Opengov, owl.Thing):
     vote_event = Relation(Opengov, 'voteEvent')
 
 
-# Result Individuals
-class ResultFail(Opengov, Individual):
-    """When a decision is made against a proposal"""
-    pass
+class VoteResult(Constant):
+    FAILED = str(Uri(Opengov, "ResultFailed"))
+    PASSED = str(Uri(Opengov, "ResultPassed"))
 
 
-class ResultPass(Opengov, Individual):
-    """When a decision is made in favor of a proposal"""
-    pass
-
-
-# VoteOption Individuals
-class VoteOptionYes(Opengov, Individual):
-    """When an individual votes in favor of a proposal"""
-    pass
-
-
-class VoteOptionNo(Opengov, Individual):
-    """When an individual votes against a proposal"""
-    pass
-
-
-class VoteOptionAbstain(Opengov, Individual):
-    """When an individual abstained from voting"""
-    pass
-
-
-class VoteOptionAbsent(Opengov, Individual):
-    """When an individual did not vote due to being absent"""
-    pass
-
-
-class VoteOptionNotVoting(Opengov, Individual):
-    """When an individual is not voting"""
-    pass
-
-
-class VoteOptionPaired(Opengov, Individual):
-    """When an individual entered a reciprocal agreement with another voter by
-    which the voter abstains if the other is unable to vote. It may not be
-    known which two members form a pair.
-    """
-    pass
+class VoteOption(Constant):
+    OPTION_YES = str(Uri(Opengov, "VoteOptionYes"))
+    OPTION_NO = str(Uri(Opengov, "VoteOptionNo"))
+    ABSTAIN = str(Uri(Opengov, "VoteOptionAbstain"))
+    ABSENT = str(Uri(Opengov, "VoteOptionAbsent"))
+    NOT_VOTING = str(Uri(Opengov, "VoteOptionNotVoting"))
+    PAIRED = str(Uri(Opengov, "VoteOptionPaired"))
