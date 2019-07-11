@@ -7,8 +7,8 @@ class PartijgedragMotion(BaseItem):
     def transform(self):
         source_defaults = {
             'source': 'partijgedrag',
-            'source_id_key': 'identifier',
-            'organization': 'ggm',
+            'supplier': 'gegevensmagazijn',
+            'collection': 'motion',
         }
 
         motion = Motion(self.original_item['identifier'], **source_defaults)
