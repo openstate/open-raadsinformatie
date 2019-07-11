@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, Integer, String, Float, ForeignKey, Boolean, DateTime, BigInteger, func
+from sqlalchemy import Column, Sequence, Integer, String, ForeignKey, DateTime, BigInteger, func, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -35,6 +35,13 @@ class Resource(Base):
 
 class Property(Base):
     __tablename__ = 'property'
+    __table_args__ = (
+        CheckConstraint('NOT(prop_resource IS NULL AND '
+                        'prop_string IS NULL AND) '
+                        'prop_datetime IS NULL AND '
+                        'prop_integer IS NULL AND '
+                        'prop_url IS NULL'),
+    )
 
     id = Column(UUIDType(), primary_key=True)
     resource_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
