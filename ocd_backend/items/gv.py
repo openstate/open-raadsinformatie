@@ -43,10 +43,12 @@ class GreenValleyItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'greenvalley',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'gemeenteoplossingen',
+            'collection': 'meeting',
         }
+
+        self.entity = 'https://staten.zuid-holland.nl/dsresource?objectid=' + self.entity
 
         meeting = self.original_item[u'default']
 
@@ -101,8 +103,15 @@ class GreenValleyItem(BaseItem):
 
         if 'bis_orgaan' in meeting:
             if meeting['bis_orgaan'] != '':
-                event.committee = Organization(meeting[u'bis_orgaan'], **source_defaults)
+                event.committee = Organization(meeting[u'bis_orgaan'],
+                                               self.source_definition,
+                                               source=self.source_definition['key'],
+                                               supplier='greenvalley',
+                                               collection='committee')
+                event.committee.entity = self.entity
+                event.committee.name = meeting['bis_orgaan']
                 event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+                event.committee.has_organization_name.merge(collection=self.source_definition['key'])
                 event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 event.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
 
@@ -119,9 +128,11 @@ class GreenValleyItem(BaseItem):
 
         event.attachment = []
         for doc in self._get_documents_as_media_urls():
-            attachment = MediaObject(doc['original_url'],
+            attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
                                      self.source_definition,
-                                     **source_defaults)
+                                     source=self.source_definition['key'],
+                                     supplier='greenvalley',
+                                     collection='attachment')
             attachment.entity = doc['original_url']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment.has_organization_name.merge(collection=self.source_definition['key'])
@@ -140,9 +151,9 @@ class GreenValleyMeeting(GreenValleyItem):
         event = super(GreenValleyMeeting, self).transform()
 
         source_defaults = {
-            'source': 'greenvalley',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'greenvalley',
+            'collection': 'meeting',
         }
 
         event.agenda = []
@@ -157,13 +168,14 @@ class GreenValleyMeeting(GreenValleyItem):
             meeting = item[u'default']
             agendaitem = AgendaItem(meeting['objectid'],
                                     self.source_definition,
-                                    **source_defaults)
+                                    source=self.source_definition['key'],
+                                    supplier='greenvalley',
+                                    collection='agenda_item')
             agendaitem.entity = self.entity
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
 
-            agendaitem.__rel_params__ = {
-                'rdf': '_%i' % int(meeting['agendapagenumber'])}
+            agendaitem.__rel_params__ = {'rdf': '_%i' % int(meeting['agendapagenumber'])}
             agendaitem.description = meeting[u'objectname']
             agendaitem.name = meeting[u'objectname']
             agendaitem.position = int(meeting['agendapagenumber'])

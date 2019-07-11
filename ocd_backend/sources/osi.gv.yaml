@@ -18,7 +18,7 @@ _entities: &entities
     <<: *entity_defaults
     entity: province
     doc_type: organizations
-    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     item: ocd_backend.items.organizations.ProvinceOrganizationItem
 
   - &organizations

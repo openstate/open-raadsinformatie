@@ -25,12 +25,12 @@ class MunicipalityOrganizationItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'allmanak',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'allmanak',
+            'collection': 'governmental_organization',
         }
 
-        object_model = TopLevelOrganization(self.source_definition['key'],
+        object_model = TopLevelOrganization(self.original_item['systemid'],
                                             self.source_definition,
                                             **source_defaults)
         object_model.entity = self.entity
@@ -50,12 +50,12 @@ class ProvinceOrganizationItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'allmanak',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'allmanak',
+            'collection': 'governmental_organization',
         }
 
-        object_model = TopLevelOrganization(self.source_definition['key'],
+        object_model = TopLevelOrganization(self.original_item['systemid'],
                                             self.source_definition,
                                             **source_defaults)
         object_model.entity = self.entity
@@ -75,16 +75,19 @@ class PartyItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'allmanak',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'allmanak',
+            'collection': 'party',
         }
 
+        # When the Allmanak implements parties as entities, the entity ID should be used
         object_model = Organization(self.original_item['partij'],
                                     self.source_definition,
                                     **source_defaults)
         object_model.entity = self.entity
         object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
+        object_model.has_organization_name.merge(collection=self.source_definition['key'])
+        object_model.collection = self.source_definition['key'] + '-' + self.original_item['partij']
         object_model.name = self.original_item['partij']
         object_model.classification = 'Party'
         object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
