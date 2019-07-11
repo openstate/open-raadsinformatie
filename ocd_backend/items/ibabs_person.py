@@ -5,9 +5,9 @@ from ocd_backend.models import *
 class IbabsPersonItem(BaseItem):
     def transform(self):
         source_defaults = {
-            'source': 'ibabs',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'ibabs',
+            'collection': 'person',
         }
 
         person = Person(self.original_item['UserId'], **source_defaults)
