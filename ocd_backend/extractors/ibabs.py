@@ -56,7 +56,13 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
             total_count = 0
             for mt in meeting_types.Meetingtypes[0]:
                 if committee_designator in mt.Meetingtype.lower():
-                    yield 'application/json', json.dumps(meeting_type_to_dict(mt))
+                    raw = meeting_type_to_dict(mt)
+                    entity = raw['Id']
+                    committee = json.dumps(raw)
+                    yield 'application/json', \
+                          committee, \
+                          entity, \
+                          'used_file_placeholder'
                     total_count += 1
             log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
         else:
@@ -112,9 +118,11 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                         meetings_skipped += 1
                         continue
 
-                    meeting_dict['Meetingtype'] = meeting_types[
-                        meeting_dict['MeetingtypeId']]
-                    yield 'application/json', json.dumps(meeting_dict)
+                    meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
+                    yield 'application/json', \
+                          json.dumps(meeting_dict), \
+                          meeting_dict['Id'], \
+                          meeting_dict
 
                     meeting_count += 1
 
@@ -237,7 +245,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
             # log.debug(processed)
             for result in processed:
-                yield 'application/json', json.dumps(result)
+                yield 'application/json', json.dumps(result), 'entity_placeholder', result
                 passed_vote_count += 1
             log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['index_name'], start_date, end_date,))
 
@@ -462,7 +470,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     #         dict_item['_Extra']['Values'][u'Onderwerp']))
                     # except (KeyError, AttributeError) as e:
                     #     pass
-                    yield 'application/json', json.dumps(dict_item)
+                    yield 'application/json', json.dumps(dict_item), dict_item['id'][0], dict_item
                     yield_count += 1
                     total_yield_count += 1
                     result_count += 1
@@ -496,7 +504,7 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 )
 
                 profile = person_profile_to_dict(user_details.User.PublicProfile)
-                yield 'application/json', json.dumps(profile)
+                yield 'application/json', json.dumps(profile), profile['UserId'], profile
                 total_count += 1
 
             log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
