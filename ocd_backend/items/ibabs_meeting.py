@@ -12,9 +12,9 @@ log = get_source_logger('ibabs_meeting')
 class IBabsMeetingItem(BaseItem):
     def transform(self):
         source_defaults = {
-            'source': 'ibabs',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'ibabs',
+            'collection': 'meeting',
         }
 
         # Sometimes the meeting is contained in a sub-dictionary called 'Meeting'
@@ -125,9 +125,9 @@ class IBabsMeetingItem(BaseItem):
 class IBabsReportItem(BaseItem):
     def transform(self):
         source_defaults = {
-            'source': 'ibabs',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'ibabs',
+            'collection': 'report',
         }
 
         report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
