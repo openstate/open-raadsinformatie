@@ -124,7 +124,7 @@ class GreenValleyItem(BaseItem):
         #     event.status = EventUnconfirmed()
         # else:
         #     event.status = EventConfirmed()
-        event.status = EventConfirmed()
+        event.status = EventStatus.CONFIRMED
 
         event.attachment = []
         for doc in self._get_documents_as_media_urls():

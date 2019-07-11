@@ -4,7 +4,6 @@ http://schema.org/
 
 import owl
 from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms
-from ocd_backend.models.model import Individual
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, Relation
 
@@ -71,20 +70,3 @@ class Place(Schema, owl.Thing):
 
 class VideoObject(Schema, owl.Thing):
     content_url = StringProperty(Schema, 'contentUrl')
-
-
-# EventStatusType Individuals
-class EventCancelled(Schema, Individual):
-    pass
-
-
-class EventPostponed(Schema, Individual):
-    pass
-
-
-class EventRescheduled(Schema, Individual):
-    pass
-
-
-class EventScheduled(Schema, Individual):
-    pass
