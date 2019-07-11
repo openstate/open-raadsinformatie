@@ -145,17 +145,11 @@ class PostgresSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Individual, Relationship
+                from .model import Relationship
                 if isinstance(item, Relationship):
                     item = item.model
 
-                if isinstance(item, Individual):
-                    if self.uri_format_type == 'compact':
-                        props.append(item.compact_uri())
-                    else:
-                        props.append(item.absolute_uri())
-                else:
-                    props.append(self.ori_uri(item))
+                props.append(self.ori_uri(item))
 
             if len(props) == 1:
                 return props[0]
@@ -286,17 +280,11 @@ class JsonSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Relationship, Individual
+                from .model import Relationship
                 if isinstance(item, Relationship):
                     item = item.model
 
-                if isinstance(item, Individual):
-                    if self.uri_format_type == 'compact':
-                        props.append(item.compact_uri())
-                    else:
-                        props.append(item.absolute_uri())
-                else:
-                    props.append(self.ori_uri(item))
+                props.append(self.ori_uri(item))
 
             if len(props) == 1:
                 return props[0]

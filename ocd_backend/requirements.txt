@@ -1,3 +1,4 @@
+aenum==2.1.2
 alembic==1.0.10
 bugsnag==3.4.0
 celery[redis]==4.3.0

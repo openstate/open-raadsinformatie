@@ -231,10 +231,6 @@ class Model(object):
             logger.warning("Unable to merge: %s", e)
 
 
-class Individual(Model):
-    __metaclass__ = ModelMetaclass
-
-
 class Relationship(object):
     """
     The Relationship model is used to explicitly specify one or more

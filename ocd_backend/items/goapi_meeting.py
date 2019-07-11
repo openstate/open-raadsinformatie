@@ -90,12 +90,12 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         # TODO: This is untested so we log any cases that are not the default
         if 'canceled' in self.original_item and self.original_item['canceled']:
             log.info('Found a GOAPI event with status EventCancelled: %s' % str(event.values))
-            event.status = EventCancelled()
+            event.status = EventStatus.CANCELLED
         elif 'inactive' in self.original_item and self.original_item['inactive']:
             log.info('Found a GOAPI event with status EventUnconmfirmed: %s' % str(event.values))
-            event.status = EventUnconfirmed()
+            event.status = EventStatus.UNCONFIRMED
         else:
-            event.status = EventConfirmed()
+            event.status = EventStatus.CONFIRMED
 
         event.agenda = []
         for item in self.original_item.get('items', []):
