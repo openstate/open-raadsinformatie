@@ -129,6 +129,9 @@ class PostgresDatabase(object):
 
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
+                # Don't save ori_identifier as a property
+                if predicate == model_object.definition('ori_identifier').absolute_uri():
+                    continue
                 new_property = (Property(id=uuid.uuid4(), predicate=predicate))
                 setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
                 resource.properties.append(new_property)
