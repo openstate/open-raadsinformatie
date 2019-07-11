@@ -5,12 +5,12 @@ from ocd_backend.models import *
 class CommitteeItem(BaseItem):
     def transform(self):
         source_defaults = {
-            'source': 'gemeenteoplossingen',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'gemeenteoplossingen',
+            'collection': 'committee',
         }
 
-        committee = Organization('committee-' + str(self.original_item['id']),
+        committee = Organization(self.original_item['id'],
                                  self.source_definition,
                                  **source_defaults)
         committee.entity = self.entity

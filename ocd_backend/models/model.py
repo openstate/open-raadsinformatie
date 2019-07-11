@@ -96,7 +96,7 @@ class Model(object):
 
         return instance
 
-    def __init__(self, source_id=None, source_definition=None, organization=None, source=None, source_id_key=None):
+    def __init__(self, source_id=None, source_definition=None, source=None, supplier=None, collection=None):
         # Set defaults
         self.skip_validation = None
         self.values = dict()
@@ -107,15 +107,15 @@ class Model(object):
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
         # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
         if source_id:
-            assert organization
             assert source
-            assert source_id_key
+            assert supplier
+            assert collection
             self.had_primary_source = Uri(
                 Mapping,
                 '{}/{}/{}/{}'.format(
-                    organization,
                     source,
-                    source_id_key,
+                    supplier,
+                    collection,
                     slugify(source_id)
                 )
             )
