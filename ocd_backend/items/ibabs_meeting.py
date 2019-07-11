@@ -23,7 +23,10 @@ class IBabsMeetingItem(BaseItem):
         else:
             meeting = self.original_item
 
-        item = Meeting(meeting['Id'], **source_defaults)
+        item = Meeting(meeting['Id'],
+                       self.source_definition,
+                       **source_defaults)
+        item.entity = self.entity
         item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         item.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -50,7 +53,10 @@ class IBabsMeetingItem(BaseItem):
         committee_designator = self.source_definition.get('committee_designator', 'commissie')
         if committee_designator in meeting['Meetingtype'].lower():
             # Attach the meeting to the committee node
-            item.committee = Organization(meeting['MeetingtypeId'], **source_defaults)
+            item.committee = Organization(meeting['MeetingtypeId'],
+                                          source=self.source_definition['key'],
+                                          supplier='ibabs',
+                                          collection='committee')
             item.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             item.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -67,7 +73,12 @@ class IBabsMeetingItem(BaseItem):
         if 'MeetingItems' in meeting:
             item.agenda = list()
             for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-                agenda_item = AgendaItem(mi['Id'], **source_defaults)
+                agenda_item = AgendaItem(mi['Id'],
+                                         self.source_definition,
+                                         source=self.source_definition['key'],
+                                         supplier='ibabs',
+                                         collection='agenda_item')
+                agenda_item.entity = mi['Id']
                 agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 agenda_item.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -78,7 +89,12 @@ class IBabsMeetingItem(BaseItem):
 
                 agenda_item.attachment = list()
                 for document in mi['Documents'] or []:
-                    attachment = MediaObject(document['Id'], **source_defaults)
+                    attachment = MediaObject(document['Id'],
+                                             self.source_definition,
+                                             source=self.source_definition['key'],
+                                             supplier='ibabs',
+                                             collection='attachment')
+                    attachment.entity = document['Id']
                     attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                     attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -93,7 +109,12 @@ class IBabsMeetingItem(BaseItem):
 
         item.invitee = list()
         for invitee in meeting['Invitees'] or []:
-            invitee_item = Person(invitee['UniqueId'], **source_defaults)
+            invitee_item = Person(invitee['UniqueId'],
+                                  self.source_definition,
+                                  source=self.source_definition['key'],
+                                  supplier='ibabs',
+                                  collection='meeting_invitee')
+            invitee_item.entity = invitee['UniqueId']
             invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             invitee_item.has_organization_name.merge(collection=self.source_definition['key'])
             item.invitee.append(invitee_item)
@@ -108,7 +129,12 @@ class IBabsMeetingItem(BaseItem):
 
         item.attachment = list()
         for document in meeting['Documents'] or []:
-            attachment = MediaObject(document['Id'], **source_defaults)
+            attachment = MediaObject(document['Id'],
+                                     self.source_definition,
+                                     source=self.source_definition['key'],
+                                     supplier='ibabs',
+                                     collection='attachment')
+            attachment.entity = document['Id']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -130,7 +156,12 @@ class IBabsReportItem(BaseItem):
             'collection': 'report',
         }
 
-        report = CreativeWork(self.original_item['id'][0], **source_defaults)  # todo
+        report = CreativeWork(self.original_item['id'][0],
+                              self.source_definition,
+                              source=self.source_definition['key'],
+                              supplier='ibabs',
+                              collection='report')
+        report.entity = self.original_item['id'][0]
         report.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         report.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -190,7 +221,12 @@ class IBabsReportItem(BaseItem):
 
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
-            attachment_file = MediaObject(document['Id'], **source_defaults)
+            attachment_file = MediaObject(document['Id'],
+                                          self.source_definition,
+                                          source=self.source_definition['key'],
+                                          supplier='ibabs',
+                                          collection='attachment')
+            attachment_file.entity = document['Id']
             attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment_file.has_organization_name.merge(collection=self.source_definition['key'])
 
