@@ -29,9 +29,9 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'gemeenteoplossingen',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'gemeenteoplossingen',
+            'collection': 'meeting',
         }
 
         event = Meeting(self.original_item[u'id'],
@@ -74,7 +74,10 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
         # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
         # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
-        event.committee = Organization('committee-' + str(self.original_item[u'dmu'][u'id']), **source_defaults)
+        event.committee = Organization(self.original_item[u'dmu'][u'id'],
+                                       source=self.source_definition['key'],
+                                       supplier='gemeenteoplossingen',
+                                       collection='committee')
         event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         event.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -101,7 +104,9 @@ class GemeenteOplossingenMeetingItem(BaseItem):
 
             agendaitem = AgendaItem(item['id'],
                                     self.source_definition,
-                                    **source_defaults)
+                                    source=self.source_definition['key'],
+                                    supplier='gemeenteoplossingen',
+                                    collection='agenda_item')
             agendaitem.entity = self.entity
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
@@ -117,9 +122,11 @@ class GemeenteOplossingenMeetingItem(BaseItem):
             for doc in self._get_documents_as_media_urls(
                 item.get('documents', [])
             ):
-                attachment = MediaObject(doc['url'],
+                attachment = MediaObject(doc['url'].rpartition('/')[2],
                                          self.source_definition,
-                                         **source_defaults)
+                                         source=self.source_definition['key'],
+                                         supplier='gemeenteoplossingen',
+                                         collection='attachment')
                 attachment.entity = doc['url']
                 attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 attachment.has_organization_name.merge(collection=self.source_definition['key'])
@@ -136,9 +143,11 @@ class GemeenteOplossingenMeetingItem(BaseItem):
         for doc in self._get_documents_as_media_urls(
             self.original_item.get('documents', [])
         ):
-            attachment = MediaObject(doc['url'],
+            attachment = MediaObject(doc['url'].rpartition('/')[2],
                                      self.source_definition,
-                                     **source_defaults)
+                                     source=self.source_definition['key'],
+                                     supplier='gemeenteoplossingen',
+                                     collection='attachment')
             attachment.entity = doc['url']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment.has_organization_name.merge(collection=self.source_definition['key'])
