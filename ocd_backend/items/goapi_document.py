@@ -30,9 +30,9 @@ class GemeenteOplossingenDocumentItem(BaseItem):
 
     def transform(self):
         source_defaults = {
-            'source': 'gemeenteoplossingen',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'gemeenteoplossingen',
+            'collection': 'document',
         }
 
         event = Meeting(self.original_item[u'id'],

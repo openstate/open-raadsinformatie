@@ -8,9 +8,9 @@ log = get_source_logger('notubiz_meeting')
 class NotubizMeetingItem(BaseItem):
     def transform(self):
         source_defaults = {
-            'source': 'notubiz',
-            'source_id_key': 'identifier',
-            'organization': self.source_definition['key'],
+            'source': self.source_definition['key'],
+            'supplier': 'notubiz',
+            'collection': 'meeting',
         }
 
         event = Meeting(self.original_item['id'],
@@ -31,7 +31,10 @@ class NotubizMeetingItem(BaseItem):
         event.organization.merge(collection=self.source_definition['key'])
 
         # Attach the meeting to the committee node
-        event.committee = Organization('committee-' + str(self.original_item['gremium']['id']), **source_defaults)
+        event.committee = Organization(self.original_item['gremium']['id'],
+                                       source=self.source_definition['key'],
+                                       supplier='notubiz',
+                                       collection='committee')
         event.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
         event.committee.has_organization_name.merge(collection=self.source_definition['key'])
 
@@ -50,7 +53,9 @@ class NotubizMeetingItem(BaseItem):
 
             agendaitem = AgendaItem(item['id'],
                                     self.source_definition,
-                                    **source_defaults)
+                                    source=self.source_definition['key'],
+                                    supplier='notubiz',
+                                    collection='agenda_item')
             agendaitem.entity = self.entity
             agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             agendaitem.has_organization_name.merge(collection=self.source_definition['key'])
@@ -72,7 +77,9 @@ class NotubizMeetingItem(BaseItem):
             for doc in item.get('documents', []):
                 attachment = MediaObject(doc['id'],
                                          self.source_definition,
-                                         **source_defaults)
+                                         source=self.source_definition['key'],
+                                         supplier='notubiz',
+                                         collection='attachment')
                 attachment.entity = doc['url']
                 attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
                 attachment.has_organization_name.merge(collection=self.source_definition['key'])
@@ -102,7 +109,9 @@ class NotubizMeetingItem(BaseItem):
         for doc in self.original_item.get('documents', []):
             attachment = MediaObject(doc['id'],
                                      self.source_definition,
-                                     **source_defaults)
+                                     source=self.source_definition['key'],
+                                     supplier='notubiz',
+                                     collection='attachment')
             attachment.entity = doc['url']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
             attachment.has_organization_name.merge(collection=self.source_definition['key'])
