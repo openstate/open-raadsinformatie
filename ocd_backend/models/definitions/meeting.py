@@ -7,12 +7,14 @@ used to describe both virtual (eg. online discussion) and non-virtual (eg.
 an assembly of people) discussion.
 """
 
+from aenum import Constant
+
 import opengov
 import schema
-from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
-from ocd_backend.models.model import Individual
+from ocd_backend.models.definitions import Mapping, Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \
     Relation, OrderedRelation
+from ocd_backend.models.misc import Uri
 
 
 class Meeting(MeetingNS, schema.Event):
@@ -25,7 +27,7 @@ class Meeting(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     audio = Relation(Schema, 'audio')
     description = StringProperty(Schema, 'description')
-    status = Relation(Schema, 'eventStatus')
+    status = StringProperty(Mapping, 'eventStatus')
     location = StringProperty(Schema, 'location')
     name = StringProperty(Schema, 'name', required=True)
     organization = Relation(Schema, 'organizer', required=True)
@@ -59,50 +61,20 @@ class AgendaItem(MeetingNS, schema.Event):
     agenda = Relation(MeetingNS, 'agenda')
 
 
-# Result Individuals
-class ResultKept(MeetingNS, Individual):
-    """When a proposal is kept for later processing"""
-    pass
+class ResultStatus(Constant):
+    KEPT = str(Uri(MeetingNS, "ResultKept"))
+    POSTPONED = str(Uri(MeetingNS, "ResultPostponed"))
+    WITHDRAWN = str(Uri(MeetingNS, "ResultWithdrawn"))
+    EXPIRED = str(Uri(MeetingNS, "ResultExpired"))
+    DISCUSSED = str(Uri(MeetingNS, "ResultDiscussed"))
+    PUBLISHED = str(Uri(MeetingNS, "ResultPublished"))
 
 
-class ResultPostponed(MeetingNS, Individual):
-    """When a proposal is postponed to a later (unspecified) moment"""
-    pass
-
-
-class ResultWithdrawn(MeetingNS, Individual):
-    """When a proposal is withdrawn by its author"""
-    pass
-
-
-class ResultExpired(MeetingNS, Individual):
-    """When a proposal has been expired"""
-    pass
-
-
-class ResultDiscussed(MeetingNS, Individual):
-    """When a proposal has been discussed"""
-    pass
-
-
-class ResultPublished(MeetingNS, Individual):
-    """When a proposal has been published"""
-    pass
-
-
-# EventStatusType Individuals
-class EventCompleted(MeetingNS, Individual):
-    """The event has taken place and has been completed"""
-    pass
-
-
-class EventConfirmed(MeetingNS, Individual):
-    """The event will take place but has not been
-    :class:`.schema.EventScheduled` yet
-    """
-    pass
-
-
-class EventUnconfirmed(MeetingNS, Individual):
-    """The event is not :class:`EventConfirmed` or is inactive"""
-    pass
+class EventStatus(Constant):
+    SCHEDULED = str(Uri(Schema, "EventScheduled"))
+    RESCHEDULED = str(Uri(Schema, "EventRescheduled"))
+    CANCELLED = str(Uri(Schema, "EventCancelled"))
+    POSTPONED = str(Uri(Schema, "EventPostponed"))
+    COMPLETED = str(Uri(MeetingNS, "EventCompleted"))
+    CONFIRMED = str(Uri(MeetingNS, "EventConfirmed"))
+    UNCONFIRMED = str(Uri(MeetingNS, "EventUnconfirmed"))

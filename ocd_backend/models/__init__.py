@@ -17,8 +17,6 @@ import definitions.schema
 Meeting = definitions.meeting.Meeting
 AgendaItem = definitions.meeting.AgendaItem
 Amendment = definitions.meeting.Amendment
-EventUnconfirmed = definitions.meeting.EventUnconfirmed
-EventConfirmed = definitions.meeting.EventConfirmed
 
 # https://argu.co/voc/mapping/
 # OriIdentifier = definitions.mapping.OriIdentifier
@@ -40,18 +38,12 @@ NoCount = definitions.opengov.NoCount
 AbstainCount = definitions.opengov.AbstainCount
 AbsentCount = definitions.opengov.AbsentCount
 Vote = definitions.opengov.Vote
-ResultFail = definitions.opengov.ResultFail
-ResultPass = definitions.opengov.ResultPass
-VoteOptionYes = definitions.opengov.VoteOptionYes
-VoteOptionNo = definitions.opengov.VoteOptionNo
-VoteOptionAbsent = definitions.opengov.VoteOptionAbsent
 
 # http://schema.org/
 MediaObject = definitions.schema.MediaObject
 ImageObject = definitions.schema.ImageObject
 CreativeWork = definitions.schema.CreativeWork
 PropertyValue = definitions.schema.PropertyValue
-EventCancelled = definitions.schema.EventCancelled
 
 # http://www.w3.org/ns/person#
 Person = definitions.person.Person
@@ -61,3 +53,9 @@ Organization = definitions.org.Organization
 # TopLevelOrganization is an alias for Organization
 TopLevelOrganization = definitions.org.Organization
 Membership = definitions.org.Membership
+
+# Enums for literals
+EventStatus = definitions.meeting.EventStatus
+ResultStatus = definitions.meeting.ResultStatus
+VoteOption = definitions.opengov.VoteOption
+VoteResult = definitions.opengov.VoteResult

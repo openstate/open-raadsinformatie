@@ -98,12 +98,12 @@ class NotubizMeetingItem(BaseItem):
 
         if 'canceled' in self.original_item and self.original_item['canceled']:
             log.info('Found a Notubiz event with status EventCancelled: %s' % str(event.values))
-            event.status = EventCancelled()
+            event.status = EventStatus.CANCELLED
         elif 'inactive' in self.original_item and self.original_item['inactive']:
             log.info('Found a Notubiz event with status EventUncomfirmed: %s' % str(event.values))
-            event.status = EventUnconfirmed()
+            event.status = EventStatus.CONFIRMED
         else:
-            event.status = EventConfirmed()
+            event.status = EventStatus.UNCONFIRMED
 
         event.attachment = []
         for doc in self.original_item.get('documents', []):

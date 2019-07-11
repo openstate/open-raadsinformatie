@@ -38,12 +38,12 @@ class IBabsMeetingItem(BaseItem):
         # TODO: This is untested so we log any cases that are not the default
         if 'canceled' in meeting and meeting['canceled']:
             log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
-            item.status = EventCancelled()
+            item.status = EventStatus.CANCELLED
         elif 'inactive' in meeting and meeting['inactive']:
             log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
-            item.status = EventUnconfirmed()
+            item.status = EventStatus.UNCONFIRMED
         else:
-            item.status = EventConfirmed()
+            item.status = EventStatus.CONFIRMED
 
         # Attach the meeting to the municipality node
         item.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
@@ -217,7 +217,7 @@ class IBabsReportItem(BaseItem):
             report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
             report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
-        report.status = EventConfirmed()
+        report.status = EventStatus.CONFIRMED
 
         report.attachment = list()
         for document in self.original_item['_Extra']['Documents'] or []:
