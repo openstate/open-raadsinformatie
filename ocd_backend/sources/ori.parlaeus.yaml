@@ -6,7 +6,6 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
@@ -18,41 +17,41 @@ _entities: &entities
     entity: municipality
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
-    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
+    transformer: ocd_backend.transformers.organizations.municipality_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
     doc_type: organizations
     extractor: ocd_backend.extractors.parlaeus.ParlaeusCommitteesExtractor
-    item: ocd_backend.items.parlaeus.Committee
+    transformer: ocd_backend.transformers.parlaeus.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
-    item: ocd_backend.items.organizations.PartyItem
+    transformer: ocd_backend.transformers.organizations.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.parlaeus.ParlaeusPersonsExtractor
-    item: ocd_backend.items.parlaeus.Person
+    transformer: ocd_backend.transformers.parlaeus.person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingsExtractor
-    item: ocd_backend.items.parlaeus.Meeting
+    transformer: ocd_backend.transformers.parlaeus.meeting_item
 
   - &meetingitems
     <<: *meetings
     entity: meetingitems
     extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingitemsExtractor
-    item: ocd_backend.items.parlaeus.MeetingItem
+    transformer: ocd_backend.transformers.parlaeus.meetingitem_item
     enrichers:
       - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
         - tasks:

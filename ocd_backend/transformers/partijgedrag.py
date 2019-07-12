@@ -1,8 +1,8 @@
-from ocd_backend.items import BaseItem
+from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import Motion, Organization, VoteEvent, Vote, Person, VoteOption, VoteResult
 
 
-class PartijgedragMotion(BaseItem):
+class MotionItem(BaseTransformer):
     def transform(self):
         source_defaults = {
             'source': 'partijgedrag',

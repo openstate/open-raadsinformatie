@@ -6,7 +6,6 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
@@ -18,7 +17,7 @@ _entities: &entities
     entity: motions
     doc_type: motions
     extractor: ocd_backend.extractors.staticfile.StaticJSONDumpExtractor
-    item: ocd_backend.items.partijgedrag.PartijgedragMotion
+    transformer: ocd_backend.transformers.partijgedrag.motion_item
     dump_path: "./json/pg_motions.json"
 
 ori.pg:
