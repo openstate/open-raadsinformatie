@@ -7,8 +7,8 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from ocd_backend import settings
 from ocd_backend.models.postgres_models import Source, Resource, Property
 from ocd_backend.models.definitions import Ori
-from ocd_backend.models.properties import StringProperty, IntegerProperty, DateProperty, DateTimeProperty, \
-    ArrayProperty, Relation, OrderedRelation
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, \
+    DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 from ocd_backend.models.misc import Uri
 
 
@@ -129,8 +129,9 @@ class PostgresDatabase(object):
 
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
-                # Don't save ori_identifier as a property
-                if predicate == model_object.definition('ori_identifier').absolute_uri():
+                # Don't save ori_identifier or had_primary_source as a property
+                if predicate in (model_object.definition('ori_identifier').absolute_uri(),
+                                 model_object.definition('had_primary_source').absolute_uri()):
                     continue
                 new_property = (Property(id=uuid.uuid4(), predicate=predicate))
                 setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
@@ -147,6 +148,8 @@ class PostgresDatabase(object):
 
         if property_type in (StringProperty, ArrayProperty):
             return 'prop_string'
+        if property_type is URLProperty:
+            return 'prop_url'
         elif property_type is IntegerProperty:
             return 'prop_integer'
         elif property_type in (DateProperty, DateTimeProperty):

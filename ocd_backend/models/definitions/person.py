@@ -5,7 +5,7 @@ http://www.w3.org/ns/person#
 import foaf
 from ocd_backend.models.definitions import Opengov, Schema, Foaf, Rdfs, \
     Dcterms, Bio, Person as PersonNS
-from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \
     Relation
 
 
@@ -20,7 +20,7 @@ class Person(PersonNS, foaf.Agent):
     national_identity = StringProperty(Opengov, 'nationalIdentity')
     summary = StringProperty(Bio, 'olb')
     other_names = StringProperty(Opengov, 'otherName')
-    links = StringProperty(Rdfs, 'seeAlso')
+    links = URLProperty(Rdfs, 'seeAlso')
     birth_date = DateTimeProperty(Schema, 'birthDate')
     death_date = DateTimeProperty(Schema, 'deathDate')
     email = StringProperty(Schema, 'email')

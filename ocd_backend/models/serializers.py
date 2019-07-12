@@ -5,7 +5,7 @@ from rdflib.namespace import XSD, Namespace, NamespaceManager
 from ocd_backend.models.definitions import ALL, Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty
-from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 from ocd_backend.utils.misc import iterate
 
@@ -86,6 +86,9 @@ class BaseSerializer(object):
         an SerializerError.
         """
         if type(prop) == StringProperty:
+            return value
+
+        elif type(prop) == URLProperty:
             return value
 
         elif type(prop) == IntegerProperty:

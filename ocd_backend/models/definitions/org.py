@@ -6,7 +6,7 @@ import foaf
 import owl
 from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
     Schema, Rdf, Meta
-from ocd_backend.models.properties import StringProperty, DateTimeProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \
     Relation, OrderedRelation
 
 
@@ -30,7 +30,7 @@ class Organization(Org, foaf.Agent):
     classification = StringProperty(Org, 'classification')
     subOrganizationOf = OrderedRelation(Org, 'subOrganizationOf')
     other_names = StringProperty(Opengov, 'otherName')
-    links = StringProperty(Rdf, 'seeAlso')
+    links = URLProperty(Rdf, 'seeAlso')
     dissolution_date = StringProperty(Schema, 'dissolutionDate')
     founding_date = StringProperty(Schema, 'foundingDate')
     image = StringProperty(Schema, 'image')
