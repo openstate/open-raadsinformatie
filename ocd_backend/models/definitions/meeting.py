@@ -12,7 +12,7 @@ from aenum import Constant
 import opengov
 import schema
 from ocd_backend.models.definitions import Mapping, Opengov, Schema, Meeting as MeetingNS
-from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     Relation, OrderedRelation
 from ocd_backend.models.misc import Uri
 
@@ -27,7 +27,7 @@ class Meeting(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     audio = Relation(Schema, 'audio')
     description = StringProperty(Schema, 'description')
-    status = StringProperty(Mapping, 'eventStatus')
+    status = URLProperty(Mapping, 'eventStatus')
     location = StringProperty(Schema, 'location')
     name = StringProperty(Schema, 'name', required=True)
     organization = Relation(Schema, 'organizer', required=True)

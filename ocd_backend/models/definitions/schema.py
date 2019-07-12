@@ -4,13 +4,13 @@ http://schema.org/
 
 import owl
 from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms
-from ocd_backend.models.properties import StringProperty, IntegerProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, Relation
 
 
 class MediaObject(Schema, owl.Thing):
     name = StringProperty(Schema, 'name')
-    url = StringProperty(Schema, 'contentUrl')
+    url = URLProperty(Schema, 'contentUrl')
     size_in_bytes = IntegerProperty(Schema, 'fileSize')
     file_type = StringProperty(Schema, 'fileType')
     additional_type = StringProperty(Schema, 'additionalType')
@@ -21,7 +21,7 @@ class MediaObject(Schema, owl.Thing):
     embed_url = StringProperty(Schema, 'embedUrl')
     file_name = StringProperty(Dbo, 'filename')
     date_modified = DateTimeProperty(Schema, 'dateModified')
-    original_url = StringProperty(Schema, 'isBasedOn')
+    original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
     isReferencedBy = Relation(Dcterms, 'isReferencedBy')
 
@@ -29,7 +29,7 @@ class MediaObject(Schema, owl.Thing):
 
 
 class AudioObject(Schema, owl.Thing):
-    contentUrl = StringProperty(Schema, 'contentUrl')
+    contentUrl = URLProperty(Schema, 'contentUrl')
 
 
 class CreativeWork(Schema, owl.Thing):
@@ -47,8 +47,8 @@ class Event(Schema, owl.Thing):
 
 
 class ImageObject(Schema, owl.Thing):
-    content_url = StringProperty(Schema, 'contentUrl')
-    is_based_on = StringProperty(Schema, 'isBasedOn')
+    content_url = URLProperty(Schema, 'contentUrl')
+    is_based_on = URLProperty(Schema, 'isBasedOn')
     file_format = StringProperty(Schema, 'fileFormat')
     content_size = StringProperty(Schema, 'contentSize')
     encoding_format = StringProperty(Schema, 'encodingFormat')
@@ -69,4 +69,4 @@ class Place(Schema, owl.Thing):
 
 
 class VideoObject(Schema, owl.Thing):
-    content_url = StringProperty(Schema, 'contentUrl')
+    content_url = URLProperty(Schema, 'contentUrl')
