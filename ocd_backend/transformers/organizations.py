@@ -1,4 +1,4 @@
-from ocd_backend.items import BaseItem
+from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import TopLevelOrganization, Organization
 
 
@@ -18,7 +18,7 @@ def transform_contact_details(data):
     return transformed_data
 
 
-class MunicipalityOrganizationItem(BaseItem):
+class MunicipalityOrganizationItem(BaseTransformer):
     """
     Creates a Municipality item.
     """
@@ -43,7 +43,7 @@ class MunicipalityOrganizationItem(BaseItem):
         return object_model
 
 
-class ProvinceOrganizationItem(BaseItem):
+class ProvinceOrganizationItem(BaseTransformer):
     """
     Creates a Province item.
     """
@@ -68,7 +68,7 @@ class ProvinceOrganizationItem(BaseItem):
         return object_model
 
 
-class PartyItem(BaseItem):
+class PartyItem(BaseTransformer):
     """
     Creates a Party (Organization) item.
     """

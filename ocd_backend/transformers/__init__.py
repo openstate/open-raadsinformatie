@@ -5,7 +5,6 @@ from lxml import etree
 from ocd_backend import celery_app
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.mixins import OCDBackendTaskFailureMixin
-from ocd_backend.utils.misc import load_object
 
 
 class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
@@ -21,23 +20,10 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
         else:
             raise NoDeserializerAvailable('Item with content_type %s' % content_type)
 
-    def start(self, content_type, raw_item, entity, source_item, **kwargs):
-        """Start transformation of a single item."""
-
-        self.source_definition = kwargs['source_definition']
-        item_class = load_object(self.source_definition['item'])
-
-        deserialized_item = self.deserialize_item(content_type=content_type, raw_item=raw_item)
-
-        transformed_item = item_class(deserialized_item=deserialized_item,
-                                      entity=entity,
-                                      source_definition=self.source_definition).transform()
-
-        transformed_item.save()
-
-        return transformed_item
+    # def __init__(self, source_definition):
+    #     self.source_definition = source_definition
 
 
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
-def transformer(self, *args, **kwargs):
-    return self.start(*args, **kwargs)
+from goapi_committee import *
+from goapi_document import *
+from goapi_meeting import *

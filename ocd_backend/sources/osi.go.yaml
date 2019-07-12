@@ -7,7 +7,6 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
@@ -19,35 +18,35 @@ _entities: &entities
     entity: province
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
-    item: ocd_backend.items.organizations.ProvinceOrganizationItem
+    transformer: ocd_backend.transformers.organizations.province_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
     doc_type: organizations
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
-    item: ocd_backend.items.goapi_committee.CommitteeItem
+    transformer: ocd_backend.transformers.goapi_committee.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
-    item: ocd_backend.items.organizations.PartyItem
+    transformer: ocd_backend.transformers.organizations.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
-    item: ocd_backend.items.persons.AllmanakPersonItem
+    transformer: ocd_backend.transformers.persons.allmanak_person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
-    item: ocd_backend.items.goapi_meeting.GemeenteOplossingenMeetingItem
+    transformer: ocd_backend.transformers.goapi_meeting.meeting_item
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.local_static_media_enricher
       - tasks:
@@ -58,7 +57,7 @@ _entities: &entities
     entity: documents
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
-    item: ocd_backend.items.goapi_document.GemeenteOplossingenDocumentItem
+    transformer: ocd_backend.transformers.goapi_document.document_item
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.local_static_media_enricher
       - tasks:

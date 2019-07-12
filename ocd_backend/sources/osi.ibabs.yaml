@@ -7,31 +7,30 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
-_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
-  <<: *entity_defaults
-  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-  item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-  include: moties
-  pdf_max_pages: 20
-  max_pages: 1
-  per_page: 100
+#_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
+#  <<: *entity_defaults
+#  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+#  transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
+#  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+#  include: moties
+#  pdf_max_pages: 20
+#  max_pages: 1
+#  per_page: 100
 
-_voting_rounds_defaults: &voting_rounds_defaults
-  <<: *entity_defaults
-  entity: voting_rounds
-  doc_type: vote_events
-  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-  item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
-  reverse_chronological: false
-  max_processed_meetings: 0
+#_voting_rounds_defaults: &voting_rounds_defaults
+#  <<: *entity_defaults
+#  entity: voting_rounds
+#  doc_type: vote_events
+#  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+#  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
+#  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+#  reverse_chronological: false
+#  max_processed_meetings: 0
 
 _entities: &entities
   - &province
@@ -39,42 +38,42 @@ _entities: &entities
     entity: province
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
-    item: ocd_backend.items.organizations.ProvinceOrganizationItem
+    transformer: ocd_backend.transformers.organizations.province_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
     doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
-    item: ocd_backend.items.ibabs_committee.CommitteeItem
+    transformer: ocd_backend.transformers.ibabs_committee.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
-    item: ocd_backend.items.organizations.PartyItem
+    transformer: ocd_backend.transformers.organizations.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
-    item: ocd_backend.items.ibabs_person.IbabsPersonItem
+    transformer: ocd_backend.transformers.ibabs_person.person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
-    item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+    transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
 
   - &reports
     <<: *entity_defaults
     entity: reports
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+    transformer: ocd_backend.transformers.ibabs_meeting.report_item
     include: ".*"
     pdf_max_pages: 0
     max_pages: 1
@@ -85,36 +84,6 @@ _entities_voting: &entities_voting
 
   - &committees_voting
     <<: *committees
-
-  - &organizations_voting
-    <<: *entity_defaults
-    entity: organizations
-    doc_type: organizations
-    extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    transformer: ocd_backend.transformers.transformer
-    item: ocd_backend.items.popit.PopitOrganisationItem
-    loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-    cleanup: ocd_backend.tasks.cleanup_elasticsearch
-    vote_entity: organizations
-    pdf_max_pages: 20
-    council_members_count: 1
-    reverse_chronological: true
-    max_processed_meetings: 1
-
-  - &persons_voting
-    <<: *entity_defaults
-    entity: persons
-    doc_type: persons
-    extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-    transformer: ocd_backend.transformers.transformer
-    item: ocd_backend.items.popit.PopitPersonItem
-    loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-    cleanup: ocd_backend.tasks.cleanup_elasticsearch
-    vote_entity: persons
-    pdf_max_pages: 20
-    council_members_count: 1
-    reverse_chronological: true
-    max_processed_meetings: 1
 
   - &meetings_voting
     <<: *meetings
@@ -177,8 +146,6 @@ osi.ibabs:
     entities:
     - *province_voting
     - *committees_voting
-    - *organizations_voting
-    - *persons_voting
     - *meetings_voting
     - *reports_voting
 
@@ -189,7 +156,7 @@ osi.ibabs:
       include: moties
       exclude: "^$"
       <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
+      # <<: *motions_and_amendments_voting_defaults
 
     - &amendments_voting
       entity: amendments
@@ -198,7 +165,7 @@ osi.ibabs:
       include: amendementen
       exclude: "^$"
       <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
+      # <<: *motions_and_amendments_voting_defaults
 
     - &vote_events
       entity: vote_events
@@ -207,7 +174,7 @@ osi.ibabs:
       include: (moties|amendementen)
       exclude: "^$"
       <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
+      # <<: *motions_and_amendments_voting_defaults
 
     - &voting_rounds
-      <<: *voting_rounds_defaults
+      # <<: *voting_rounds_defaults
