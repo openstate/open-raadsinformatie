@@ -52,6 +52,11 @@ class StringProperty(Property):
             return unicode(value).strip()
 
 
+class URLProperty(StringProperty):
+    """A property which defines a URL."""
+    pass
+
+
 class IntegerProperty(Property):
     """A property which defines an int type."""
 
