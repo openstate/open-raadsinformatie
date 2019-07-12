@@ -6,7 +6,6 @@ _defaults: &source_defaults
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
-  transformer: ocd_backend.transformers.transformer
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
     - ocd_backend.loaders.delta.delta_loader
@@ -18,35 +17,35 @@ _entities: &entities
     entity: municipality
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
-    item: ocd_backend.items.organizations.MunicipalityOrganizationItem
+    transformer: ocd_backend.transformers.organizations.municipality_organization_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
-    item: ocd_backend.items.organizations.PartyItem
+    transformer: ocd_backend.transformers.organizations.party_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
     doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
-    item: ocd_backend.items.ibabs_committee.CommitteeItem
+    transformer: ocd_backend.transformers.ibabs_committee.committee_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
     doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
-    item: ocd_backend.items.ibabs_person.IbabsPersonItem
+    transformer: ocd_backend.transformers.ibabs_person.person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
-    item: ocd_backend.items.ibabs_meeting.IBabsMeetingItem
+    transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
       - # reserved for enricher_settings
@@ -56,7 +55,7 @@ _entities: &entities
     entity: reports
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+    transformer: ocd_backend.transformers.ibabs_meeting.report_item
     enrichers:
     - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
       - # reserved for enricher_settings
@@ -64,15 +63,15 @@ _entities: &entities
     pdf_max_pages: 0
     max_pages: 1
 
-_cwc: &cwc
-  - &videotulen
-    <<: *entity_defaults
-    entity: videotulen
-    doc_type: events
-    extractor: ocd_backend.extractors.cwc.VideotulenExtractor
-    item: ocd_backend.items.cwc.VideotulenItem
-    cwc_pagesize: 10
-    cwc_paging: false
+#_cwc: &cwc
+#  - &videotulen
+#    <<: *entity_defaults
+#    entity: videotulen
+#    doc_type: events
+#    extractor: ocd_backend.extractors.cwc.VideotulenExtractor
+#    transformer: ocd_backend.transformers.cwc.VideotulenItem
+#    cwc_pagesize: 10
+#    cwc_paging: false
 
 _ibabs: &ibabs
   source_type: "SOAP"
@@ -124,7 +123,7 @@ ori.ibabs:
     - *persons
     - *meetings
     - *reports
-    - *videotulen
+    # - *videotulen
     <<: *ibabs
 
   zoetermeer:
@@ -144,7 +143,7 @@ ori.ibabs:
     - entity: reports
       doc_type: events
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_meeting.IBabsReportItem
+      transformer: ocd_backend.transformers.ibabs_meeting.report_item
       include: ".*"
       exclude: (moties|amendementen)
       pdf_max_pages: 0
@@ -176,113 +175,80 @@ ori.ibabs:
           start_date: datum
       <<: *entity_defaults
 
-    - id: utrecht_ibabs_organizations
-      entity: organizations
-      doc_type: organizations
-      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      transformer: ocd_backend.transformers.transformer
-      item: ocd_backend.items.popit.PopitOrganisationItem
-      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-      cleanup: ocd_backend.tasks.cleanup_elasticsearch
-      vote_entity: organizations
-      pdf_max_pages: 20
-      council_members_count: 45
-      reverse_chronological: true
-      max_processed_meetings: 1
-      # start_date: '2017-09-01T00:00:00'
-      # end_date: '2018-03-21T00:00:00'
+#    - entity: motions
+#      doc_type: motions
+#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+#      transformer: ocd_backend.transformers.ibabs_motion.motion_itm
+#      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
+#      include: moties
+#      pdf_max_pages: 20
+#      max_pages: 1
+#      per_page: 100
+#      fields:
+#        Moties:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#        Amendementen:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#      <<: *entity_defaults
 
-    - id: utrecht_ibabs_persons
-      entity: persons
-      doc_type: persons
-      extractor: ocd_backend.extractors.ibabs.IBabsMostRecentCompleteCouncilExtractor
-      transformer: ocd_backend.transformers.transformer
-      item: ocd_backend.items.popit.PopitPersonItem
-      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-      cleanup: ocd_backend.tasks.cleanup_elasticsearch
-      vote_entity: persons
-      pdf_max_pages: 20
-      council_members_count: 45
-      reverse_chronological: true
-      max_processed_meetings: 1
-      # start_date: '2017-09-01T00:00:00'
-      # end_date: '2018-03-21T00:00:00'
+#    - entity: amendments
+#      doc_type: motions
+#      classification: Amendementen
+#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+#      transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
+#      include: amendementen
+#      pdf_max_pages: 20
+#      max_pages: 1
+#      per_page: 100
+#      fields:
+#        Amendementen:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#        Moties:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#      <<: *entity_defaults
 
-    - entity: motions
-      doc_type: motions
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-      include: moties
-      pdf_max_pages: 20
-      max_pages: 1
-      per_page: 100
-      fields:
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-      <<: *entity_defaults
+#    - entity: vote_events
+#      doc_type: vote_events
+#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+#      transformer: ocd_backend.transformers.ibabs_motion.IBabsVoteEventItem
+#      include: (moties|amendementen)
+#      pdf_max_pages: 20
+#      max_pages: 1
+#      per_page: 100
+#      fields:
+#        Moties:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#        Amendementen:
+#          name: onderwerp
+#          description: status
+#          start_date: datum
+#      <<: *entity_defaults
 
-    - entity: amendments
-      doc_type: motions
-      classification: Amendementen
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_motion.IBabsMotionItem
-      include: amendementen
-      pdf_max_pages: 20
-      max_pages: 1
-      per_page: 100
-      fields:
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-      <<: *entity_defaults
-
-    #
-    - entity: vote_events
-      doc_type: vote_events
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      item: ocd_backend.items.ibabs_motion.IBabsVoteEventItem
-      include: (moties|amendementen)
-      pdf_max_pages: 20
-      max_pages: 1
-      per_page: 100
-      fields:
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-      <<: *entity_defaults
-    #
-    - entity: voting_rounds
-      doc_type: vote_events
-      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-      item: ocd_backend.items.voting_round.IBabsVotingRoundItem
-      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpdateOnlyLoader
-      reverse_chronological: false
-      max_processed_meetings: 0
-      # start_date: '2018-02-01T00:00:00'
-      # end_date: '2018-03-21T00:00:00'
-      <<: *entity_defaults
+#    - entity: voting_rounds
+#      doc_type: vote_events
+#      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+#      transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
+#      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpdateOnlyLoader
+#      reverse_chronological: false
+#      max_processed_meetings: 0
+#      # start_date: '2018-02-01T00:00:00'
+#      # end_date: '2018-03-21T00:00:00'
+#      <<: *entity_defaults
 
     # - entity: meeting_attendees
     #   doc_type: events
     #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor
-    #   item: ocd_backend.items.attendance.AttendanceForEventItem
+    #   transformer: ocd_backend.transformers.attendance.AttendanceForEventItem
     #   frontend_type: events
     #   frontend_args:
     #     classification: Agenda
@@ -291,7 +257,7 @@ ori.ibabs:
     #     size: 100
     #   <<: *entity_defaults
 
-    - *videotulen
+    # - *videotulen
 
   # Added on 17-11-2017
   barneveld:
@@ -538,5 +504,5 @@ ori.ibabs:
     - *persons
     - *meetings
     - *reports
-    - *videotulen
+    # - *videotulen
     <<: *ibabs

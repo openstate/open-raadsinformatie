@@ -2,14 +2,14 @@ import re
 
 import iso8601
 
-from ocd_backend.items import BaseItem
+from ocd_backend.transformers import BaseTransformer
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 
 log = get_source_logger('ibabs_meeting')
 
 
-class IBabsMeetingItem(BaseItem):
+class MeetingItem(BaseTransformer):
     def transform(self):
         source_defaults = {
             'source': self.source_definition['key'],
@@ -148,7 +148,7 @@ class IBabsMeetingItem(BaseItem):
         return item
 
 
-class IBabsReportItem(BaseItem):
+class ReportItem(BaseTransformer):
     def transform(self):
         source_defaults = {
             'source': self.source_definition['key'],
