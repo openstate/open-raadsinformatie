@@ -1,11 +1,11 @@
-from ocd_backend.items import BaseItem
+from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('notubiz_meeting')
 
 
-class NotubizMeetingItem(BaseItem):
+class MeetingItem(BaseTransformer):
     def transform(self):
         source_defaults = {
             'source': self.source_definition['key'],

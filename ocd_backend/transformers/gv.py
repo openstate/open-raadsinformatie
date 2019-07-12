@@ -1,11 +1,11 @@
 from datetime import datetime
 from hashlib import sha1
 
-from ocd_backend.items import BaseItem
+from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
 
 
-class GreenValleyItem(BaseItem):
+class GreenValleyItem(BaseTransformer):
     def _get_documents_as_media_urls(self):
         media_urls = {}
         if u'attachmentlist' in self.original_item:
@@ -146,9 +146,9 @@ class GreenValleyItem(BaseItem):
         return event
 
 
-class GreenValleyMeeting(GreenValleyItem):
+class MeetingItem(GreenValleyItem):
     def transform(self):
-        event = super(GreenValleyMeeting, self).transform()
+        event = super(MeetingItem, self).transform()
 
         source_defaults = {
             'source': self.source_definition['key'],
