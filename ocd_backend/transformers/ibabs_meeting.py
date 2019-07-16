@@ -31,8 +31,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                    source_definition,
                    **source_defaults)
     item.entity = entity
-    item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    item.has_organization_name.merge(collection=source_definition['key'])
+    item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                      source=source_definition['key'],
+                                                      supplier='allmanak',
+                                                      collection='governmental_organization')
 
     item.name = meeting['Meetingtype']
     item.chair = meeting['Chairman']
@@ -49,9 +51,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     else:
         item.status = EventStatus.CONFIRMED
 
-    # Attach the meeting to the municipality node
-    item.organization = TopLevelOrganization(source_definition['key'], **source_defaults)
-    item.organization.merge(collection=source_definition['key'])
+    item.organization = TopLevelOrganization(source_definition['allmanak_id'],
+                                             source=source_definition['key'],
+                                             supplier='allmanak',
+                                             collection='governmental_organization')
 
     # Check if this is a committee meeting and if so connect it to the committee node.
     committee_designator = source_definition.get('committee_designator', 'commissie')
@@ -61,8 +64,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                       source=source_definition['key'],
                                       supplier='ibabs',
                                       collection='committee')
-        item.committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        item.committee.has_organization_name.merge(collection=source_definition['key'])
+        item.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                    source=source_definition['key'],
+                                                                    supplier='allmanak',
+                                                                    collection='governmental_organization')
 
         item.committee.name = meeting['Meetingtype']
         if 'sub' in meeting['MeetingtypeId']:
@@ -71,8 +76,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             item.committee.classification = u'Committee'
 
         # Re-attach the committee node to the municipality node
-        item.committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
-        item.committee.subOrganizationOf.merge(collection=source_definition['key'])
+        item.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
     if 'MeetingItems' in meeting:
         item.agenda = list()
@@ -83,8 +90,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      supplier='ibabs',
                                      collection='agenda_item')
             agenda_item.entity = mi['Id']
-            agenda_item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-            agenda_item.has_organization_name.merge(collection=source_definition['key'])
+            agenda_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                     source=source_definition['key'],
+                                                                     supplier='allmanak',
+                                                                     collection='governmental_organization')
 
             agenda_item.parent = item
             agenda_item.name = mi['Title']
@@ -99,8 +108,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                          supplier='ibabs',
                                          collection='attachment')
                 attachment.entity = document['Id']
-                attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-                attachment.has_organization_name.merge(collection=source_definition['key'])
+                attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                        source=source_definition['key'],
+                                                                        supplier='allmanak',
+                                                                        collection='governmental_organization')
 
                 attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                 attachment.original_url = document['PublicDownloadURL']
@@ -119,8 +130,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                               supplier='ibabs',
                               collection='meeting_invitee')
         invitee_item.entity = invitee['UniqueId']
-        invitee_item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        invitee_item.has_organization_name.merge(collection=source_definition['key'])
+        invitee_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                  source=source_definition['key'],
+                                                                  supplier='allmanak',
+                                                                  collection='governmental_organization')
         item.invitee.append(invitee_item)
 
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
@@ -139,8 +152,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  supplier='ibabs',
                                  collection='attachment')
         attachment.entity = document['Id']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        attachment.has_organization_name.merge(collection=source_definition['key'])
+        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
         attachment.original_url = document['PublicDownloadURL']
@@ -170,8 +185,10 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
                           supplier='ibabs',
                           collection='report')
     report.entity = original_item['id'][0]
-    report.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    report.has_organization_name.merge(collection=source_definition['key'])
+    report.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                        source=source_definition['key'],
+                                                        supplier='allmanak',
+                                                        collection='governmental_organization')
 
     report_name = original_item['_ReportName'].split(r'\s+')[0]
     report.classification = u'Report'
@@ -195,8 +212,10 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     # Temporary binding reports to municipality as long as events and agendaitems are not
     # referenced in the iBabs API
-    report.creator = TopLevelOrganization(source_definition['key'], **source_defaults)
-    report.creator.merge(collection=source_definition['key'])
+    report.creator = TopLevelOrganization(source_definition['allmanak_id'],
+                                          source=source_definition['key'],
+                                          supplier='allmanak',
+                                          collection='governmental_organization')
 
     try:
         name_field = source_definition['fields'][report_name]['description']
@@ -235,8 +254,10 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                       supplier='ibabs',
                                       collection='attachment')
         attachment_file.entity = document['Id']
-        attachment_file.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        attachment_file.has_organization_name.merge(collection=source_definition['key'])
+        attachment_file.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                     source=source_definition['key'],
+                                                                     supplier='allmanak',
+                                                                     collection='governmental_organization')
 
         attachment_file.original_url = document['PublicDownloadURL']
         attachment_file.size_in_bytes = document['FileSize']
