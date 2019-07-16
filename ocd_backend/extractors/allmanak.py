@@ -115,12 +115,14 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
 
         if static_json[0]['functies']:
             total_persons = 0
-            for person in static_json[0]['functies'][4]['functie']['medewerkers']:
-                yield 'application/json', \
-                      json.dumps(person['persoon']), \
-                      path, \
-                      static_json
-                total_persons += 1
+            for row in static_json[0]['functies']:
+                if row['functie']:
+                    for person in row['functie']['medewerkers']:
+                        yield 'application/json', \
+                              json.dumps(person['persoon']), \
+                              path, \
+                              static_json
+                        total_persons += 1
             log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['sitename'], total_persons))
         else:
             log.warning('[%s] Allmanak does not list any persons for this source.' % self.source_definition['sitename'])
