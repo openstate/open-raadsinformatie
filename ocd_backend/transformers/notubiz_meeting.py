@@ -21,30 +21,35 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                     source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.has_organization_name.merge(collection=source_definition['key'])
-
+    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                       source=source_definition['key'],
+                                                       supplier='allmanak',
+                                                       collection='governmental_organization')
     event.start_date = original_item['plannings'][0]['start_date']
     event.end_date = original_item['plannings'][0]['end_date']
     event.name = original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
     event.classification = [u'Agenda']
     event.location = original_item['attributes'].get('Locatie')
 
-    # Attach the meeting to the municipality node
-    event.organization = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.organization.merge(collection=source_definition['key'])
+    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
+                                              source=source_definition['key'],
+                                              supplier='allmanak',
+                                              collection='governmental_organization')
 
-    # Attach the meeting to the committee node
     event.committee = Organization(original_item['gremium']['id'],
                                    source=source_definition['key'],
                                    supplier='notubiz',
                                    collection='committee')
-    event.committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.committee.has_organization_name.merge(collection=source_definition['key'])
+    event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                 source=source_definition['key'],
+                                                                 supplier='allmanak',
+                                                                 collection='governmental_organization')
 
     # Re-attach the committee node to the municipality node
-    event.committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.committee.subOrganizationOf.merge(collection=source_definition['key'])
+    event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
+                                                             source=source_definition['key'],
+                                                             supplier='allmanak',
+                                                             collection='governmental_organization')
 
     event.agenda = []
     for item in original_item.get('agenda_items', []):
@@ -61,8 +66,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                 supplier='notubiz',
                                 collection='agenda_item')
         agendaitem.entity = entity
-        agendaitem.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        agendaitem.has_organization_name.merge(collection=source_definition['key'])
+        agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
         try:
@@ -85,8 +92,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      supplier='notubiz',
                                      collection='attachment')
             attachment.entity = doc['url']
-            attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-            attachment.has_organization_name.merge(collection=source_definition['key'])
+            attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                    source=source_definition['key'],
+                                                                    supplier='allmanak',
+                                                                    collection='governmental_organization')
 
             attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
@@ -117,8 +126,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  supplier='notubiz',
                                  collection='attachment')
         attachment.entity = doc['url']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        attachment.has_organization_name.merge(collection=source_definition['key'])
+        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

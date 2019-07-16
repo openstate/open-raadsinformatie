@@ -45,11 +45,15 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
                     source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.has_organization_name.merge(collection=source_definition['key'])
+    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                       source=source_definition['key'],
+                                                       supplier='allmanak',
+                                                       collection='governmental_organization')
 
-    event.organization = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.organization.merge(collection=source_definition['key'])
+    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
+                                              source=source_definition['key'],
+                                              supplier='allmanak',
+                                              collection='governmental_organization')
 
     try:
         date_tz = pytz.timezone(
@@ -76,8 +80,10 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source_definition,
                                  **source_defaults)
         attachment.entity = doc['url']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        attachment.has_organization_name.merge(collection=source_definition['key'])
+        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']
