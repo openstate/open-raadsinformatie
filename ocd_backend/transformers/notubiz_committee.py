@@ -1,30 +1,38 @@
+from ocd_backend import celery_app
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('notubiz_committee')
 
 
-class CommitteeItem(BaseTransformer):
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'notubiz',
-            'collection': 'committee',
-        }
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
 
-        committee = Organization(self.original_item['id'],
-                                 self.source_definition,
-                                 **source_defaults)
-        committee.entity = self.entity
-        committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        committee.has_organization_name.merge(collection=self.source_definition['key'])
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'notubiz',
+        'collection': 'committee',
+    }
 
-        committee.name = self.original_item['title']
-        if self.original_item['title'] == 'Gemeenteraad':
-            committee.classification = 'Council'
-        else:
-            committee.classification = 'Committee'
+    committee = Organization(original_item['id'],
+                             source_definition,
+                             **source_defaults)
+    committee.entity = entity
+    committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+    committee.has_organization_name.merge(collection=source_definition['key'])
 
-        # Attach the committee node to the municipality node
-        committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        committee.subOrganizationOf.merge(collection=self.source_definition['key'])
+    committee.name = original_item['title']
+    if original_item['title'] == 'Gemeenteraad':
+        committee.classification = 'Council'
+    else:
+        committee.classification = 'Committee'
 
-        return committee
+    # Attach the committee node to the municipality node
+    committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
+    committee.subOrganizationOf.merge(collection=source_definition['key'])
+
+    committee.save()
+    return committee
