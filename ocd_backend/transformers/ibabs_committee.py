@@ -21,8 +21,10 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
                              source_definition,
                              **source_defaults)
     committee.entity = entity
-    committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    committee.has_organization_name.merge(collection=source_definition['key'])
+    committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                           source=source_definition['key'],
+                                                           supplier='allmanak',
+                                                           collection='governmental_organization')
 
     committee.name = original_item['Meetingtype']
     committee.description = original_item['Abbreviation']
@@ -33,8 +35,10 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
         committee.classification = u'Committee'
 
     # Attach the committee node to the municipality node
-    committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
-    committee.subOrganizationOf.merge(collection=source_definition['key'])
+    committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
+                                                       source=source_definition['key'],
+                                                       supplier='allmanak',
+                                                       collection='governmental_organization')
 
     committee.save()
     return committee
