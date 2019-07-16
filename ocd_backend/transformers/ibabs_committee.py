@@ -1,32 +1,40 @@
+from ocd_backend import celery_app
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('ibabs_committee')
 
 
-class CommitteeItem(BaseTransformer):
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'ibabs',
-            'collection': 'committee',
-        }
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
 
-        committee = Organization(self.original_item['Id'],
-                                 self.source_definition,
-                                 **source_defaults)
-        committee.entity = self.entity
-        committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        committee.has_organization_name.merge(collection=self.source_definition['key'])
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'ibabs',
+        'collection': 'committee',
+    }
 
-        committee.name = self.original_item['Meetingtype']
-        committee.description = self.original_item['Abbreviation']
+    committee = Organization(original_item['Id'],
+                             source_definition,
+                             **source_defaults)
+    committee.entity = entity
+    committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+    committee.has_organization_name.merge(collection=source_definition['key'])
 
-        if 'sub' in self.original_item['Meetingtype']:
-            committee.classification = u'Subcommittee'
-        else:
-            committee.classification = u'Committee'
+    committee.name = original_item['Meetingtype']
+    committee.description = original_item['Abbreviation']
 
-        # Attach the committee node to the municipality node
-        committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        committee.subOrganizationOf.merge(collection=self.source_definition['key'])
+    if 'sub' in original_item['Meetingtype']:
+        committee.classification = u'Subcommittee'
+    else:
+        committee.classification = u'Committee'
 
-        return committee
+    # Attach the committee node to the municipality node
+    committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
+    committee.subOrganizationOf.merge(collection=source_definition['key'])
+
+    committee.save()
+    return committee

@@ -1,5 +1,9 @@
+from ocd_backend import celery_app
 from ocd_backend.transformers import BaseTransformer
-from ocd_backend.models import TopLevelOrganization, Organization
+from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('organizations')
 
 
 def transform_contact_details(data):
@@ -18,79 +22,79 @@ def transform_contact_details(data):
     return transformed_data
 
 
-class MunicipalityOrganizationItem(BaseTransformer):
-    """
-    Creates a Municipality item.
-    """
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def municipality_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
 
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'allmanak',
-            'collection': 'governmental_organization',
-        }
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'allmanak',
+        'collection': 'governmental_organization',
+    }
 
-        object_model = TopLevelOrganization(self.original_item['systemid'],
-                                            self.source_definition,
-                                            **source_defaults)
-        object_model.entity = self.entity
-        object_model.classification = u'Municipality'
-        object_model.collection = self.source_definition['key']
-        object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(self.original_item['naam'])])
-        object_model.description = self.original_item['omvatplaats']
-        # object_model.contact_details = transform_contact_details(self.original_item['contact'])
+    object_model = TopLevelOrganization(original_item['systemid'],
+                                        source_definition,
+                                        **source_defaults)
+    object_model.entity = entity
+    object_model.classification = u'Municipality'
+    object_model.collection = source_definition['key']
+    object_model.name = ' '.join([source_definition.get('municipality_prefix', ''), unicode(original_item['naam'])])
+    object_model.description = original_item['omvatplaats']
+    # object_model.contact_details = transform_contact_details(original_item['contact'])
 
-        return object_model
-
-
-class ProvinceOrganizationItem(BaseTransformer):
-    """
-    Creates a Province item.
-    """
-
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'allmanak',
-            'collection': 'governmental_organization',
-        }
-
-        object_model = TopLevelOrganization(self.original_item['systemid'],
-                                            self.source_definition,
-                                            **source_defaults)
-        object_model.entity = self.entity
-        object_model.classification = u'Province'
-        object_model.collection = self.source_definition['key']
-        object_model.name = unicode(self.original_item['naam'])
-        object_model.description = self.original_item['omvatplaats']
-        # object_model.contact_details = transform_contact_details(self.original_item['contact'])
-
-        return object_model
+    object_model.save()
+    return object_model
 
 
-class PartyItem(BaseTransformer):
-    """
-    Creates a Party (Organization) item.
-    """
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def province_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
 
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'allmanak',
-            'collection': 'party',
-        }
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'allmanak',
+        'collection': 'governmental_organization',
+    }
 
-        # When the Allmanak implements parties as entities, the entity ID should be used
-        object_model = Organization(self.original_item['partij'],
-                                    self.source_definition,
-                                    **source_defaults)
-        object_model.entity = self.entity
-        object_model.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        object_model.has_organization_name.merge(collection=self.source_definition['key'])
-        object_model.collection = self.source_definition['key'] + '-' + self.original_item['partij']
-        object_model.name = self.original_item['partij']
-        object_model.classification = 'Party'
-        object_model.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        object_model.subOrganizationOf.merge(collection=self.source_definition['key'])
+    object_model = TopLevelOrganization(original_item['systemid'],
+                                        source_definition,
+                                        **source_defaults)
+    object_model.entity = entity
+    object_model.classification = u'Province'
+    object_model.collection = source_definition['key']
+    object_model.name = unicode(original_item['naam'])
+    object_model.description = original_item['omvatplaats']
+    # object_model.contact_details = transform_contact_details(original_item['contact'])
 
-        return object_model
+    object_model.save()
+    return object_model
+
+
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
+
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'allmanak',
+        'collection': 'party',
+    }
+
+    # When the Allmanak implements parties as entities, the entity ID should be used
+    object_model = Organization(original_item['partij'],
+                                source_definition,
+                                **source_defaults)
+    object_model.entity = entity
+    object_model.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+    object_model.has_organization_name.merge(collection=source_definition['key'])
+    object_model.collection = source_definition['key'] + '-' + original_item['partij']
+    object_model.name = original_item['partij']
+    object_model.classification = 'Party'
+    object_model.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
+    object_model.subOrganizationOf.merge(collection=source_definition['key'])
+
+    object_model.save()
+    return object_model
