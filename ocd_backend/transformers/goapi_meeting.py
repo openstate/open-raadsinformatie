@@ -44,8 +44,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                     source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.has_organization_name.merge(collection=source_definition['key'])
+    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                       source=source_definition['key'],
+                                                       supplier='allmanak',
+                                                       collection='governmental_organization')
 
     # dates in v1 have a time in them and in v2 they don't
     if ':' in original_item['date']:
@@ -75,8 +77,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         pass
 
     # Attach the meeting to the municipality node
-    event.organization = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.organization.merge(collection=source_definition['key'])
+    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
+                                              source=source_definition['key'],
+                                              supplier='allmanak',
+                                              collection='governmental_organization')
 
     # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
     # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
@@ -84,11 +88,14 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                    source=source_definition['key'],
                                    supplier='gemeenteoplossingen',
                                    collection='committee')
-    event.committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.committee.has_organization_name.merge(collection=source_definition['key'])
-
-    event.committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
-    event.committee.subOrganizationOf.merge(collection=source_definition['key'])
+    event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                 source=source_definition['key'],
+                                                                 supplier='allmanak',
+                                                                 collection='governmental_organization')
+    event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
+                                                             source=source_definition['key'],
+                                                             supplier='allmanak',
+                                                             collection='governmental_organization')
 
     # object_model['last_modified'] = iso8601.parse_date(
     #    original_item['last_modified'])
@@ -114,8 +121,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                 supplier='gemeenteoplossingen',
                                 collection='agenda_item')
         agendaitem.entity = entity
-        agendaitem.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        agendaitem.has_organization_name.merge(collection=source_definition['key'])
+        agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         agendaitem.__rel_params__ = {'rdf': '_%i' % item['sortorder']}
         agendaitem.description = item['description']
@@ -132,8 +141,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      supplier='gemeenteoplossingen',
                                      collection='attachment')
             attachment.entity = doc['url']
-            attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-            attachment.has_organization_name.merge(collection=source_definition['key'])
+            attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                    source=source_definition['key'],
+                                                                    supplier='allmanak',
+                                                                    collection='governmental_organization')
 
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
@@ -151,8 +162,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  supplier='gemeenteoplossingen',
                                  collection='attachment')
         attachment.entity = doc['url']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        attachment.has_organization_name.merge(collection=source_definition['key'])
+        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                source=source_definition['key'],
+                                                                supplier='allmanak',
+                                                                collection='governmental_organization')
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

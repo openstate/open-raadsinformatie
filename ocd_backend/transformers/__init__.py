@@ -31,3 +31,4 @@ from ibabs_meeting import *
 from ibabs_person import *
 from notubiz_committee import *
 from notubiz_meeting import *
+from gv import *

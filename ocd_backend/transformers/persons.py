@@ -21,8 +21,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
                     source_definition,
                     **source_defaults)
     person.entity = entity
-    person.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    person.has_organization_name.merge(collection=source_definition['key'])
+    person.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                        source=source_definition['key'],
+                                                        supplier='allmanak',
+                                                        collection='governmental_organization')
 
     person.name = original_item['naam']
     if 'Dhr.' in original_item['naam']:
@@ -30,8 +32,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     elif 'Mw.' in original_item['naam']:
         person.gender = 'Vrouw'
 
-    municipality = TopLevelOrganization(source_definition['key'], **source_defaults)
-    municipality.merge(collection=source_definition['key'])
+    municipality = TopLevelOrganization(source_definition['allmanak_id'],
+                                        source=source_definition['key'],
+                                        supplier='allmanak',
+                                        collection='governmental_organization')
 
     # The source ID for the municipality membership is constructed by combining the person's Allmanak ID and the
     # key of the source
@@ -42,8 +46,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
                                      supplier='allmanak',
                                      collection='person_municipality_membership')
     municipality_member.entity = entity
-    municipality_member.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-    municipality_member.has_organization_name.merge(collection=source_definition['key'])
+    municipality_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                     source=source_definition['key'],
+                                                                     supplier='allmanak',
+                                                                     collection='governmental_organization')
 
     municipality_member.organization = municipality
     municipality_member.member = person
@@ -57,8 +63,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
                              supplier='allmanak',
                              collection='party')
         party.merge(collection=source_definition['key'] + '-' + original_item['partij'])
-        party.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        party.has_organization_name.merge(collection=source_definition['key'])
+        party.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                           source=source_definition['key'],
+                                                           supplier='allmanak',
+                                                           collection='governmental_organization')
 
         party.name = original_item['partij']
 
@@ -71,8 +79,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
                                   supplier='allmanak',
                                   collection='person_party_membership')
         party_member.entity = entity
-        party_member.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
-        party_member.has_organization_name.merge(collection=source_definition['key'])
+        party_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                  source=source_definition['key'],
+                                                                  supplier='allmanak',
+                                                                  collection='governmental_organization')
 
         party_member.organization = party
         party_member.member = person
