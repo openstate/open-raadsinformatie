@@ -52,7 +52,7 @@ _entities: &entities
     entity: reports
     doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
-    transformer: ocd_backend.transformers.gv.greenvalley_item
+    transformer: ocd_backend.transformers.gv.greenvalley_report
     greenvalley_date_key: publishdate
     greenvalley_objecttypes:
       - antwoordstuk
