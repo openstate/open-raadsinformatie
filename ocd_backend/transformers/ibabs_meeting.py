@@ -2,238 +2,247 @@ import re
 
 import iso8601
 
+from ocd_backend import celery_app
 from ocd_backend.transformers import BaseTransformer
-from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
+from ocd_backend.log import get_source_logger
 
 log = get_source_logger('ibabs_meeting')
 
 
-class MeetingItem(BaseTransformer):
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'ibabs',
-            'collection': 'meeting',
-        }
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
 
-        # Sometimes the meeting is contained in a sub-dictionary called 'Meeting'
-        if 'Meeting' in self.original_item:
-            meeting = self.original_item['Meeting']
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'ibabs',
+        'collection': 'meeting',
+    }
+
+    # Sometimes the meeting is contained in a sub-dictionary called 'Meeting'
+    if 'Meeting' in original_item:
+        meeting = original_item['Meeting']
+    else:
+        meeting = original_item
+
+    item = Meeting(meeting['Id'],
+                   source_definition,
+                   **source_defaults)
+    item.entity = entity
+    item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+    item.has_organization_name.merge(collection=source_definition['key'])
+
+    item.name = meeting['Meetingtype']
+    item.chair = meeting['Chairman']
+    item.location = meeting['Location']
+    item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+
+    # TODO: This is untested so we log any cases that are not the default
+    if 'canceled' in meeting and meeting['canceled']:
+        log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
+        item.status = EventStatus.CANCELLED
+    elif 'inactive' in meeting and meeting['inactive']:
+        log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
+        item.status = EventStatus.UNCONFIRMED
+    else:
+        item.status = EventStatus.CONFIRMED
+
+    # Attach the meeting to the municipality node
+    item.organization = TopLevelOrganization(source_definition['key'], **source_defaults)
+    item.organization.merge(collection=source_definition['key'])
+
+    # Check if this is a committee meeting and if so connect it to the committee node.
+    committee_designator = source_definition.get('committee_designator', 'commissie')
+    if committee_designator in meeting['Meetingtype'].lower():
+        # Attach the meeting to the committee node
+        item.committee = Organization(meeting['MeetingtypeId'],
+                                      source=source_definition['key'],
+                                      supplier='ibabs',
+                                      collection='committee')
+        item.committee.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+        item.committee.has_organization_name.merge(collection=source_definition['key'])
+
+        item.committee.name = meeting['Meetingtype']
+        if 'sub' in meeting['MeetingtypeId']:
+            item.committee.classification = u'Subcommittee'
         else:
-            meeting = self.original_item
+            item.committee.classification = u'Committee'
 
-        item = Meeting(meeting['Id'],
-                       self.source_definition,
-                       **source_defaults)
-        item.entity = self.entity
-        item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        item.has_organization_name.merge(collection=self.source_definition['key'])
+        # Re-attach the committee node to the municipality node
+        item.committee.subOrganizationOf = TopLevelOrganization(source_definition['key'], **source_defaults)
+        item.committee.subOrganizationOf.merge(collection=source_definition['key'])
 
-        item.name = meeting['Meetingtype']
-        item.chair = meeting['Chairman']
-        item.location = meeting['Location']
-        item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
-
-        # TODO: This is untested so we log any cases that are not the default
-        if 'canceled' in meeting and meeting['canceled']:
-            log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
-            item.status = EventStatus.CANCELLED
-        elif 'inactive' in meeting and meeting['inactive']:
-            log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
-            item.status = EventStatus.UNCONFIRMED
-        else:
-            item.status = EventStatus.CONFIRMED
-
-        # Attach the meeting to the municipality node
-        item.organization = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        item.organization.merge(collection=self.source_definition['key'])
-
-        # Check if this is a committee meeting and if so connect it to the committee node.
-        committee_designator = self.source_definition.get('committee_designator', 'commissie')
-        if committee_designator in meeting['Meetingtype'].lower():
-            # Attach the meeting to the committee node
-            item.committee = Organization(meeting['MeetingtypeId'],
-                                          source=self.source_definition['key'],
-                                          supplier='ibabs',
-                                          collection='committee')
-            item.committee.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            item.committee.has_organization_name.merge(collection=self.source_definition['key'])
-
-            item.committee.name = meeting['Meetingtype']
-            if 'sub' in meeting['MeetingtypeId']:
-                item.committee.classification = u'Subcommittee'
-            else:
-                item.committee.classification = u'Committee'
-
-            # Re-attach the committee node to the municipality node
-            item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            item.committee.subOrganizationOf.merge(collection=self.source_definition['key'])
-
-        if 'MeetingItems' in meeting:
-            item.agenda = list()
-            for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-                agenda_item = AgendaItem(mi['Id'],
-                                         self.source_definition,
-                                         source=self.source_definition['key'],
-                                         supplier='ibabs',
-                                         collection='agenda_item')
-                agenda_item.entity = mi['Id']
-                agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-                agenda_item.has_organization_name.merge(collection=self.source_definition['key'])
-
-                agenda_item.parent = item
-                agenda_item.name = mi['Title']
-                agenda_item.start_date = item.start_date
-                agenda_item.__rel_params__ = {'rdf': '_%i' % i}
-
-                agenda_item.attachment = list()
-                for document in mi['Documents'] or []:
-                    attachment = MediaObject(document['Id'],
-                                             self.source_definition,
-                                             source=self.source_definition['key'],
-                                             supplier='ibabs',
-                                             collection='attachment')
-                    attachment.entity = document['Id']
-                    attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-                    attachment.has_organization_name.merge(collection=self.source_definition['key'])
-
-                    attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
-                    attachment.original_url = document['PublicDownloadURL']
-                    attachment.size_in_bytes = document['FileSize']
-                    attachment.name = document['DisplayName']
-                    attachment.isReferencedBy = agenda_item
-                    agenda_item.attachment.append(attachment)
-
-                item.agenda.append(agenda_item)
-
-        item.invitee = list()
-        for invitee in meeting['Invitees'] or []:
-            invitee_item = Person(invitee['UniqueId'],
-                                  self.source_definition,
-                                  source=self.source_definition['key'],
-                                  supplier='ibabs',
-                                  collection='meeting_invitee')
-            invitee_item.entity = invitee['UniqueId']
-            invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            invitee_item.has_organization_name.merge(collection=self.source_definition['key'])
-            item.invitee.append(invitee_item)
-
-        # Double check because sometimes 'EndTime' is in meeting but it is set to None
-        if 'EndTime' in meeting and meeting['EndTime']:
-            meeting_date, _, _ = meeting['MeetingDate'].partition('T')
-            meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
-            item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
-        else:
-            item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
-
-        item.attachment = list()
-        for document in meeting['Documents'] or []:
-            attachment = MediaObject(document['Id'],
-                                     self.source_definition,
-                                     source=self.source_definition['key'],
+    if 'MeetingItems' in meeting:
+        item.agenda = list()
+        for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
+            agenda_item = AgendaItem(mi['Id'],
+                                     source_definition,
+                                     source=source_definition['key'],
                                      supplier='ibabs',
-                                     collection='attachment')
-            attachment.entity = document['Id']
-            attachment.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            attachment.has_organization_name.merge(collection=self.source_definition['key'])
+                                     collection='agenda_item')
+            agenda_item.entity = mi['Id']
+            agenda_item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+            agenda_item.has_organization_name.merge(collection=source_definition['key'])
 
-            attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
-            attachment.original_url = document['PublicDownloadURL']
-            attachment.size_in_bytes = document['FileSize']
-            attachment.name = document['DisplayName']
-            attachment.isReferencedBy = item
-            item.attachment.append(attachment)
+            agenda_item.parent = item
+            agenda_item.name = mi['Title']
+            agenda_item.start_date = item.start_date
+            agenda_item.__rel_params__ = {'rdf': '_%i' % i}
 
-        return item
+            agenda_item.attachment = list()
+            for document in mi['Documents'] or []:
+                attachment = MediaObject(document['Id'],
+                                         source_definition,
+                                         source=source_definition['key'],
+                                         supplier='ibabs',
+                                         collection='attachment')
+                attachment.entity = document['Id']
+                attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+                attachment.has_organization_name.merge(collection=source_definition['key'])
 
+                attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
+                attachment.original_url = document['PublicDownloadURL']
+                attachment.size_in_bytes = document['FileSize']
+                attachment.name = document['DisplayName']
+                attachment.isReferencedBy = agenda_item
+                agenda_item.attachment.append(attachment)
 
-class ReportItem(BaseTransformer):
-    def transform(self):
-        source_defaults = {
-            'source': self.source_definition['key'],
-            'supplier': 'ibabs',
-            'collection': 'report',
-        }
+            item.agenda.append(agenda_item)
 
-        report = CreativeWork(self.original_item['id'][0],
-                              self.source_definition,
-                              source=self.source_definition['key'],
+    item.invitee = list()
+    for invitee in meeting['Invitees'] or []:
+        invitee_item = Person(invitee['UniqueId'],
+                              source_definition,
+                              source=source_definition['key'],
                               supplier='ibabs',
-                              collection='report')
-        report.entity = self.original_item['id'][0]
-        report.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        report.has_organization_name.merge(collection=self.source_definition['key'])
+                              collection='meeting_invitee')
+        invitee_item.entity = invitee['UniqueId']
+        invitee_item.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+        invitee_item.has_organization_name.merge(collection=source_definition['key'])
+        item.invitee.append(invitee_item)
 
-        report_name = self.original_item['_ReportName'].split(r'\s+')[0]
-        report.classification = u'Report'
+    # Double check because sometimes 'EndTime' is in meeting but it is set to None
+    if 'EndTime' in meeting and meeting['EndTime']:
+        meeting_date, _, _ = meeting['MeetingDate'].partition('T')
+        meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
+        item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
+    else:
+        item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
-        name_field = None
+    item.attachment = list()
+    for document in meeting['Documents'] or []:
+        attachment = MediaObject(document['Id'],
+                                 source_definition,
+                                 source=source_definition['key'],
+                                 supplier='ibabs',
+                                 collection='attachment')
+        attachment.entity = document['Id']
+        attachment.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+        attachment.has_organization_name.merge(collection=source_definition['key'])
+
+        attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
+        attachment.original_url = document['PublicDownloadURL']
+        attachment.size_in_bytes = document['FileSize']
+        attachment.name = document['DisplayName']
+        attachment.isReferencedBy = item
+        item.attachment.append(attachment)
+
+    item.save()
+    return item
+
+
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
+    original_item = self.deserialize_item(content_type, raw_item)
+    source_definition = kwargs['source_definition']
+
+    source_defaults = {
+        'source': source_definition['key'],
+        'supplier': 'ibabs',
+        'collection': 'report',
+    }
+
+    report = CreativeWork(original_item['id'][0],
+                          source_definition,
+                          source=source_definition['key'],
+                          supplier='ibabs',
+                          collection='report')
+    report.entity = original_item['id'][0]
+    report.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+    report.has_organization_name.merge(collection=source_definition['key'])
+
+    report_name = original_item['_ReportName'].split(r'\s+')[0]
+    report.classification = u'Report'
+
+    name_field = None
+    try:
+        name_field = source_definition['fields'][report_name]['name']
+    except KeyError:
+        for field in original_item.keys():
+            # Search for things that look like title
+            if field.lower()[0:3] == 'tit':
+                name_field = field
+                break
+
+            id_for_field = '%sIds' % (field,)
+            if id_for_field in original_item and name_field is None:
+                name_field = field
+                break
+
+    report.name = original_item[name_field][0]
+
+    # Temporary binding reports to municipality as long as events and agendaitems are not
+    # referenced in the iBabs API
+    report.creator = TopLevelOrganization(source_definition['key'], **source_defaults)
+    report.creator.merge(collection=source_definition['key'])
+
+    try:
+        name_field = source_definition['fields'][report_name]['description']
+        report.description = original_item[name_field][0]
+    except KeyError:
         try:
-            name_field = self.source_definition['fields'][report_name]['name']
+            report.description = original_item['_Extra']['Values']['Toelichting']
         except KeyError:
-            for field in self.original_item.keys():
-                # Search for things that look like title
-                if field.lower()[0:3] == 'tit':
-                    name_field = field
-                    break
+            pass
 
-                id_for_field = '%sIds' % (field,)
-                if id_for_field in self.original_item and name_field is None:
-                    name_field = field
-                    break
+    try:
+        datum_field = source_definition['fields'][report_name]['start_date']
+    except KeyError:
+        datum_field = 'datum'
 
-        report.name = self.original_item[name_field][0]
+    datum = None
+    if datum_field in original_item:
+        if isinstance(original_item[datum_field], list):
+            datum = original_item[datum_field][0]
+        else:
+            datum = original_item[datum_field]
 
-        # Temporary binding reports to municipality as long as events and agendaitems are not
-        # referenced in the iBabs API
-        report.creator = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-        report.creator.merge(collection=self.source_definition['key'])
+    if datum is not None:
+        # msgpack does not like microseconds for some reason.
+        # no biggie if we disregard it, though
+        report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
+        report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
-        try:
-            name_field = self.source_definition['fields'][report_name]['description']
-            report.description = self.original_item[name_field][0]
-        except KeyError:
-            try:
-                report.description = self.original_item['_Extra']['Values']['Toelichting']
-            except KeyError:
-                pass
+    report.status = EventStatus.CONFIRMED
 
-        try:
-            datum_field = self.source_definition['fields'][report_name]['start_date']
-        except KeyError:
-            datum_field = 'datum'
+    report.attachment = list()
+    for document in original_item['_Extra']['Documents'] or []:
+        attachment_file = MediaObject(document['Id'],
+                                      source_definition,
+                                      source=source_definition['key'],
+                                      supplier='ibabs',
+                                      collection='attachment')
+        attachment_file.entity = document['Id']
+        attachment_file.has_organization_name = TopLevelOrganization(source_definition['key'], **source_defaults)
+        attachment_file.has_organization_name.merge(collection=source_definition['key'])
 
-        datum = None
-        if datum_field in self.original_item:
-            if isinstance(self.original_item[datum_field], list):
-                datum = self.original_item[datum_field][0]
-            else:
-                datum = self.original_item[datum_field]
+        attachment_file.original_url = document['PublicDownloadURL']
+        attachment_file.size_in_bytes = document['FileSize']
+        attachment_file.name = document['DisplayName']
+        attachment_file.isReferencedBy = report
+        report.attachment.append(attachment_file)
 
-        if datum is not None:
-            # msgpack does not like microseconds for some reason.
-            # no biggie if we disregard it, though
-            report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
-            report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
-
-        report.status = EventStatus.CONFIRMED
-
-        report.attachment = list()
-        for document in self.original_item['_Extra']['Documents'] or []:
-            attachment_file = MediaObject(document['Id'],
-                                          self.source_definition,
-                                          source=self.source_definition['key'],
-                                          supplier='ibabs',
-                                          collection='attachment')
-            attachment_file.entity = document['Id']
-            attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['key'], **source_defaults)
-            attachment_file.has_organization_name.merge(collection=self.source_definition['key'])
-
-            attachment_file.original_url = document['PublicDownloadURL']
-            attachment_file.size_in_bytes = document['FileSize']
-            attachment_file.name = document['DisplayName']
-            attachment_file.isReferencedBy = report
-            report.attachment.append(attachment_file)
-
-        return report
+    report.save()
+    return report
