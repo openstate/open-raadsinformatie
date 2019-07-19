@@ -41,35 +41,6 @@ class PostgresDatabase(object):
         finally:
             session.close()
 
-    def get_mergeable_resource_identifier(self, model_object, **kwargs):
-        """
-        Queries the database to find the ORI identifier of the Resource linked to the Property with the given
-        predicate and value.
-
-        TODO: Currently only works for values that are in the `prop_string` field.
-        """
-
-        if len(kwargs) != 1:
-            raise TypeError('get_mergeable_resource_identifier takes exactly 1 keyword argument')
-
-        filter_key, filter_value = kwargs.items()[0]
-        definition = model_object.definition(filter_key)
-
-        session = self.Session()
-        try:
-            # TODO: This currently only works if the filter_value is in the prop_string field.
-            resource_property = session.query(Property).filter(Property.predicate == definition.absolute_uri(),
-                                                               Property.prop_string == filter_value).one()
-            return resource_property.resource.iri
-        except MultipleResultsFound:
-            raise MultipleResultsFound('Multiple properties found for predicate %s with value %s' %
-                                       (filter_key, filter_value))
-        except NoResultFound:
-            raise NoResultFound('No property found for predicate %s with value %s' %
-                                (filter_key, filter_value))
-        finally:
-            session.close()
-
     def generate_ori_identifier(self, iri):
         """
         Generates a Resource with an ORI identifier and adds the IRI as a Source if it does not already exist.
@@ -93,6 +64,35 @@ class PostgresDatabase(object):
             session.close()
 
         return new_identifier
+
+    def get_mergeable_resource_identifier(self, model_object, **kwargs):
+        """
+        Queries the database to find the ORI identifier of the Resource linked to the Property with the given
+        predicate and value.
+
+        TODO: Currently only works for values that are in the `prop_string` field.
+        """
+
+        if len(kwargs) != 1:
+            raise TypeError('get_mergeable_resource_identifier takes exactly 1 keyword argument')
+
+        filter_key, filter_value = kwargs.items()[0]
+        definition = model_object.definition(filter_key)
+
+        session = self.Session()
+        try:
+            # TODO: This currently only works if the filter_value is in the prop_string field.
+            resource_property = session.query(Property).filter(Property.predicate == definition.absolute_uri(),
+                                                               Property.prop_string == filter_value).one()
+            return resource_property.resource.iri
+        except MultipleResultsFound:
+            raise MultipleResultsFound('Multiple properties found for predicate "%s" with value %s' %
+                                       (filter_key, filter_value))
+        except NoResultFound:
+            raise NoResultFound('No property found for predicate "%s" with value "%s"' %
+                                (filter_key, filter_value))
+        finally:
+            session.close()
 
     def save(self, model_object):
         if not model_object.values.get('had_primary_source'):
@@ -165,11 +165,37 @@ class PostgresDatabase(object):
             raise ValueError('Unable to map property of type %s to a column.' % property_type)
 
     def update_source(self, model_object):
-        """Updates the source type and entity of the Source of the corresponding model object."""
+        """Updates the source type and entity of the Source of the corresponding model object. One Source can have
+        multiple different entities."""
 
         session = self.Session()
-        source = session.query(Source).filter(Source.resource_ori_id == model_object.get_short_identifier()).one()
-        source.type = model_object.source_definition['source_type']
-        source.entity = model_object.values['entity']
+        resource = session.query(Resource).filter(Resource.ori_id == model_object.get_short_identifier()).one()
+
+        try:
+            # First check if there is a Source record with an empty entity, and if so fill that record
+            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id, Source.entity == None).one()
+            source.type = model_object.source_definition['source_type']
+            source.entity = model_object.values['entity']
+        except NoResultFound:
+            try:
+                # If no empty entity record exists, check if one already exists with the given IRI and entity
+                source = session.query(Source).filter(Source.resource == resource,
+                                                      Source.entity == model_object.entity).one()
+                # At this point it's not really necessary to update the fields again, but it's here in case
+                # more fields are added later
+                source.type = model_object.source_definition['source_type']
+                source.entity = model_object.values['entity']
+            except NoResultFound:
+                # If no Source and entity combination exists for the given IRI, create it.
+                source = Source(resource=resource,
+                                iri=model_object.had_primary_source,
+                                entity=model_object.entity,
+                                type=model_object.source_definition['source_type'])
+                session.add(source)
+            except Exception:
+                raise
+        except Exception:
+            raise
+
         session.commit()
         session.close()
