@@ -133,11 +133,20 @@ class PostgresDatabase(object):
                 if predicate in (model_object.definition('ori_identifier').absolute_uri(),
                                  model_object.definition('had_primary_source').absolute_uri()):
                     continue
-                new_property = (Property(id=uuid.uuid4(), predicate=predicate))
-                setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
-                resource.properties.append(new_property)
-            session.commit()
 
+                if isinstance(value_and_property_type[0], list):
+                    # Create each item as a separate Property with the same predicate, and save the order to
+                    # the `order` column
+                    for order, item in enumerate(value_and_property_type[0], start=1):
+                        new_property = (Property(id=uuid.uuid4(), predicate=predicate, order=order))
+                        setattr(new_property, self.map_column_type((item, value_and_property_type[1])), item)
+                        resource.properties.append(new_property)
+                else:
+                    new_property = (Property(id=uuid.uuid4(), predicate=predicate))
+                    setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
+                    resource.properties.append(new_property)
+
+            session.commit()
             session.close()
 
     @staticmethod
@@ -146,7 +155,7 @@ class PostgresDatabase(object):
         value = value_and_property_type[0]
         property_type = value_and_property_type[1]
 
-        if property_type in (StringProperty, ArrayProperty):
+        if property_type == StringProperty:
             return 'prop_string'
         if property_type is URLProperty:
             return 'prop_url'
@@ -154,15 +163,14 @@ class PostgresDatabase(object):
             return 'prop_integer'
         elif property_type in (DateProperty, DateTimeProperty):
             return 'prop_datetime'
-        elif property_type in (Relation, OrderedRelation):
-            # Slight hack to intercept Individuals that have no ORI identifier
+        elif property_type in (ArrayProperty, Relation, OrderedRelation):
             try:
                 int(value)
                 return 'prop_resource'
             except (ValueError, TypeError):
                 return 'prop_string'
         else:
-            raise ValueError('Unable to map property of type %s to a column.' % property_type)
+            raise ValueError('Unable to map property of type "%s" to a column.' % property_type)
 
     def update_source(self, model_object):
         """Updates the source type and entity of the Source of the corresponding model object. One Source can have
@@ -186,7 +194,7 @@ class PostgresDatabase(object):
                 source.type = model_object.source_definition['source_type']
                 source.entity = model_object.values['entity']
             except NoResultFound:
-                # If no Source and entity combination exists for the given IRI, create it.
+                # If no Source and entity combination exists for the given IRI, create it
                 source = Source(resource=resource,
                                 iri=model_object.had_primary_source,
                                 entity=model_object.entity,

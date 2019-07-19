@@ -46,6 +46,7 @@ class Property(Base):
     id = Column(UUIDType(), primary_key=True)
     resource_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
     predicate = Column(String, nullable=False)
+    order = Column(Integer, default=0)
     prop_resource = Column(Integer, ForeignKey("resource.ori_id"), nullable=True)
     prop_string = Column(String, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
