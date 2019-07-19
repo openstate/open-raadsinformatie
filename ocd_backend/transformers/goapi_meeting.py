@@ -173,4 +173,5 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.isReferencedBy = event
         event.attachment.append(attachment)
 
+    event.save()
     return event
