@@ -7,8 +7,6 @@ used to describe both virtual (eg. online discussion) and non-virtual (eg.
 an assembly of people) discussion.
 """
 
-from aenum import Constant
-
 import opengov
 import schema
 from ocd_backend.models.definitions import Mapping, Opengov, Schema, Meeting as MeetingNS
@@ -61,20 +59,20 @@ class AgendaItem(MeetingNS, schema.Event):
     agenda = Relation(MeetingNS, 'agenda')
 
 
-class ResultStatus(Constant):
-    KEPT = str(Uri(MeetingNS, "ResultKept"))
-    POSTPONED = str(Uri(MeetingNS, "ResultPostponed"))
-    WITHDRAWN = str(Uri(MeetingNS, "ResultWithdrawn"))
-    EXPIRED = str(Uri(MeetingNS, "ResultExpired"))
-    DISCUSSED = str(Uri(MeetingNS, "ResultDiscussed"))
-    PUBLISHED = str(Uri(MeetingNS, "ResultPublished"))
+class ResultStatus(object):
+    KEPT = Uri(MeetingNS, "ResultKept")
+    POSTPONED = Uri(MeetingNS, "ResultPostponed")
+    WITHDRAWN = Uri(MeetingNS, "ResultWithdrawn")
+    EXPIRED = Uri(MeetingNS, "ResultExpired")
+    DISCUSSED = Uri(MeetingNS, "ResultDiscussed")
+    PUBLISHED = Uri(MeetingNS, "ResultPublished")
 
 
-class EventStatus(Constant):
-    SCHEDULED = str(Uri(Schema, "EventScheduled"))
-    RESCHEDULED = str(Uri(Schema, "EventRescheduled"))
-    CANCELLED = str(Uri(Schema, "EventCancelled"))
-    POSTPONED = str(Uri(Schema, "EventPostponed"))
-    COMPLETED = str(Uri(MeetingNS, "EventCompleted"))
-    CONFIRMED = str(Uri(MeetingNS, "EventConfirmed"))
-    UNCONFIRMED = str(Uri(MeetingNS, "EventUnconfirmed"))
+class EventStatus(object):
+    SCHEDULED = Uri(Schema, "EventScheduled")
+    RESCHEDULED = Uri(Schema, "EventRescheduled")
+    CANCELLED = Uri(Schema, "EventCancelled")
+    POSTPONED = Uri(Schema, "EventPostponed")
+    COMPLETED = Uri(MeetingNS, "EventCompleted")
+    CONFIRMED = Uri(MeetingNS, "EventConfirmed")
+    UNCONFIRMED = Uri(MeetingNS, "EventUnconfirmed")

@@ -2,8 +2,6 @@
 http://www.w3.org/ns/opengov#
 """
 
-from aenum import Constant
-
 import owl
 import schema
 from ocd_backend.models.definitions import Opengov, Schema, Meeting, Dcterms, \
@@ -125,15 +123,15 @@ class Result(Opengov, owl.Thing):
     vote_event = Relation(Opengov, 'voteEvent')
 
 
-class VoteResult(Constant):
-    FAILED = str(Uri(Opengov, "ResultFailed"))
-    PASSED = str(Uri(Opengov, "ResultPassed"))
+class VoteResult(object):
+    FAILED = Uri(Opengov, "ResultFailed")
+    PASSED = Uri(Opengov, "ResultPassed")
 
 
-class VoteOption(Constant):
-    OPTION_YES = str(Uri(Opengov, "VoteOptionYes"))
-    OPTION_NO = str(Uri(Opengov, "VoteOptionNo"))
-    ABSTAIN = str(Uri(Opengov, "VoteOptionAbstain"))
-    ABSENT = str(Uri(Opengov, "VoteOptionAbsent"))
-    NOT_VOTING = str(Uri(Opengov, "VoteOptionNotVoting"))
-    PAIRED = str(Uri(Opengov, "VoteOptionPaired"))
+class VoteOption(object):
+    OPTION_YES = Uri(Opengov, "VoteOptionYes")
+    OPTION_NO = Uri(Opengov, "VoteOptionNo")
+    ABSTAIN = Uri(Opengov, "VoteOptionAbstain")
+    ABSENT = Uri(Opengov, "VoteOptionAbsent")
+    NOT_VOTING = Uri(Opengov, "VoteOptionNotVoting")
+    PAIRED = Uri(Opengov, "VoteOptionPaired")
