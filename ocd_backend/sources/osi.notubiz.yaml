@@ -1,0 +1,68 @@
+# All underscored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: false
+  es_prefix: osi
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  loaders:
+    - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    entity: municipality
+    doc_type: organizations
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    transformer: ocd_backend.transformers.organizations.municipality_organization_item
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    doc_type: organizations
+    extractor: ocd_backend.extractors.notubiz.NotubizCommitteesExtractor
+    transformer: ocd_backend.transformers.notubiz_committee.committee_item
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    doc_type: organizations
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    transformer: ocd_backend.transformers.organizations.party_item
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    doc_type: persons
+    extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
+    transformer: ocd_backend.transformers.persons.allmanak_person_item
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
+    transformer: ocd_backend.transformers.notubiz_meeting.meeting_item
+    enrichers:
+    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - # reserved for enricher settings
+
+_notubiz: &notubiz
+  source_type: "HTTP"
+  index_name: "{key}"
+  sitename: "{key!c}"
+  base_url: "https://api.notubiz.nl"
+  allmanak_api_version: "v0"
+  entities: *entities
+  <<: *source_defaults
+
+osi.notubiz:
+  overijssel:
+    key: overijssel
+    allmanak_id: 16771
+    notubiz_organization_id: 1145
+    <<: *notubiz
