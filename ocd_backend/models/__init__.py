@@ -4,7 +4,6 @@ This file is used to specify custom model mappings.
 By mapping these names definitions can be remapped if needed later on.
 """
 import definitions.foaf
-import definitions.mapping
 import definitions.meeting
 import definitions.ncal
 import definitions.opengov
