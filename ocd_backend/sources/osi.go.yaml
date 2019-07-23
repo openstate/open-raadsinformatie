@@ -73,6 +73,7 @@ _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
+  source_type: "province"
   entities: *entities
   <<: *source_defaults
 
