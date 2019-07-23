@@ -126,7 +126,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 supplier='allmanak',
                                                                 collection='governmental_organization')
 
-        agendaitem.__rel_params__ = {'rdf': '_%i' % item['sortorder']}
         agendaitem.description = item['description']
         agendaitem.name = '%s: %s' % (item['number'], item['title'],)
         agendaitem.position = item['sortorder']
