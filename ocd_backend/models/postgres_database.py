@@ -95,25 +95,28 @@ class PostgresDatabase(object):
             session.close()
 
     def save(self, model_object):
-        if not model_object.values.get('had_primary_source'):
+        if not model_object.had_primary_source:
             # If the item is an Individual, like EventConfirmed, we "save" it by setting an ORI identifier
             iri = self.serializer.label(model_object)
             if not model_object.values.get('ori_identifier'):
                 model_object.ori_identifier = self.get_ori_identifier(iri=iri)
         else:
             if not model_object.values.get('ori_identifier'):
-                model_object.ori_identifier = self.get_ori_identifier(iri=model_object.values.get('had_primary_source'))
+                model_object.ori_identifier = self.get_ori_identifier(iri=model_object.had_primary_source)
 
             # Handle entity and source
-            if model_object.values.get('entity'):
+            try:
                 # This needs to be done with a try/except because of the way Model overrides __getitem__
+                _ = model_object.entity
                 try:
+                    # This needs to be done with a try/except because of the way Model overrides __getitem__
                     _ = model_object.source_definition
                 except AttributeError:
                     raise ValueError('Model instances that set an entity must also pass their source definition to '
                                      'the constructor.')
                 self.update_source(model_object)
-                del model_object.values['entity']
+            except AttributeError:
+                pass
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -129,11 +132,6 @@ class PostgresDatabase(object):
 
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
-                # Don't save ori_identifier or had_primary_source as a property
-                if predicate in (model_object.definition('ori_identifier').absolute_uri(),
-                                 model_object.definition('had_primary_source').absolute_uri()):
-                    continue
-
                 if isinstance(value_and_property_type[0], list):
                     # Create each item as a separate Property with the same predicate, and save the order to
                     # the `order` column
@@ -183,7 +181,7 @@ class PostgresDatabase(object):
             # First check if there is a Source record with an empty entity, and if so fill that record
             source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id, Source.entity == None).one()
             source.type = model_object.source_definition['source_type']
-            source.entity = model_object.values['entity']
+            source.entity = model_object.entity
         except NoResultFound:
             try:
                 # If no empty entity record exists, check if one already exists with the given IRI and entity
@@ -192,7 +190,7 @@ class PostgresDatabase(object):
                 # At this point it's not really necessary to update the fields again, but it's here in case
                 # more fields are added later
                 source.type = model_object.source_definition['source_type']
-                source.entity = model_object.values['entity']
+                source.entity = model_object.entity
             except NoResultFound:
                 # If no Source and entity combination exists for the given IRI, create it
                 source = Source(resource=resource,
