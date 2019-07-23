@@ -49,11 +49,6 @@ class ModelMetaclass(type):
 class Model(object):
     __metaclass__ = ModelMetaclass
 
-    # Top-level definitions
-    ori_identifier = StringProperty(Mapping, 'ori/identifier')
-    had_primary_source = StringProperty(Prov, 'hadPrimarySource')
-    entity = StringProperty(Meta, 'entity')
-
     def absolute_uri(self):
         return '%s%s' % (self.uri, self.verbose_name())
 
@@ -119,7 +114,6 @@ class Model(object):
                     slugify(source_id)
                 )
             )
-            # self._source = source
 
     def __getattr__(self, item):
         try:
