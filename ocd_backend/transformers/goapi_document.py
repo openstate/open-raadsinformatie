@@ -48,12 +48,12 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='governmental_organization')
+                                                       collection='municipality')
 
     event.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                               source=source_definition['key'],
                                               supplier='allmanak',
-                                              collection='governmental_organization')
+                                              collection='municipality')
 
     try:
         date_tz = pytz.timezone(
@@ -83,7 +83,7 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='muncipality')
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

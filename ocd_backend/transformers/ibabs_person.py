@@ -24,7 +24,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     person.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                         source=source_definition['key'],
                                                         supplier='allmanak',
-                                                        collection='governmental_organization')
+                                                        collection='muncipality')
 
     person.name = original_item['Name']
     person.family_name = original_item['LastName']
@@ -35,7 +35,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     municipality = TopLevelOrganization(source_definition['allmanak_id'],
                                         source=source_definition['key'],
                                         supplier='allmanak',
-                                        collection='governmental_organization')
+                                        collection='muncipality')
 
     # The source ID for the municipality membership is constructed by combining the person's iBabs ID and the
     # key of the source
@@ -44,12 +44,12 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      source_definition,
                                      source=source_definition['key'],
                                      supplier='ibabs',
-                                     collection='person_municipality_membership')
+                                     collection='municipality_membership')
     municipality_member.entity = entity
     municipality_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='governmental_organization')
+                                                                     collection='muncipality')
 
     municipality_member.organization = municipality
     municipality_member.member = person
@@ -77,7 +77,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         party.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                            source=source_definition['key'],
                                                            supplier='allmanak',
-                                                           collection='governmental_organization')
+                                                           collection='muncipality')
 
         party.name = original_item['PoliticalPartyName']
 
@@ -88,12 +88,12 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                   source_definition,
                                   source=source_definition['key'],
                                   supplier='ibabs',
-                                  collection='person_party_membership')
+                                  collection='party_membership')
         party_member.entity = entity
         party_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                   source=source_definition['key'],
                                                                   supplier='allmanak',
-                                                                  collection='governmental_organization')
+                                                                  collection='muncipality')
 
         party_member.organization = party
         party_member.member = person

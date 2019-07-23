@@ -24,7 +24,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='governmental_organization')
+                                                       collection='muncipality')
     event.start_date = original_item['plannings'][0]['start_date']
     event.end_date = original_item['plannings'][0]['end_date']
     event.name = original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
@@ -34,7 +34,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                               source=source_definition['key'],
                                               supplier='allmanak',
-                                              collection='governmental_organization')
+                                              collection='muncipality')
 
     event.committee = Organization(original_item['gremium']['id'],
                                    source=source_definition['key'],
@@ -43,13 +43,13 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                  source=source_definition['key'],
                                                                  supplier='allmanak',
-                                                                 collection='governmental_organization')
+                                                                 collection='muncipality')
 
     # Re-attach the committee node to the municipality node
     event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                              source=source_definition['key'],
                                                              supplier='allmanak',
-                                                             collection='governmental_organization')
+                                                             collection='muncipality')
 
     event.agenda = []
     for item in original_item.get('agenda_items', []):
@@ -69,7 +69,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='muncipality')
 
         try:
             agendaitem.description = item['type_data']['attributes'][0]['value']
@@ -94,7 +94,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                     source=source_definition['key'],
                                                                     supplier='allmanak',
-                                                                    collection='governmental_organization')
+                                                                    collection='muncipality')
 
             attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
@@ -128,7 +128,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='muncipality')
 
         attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

@@ -34,7 +34,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                       source=source_definition['key'],
                                                       supplier='allmanak',
-                                                      collection='governmental_organization')
+                                                      collection='muncipality')
 
     item.name = meeting['Meetingtype']
     item.chair = meeting['Chairman']
@@ -54,7 +54,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                              source=source_definition['key'],
                                              supplier='allmanak',
-                                             collection='governmental_organization')
+                                             collection='muncipality')
 
     # Check if this is a committee meeting and if so connect it to the committee node.
     committee_designator = source_definition.get('committee_designator', 'commissie')
@@ -67,7 +67,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         item.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                     source=source_definition['key'],
                                                                     supplier='allmanak',
-                                                                    collection='governmental_organization')
+                                                                    collection='muncipality')
 
         item.committee.name = meeting['Meetingtype']
         if 'sub' in meeting['MeetingtypeId']:
@@ -79,7 +79,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         item.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='muncipality')
 
     if 'MeetingItems' in meeting:
         item.agenda = list()
@@ -93,7 +93,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             agenda_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='governmental_organization')
+                                                                     collection='muncipality')
 
             agenda_item.parent = item
             agenda_item.name = mi['Title']
@@ -110,7 +110,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                 attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                         source=source_definition['key'],
                                                                         supplier='allmanak',
-                                                                        collection='governmental_organization')
+                                                                        collection='muncipality')
 
                 attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                 attachment.original_url = document['PublicDownloadURL']
@@ -132,7 +132,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         invitee_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                   source=source_definition['key'],
                                                                   supplier='allmanak',
-                                                                  collection='governmental_organization')
+                                                                  collection='muncipality')
         item.invitee.append(invitee_item)
 
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
@@ -154,7 +154,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='muncipality')
 
         attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
         attachment.original_url = document['PublicDownloadURL']
@@ -187,7 +187,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     report.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                         source=source_definition['key'],
                                                         supplier='allmanak',
-                                                        collection='governmental_organization')
+                                                        collection='muncipality')
 
     report_name = original_item['_ReportName'].split(r'\s+')[0]
     report.classification = u'Report'
@@ -214,7 +214,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     report.creator = TopLevelOrganization(source_definition['allmanak_id'],
                                           source=source_definition['key'],
                                           supplier='allmanak',
-                                          collection='governmental_organization')
+                                          collection='muncipality')
 
     try:
         name_field = source_definition['fields'][report_name]['description']
@@ -256,7 +256,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment_file.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='governmental_organization')
+                                                                     collection='muncipality')
 
         attachment_file.original_url = document['PublicDownloadURL']
         attachment_file.size_in_bytes = document['FileSize']
