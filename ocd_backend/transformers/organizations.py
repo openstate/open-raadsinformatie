@@ -30,7 +30,7 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
     source_defaults = {
         'source': source_definition['key'],
         'supplier': 'allmanak',
-        'collection': 'muncipality',
+        'collection': 'municipality',
     }
 
     object_model = TopLevelOrganization(original_item['systemid'],
@@ -91,14 +91,14 @@ def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
     object_model.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                               source=source_definition['key'],
                                                               supplier='allmanak',
-                                                              collection='muncipality')
+                                                              collection='municipality')
     object_model.collection = source_definition['key'] + '-' + original_item['partij']
     object_model.name = original_item['partij']
     object_model.classification = 'Party'
     object_model.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                           source=source_definition['key'],
                                                           supplier='allmanak',
-                                                          collection='muncipality')
+                                                          collection='municipality')
 
     object_model.save()
     return object_model

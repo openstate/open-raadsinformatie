@@ -83,7 +83,7 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='muncipality')
+                                                                collection='municipality')
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

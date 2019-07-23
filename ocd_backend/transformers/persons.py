@@ -24,7 +24,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     person.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                         source=source_definition['key'],
                                                         supplier='allmanak',
-                                                        collection='muncipality')
+                                                        collection='municipality')
 
     person.name = original_item['naam']
     if 'Dhr.' in original_item['naam']:
@@ -35,7 +35,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     municipality = TopLevelOrganization(source_definition['allmanak_id'],
                                         source=source_definition['key'],
                                         supplier='allmanak',
-                                        collection='muncipality')
+                                        collection='municipality')
 
     # The source ID for the municipality membership is constructed by combining the person's Allmanak ID and the
     # key of the source
@@ -49,7 +49,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     municipality_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='muncipality')
+                                                                     collection='municipality')
 
     municipality_member.organization = municipality
     municipality_member.member = person
@@ -66,7 +66,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
         party.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                            source=source_definition['key'],
                                                            supplier='allmanak',
-                                                           collection='muncipality')
+                                                           collection='municipality')
 
         party.name = original_item['partij']
 
@@ -82,7 +82,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
         party_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                   source=source_definition['key'],
                                                                   supplier='allmanak',
-                                                                  collection='muncipality')
+                                                                  collection='municipality')
 
         party_member.organization = party
         party_member.member = person
