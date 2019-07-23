@@ -103,7 +103,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
                                                        supplier='allmanak',
                                                        collection='governmental_organization')
 
-    event.start_date, event.end_date = self.get_meeting_dates(event)
+    event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
     event.name = meeting[u'objectname']
     event.classification = [u'Agenda']
@@ -201,7 +201,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                        supplier='allmanak',
                                                        collection='governmental_organization')
 
-    event.start_date, event.end_date = self.get_meeting_dates(event)
+    event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
     event.name = meeting[u'objectname']
     event.classification = [u'Agenda']
