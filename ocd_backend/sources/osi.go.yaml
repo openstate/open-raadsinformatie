@@ -16,6 +16,7 @@ _entities: &entities
   - &province
     <<: *entity_defaults
     entity: province
+    entity_type: "HTTP"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
@@ -23,6 +24,7 @@ _entities: &entities
   - &committees
     <<: *entity_defaults
     entity: committees
+    entity_type: "HTTP"
     doc_type: organizations
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenCommitteesExtractor
     transformer: ocd_backend.transformers.goapi_committee.committee_item
@@ -30,6 +32,7 @@ _entities: &entities
   - &organizations
     <<: *entity_defaults
     entity: organizations
+    entity_type: "HTTP"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
@@ -37,6 +40,7 @@ _entities: &entities
   - &persons
     <<: *entity_defaults
     entity: persons
+    entity_type: "HTTP"
     doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.persons.allmanak_person_item
@@ -44,6 +48,7 @@ _entities: &entities
   - &meetings
     <<: *entity_defaults
     entity: meetings
+    entity_type: "HTTP"
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     transformer: ocd_backend.transformers.goapi_meeting.meeting_item
@@ -55,6 +60,7 @@ _entities: &entities
   - &documents
     <<: *entity_defaults
     entity: documents
+    entity_type: "HTTP"
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
     transformer: ocd_backend.transformers.goapi_document.document_item
@@ -64,7 +70,6 @@ _entities: &entities
         - file_to_text
 
 _go: &go
-  source_type: "HTTP"
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"

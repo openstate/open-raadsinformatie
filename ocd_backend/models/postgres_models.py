@@ -14,7 +14,7 @@ class Source(Base):
     id = Column(BigInteger, Sequence('source_id_seq'), primary_key=True)
     iri = Column(String)
     resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
-    type = Column(String)
+    entity_type = Column(String)
     entity = Column(String)
     used_file = Column(String)
     created_at = Column(DateTime, default=func.now())
