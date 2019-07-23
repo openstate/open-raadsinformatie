@@ -10,6 +10,39 @@ log = get_source_logger('greenvalley')
 
 
 class GreenValleyTransformer(BaseTransformer):
+    def __init__(self, *args, **kwargs):
+        self.classification_mapping = {
+            'agenda': 'Agenda',
+            'agendapage': 'Agendapunt',
+            'bestuurlijkstuk': 'Bestuurlijk stuk',
+            'notule': 'Verslag',
+            'ingekomenstuk': 'Ingekomen stuk',
+            'antwoordstuk': 'Antwoord'  # ?
+        }
+
+    def get_meeting_dates(self, meeting):
+        """Determine meeting start and end dates."""
+
+        start_date = None
+        end_date = None
+
+        if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
+            start_date = datetime.fromtimestamp(
+                float(meeting[u'bis_vergaderdatum']) +
+                (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
+                (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
+            end_date = datetime.fromtimestamp(
+                float(meeting[u'bis_vergaderdatum']) +
+                (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
+                (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
+        elif u'publishdate' in meeting:
+            start_date = datetime.fromtimestamp(
+                float(meeting[u'publishdate']))
+            end_date = datetime.fromtimestamp(
+                float(meeting[u'publishdate']))
+
+        return start_date, end_date
+
     def _get_documents_as_media_urls(self, original_item):
         media_urls = {}
         if u'attachmentlist' in original_item:
@@ -70,35 +103,13 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
                                                        supplier='allmanak',
                                                        collection='governmental_organization')
 
-    if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
-        event.start_date = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
-        event.end_date = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
-    elif u'publishdate' in meeting:
-        event.start_date = datetime.fromtimestamp(
-            float(meeting[u'publishdate']))
-        event.end_date = datetime.fromtimestamp(
-            float(meeting[u'publishdate']))
+    event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
     event.name = meeting[u'objectname']
-
-    objecttype2classification = {
-        'agenda': 'Agenda',
-        'agendapage': 'Agendapunt',
-        'bestuurlijkstuk': 'Bestuurlijk stuk',
-        'notule': 'Verslag',
-        'ingekomenstuk': 'Ingekomen stuk',
-        'antwoordstuk': 'Antwoord'  # ?
-    }
     event.classification = [u'Agenda']
     try:
         event.classification = [unicode(
-            objecttype2classification[meeting[u'objecttype'].lower()])]
+            self.classification_mapping[meeting[u'objecttype'].lower()])]
     except LookupError:
         event.classification = [unicode(
             meeting[u'objecttype'].capitalize())]
@@ -190,35 +201,13 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                        supplier='allmanak',
                                                        collection='governmental_organization')
 
-    if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
-        event.start_date = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
-        event.end_date = datetime.fromtimestamp(
-            float(meeting[u'bis_vergaderdatum']) +
-            (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
-            (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
-    elif u'publishdate' in meeting:
-        event.start_date = datetime.fromtimestamp(
-            float(meeting[u'publishdate']))
-        event.end_date = datetime.fromtimestamp(
-            float(meeting[u'publishdate']))
+    event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
     event.name = meeting[u'objectname']
-
-    objecttype2classification = {
-        'agenda': 'Agenda',
-        'agendapage': 'Agendapunt',
-        'bestuurlijkstuk': 'Bestuurlijk stuk',
-        'notule': 'Verslag',
-        'ingekomenstuk': 'Ingekomen stuk',
-        'antwoordstuk': 'Antwoord'  # ?
-    }
     event.classification = [u'Agenda']
     try:
         event.classification = [unicode(
-            objecttype2classification[meeting[u'objecttype'].lower()])]
+            self.classification_mapping[meeting[u'objecttype'].lower()])]
     except LookupError:
         event.classification = [unicode(
             meeting[u'objecttype'].capitalize())]
