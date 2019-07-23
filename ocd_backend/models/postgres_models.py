@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, Integer, String, ForeignKey, DateTime, BigInteger, func, CheckConstraint
+from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, BigInteger, func, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -11,9 +11,9 @@ Base = declarative_base()
 class Source(Base):
     __tablename__ = 'source'
 
-    id = Column(Integer, Sequence('source_id_seq'), primary_key=True)
+    id = Column(BigInteger, Sequence('source_id_seq'), primary_key=True)
     iri = Column(String)
-    resource_ori_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
+    resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
     type = Column(String)
     entity = Column(String)
     used_file = Column(String)
@@ -26,7 +26,7 @@ class Source(Base):
 class Resource(Base):
     __tablename__ = 'resource'
 
-    ori_id = Column(Integer, Sequence('ori_id_seq'), primary_key=True)
+    ori_id = Column(BigInteger, Sequence('ori_id_seq'), primary_key=True)
     iri = Column(String)
 
     sources = relationship("Source", back_populates="resource")
@@ -37,17 +37,17 @@ class Property(Base):
     __tablename__ = 'property'
     __table_args__ = (
         CheckConstraint('NOT(prop_resource IS NULL AND '
-                        'prop_string IS NULL AND) '
+                        'prop_string IS NULL AND '
                         'prop_datetime IS NULL AND '
                         'prop_integer IS NULL AND '
                         'prop_url IS NULL'),
     )
 
     id = Column(UUIDType(), primary_key=True)
-    resource_id = Column(Integer, ForeignKey("resource.ori_id"), nullable=False)
+    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
     predicate = Column(String, nullable=False)
-    order = Column(Integer, default=0)
-    prop_resource = Column(Integer, ForeignKey("resource.ori_id"), nullable=True)
+    order = Column(BigInteger, nullable=True)
+    prop_resource = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=True)
     prop_string = Column(String, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
