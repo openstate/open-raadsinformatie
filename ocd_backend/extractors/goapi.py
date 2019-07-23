@@ -91,7 +91,7 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             for meeting in static_json:
                 yield 'application/json', \
                       json.dumps(meeting), \
-                      urljoin(self.base_url, 'meetings/%s' % meeting['id']), \
+                      urljoin(self.base_url, url), \
                       meeting
                 meeting_count += 1
 

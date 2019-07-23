@@ -47,7 +47,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='governmental_organization')
+                                                       collection=source_definition['source_type'])
 
     # dates in v1 have a time in them and in v2 they don't
     if ':' in original_item['date']:
@@ -80,7 +80,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                               source=source_definition['key'],
                                               supplier='allmanak',
-                                              collection='governmental_organization')
+                                              collection=source_definition['source_type'])
 
     # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
     # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
@@ -91,11 +91,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                  source=source_definition['key'],
                                                                  supplier='allmanak',
-                                                                 collection='governmental_organization')
+                                                                 collection=source_definition['source_type'])
     event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                              source=source_definition['key'],
                                                              supplier='allmanak',
-                                                             collection='governmental_organization')
+                                                             collection=source_definition['source_type'])
 
     # object_model['last_modified'] = iso8601.parse_date(
     #    original_item['last_modified'])
@@ -124,7 +124,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection=source_definition['source_type'])
 
         agendaitem.description = item['description']
         agendaitem.name = '%s: %s' % (item['number'], item['title'],)
@@ -139,11 +139,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      source=source_definition['key'],
                                      supplier='gemeenteoplossingen',
                                      collection='attachment')
-            attachment.entity = doc['url']
+            attachment.entity = entity
             attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                     source=source_definition['key'],
                                                                     supplier='allmanak',
-                                                                    collection='governmental_organization')
+                                                                    collection=source_definition['source_type'])
 
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
@@ -160,11 +160,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source=source_definition['key'],
                                  supplier='gemeenteoplossingen',
                                  collection='attachment')
-        attachment.entity = doc['url']
+        attachment.entity = entity
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection=source_definition['source_type'])
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

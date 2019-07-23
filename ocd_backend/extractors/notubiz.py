@@ -156,9 +156,17 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
+                entity = "%s/events?organisation_id=%i&date_from=%s&date_to=%s&format=json&version=1.10.8&page=%i" % (
+                        self.base_url,
+                        self.source_definition['notubiz_organization_id'],
+                        start_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        end_date.strftime("%Y-%m-%d %H:%M:%S"),
+                        page
+                    )
+
                 yield 'application/json', \
                       json.dumps(meeting_json), \
-                      meeting_json['self'], \
+                      entity, \
                       meeting_json
                 meeting_count += 1
 

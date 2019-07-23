@@ -62,6 +62,7 @@ _parlaeus: &parlaeus
   sitename: "{key!c}"
   base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
   session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
+  source_type: "municipality"
   entities: *entities
   <<: *source_defaults
 

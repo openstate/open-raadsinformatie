@@ -101,7 +101,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='governmental_organization')
+                                                       collection='province')
 
     event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
@@ -123,7 +123,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     event.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                               source=source_definition['key'],
                                               supplier='allmanak',
-                                              collection='governmental_organization')
+                                              collection='province')
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
@@ -137,11 +137,11 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
             event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                          source=source_definition['key'],
                                                                          supplier='allmanak',
-                                                                         collection='governmental_organization')
+                                                                         collection='province')
             event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='governmental_organization')
+                                                                     collection='province')
 
     # object_model['last_modified'] = iso8601.parse_date(
     #    original_item['last_modified'])
@@ -165,7 +165,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='province')
 
         attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['original_url']
@@ -199,7 +199,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='governmental_organization')
+                                                       collection='province')
 
     event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
@@ -221,7 +221,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.organization = TopLevelOrganization(source_definition['allmanak_id'],
                                               source=source_definition['key'],
                                               supplier='allmanak',
-                                              collection='governmental_organization')
+                                              collection='province')
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
@@ -235,11 +235,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                          source=source_definition['key'],
                                                                          supplier='allmanak',
-                                                                         collection='governmental_organization')
+                                                                         collection='province')
             event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                                      source=source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection='governmental_organization')
+                                                                     collection='province')
 
     # object_model['last_modified'] = iso8601.parse_date(
     #    original_item['last_modified'])
@@ -263,7 +263,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='province')
 
         attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['original_url']
@@ -290,7 +290,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                                 source=source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection='governmental_organization')
+                                                                collection='province')
 
         agendaitem.description = meeting[u'objectname']
         agendaitem.name = meeting[u'objectname']
