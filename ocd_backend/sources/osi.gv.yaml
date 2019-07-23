@@ -16,6 +16,7 @@ _entities: &entities
   - &province
     <<: *entity_defaults
     entity: province
+    entity_type: "HTTP"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
@@ -23,6 +24,7 @@ _entities: &entities
   - &organizations
     <<: *entity_defaults
     entity: organizations
+    entity_type: "HTTP"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
@@ -30,6 +32,7 @@ _entities: &entities
   - &persons
     <<: *entity_defaults
     entity: persons
+    entity_type: "HTTP"
     doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.persons.allmanak_person_item
@@ -37,6 +40,7 @@ _entities: &entities
   - &meetings
     <<: *entity_defaults
     entity: meetings
+    entity_type: "GVCMSProxy"
     doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     transformer: ocd_backend.transformers.gv.meeting_item
@@ -50,6 +54,7 @@ _entities: &entities
   - &reports
     <<: *entity_defaults
     entity: reports
+    entity_type: "GVCMSProxy"
     doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     transformer: ocd_backend.transformers.gv.greenvalley_report
@@ -65,7 +70,6 @@ _entities: &entities
         - file_to_text
 
 _gv: &gv
-  source_type: "GVCMSProxy"
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
