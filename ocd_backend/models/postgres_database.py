@@ -196,7 +196,7 @@ class PostgresDatabase(object):
                 source = Source(resource=resource,
                                 iri=model_object.had_primary_source,
                                 entity=model_object.entity,
-                                type=model_object.source_definition['entity_type'])
+                                entity_type=model_object.source_definition['entity_type'])
                 session.add(source)
             except Exception:
                 raise
