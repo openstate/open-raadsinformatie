@@ -98,7 +98,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             agenda_item.parent = item
             agenda_item.name = mi['Title']
             agenda_item.start_date = item.start_date
-            agenda_item.__rel_params__ = {'rdf': '_%i' % i}
 
             agenda_item.attachment = list()
             for document in mi['Documents'] or []:
