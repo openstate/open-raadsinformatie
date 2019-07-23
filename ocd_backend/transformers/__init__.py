@@ -19,16 +19,3 @@ class BaseTransformer(OCDBackendTaskFailureMixin, celery_app.Task):
             return etree.HTML(raw_item)
         else:
             raise NoDeserializerAvailable('Item with content_type %s' % content_type)
-
-
-from organizations import *
-from persons import *
-from goapi_committee import *
-from goapi_document import *
-from goapi_meeting import *
-from ibabs_committee import *
-from ibabs_meeting import *
-from ibabs_person import *
-from notubiz_committee import *
-from notubiz_meeting import *
-from gv import *
