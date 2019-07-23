@@ -292,7 +292,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 supplier='allmanak',
                                                                 collection='governmental_organization')
 
-        agendaitem.__rel_params__ = {'rdf': '_%i' % int(meeting['agendapagenumber'])}
         agendaitem.description = meeting[u'objectname']
         agendaitem.name = meeting[u'objectname']
         agendaitem.position = int(meeting['agendapagenumber'])

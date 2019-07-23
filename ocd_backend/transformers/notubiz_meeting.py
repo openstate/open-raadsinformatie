@@ -71,7 +71,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 supplier='allmanak',
                                                                 collection='governmental_organization')
 
-        agendaitem.__rel_params__ = {'rdf': '_%i' % item['order']}
         try:
             agendaitem.description = item['type_data']['attributes'][0]['value']
         except KeyError:
