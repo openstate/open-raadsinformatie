@@ -24,7 +24,7 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
     committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
                                                            source=source_definition['key'],
                                                            supplier='allmanak',
-                                                           collection='municipality')
+                                                           collection=source_definition['source_type'])
 
     committee.name = original_item['Meetingtype']
     committee.description = original_item['Abbreviation']
@@ -38,7 +38,7 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
     committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
                                                        source=source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection='municipality')
+                                                       collection=source_definition['source_type'])
 
     committee.save()
     return committee
