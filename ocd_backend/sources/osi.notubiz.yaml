@@ -52,11 +52,11 @@ _entities: &entities
       - # reserved for enricher settings
 
 _notubiz: &notubiz
-  source_type: "HTTP"
   index_name: "{key}"
   sitename: "{key!c}"
   base_url: "https://api.notubiz.nl"
   allmanak_api_version: "v0"
+  source_type: "province"
   entities: *entities
   <<: *source_defaults
 
