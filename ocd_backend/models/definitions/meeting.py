@@ -25,7 +25,7 @@ class Meeting(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     audio = Relation(Schema, 'audio')
     description = StringProperty(Schema, 'description')
-    status = URLProperty(Mapping, 'eventStatus')
+    status = URLProperty(Schema, 'eventStatus')
     location = StringProperty(Schema, 'location')
     name = StringProperty(Schema, 'name', required=True)
     organization = Relation(Schema, 'organizer', required=True)
