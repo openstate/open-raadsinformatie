@@ -125,7 +125,7 @@ class PostgresDatabase(object):
 
             # Delete properties that are about to be updated
             predicates = [predicate for predicate, _ in serialized_properties.iteritems()]
-            session.query(Property).filter(Property.resource_id==resource.ori_id,
+            session.query(Property).filter(Property.resource_id == resource.ori_id,
                                            Property.predicate.in_(predicates)
                                            ).delete(synchronize_session='fetch')
             session.commit()
