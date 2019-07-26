@@ -81,26 +81,26 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 supplier='allmanak',
                                                                 collection=source_definition['source_type'])
 
-    if 'MeetingItems' in meeting:
-        item.agenda = list()
-        for i, mi in enumerate(meeting['MeetingItems'] or [], start=1):
-            agenda_item = AgendaItem(mi['Id'],
-                                     source_definition,
-                                     source=source_definition['key'],
-                                     supplier='ibabs',
-                                     collection='agenda_item')
-            agenda_item.entity = mi['Id']
-            agenda_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                     source=source_definition['key'],
-                                                                     supplier='allmanak',
-                                                                     collection=source_definition['source_type'])
+    item.agenda = list()
+    for i, mi in enumerate(meeting['MeetingItems']['iBabsMeetingItem'] or [], start=1):
+        agenda_item = AgendaItem(mi['Id'],
+                                 source_definition,
+                                 source=source_definition['key'],
+                                 supplier='ibabs',
+                                 collection='agenda_item')
+        agenda_item.entity = mi['Id']
+        agenda_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
+                                                                 source=source_definition['key'],
+                                                                 supplier='allmanak',
+                                                                 collection=source_definition['source_type'])
 
-            agenda_item.parent = item
-            agenda_item.name = mi['Title']
-            agenda_item.start_date = item.start_date
+        agenda_item.parent = item
+        agenda_item.name = mi['Title']
+        agenda_item.start_date = item.start_date
 
+        if mi['Documents'] and 'iBabsDocument' in mi['Documents']:
             agenda_item.attachment = list()
-            for document in mi['Documents'] or []:
+            for document in mi['Documents']['iBabsDocument'] or []:
                 attachment = MediaObject(document['Id'],
                                          source_definition,
                                          source=source_definition['key'],
@@ -122,7 +122,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             item.agenda.append(agenda_item)
 
     item.invitee = list()
-    for invitee in meeting['Invitees'] or []:
+    for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
         invitee_item = Person(invitee['UniqueId'],
                               source_definition,
                               source=source_definition['key'],
@@ -144,7 +144,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
     item.attachment = list()
-    for document in meeting['Documents'] or []:
+    for document in meeting['Documents']['iBabsDocument'] or []:
         attachment = MediaObject(document['Id'],
                                  source_definition,
                                  source=source_definition['key'],

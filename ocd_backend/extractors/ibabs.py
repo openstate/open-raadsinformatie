@@ -1,7 +1,8 @@
 import json
 import re
 
-from suds.client import Client  # pylint: disable=import-error
+from zeep.client import Client, Settings
+from zeep.helpers import serialize_object
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
@@ -9,8 +10,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
-    meeting_to_dict, meeting_type_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict, votes_to_dict, person_profile_to_dict)
+    meeting_to_dict, list_report_response_to_dict,
+    list_entry_response_to_dict, votes_to_dict)
 
 log = get_source_logger('extractor')
 
@@ -31,9 +32,11 @@ class IBabsBaseExtractor(BaseExtractor):
             ibabs_wsdl = self.source_definition['wsdl']
         except Exception as e:
             ibabs_wsdl = settings.IBABS_WSDL
-        # log.debug(ibabs_wsdl)
-        self.client = Client(ibabs_wsdl)
-        self.client.set_options(port='BasicHttpsBinding_IPublic')
+
+        soap_settings = Settings(extra_http_headers={'User-Agent': settings.USER_AGENT})
+        self.client = Client(ibabs_wsdl,
+                             port_name='BasicHttpsBinding_IPublic',
+                             settings=soap_settings)
 
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
@@ -54,14 +57,12 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
 
         if meeting_types.Meetingtypes:
             total_count = 0
-            for mt in meeting_types.Meetingtypes[0]:
+            for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 if committee_designator in mt.Meetingtype.lower():
-                    raw = meeting_type_to_dict(mt)
-                    entity = raw['Id']
-                    committee = json.dumps(raw)
+                    committee = serialize_object(mt, dict)
                     yield 'application/json', \
-                          committee, \
-                          entity, \
+                          json.dumps(committee), \
+                          committee['Id'], \
                           'used_file_placeholder'
                     total_count += 1
             log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
@@ -79,7 +80,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         meeting_types = self.client.service.GetMeetingtypes(self.source_definition['sitename'])
 
         if meeting_types.Meetingtypes:
-            for o in meeting_types.Meetingtypes[0]:
+            for o in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 include_regex = self.source_definition.get('include', None)
                 if include_regex and not re.search(include_regex, o.Description):
                     continue
@@ -109,10 +110,14 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             meeting_types = self._meetingtypes_as_dict()
 
             if meetings.Meetings:
-                for meeting in meetings.Meetings[0]:
-                    meeting_dict = meeting_to_dict(meeting)
+                for meeting in meetings.Meetings['iBabsMeeting']:
 
-                    # sometimes a meetingtype is actually a meeting for some
+                    meeting_dict = serialize_object(meeting, dict)
+                    # Convert unserializable keys to text
+                    meeting_dict['PublishDate'] = meeting_dict['PublishDate'].isoformat()
+                    meeting_dict['MeetingDate'] = meeting_dict['MeetingDate'].isoformat()
+
+                    # sometimes a meeting type is not actually a meeting for some
                     # reason. Let's ignore these for now
                     if meeting_dict['MeetingtypeId'] not in meeting_types:
                         meetings_skipped += 1
@@ -128,6 +133,142 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
         log.info("[%s] Extracted total of %d ibabs meetings. Also skipped %d meetings in total." %
                  (self.source_definition['sitename'], meeting_count, meetings_skipped,))
+
+
+class IBabsReportsExtractor(IBabsBaseExtractor):
+    """
+    Extracts reports from the iBabs SOAP Service. The source definition should
+    state which kind of reports should be extracted.
+    """
+
+    def run(self):
+        lists = self.client.service.GetLists(Sitename=self.source_definition['sitename'])
+
+        if len(lists) < 1:
+            log.info("[%s] No ibabs reports defined" % (self.source_definition['sitename'],))
+            return
+
+        selected_lists = []
+        for l in lists:
+            include_regex = self.source_definition.get('include', None) or self.source_definition['regex']
+            if not re.search(include_regex, l.Value.lower()):
+                continue
+            exclude_regex = self.source_definition.get('exclude', None) or r'^$'
+            if re.search(exclude_regex, l.Value.lower()):
+                continue
+            selected_lists.append(l)
+
+        total_yield_count = 0
+        for l in selected_lists:
+            reports = self.client.service.GetListReports(Sitename=self.source_definition['sitename'], ListId=l.Key)
+            report = reports[0]
+            if len(reports) > 1:
+                try:
+                    report = [
+                        r for r in reports if r.Value == l.Value][0]
+                except IndexError as e:
+                    pass
+
+            active_page_nr = 0
+            max_pages = self.source_definition.get('max_pages', 1)
+            per_page = self.source_definition.get('per_page', 100)
+            result_count = per_page
+            total_count = 0
+            yield_count = 0
+            while (active_page_nr < max_pages) and (result_count == per_page):
+                try:
+                    result = self.client.service.GetListReport(
+                        Sitename=self.source_definition['sitename'],
+                        ListId=l.Key, ReportId=report.Key,
+                        ActivePageNr=active_page_nr, RecordsPerPage=per_page)
+                except Exception as e:  # most likely an XML parse problem
+                    log.warning("[%s] Could not parse page %s correctly!: %s" % (
+                        self.source_definition['sitename'], active_page_nr, e.message))
+                    result = None
+                result_count = 0
+                # log.debug("* %s: %s/%s - %d/%d" % (
+                #     self.source_definition['sitename'],
+                #     result.ListName, result.ReportName,
+                #     active_page_nr, max_pages,))
+
+                if result is not None:
+                    try:
+                        document_element = result.Data.diffgram[0].DocumentElement[0]
+                    except AttributeError as e:
+                        document_element = None
+                    except IndexError as e:
+                        document_element = None
+                else:
+                    document_element = None
+
+                if document_element is None:
+                    log.debug("[%s] No correct document element for this page!" % self.source_definition['sitename'])
+                    total_count += per_page
+                    continue
+
+                for item in document_element.results:
+                    dict_item = list_report_response_to_dict(item)
+                    dict_item['_ListName'] = result.ListName
+                    dict_item['_ReportName'] = result.ReportName
+                    extra_info_item = self.client.service.GetListEntry(
+                        Sitename=self.source_definition['sitename'],
+                        ListId=l.Key, EntryId=dict_item['id'][0])
+                    dict_item['_Extra'] = list_entry_response_to_dict(
+                        extra_info_item)
+                    # if dict_item['kenmerk'][0].startswith('2018 M67'):
+                    #     log.debug(dict_item)
+                    # try:
+                    #     # this should be the motion's unique identifier
+                    #     log.debug(full_normalized_motion_id(
+                    #         dict_item['_Extra']['Values'][u'Onderwerp']))
+                    # except (KeyError, AttributeError) as e:
+                    #     pass
+                    yield 'application/json', json.dumps(dict_item), dict_item['id'][0], dict_item
+                    yield_count += 1
+                    total_yield_count += 1
+                    result_count += 1
+                total_count += result_count
+                active_page_nr += 1
+            log.debug("[%s] Report: %s -- total %s, results %s, yielded %s" % (
+                self.source_definition['sitename'], l.Value, total_count, result_count, yield_count))
+
+        log.info("[%s] Extracted total of %s ibabs reports yielded" % (
+            self.source_definition['sitename'], total_yield_count))
+
+
+class IbabsPersonsExtractor(IBabsBaseExtractor):
+    """
+    Extracts person profiles from the iBabs SOAP service.
+    """
+
+    def run(self):
+        users = self.client.service.GetUsers(
+            self.source_definition['sitename']
+        )
+
+        if users.Users:
+            total_count = 0
+            for user in users.Users['iBabsUserBasic']:
+                identifier = user['UniqueId']
+
+                user_details = self.client.service.GetUser(
+                    self.source_definition['sitename'],
+                    identifier
+                )
+
+                profile = serialize_object(user_details.User.PublicProfile, dict)
+                # Picture can't be JSON-encoded so we delete it
+                del profile['Picture']
+
+                yield 'application/json', json.dumps(profile), profile['UserId'], profile
+                total_count += 1
+
+            log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
+
+        elif users.Message == 'No users found!':
+            log.info('[%s] No ibabs persons were found' % self.source_definition['index_name'])
+        else:
+            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], users.Message))
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
@@ -196,19 +337,19 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 meeting_dict['Meetingtype'] = meeting_types[
                     meeting_dict['MeetingtypeId']]
 
-                kv = self.client.factory.create('ns0:iBabsKeyValue')
+                kv = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv.Key = 'IncludeMeetingItems'
                 kv.Value = True
 
-                kv2 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv2 = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv2.Key = 'IncludeListEntries'
                 kv2.Value = True
 
-                kv3 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv3 = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv3.Key = 'IncludeMeetingItems'
                 kv3.Value = True
 
-                params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
+                params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')  # pylint: disable=no-member
                 params.iBabsKeyValue.append(kv)
                 params.iBabsKeyValue.append(kv2)
                 params.iBabsKeyValue.append(kv3)
@@ -375,141 +516,3 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
             return result
         else:
             return []
-
-
-class IBabsReportsExtractor(IBabsBaseExtractor):
-    """
-    Extracts reports from the iBabs SOAP Service. The source definition should
-    state which kind of reports should be extracted.
-    """
-
-    def run(self):
-        lists = self.client.service.GetLists(
-            Sitename=self.source_definition['sitename'])
-
-        try:
-            kv = lists.iBabsKeyValue
-        except AttributeError as e:
-            log.info("[%s] No ibabs reports defined" % (
-                self.source_definition['sitename'],))
-            return
-
-        selected_lists = []
-        for l in lists.iBabsKeyValue:
-            include_regex = self.source_definition.get('include', None) or self.source_definition['regex']
-            if not re.search(include_regex, l.Value.lower()):
-                continue
-            exclude_regex = self.source_definition.get('exclude', None) or r'^$'
-            if re.search(exclude_regex, l.Value.lower()):
-                continue
-            selected_lists.append(l)
-
-        total_yield_count = 0
-        for l in selected_lists:
-            reports = self.client.service.GetListReports(
-                Sitename=self.source_definition['sitename'], ListId=l.Key)
-            report = reports.iBabsKeyValue[0]
-            if len(reports.iBabsKeyValue) > 1:
-                try:
-                    report = [
-                        r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
-                except IndexError as e:
-                    pass
-
-            active_page_nr = 0
-            max_pages = self.source_definition.get('max_pages', 1)
-            per_page = self.source_definition.get('per_page', 100)
-            result_count = per_page
-            total_count = 0
-            yield_count = 0
-            while (active_page_nr < max_pages) and (result_count == per_page):
-                try:
-                    result = self.client.service.GetListReport(
-                        Sitename=self.source_definition['sitename'],
-                        ListId=l.Key, ReportId=report.Key,
-                        ActivePageNr=active_page_nr, RecordsPerPage=per_page)
-                except Exception as e:  # most likely an XML parse problem
-                    log.warning("[%s] Could not parse page %s correctly!: %s" % (
-                        self.source_definition['sitename'], active_page_nr, e.message))
-                    result = None
-                result_count = 0
-                # log.debug("* %s: %s/%s - %d/%d" % (
-                #     self.source_definition['sitename'],
-                #     result.ListName, result.ReportName,
-                #     active_page_nr, max_pages,))
-
-                if result is not None:
-                    try:
-                        document_element = result.Data.diffgram[0].DocumentElement[0]
-                    except AttributeError as e:
-                        document_element = None
-                    except IndexError as e:
-                        document_element = None
-                else:
-                    document_element = None
-
-                if document_element is None:
-                    log.debug("[%s] No correct document element for this page!" % self.source_definition['sitename'])
-                    total_count += per_page
-                    continue
-
-                for item in document_element.results:
-                    dict_item = list_report_response_to_dict(item)
-                    dict_item['_ListName'] = result.ListName
-                    dict_item['_ReportName'] = result.ReportName
-                    extra_info_item = self.client.service.GetListEntry(
-                        Sitename=self.source_definition['sitename'],
-                        ListId=l.Key, EntryId=dict_item['id'][0])
-                    dict_item['_Extra'] = list_entry_response_to_dict(
-                        extra_info_item)
-                    # if dict_item['kenmerk'][0].startswith('2018 M67'):
-                    #     log.debug(dict_item)
-                    # try:
-                    #     # this should be the motion's unique identifier
-                    #     log.debug(full_normalized_motion_id(
-                    #         dict_item['_Extra']['Values'][u'Onderwerp']))
-                    # except (KeyError, AttributeError) as e:
-                    #     pass
-                    yield 'application/json', json.dumps(dict_item), dict_item['id'][0], dict_item
-                    yield_count += 1
-                    total_yield_count += 1
-                    result_count += 1
-                total_count += result_count
-                active_page_nr += 1
-            log.debug("[%s] Report: %s -- total %s, results %s, yielded %s" % (
-                self.source_definition['sitename'], l.Value, total_count, result_count, yield_count))
-
-        log.info("[%s] Extracted total of %s ibabs reports yielded" % (
-            self.source_definition['sitename'], total_yield_count))
-
-
-class IbabsPersonsExtractor(IBabsBaseExtractor):
-    """
-    Extracts person profiles from the iBabs SOAP service.
-    """
-
-    def run(self):
-        users = self.client.service.GetUsers(
-            self.source_definition['sitename']
-        )
-
-        if users.Users:
-            total_count = 0
-            for user in users.Users[0]:
-                identifier = user['UniqueId']
-
-                user_details = self.client.service.GetUser(
-                    self.source_definition['sitename'],
-                    identifier
-                )
-
-                profile = person_profile_to_dict(user_details.User.PublicProfile)
-                yield 'application/json', json.dumps(profile), profile['UserId'], profile
-                total_count += 1
-
-            log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
-
-        elif users.Message == 'No users found!':
-            log.info('[%s] No ibabs persons were found' % self.source_definition['index_name'])
-        else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], users.Message))
