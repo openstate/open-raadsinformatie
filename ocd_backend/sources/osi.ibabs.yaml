@@ -12,25 +12,25 @@ _entity_defaults: &entity_defaults
     - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
-#_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
-#  <<: *entity_defaults
-#  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-#  transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
-#  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-#  include: moties
-#  pdf_max_pages: 20
-#  max_pages: 1
-#  per_page: 100
+_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
+  <<: *entity_defaults
+  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
+  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+  include: moties
+  pdf_max_pages: 20
+  max_pages: 1
+  per_page: 100
 
-#_voting_rounds_defaults: &voting_rounds_defaults
-#  <<: *entity_defaults
-#  entity: voting_rounds
-#  doc_type: vote_events
-#  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-#  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
-#  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
-#  reverse_chronological: false
-#  max_processed_meetings: 0
+_voting_rounds_defaults: &voting_rounds_defaults
+  <<: *entity_defaults
+  entity: voting_rounds
+  doc_type: vote_events
+  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
+  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+  reverse_chronological: false
+  max_processed_meetings: 0
 
 _entities: &entities
   - &province
@@ -163,7 +163,7 @@ osi.ibabs:
       include: moties
       exclude: "^$"
       <<: *fields_limburg
-      # <<: *motions_and_amendments_voting_defaults
+      <<: *motions_and_amendments_voting_defaults
 
     - &amendments_voting
       entity: amendments
@@ -173,7 +173,7 @@ osi.ibabs:
       include: amendementen
       exclude: "^$"
       <<: *fields_limburg
-      # <<: *motions_and_amendments_voting_defaults
+      <<: *motions_and_amendments_voting_defaults
 
     - &vote_events
       entity: vote_events
@@ -183,7 +183,7 @@ osi.ibabs:
       include: (moties|amendementen)
       exclude: "^$"
       <<: *fields_limburg
-      # <<: *motions_and_amendments_voting_defaults
+      <<: *motions_and_amendments_voting_defaults
 
     - &voting_rounds
-      # <<: *voting_rounds_defaults
+      <<: *voting_rounds_defaults

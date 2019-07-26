@@ -135,18 +135,6 @@ def meeting_item_to_dict(m):
     return _ibabs_to_dict(m, fields)
 
 
-def meeting_type_to_dict(mt):
-    """
-    Converts an iBabsMeetingType to a JSON serializable dict
-    """
-    fields = {
-        'Id': None,
-        'Meetingtype': None,
-        'Abbreviation': None,
-    }
-    return _ibabs_to_dict(mt, fields)
-
-
 def _list_response_field_to_val(r):
     if isinstance(r, list):
         return [unicode(l) for l in r]
@@ -178,10 +166,3 @@ def list_entry_response_to_dict(m):
             unicode(y.Key): unicode(y.Value) if y.Value is not None else None for y in x[0]}
     }
     return _ibabs_to_dict(m, fields)
-
-
-def person_profile_to_dict(p):
-    """
-    Converts an iBabsListEntryBasic to a JSON serializable dict
-    """
-    return {k[0]: _list_response_field_to_val(k[1]) for k in p}
