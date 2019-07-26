@@ -125,6 +125,11 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 log.debug("[%s] Processing events page %i" % (self.source_definition['sitename'], page))
 
             for item in event_json[self.source_definition['doc_type']]:
+                # Skip meetings that are not public
+                if item['permission_group'] != 'public':
+                    meetings_skipped += 1
+                    continue
+
                 try:
                     data = self.fetch_data(
                         "%s/events/meetings/%i?format=json&version=1.10.8" %
