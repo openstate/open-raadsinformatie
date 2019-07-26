@@ -108,7 +108,7 @@ class Model(object):
             self.had_primary_source = Uri(
                 Mapping,
                 '{}/{}/{}/{}'.format(
-                    source,
+                    slugify(source),
                     supplier,
                     collection,
                     slugify(source_id)

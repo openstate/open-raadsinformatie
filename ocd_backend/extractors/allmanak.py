@@ -16,7 +16,7 @@ class AllmanakBaseExtractor(BaseExtractor, HttpRequestMixin):
 
     def __init__(self, *args, **kwargs):
         super(AllmanakBaseExtractor, self).__init__(*args, **kwargs)
-        self.base_url = '%s/%s/' % ('https://rest-api.allmanak.nl:443', self.source_definition['allmanak_api_version'],)
+        self.base_url = '%s/%s/' % ('https://rest-api.allmanak.nl', self.source_definition['allmanak_api_version'],)
 
     def _request(self, path):
         # log.debug('Now retrieving: %s' % (urljoin(self.base_url, path),))
