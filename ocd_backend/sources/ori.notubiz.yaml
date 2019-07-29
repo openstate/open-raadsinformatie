@@ -79,7 +79,6 @@ ori.notubiz:
 
   amsterdam:
     key: amsterdam
-    municipality_prefix: "Amsterdam"
     allmanak_id: 25698
     notubiz_organization_id: 281
     <<: *notubiz
