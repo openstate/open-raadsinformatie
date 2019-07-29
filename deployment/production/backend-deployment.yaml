@@ -37,6 +37,16 @@ spec:
               secretKeyRef:
                 name: secrets
                 key: KAFKA_PASSWORD
+          - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: POSTGRES_USERNAME
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: POSTGRES_PASSWORD
         volumeMounts:
         - mountPath: /opt/ori/data
           name: oridata
