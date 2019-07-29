@@ -33,27 +33,27 @@ def get_documents_as_media_urls(source_definition, original_item, documents):
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
     
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'gemeenteoplossingen',
         'collection': 'document',
     }
 
     event = Meeting(original_item[u'id'],
-                    source_definition,
+                    self.source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                       source=source_definition['key'],
+    event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                       source=self.source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection=source_definition['source_type'])
+                                                       collection=self.source_definition['source_type'])
 
-    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
-                                              source=source_definition['key'],
+    event.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                              source=self.source_definition['key'],
                                               supplier='allmanak',
-                                              collection=source_definition['source_type'])
+                                              collection=self.source_definition['source_type'])
 
     try:
         date_tz = pytz.timezone(
@@ -75,15 +75,15 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.description = original_item[u'description']
 
     event.attachment = []
-    for doc in get_documents_as_media_urls(source_definition, original_item, original_item.get('documents', [])):
+    for doc in get_documents_as_media_urls(self.source_definition, original_item, original_item.get('documents', [])):
         attachment = MediaObject(doc['url'],
-                                 source_definition,
+                                 self.source_definition,
                                  **source_defaults)
         attachment.entity = entity
-        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection=source_definition['source_type'])
+                                                                collection=self.source_definition['source_type'])
 
         attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']

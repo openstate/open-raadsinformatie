@@ -13,10 +13,10 @@ log = get_source_logger('ibabs_meeting')
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
 
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'ibabs',
         'collection': 'meeting',
     }
@@ -28,13 +28,13 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         meeting = original_item
 
     item = Meeting(meeting['Id'],
-                   source_definition,
+                   self.source_definition,
                    **source_defaults)
     item.entity = entity
-    item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                      source=source_definition['key'],
+    item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                      source=self.source_definition['key'],
                                                       supplier='allmanak',
-                                                      collection=source_definition['source_type'])
+                                                      collection=self.source_definition['source_type'])
 
     item.name = meeting['Meetingtype']
     item.chair = meeting['Chairman']
@@ -51,23 +51,23 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     else:
         item.status = EventStatus.CONFIRMED
 
-    item.organization = TopLevelOrganization(source_definition['allmanak_id'],
-                                             source=source_definition['key'],
+    item.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                             source=self.source_definition['key'],
                                              supplier='allmanak',
-                                             collection=source_definition['source_type'])
+                                             collection=self.source_definition['source_type'])
 
     # Check if this is a committee meeting and if so connect it to the committee node.
-    committee_designator = source_definition.get('committee_designator', 'commissie')
+    committee_designator = self.source_definition.get('committee_designator', 'commissie')
     if committee_designator in meeting['Meetingtype'].lower():
         # Attach the meeting to the committee node
         item.committee = Organization(meeting['MeetingtypeId'],
-                                      source=source_definition['key'],
+                                      source=self.source_definition['key'],
                                       supplier='ibabs',
                                       collection='committee')
-        item.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                    source=source_definition['key'],
+        item.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                    source=self.source_definition['key'],
                                                                     supplier='allmanak',
-                                                                    collection=source_definition['source_type'])
+                                                                    collection=self.source_definition['source_type'])
 
         item.committee.name = meeting['Meetingtype']
         if 'sub' in meeting['MeetingtypeId']:
@@ -76,23 +76,23 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             item.committee.classification = u'Committee'
 
         # Re-attach the committee node to the municipality node
-        item.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection=source_definition['source_type'])
+                                                                collection=self.source_definition['source_type'])
 
     item.agenda = list()
     for i, mi in enumerate(meeting['MeetingItems']['iBabsMeetingItem'] or [], start=1):
         agenda_item = AgendaItem(mi['Id'],
-                                 source_definition,
-                                 source=source_definition['key'],
+                                 self.source_definition,
+                                 source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='agenda_item')
         agenda_item.entity = mi['Id']
-        agenda_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                 source=source_definition['key'],
+        agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                 source=self.source_definition['key'],
                                                                  supplier='allmanak',
-                                                                 collection=source_definition['source_type'])
+                                                                 collection=self.source_definition['source_type'])
 
         agenda_item.parent = item
         agenda_item.name = mi['Title']
@@ -102,15 +102,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             agenda_item.attachment = list()
             for document in mi['Documents']['iBabsDocument'] or []:
                 attachment = MediaObject(document['Id'],
-                                         source_definition,
-                                         source=source_definition['key'],
+                                         self.source_definition,
+                                         source=self.source_definition['key'],
                                          supplier='ibabs',
                                          collection='attachment')
                 attachment.entity = document['Id']
-                attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                        source=source_definition['key'],
+                attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                        source=self.source_definition['key'],
                                                                         supplier='allmanak',
-                                                                        collection=source_definition['source_type'])
+                                                                        collection=self.source_definition['source_type'])
 
                 attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                 attachment.original_url = document['PublicDownloadURL']
@@ -124,15 +124,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.invitee = list()
     for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
         invitee_item = Person(invitee['UniqueId'],
-                              source_definition,
-                              source=source_definition['key'],
+                              self.source_definition,
+                              source=self.source_definition['key'],
                               supplier='ibabs',
                               collection='person')
         invitee_item.entity = invitee['UniqueId']
-        invitee_item.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                  source=source_definition['key'],
+        invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                  source=self.source_definition['key'],
                                                                   supplier='allmanak',
-                                                                  collection=source_definition['source_type'])
+                                                                  collection=self.source_definition['source_type'])
         item.invitee.append(invitee_item)
 
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
@@ -146,15 +146,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.attachment = list()
     for document in meeting['Documents']['iBabsDocument'] or []:
         attachment = MediaObject(document['Id'],
-                                 source_definition,
-                                 source=source_definition['key'],
+                                 self.source_definition,
+                                 source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='attachment')
         attachment.entity = document['Id']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection=source_definition['source_type'])
+                                                                collection=self.source_definition['source_type'])
 
         attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
         attachment.original_url = document['PublicDownloadURL']
@@ -170,31 +170,31 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
 
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'ibabs',
         'collection': 'report',
     }
 
     report = CreativeWork(original_item['id'][0],
-                          source_definition,
-                          source=source_definition['key'],
+                          self.source_definition,
+                          source=self.source_definition['key'],
                           supplier='ibabs',
                           collection='report')
     report.entity = original_item['id'][0]
-    report.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                        source=source_definition['key'],
+    report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                        source=self.source_definition['key'],
                                                         supplier='allmanak',
-                                                        collection=source_definition['source_type'])
+                                                        collection=self.source_definition['source_type'])
 
     report_name = original_item['_ReportName'].split(r'\s+')[0]
     report.classification = u'Report'
 
     name_field = None
     try:
-        name_field = source_definition['fields'][report_name]['name']
+        name_field = self.source_definition['fields'][report_name]['name']
     except KeyError:
         for field in original_item.keys():
             # Search for things that look like title
@@ -211,13 +211,13 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     # Temporary binding reports to municipality as long as events and agendaitems are not
     # referenced in the iBabs API
-    report.creator = TopLevelOrganization(source_definition['allmanak_id'],
-                                          source=source_definition['key'],
+    report.creator = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                          source=self.source_definition['key'],
                                           supplier='allmanak',
-                                          collection=source_definition['source_type'])
+                                          collection=self.source_definition['source_type'])
 
     try:
-        name_field = source_definition['fields'][report_name]['description']
+        name_field = self.source_definition['fields'][report_name]['description']
         report.description = original_item[name_field][0]
     except KeyError:
         try:
@@ -226,7 +226,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
             pass
 
     try:
-        datum_field = source_definition['fields'][report_name]['start_date']
+        datum_field = self.source_definition['fields'][report_name]['start_date']
     except KeyError:
         datum_field = 'datum'
 
@@ -248,15 +248,15 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     report.attachment = list()
     for document in original_item['_Extra']['Documents'] or []:
         attachment_file = MediaObject(document['Id'],
-                                      source_definition,
-                                      source=source_definition['key'],
+                                      self.source_definition,
+                                      source=self.source_definition['key'],
                                       supplier='ibabs',
                                       collection='attachment')
         attachment_file.entity = document['Id']
-        attachment_file.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                     source=source_definition['key'],
+        attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection=source_definition['source_type'])
+                                                                     collection=self.source_definition['source_type'])
 
         attachment_file.original_url = document['PublicDownloadURL']
         attachment_file.size_in_bytes = document['FileSize']

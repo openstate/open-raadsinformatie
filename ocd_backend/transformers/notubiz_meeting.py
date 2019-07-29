@@ -9,47 +9,47 @@ log = get_source_logger('notubiz_meeting')
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
     
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'notubiz',
         'collection': 'meeting',
     }
 
     event = Meeting(original_item['id'],
-                    source_definition,
+                    self.source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                       source=source_definition['key'],
+    event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                       source=self.source_definition['key'],
                                                        supplier='allmanak',
-                                                       collection=source_definition['source_type'])
+                                                       collection=self.source_definition['source_type'])
     event.start_date = original_item['plannings'][0]['start_date']
     event.end_date = original_item['plannings'][0]['end_date']
     event.name = original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
     event.classification = [u'Agenda']
     event.location = original_item['attributes'].get('Locatie')
 
-    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
-                                              source=source_definition['key'],
+    event.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                              source=self.source_definition['key'],
                                               supplier='allmanak',
-                                              collection=source_definition['source_type'])
+                                              collection=self.source_definition['source_type'])
 
     event.committee = Organization(original_item['gremium']['id'],
-                                   source=source_definition['key'],
+                                   source=self.source_definition['key'],
                                    supplier='notubiz',
                                    collection='committee')
-    event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                 source=source_definition['key'],
+    event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                 source=self.source_definition['key'],
                                                                  supplier='allmanak',
-                                                                 collection=source_definition['source_type'])
+                                                                 collection=self.source_definition['source_type'])
 
     # Re-attach the committee node to the municipality node
-    event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
-                                                             source=source_definition['key'],
+    event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                             source=self.source_definition['key'],
                                                              supplier='allmanak',
-                                                             collection=source_definition['source_type'])
+                                                             collection=self.source_definition['source_type'])
 
     event.agenda = []
     for item in original_item.get('agenda_items', []):
@@ -61,15 +61,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             continue
 
         agendaitem = AgendaItem(item['id'],
-                                source_definition,
-                                source=source_definition['key'],
+                                self.source_definition,
+                                source=self.source_definition['key'],
                                 supplier='notubiz',
                                 collection='agenda_item')
         agendaitem.entity = entity
-        agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection=source_definition['source_type'])
+                                                                collection=self.source_definition['source_type'])
 
         try:
             agendaitem.description = item['type_data']['attributes'][0]['value']
@@ -86,15 +86,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.attachment = []
         for doc in item.get('documents', []):
             attachment = MediaObject(doc['id'],
-                                     source_definition,
-                                     source=source_definition['key'],
+                                     self.source_definition,
+                                     source=self.source_definition['key'],
                                      supplier='notubiz',
                                      collection='attachment')
             attachment.entity = entity
-            attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                    source=source_definition['key'],
+            attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                    source=self.source_definition['key'],
                                                                     supplier='allmanak',
-                                                                    collection=source_definition['source_type'])
+                                                                    collection=self.source_definition['source_type'])
 
             attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
@@ -120,15 +120,15 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in original_item.get('documents', []):
         attachment = MediaObject(doc['id'],
-                                 source_definition,
-                                 source=source_definition['key'],
+                                 self.source_definition,
+                                 source=self.source_definition['key'],
                                  supplier='notubiz',
                                  collection='attachment')
         attachment.entity = entity
-        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
-                                                                collection=source_definition['source_type'])
+                                                                collection=self.source_definition['source_type'])
 
         attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']
