@@ -8,28 +8,29 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('goapi_meeting')
 
 
-def get_current_permalink(source_definition,original_item):
-    api_version = source_definition.get('api_version', 'v1')
-    base_url = '%s/%s' % (
-        source_definition['base_url'], api_version,)
+class GOAPITransformer(BaseTransformer):
+    def get_current_permalink(self, original_item):
+        api_version = self.source_definition.get('api_version', 'v1')
+        base_url = '%s/%s' % (
+            self.source_definition['base_url'], api_version,)
 
-    return u'%s/meetings/%i' % (base_url, original_item[u'id'],)
+        return u'%s/meetings/%i' % (base_url, original_item[u'id'],)
+
+    def get_documents_as_media_urls(self, original_item):
+        current_permalink = self.get_current_permalink(original_item)
+
+        output = []
+        for document in original_item['documents']:
+            # sleep(1)
+            url = u"%s/documents/%s" % (current_permalink, document['id'])
+            output.append({
+                'url': url,
+                'note': document[u'filename']})
+        return output
 
 
-def get_documents_as_media_urls(source_definition, original_item, documents):
-    current_permalink = get_current_permalink(source_definition, original_item)
-
-    output = []
-    for document in documents:
-        # sleep(1)
-        url = u"%s/documents/%s" % (current_permalink, document['id'])
-        output.append({
-            'url': url,
-            'note': document[u'filename']})
-    return output
-
-
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+# noinspection DuplicatedCode
+@celery_app.task(bind=True, base=GOAPITransformer, autoretry_for=(Exception,), retry_backoff=True)
 def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
@@ -133,7 +134,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.start_date = event.start_date
         agendaitem.attachment = []
 
-        for doc in get_documents_as_media_urls(self.source_definition, original_item, item.get('documents', [])):
+        for doc in self.get_documents_as_media_urls(original_item):
             attachment = MediaObject(doc['url'].rpartition('/')[2],
                                      self.source_definition,
                                      source=self.source_definition['key'],
@@ -154,7 +155,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         event.agenda.append(agendaitem)
 
     event.attachment = []
-    for doc in get_documents_as_media_urls(self.source_definition, original_item, original_item.get('documents', [])):
+    for doc in self.get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['url'].rpartition('/')[2],
                                  self.source_definition,
                                  source=self.source_definition['key'],
