@@ -9,22 +9,22 @@ log = get_source_logger('ibabs_person')
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
     
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'ibabs',
         'collection': 'person',
     }
 
     person = Person(original_item['UserId'],
-                    source_definition,
+                    self.source_definition,
                     **source_defaults)
     person.entity = entity
-    person.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                        source=source_definition['key'],
+    person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                        source=self.source_definition['key'],
                                                         supplier='allmanak',
-                                                        collection=source_definition['source_type'])
+                                                        collection=self.source_definition['source_type'])
 
     person.name = original_item['Name']
     person.family_name = original_item['LastName']
@@ -32,24 +32,24 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     person.email = original_item['Email']
     person.phone = original_item['Phone']
 
-    municipality = TopLevelOrganization(source_definition['allmanak_id'],
-                                        source=source_definition['key'],
+    municipality = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                        source=self.source_definition['key'],
                                         supplier='allmanak',
-                                        collection=source_definition['source_type'])
+                                        collection=self.source_definition['source_type'])
 
     # The source ID for the municipality membership is constructed by combining the person's iBabs ID and the
     # key of the source
-    municipality_membership_id = '%s_%s' % (original_item['UserId'], source_definition['key'])
+    municipality_membership_id = '%s_%s' % (original_item['UserId'], self.source_definition['key'])
     municipality_member = Membership(municipality_membership_id,
-                                     source_definition,
-                                     source=source_definition['key'],
+                                     self.source_definition,
+                                     source=self.source_definition['key'],
                                      supplier='ibabs',
                                      collection='municipality_membership')
     municipality_member.entity = entity
-    municipality_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                     source=source_definition['key'],
+    municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
                                                                      supplier='allmanak',
-                                                                     collection=source_definition['source_type'])
+                                                                     collection=self.source_definition['source_type'])
 
     municipality_member.organization = municipality
     municipality_member.member = person
@@ -69,15 +69,15 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         # These duplicate nodes are necessary to cover ibabs sources that have no persons, otherwise those
         # sources would not have any parties.
         party = Organization(original_item['PoliticalPartyId'],
-                             source_definition,
-                             source=source_definition['key'],
+                             self.source_definition,
+                             source=self.source_definition['key'],
                              supplier='ibabs',
                              collection='party')
         party.entity = original_item['PoliticalPartyId']
-        party.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                           source=source_definition['key'],
+        party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                           source=self.source_definition['key'],
                                                            supplier='allmanak',
-                                                           collection=source_definition['source_type'])
+                                                           collection=self.source_definition['source_type'])
 
         party.name = original_item['PoliticalPartyName']
 
@@ -85,15 +85,15 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         # name of the party
         party_membership_id = '%s_%s' % (original_item['UserId'], original_item['PoliticalPartyName'])
         party_member = Membership(party_membership_id,
-                                  source_definition,
-                                  source=source_definition['key'],
+                                  self.source_definition,
+                                  source=self.source_definition['key'],
                                   supplier='ibabs',
                                   collection='party_membership')
         party_member.entity = entity
-        party_member.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                  source=source_definition['key'],
+        party_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                  source=self.source_definition['key'],
                                                                   supplier='allmanak',
-                                                                  collection=source_definition['source_type'])
+                                                                  collection=self.source_definition['source_type'])
 
         party_member.organization = party
         party_member.member = person
