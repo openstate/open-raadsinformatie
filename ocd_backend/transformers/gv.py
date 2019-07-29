@@ -82,10 +82,10 @@ class GreenValleyTransformer(BaseTransformer):
 @celery_app.task(bind=True, base=GreenValleyTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
     
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'gemeenteoplossingen',
         'collection': 'meeting',
     }
@@ -95,11 +95,11 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'],
-                    source_definition,
+                    self.source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                       source=source_definition['key'],
+    event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                       source=self.source_definition['key'],
                                                        supplier='allmanak',
                                                        collection='province')
 
@@ -120,26 +120,26 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     except (AttributeError, KeyError):
         pass
 
-    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
-                                              source=source_definition['key'],
+    event.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                              source=self.source_definition['key'],
                                               supplier='allmanak',
                                               collection='province')
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
             event.committee = Organization(meeting[u'bis_orgaan'],
-                                           source_definition,
-                                           source=source_definition['key'],
+                                           self.source_definition,
+                                           source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
             event.committee.entity = entity
             event.committee.name = meeting['bis_orgaan']
-            event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                         source=source_definition['key'],
+            event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                         source=self.source_definition['key'],
                                                                          supplier='allmanak',
                                                                          collection='province')
-            event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                     source=source_definition['key'],
+            event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
                                                                      supplier='allmanak',
                                                                      collection='province')
 
@@ -157,13 +157,13 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
-                                 source_definition,
-                                 source=source_definition['key'],
+                                 self.source_definition,
+                                 source=self.source_definition['key'],
                                  supplier='greenvalley',
                                  collection='attachment')
         attachment.entity = doc['original_url']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
                                                                 collection='province')
 
@@ -180,10 +180,10 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
 @celery_app.task(bind=True, base=GreenValleyTransformer, autoretry_for=(Exception,), retry_backoff=True)
 def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
-    source_definition = kwargs['source_definition']
+    self.source_definition = kwargs['source_definition']
     
     source_defaults = {
-        'source': source_definition['key'],
+        'source': self.source_definition['key'],
         'supplier': 'greenvalley',
         'collection': 'meeting',
     }
@@ -193,11 +193,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'],
-                    source_definition,
+                    self.source_definition,
                     **source_defaults)
     event.entity = entity
-    event.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                       source=source_definition['key'],
+    event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                       source=self.source_definition['key'],
                                                        supplier='allmanak',
                                                        collection='province')
 
@@ -218,26 +218,26 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     except (AttributeError, KeyError):
         pass
 
-    event.organization = TopLevelOrganization(source_definition['allmanak_id'],
-                                              source=source_definition['key'],
+    event.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                              source=self.source_definition['key'],
                                               supplier='allmanak',
                                               collection='province')
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
             event.committee = Organization(meeting[u'bis_orgaan'],
-                                           source_definition,
-                                           source=source_definition['key'],
+                                           self.source_definition,
+                                           source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
             event.committee.entity = entity
             event.committee.name = meeting['bis_orgaan']
-            event.committee.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                         source=source_definition['key'],
+            event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                         source=self.source_definition['key'],
                                                                          supplier='allmanak',
                                                                          collection='province')
-            event.committee.subOrganizationOf = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                     source=source_definition['key'],
+            event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
                                                                      supplier='allmanak',
                                                                      collection='province')
 
@@ -255,13 +255,13 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
-                                 source_definition,
-                                 source=source_definition['key'],
+                                 self.source_definition,
+                                 source=self.source_definition['key'],
                                  supplier='greenvalley',
                                  collection='attachment')
         attachment.entity = doc['original_url']
-        attachment.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
                                                                 collection='province')
 
@@ -282,13 +282,13 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     for item in children:
         meeting = item[u'default']
         agendaitem = AgendaItem(meeting['objectid'],
-                                source_definition,
-                                source=source_definition['key'],
+                                self.source_definition,
+                                source=self.source_definition['key'],
                                 supplier='greenvalley',
                                 collection='agenda_item')
         agendaitem.entity = entity
-        agendaitem.has_organization_name = TopLevelOrganization(source_definition['allmanak_id'],
-                                                                source=source_definition['key'],
+        agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                source=self.source_definition['key'],
                                                                 supplier='allmanak',
                                                                 collection='province')
 
