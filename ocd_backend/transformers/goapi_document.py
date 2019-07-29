@@ -2,35 +2,14 @@ import iso8601
 import pytz
 
 from ocd_backend import celery_app
-from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
 from ocd_backend.log import get_source_logger
+from ocd_backend.transformers.goapi_meeting import GOAPITransformer
 
 log = get_source_logger('goapi_document')
 
 
-def get_current_permalink(source_definition, original_item):
-    api_version = source_definition.get('api_version', 'v1')
-    base_url = '%s/%s' % (
-        source_definition['base_url'], api_version,)
-
-    return u'%s/documents/%i' % (base_url, original_item[u'id'],)
-
-
-def get_documents_as_media_urls(source_definition, original_item, documents):
-    current_permalink = get_current_permalink(source_definition, original_item)
-
-    output = []
-    for document in documents:
-        # sleep(1)
-        url = current_permalink
-        output.append({
-            'url': url,
-            'note': document[u'filename']})
-    return output
-
-
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=GOAPITransformer, autoretry_for=(Exception,), retry_backoff=True)
 def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
@@ -75,7 +54,7 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.description = original_item[u'description']
 
     event.attachment = []
-    for doc in get_documents_as_media_urls(self.source_definition, original_item, original_item.get('documents', [])):
+    for doc in self.get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['url'],
                                  self.source_definition,
                                  **source_defaults)
