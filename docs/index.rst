@@ -12,8 +12,6 @@ Background
    :maxdepth: 2
 
    intro
-   faq
-   changes
 
 
 Using the Open Raadsinformatie API
