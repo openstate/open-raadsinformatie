@@ -36,7 +36,6 @@ _entities: &entities
   - &province
     <<: *entity_defaults
     entity: province
-    entity_type: "HTML"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
@@ -44,7 +43,6 @@ _entities: &entities
   - &committees
     <<: *entity_defaults
     entity: committees
-    entity_type: "SOAP"
     doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
     transformer: ocd_backend.transformers.ibabs_committee.committee_item
@@ -52,7 +50,6 @@ _entities: &entities
   - &organizations
     <<: *entity_defaults
     entity: organizations
-    entity_type: "HTML"
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
@@ -60,7 +57,6 @@ _entities: &entities
   - &persons
     <<: *entity_defaults
     entity: persons
-    entity_type: "HTML"
     doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
     transformer: ocd_backend.transformers.ibabs_person.person_item
@@ -68,7 +64,6 @@ _entities: &entities
   - &meetings
     <<: *entity_defaults
     entity: meetings
-    entity_type: "SOAP"
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
@@ -76,7 +71,6 @@ _entities: &entities
   - &reports
     <<: *entity_defaults
     entity: reports
-    entity_type: "SOAP"
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.report_item
@@ -157,7 +151,6 @@ osi.ibabs:
 
     - &motions_voting
       entity: motions
-      entity_type: "SOAP"
       doc_type: motions
       classification: Moties
       include: moties
@@ -167,7 +160,6 @@ osi.ibabs:
 
     - &amendments_voting
       entity: amendments
-      entity_type: "SOAP"
       doc_type: motions
       classification: Amendementen
       include: amendementen
@@ -177,7 +169,6 @@ osi.ibabs:
 
     - &vote_events
       entity: vote_events
-      entity_type: "SOAP"
       doc_type: vote_events
       classification: Stemmingen
       include: (moties|amendementen)

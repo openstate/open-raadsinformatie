@@ -17,9 +17,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
         'collection': 'person',
     }
 
-    person = Person(original_item['systemid'],
-                    self.source_definition,
-                    **source_defaults)
+    person = Person(original_item['systemid'], **source_defaults)
     person.entity = entity
     person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
@@ -41,7 +39,6 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     # key of the source
     municipality_membership_id = '%s_%s' % (original_item['systemid'], self.source_definition['key'])
     municipality_member = Membership(municipality_membership_id,
-                                     self.source_definition,
                                      source=self.source_definition['key'],
                                      supplier='allmanak',
                                      collection='municipality_membership')
@@ -74,7 +71,6 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
         # name of the party
         party_membership_id = '%s_%s' % (original_item['systemid'], original_item['partij'])
         party_member = Membership(party_membership_id,
-                                  self.source_definition,
                                   source=self.source_definition['key'],
                                   supplier='allmanak',
                                   collection='party_membership')

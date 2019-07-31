@@ -20,7 +20,7 @@ class GOAPITransformer(BaseTransformer):
         current_permalink = self.get_current_permalink(original_item)
 
         output = []
-        for document in original_item['documents']:
+        for document in original_item.get('documents', []):
             # sleep(1)
             url = u"%s/documents/%s" % (current_permalink, document['id'])
             output.append({
@@ -41,9 +41,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'collection': 'meeting',
     }
 
-    event = Meeting(original_item[u'id'],
-                    self.source_definition,
-                    **source_defaults)
+    event = Meeting(original_item[u'id'], **source_defaults)
     event.entity = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
@@ -117,7 +115,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             continue
 
         agendaitem = AgendaItem(item['id'],
-                                self.source_definition,
                                 source=self.source_definition['key'],
                                 supplier='gemeenteoplossingen',
                                 collection='agenda_item')
@@ -136,7 +133,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
         for doc in self.get_documents_as_media_urls(original_item):
             attachment = MediaObject(doc['url'].rpartition('/')[2],
-                                     self.source_definition,
                                      source=self.source_definition['key'],
                                      supplier='gemeenteoplossingen',
                                      collection='attachment')
@@ -157,7 +153,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in self.get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['url'].rpartition('/')[2],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='gemeenteoplossingen',
                                  collection='attachment')
