@@ -18,7 +18,7 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     committee = Organization(original_item['Id'], **source_defaults)
-    committee.entity = entity
+    committee.canonical_id = entity
     committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                            source=self.source_definition['key'],
                                                            supplier='allmanak',
