@@ -106,12 +106,12 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     if 'canceled' in original_item and original_item['canceled']:
         log.info('Found a Notubiz event with status EventCancelled: %s' % str(event.values))
-        event.status = EventStatus.CANCELLED
+        event.status = EventCancelled
     elif 'inactive' in original_item and original_item['inactive']:
         log.info('Found a Notubiz event with status EventUncomfirmed: %s' % str(event.values))
-        event.status = EventStatus.CONFIRMED
+        event.status = EventConfirmed
     else:
-        event.status = EventStatus.UNCONFIRMED
+        event.status = EventUnconfirmed
 
     event.attachment = []
     for doc in original_item.get('documents', []):

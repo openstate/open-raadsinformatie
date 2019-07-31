@@ -149,7 +149,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     #     event.status = EventUnconfirmed()
     # else:
     #     event.status = EventConfirmed()
-    event.status = EventStatus.CONFIRMED
+    event.status = EventConfirmed
 
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
@@ -238,12 +238,12 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     #    original_item['last_modified'])
 
     # if original_item['canceled']:
-    #     event.status = EventCancelled()
+    #     event.status = EventCancelled
     # elif original_item['inactive']:
-    #     event.status = EventUnconfirmed()
+    #     event.status = EventUnconfirmed
     # else:
-    #     event.status = EventConfirmed()
-    event.status = EventStatus.CONFIRMED
+    #     event.status = EventConfirmed
+    event.status = EventConfirmed
 
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):

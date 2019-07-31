@@ -42,12 +42,12 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in meeting and meeting['canceled']:
         log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
-        item.status = EventStatus.CANCELLED
+        item.status = EventCancelled
     elif 'inactive' in meeting and meeting['inactive']:
         log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
-        item.status = EventStatus.UNCONFIRMED
+        item.status = EventUnconfirmed
     else:
-        item.status = EventStatus.CONFIRMED
+        item.status = EventConfirmed
 
     item.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
                                              source=self.source_definition['key'],
@@ -236,7 +236,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
         report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
         report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
-    report.status = EventStatus.CONFIRMED
+    report.status = EventConfirmed
 
     report.attachment = list()
     for document in original_item['_Extra']['Documents'] or []:
