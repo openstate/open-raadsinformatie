@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, BigInteger, func, CheckConstraint
+from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, func, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -46,7 +46,7 @@ class Property(Base):
     id = Column(UUIDType(), primary_key=True)
     resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
     predicate = Column(String, nullable=False)
-    order = Column(BigInteger, nullable=True)
+    order = Column(SmallInteger, nullable=True)
     prop_resource = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=True)
     prop_string = Column(String, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
