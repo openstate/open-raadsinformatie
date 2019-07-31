@@ -17,9 +17,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'collection': 'meeting',
     }
 
-    event = Meeting(original_item['id'],
-                    self.source_definition,
-                    **source_defaults)
+    event = Meeting(original_item['id'], **source_defaults)
     event.entity = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
@@ -61,7 +59,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             continue
 
         agendaitem = AgendaItem(item['id'],
-                                self.source_definition,
                                 source=self.source_definition['key'],
                                 supplier='notubiz',
                                 collection='agenda_item')
@@ -86,7 +83,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.attachment = []
         for doc in item.get('documents', []):
             attachment = MediaObject(doc['id'],
-                                     self.source_definition,
                                      source=self.source_definition['key'],
                                      supplier='notubiz',
                                      collection='attachment')
@@ -120,7 +116,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in original_item.get('documents', []):
         attachment = MediaObject(doc['id'],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='notubiz',
                                  collection='attachment')

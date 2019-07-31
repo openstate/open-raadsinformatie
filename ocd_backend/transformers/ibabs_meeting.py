@@ -27,9 +27,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     else:
         meeting = original_item
 
-    item = Meeting(meeting['Id'],
-                   self.source_definition,
-                   **source_defaults)
+    item = Meeting(meeting['Id'], **source_defaults)
     item.entity = entity
     item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                       source=self.source_definition['key'],
@@ -84,7 +82,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.agenda = list()
     for i, mi in enumerate(meeting['MeetingItems']['iBabsMeetingItem'] or [], start=1):
         agenda_item = AgendaItem(mi['Id'],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='agenda_item')
@@ -102,7 +99,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             agenda_item.attachment = list()
             for document in mi['Documents']['iBabsDocument'] or []:
                 attachment = MediaObject(document['Id'],
-                                         self.source_definition,
                                          source=self.source_definition['key'],
                                          supplier='ibabs',
                                          collection='attachment')
@@ -124,7 +120,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.invitee = list()
     for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
         invitee_item = Person(invitee['UniqueId'],
-                              self.source_definition,
                               source=self.source_definition['key'],
                               supplier='ibabs',
                               collection='person')
@@ -146,7 +141,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.attachment = list()
     for document in meeting['Documents']['iBabsDocument'] or []:
         attachment = MediaObject(document['Id'],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='attachment')
@@ -179,7 +173,6 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     report = CreativeWork(original_item['id'][0],
-                          self.source_definition,
                           source=self.source_definition['key'],
                           supplier='ibabs',
                           collection='report')
@@ -248,7 +241,6 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
     report.attachment = list()
     for document in original_item['_Extra']['Documents'] or []:
         attachment_file = MediaObject(document['Id'],
-                                      self.source_definition,
                                       source=self.source_definition['key'],
                                       supplier='ibabs',
                                       collection='attachment')
