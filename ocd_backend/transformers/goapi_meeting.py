@@ -42,7 +42,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     event = Meeting(original_item[u'id'], **source_defaults)
-    event.entity = entity
+    event.canonical_iri = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -118,7 +118,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                 source=self.source_definition['key'],
                                 supplier='gemeenteoplossingen',
                                 collection='agenda_item')
-        agendaitem.entity = entity
+        agendaitem.canonical_iri = entity
         agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',
@@ -136,7 +136,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      source=self.source_definition['key'],
                                      supplier='gemeenteoplossingen',
                                      collection='attachment')
-            attachment.entity = entity
+            attachment.canonical_iri = entity
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                     source=self.source_definition['key'],
                                                                     supplier='allmanak',
@@ -156,7 +156,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source=self.source_definition['key'],
                                  supplier='gemeenteoplossingen',
                                  collection='attachment')
-        attachment.entity = entity
+        attachment.canonical_iri = entity
         attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',

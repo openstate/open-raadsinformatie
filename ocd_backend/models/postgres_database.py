@@ -104,13 +104,13 @@ class PostgresDatabase(object):
             if not model_object.values.get('ori_identifier'):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.had_primary_source)
 
-            # Handle entity and source
-            try:
-                # This needs to be done with a try/except because of the way Model overrides __getitem__
-                _ = model_object.entity
-                self.update_source(model_object)
-            except AttributeError:
-                pass
+            # Handle canonical IRI or ID
+            if model_object.values.get('canonical_iri'):
+                self.update_source(model_object, iri=True)
+                del model_object.values['canonical_iri']
+            elif model_object.values.get('canonical_id'):
+                self.update_source(model_object, id=True)
+                del model_object.values['canonical_id']
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -164,30 +164,43 @@ class PostgresDatabase(object):
         else:
             raise ValueError('Unable to map property of type "%s" to a column.' % property_type)
 
-    def update_source(self, model_object):
-        """Updates the source type and entity of the Source of the corresponding model object. One Source can have
-        multiple different entities."""
+    def update_source(self, model_object, iri=False, id=False):
+        """Updates the canonical IRI or ID field of the Source of the corresponding model object. One Source can have
+        multiple different canonical IRI/ID entries."""
+
+        if iri:
+            canonical_field = 'canonical_iri'
+        elif id:
+            canonical_field = 'canonical_id'
+        else:
+            raise ValueError('update_source must be called with either iri or id as True')
 
         session = self.Session()
         resource = session.query(Resource).filter(Resource.ori_id == model_object.get_short_identifier()).one()
 
         try:
-            # First check if there is a Source record with an empty entity, and if so fill that record
-            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id, Source.entity == None).one()
-            source.entity = model_object.entity
+            # First check if there is a Source record with an empty canonical IRI/ID field, and if so fill that record
+            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                  Source.canonical_iri == None,
+                                                  Source.canonical_id == None).one()
+            setattr(source, canonical_field, getattr(model_object, canonical_field))
         except NoResultFound:
             try:
-                # If no empty entity record exists, check if one already exists with the given IRI and entity
-                source = session.query(Source).filter(Source.resource == resource,
-                                                      Source.entity == model_object.entity).one()
-                # At this point it's not really necessary to update the fields again, but it's here in case
+                # If no empty record exists, check if one already exists with the given source IRI and canonical IRI/ID
+                if iri:
+                    source = session.query(Source).filter(Source.resource == resource,
+                                                          Source.canonical_iri == model_object.canonical_iri).one()
+                elif id:
+                    source = session.query(Source).filter(Source.resource == resource,
+                                                          Source.canonical_id == model_object.canonical_id).one()
+                # At this point it's not really necessary to update the field again, but it's here in case
                 # more fields are added later
-                source.entity = model_object.entity
+                setattr(source, canonical_field, getattr(model_object, canonical_field))
             except NoResultFound:
-                # If no Source and entity combination exists for the given IRI, create it
+                # If no Source and canonical IRI/ID combination exists for the given source IRI, create it
                 source = Source(resource=resource,
-                                iri=model_object.had_primary_source,
-                                entity=model_object.entity)
+                                iri=model_object.had_primary_source)
+                setattr(source, canonical_field, getattr(model_object, canonical_field))
                 session.add(source)
             except Exception:
                 raise

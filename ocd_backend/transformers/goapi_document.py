@@ -21,7 +21,7 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     event = Meeting(original_item[u'id'], **source_defaults)
-    event.entity = entity
+    event.canonical_iri = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -54,7 +54,7 @@ def document_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in self.get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['url'], **source_defaults)
-        attachment.entity = entity
+        attachment.canonical_iri = entity
         attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',
