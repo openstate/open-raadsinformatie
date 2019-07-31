@@ -94,9 +94,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
 
     meeting = original_item[u'default']
 
-    event = Meeting(meeting[u'objectid'],
-                    self.source_definition,
-                    **source_defaults)
+    event = Meeting(meeting[u'objectid'], **source_defaults)
     event.entity = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
@@ -128,7 +126,6 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
             event.committee = Organization(meeting[u'bis_orgaan'],
-                                           self.source_definition,
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
@@ -157,7 +154,6 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='greenvalley',
                                  collection='attachment')
@@ -192,9 +188,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     meeting = original_item[u'default']
 
-    event = Meeting(meeting[u'objectid'],
-                    self.source_definition,
-                    **source_defaults)
+    event = Meeting(meeting[u'objectid'], **source_defaults)
     event.entity = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
@@ -226,7 +220,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
             event.committee = Organization(meeting[u'bis_orgaan'],
-                                           self.source_definition,
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
@@ -255,7 +248,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
         attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
-                                 self.source_definition,
                                  source=self.source_definition['key'],
                                  supplier='greenvalley',
                                  collection='attachment')
@@ -282,7 +274,6 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     for item in children:
         meeting = item[u'default']
         agendaitem = AgendaItem(meeting['objectid'],
-                                self.source_definition,
                                 source=self.source_definition['key'],
                                 supplier='greenvalley',
                                 collection='agenda_item')

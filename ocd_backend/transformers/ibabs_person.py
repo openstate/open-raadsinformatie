@@ -17,9 +17,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'collection': 'person',
     }
 
-    person = Person(original_item['UserId'],
-                    self.source_definition,
-                    **source_defaults)
+    person = Person(original_item['UserId'], **source_defaults)
     person.entity = entity
     person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
@@ -41,7 +39,6 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     # key of the source
     municipality_membership_id = '%s_%s' % (original_item['UserId'], self.source_definition['key'])
     municipality_member = Membership(municipality_membership_id,
-                                     self.source_definition,
                                      source=self.source_definition['key'],
                                      supplier='ibabs',
                                      collection='municipality_membership')
@@ -69,7 +66,6 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         # These duplicate nodes are necessary to cover ibabs sources that have no persons, otherwise those
         # sources would not have any parties.
         party = Organization(original_item['PoliticalPartyId'],
-                             self.source_definition,
                              source=self.source_definition['key'],
                              supplier='ibabs',
                              collection='party')
@@ -85,7 +81,6 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
         # name of the party
         party_membership_id = '%s_%s' % (original_item['UserId'], original_item['PoliticalPartyName'])
         party_member = Membership(party_membership_id,
-                                  self.source_definition,
                                   source=self.source_definition['key'],
                                   supplier='ibabs',
                                   collection='party_membership')

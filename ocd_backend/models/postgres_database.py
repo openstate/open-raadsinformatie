@@ -108,12 +108,6 @@ class PostgresDatabase(object):
             try:
                 # This needs to be done with a try/except because of the way Model overrides __getitem__
                 _ = model_object.entity
-                try:
-                    # This needs to be done with a try/except because of the way Model overrides __getitem__
-                    _ = model_object.source_definition
-                except AttributeError:
-                    raise ValueError('Model instances that set an entity must also pass their source definition to '
-                                     'the constructor.')
                 self.update_source(model_object)
             except AttributeError:
                 pass
@@ -180,7 +174,6 @@ class PostgresDatabase(object):
         try:
             # First check if there is a Source record with an empty entity, and if so fill that record
             source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id, Source.entity == None).one()
-            source.entity_type = model_object.source_definition['entity_type']
             source.entity = model_object.entity
         except NoResultFound:
             try:
@@ -189,14 +182,12 @@ class PostgresDatabase(object):
                                                       Source.entity == model_object.entity).one()
                 # At this point it's not really necessary to update the fields again, but it's here in case
                 # more fields are added later
-                source.entity_type = model_object.source_definition['entity_type']
                 source.entity = model_object.entity
             except NoResultFound:
                 # If no Source and entity combination exists for the given IRI, create it
                 source = Source(resource=resource,
                                 iri=model_object.had_primary_source,
-                                entity=model_object.entity,
-                                entity_type=model_object.source_definition['entity_type'])
+                                entity=model_object.entity)
                 session.add(source)
             except Exception:
                 raise
