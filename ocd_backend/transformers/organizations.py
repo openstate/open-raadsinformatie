@@ -34,7 +34,7 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.entity = entity
+    object_model.canonical_iri = entity
     object_model.classification = u'Municipality'
     object_model.collection = self.source_definition['key']
     object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(original_item['naam'])])
@@ -57,7 +57,7 @@ def province_organization_item(self, content_type, raw_item, entity, source_item
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.entity = entity
+    object_model.canonical_iri = entity
     object_model.classification = u'Province'
     object_model.collection = self.source_definition['key']
     object_model.name = unicode(original_item['naam'])
@@ -81,7 +81,7 @@ def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     # When the Allmanak implements parties as entities, the entity ID should be used
     object_model = Organization(original_item['partij'], **source_defaults)
-    object_model.entity = entity
+    object_model.canonical_iri = entity
     object_model.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                               source=self.source_definition['key'],
                                                               supplier='allmanak',

@@ -18,7 +18,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     person = Person(original_item['UserId'], **source_defaults)
-    person.entity = entity
+    person.canonical_id = entity
     person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
@@ -42,7 +42,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      source=self.source_definition['key'],
                                      supplier='ibabs',
                                      collection='municipality_membership')
-    municipality_member.entity = entity
+    municipality_member.canonical_id = entity
     municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                      source=self.source_definition['key'],
                                                                      supplier='allmanak',
@@ -69,7 +69,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
                              source=self.source_definition['key'],
                              supplier='ibabs',
                              collection='party')
-        party.entity = original_item['PoliticalPartyId']
+        party.canonical_id = original_item['PoliticalPartyId']
         party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                            source=self.source_definition['key'],
                                                            supplier='allmanak',
@@ -84,7 +84,7 @@ def person_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                   source=self.source_definition['key'],
                                   supplier='ibabs',
                                   collection='party_membership')
-        party_member.entity = entity
+        party_member.canonical_id = entity
         party_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                   source=self.source_definition['key'],
                                                                   supplier='allmanak',

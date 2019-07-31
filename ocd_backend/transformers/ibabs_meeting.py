@@ -28,7 +28,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         meeting = original_item
 
     item = Meeting(meeting['Id'], **source_defaults)
-    item.entity = entity
+    item.canonical_id = entity
     item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                       source=self.source_definition['key'],
                                                       supplier='allmanak',
@@ -85,7 +85,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='agenda_item')
-        agenda_item.entity = mi['Id']
+        agenda_item.canonical_id = mi['Id']
         agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                  source=self.source_definition['key'],
                                                                  supplier='allmanak',
@@ -102,7 +102,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                          source=self.source_definition['key'],
                                          supplier='ibabs',
                                          collection='attachment')
-                attachment.entity = document['Id']
+                attachment.canonical_id = document['Id']
                 attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                         source=self.source_definition['key'],
                                                                         supplier='allmanak',
@@ -123,7 +123,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                               source=self.source_definition['key'],
                               supplier='ibabs',
                               collection='person')
-        invitee_item.entity = invitee['UniqueId']
+        invitee_item.canonical_id = invitee['UniqueId']
         invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                   source=self.source_definition['key'],
                                                                   supplier='allmanak',
@@ -144,7 +144,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source=self.source_definition['key'],
                                  supplier='ibabs',
                                  collection='attachment')
-        attachment.entity = document['Id']
+        attachment.canonical_id = document['Id']
         attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',
@@ -176,7 +176,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
                           source=self.source_definition['key'],
                           supplier='ibabs',
                           collection='report')
-    report.entity = original_item['id'][0]
+    report.canonical_id = original_item['id'][0]
     report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
@@ -244,7 +244,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                       source=self.source_definition['key'],
                                       supplier='ibabs',
                                       collection='attachment')
-        attachment_file.entity = document['Id']
+        attachment_file.canonical_id = document['Id']
         attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                      source=self.source_definition['key'],
                                                                      supplier='allmanak',
