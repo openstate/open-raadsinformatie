@@ -53,8 +53,29 @@ Organization = definitions.org.Organization
 TopLevelOrganization = definitions.org.Organization
 Membership = definitions.org.Membership
 
-# Enums for literals
-EventStatus = definitions.meeting.EventStatus
-ResultStatus = definitions.meeting.ResultStatus
-VoteOption = definitions.opengov.VoteOption
-VoteResult = definitions.opengov.VoteResult
+# Constants
+
+ResultKept = definitions.meeting.ResultKept
+ResultPostponed = definitions.meeting.ResultPostponed
+ResultWithdrawn = definitions.meeting.ResultWithdrawn
+ResultExpired = definitions.meeting.ResultExpired
+ResultDiscussed = definitions.meeting.ResultDiscussed
+ResultPublished = definitions.meeting.ResultPublished
+
+ResultFailed = definitions.opengov.ResultFailed
+ResultPassed = definitions.opengov.ResultPassed
+
+EventCompleted = definitions.meeting.EventCompleted
+EventConfirmed = definitions.meeting.EventConfirmed
+EventUnconfirmed = definitions.meeting.EventUnconfirmed
+EventScheduled = definitions.schema.EventScheduled
+EventRescheduled = definitions.schema.EventRescheduled
+EventCancelled = definitions.schema.EventCancelled
+EventPostponed = definitions.schema.EventPostponed
+
+VoteOptionYes = definitions.opengov.VoteOptionYes
+VoteOptionNo = definitions.opengov.VoteOptionNo
+VoteOptionAbstain = definitions.opengov.VoteOptionAbstain
+VoteOptionAbsent = definitions.opengov.VoteOptionAbsent
+VoteOptionNotVoting = definitions.opengov.VoteOptionNotVoting
+VoteOptionPaired = definitions.opengov.VoteOptionPaired

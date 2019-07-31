@@ -9,7 +9,7 @@ an assembly of people) discussion.
 
 import opengov
 import schema
-from ocd_backend.models.definitions import Mapping, Opengov, Schema, Meeting as MeetingNS
+from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     Relation, OrderedRelation
 from ocd_backend.models.misc import Uri
@@ -59,20 +59,14 @@ class AgendaItem(MeetingNS, schema.Event):
     agenda = Relation(MeetingNS, 'agenda')
 
 
-class ResultStatus(object):
-    KEPT = Uri(MeetingNS, "ResultKept")
-    POSTPONED = Uri(MeetingNS, "ResultPostponed")
-    WITHDRAWN = Uri(MeetingNS, "ResultWithdrawn")
-    EXPIRED = Uri(MeetingNS, "ResultExpired")
-    DISCUSSED = Uri(MeetingNS, "ResultDiscussed")
-    PUBLISHED = Uri(MeetingNS, "ResultPublished")
+ResultKept = Uri(MeetingNS, "ResultKept")
+ResultPostponed = Uri(MeetingNS, "ResultPostponed")
+ResultWithdrawn = Uri(MeetingNS, "ResultWithdrawn")
+ResultExpired = Uri(MeetingNS, "ResultExpired")
+ResultDiscussed = Uri(MeetingNS, "ResultDiscussed")
+ResultPublished = Uri(MeetingNS, "ResultPublished")
 
 
-class EventStatus(object):
-    SCHEDULED = Uri(Schema, "EventScheduled")
-    RESCHEDULED = Uri(Schema, "EventRescheduled")
-    CANCELLED = Uri(Schema, "EventCancelled")
-    POSTPONED = Uri(Schema, "EventPostponed")
-    COMPLETED = Uri(MeetingNS, "EventCompleted")
-    CONFIRMED = Uri(MeetingNS, "EventConfirmed")
-    UNCONFIRMED = Uri(MeetingNS, "EventUnconfirmed")
+EventCompleted = Uri(MeetingNS, "EventCompleted")
+EventConfirmed = Uri(MeetingNS, "EventConfirmed")
+EventUnconfirmed = Uri(MeetingNS, "EventUnconfirmed")

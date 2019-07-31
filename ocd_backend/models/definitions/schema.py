@@ -6,6 +6,7 @@ import owl
 from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, Relation
+from ocd_backend.models.misc import Uri
 
 
 class MediaObject(Schema, owl.Thing):
@@ -70,3 +71,9 @@ class Place(Schema, owl.Thing):
 
 class VideoObject(Schema, owl.Thing):
     content_url = URLProperty(Schema, 'contentUrl')
+
+
+EventScheduled = Uri(Schema, "EventScheduled")
+EventRescheduled = Uri(Schema, "EventRescheduled")
+EventCancelled = Uri(Schema, "EventCancelled")
+EventPostponed = Uri(Schema, "EventPostponed")
