@@ -1,5 +1,5 @@
 from ocd_backend.transformers import BaseTransformer
-from ocd_backend.models import Motion, Organization, VoteEvent, Vote, Person, VoteOption, VoteResult
+from ocd_backend.models import *
 
 
 class MotionItem(BaseTransformer):
@@ -41,9 +41,9 @@ class MotionItem(BaseTransformer):
         vote_event.start_date = self.original_item.get('issuedate')
 
         if self.original_item['uitslag']:
-            vote_event.result = VoteResult.PASSED
+            vote_event.result = ResultPassed
         elif not self.original_item['uitslag']:
-            vote_event.result = VoteResult.FAILED
+            vote_event.result = ResultFailed
 
         if 'votes' in self.original_item:
             votes = list()
@@ -63,11 +63,11 @@ class MotionItem(BaseTransformer):
                     vote.weight = vote_party['aantal']
 
                     if vote_option == 'voor':
-                        vote.option = VoteOption.OPTION_YES
+                        vote.option = VoteOptionYes
                     elif vote_option == 'tegen':
-                        vote.option = VoteOption.OPTION_NO
+                        vote.option = VoteOptionNo
                     elif vote_option == 'afwezig':
-                        vote.option = VoteOption.ABSENT
+                        vote.option = VoteOptionAbsent
 
                     votes.append(vote)
 

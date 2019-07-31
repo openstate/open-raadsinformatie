@@ -26,6 +26,3 @@ class Person(PersonNS, foaf.Agent):
     email = StringProperty(Schema, 'email')
     image = Relation(Schema, 'image')
     phone = StringProperty(Schema, 'telephone')
-
-    # def verbose_name(self):
-    #     self.name = '%s %s' % (self.given_name, self.family_name)

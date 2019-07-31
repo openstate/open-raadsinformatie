@@ -102,12 +102,12 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in original_item and original_item['canceled']:
         log.info('Found a GOAPI event with status EventCancelled: %s' % str(event.values))
-        event.status = EventStatus.CANCELLED
+        event.status = EventCancelled
     elif 'inactive' in original_item and original_item['inactive']:
         log.info('Found a GOAPI event with status EventUnconmfirmed: %s' % str(event.values))
-        event.status = EventStatus.UNCONFIRMED
+        event.status = EventUnconfirmed
     else:
-        event.status = EventStatus.CONFIRMED
+        event.status = EventConfirmed
 
     event.agenda = []
     for item in original_item.get('items', []):

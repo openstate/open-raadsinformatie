@@ -123,15 +123,13 @@ class Result(Opengov, owl.Thing):
     vote_event = Relation(Opengov, 'voteEvent')
 
 
-class VoteResult(object):
-    FAILED = Uri(Opengov, "ResultFailed")
-    PASSED = Uri(Opengov, "ResultPassed")
+ResultFailed = Uri(Opengov, "ResultFailed")
+ResultPassed = Uri(Opengov, "ResultPassed")
 
 
-class VoteOption(object):
-    OPTION_YES = Uri(Opengov, "VoteOptionYes")
-    OPTION_NO = Uri(Opengov, "VoteOptionNo")
-    ABSTAIN = Uri(Opengov, "VoteOptionAbstain")
-    ABSENT = Uri(Opengov, "VoteOptionAbsent")
-    NOT_VOTING = Uri(Opengov, "VoteOptionNotVoting")
-    PAIRED = Uri(Opengov, "VoteOptionPaired")
+VoteOptionYes = Uri(Opengov, "VoteOptionYes")
+VoteOptionNo = Uri(Opengov, "VoteOptionNo")
+VoteOptionAbstain = Uri(Opengov, "VoteOptionAbstain")
+VoteOptionAbsent = Uri(Opengov, "VoteOptionAbsent")
+VoteOptionNotVoting = Uri(Opengov, "VoteOptionNotVoting")
+VoteOptionPaired = Uri(Opengov, "VoteOptionPaired")
