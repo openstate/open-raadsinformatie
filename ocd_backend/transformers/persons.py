@@ -18,7 +18,7 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
     }
 
     person = Person(original_item['systemid'], **source_defaults)
-    person.canonical_iri = entity
+    person.canonical_id = original_item['systemid']
     person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',

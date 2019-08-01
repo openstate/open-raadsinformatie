@@ -65,7 +65,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
         committee_count = 0
         for committee in json.loads(response.content)['gremia']:
-            entity = '%s/organisations/%s/gremia/%s?format=json&version=1.10.8' % (
+            entity = '%s/organisations/%s/gremia/%s' % (
                 self.base_url,
                 self.source_definition['notubiz_organization_id'],
                 committee['id'])
@@ -131,15 +131,10 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     continue
 
                 try:
-                    data = self.fetch_data(
-                        "%s/events/meetings/%i?format=json&version=1.10.8" %
-                        (
-                            self.base_url,
-                            item['id']
-                        ),
-                        "events/meetings/%i" % item['id'],
-                        item['last_modified'],
-                    )
+                    meeting_url = "%s/events/meetings/%i?format=json&version=1.10.8" % (self.base_url, item['id'])
+                    data = self.fetch_data(meeting_url,
+                                           "events/meetings/%i" % item['id'],
+                                           item['last_modified'])
                     meeting_json = json.loads(data)['meeting']
                 except ItemAlreadyProcessed, e:
                     # This should no longer be triggered after the change to GCS caching
@@ -161,17 +156,9 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
-                entity = "%s/events?organisation_id=%i&date_from=%s&date_to=%s&format=json&version=1.10.8&page=%i" % (
-                        self.base_url,
-                        self.source_definition['notubiz_organization_id'],
-                        start_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        end_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        page
-                    )
-
                 yield 'application/json', \
                       json.dumps(meeting_json), \
-                      entity, \
+                      meeting_url, \
                       meeting_json
                 meeting_count += 1
 
