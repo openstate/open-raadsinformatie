@@ -81,7 +81,7 @@ def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     # When the Allmanak implements parties as entities, the entity ID should be used
     object_model = Organization(original_item['partij'], **source_defaults)
-    object_model.canonical_iri = entity
+    object_model.canonical_id = original_item['partij']
     object_model.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                               source=self.source_definition['key'],
                                                               supplier='allmanak',

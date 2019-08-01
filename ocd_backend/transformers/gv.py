@@ -80,22 +80,20 @@ class GreenValleyTransformer(BaseTransformer):
         
 
 @celery_app.task(bind=True, base=GreenValleyTransformer, autoretry_for=(Exception,), retry_backoff=True)
-def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
     
     source_defaults = {
         'source': self.source_definition['key'],
         'supplier': 'gemeenteoplossingen',
-        'collection': 'meeting',
+        'collection': 'report',
     }
-
-    entity = 'https://staten.zuid-holland.nl/dsresource?objectid=' + entity
 
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'], **source_defaults)
-    event.canonical_iri = entity
+    event.canonical_id = meeting[u'objectid']
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -129,7 +127,7 @@ def greenvalley_item(self, content_type, raw_item, entity, source_item, **kwargs
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
-            event.committee.canonical_iri = entity
+            event.committee.canonical_id = meeting['bis_orgaan']
             event.committee.name = meeting['bis_orgaan']
             event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                          source=self.source_definition['key'],
@@ -184,12 +182,10 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'collection': 'meeting',
     }
 
-    entity = 'https://staten.zuid-holland.nl/dsresource?objectid=' + entity
-
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'], **source_defaults)
-    event.canonical_iri = entity
+    event.canonical_id = meeting[u'objectid']
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -223,7 +219,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
-            event.committee.canonical_iri = entity
+            event.committee.canonical_id = meeting['bis_orgaan']
             event.committee.name = meeting['bis_orgaan']
             event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                          source=self.source_definition['key'],
@@ -272,20 +268,20 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             children.append(result)
 
     for item in children:
-        meeting = item[u'default']
-        agendaitem = AgendaItem(meeting['objectid'],
+        agenda_item = item[u'default']
+        agendaitem = AgendaItem(agenda_item['objectid'],
                                 source=self.source_definition['key'],
                                 supplier='greenvalley',
                                 collection='agenda_item')
-        agendaitem.canonical_iri = entity
+        agendaitem.canonical_id = agenda_item['objectid']
         agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',
                                                                 collection='province')
 
-        agendaitem.description = meeting[u'objectname']
-        agendaitem.name = meeting[u'objectname']
-        agendaitem.position = int(meeting['agendapagenumber'])
+        agendaitem.description = agenda_item[u'objectname']
+        agendaitem.name = agenda_item[u'objectname']
+        agendaitem.position = int(agenda_item['agendapagenumber'])
         agendaitem.parent = event
         # AgendaItem requires a start_date because it derives from Meeting
         agendaitem.start_date = event.start_date
