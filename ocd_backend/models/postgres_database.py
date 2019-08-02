@@ -65,32 +65,37 @@ class PostgresDatabase(object):
 
         return new_identifier
 
-    def get_mergeable_resource_identifier(self, model_object, **kwargs):
+    def get_mergeable_resource_identifier(self, model_object, predicate, column, value):
         """
         Queries the database to find the ORI identifier of the Resource linked to the Property with the given
-        predicate and value.
-
-        TODO: Currently only works for values that are in the `prop_string` field.
+        predicate and value in the specified column.
         """
 
-        if len(kwargs) != 1:
-            raise TypeError('get_mergeable_resource_identifier takes exactly 1 keyword argument')
-
-        filter_key, filter_value = kwargs.items()[0]
-        definition = model_object.definition(filter_key)
+        definition = model_object.definition(predicate)
 
         session = self.Session()
         try:
-            # TODO: This currently only works if the filter_value is in the prop_string field.
-            resource_property = session.query(Property).filter(Property.predicate == definition.absolute_uri(),
-                                                               Property.prop_string == filter_value).one()
+            query_result = session.query(Property).filter(Property.predicate == definition.absolute_uri())
+            if column == 'prop_resource':
+                query_result = query_result.filter(Property.prop_resource == value)
+            elif column == 'prop_string':
+                query_result = query_result.filter(Property.prop_string == value)
+            elif column == 'prop_datetime':
+                query_result = query_result.filter(Property.prop_datetime == value)
+            elif column == 'prop_integer':
+                query_result = query_result.filter(Property.prop_integer == value)
+            elif column == 'prop_url':
+                query_result = query_result.filter(Property.prop_url == value)
+            else:
+                raise ValueError('Invalid column type "%s" specified for merge_into' % column)
+            resource_property = query_result.one()
             return resource_property.resource.iri
         except MultipleResultsFound:
-            raise MultipleResultsFound('Multiple properties found for predicate "%s" with value %s' %
-                                       (filter_key, filter_value))
+            raise MultipleResultsFound('Multiple resources found for predicate "%s" with value "%s" in column "%s"' %
+                                       (predicate, value, column))
         except NoResultFound:
-            raise NoResultFound('No property found for predicate "%s" with value "%s"' %
-                                (filter_key, filter_value))
+            raise NoResultFound('No resource found for predicate "%s" with value "%s" in column "%s"' %
+                                (predicate, value, column))
         finally:
             session.close()
 
