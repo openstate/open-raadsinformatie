@@ -52,17 +52,6 @@ _entities: &entities
       - tasks:
         - file_to_text
 
-  - &documents
-    <<: *entity_defaults
-    entity: documents
-    doc_type: events
-    extractor: ocd_backend.extractors.goapi.GemeenteOplossingenDocumentsExtractor
-    transformer: ocd_backend.transformers.goapi_document.document_item
-    enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.local_static_media_enricher
-      - tasks:
-        - file_to_text
-
 _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
