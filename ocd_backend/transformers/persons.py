@@ -43,12 +43,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
                                      supplier='allmanak',
                                      collection='municipality_membership')
     municipality_member.canonical_iri = entity
-    municipality_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                     source=self.source_definition['key'],
-                                                                     supplier='allmanak',
-                                                                     collection=self.source_definition['source_type'])
 
+    municipality_member.has_organization_name = municipality
     municipality_member.organization = municipality
+
     municipality_member.member = person
     municipality_member.role = 'Raadslid'
 
@@ -58,8 +56,10 @@ def allmanak_person_item(self, content_type, raw_item, entity, source_item, **kw
         party = Organization(original_item['partij'],
                              source=self.source_definition['key'],
                              supplier='allmanak',
-                             collection='party')
-        party.merge(collection=self.source_definition['key'] + '-' + original_item['partij'])
+                             collection='party',
+                             merge_into=('collection',
+                                         'prop_string',
+                                         self.source_definition['key'] + '-' + original_item['partij']))
         party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                            source=self.source_definition['key'],
                                                            supplier='allmanak',
