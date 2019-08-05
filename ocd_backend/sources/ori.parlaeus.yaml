@@ -3,6 +3,7 @@ _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
   wait_until_finished: false
+  source_type: "municipality"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -62,7 +63,6 @@ _parlaeus: &parlaeus
   sitename: "{key!c}"
   base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
   session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
-  source_type: "municipality"
   entities: *entities
   <<: *source_defaults
 

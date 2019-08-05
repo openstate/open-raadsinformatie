@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   es_prefix: osi
+  source_type: "province"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -56,7 +57,6 @@ _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
-  source_type: "province"
   entities: *entities
   <<: *source_defaults
 
