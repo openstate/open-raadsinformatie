@@ -21,7 +21,7 @@ spec:
           value: ori
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
-        - name: POSTGRES_USERNAME
+        - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
               name: secrets
