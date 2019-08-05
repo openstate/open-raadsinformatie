@@ -30,7 +30,7 @@ class Meeting(Namespace):
 
 
 class Mapping(Namespace):
-    uri = 'https://argu.co/voc/mapping/'
+    uri = 'https://openbesluitvorming.nl/voc/mapping/'
     prefix = 'mapping'
 
 
