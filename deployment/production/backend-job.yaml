@@ -16,7 +16,7 @@ spec:
         args:
           - manage.py
           - extract
-          - process
+          - start
           - all
         envFrom:
         - configMapRef:
@@ -24,11 +24,16 @@ spec:
         - secretRef:
             name: backend-credentials
         env:
-        - name: NEO4J_AUTH
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: NEO4J_AUTH
+          - name: POSTGRES_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: POSTGRES_USERNAME
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: POSTGRES_PASSWORD
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
