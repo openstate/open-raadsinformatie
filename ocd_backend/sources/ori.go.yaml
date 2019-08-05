@@ -3,6 +3,7 @@ _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
   wait_until_finished: false
+  source_type: "municipality"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -55,7 +56,6 @@ _go: &go
   index_name: "{key}"
   sitename: "{key!c}"
   allmanak_api_version: "v0"
-  source_type: "municipality"
   entities: *entities
   <<: *source_defaults
 
