@@ -80,55 +80,57 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 collection=self.source_definition['source_type'])
 
     item.agenda = list()
-    for i, mi in enumerate(meeting['MeetingItems']['iBabsMeetingItem'] or [], start=1):
-        agenda_item = AgendaItem(mi['Id'],
-                                 source=self.source_definition['key'],
-                                 supplier='ibabs',
-                                 collection='agenda_item')
-        agenda_item.canonical_id = mi['Id']
-        agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                 source=self.source_definition['key'],
-                                                                 supplier='allmanak',
-                                                                 collection=self.source_definition['source_type'])
+    if meeting['MeetingItems'] and 'iBabsMeetingItem' in meeting['MeetingItems']:
+        for i, mi in enumerate(meeting['MeetingItems']['iBabsMeetingItem'] or [], start=1):
+            agenda_item = AgendaItem(mi['Id'],
+                                     source=self.source_definition['key'],
+                                     supplier='ibabs',
+                                     collection='agenda_item')
+            agenda_item.canonical_id = mi['Id']
+            agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
+                                                                     supplier='allmanak',
+                                                                     collection=self.source_definition['source_type'])
 
-        agenda_item.parent = item
-        agenda_item.name = mi['Title']
-        agenda_item.start_date = item.start_date
+            agenda_item.parent = item
+            agenda_item.name = mi['Title']
+            agenda_item.start_date = item.start_date
 
-        if mi['Documents'] and 'iBabsDocument' in mi['Documents']:
-            agenda_item.attachment = list()
-            for document in mi['Documents']['iBabsDocument'] or []:
-                attachment = MediaObject(document['Id'],
-                                         source=self.source_definition['key'],
-                                         supplier='ibabs',
-                                         collection='attachment')
-                attachment.canonical_id = document['Id']
-                attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                        source=self.source_definition['key'],
-                                                                        supplier='allmanak',
-                                                                        collection=self.source_definition['source_type'])
+            if mi['Documents'] and 'iBabsDocument' in mi['Documents']:
+                agenda_item.attachment = list()
+                for document in mi['Documents']['iBabsDocument'] or []:
+                    attachment = MediaObject(document['Id'],
+                                             source=self.source_definition['key'],
+                                             supplier='ibabs',
+                                             collection='attachment')
+                    attachment.canonical_id = document['Id']
+                    attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                            source=self.source_definition['key'],
+                                                                            supplier='allmanak',
+                                                                            collection=self.source_definition['source_type'])
 
-                attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
-                attachment.original_url = document['PublicDownloadURL']
-                attachment.size_in_bytes = document['FileSize']
-                attachment.name = document['DisplayName']
-                attachment.isReferencedBy = agenda_item
-                agenda_item.attachment.append(attachment)
+                    attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
+                    attachment.original_url = document['PublicDownloadURL']
+                    attachment.size_in_bytes = document['FileSize']
+                    attachment.name = document['DisplayName']
+                    attachment.isReferencedBy = agenda_item
+                    agenda_item.attachment.append(attachment)
 
-            item.agenda.append(agenda_item)
+                item.agenda.append(agenda_item)
 
     item.invitee = list()
-    for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
-        invitee_item = Person(invitee['UniqueId'],
-                              source=self.source_definition['key'],
-                              supplier='ibabs',
-                              collection='person')
-        invitee_item.canonical_id = invitee['UniqueId']
-        invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                  source=self.source_definition['key'],
-                                                                  supplier='allmanak',
-                                                                  collection=self.source_definition['source_type'])
-        item.invitee.append(invitee_item)
+    if meeting['Invitees'] and 'iBabsUserBasic' in meeting['Invitees']:
+        for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
+            invitee_item = Person(invitee['UniqueId'],
+                                  source=self.source_definition['key'],
+                                  supplier='ibabs',
+                                  collection='person')
+            invitee_item.canonical_id = invitee['UniqueId']
+            invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                      source=self.source_definition['key'],
+                                                                      supplier='allmanak',
+                                                                      collection=self.source_definition['source_type'])
+            item.invitee.append(invitee_item)
 
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
     if 'EndTime' in meeting and meeting['EndTime']:
@@ -139,23 +141,24 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
 
     item.attachment = list()
-    for document in meeting['Documents']['iBabsDocument'] or []:
-        attachment = MediaObject(document['Id'],
-                                 source=self.source_definition['key'],
-                                 supplier='ibabs',
-                                 collection='attachment')
-        attachment.canonical_id = document['Id']
-        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                source=self.source_definition['key'],
-                                                                supplier='allmanak',
-                                                                collection=self.source_definition['source_type'])
+    if meeting['Documents'] and 'iBabsDocument' in meeting['Documents']:
+        for document in meeting['Documents']['iBabsDocument'] or []:
+            attachment = MediaObject(document['Id'],
+                                     source=self.source_definition['key'],
+                                     supplier='ibabs',
+                                     collection='attachment')
+            attachment.canonical_id = document['Id']
+            attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                    source=self.source_definition['key'],
+                                                                    supplier='allmanak',
+                                                                    collection=self.source_definition['source_type'])
 
-        attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
-        attachment.original_url = document['PublicDownloadURL']
-        attachment.size_in_bytes = document['FileSize']
-        attachment.name = document['DisplayName']
-        attachment.isReferencedBy = item
-        item.attachment.append(attachment)
+            attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
+            attachment.original_url = document['PublicDownloadURL']
+            attachment.size_in_bytes = document['FileSize']
+            attachment.name = document['DisplayName']
+            attachment.isReferencedBy = item
+            item.attachment.append(attachment)
 
     item.save()
     return item
