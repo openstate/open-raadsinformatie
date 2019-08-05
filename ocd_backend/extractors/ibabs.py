@@ -3,6 +3,7 @@ import re
 
 from zeep.client import Client, Settings
 from zeep.helpers import serialize_object
+from zeep.exceptions import Error, TransportError
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
@@ -34,9 +35,13 @@ class IBabsBaseExtractor(BaseExtractor):
             ibabs_wsdl = settings.IBABS_WSDL
 
         soap_settings = Settings(extra_http_headers={'User-Agent': settings.USER_AGENT})
-        self.client = Client(ibabs_wsdl,
-                             port_name='BasicHttpsBinding_IPublic',
-                             settings=soap_settings)
+
+        try:
+            self.client = Client(ibabs_wsdl,
+                                 port_name='BasicHttpsBinding_IPublic',
+                                 settings=soap_settings)
+        except Error as e:
+            log.error('Unable to instantiate iBabs client: ' + str(e))
 
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
