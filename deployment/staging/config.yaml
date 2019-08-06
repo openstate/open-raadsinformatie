@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: staging
+data:
+  BUGSNAG_APIKEY: d83215ad00143ac50873ac2265c2dabb
+  GCE_STACKDRIVER: "true"
+  RELEASE_STAGE: staging
+  RESOLVER_BASE_URL: https://beta.openraadsinformatie.nl/v1/resolve
+  BACKEND_CRONJOB_ARGS: manage.py
+  ORI_API_POSTGRESQL_ADDRESS: localhost
+  ORI_API_POSTGRESQL_DATABASE: ori_api_db
+  ORI_API_RAILS_LOG_TO_STDOUT: truthy
+  KAFKA_HOST: pkc-lzgmd.europe-west3.gcp.confluent.cloud

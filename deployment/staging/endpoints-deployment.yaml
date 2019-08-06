@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: endpoints
+  namespace: staging
+spec:
+  selector:
+    matchLabels:
+      app: endpoints
+  template:
+    metadata:
+      labels:
+        app: endpoints
+    spec:
+      containers:
+      - name: endpoints
+        image: gcr.io/endpoints-release/endpoints-runtime:1
+        args: [
+          '--http_port=8000',
+          '--backend=elastic:9200',
+          '--service=beta.openraadsinformatie.nl',
+          '--rollout_strategy=managed',
+        ]
+        ports:
+        - containerPort: 8000
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
