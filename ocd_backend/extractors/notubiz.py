@@ -65,7 +65,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
         committee_count = 0
         for committee in json.loads(response.content)['gremia']:
-            entity = '%s/organisations/%s/gremia/%s' % (
+            entity = '%s/organisations/%s/gremia/%s?format=json&version=1.10.8' % (
                 self.base_url,
                 self.source_definition['notubiz_organization_id'],
                 committee['id'])
