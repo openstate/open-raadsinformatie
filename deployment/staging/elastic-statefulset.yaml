@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elastic
+  namespace: staging
+spec:
+  selector:
+    matchLabels:
+      app: elastic
+  replicas: 1
+  serviceName: "elastic"
+  template:
+    metadata:
+      labels:
+        app: elastic
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+        - name: init-sysctl
+          image: busybox
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command: ["sysctl", "-w", "vm.max_map_count=262144"]
+      containers:
+      - name: elastic
+        image: elasticsearch:7.0.0
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        env:
+        - name: ES_JAVA_OPTS
+          value: -Xms1g -Xmx1g
+        - name: cluster.name
+          value: "docker-cluster"
+        - name: xpack.security.enabled
+          value: "false"
+        - name: xpack.monitoring.enabled
+          value: "false"
+        - name: bootstrap.memory_lock
+          value: "false"
+        - name: network.host
+          value: "0.0.0.0"
+        - name: discovery.seed_hosts
+          value: "elastic-discovery"
+        - name: cluster.initial_master_nodes
+          value: "elastic-0"
+        - name: node.max_local_storage_nodes
+          value: "20"
+        - name: http.cors.enabled
+          value: "true"
+        - name: http.cors.allow-origin
+          value: "*"
+        - name: http.cors.allow-headers
+          value: "Content-Type,Content-Length,Authorization"
+        - name: http.cors.allow-credentials
+          value: "true"
+        - name: http.max_initial_line_length
+          value: "8kb"
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /_cluster/health?local=true
+            port: 9200
+          initialDelaySeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          capabilities:
+            add:
+            # Lock memory (mlock(2), mlockall(2), mmap(2), shmctl(2))
+            - IPC_LOCK
+            # Override resource Limits
+            - SYS_RESOURCE
+          privileged: true
+        resources:
+          requests:
+            memory: 1.5Gi
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: esdata
+      restartPolicy: Always
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
+
+  volumeClaimTemplates:
+    - metadata:
+        name: esdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 30Gi

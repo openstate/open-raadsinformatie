@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: staging
+spec:
+  selector:
+    matchLabels:
+      app: api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: ori-api
+        image: ontola/ori_api:9
+        imagePullPolicy: Always
+        env:
+        - name: KAFKA_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              name: config
+              key: KAFKA_HOST
+        volumeMounts:
+        - mountPath: /var/lib/data/id
+          name: apidata
+      volumes:
+      - name: apidata
+        persistentVolumeClaim:
+          claimName: apidata
+      nodeSelector:
+        cloud.google.com/gke-nodepool: persistent
