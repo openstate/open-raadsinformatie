@@ -18,7 +18,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     }
 
     event = Meeting(original_item['id'], **source_defaults)
-    event.canonical_iri = 'https://' + original_item['self']
+    event.canonical_iri = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -86,7 +86,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                      source=self.source_definition['key'],
                                      supplier='notubiz',
                                      collection='attachment')
-            attachment.canonical_iri = doc['url']
+            attachment.canonical_iri = 'https://' + doc['self'] + '?format=json&version=1.10.8'
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                     source=self.source_definition['key'],
                                                                     supplier='allmanak',
@@ -119,7 +119,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                  source=self.source_definition['key'],
                                  supplier='notubiz',
                                  collection='attachment')
-        attachment.canonical_iri = doc['url']
+        attachment.canonical_iri = 'https://' + doc['url'] + '?format=json&version=1.10.8'
         attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',
