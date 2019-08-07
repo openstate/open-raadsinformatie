@@ -138,7 +138,9 @@ ori.ibabs:
     <<: *ibabs
     entities:
     - *municipality
+    - *organizations
     - *committees
+    - *persons
     - *meetings
 
     - entity: reports
