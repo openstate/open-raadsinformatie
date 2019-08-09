@@ -12,6 +12,11 @@ Using the issue tracker
 The `issue tracker <https://github.com/openstate/open-raadsinformatie/issues>`_ is the preferred channel for submitting
 bug reports, feature requests and pull requests.
 
+Prioritization
+--------------
+
+When deciding upon what we (Ontola, the current maintainers) will fix next, we use Milestones with Semantic Versioning. When an issue does not have a milestone, it's basically "backlog", or low-priority.
+
 Bug reports
 -----------
 
