@@ -59,12 +59,12 @@ CELERY_CONFIG = {
         'ocd_backend.transformers.*': {
             'queue': 'transformers',
             'routing_key': 'transformers',
-            'priority': 6,
+            'priority': 9,
         },
         'ocd_backend.enrichers.*': {
             'queue': 'enrichers',
             'routing_key': 'enrichers',
-            'priority': 9,
+            'priority': 6,
         },
         'ocd_backend.loaders.*': {
             'queue': 'loaders',
