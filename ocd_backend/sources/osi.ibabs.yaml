@@ -13,25 +13,25 @@ _entity_defaults: &entity_defaults
     - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
-_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
-  <<: *entity_defaults
-  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-  transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
-  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
-  include: moties
-  pdf_max_pages: 20
-  max_pages: 1
-  per_page: 100
-
-_voting_rounds_defaults: &voting_rounds_defaults
-  <<: *entity_defaults
-  entity: voting_rounds
-  doc_type: vote_events
-  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
-  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
-  reverse_chronological: false
-  max_processed_meetings: 0
+#_motions_and_amendments_voting_defaults: &motions_and_amendments_voting_defaults
+#  <<: *entity_defaults
+#  extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+#  transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
+#  loader: ocd_backend.loaders.ElasticsearchUpsertLoader
+#  include: moties
+#  pdf_max_pages: 20
+#  max_pages: 1
+#  per_page: 100
+#
+#_voting_rounds_defaults: &voting_rounds_defaults
+#  <<: *entity_defaults
+#  entity: voting_rounds
+#  doc_type: vote_events
+#  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+#  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
+#  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
+#  reverse_chronological: false
+#  max_processed_meetings: 0
 
 _entities: &entities
   - &province
@@ -76,25 +76,26 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.report_item
     include: ".*"
-    pdf_max_pages: 0
-    max_pages: 1
-
-_entities_voting: &entities_voting
-  - &province_voting
-    <<: *province
-
-  - &committees_voting
-    <<: *committees
-
-  - &meetings_voting
-    <<: *meetings
-
-  - &reports_voting
-    <<: *reports
-    include: ".*"
     exclude: (moties|amendementen)
     pdf_max_pages: 0
     max_pages: 1
+
+#_entities_voting: &entities_voting
+#  - &province_voting
+#    <<: *province
+#
+#  - &committees_voting
+#    <<: *committees
+#
+#  - &meetings_voting
+#    <<: *meetings
+#
+#  - &reports_voting
+#    <<: *reports
+#    include: ".*"
+#    exclude: (moties|amendementen)
+#    pdf_max_pages: 0
+#    max_pages: 1
 
 _ibabs: &ibabs
   index_name: "{key}"
@@ -103,12 +104,12 @@ _ibabs: &ibabs
   entities: *entities
   <<: *source_defaults
 
-_ibabs_voting: &ibabs_voting
-  index_name: "{key}"
-  sitename: "{key!c}"
-  allmanak_api_version: "v0"
-  entities: *entities_voting
-  <<: *source_defaults
+#_ibabs_voting: &ibabs_voting
+#  index_name: "{key}"
+#  sitename: "{key!c}"
+#  allmanak_api_version: "v0"
+#  entities: *entities_voting
+#  <<: *source_defaults
 
 osi.ibabs:
   # Added before 17-11-2017
@@ -120,61 +121,62 @@ osi.ibabs:
   limburg:
     key: limburg
     allmanak_id: 16071
+    <<: *ibabs
 
-    _fields_limburg: &fields_limburg
-      fields:
-        Moties:
-          id: Titel
-          name: Titel
-          creator: Hoofdindieners
-          description: status
-          start_date: Datum
-        Amendementen:
-          id: Titel
-          name: Titel
-          creator: Hoofdindieners
-          description: status
-          start_date: Datum
-        Stemmingen:
-          id: Titel
-          name: Titel
-          creator: Hoofdindieners
-          description: status
-          start_date: Datum
-
-    <<: *ibabs_voting
-    entities:
-    - *province_voting
-    - *committees_voting
-    - *meetings_voting
-    - *reports_voting
-
-    - &motions_voting
-      entity: motions
-      doc_type: motions
-      classification: Moties
-      include: moties
-      exclude: "^$"
-      <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
-
-    - &amendments_voting
-      entity: amendments
-      doc_type: motions
-      classification: Amendementen
-      include: amendementen
-      exclude: "^$"
-      <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
-
-    - &vote_events
-      entity: vote_events
-      doc_type: vote_events
-      classification: Stemmingen
-      include: (moties|amendementen)
-      exclude: "^$"
-      <<: *fields_limburg
-      <<: *motions_and_amendments_voting_defaults
-
-    - &voting_rounds
-      <<: *voting_rounds_defaults
+#    _fields_limburg: &fields_limburg
+#      fields:
+#        Moties:
+#          id: Titel
+#          name: Titel
+#          creator: Hoofdindieners
+#          description: status
+#          start_date: Datum
+#        Amendementen:
+#          id: Titel
+#          name: Titel
+#          creator: Hoofdindieners
+#          description: status
+#          start_date: Datum
+#        Stemmingen:
+#          id: Titel
+#          name: Titel
+#          creator: Hoofdindieners
+#          description: status
+#          start_date: Datum
+#
+#    <<: *ibabs_voting
+#    entities:
+#    - *province_voting
+#    - *committees_voting
+#    - *meetings_voting
+#    - *reports_voting
+#
+#    - &motions_voting
+#      entity: motions
+#      doc_type: motions
+#      classification: Moties
+#      include: moties
+#      exclude: "^$"
+#      <<: *fields_limburg
+#      <<: *motions_and_amendments_voting_defaults
+#
+#    - &amendments_voting
+#      entity: amendments
+#      doc_type: motions
+#      classification: Amendementen
+#      include: amendementen
+#      exclude: "^$"
+#      <<: *fields_limburg
+#      <<: *motions_and_amendments_voting_defaults
+#
+#    - &vote_events
+#      entity: vote_events
+#      doc_type: vote_events
+#      classification: Stemmingen
+#      include: (moties|amendementen)
+#      exclude: "^$"
+#      <<: *fields_limburg
+#      <<: *motions_and_amendments_voting_defaults
+#
+#    - &voting_rounds
+#      <<: *voting_rounds_defaults
