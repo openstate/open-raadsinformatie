@@ -74,7 +74,7 @@ _entities: &entities
     entity: reports
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-    transformer: ocd_backend.transformers.ibabs_meeting.report_item
+    transformer: ocd_backend.transformers.ibabs_report.report_item
     include: ".*"
     exclude: (moties|amendementen)
     pdf_max_pages: 0
