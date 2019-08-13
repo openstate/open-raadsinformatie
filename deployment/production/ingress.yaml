@@ -18,6 +18,10 @@ spec:
         backend:
           serviceName: endpoints
           servicePort: 8000
+      - path: /(v1/.*)
+        backend:
+          serviceName: api-serve
+          servicePort: 80
       - path: /v0/(.*)
         backend:
           serviceName: openstate
@@ -29,6 +33,10 @@ spec:
         backend:
           serviceName: endpoints
           servicePort: 8000
+      - path: /(v1/.*)
+        backend:
+          serviceName: api-serve
+          servicePort: 80
       - path: /v0/(.*)
         backend:
           serviceName: openstate
