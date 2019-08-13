@@ -257,6 +257,7 @@ if BUGSNAG_APIKEY:
         project_root=ROOT_PATH,
         release_stage=RELEASE_STAGE,
         app_version=APP_VERSION,
+        asynchronous=False,
     )
 
     connect_failure_handler()
