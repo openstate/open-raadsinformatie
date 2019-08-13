@@ -4,11 +4,9 @@ metadata:
   name: search
   namespace: production
 spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 8080
   selector:
     app: search
-  type: LoadBalancer
-  loadBalancerIP: 35.204.47.135
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
