@@ -117,6 +117,8 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
         return super(StackdriverJsonFormatter, self).process_log_record(log_record)
 
 
+default_handlers = ['default', 'bugsnag']
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Existing loggers are 'disabled' below
@@ -158,72 +160,72 @@ LOGGING = {
     },
     'loggers': {
         'ocd_backend': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'DEBUG',
             'propagate': False,
         },
         'celery': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'INFO',
             'propagate': False,
         },
         'celery.worker': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'DEBUG',
             'propagate': False,
             'filters': ['set_debug']
         },
         'celery.worker.strategy': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'INFO',
             'propagate': False,
             'filters': ['set_debug']
         },
         'celery.worker.control': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'DEBUG',
             'propagate': False,
             'filters': ['set_debug']
         },
         'celery.app.trace': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'INFO',
             'propagate': False,
             # 'filters': ['set_debug']
         },
         'httpstream': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         },
         'elasticsearch': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         },
         'requests': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         },
         'urllib3': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         },
         'iso8601': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         },
         'kombu': {
-            'handlers': ['default'],
+            'handlers': default_handlers,
             'level': 'WARNING',
             'propagate': False,
         }
     },
     'root': {
-        'handlers': ['default', 'bugsnag'],
+        'handlers': default_handlers,
         'level': 'WARNING',
         'propagate': False
     },
