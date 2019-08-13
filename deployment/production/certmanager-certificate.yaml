@@ -31,6 +31,7 @@ spec:
   - zoek.openraadsinformatie.nl
   - zoek.openstateninformatie.nl
   - docs.openraadsinformatie.nl
+  - ori.argu.co
   acme:
     config:
     - http01:
@@ -44,3 +45,4 @@ spec:
       - zoek.openraadsinformatie.nl
       - zoek.openstateninformatie.nl
       - docs.openraadsinformatie.nl
+      - ori.argu.co
