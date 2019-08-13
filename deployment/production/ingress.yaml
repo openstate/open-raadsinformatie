@@ -54,5 +54,12 @@ spec:
         backend:
           serviceName: api-serve
           servicePort: 80
+  - host: ori.argu.co
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: search
+          servicePort: 80
   tls:
   - secretName: tls-certificate
