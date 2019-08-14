@@ -26,6 +26,10 @@ spec:
         backend:
           serviceName: openstate
           servicePort: 80
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
   - host: api.openstateninformatie.nl
     http:
       paths:
@@ -41,6 +45,10 @@ spec:
         backend:
           serviceName: openstate
           servicePort: 80
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
   - host: zoek.openraadsinformatie.nl
     http:
       paths:
@@ -54,6 +62,20 @@ spec:
       - path: /(.*)
         backend:
           serviceName: openstate
+          servicePort: 80
+  - host: docs.openraadsinformatie.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: docs.openstateninformatie.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: nginx
           servicePort: 80
   - host: id.openraadsinformatie.nl
     http:
