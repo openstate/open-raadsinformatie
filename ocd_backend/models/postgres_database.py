@@ -3,13 +3,14 @@ import uuid
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.pool import StaticPool
 
 from ocd_backend import settings
-from ocd_backend.models.postgres_models import Source, Resource, Property
 from ocd_backend.models.definitions import Ori
+from ocd_backend.models.misc import Uri
+from ocd_backend.models.postgres_models import Source, Resource, Property
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, \
     DateTimeProperty, ArrayProperty, Relation, OrderedRelation
-from ocd_backend.models.misc import Uri
 
 
 class PostgresDatabase(object):
@@ -21,7 +22,7 @@ class PostgresDatabase(object):
                                     settings.POSTGRES_PASSWORD,
                                     settings.POSTGRES_HOST,
                                     settings.POSTGRES_DATABASE)
-        self.engine = create_engine(self.connection_string)
+        self.engine = create_engine(self.connection_string, poolclass=StaticPool)
         self.Session = sessionmaker(bind=self.engine)
 
     def get_ori_identifier(self, iri):
