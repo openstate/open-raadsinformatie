@@ -299,6 +299,7 @@ PDF_TO_TEXT = u'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
 
 # Kafka settings for DeltaLoader
+KAFKA_ENABLED = True
 KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost:9092')
 KAFKA_USERNAME = os.getenv('KAFKA_USERNAME')
 KAFKA_PASSWORD = os.getenv('KAFKA_PASSWORD')

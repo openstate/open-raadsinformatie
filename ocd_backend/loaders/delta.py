@@ -26,6 +26,11 @@ class DeltaLoader(BaseLoader):
         config['sasl.password'] = settings.KAFKA_PASSWORD
 
     def load_item(self, doc):
+
+        # Skip this loader if it is disabled in settings
+        if not settings.KAFKA_ENABLED:
+            return
+
         kafka_producer = Producer(self.config)
 
         # Recursively index associated models like attachments
