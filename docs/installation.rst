@@ -91,9 +91,14 @@ your credentials and have it available locally to be loaded as an environment va
     settings.ELASTICSEARCH_HOST = 'localhost'
     settings.POSTGRES_HOST = 'localhost'
     settings.API_URL = 'http://localhost:5000/v1/'
+    settings.KAFKA_ENABLED = False
 
 This instructs the ``backend`` container to use a locally running instance of Redis, which makes it easier to inspect
 and manipulate the task queue. It also makes the Elasticsearch endpoint available on ``localhost``.
+
+Kafka is not included in ``docker-compose`` and should be disabled if you are not using it with the ``KAFKA_ENABLED``
+setting in either ``settings.py`` or your ``local_settings.py``, because it will hang for a long time and eventually
+time out if it is unable to connect. Setting ``KAFKA_ENABLED`` to ``False`` disables the Delta loader.
 
 Database migrations
 ===================
