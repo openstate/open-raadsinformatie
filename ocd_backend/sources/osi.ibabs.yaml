@@ -106,14 +106,14 @@ _entities: &entities
 _ibabs: &ibabs
   index_name: "{key}"
   sitename: "{key!c}"
-  allmanak_api_version: "v0"
+  allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
 
 #_ibabs_voting: &ibabs_voting
 #  index_name: "{key}"
 #  sitename: "{key!c}"
-#  allmanak_api_version: "v0"
+#  allmanak_api_version: "v1"
 #  entities: *entities_voting
 #  <<: *source_defaults
 
