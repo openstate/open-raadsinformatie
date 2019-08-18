@@ -33,12 +33,15 @@ def file_parser(fname, pages=None):
             # reraise everything
             raise
     else:
-        try:
-            content = parser.from_file(fname)['content']
-            return (content or '').encode('UTF-8')
-        except:
-            # reraise everything
-            raise
+        # This code path is disabled until the Tika service is fixed (see issue 178)
+
+        # try:
+        #     content = parser.from_file(fname)['content']
+        #     return (content or '').encode('UTF-8')
+        # except:
+        #     # reraise everything
+        #     raise
+        pass
 
 
 class FileToTextMixin(object):
