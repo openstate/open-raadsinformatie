@@ -56,7 +56,7 @@ _notubiz: &notubiz
   index_name: "{key}"
   sitename: "{key!c}"
   base_url: "https://api.notubiz.nl"
-  allmanak_api_version: "v0"
+  allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
 
