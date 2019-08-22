@@ -8,6 +8,7 @@ Develop: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinfor
  - [Bugs and feature requests](#bugs-and-feature-requests)
  - [Install and usage](#installation-and-usage)
  - [Documentation](#documentation)
+ - [Supported Sources](#supported-sources)
  - [Contributing](#contributing)
  - [Authors and contributors](#authors-and-contributors)
  - [Copyright and license](#copyright-and-license)
@@ -31,6 +32,15 @@ See this guide to [install the Open Raadsinformatie API](https://github.com/open
 
 We use [Sphinx](http://sphinx-doc.org/) to create the documentation. The source files are included in this repo under 
 the ``docs`` directory.  
+
+## Supported Sources
+
+Data extraction support is available for the following source systems:
+
+- [GO GemeenteOplossingen](https://www.gemeenteoplossingen.nl/)
+- [GreenValley](https://www.greenvalley.nl/)
+- [Notubiz](https://notubiz.nl/)
+- [iBabs](https://www.ibabs.eu/nl/)
 
 ## Contributing
 
