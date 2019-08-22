@@ -4,6 +4,7 @@ from ocd_backend import celery_app
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import iterate
+from ocd_backend.models.enricher_log import EnricherLog
 
 log = get_source_logger('enricher')
 
@@ -23,6 +24,7 @@ class BaseEnricher(celery_app.Task):
 
         self.source_definition = kwargs['source_definition']
         self.enricher_settings = kwargs['enricher_settings']
+        self.enricher_log = EnricherLog()
 
         for _, doc in iterate(args):
             for model in doc.traverse():
@@ -33,7 +35,16 @@ class BaseEnricher(celery_app.Task):
                     continue
 
                 try:
-                    self.enrich_item(model)
+                    resource_id = int(model.ori_identifier.rsplit('/')[3])
+                    enricher_class = self.__name__
+                    task = model.enricher_task
+                    if not self.enricher_log.check(resource_id, enricher_class, task):
+                        self.enrich_item(model)
+                        self.enricher_log.insert(resource_id, enricher_class, task)
+                    else:
+                        log.info('Skipping "%s.%s" for resource id %s - '
+                                 'task already executed.' % (enricher_class, task, resource_id))
+                        continue
                 except SkipEnrichment as e:
                     bugsnag.notify(e, severity="info")
                     log.info('Skipping %s, reason: %s'
