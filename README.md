@@ -37,7 +37,7 @@ the ``docs`` directory.
 
 Data extraction support is available for the following source systems:
 
-- [GO GemeenteOplossing](https://www.gemeenteoplossingen.nl/)
+- [GO GemeenteOplossingen](https://www.gemeenteoplossingen.nl/)
 - [GreenValley](https://www.greenvalley.nl/)
 - [Notubiz](https://notubiz.nl/)
 - [Parlaeus](https://parlaeus.nl/)
