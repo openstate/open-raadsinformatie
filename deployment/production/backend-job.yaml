@@ -16,7 +16,7 @@ spec:
         args:
           - manage.py
           - extract
-          - start
+          - process
           - all
         envFrom:
         - configMapRef:
