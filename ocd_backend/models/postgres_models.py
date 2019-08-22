@@ -31,6 +31,7 @@ class Resource(Base):
 
     sources = relationship("Source", back_populates="resource")
     properties = relationship("Property", back_populates="resource", foreign_keys="Property.resource_id")
+    enricher_logs = relationship("EnricherLogModel", back_populates="resource", foreign_keys="EnricherLogModel.resource_id")
 
 
 class Property(Base):
@@ -54,3 +55,15 @@ class Property(Base):
     prop_url = Column(String, nullable=True)
 
     resource = relationship("Resource", back_populates="properties", foreign_keys=resource_id)
+
+
+class EnricherLogModel(Base):
+    __tablename__ = 'enricher_log'
+
+    id = Column(BigInteger, Sequence('enricher_log_id_seq'), primary_key=True)
+    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
+    enricher_class = Column(String, nullable=False)
+    task = Column(String, nullable=False)
+    created_at = Column(DateTime, default=func.now())
+
+    resource = relationship("Resource", back_populates="enricher_logs", foreign_keys=resource_id)
