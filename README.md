@@ -40,7 +40,6 @@ Data extraction support is available for the following source systems:
 - [GO GemeenteOplossingen](https://www.gemeenteoplossingen.nl/)
 - [GreenValley](https://www.greenvalley.nl/)
 - [Notubiz](https://notubiz.nl/)
-- [Parlaeus](https://parlaeus.nl/)
 - [iBabs](https://www.ibabs.eu/nl/)
 
 ## Contributing
