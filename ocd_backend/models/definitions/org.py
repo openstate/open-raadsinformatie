@@ -5,9 +5,9 @@ http://www.w3.org/ns/org#
 import foaf
 import owl
 from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
-    Schema, Rdf, Meta
+    Schema, Rdf, Meta, Vcard
 from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \
-    Relation, OrderedRelation
+    Relation, OrderedRelation, ArrayProperty
 
 
 class Membership(Org, owl.Thing):
@@ -37,3 +37,5 @@ class Organization(Org, foaf.Agent):
     alt_label = StringProperty(Skos, 'altLabel')
     name = StringProperty(Skos, 'prefLabel')
     collection = StringProperty(Meta, 'collection')
+    homepage = URLProperty(Vcard, 'url')
+    email = StringProperty(Vcard, 'email')
