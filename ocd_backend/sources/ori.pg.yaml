@@ -22,6 +22,7 @@ _entities: &entities
 
 ori.pg:
   key: partijgedrag
+  source_name: "{key!c}"
   index_name: partijgedrag
   entities: *entities
   <<: *source_defaults

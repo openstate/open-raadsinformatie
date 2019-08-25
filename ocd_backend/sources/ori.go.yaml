@@ -54,7 +54,7 @@ _entities: &entities
 
 _go: &go
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
@@ -68,6 +68,7 @@ ori.go:
 
   den_helder:
     key: den_helder
+    source_name: "Den Helder"
     base_url: "https://gemeenteraad.denhelder.nl/api"
     allmanak_id: 24611
     <<: *go
@@ -92,6 +93,7 @@ ori.go:
 
   oude_ijsselstreek:
     key: oude_ijsselstreek
+    source_name: "Oude IJsselstreek"
     base_url: "https://raad.oude-ijsselstreek.nl/api/"
     allmanak_id: 36780
     <<: *go
@@ -136,6 +138,7 @@ ori.go:
   # Added on 15-04-2019
   stichtse_vecht:
     key: stichtse_vecht
+    source_name: "Stichtse Vecht"
     base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
     allmanak_id: 34861
     <<: *go

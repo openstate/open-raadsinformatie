@@ -53,7 +53,7 @@ _entities: &entities
 
 _notubiz: &notubiz
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   base_url: "https://api.notubiz.nl"
   allmanak_api_version: "v1"
   entities: *entities
@@ -80,6 +80,7 @@ ori.notubiz:
 
   amsterdam_centrum:
     key: amsterdam_centrum
+    source_name: "Amsterdam-Centrum"
     municipality_prefix: "Amsterdam"
     allmanak_id: 21915
     notubiz_organization_id: 547
@@ -87,6 +88,7 @@ ori.notubiz:
 
   amsterdam_zuid:
     key: amsterdam_zuid
+    source_name: "Amsterdam-Zuid"
     municipality_prefix: "Amsterdam"
     allmanak_id: 40007
     notubiz_organization_id: 1424
@@ -94,6 +96,7 @@ ori.notubiz:
 
   amsterdam_noord:
     key: amsterdam_noord
+    source_name: "Amsterdam-Noord"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39732
     notubiz_organization_id: 977
@@ -101,6 +104,7 @@ ori.notubiz:
 
   amsterdam_west:
     key: amsterdam_west
+    source_name: "Amsterdam-West"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39885
     notubiz_organization_id: 1413
@@ -108,6 +112,7 @@ ori.notubiz:
 
   amsterdam_oost:
     key: amsterdam_oost
+    source_name: "Amsterdam-Oost"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39963
     notubiz_organization_id: 1425
@@ -115,6 +120,7 @@ ori.notubiz:
 
   amsterdam_zuidoost:
     key: amsterdam_zuidoost
+    source_name: "Amsterdam-Zuidoost"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39832
     notubiz_organization_id: 2122
@@ -122,6 +128,7 @@ ori.notubiz:
 
   amsterdam_nieuw-west:
     key: amsterdam_nieuw-west
+    source_name: "Amsterdam Nieuw-West"
     municipality_prefix: "Amsterdam"
     allmanak_id: 40084
     notubiz_organization_id: 2328
@@ -243,12 +250,14 @@ ori.notubiz:
 
   den_haag:
     key: den_haag
+    source_name: "Den Haag"
     allmanak_id: 24873
     notubiz_organization_id: 318
     <<: *notubiz
 
   krimpen_ad_ijssel:
     key: krimpen_ad_ijssel
+    source_name: "Krimpen aan den IJssel"
     allmanak_id: 31244
     notubiz_organization_id: 1273
     <<: *notubiz
@@ -333,6 +342,7 @@ ori.notubiz:
 
   stichtse_vecht:
     key: stichtse_vecht
+    source_name: "Stichtse Vecht"
     allmanak_id: 34861
     notubiz_organization_id: 1770
     <<: *notubiz
@@ -345,18 +355,21 @@ ori.notubiz:
 
   capelle_ad_ijssel:
     key: capelle_ad_ijssel
+    source_name: "Capelle aan den IJssel"
     allmanak_id: 22846
     notubiz_organization_id: 1517
     <<: *notubiz
 
   de_wolden:
     key: de_wolden
+    source_name: "De Wolden"
     allmanak_id: 21391
     notubiz_organization_id: 1317
     <<: *notubiz
 
   oost_gelre:
     key: oost_gelre
+    source_name: "Oost Gelre"
     allmanak_id: 36871
     notubiz_organization_id: 341
     <<: *notubiz

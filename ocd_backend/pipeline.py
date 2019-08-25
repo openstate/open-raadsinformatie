@@ -16,7 +16,7 @@ logger = get_source_logger('pipeline')
 
 @celery_app.task(autoretry_for=(Exception,), retry_backoff=True)
 def setup_pipeline(source_definition):
-    logger.debug('[%s] Starting pipeline for source: %s' % (source_definition['sitename'], source_definition.get('id')))
+    logger.debug('[%s] Starting pipeline for source: %s' % (source_definition['key'], source_definition.get('id')))
 
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
@@ -59,7 +59,7 @@ def setup_pipeline(source_definition):
         'index_alias': index_alias
     }
 
-    logger.debug('[%s] Starting run with identifier %s' % (source_definition['sitename'], params['run_identifier']))
+    logger.debug('[%s] Starting run with identifier %s' % (source_definition['key'], params['run_identifier']))
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
@@ -155,7 +155,7 @@ def setup_pipeline(source_definition):
                                  run_identifier=params['run_identifier'],
                                  extractor=pipeline_extractors[pipeline['id']],
                                  message=e,
-                                 site_name=source_definition['sitename'],
+                                 site_name=source_definition['key'],
                                  )
                          )
 
@@ -167,5 +167,5 @@ def setup_pipeline(source_definition):
     celery_app.backend.set(params['run_identifier'], 'done')
     if result and source_definition.get('wait_until_finished'):
         # Wait for last task chain to end before continuing
-        logger.info("[%s] Waiting for last chain to finish" % source_definition['sitename'])
+        logger.info("[%s] Waiting for last chain to finish" % source_definition['key'])
         propagate_chain_get(result)

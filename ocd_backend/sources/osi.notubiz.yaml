@@ -52,9 +52,8 @@ _entities: &entities
       - # reserved for enricher settings
 
 _notubiz: &notubiz
-  source_type: "HTTP"
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   base_url: "https://api.notubiz.nl"
   allmanak_api_version: "v1"
   entities: *entities

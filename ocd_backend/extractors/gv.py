@@ -125,7 +125,7 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
                 self.start_date = cur_start
             self.end_date = cur_end
         log.debug("[%s] Now processing meetings from %s to %s" % (
-            self.source_definition['sitename'], self.start_date, self.end_date,))
+            self.source_definition['key'], self.start_date, self.end_date,))
 
         total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
@@ -133,4 +133,4 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             total_meetings += 1
 
         log.info("[%s] Extracting total of %d GreenValley meetings" % (
-            self.source_definition['sitename'], total_meetings))
+            self.source_definition['key'], total_meetings))
