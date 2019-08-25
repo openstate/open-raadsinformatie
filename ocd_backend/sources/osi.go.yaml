@@ -55,7 +55,7 @@ _entities: &entities
 
 _go: &go
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
@@ -63,6 +63,7 @@ _go: &go
 osi.go:
   provincie-utrecht:
     key: provincie-utrecht
+    source_name: "Provincie Utrecht"
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
     api_version: v2
     allmanak_id: 17166

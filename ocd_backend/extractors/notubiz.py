@@ -35,7 +35,7 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
         try:
             response.raise_for_status()
         except HTTPError, e:
-            log.warning('[%s] %s: %s' % (self.source_definition['sitename'], e, response.request.url))
+            log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
             return
 
         # Create a dictionary of Notubiz organizations. Some child classes need information
@@ -75,7 +75,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
                   committee
             committee_count += 1
 
-        log.info("[%s] Extracted total of %d notubiz committees." % (self.source_definition['sitename'], committee_count))
+        log.info("[%s] Extracted total of %d notubiz committees." % (self.source_definition['key'], committee_count))
 
 
 class NotubizMeetingsExtractor(NotubizBaseExtractor):
@@ -107,13 +107,13 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     )
                 )
             except (HTTPError, RetryError), e:
-                log.warning('[%s] %s: %s' % (self.source_definition['sitename'], e, response.request.url))
+                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
                 break
 
             try:
                 response.raise_for_status()
             except HTTPError, e:
-                log.warning('[%s] %s: %s' % (self.source_definition['sitename'], e, response.request.url))
+                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
                 break
 
             event_json = response.json()
@@ -122,7 +122,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 break
 
             if page > 1:
-                log.debug("[%s] Processing events page %i" % (self.source_definition['sitename'], page))
+                log.debug("[%s] Processing events page %i" % (self.source_definition['key'], page))
 
             for item in event_json[self.source_definition['doc_type']]:
                 # Skip meetings that are not public
@@ -139,11 +139,11 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 except ItemAlreadyProcessed, e:
                     # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1
-                    log.debug("[%s] %s" % (self.source_definition['sitename'], e))
+                    log.debug("[%s] %s" % (self.source_definition['key'], e))
                     continue
                 except Exception as e:
                     meetings_skipped += 1
-                    log.warning('[%s] %s: %s' % (self.source_definition['sitename'], e, response.request.url))
+                    log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
                     continue
 
                 organization = self.organizations[self.source_definition['notubiz_organization_id']]
@@ -165,11 +165,11 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             page += 1
 
             if not event_json['pagination']['has_more_pages']:
-                log.debug("[%s] Done processing all %d pages!" % (self.source_definition['sitename'], page))
+                log.debug("[%s] Done processing all %d pages!" % (self.source_definition['key'], page))
                 break
 
         log.info("[%s] Extracted total of %d notubiz meeting(items). Also skipped %d "
-                 "meetings in total." % (self.source_definition['sitename'], meeting_count, meetings_skipped,))
+                 "meetings in total." % (self.source_definition['key'], meeting_count, meetings_skipped,))
 
 
 # class NotubizMeetingItemExtractor(NotubizBaseExtractor):

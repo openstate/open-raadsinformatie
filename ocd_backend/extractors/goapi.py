@@ -64,7 +64,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
                   dmu
             committee_count += 1
 
-        log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['sitename'], committee_count))
+        log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['key'], committee_count))
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -95,8 +95,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                       meeting
                 meeting_count += 1
 
-            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
-        log.info("[%s] Extracted total of %d GO API meetings." % (self.source_definition['sitename'], meeting_count))
+            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['key'], start_date, end_date,))
+        log.info("[%s] Extracted total of %d GO API meetings." % (self.source_definition['key'], meeting_count))
 
 
 # class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor):
@@ -152,5 +152,5 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
                       doc
                 meeting_count += 1
 
-            log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['sitename'], start_date, end_date,))
-        log.info("[%s] Extracted total of %d GO API documents." % (self.source_definition['sitename'], meeting_count))
+            log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['key'], start_date, end_date,))
+        log.info("[%s] Extracted total of %d GO API documents." % (self.source_definition['key'], meeting_count))

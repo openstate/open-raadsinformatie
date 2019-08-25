@@ -56,7 +56,7 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
         log.debug("[%s] Getting ibabs committees with designator: %s" %
                   (self.source_definition['index_name'], committee_designator))
         meeting_types = self.client.service.GetMeetingtypes(
-            self.source_definition['sitename']
+            self.source_definition['ibabs_sitename']
         )
 
         if meeting_types.Meetingtypes:
@@ -83,7 +83,7 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
 
     def run(self):
         users = self.client.service.GetUsers(
-            self.source_definition['sitename']
+            self.source_definition['ibabs_sitename']
         )
 
         if users.Users:
@@ -92,7 +92,7 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 identifier = user['UniqueId']
 
                 user_details = self.client.service.GetUser(
-                    self.source_definition['sitename'],
+                    self.source_definition['ibabs_sitename'],
                     identifier
                 )
 
@@ -115,7 +115,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     """
 
     def _meetingtypes_as_dict(self):
-        meeting_types = self.client.service.GetMeetingtypes(self.source_definition['sitename'])
+        meeting_types = self.client.service.GetMeetingtypes(self.source_definition['ibabs_sitename'])
 
         if meeting_types.Meetingtypes:
             for o in meeting_types.Meetingtypes[0]:
@@ -137,10 +137,10 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         meetings_skipped = 0
         for start_date, end_date in self.interval_generator():
             log.debug("[%s] Now processing meetings from %s to %s" % (
-                self.source_definition['sitename'], start_date, end_date,))
+                self.source_definition['key'], start_date, end_date,))
 
             meetings = self.client.service.GetMeetingsByDateRange(
-                Sitename=self.source_definition['sitename'],
+                Sitename=self.source_definition['ibabs_sitename'],
                 StartDate=start_date.strftime('%Y-%m-%dT%H:%M:%S'),
                 EndDate=end_date.strftime('%Y-%m-%dT%H:%M:%S'),
                 MetaDataOnly=False)
@@ -166,7 +166,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     meeting_count += 1
 
         log.info("[%s] Extracted total of %d ibabs meetings. Also skipped %d meetings in total." %
-                 (self.source_definition['sitename'], meeting_count, meetings_skipped,))
+                 (self.source_definition['key'], meeting_count, meetings_skipped,))
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
@@ -177,13 +177,13 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
     def run(self):
         lists = self.client.service.GetLists(
-            Sitename=self.source_definition['sitename'])
+            Sitename=self.source_definition['ibabs_sitename'])
 
         try:
             kv = lists.iBabsKeyValue
         except AttributeError as e:
             log.info("[%s] No ibabs reports defined" % (
-                self.source_definition['sitename'],))
+                self.source_definition['key'],))
             return
 
         selected_lists = []
@@ -199,7 +199,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         total_yield_count = 0
         for l in selected_lists:
             reports = self.client.service.GetListReports(
-                Sitename=self.source_definition['sitename'], ListId=l.Key)
+                Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
             report = reports.iBabsKeyValue[0]
             if len(reports.iBabsKeyValue) > 1:
                 try:
@@ -217,16 +217,16 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             while (active_page_nr < max_pages) and (result_count == per_page):
                 try:
                     result = self.client.service.GetListReport(
-                        Sitename=self.source_definition['sitename'],
+                        Sitename=self.source_definition['ibabs_sitename'],
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
                     log.warning("[%s] Could not parse page %s correctly!: %s" % (
-                        self.source_definition['sitename'], active_page_nr, e.message))
+                        self.source_definition['key'], active_page_nr, e.message))
                     result = None
                 result_count = 0
                 # log.debug("* %s: %s/%s - %d/%d" % (
-                #     self.source_definition['sitename'],
+                #     self.source_definition['key'],
                 #     result.ListName, result.ReportName,
                 #     active_page_nr, max_pages,))
 
@@ -241,7 +241,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     document_element = None
 
                 if document_element is None:
-                    log.debug("[%s] No correct document element for this page!" % self.source_definition['sitename'])
+                    log.debug("[%s] No correct document element for this page!" % self.source_definition['key'])
                     total_count += per_page
                     continue
 
@@ -250,7 +250,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     dict_item['_ListName'] = result.ListName
                     dict_item['_ReportName'] = result.ReportName
                     extra_info_item = self.client.service.GetListEntry(
-                        Sitename=self.source_definition['sitename'],
+                        Sitename=self.source_definition['ibabs_sitename'],
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
@@ -269,10 +269,10 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 total_count += result_count
                 active_page_nr += 1
             log.debug("[%s] Report: %s -- total %s, results %s, yielded %s" % (
-                self.source_definition['sitename'], l.Value, total_count, result_count, yield_count))
+                self.source_definition['key'], l.Value, total_count, result_count, yield_count))
 
         log.info("[%s] Extracted total of %s ibabs reports yielded" % (
-            self.source_definition['sitename'], total_yield_count))
+            self.source_definition['key'], total_yield_count))
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
@@ -284,7 +284,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
     def _meetingtypes_as_dict(self):
         return {
             o.Id: o.Description for o in
-            self.client.service.GetMeetingtypes(self.source_definition['sitename']).Meetingtypes[0]
+            self.client.service.GetMeetingtypes(self.source_definition['ibabs_sitename']).Meetingtypes[0]
         }
 
     def valid_meeting(self, meeting):
@@ -317,7 +317,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
         for start_date, end_date in dates:
             meetings = self.client.service.GetMeetingsByDateRange(
-                Sitename=self.source_definition['sitename'],
+                Sitename=self.source_definition['ibabs_sitename'],
                 StartDate=start_date,
                 EndDate=end_date,
                 MetaDataOnly=False)
@@ -359,7 +359,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 params.iBabsKeyValue.append(kv3)
 
                 vote_meeting = self.client.service.GetMeetingWithOptions(
-                    Sitename=self.source_definition['sitename'],
+                    Sitename=self.source_definition['ibabs_sitename'],
                     MeetingId=meeting_dict['Id'],
                     Options=params)
                 meeting_dict_short = meeting_to_dict(vote_meeting.Meeting)
@@ -371,7 +371,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                         continue
                     for le in mi['ListEntries']:
                         votes = self.client.service.GetListEntryVotes(
-                            Sitename=self.source_definition['sitename'],
+                            Sitename=self.source_definition['ibabs_sitename'],
                             EntryId=le['EntryId'])
                         if votes.ListEntryVotes is None:
                             votes = []
@@ -421,7 +421,7 @@ class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpR
         result = None
         if (max_meetings <= 0) or (meeting_count < max_meetings):
             setattr(self, 'meeting_count', meeting_count + 1)
-            log.debug("[%s] Processing meeting %d" % (self.source_definition['sitename'], meeting_count,))
+            log.debug("[%s] Processing meeting %d" % (self.source_definition['key'], meeting_count,))
             council = self.api_request(
                 self.source_definition['index_name'], 'organizations',
                 classification=u'Council')
