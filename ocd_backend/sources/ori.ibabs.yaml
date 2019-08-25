@@ -77,7 +77,8 @@ _entities: &entities
 
 _ibabs: &ibabs
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
+  ibabs_sitename: "{key!c}"
   allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
@@ -304,7 +305,7 @@ ori.ibabs:
   voorschoten:
     key: voorschoten
     allmanak_id: 35396
-    sitename: Duivenvoorde
+    ibabs_sitename: Duivenvoorde
     include: ".*[Vv]oorschoten$"
     exclude: ".*[Ww]assenaar$"
     <<: *ibabs
@@ -312,7 +313,7 @@ ori.ibabs:
   wassenaar:
     key: wassenaar
     allmanak_id: 40204
-    sitename: Duivenvoorde
+    ibabs_sitename: Duivenvoorde
     include: ".*[Ww]assenaar$"
     exclude: ".*[Vv]oorschoten$"
     <<: *ibabs
@@ -349,7 +350,8 @@ ori.ibabs:
 
   loon_op_zand:
     key: loon_op_zand
-    sitename: Loon op Zand
+    source_name: "Loon op Zand"
+    ibabs_sitename: Loon op Zand
     allmanak_id: 25473
     <<: *ibabs
 
@@ -380,7 +382,8 @@ ori.ibabs:
 
   hollands_kroon:
     key: hollands_kroon
-    sitename: Hollands Kroon
+    source_name: "Hollands Kroon"
+    ibabs_sitename: Hollands Kroon
     allmanak_id: 24449
     <<: *ibabs
 
@@ -397,11 +400,13 @@ ori.ibabs:
 
   edam-volendam:
     key: edam-volendam
+    source_name: "Edam-Volendam"
     allmanak_id: 22102
     <<: *ibabs
 
   etten-leur:
     key: etten-leur
+    source_name: "Etten-Leur"
     allmanak_id: 21760
     <<: *ibabs
 

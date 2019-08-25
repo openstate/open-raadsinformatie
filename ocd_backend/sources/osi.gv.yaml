@@ -67,7 +67,7 @@ _entities: &entities
 
 _gv: &gv
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults

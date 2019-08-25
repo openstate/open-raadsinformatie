@@ -27,7 +27,7 @@ class AllmanakBaseExtractor(BaseExtractor, HttpRequestMixin):
             return len(static_json), static_json
         else:
             log.error('[%s] Failed to extract from Allmanak path %s' % (
-                self.source_definition['sitename'], urljoin(self.base_url, path))
+                self.source_definition['key'], urljoin(self.base_url, path))
                       )
             return 0, []
 
@@ -44,15 +44,15 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
 
         if total != 1:
             log.error('[%s] Number of extracted municipalities for %s is not equal to 1' % (
-                self.source_definition['sitename'],
-                self.source_definition['sitename'])
+                self.source_definition['key'],
+                self.source_definition['key'])
                       )
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
                   static_json
-            log.info("[%s] Extracted 1 Allmanak municipality." % self.source_definition['sitename'])
+            log.info("[%s] Extracted 1 Allmanak municipality." % self.source_definition['key'])
 
 
 class AllmanakProvinceExtractor(AllmanakBaseExtractor):
@@ -67,15 +67,15 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
 
         if total != 1:
             log.error('[%s] Number of extracted provinces for %s is not equal to 1' % (
-                self.source_definition['sitename'],
-                self.source_definition['sitename'])
+                self.source_definition['key'],
+                self.source_definition['key'])
                       )
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
                   static_json
-            log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['sitename'])
+            log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['key'])
 
 
 class AllmanakPartiesExtractor(AllmanakBaseExtractor):
@@ -96,9 +96,9 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
                       path, \
                       static_json
                 total_parties += 1
-            log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['sitename'], total_parties))
+            log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['key'], total_parties))
         else:
-            log.warning('[%s] Allmanak does not list any parties for this source.' % self.source_definition['sitename'])
+            log.warning('[%s] Allmanak does not list any parties for this source.' % self.source_definition['key'])
 
 
 class AllmanakPersonsExtractor(AllmanakBaseExtractor):
@@ -123,6 +123,6 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
                               path, \
                               static_json
                         total_persons += 1
-            log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['sitename'], total_persons))
+            log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['key'], total_persons))
         else:
-            log.warning('[%s] Allmanak does not list any persons for this source.' % self.source_definition['sitename'])
+            log.warning('[%s] Allmanak does not list any persons for this source.' % self.source_definition['key'])

@@ -60,7 +60,7 @@ _entities: &entities
 
 _parlaeus: &parlaeus
   index_name: "{key}"
-  sitename: "{key!c}"
+  source_name: "{key!c}"
   base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
   session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
   entities: *entities
@@ -69,6 +69,6 @@ _parlaeus: &parlaeus
 ori.parlaeus:
   bodegraven_reeuwijk:
     key: bodegravenreeuwijk
-    sitename: Bodegraven-Reeuwijk
+    source_name: "Bodegraven-Reeuwijk"
     allmanak_id: 33912
     <<: *parlaeus
