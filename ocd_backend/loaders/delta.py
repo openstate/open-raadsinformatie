@@ -36,7 +36,7 @@ class DeltaLoader(BaseLoader):
         # Recursively index associated models like attachments
         for model in doc.traverse():
             # Serialize the body to JSON-LD
-            jsonld_body = JsonLDSerializer().serialize(model)
+            jsonld_body = JsonLDSerializer(loader_class=self).serialize(model)
 
             # Serialize the jsonld_body to N-Triples
             ntriples = jsonld.normalize(jsonld_body, {'algorithm': 'URDNA2015', 'format': 'application/n-quads'})

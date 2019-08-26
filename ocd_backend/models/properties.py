@@ -5,10 +5,15 @@ from ocd_backend.utils.misc import str_to_datetime
 class PropertyBase(object):
     """The base property all properties and relations should inherit from."""
 
-    def __init__(self, ns, name, required=False):
+    def __init__(self, ns, name, required=False, ignore_for_loader=None):
         assert issubclass(ns, Namespace)
         self.ns = ns
         self.required = required
+        self.ignore_for_loader = ignore_for_loader
+
+        if self.ignore_for_loader and not isinstance(self.ignore_for_loader, list):
+            raise ValueError('ignore_for_loader should be a list of loader classes.')
+
         self._name = name
 
     def absolute_uri(self):
