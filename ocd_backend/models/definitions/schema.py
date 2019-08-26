@@ -3,10 +3,11 @@ http://schema.org/
 """
 
 import owl
-from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms
+from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, Relation
 from ocd_backend.models.misc import Uri
+from ocd_backend.loaders.delta import DeltaLoader
 
 
 class MediaObject(Schema, owl.Thing):
@@ -25,6 +26,7 @@ class MediaObject(Schema, owl.Thing):
     original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
     isReferencedBy = Relation(Dcterms, 'isReferencedBy')
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
 
     enricher_task = 'file_to_text'
 
