@@ -79,6 +79,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.position = original_item['order']
         agendaitem.parent = event
         agendaitem.start_date = event.start_date
+        agendaitem.last_discussed_at = event.start_date
 
         agendaitem.attachment = []
         for doc in item.get('documents', []):
@@ -97,6 +98,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.name = doc['title']
             attachment.date_modified = doc['last_modified']
             attachment.isReferencedBy = agendaitem
+            attachment.last_discussed_at = event.start_date
             agendaitem.attachment.append(attachment)
 
         event.agenda.append(agendaitem)
@@ -130,6 +132,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.name = doc['title']
         attachment.date_modified = doc['last_modified']
         attachment.isReferencedBy = event
+        attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 
     event.save()

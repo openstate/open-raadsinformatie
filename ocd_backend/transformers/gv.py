@@ -165,6 +165,7 @@ def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwar
         attachment.original_url = doc['original_url']
         attachment.name = doc['note']
         attachment.isReferencedBy = event
+        attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 
     event.save()
@@ -257,6 +258,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.original_url = doc['original_url']
         attachment.name = doc['note']
         attachment.isReferencedBy = event
+        attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 
     event.agenda = []
@@ -285,6 +287,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.parent = event
         # AgendaItem requires a start_date because it derives from Meeting
         agendaitem.start_date = event.start_date
+        agendaitem.last_discussed_at = event.start_date
 
         event.agenda.append(agendaitem)
 
