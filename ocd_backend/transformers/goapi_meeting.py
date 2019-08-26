@@ -129,6 +129,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         agendaitem.position = item['sortorder']
         agendaitem.parent = event
         agendaitem.start_date = event.start_date
+        agendaitem.last_discussed_at = event.start_date
         agendaitem.attachment = []
 
         for doc in self.get_documents_as_media_urls(original_item):
@@ -146,6 +147,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.original_url = doc['url']
             attachment.name = doc['note']
             attachment.isReferencedBy = agendaitem
+            attachment.last_discussed_at = event.start_date
             agendaitem.attachment.append(attachment)
 
         event.agenda.append(agendaitem)
@@ -166,6 +168,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.original_url = doc['url']
         attachment.name = doc['note']
         attachment.isReferencedBy = event
+        attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 
     event.save()
