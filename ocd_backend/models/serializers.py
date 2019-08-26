@@ -4,7 +4,7 @@ from rdflib.namespace import XSD, Namespace, NamespaceManager
 
 from ocd_backend.models.definitions import ALL, Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
-    RequiredProperty, MissingProperty
+    RequiredProperty, MissingProperty, IgnoredProperty
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 from ocd_backend.utils.misc import iterate
@@ -27,7 +27,7 @@ def get_serializer_class(format=None):
 class BaseSerializer(object):
     """The base serializer where all serializer should inherit from."""
 
-    def __init__(self, uri_format_type='term'):
+    def __init__(self, uri_format_type='term', loader_class=None):
         """Initialize the serializer with a specified format.
 
         Options for uri_format_type are:
@@ -40,6 +40,7 @@ class BaseSerializer(object):
                 "Not a valid uri_format. Choose 'absolute', 'compact' or 'term'"
             )
         self.uri_format_type = uri_format_type
+        self.loader_class = loader_class
 
     def uri_format(self, model_object):
         """Uses `klass` as an interface to return the specified uri_format."""
@@ -63,6 +64,8 @@ class BaseSerializer(object):
                 uri = self.uri_format(definition) or name
                 try:
                     props_list[uri] = self.serialize_prop(definition, value)
+                except IgnoredProperty:
+                    continue
                 except MissingProperty:
                     raise
             elif definition.required and not model_object.skip_validation:
@@ -85,6 +88,11 @@ class BaseSerializer(object):
         methods should call too. If there is no matching `prop`, it will raise
         an SerializerError.
         """
+        if self.loader_class and prop.ignore_for_loader:
+            for klass in prop.ignore_for_loader:
+                if isinstance(self.loader_class, klass):
+                    raise IgnoredProperty()
+
         if type(prop) == StringProperty:
             return value
 
@@ -103,17 +111,17 @@ class BaseSerializer(object):
         elif type(prop) == ArrayProperty:
             return value
 
-        else:
-            raise SerializerError(
-                "Cannot serialize the property of type '{}'".format(type(prop))
-            )
+        # else:
+        #     raise SerializerError(
+        #         "Cannot serialize the property of type '{}'".format(type(prop))
+        #     )
 
 
 class PostgresSerializer(BaseSerializer):
     """This serializer is used to turn models into full URI properties that can be inserted into Postgres."""
 
-    def __init__(self):
-        super(PostgresSerializer, self).__init__('absolute')
+    def __init__(self, loader_class=None):
+        super(PostgresSerializer, self).__init__('absolute', loader_class)
 
     def serialize(self, model_object=None):
         """No high-level serialize method available, use `deflate` instead."""
@@ -132,6 +140,8 @@ class PostgresSerializer(BaseSerializer):
                 uri = self.uri_format(definition) or name
                 try:
                     props_list[uri] = (self.serialize_prop(definition, value), definition.__class__)
+                except IgnoredProperty:
+                    continue
                 except MissingProperty:
                     raise
             elif definition.required and not model_object.skip_validation:
@@ -145,6 +155,8 @@ class PostgresSerializer(BaseSerializer):
 
         For all other properties the super method is called as a fallback.
         """
+        serialized = super(PostgresSerializer, self).serialize_prop(prop, value)
+
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
@@ -158,7 +170,7 @@ class PostgresSerializer(BaseSerializer):
                 return props[0]
             return props
 
-        return super(PostgresSerializer, self).serialize_prop(prop, value)
+        return serialized
 
     def ori_uri(self, item):
         """Gets the short identifier of a resource"""
@@ -171,10 +183,10 @@ class RdfSerializer(BaseSerializer):
     This uses rdflib to create a graph which can be serialized to the various
     formats that rdflib supports."""
 
-    def __init__(self):
+    def __init__(self, loader_class=None):
         """Set all properties to be fully qualified."""
         self.g = Graph()
-        super(RdfSerializer, self).__init__('absolute')
+        super(RdfSerializer, self).__init__('absolute', loader_class)
 
     def deflate(self, model_object, props, rels):
         """Overrides the `BaseSerializer` method to add graph logic."""
@@ -196,28 +208,31 @@ class RdfSerializer(BaseSerializer):
         self.g.add((s, p, o,))
 
         for name, definition in model_object.definitions(props=props, rels=rels):
-            value = model_object.values.get(name, None)
-            if value:
-                p = URIRef(self.uri_format(definition))
-                try:
-                    o = self.serialize_prop(definition, value)
-                except MissingProperty:
-                    raise
+            try:
+                value = model_object.values.get(name, None)
+                if value:
+                    p = URIRef(self.uri_format(definition))
+                    try:
+                        o = self.serialize_prop(definition, value)
+                    except (IgnoredProperty, MissingProperty):
+                        raise
 
-                namespace_manager.bind(
-                    definition.ns.prefix,
-                    Namespace(definition.ns.uri),
-                    override=False
-                )
-                if type(o) != list:
-                    self.g.add((s, p, o,))
-                else:
-                    for oo in o:
-                        self.g.add((s, p, oo,))
-            elif definition.required and not model_object.skip_validation:
-                raise RequiredProperty("Property '{}' is required for {}".format(
-                    name, model_object.compact_uri())
-                )
+                    namespace_manager.bind(
+                        definition.ns.prefix,
+                        Namespace(definition.ns.uri),
+                        override=False
+                    )
+                    if type(o) != list:
+                        self.g.add((s, p, o,))
+                    else:
+                        for oo in o:
+                            self.g.add((s, p, oo,))
+                elif definition.required and not model_object.skip_validation:
+                    raise RequiredProperty("Property '{}' is required for {}".format(
+                        name, model_object.compact_uri())
+                    )
+            except IgnoredProperty:
+                continue
 
     def serialize(self, model_object, format='turtle'):
         """Serializes `model_object` to a  Rdf `format`, defaults to 'turtle'.
@@ -269,8 +284,8 @@ class RdfSerializer(BaseSerializer):
 class JsonSerializer(BaseSerializer):
     """The `JsonSerializer` converts models to basic json data."""
 
-    def __init__(self):
-        super(JsonSerializer, self).__init__('term')
+    def __init__(self, loader_class=None):
+        super(JsonSerializer, self).__init__('term', loader_class)
 
     def serialize(self, model_object):
         return self.deflate(model_object, props=True, rels=True)
@@ -280,6 +295,8 @@ class JsonSerializer(BaseSerializer):
 
         For all other properties the super method is called as a fallback.
         """
+        serialized = super(JsonSerializer, self).serialize_prop(prop, value)
+
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
@@ -293,7 +310,7 @@ class JsonSerializer(BaseSerializer):
                 return props[0]
             return props
 
-        return super(JsonSerializer, self).serialize_prop(prop, value)
+        return serialized
 
     def ori_uri(self, item):
         """Creates a full uri to an ori resource since json doesn't do prefixes."""

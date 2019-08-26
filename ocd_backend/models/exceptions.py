@@ -13,6 +13,11 @@ class RequiredProperty(Exception):
     pass
 
 
+class IgnoredProperty(Exception):
+    """Thrown when a property is ignored by ignore_for_loader"""
+    pass
+
+
 class QueryResultError(Exception):
     """Error thrown when the query yields unexpected results."""
     pass

@@ -31,7 +31,7 @@ class ElasticsearchLoader(BaseLoader):
     def load_item(self, doc):
         # Recursively index associated models like attachments
         for model in doc.traverse():
-            model_body = json_encoder.encode(JsonLDSerializer().serialize(model))
+            model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
             log.debug('ElasticsearchLoader indexing document id: %s' % model.get_ori_identifier())
 
@@ -65,7 +65,7 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     def load_item(self, doc):
         # Recursively index associated models like attachments
         for model in doc.traverse():
-            model_body = json_encoder.encode(JsonLDSerializer().serialize(model))
+            model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
             if doc == {}:
                 log.info('Empty document ....')
@@ -91,7 +91,7 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     def load_item(self, doc):
         # Recursively index associated models like attachments
         for model in doc.traverse():
-            model_body = json_encoder.encode(JsonLDSerializer().serialize(model))
+            model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
             log.debug('ElasticsearchUpsertLoader indexing document id: %s' % model.get_ori_identifier())
 
