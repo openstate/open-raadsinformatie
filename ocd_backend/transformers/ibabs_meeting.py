@@ -95,6 +95,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             agenda_item.parent = item
             agenda_item.name = mi['Title']
             agenda_item.start_date = item.start_date
+            agenda_item.last_discussed_at = item.start_date
 
             if mi['Documents'] and 'iBabsDocument' in mi['Documents']:
                 agenda_item.attachment = list()
@@ -114,6 +115,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                     attachment.size_in_bytes = document['FileSize']
                     attachment.name = document['DisplayName']
                     attachment.isReferencedBy = agenda_item
+                    attachment.last_discussed_at = item.start_date
                     agenda_item.attachment.append(attachment)
 
                 item.agenda.append(agenda_item)
@@ -158,6 +160,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']
             attachment.isReferencedBy = item
+            attachment.last_discussed_at = item.start_date
             item.attachment.append(attachment)
 
     item.save()
