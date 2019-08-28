@@ -27,19 +27,17 @@ class EnricherLog(object):
         """
 
         session = self.Session()
-        try:
-            enricher_log = session.query(EnricherLogModel).filter(EnricherLogModel.resource_id == resource_id,
-                                                                  EnricherLogModel.enricher_class == enricher_class,
-                                                                  EnricherLogModel.task == task).one()
-            return True
-        except MultipleResultsFound:
-            log.error('Multiple enricher logs found for resource id %s and task "%s.%s"' % (resource_id,
-                                                                                            enricher_class,
-                                                                                            task))
-        except NoResultFound:
-            return False
-        finally:
+
+        enricher_log_count = session.query(EnricherLogModel).filter(
+            EnricherLogModel.resource_id == resource_id,
+            EnricherLogModel.enricher_class == enricher_class,
+            EnricherLogModel.task == task).count()
+        if enricher_log_count > 0:
             session.close()
+            return True
+        else:
+            session.close()
+            return False
 
     def insert(self, resource_id, enricher_class, task):
         """
