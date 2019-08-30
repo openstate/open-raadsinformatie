@@ -28,3 +28,9 @@ data:
         server_name docs.openstateninformatie.nl;
         return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
     }
+
+    server {
+        listen 80;
+        server_name ori.argu.co;
+        return 301 https://ori.argu.co;
+    }
