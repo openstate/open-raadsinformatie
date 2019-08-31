@@ -58,6 +58,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
 
     event.start_date = iso8601.parse_date(start_date)
     event.end_date = event.start_date  # ?
+    event.last_discussed_at = event.start_date
 
     # Some meetings are missing a name because some municipalities do not always fill the description field.
     # In this case we create the name from the name of the commission and the start date of the meeting.

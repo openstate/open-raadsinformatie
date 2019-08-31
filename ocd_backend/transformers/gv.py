@@ -100,6 +100,7 @@ def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwar
                                                        collection='province')
 
     event.start_date, event.end_date = self.get_meeting_dates(meeting)
+    event.last_discussed_at = event.start_date
 
     event.name = meeting[u'objectname']
     event.classification = [u'Agenda']
