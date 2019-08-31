@@ -25,6 +25,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                        collection=self.source_definition['source_type'])
     event.start_date = original_item['plannings'][0]['start_date']
     event.end_date = original_item['plannings'][0]['end_date']
+    event.last_discussed_at = event.start_date
     event.name = original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
     event.classification = [u'Agenda']
     event.location = original_item['attributes'].get('Locatie')

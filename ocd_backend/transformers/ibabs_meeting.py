@@ -38,6 +38,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item.chair = meeting['Chairman']
     item.location = meeting['Location']
     item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+    item.last_discussed_at = item.start_date
 
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in meeting and meeting['canceled']:
