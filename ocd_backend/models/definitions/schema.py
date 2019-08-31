@@ -47,6 +47,7 @@ class CreativeWork(Schema, owl.Thing):
 class Event(Schema, owl.Thing):
     end_date = DateTimeProperty(Schema, 'endDate')
     start_date = DateTimeProperty(Schema, 'startDate', required=True)
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
 
 
 class ImageObject(Schema, owl.Thing):
