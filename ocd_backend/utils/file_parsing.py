@@ -2,8 +2,7 @@ import tempfile
 from urllib2 import HTTPError
 
 import magic
-import pdfparser.poppler as pdf
-import tika.parser as parser
+import pdftotext
 
 from ocd_backend.log import get_source_logger
 
@@ -12,26 +11,17 @@ log = get_source_logger('file_parser')
 
 def file_parser(fname, pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
-        try:
+        with open(fname, "rb") as f:
             result_pages = []
             i = 0
-            d = pdf.Document(fname, quiet=True)
-            for i, p in enumerate(d, start=1):
-                text_array = []
-                for f in p:
-                    for b in f:
-                        for l in b:
-                            text_array.append(unicode(l.text))
-                result_pages.append('\n'.join(text_array))
+            for page in pdftotext.PDF(f):
+                result_pages.append(page)
 
                 if i >= pages:  # break after x pages
                     break
 
-            log.debug("Processed %i pages (%i max)", i, pages)
+            log.debug("Processed %i pages", pages)
             return result_pages
-        except:
-            # reraise everything
-            raise
     else:
         # This code path is disabled until the Tika service is fixed (see issue 178)
 
