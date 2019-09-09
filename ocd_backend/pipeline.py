@@ -1,3 +1,4 @@
+import os
 from copy import deepcopy
 from datetime import datetime
 from uuid import uuid4
@@ -24,6 +25,10 @@ def setup_pipeline(source_definition):
         index_name=source_definition.get('index_name',
                                          source_definition.get('id'))
     )
+
+    # Purge and recreate temp dir to prevent No space left on device, see #236
+    os.remove(settings.TEMP_DIR_PATH)
+    os.mkdir(settings.TEMP_DIR_PATH)
 
     if not es.indices.exists(index_alias):
         index_name = '{index_alias}_{now}'.format(index_alias=index_alias,
