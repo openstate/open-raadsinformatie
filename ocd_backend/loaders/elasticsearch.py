@@ -121,16 +121,16 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
                                     body=url_doc)
 
 
-@celery_app.task(bind=True, base=ElasticsearchLoader, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=ElasticsearchLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def elasticsearch_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 
-@celery_app.task(bind=True, base=ElasticsearchUpdateOnlyLoader, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=ElasticsearchUpdateOnlyLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def elasticsearch_update_only_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 
-@celery_app.task(bind=True, base=ElasticsearchUpsertLoader, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=ElasticsearchUpsertLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def elasticsearch_upsert_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)

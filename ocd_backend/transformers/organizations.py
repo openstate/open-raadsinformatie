@@ -1,4 +1,4 @@
-from ocd_backend import celery_app
+from ocd_backend import celery_app, settings
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.models import *
 from ocd_backend.log import get_source_logger
@@ -22,7 +22,7 @@ def transform_contact_details(data):
     return transformed_data
 
 
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def municipality_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
@@ -47,7 +47,7 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
     return object_model
 
 
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def province_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
@@ -72,7 +72,7 @@ def province_organization_item(self, content_type, raw_item, entity, source_item
     return object_model
 
 
-@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']

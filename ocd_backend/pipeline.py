@@ -16,7 +16,7 @@ from ocd_backend.utils.misc import load_object, propagate_chain_get
 logger = get_source_logger('pipeline')
 
 
-@celery_app.task(autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def setup_pipeline(source_definition):
     logger.debug('[%s] Starting pipeline for source: %s' % (source_definition['key'], source_definition.get('id')))
 
