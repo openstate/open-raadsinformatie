@@ -66,6 +66,6 @@ def delivery_report(err, msg):
         log.debug('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
 
-@celery_app.task(bind=True, base=DeltaLoader, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=DeltaLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def delta_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)

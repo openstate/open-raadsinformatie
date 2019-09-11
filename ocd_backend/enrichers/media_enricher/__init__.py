@@ -6,7 +6,7 @@ from ocd_backend.enrichers.media_enricher.tasks.ggm import \
     GegevensmagazijnMotionText
 from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL
+from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('enricher')
@@ -83,6 +83,6 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         item.save()
 
 
-@celery_app.task(bind=True, base=MediaEnricher, autoretry_for=(Exception,), retry_backoff=True)
+@celery_app.task(bind=True, base=MediaEnricher, autoretry_for=AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def media_enricher(self, *args, **kwargs):
     return self.start(*args, **kwargs)

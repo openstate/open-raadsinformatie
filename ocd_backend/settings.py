@@ -301,6 +301,9 @@ CWC_WSDL = u'https://services.companywebcast.com/meta/1.2/metaservice.svc?single
 PDF_TO_TEXT = u'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
 
+# Exceptions that when raised should be autoretried by celery
+AUTORETRY_EXCEPTIONS = []
+
 # Kafka settings for DeltaLoader
 KAFKA_ENABLED = os.getenv('KAFKA_ENABLED', True)
 KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost:9092')
