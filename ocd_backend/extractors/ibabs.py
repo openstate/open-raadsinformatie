@@ -1,8 +1,10 @@
+import base64
 import json
 import re
 
-from suds.client import Client
-from suds.transport.https import HttpTransport
+from zeep.client import Client, Settings
+from zeep.helpers import serialize_object
+from zeep.exceptions import Error, TransportError
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
@@ -10,8 +12,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
-    meeting_to_dict, meeting_type_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict, votes_to_dict, person_profile_to_dict)
+    meeting_to_dict, list_report_response_to_dict,
+    list_entry_response_to_dict, votes_to_dict)
 
 log = get_source_logger('extractor')
 
@@ -33,13 +35,13 @@ class IBabsBaseExtractor(BaseExtractor):
         except Exception as e:
             ibabs_wsdl = settings.IBABS_WSDL
 
+        soap_settings = Settings(extra_http_headers={'User-Agent': settings.USER_AGENT})
+
         try:
             self.client = Client(ibabs_wsdl,
-                                 port='BasicHttpsBinding_IPublic',
-                                 transport=HttpTransport(),
-                                 timeout=10,
-                                 headers={'User-Agent': settings.USER_AGENT})
-        except Exception as e:
+                                 port_name='BasicHttpsBinding_IPublic',
+                                 settings=soap_settings)
+        except Error as e:
             log.error('Unable to instantiate iBabs client: ' + str(e))
 
 
@@ -61,14 +63,12 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
 
         if meeting_types.Meetingtypes:
             total_count = 0
-            for mt in meeting_types.Meetingtypes[0]:
+            for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 if committee_designator in mt.Meetingtype.lower():
-                    raw = meeting_type_to_dict(mt)
-                    entity = raw['Id']
-                    committee = json.dumps(raw)
+                    committee = serialize_object(mt, dict)
                     yield 'application/json', \
-                          committee, \
-                          entity, \
+                          json.dumps(committee), \
+                          committee['Id'], \
                           'used_file_placeholder'
                     total_count += 1
             log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
@@ -88,7 +88,7 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
 
         if users.Users:
             total_count = 0
-            for user in users.Users[0]:
+            for user in users.Users.iBabsUserBasic:
                 identifier = user['UniqueId']
 
                 user_details = self.client.service.GetUser(
@@ -96,7 +96,8 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                     identifier
                 )
 
-                profile = person_profile_to_dict(user_details.User.PublicProfile)
+                profile = serialize_object(user_details.User.PublicProfile, dict)
+                profile['Picture'] = base64.encodestring(user_details.User.PublicProfile.Picture).decode('ascii')
                 yield 'application/json', json.dumps(profile), profile['UserId'], profile
                 total_count += 1
 
@@ -118,7 +119,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
         meeting_types = self.client.service.GetMeetingtypes(self.source_definition['ibabs_sitename'])
 
         if meeting_types.Meetingtypes:
-            for o in meeting_types.Meetingtypes[0]:
+            for o in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 include_regex = self.source_definition.get('include', None)
                 if include_regex and not re.search(include_regex, o.Description):
                     continue
@@ -148,10 +149,14 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             meeting_types = self._meetingtypes_as_dict()
 
             if meetings.Meetings:
-                for meeting in meetings.Meetings[0]:
-                    meeting_dict = meeting_to_dict(meeting)
+                for meeting in meetings.Meetings['iBabsMeeting']:
 
-                    # sometimes a meetingtype is actually a meeting for some
+                    meeting_dict = serialize_object(meeting, dict)
+                    # Convert unserializable keys to text
+                    meeting_dict['PublishDate'] = meeting_dict['PublishDate'].isoformat()
+                    meeting_dict['MeetingDate'] = meeting_dict['MeetingDate'].isoformat()
+
+                    # sometimes a meeting type is not actually a meeting for some
                     # reason. Let's ignore these for now
                     if meeting_dict['MeetingtypeId'] not in meeting_types:
                         meetings_skipped += 1
@@ -176,18 +181,14 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
     """
 
     def run(self):
-        lists = self.client.service.GetLists(
-            Sitename=self.source_definition['ibabs_sitename'])
+        lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
 
-        try:
-            kv = lists.iBabsKeyValue
-        except AttributeError as e:
-            log.info("[%s] No ibabs reports defined" % (
-                self.source_definition['key'],))
+        if len(lists) < 1:
+            log.info("[%s] No ibabs reports defined" % (self.source_definition['ibabs_sitename'],))
             return
 
         selected_lists = []
-        for l in lists.iBabsKeyValue:
+        for l in lists:
             include_regex = self.source_definition.get('include', None) or self.source_definition['regex']
             if not re.search(include_regex, l.Value.lower()):
                 continue
@@ -198,13 +199,12 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         total_yield_count = 0
         for l in selected_lists:
-            reports = self.client.service.GetListReports(
-                Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
-            report = reports.iBabsKeyValue[0]
-            if len(reports.iBabsKeyValue) > 1:
+            reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
+            report = reports[0]
+            if len(reports) > 1:
                 try:
                     report = [
-                        r for r in reports.iBabsKeyValue if r.Value == l.Value][0]
+                        r for r in reports if r.Value == l.Value][0]
                 except IndexError as e:
                     pass
 
@@ -341,19 +341,19 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 meeting_dict['Meetingtype'] = meeting_types[
                     meeting_dict['MeetingtypeId']]
 
-                kv = self.client.factory.create('ns0:iBabsKeyValue')
+                kv = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv.Key = 'IncludeMeetingItems'
                 kv.Value = True
 
-                kv2 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv2 = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv2.Key = 'IncludeListEntries'
                 kv2.Value = True
 
-                kv3 = self.client.factory.create('ns0:iBabsKeyValue')
+                kv3 = self.client.factory.create('ns0:iBabsKeyValue')  # pylint: disable=no-member
                 kv3.Key = 'IncludeMeetingItems'
                 kv3.Value = True
 
-                params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')
+                params = self.client.factory.create('ns0:ArrayOfiBabsKeyValue')  # pylint: disable=no-member
                 params.iBabsKeyValue.append(kv)
                 params.iBabsKeyValue.append(kv2)
                 params.iBabsKeyValue.append(kv3)
