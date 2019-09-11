@@ -292,7 +292,7 @@ RESOLVER_URL_INDEX = 'resolver'
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)
 
 # The endpoint for the iBabs API
-IBABS_WSDL = u'https://www.mijnbabs.nl/iBabsWCFService/Public.svc?singleWsdl'
+IBABS_WSDL = u'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
 
 # The endpoint for the CompanyWebcast API
 CWC_WSDL = u'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
