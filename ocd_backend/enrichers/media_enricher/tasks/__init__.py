@@ -6,7 +6,7 @@ from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.settings import TEMP_DIR_PATH
-from ocd_backend.utils.file_parsing import FileToTextMixin
+from ocd_backend.utils.file_parsing import file_parser
 
 
 class BaseMediaEnrichmentTask(object):
@@ -90,7 +90,7 @@ class ViedeoMetadata(BaseMediaEnrichmentTask):
         pass
 
 
-class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
+class FileToText(BaseMediaEnrichmentTask):
     content_types = '*'
 
     def enrich_item(self, media_item, content_type, file_object):
@@ -104,14 +104,11 @@ class FileToText(BaseMediaEnrichmentTask, FileToTextMixin):
 
         if os.path.exists(file_object.name):
             path = os.path.realpath(file_object.name)
-            media_item.text = self.file_to_text(path)
+            media_item.text = file_parser(path)
 
         if media_item.text:
             self.process_text(media_item.text, media_item)
         else:
-            # meta = Metadata()
-            # meta.status = u'Unable to download or parse this file'
-            # media_item.meta = meta
             pass
 
         if temporary_file:
