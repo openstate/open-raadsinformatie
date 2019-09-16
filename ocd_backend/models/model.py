@@ -16,8 +16,8 @@ logger = get_source_logger('model')
 
 
 class ModelMetaclass(type):
-    database_class = PostgresDatabase
-    serializer_class = PostgresSerializer
+    serializer = PostgresSerializer()
+    database = PostgresDatabase(serializer)
 
     def __new__(mcs, name, bases, attrs):
         # Collect fields from current class.
@@ -41,8 +41,8 @@ class ModelMetaclass(type):
                 definitions.update(base._definitions)
 
         new_class._definitions = definitions
-        new_class.serializer = mcs.serializer_class()
-        new_class.db = mcs.database_class(new_class.serializer)
+        new_class.serializer = mcs.serializer
+        new_class.db = mcs.database
         return new_class
 
 
