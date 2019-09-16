@@ -1,4 +1,5 @@
 import cStringIO
+import json
 import os
 from tempfile import NamedTemporaryFile
 
@@ -7,6 +8,7 @@ from PIL import Image
 from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.settings import TEMP_DIR_PATH
 from ocd_backend.utils.file_parsing import file_parser
+from ocd_backend.utils.http import GCSCachingMixin
 
 
 class BaseMediaEnrichmentTask(object):
@@ -90,10 +92,24 @@ class ViedeoMetadata(BaseMediaEnrichmentTask):
         pass
 
 
-class FileToText(BaseMediaEnrichmentTask):
+class FileToText(BaseMediaEnrichmentTask, GCSCachingMixin):
     content_types = '*'
 
+    bucket_name = 'ori-enriched'
+    default_content_type = 'application/json'
+
     def enrich_item(self, media_item, content_type, file_object):
+        if self.exists(media_item.identifier_url):
+            _, _, cached_file = self.download_cache(media_item.identifier_url)
+            try:
+                media_item.text = json.load(cached_file)['data']
+                return
+            except (ValueError, KeyError):
+                # No json could be decoded or data not found, pass and parse again
+                pass
+            finally:
+                cached_file.close()
+
         # Make sure file_object is actually on the disk for pdf parsing
         temporary_file = None
         if isinstance(file_object, cStringIO.OutputType):
@@ -104,10 +120,17 @@ class FileToText(BaseMediaEnrichmentTask):
 
         if os.path.exists(file_object.name):
             path = os.path.realpath(file_object.name)
-            media_item.text = file_parser(path)
+            media_item.text = file_parser(path, max_pages=20)
 
         if media_item.text:
             self.process_text(media_item.text, media_item)
+
+            # Save the enriched version to the ori-enriched bucket
+            data = json.dumps({
+                'data': media_item.text,
+                'pages': len(media_item.text),
+            })
+            self.save(media_item.identifier_url, data)
         else:
             pass
 
