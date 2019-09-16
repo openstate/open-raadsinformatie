@@ -33,7 +33,9 @@ class PostgresDatabase(object):
 
         session = self.Session()
         try:
-            resource = session.query(Resource).join(Source).filter(Source.iri == iri).one()
+            resource = session.query(Resource).join(Source).filter(Source.iri == iri).first()
+            if not resource:
+                raise NoResultFound
             return Uri(Ori, resource.ori_id)
         except MultipleResultsFound:
             raise MultipleResultsFound('Multiple resources found for IRI %s' % iri)
