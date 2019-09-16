@@ -1,6 +1,3 @@
-import tempfile
-from urllib2 import HTTPError
-
 import magic
 import pdftotext
 
@@ -9,18 +6,17 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('file_parser')
 
 
-def file_parser(fname, pages=None):
+def file_parser(fname, max_pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         with open(fname, "rb") as f:
             result_pages = []
-            i = 0
-            for page in pdftotext.PDF(f):
+            for i, page in enumerate(pdftotext.PDF(f), start=1):
                 result_pages.append(page)
 
-                if i >= pages:  # break after x pages
+                if max_pages and i > max_pages:  # break after x pages
                     break
 
-            log.debug("Processed %i pages", pages)
+            log.debug("Processed %i pages" % i)
             return result_pages
     else:
         # This code path is disabled until the Tika service is fixed (see issue 178)
@@ -32,51 +28,3 @@ def file_parser(fname, pages=None):
         #     # reraise everything
         #     raise
         pass
-
-
-class FileToTextMixin(object):
-    """
-    Interface for converting a PDF file into text format using pdftotext
-    """
-
-    def file_get_contents(self, url, max_pages=20):
-        """
-        Convenience method to download a PDF file and converting it to text.
-        """
-        if max_pages < 1:  # do not process if not at least one
-            return
-
-        tf = self.file_download(url)
-        if tf is not None:
-            name = tf.name
-            tf.close()
-            return self.file_to_text(name, max_pages)
-        else:
-            return []  # FIXME: should be something else ...
-
-    def file_download(self, url):
-        """
-        Downloads a given url to a tempfile.
-        """
-
-        log.debug("Downloading %s", url)
-        try:
-            # GO has no wildcard domain for SSL
-            r = self.http_session.get(url, verify=False, timeout=5)
-            tf = tempfile.NamedTemporaryFile()
-            tf.write(r.content)
-            tf.seek(0)
-            return tf
-        except HTTPError as e:
-            log.info("Something went wrong downloading %s", url)
-            raise
-        except Exception as e:
-            log.warning("Some other exception %s", url)
-            raise
-
-    def file_to_text(self, path, max_pages=20):
-        """
-        Method to convert a given PDF file into text file using a subprocess
-        """
-
-        return file_parser(path, max_pages)
