@@ -14,7 +14,7 @@ from google.cloud import storage, exceptions
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from ocd_backend.exceptions import InvalidFile, ItemAlreadyProcessed
+from ocd_backend.exceptions import InvalidFile, ItemAlreadyProcessed, NotFound
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import TEMP_DIR_PATH
 from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
@@ -301,15 +301,10 @@ class GCSCachingMixin(HttpRequestMixin):
             # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
             media_file.seek(0, 0)
             self.compressed_upload(blob, data, content_type)
-            log.debug('Uploaded file %s to cache' % path)
+            log.debug('Uploaded file %s to GCS bucket %s' % (path, self.bucket_name))
             return content_type, content_length, media_file
         else:
-            # Retrieve and return the cached file
-            media_file = cStringIO.StringIO()
-            blob.download_to_file(media_file)
-            media_file.seek(0, 0)
-            log.debug('Retrieved file %s from cache' % path)
-            return blob.content_type, blob.size, media_file
+            return self.download_cache(path)
 
     def save(self, path, data, content_type=None):
         """Save data to a path in GCS. The content_type can be specified, or
@@ -321,7 +316,8 @@ class GCSCachingMixin(HttpRequestMixin):
             return super(GCSCachingMixin, self).save(path, data, content_type)
 
         bucket = self.get_bucket()
-        blob = bucket.get_blob(path)
+        blob = bucket.blob(path)
+
         self.compressed_upload(blob, data, content_type)
 
     def compressed_upload(self, blob, data, content_type=None):
@@ -344,3 +340,23 @@ class GCSCachingMixin(HttpRequestMixin):
 
         blob.content_encoding = 'gzip'
         blob.upload_from_file(f, rewind=True, content_type=content_type)
+
+    def download_cache(self, path):
+        """Retrieve and return the cached file"""
+        bucket = self.get_bucket()
+        blob = bucket.get_blob(path)
+
+        if not blob:
+            raise NotFound(path)
+
+        media_file = cStringIO.StringIO()
+        blob.download_to_file(media_file)
+        media_file.seek(0, 0)
+        log.debug('Retrieved file %s from GCS bucket %s' % (path, self.bucket_name))
+        return blob.content_type, blob.size, media_file
+
+    def exists(self, path):
+        bucket = self.get_bucket()
+        blob = bucket.get_blob(path)
+
+        return bool(blob)
