@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 import os.path
 
 from ocd_backend.exceptions import ConfigurationError

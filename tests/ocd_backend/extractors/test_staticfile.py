@@ -1,5 +1,5 @@
 import gzip
-import json
+import simplejson as json
 
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors.staticfile import StaticJSONDumpExtractor, StaticJSONExtractor
