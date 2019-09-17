@@ -11,9 +11,9 @@ Base = declarative_base()
 class Source(Base):
     __tablename__ = 'source'
 
-    id = Column(BigInteger, Sequence('source_id_seq'), primary_key=True)
-    iri = Column(String)
-    resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
+    id = Column(BigInteger, Sequence('source_id_seq'), primary_key=True, index=True)
+    iri = Column(String, index=True)
+    resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True)
     canonical_iri = Column(String)
     canonical_id = Column(String)
     used_file = Column(String)
@@ -26,7 +26,7 @@ class Source(Base):
 class Resource(Base):
     __tablename__ = 'resource'
 
-    ori_id = Column(BigInteger, Sequence('ori_id_seq'), primary_key=True)
+    ori_id = Column(BigInteger, Sequence('ori_id_seq'), primary_key=True, index=True)
     iri = Column(String)
 
     sources = relationship("Source", back_populates="resource")
@@ -44,11 +44,11 @@ class Property(Base):
                         'prop_url IS NULL'),
     )
 
-    id = Column(UUIDType(), primary_key=True)
-    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
-    predicate = Column(String, nullable=False)
+    id = Column(UUIDType(), primary_key=True, index=True)
+    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True)
+    predicate = Column(String, nullable=False, index=True)
     order = Column(SmallInteger, nullable=True)
-    prop_resource = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=True)
+    prop_resource = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=True, index=True)
     prop_string = Column(String, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
@@ -60,8 +60,8 @@ class Property(Base):
 class EnricherLogModel(Base):
     __tablename__ = 'enricher_log'
 
-    id = Column(BigInteger, Sequence('enricher_log_id_seq'), primary_key=True)
-    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False)
+    id = Column(BigInteger, Sequence('enricher_log_id_seq'), primary_key=True, index=True)
+    resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True)
     enricher_class = Column(String, nullable=False)
     task = Column(String, nullable=False)
     created_at = Column(DateTime, default=func.now())
