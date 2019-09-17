@@ -1,5 +1,5 @@
 # todo needs to be rewritten with new data
-# import json
+# import simplejson as json
 # import os
 #
 # from ocd_backend.items import LocalDumpItem

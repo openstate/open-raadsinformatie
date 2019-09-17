@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 import os
 
 from suds.client import Client  # pylint: disable=import-error

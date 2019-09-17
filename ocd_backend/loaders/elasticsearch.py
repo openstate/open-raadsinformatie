@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 
 from ocd_backend import celery_app
 from ocd_backend import settings

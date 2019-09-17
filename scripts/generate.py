@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import json
+import simplejson as json
 
 import click
 from click.core import Command

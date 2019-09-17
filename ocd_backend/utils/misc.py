@@ -1,7 +1,7 @@
 import datetime
 import glob
 import importlib
-import json
+import simplejson as json
 import re
 from calendar import timegm
 from hashlib import sha1

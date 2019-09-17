@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 from time import sleep
 
 from ocd_backend.exceptions import ConfigurationError

@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 from urlparse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
