@@ -69,13 +69,12 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                                                                 collection=self.source_definition['source_type'])
 
         try:
-            agendaitem.description = item['type_data']['attributes'][0]['value']
+            agendaitem.name = item['type_data']['attributes'][0]['value']
         except KeyError:
             try:
-                agendaitem.description = item['type_data']['attributes'][1]['value']
+                agendaitem.name = item['type_data']['attributes'][1]['value']
             except KeyError:
                 pass
-        agendaitem.name = original_item['attributes']['Titel']
         agendaitem.position = original_item['order']
         agendaitem.parent = event
         agendaitem.start_date = event.start_date
