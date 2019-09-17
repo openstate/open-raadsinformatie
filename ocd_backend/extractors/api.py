@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger

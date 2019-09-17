@@ -1,5 +1,5 @@
 import cStringIO
-import json
+import simplejson as json
 import os
 from tempfile import NamedTemporaryFile
 

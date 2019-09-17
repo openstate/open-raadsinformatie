@@ -1,6 +1,6 @@
 # TODO: Rewrite for Postgres
 
-# import json
+# import simplejson as json
 # import os
 # 
 # from ocd_backend import celery_app

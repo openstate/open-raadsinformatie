@@ -1,5 +1,5 @@
 import base64
-import json
+import simplejson as json
 import re
 
 from zeep.client import Client, Settings

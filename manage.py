@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from copy import deepcopy
 from datetime import datetime
-import json
+import simplejson as json
 from glob import glob
 from hashlib import sha1
 import os

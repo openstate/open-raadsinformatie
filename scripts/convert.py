@@ -6,7 +6,7 @@
 
 import codecs
 import hashlib
-import json
+import simplejson as json
 import sys
 
 import requests

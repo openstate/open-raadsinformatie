@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 
 from requests.exceptions import HTTPError, RetryError
 
