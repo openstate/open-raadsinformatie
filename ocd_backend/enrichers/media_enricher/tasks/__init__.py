@@ -120,7 +120,7 @@ class FileToText(BaseMediaEnrichmentTask, GCSCachingMixin):
 
         if os.path.exists(file_object.name):
             path = os.path.realpath(file_object.name)
-            media_item.text = file_parser(path, max_pages=20)
+            media_item.text = file_parser(path, max_pages=100)
 
         if media_item.text:
             self.process_text(media_item.text, media_item)

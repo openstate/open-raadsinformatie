@@ -13,7 +13,7 @@ def file_parser(fname, max_pages=None):
             for i, page in enumerate(pdftotext.PDF(f), start=1):
                 result_pages.append(page)
 
-                if max_pages and i > max_pages:  # break after x pages
+                if max_pages and i >= max_pages:  # break after x pages
                     break
 
             log.debug("Processed %i pages" % i)
