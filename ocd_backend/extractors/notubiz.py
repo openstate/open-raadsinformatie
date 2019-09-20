@@ -130,8 +130,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     meetings_skipped += 1
                     continue
 
+                meeting_url = "%s/events/meetings/%i?format=json&version=1.10.8" % (self.base_url, item['id'])
                 try:
-                    meeting_url = "%s/events/meetings/%i?format=json&version=1.10.8" % (self.base_url, item['id'])
                     data = self.fetch_data(meeting_url,
                                            "events/meetings/%i" % item['id'],
                                            item['last_modified'])
@@ -143,7 +143,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     continue
                 except Exception as e:
                     meetings_skipped += 1
-                    log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
+                    log.warning('[%s] %s: %s' % (self.source_definition['key'], e, meeting_url))
                     continue
 
                 organization = self.organizations[self.source_definition['notubiz_organization_id']]
