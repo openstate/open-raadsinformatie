@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flower
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: flower
+  template:
+    metadata:
+      labels:
+        app: flower
+    spec:
+      containers:
+      - name: flower
+        image: openstatefoundation/open-raadsinformatie-backend
+        command: ["celery", "flower", "--app=ocd_backend:celery_app"]
+        ports:
+        - containerPort: 5555
+        envFrom:
+        - configMapRef:
+            name: config
+        env:
+          - name: NEO4J_AUTH
+            valueFrom:
+              secretKeyRef:
+                name: secrets
+                key: NEO4J_AUTH
+        volumeMounts:
+        - mountPath: /opt/ori/data
+          name: oridata
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
+      volumes:
+      - name: oridata
+        persistentVolumeClaim:
+          claimName: oridata

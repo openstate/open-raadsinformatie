@@ -4,8 +4,9 @@ metadata:
   name: postgresdata
   namespace: production
 spec:
+  storageClassName: ssd
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100Gi
+      storage: 50Gi
