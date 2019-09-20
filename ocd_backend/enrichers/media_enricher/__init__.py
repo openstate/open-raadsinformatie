@@ -80,7 +80,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
 
         media_file.close()
 
-        item.save()
+        item.db.save(item)
 
 
 @celery_app.task(bind=True, base=MediaEnricher, autoretry_for=AUTORETRY_EXCEPTIONS, retry_backoff=True)
