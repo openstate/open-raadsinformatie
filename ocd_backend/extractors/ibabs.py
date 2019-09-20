@@ -216,7 +216,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             yield_count = 0
             while (active_page_nr < max_pages) and (result_count == per_page):
                 try:
-                    result = self.client.service.GetListReport(
+                    result = self.client.service.GetListReportDataSet(
                         Sitename=self.source_definition['ibabs_sitename'],
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
