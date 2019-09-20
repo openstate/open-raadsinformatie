@@ -156,14 +156,16 @@ class Model(object):
         return '<%s Model>' % self.compact_uri()
 
     def get_ori_identifier(self):
-        if not self.values.get('ori_identifier'):
-            try:
-                self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
-                return self.ori_identifier
-            except:
-                raise AttributeError('Ori Identifier is not present, has the model been saved?')
-        else:
+        try:
             return self.ori_identifier
+        except AttributeError:
+            pass
+
+        try:
+            self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
+            return self.ori_identifier
+        except:
+            raise AttributeError('Ori Identifier is not present, has the model been saved?')
 
     def get_short_identifier(self):
         ori_identifier = self.get_ori_identifier()
@@ -188,21 +190,23 @@ class Model(object):
 
     def traverse(self):
         """Returns all associated models that been attached to this model as properties"""
-        rels_list = []
+        rels = {}
 
         def inner(model):
+            identifier = model.had_primary_source
+
             # Prevent circular recursion
-            if model in rels_list:
+            if identifier in rels.keys():
                 return
 
-            rels_list.append(model)
+            rels[identifier] = model
 
             for _, prop in iterate(model.values.items()):
                 if isinstance(prop, Model) or isinstance(prop, Relationship):
                     inner(prop)
 
         inner(self)
-        return rels_list
+        return rels.values()
 
     def save(self):
         if self.saving_flag:
