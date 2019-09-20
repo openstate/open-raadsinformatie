@@ -130,7 +130,6 @@ class PostgresDatabase(object):
             session.query(Property).filter(Property.resource_id == resource.ori_id,
                                            Property.predicate.in_(predicates)
                                            ).delete(synchronize_session='fetch')
-            session.commit()
 
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
@@ -184,7 +183,7 @@ class PostgresDatabase(object):
             raise ValueError('update_source must be called with either iri or id as True')
 
         session = self.Session()
-        resource = session.query(Resource).filter(Resource.ori_id == model_object.get_short_identifier()).one()
+        resource = session.query(Resource).get(model_object.get_short_identifier())
 
         try:
             # First check if there is a Source record with an empty canonical IRI/ID field, and if so fill that record
