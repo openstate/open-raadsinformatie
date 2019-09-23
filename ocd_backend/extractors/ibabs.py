@@ -183,7 +183,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
     def run(self):
         lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
 
-        if len(lists) < 1:
+        if not lists or len(lists) < 1:
             log.info("[%s] No ibabs reports defined" % (self.source_definition['ibabs_sitename'],))
             return
 
