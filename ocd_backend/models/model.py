@@ -161,11 +161,8 @@ class Model(object):
         except AttributeError:
             pass
 
-        try:
-            self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
-            return self.ori_identifier
-        except:
-            raise AttributeError('Ori Identifier is not present, has the model been saved?')
+        self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
+        return self.ori_identifier
 
     def get_short_identifier(self):
         ori_identifier = self.get_ori_identifier()
