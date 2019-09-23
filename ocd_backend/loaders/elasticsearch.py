@@ -29,16 +29,18 @@ class ElasticsearchLoader(BaseLoader):
         return super(ElasticsearchLoader, self).start(*args, **kwargs)
 
     def load_item(self, doc):
+        log_identifiers = []
+
         # Recursively index associated models like attachments
         for model in doc.traverse():
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
-
-            log.debug('ElasticsearchLoader indexing document id: %s' % model.get_ori_identifier())
 
             # Index document into new index
             elasticsearch.index(index=self.index_name,
                                 body=model_body,
                                 id=model.get_short_identifier())
+
+            log_identifiers.append(model.get_short_identifier())
 
             if 'enricher_task' in model:
                 # The value seems to be enriched so add to resolver
@@ -55,6 +57,8 @@ class ElasticsearchLoader(BaseLoader):
                 elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
                                     id=get_sha1_hash(model.original_url),
                                     body=url_doc)
+
+        log.debug('ElasticsearchLoader indexing document id: %s' % ', '.join(log_identifiers))
 
 
 class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
@@ -63,6 +67,8 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
+        log_identifiers = []
+
         # Recursively index associated models like attachments
         for model in doc.traverse():
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
@@ -71,8 +77,6 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
                 log.info('Empty document ....')
                 return
 
-            log.debug('ElasticsearchUpdateOnlyLoader indexing document id: %s' % model.get_ori_identifier())
-
             # Index document into new index
             elasticsearch.update(
                 id=model.get_short_identifier(),
@@ -80,7 +84,11 @@ class ElasticsearchUpdateOnlyLoader(ElasticsearchLoader):
                 body={'doc': json.loads(model_body)},
             )
 
+            log_identifiers.append(model.get_short_identifier())
+
             # Resolver URLs are not updated here to prevent too complex things
+
+        log.debug('ElasticsearchUpdateOnlyLoader indexing document ids: %s' % ', '.join(log_identifiers))
 
 
 class ElasticsearchUpsertLoader(ElasticsearchLoader):
@@ -89,20 +97,23 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
     """
 
     def load_item(self, doc):
+        log_identifiers = []
+
         # Recursively index associated models like attachments
         for model in doc.traverse():
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
-
-            log.debug('ElasticsearchUpsertLoader indexing document id: %s' % model.get_ori_identifier())
 
             # Update document
             elasticsearch.update(
                 id=model.get_short_identifier(),
                 index=self.index_name,
-                body={'doc': json.loads(model_body),
-                      'doc_as_upsert': True,
+                body={
+                    'doc': json.loads(model_body),
+                    'doc_as_upsert': True,
                 },
             )
+
+            log_identifiers.append(model.get_short_identifier())
 
             if 'enricher_task' in model:
                 # The value seems to be enriched so add to resolver
@@ -119,6 +130,8 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
                 elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
                                     id=get_sha1_hash(model.original_url),
                                     body=url_doc)
+
+        log.debug('ElasticsearchUpsertLoader indexing document ids: %s' % ', '.join(log_identifiers))
 
 
 @celery_app.task(bind=True, base=ElasticsearchLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
