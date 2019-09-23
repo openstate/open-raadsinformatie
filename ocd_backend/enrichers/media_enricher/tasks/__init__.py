@@ -122,7 +122,7 @@ class FileToText(BaseMediaEnrichmentTask, GCSCachingMixin):
             path = os.path.realpath(file_object.name)
             media_item.text = file_parser(path, max_pages=100)
 
-        if media_item.text:
+        if hasattr(media_item, 'text') and media_item.text:
             self.process_text(media_item.text, media_item)
 
             # Save the enriched version to the ori-enriched bucket
