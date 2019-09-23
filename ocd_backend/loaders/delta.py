@@ -33,6 +33,7 @@ class DeltaLoader(BaseLoader):
 
         kafka_producer = Producer(self.config)
 
+        log_identifiers = []
         # Recursively index associated models like attachments
         for model in doc.traverse():
             # Serialize the body to JSON-LD
@@ -47,12 +48,14 @@ class DeltaLoader(BaseLoader):
             nquads = ' <http://purl.org/link-lib/supplant> .\n'.join(ntriples_split)
 
             # Send document to the Kafka bus
-            log.debug('DeltaLoader sending document id %s to Kafka' % model.get_ori_identifier())
+            log_identifiers.append(model.get_short_identifier())
             message_key_id = '%s_%s' % (settings.KAFKA_MESSAGE_KEY, model.get_short_identifier())
             kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'), message_key_id, callback=delivery_report)
 
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
+
+        log.debug('DeltaLoader sending document ids to Kafka: %s' % ', '.join(log_identifiers))
 
         kafka_producer.flush()
 
@@ -62,8 +65,6 @@ def delivery_report(err, msg):
         Triggered by poll() or flush(). """
     if err is not None:
         log.warning('Message delivery failed: {}'.format(err))
-    else:
-        log.debug('Message delivered to {} [{}]'.format(msg.topic(), msg.partition()))
 
 
 @celery_app.task(bind=True, base=DeltaLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
