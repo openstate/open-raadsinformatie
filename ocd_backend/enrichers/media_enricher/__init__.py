@@ -8,6 +8,7 @@ from ocd_backend.exceptions import UnsupportedContentType
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.utils.misc import strip_scheme
 
 log = get_source_logger('enricher')
 
@@ -43,7 +44,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         """
 
         try:
-            identifier = item.identifier_url
+            identifier = strip_scheme(item.identifier_url)
         except AttributeError:
             raise Exception('No identifier_url for item: %s', item)
 
