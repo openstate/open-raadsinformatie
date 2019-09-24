@@ -1,7 +1,7 @@
 import simplejson as json
 
-from ocd_backend import celery_app
 from ocd_backend import settings
+from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.loaders import BaseLoader

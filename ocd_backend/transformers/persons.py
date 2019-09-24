@@ -1,7 +1,8 @@
-from ocd_backend import celery_app, settings
-from ocd_backend.transformers import BaseTransformer
-from ocd_backend.models import *
+from ocd_backend import settings
+from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
+from ocd_backend.models import *
+from ocd_backend.transformers import BaseTransformer
 
 log = get_source_logger('persons')
 
