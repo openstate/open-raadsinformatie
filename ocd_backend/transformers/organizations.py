@@ -39,8 +39,11 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
     object_model.collection = self.source_definition['key']
     object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(original_item['naam'])])
     object_model.description = original_item['omvatplaats']
-    object_model.homepage = original_item['contact']['internet']['value']
-    object_model.email = original_item['contact']['emailadres']['value']
+    try:
+        object_model.homepage = original_item['contact']['internet']['value']
+        object_model.email = original_item['contact']['emailadres']['value']
+    except KeyError:
+        pass
     # object_model.contact_details = transform_contact_details(original_item['contact'])
 
     object_model.save()
