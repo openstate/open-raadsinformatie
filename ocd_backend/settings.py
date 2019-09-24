@@ -1,6 +1,7 @@
 import logging.config
 import os
 import pickle
+import tempfile
 
 from bugsnag.handlers import BugsnagHandler
 from kombu import Exchange, Queue
@@ -275,6 +276,11 @@ DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
 
 # The path of the directory used to store temporary files
 TEMP_DIR_PATH = os.path.join(DATA_DIR_PATH, 'temp')
+try:
+    os.makedirs(TEMP_DIR_PATH)
+except OSError:
+    pass
+tempfile.tempdir = TEMP_DIR_PATH
 
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
