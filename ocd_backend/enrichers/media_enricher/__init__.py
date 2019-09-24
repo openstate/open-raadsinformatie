@@ -1,10 +1,12 @@
+import requests
+
 from ocd_backend import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
     MediaType, FileToText
 from ocd_backend.enrichers.media_enricher.tasks.ggm import \
     GegevensmagazijnMotionText
-from ocd_backend.exceptions import UnsupportedContentType
+from ocd_backend.exceptions import UnsupportedContentType, SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.http import HttpRequestMixin
@@ -53,11 +55,14 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         except AttributeError:
             date_modified = None
 
-        content_type, content_length, media_file = self.fetch(
-            item.original_url,
-            identifier,
-            date_modified,
-        )
+        try:
+            content_type, content_length, media_file = self.fetch(
+                item.original_url,
+                identifier,
+                date_modified,
+            )
+        except requests.HTTPError as e:
+            raise SkipEnrichment(e)
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, identifier)
         item.content_type = content_type
