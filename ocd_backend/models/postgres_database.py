@@ -131,6 +131,11 @@ class PostgresDatabase(object):
                                            Property.predicate.in_(predicates)
                                            ).delete(synchronize_session='fetch')
 
+            type_property = Property(id=uuid.uuid4(),
+                                     predicate='http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                     prop_string=model_object.verbose_name())
+            resource.properties.append(type_property)
+
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
                 if isinstance(value_and_property_type[0], list):
