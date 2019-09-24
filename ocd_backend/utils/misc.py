@@ -299,6 +299,9 @@ class DatetimeJSONEncoder(json.JSONEncoder):
             return super(DatetimeJSONEncoder, self).default(o)
 
 
+json_encoder = DatetimeJSONEncoder()
+
+
 _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 

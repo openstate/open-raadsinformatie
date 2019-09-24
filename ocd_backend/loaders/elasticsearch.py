@@ -7,8 +7,7 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.serializers import JsonLDSerializer
-from ocd_backend.utils import json_encoder
-from ocd_backend.utils.misc import get_sha1_hash
+from ocd_backend.utils.misc import json_encoder, get_sha1_hash
 
 log = get_source_logger('elasticsearch_loader')
 
