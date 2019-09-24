@@ -1,4 +1,5 @@
-from ocd_backend import celery_app, settings
+from ocd_backend import settings
+from ocd_backend.app import celery_app
 from ocd_backend.enrichers.media_enricher import MediaEnricher
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin, GCSCachingMixin

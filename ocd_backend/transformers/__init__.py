@@ -1,8 +1,7 @@
 import simplejson as json
-
 from lxml import etree
 
-from ocd_backend import celery_app
+from ocd_backend.app import celery_app
 from ocd_backend.exceptions import NoDeserializerAvailable
 from ocd_backend.mixins import OCDBackendTaskFailureMixin
 

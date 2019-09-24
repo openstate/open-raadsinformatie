@@ -1,8 +1,8 @@
 from confluent_kafka import Producer
 from pyld import jsonld
 
-from ocd_backend import celery_app
 from ocd_backend import settings
+from ocd_backend.app import celery_app
 from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.serializers import JsonLDSerializer

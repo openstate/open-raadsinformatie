@@ -1,6 +1,6 @@
 import requests
 
-from ocd_backend import celery_app
+from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
     MediaType, FileToText

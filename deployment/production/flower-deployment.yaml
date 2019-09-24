@@ -15,7 +15,7 @@ spec:
       containers:
       - name: flower
         image: openstatefoundation/open-raadsinformatie-backend
-        command: ["celery", "flower", "--app=ocd_backend:celery_app"]
+        command: ["celery", "flower", "--app=ocd_backend.app:celery_app"]
         ports:
         - containerPort: 5555
         envFrom:

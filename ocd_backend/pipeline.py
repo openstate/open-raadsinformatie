@@ -1,5 +1,3 @@
-import os
-import shutil
 from copy import deepcopy
 from datetime import datetime
 from uuid import uuid4
@@ -7,7 +5,8 @@ from uuid import uuid4
 from celery import chain, group
 from elasticsearch.exceptions import NotFoundError
 
-from ocd_backend import settings, celery_app
+from ocd_backend import settings
+from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
