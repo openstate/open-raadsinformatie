@@ -4,6 +4,7 @@ metadata:
   name: oridata
   namespace: production
 spec:
+  storageClassName: ssd
   accessModes:
   - ReadWriteOnce
   resources:
