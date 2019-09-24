@@ -16,7 +16,6 @@ from urllib3.util.retry import Retry
 
 from ocd_backend.exceptions import InvalidFile, ItemAlreadyProcessed, NotFound
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import TEMP_DIR_PATH
 from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
 from ocd_backend.utils.misc import localize_datetime, datetime_to_unixstamp, \
     str_to_datetime
@@ -88,13 +87,9 @@ class HttpRequestMixin(object):
         http_resp = self.http_session.get(url, stream=True, timeout=(60, 120))
         http_resp.raise_for_status()
 
-        if not os.path.exists(TEMP_DIR_PATH):
-            log.debug('Creating temp directory %s' % TEMP_DIR_PATH)
-            os.makedirs(TEMP_DIR_PATH)
-
         # Create a temporary file to store the media item, write the file
         # to disk if it is larger than 1 MB.
-        media_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
+        media_file = NamedTemporaryFile(delete=True)
 
         # When a partial fetch is requested, request up to two MB
         partial_target_size = 1024 * 1024 * 2

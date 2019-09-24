@@ -6,7 +6,6 @@ from tempfile import NamedTemporaryFile
 from PIL import Image
 
 from ocd_backend.exceptions import UnsupportedContentType
-from ocd_backend.settings import TEMP_DIR_PATH
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import GCSCachingMixin
 
@@ -113,7 +112,7 @@ class FileToText(BaseMediaEnrichmentTask, GCSCachingMixin):
         # Make sure file_object is actually on the disk for pdf parsing
         temporary_file = None
         if isinstance(file_object, cStringIO.OutputType):
-            temporary_file = NamedTemporaryFile(dir=TEMP_DIR_PATH)
+            temporary_file = NamedTemporaryFile(delete=True)
             temporary_file.write(file_object.read())
             temporary_file.seek(0, 0)
             file_object = temporary_file
