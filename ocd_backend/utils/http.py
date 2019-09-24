@@ -130,6 +130,10 @@ class HttpRequestMixin(object):
 
 
 class LocalCachingMixin(HttpRequestMixin):
+    """Deprecated now in favor of GCSCachingMixin"""
+
+    def __init__(self, *args, **kwargs):
+        raise DeprecationWarning
 
     def base_path(self, file_name):
         first_dir = file_name[0:2]
