@@ -1,13 +1,14 @@
 import datetime
 import glob
 import importlib
-import simplejson as json
 import re
 from calendar import timegm
 from hashlib import sha1
 from string import Formatter
+from urlparse import urlparse
 
 import pytz
+import simplejson as json
 # noinspection PyUnresolvedReferences
 import translitcodec  # used for encoding, search 'translit'
 from dateutil.parser import parse
@@ -473,3 +474,9 @@ def localize_datetime(date):
 def doc_type(name):
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
+
+
+def strip_scheme(url):
+    parsed = urlparse(url)
+    scheme = "%s://" % parsed.scheme
+    return parsed.geturl().replace(scheme, '', 1)
