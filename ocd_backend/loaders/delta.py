@@ -45,7 +45,7 @@ class DeltaLoader(BaseLoader):
             # Add the graph name to the body. This is done the low-tech way, but could be improved by updating the
             # JSON-LD so that the graph information is included when serializing to N-Quads.
             ntriples_split = ntriples.split(' .\n')
-            nquads = ' <http://purl.org/link-lib/supplant> .\n'.join(ntriples_split)
+            nquads = ' <http://purl.org/linked-delta/replace> .\n'.join(ntriples_split)
 
             # Send document to the Kafka bus
             log_identifiers.append(model.get_short_identifier())
