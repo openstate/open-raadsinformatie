@@ -10,11 +10,15 @@ def file_parser(fname, max_pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         with open(fname, "rb") as f:
             result_pages = []
-            for i, page in enumerate(pdftotext.PDF(f), start=1):
-                result_pages.append(page)
+            i = 0
+            try:
+                for i, page in enumerate(pdftotext.PDF(f), start=1):
+                    result_pages.append(page)
 
-                if max_pages and i >= max_pages:  # break after x pages
-                    break
+                    if max_pages and i >= max_pages:  # break after x pages
+                        break
+            except pdftotext.Error as e:
+                log.warning(e)
 
             log.debug("Processed %i pages" % i)
             return result_pages
