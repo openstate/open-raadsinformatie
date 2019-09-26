@@ -21,18 +21,5 @@ spec:
         envFrom:
         - configMapRef:
             name: config
-        env:
-          - name: NEO4J_AUTH
-            valueFrom:
-              secretKeyRef:
-                name: secrets
-                key: NEO4J_AUTH
-        volumeMounts:
-        - mountPath: /opt/ori/data
-          name: oridata
       nodeSelector:
         cloud.google.com/gke-preemptible: "true"
-      volumes:
-      - name: oridata
-        persistentVolumeClaim:
-          claimName: oridata

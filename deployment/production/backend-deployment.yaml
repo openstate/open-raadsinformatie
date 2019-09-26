@@ -48,8 +48,8 @@ spec:
                 name: secrets
                 key: POSTGRES_PASSWORD
         volumeMounts:
-        - mountPath: /opt/ori/data
-          name: oridata
+        - mountPath: /tmp
+          name: tempdir
         resources:
           requests:
             memory: 120Mi
@@ -59,8 +59,8 @@ spec:
         runAsUser: 1000
         fsGroup: 1000
       volumes:
-      - name: oridata
-        persistentVolumeClaim:
-          claimName: oridata
+      - name: tempdir
+        emptyDir:
+          medium: Memory
       nodeSelector:
         cloud.google.com/gke-preemptible: "true"
