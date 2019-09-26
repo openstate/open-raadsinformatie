@@ -34,6 +34,10 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgresdata
+        resources:
+          requests:
+            memory: 900M
+            cpu: 250m
       restartPolicy: Always
       volumes:
       - name: postgresdata

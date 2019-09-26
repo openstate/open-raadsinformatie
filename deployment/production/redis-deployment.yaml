@@ -21,10 +21,12 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: redisdata
+        resources:
+          requests:
+            memory: 1G
+            cpu: 250m
       restartPolicy: Always
       volumes:
       - name: redisdata
         persistentVolumeClaim:
           claimName: redisdata
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"

@@ -21,5 +21,6 @@ spec:
         envFrom:
         - configMapRef:
             name: config
-      nodeSelector:
-        cloud.google.com/gke-preemptible: "true"
+        resources:
+          requests:
+            memory: 120Mi

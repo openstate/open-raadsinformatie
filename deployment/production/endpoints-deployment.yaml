@@ -23,5 +23,8 @@ spec:
         ]
         ports:
         - containerPort: 8000
+        resources:
+          requests:
+            memory: 25Mi
       nodeSelector:
         cloud.google.com/gke-nodepool: persistent
