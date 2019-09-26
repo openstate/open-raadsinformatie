@@ -275,11 +275,7 @@ ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
 DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
 
 # The path of the directory used to store temporary files
-TEMP_DIR_PATH = os.path.join(DATA_DIR_PATH, 'temp')
-try:
-    os.makedirs(TEMP_DIR_PATH)
-except OSError:
-    pass
+TEMP_DIR_PATH = '/tmp'
 tempfile.tempdir = TEMP_DIR_PATH
 
 # The path of the JSON file containing the sources config
