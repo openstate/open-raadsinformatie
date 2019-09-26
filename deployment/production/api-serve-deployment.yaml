@@ -14,11 +14,14 @@ spec:
     spec:
       containers:
       - name: ori-api
-        image: ontola/ori_api:9-serve
+        image: ontola/ori_api:latest-serve
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /www/data/id
           name: apidata
+        resources:
+          requests:
+            memory: 10Mi
       volumes:
       - name: apidata
         persistentVolumeClaim:

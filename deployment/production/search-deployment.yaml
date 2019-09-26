@@ -20,5 +20,8 @@ spec:
         - node
         image: argu/ori-search
         imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 30Mi
       nodeSelector:
         cloud.google.com/gke-nodepool: persistent

@@ -77,7 +77,8 @@ spec:
           privileged: true
         resources:
           requests:
-            memory: 1.5Gi
+            memory: 1.8G
+            cpu: 150m
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata

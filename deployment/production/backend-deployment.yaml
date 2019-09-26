@@ -52,9 +52,7 @@ spec:
           name: tempdir
         resources:
           requests:
-            memory: 120Mi
-          limits:
-            memory: 300Mi
+            memory: 400Mi
       securityContext:
         runAsUser: 1000
         fsGroup: 1000

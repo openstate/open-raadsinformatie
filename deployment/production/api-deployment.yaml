@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: ori-api
-        image: ontola/ori_api:9
+        image: ontola/ori_api:latest
         imagePullPolicy: Always
         env:
         - name: KAFKA_HOSTNAME
@@ -26,6 +26,12 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/data/id
           name: apidata
+        resources:
+          requests:
+            memory: 800M
+            cpu: 100m
+          limits:
+            cpu: 500m
       volumes:
       - name: apidata
         persistentVolumeClaim:
