@@ -48,7 +48,7 @@ paths:
       description: |
         Elasticsearch endpoint displaying the indices that match the index filter.
         See https://www.elastic.co/guide/en/elasticsearch/reference/current/cat-indices.html for more information.
-      operationId: "elastic_indices_get_index"
+      operationId: "elastic_indices_index_get"
       parameters:
         - $ref: "#/parameters/index"
       responses:
@@ -170,7 +170,7 @@ paths:
       description: |
         Elasticsearch endpoint for retrieving a single document.
         See https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html for more information.
-      operationId: "elastic_doc_get"
+      operationId: "elastic_doc_index_get"
       parameters:
         - $ref: "#/parameters/index"
         - $ref: "#/parameters/docId"
@@ -185,7 +185,7 @@ paths:
       description: |
         Elasticsearch endpoint for retrieving a single document source.
         See https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-get.html for more information.
-      operationId: "elastic_source_get"
+      operationId: "elastic_source_index_get"
       parameters:
         - $ref: "#/parameters/index"
         - $ref: "#/parameters/docId"
