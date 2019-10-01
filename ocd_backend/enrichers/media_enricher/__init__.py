@@ -2,15 +2,14 @@ import requests
 
 from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
-from ocd_backend.enrichers.media_enricher.tasks import ImageMetadata, \
-    MediaType, FileToText
-from ocd_backend.enrichers.media_enricher.tasks.ggm import \
-    GegevensmagazijnMotionText
-from ocd_backend.exceptions import UnsupportedContentType, SkipEnrichment
+from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.misc import strip_scheme
+from tasks.file_to_text import FileToText
+from tasks.ggm_motion_text import GegevensmagazijnMotionText
+from tasks.image_metadata import ImageMetadata
 
 log = get_source_logger('enricher')
 
@@ -30,9 +29,8 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
     #: returned ``content-type``.
     available_tasks = {
         'image_metadata': ImageMetadata,
-        'media_type': MediaType,
         'file_to_text': FileToText,
-        'ggm_motion_text': GegevensmagazijnMotionText
+        'ggm_motion_text': GegevensmagazijnMotionText,
     }
 
     def enrich_item(self, item):
@@ -72,17 +70,11 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         if isinstance(enrich_tasks, basestring):
             enrich_tasks = [item.enricher_task]
 
+        # The enricher tasks will executed in specified order
         for task in enrich_tasks:
             # Seek to the beginning of the file before starting a task
             media_file.seek(0)
-            try:
-                self.available_tasks[task](item, content_type, media_file)
-            except UnsupportedContentType:
-                log.info('Skipping media enrichment task %s, '
-                         'content-type %s (object_id: %s, url %s) is not '
-                         'supported.' % (task, content_type, item.get_ori_identifier(),
-                                         item.original_url))
-                continue
+            self.available_tasks[task]().enrich_item(item, media_file)
 
         media_file.close()
 

@@ -43,6 +43,7 @@ class HttpRequestMixin(object):
 
     _http_session = None
     source_definition = None
+    http_retries = 0
 
     @property
     def http_session(self, retries=None):
@@ -50,10 +51,10 @@ class HttpRequestMixin(object):
         created if it doesn't already exist."""
         http_session = getattr(self, '_http_session', None)
         # try to get the source definition if available
-        source_definition = getattr(self, 'source_definition', {})
+        source_definition = getattr(self, 'source_definition')
 
-        if not retries:
-            retries = source_definition.get('http_retries', 0)
+        if not retries and source_definition:
+            retries = source_definition.get('http_retries')
 
         if not http_session:
             urllib3.disable_warnings()

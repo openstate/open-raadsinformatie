@@ -2,11 +2,11 @@ import string
 
 import bugsnag
 
-from ocd_backend.enrichers.media_enricher.tasks import FileToText
+from ocd_backend.enrichers.media_enricher.tasks.file_to_text import FileToText
 
 
 class GegevensmagazijnMotionText(FileToText):
-    def process_text(self, text, media_item):
+    def process_text(self, text, item):
         lines = text.split("\n")
 
         # Determine in the first 10 lines if it is an actual motion
@@ -66,4 +66,4 @@ class GegevensmagazijnMotionText(FileToText):
         if not first_request:
             motion_lines[-1] += "**"
 
-        media_item.text = "\n".join(motion_lines)
+        item.text = "\n".join(motion_lines)
