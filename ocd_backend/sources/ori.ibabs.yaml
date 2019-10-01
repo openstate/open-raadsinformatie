@@ -517,3 +517,20 @@ ori.ibabs:
     - *reports
     # - *videotulen
     <<: *ibabs
+
+  # Added on 01-10-2019
+  wijchen:
+    key: wijchen
+    allmanak_id: 24056
+    ibabs_sitename: wdw
+    include: ".*[Ww]ijchen"
+    exclude: ".*[Dd]ruten"
+    <<: *ibabs
+
+  druten:
+    key: druten
+    allmanak_id: 34358
+    ibabs_sitename: wdw
+    include: ".*[Dd]ruten"
+    exclude: ".*[Ww]ijchen"
+    <<: *ibabs
