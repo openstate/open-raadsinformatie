@@ -16,6 +16,7 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.transformers.ibabs_report',
     'ocd_backend.transformers.notubiz_committee',
     'ocd_backend.transformers.notubiz_meeting',
+    'ocd_backend.transformers.parlaeus_meeting',
     'ocd_backend.transformers.organizations',
     'ocd_backend.transformers.persons',
     'ocd_backend.enrichers.media_enricher',

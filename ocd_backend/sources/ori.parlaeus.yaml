@@ -20,49 +20,22 @@ _entities: &entities
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
     transformer: ocd_backend.transformers.organizations.municipality_organization_item
 
-  - &committees
-    <<: *entity_defaults
-    entity: committees
-    doc_type: organizations
-    extractor: ocd_backend.extractors.parlaeus.ParlaeusCommitteesExtractor
-    transformer: ocd_backend.transformers.parlaeus.committee_item
-
-  - &organizations
-    <<: *entity_defaults
-    entity: organizations
-    doc_type: organizations
-    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
-    transformer: ocd_backend.transformers.organizations.party_item
-
-  - &persons
-    <<: *entity_defaults
-    entity: persons
-    doc_type: persons
-    extractor: ocd_backend.extractors.parlaeus.ParlaeusPersonsExtractor
-    transformer: ocd_backend.transformers.parlaeus.person_item
-
   - &meetings
     <<: *entity_defaults
     entity: meetings
     doc_type: events
     extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingsExtractor
-    transformer: ocd_backend.transformers.parlaeus.meeting_item
-
-  - &meetingitems
-    <<: *meetings
-    entity: meetingitems
-    extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingitemsExtractor
-    transformer: ocd_backend.transformers.parlaeus.meetingitem_item
+    transformer: ocd_backend.transformers.parlaeus_meeting.meeting_item
     enrichers:
-      - - ocd_backend.enrichers.media_enricher.static.StaticMediaEnricher
-        - tasks:
-          - file_to_text
+    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - # reserved for enricher_settings
 
 _parlaeus: &parlaeus
   index_name: "{key}"
   source_name: "{key!c}"
   base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
   session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
+  allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
 
