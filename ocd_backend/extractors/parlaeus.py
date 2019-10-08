@@ -49,3 +49,41 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
             agenda = meeting_data['agenda']
             agenda['url'] = url
             yield 'application/json', json.dumps(agenda), url, agenda
+
+
+class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
+    """
+    Extracts committees from the Parleaus API.
+    """
+
+    def run(self):
+        url = '%s?rid=%s&fn=cie_list' % (
+            self.base_url,
+            self.rid,
+        )
+        resp = self.http_session.get(url)
+        resp.raise_for_status()
+
+        json_data = resp.json()
+        for committee in json_data.get('list'):
+            committee['url'] = url
+            yield 'application/json', json.dumps(committee), url, committee
+
+
+class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
+    """
+    Extracts persons from the Parleaus API.
+    """
+
+    def run(self):
+        url = '%s?rid=%s&fn=person_list' % (
+            self.base_url,
+            self.rid,
+        )
+        resp = self.http_session.get(url)
+        resp.raise_for_status()
+
+        json_data = resp.json()
+        for person in json_data.get('list'):
+            person['url'] = url
+            yield 'application/json', json.dumps(person), url, person
