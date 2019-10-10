@@ -9,6 +9,7 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.extractors',
     'ocd_backend.transformers.goapi_committee',
     'ocd_backend.transformers.goapi_meeting',
+    'ocd_backend.transformers.gs',
     'ocd_backend.transformers.gv',
     'ocd_backend.transformers.ibabs_committee',
     'ocd_backend.transformers.ibabs_meeting',

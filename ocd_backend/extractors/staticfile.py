@@ -54,7 +54,6 @@ class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
             static_content = r.content
         except Exception:
             static_content = u''
-
         # Extract and yield the items
         if static_content != '':
             for item in self.extract_items(static_content):
@@ -124,6 +123,14 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
 
         self.item_xpath = self.source_definition['item_xpath']
 
+        if 'item_id_xpath' not in self.source_definition:
+            raise ConfigurationError('Missing \'item_id_xpath\' definition')
+
+        if not self.source_definition['item_id_xpath']:
+            raise ConfigurationError('The \'item_id_xpath\' is empty')
+
+        self.item_id_xpath = self.source_definition['item_id_xpath']
+
         self.default_namespace = None
         if 'default_namespace' in self.source_definition:
             self.default_namespace = self.source_definition[
@@ -147,7 +154,7 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
 
         item_total = 0
         for item in tree.xpath(self.item_xpath, namespaces=self.namespaces):
-            yield 'application/html', etree.tostring(item)
+            yield 'application/html', etree.tostring(item), str(item.xpath(self.item_id_xpath, namespaces=self.namespaces)[0]), etree.tostring(item)
             item_total += 1
 
         log.info("[%s] Extracted total of %d %s %s items" % (self.source_definition['key'],
