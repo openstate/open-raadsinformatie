@@ -91,13 +91,16 @@ osi.gv:
 #    - *reports
     - entity: gs
       doc_type: events
-      extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+      #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+      extractor: ocd_backend.extractors.paging.PagingHTMLExtractor
       transformer: ocd_backend.transformers.gs.gs_besluit
       file_url: "https://www.zuid-holland.nl/overons/bestuur-zh/gedeputeerde-staten/besluiten/?ajax=true&pager_page=0"
       item_xpath: "//div[contains(@class, \"rol-entry\")]"
       item_id_xpath: ".//div[contains(@class, \"grid-title\")]/h2/a/@href"
+      next_page_xpath: "//a[contains(@class, \"volgende\")]/@href"
+      next_page_max_count: 1
       enrichers:
-      - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - - ocd_backend.enrichers.media_enricher.static.temporary_file_media_enricher
         - tasks:
           - file_to_text
       <<: *entity_defaults
