@@ -87,8 +87,8 @@ osi.gv:
     - *province
     - *organizations
     - *persons
-#    - *meetings
-#    - *reports
+   - *meetings
+   - *reports
     - entity: gs
       doc_type: events
       #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
