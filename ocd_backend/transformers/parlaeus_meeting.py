@@ -80,7 +80,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.original_url = document['link']
             attachment.name = document.get('title')
             attachment.last_discussed_at = meeting.start_date
-            attachment.isReferencedBy = item
+            attachment.isReferencedBy = agenda_item
 
             agenda_item.attachment.append(attachment)
 
