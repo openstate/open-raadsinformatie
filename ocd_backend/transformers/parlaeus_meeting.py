@@ -37,6 +37,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             '%s %s' % (original_item['date'], original_item['time']),
             '%Y%m%d %H:%M'
         )
+        meeting.last_discussed_at = meeting.start_date
 
     if original_item.get('endtime') and original_item['endtime'] != '0':
         meeting.end_date = datetime.strptime(
@@ -79,6 +80,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.original_url = document['link']
             attachment.name = document.get('title')
             attachment.last_discussed_at = meeting.start_date
+            attachment.isReferencedBy = item
 
             agenda_item.attachment.append(attachment)
 
