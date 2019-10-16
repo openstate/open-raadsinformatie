@@ -10,6 +10,7 @@ from ocd_backend.utils.misc import strip_scheme
 from tasks.file_to_text import FileToText
 from tasks.ggm_motion_text import GegevensmagazijnMotionText
 from tasks.image_metadata import ImageMetadata
+from tasks.theme_classifier import ThemeClassifier
 
 log = get_source_logger('enricher')
 
@@ -31,6 +32,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         'image_metadata': ImageMetadata,
         'file_to_text': FileToText,
         'ggm_motion_text': GegevensmagazijnMotionText,
+        'theme_classifier': ThemeClassifier,
     }
 
     def enrich_item(self, item):

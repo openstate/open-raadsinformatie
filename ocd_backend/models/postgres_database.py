@@ -9,7 +9,7 @@ from ocd_backend import settings
 from ocd_backend.models.definitions import Ori
 from ocd_backend.models.misc import Uri
 from ocd_backend.models.postgres_models import Source, Resource, Property
-from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, JsonProperty, \
     DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 
 
@@ -167,6 +167,8 @@ class PostgresDatabase(object):
             return 'prop_integer'
         elif property_type in (DateProperty, DateTimeProperty):
             return 'prop_datetime'
+        elif property_type is JsonProperty:
+            return 'prop_json'
         elif property_type in (ArrayProperty, Relation, OrderedRelation):
             try:
                 int(value)

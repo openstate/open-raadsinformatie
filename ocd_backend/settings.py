@@ -281,8 +281,7 @@ tempfile.tempdir = TEMP_DIR_PATH
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
 
-# The name of the index containing documents from all sources
-COMBINED_INDEX = 'ori_combined_index'
+ORI_CLASSIFIER_URL = 'http://{}/classificeer'.format(os.getenv('CLASSIFIER_HOST', 'classifier'))
 
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'

@@ -72,6 +72,17 @@ class IntegerProperty(Property):
             return int(value)
 
 
+class FloatProperty(Property):
+    """A property which defines an int type."""
+
+    @staticmethod
+    def sanitize(value):
+        """Force cast to float. This will fail by design if not castable to int"""
+        if value:
+            return float(value)
+
+
+
 class DateProperty(Property):
     """A property which defines a date type."""
 
@@ -94,6 +105,11 @@ class DateTimeProperty(Property):
 
 class ArrayProperty(Property):
     """A property which defines a list type."""
+    pass
+
+
+class JsonProperty(Property):
+    """A property which contains a json string"""
     pass
 
 

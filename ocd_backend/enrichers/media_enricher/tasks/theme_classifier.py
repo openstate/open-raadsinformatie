@@ -1,0 +1,52 @@
+import operator
+
+from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
+from ocd_backend.models.definitions import Meeting as MeetingNS, Rdf
+from ocd_backend.models.misc import Uri
+from ocd_backend.settings import ORI_CLASSIFIER_URL
+from ocd_backend.utils.http import HttpRequestMixin
+
+
+class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
+    def enrich_item(self, item, file_object):
+        if not hasattr(item, 'text'):
+            return
+
+        text = item.text
+        if type(item.text) == list:
+            text = ' '.join(text)
+
+        if len(text) < 76:
+            return
+
+        identifier_key = 'result'
+        request_json = {
+            'ori_identifier': identifier_key,  # not being used
+            'name': text
+        }
+
+        response = self.http_session.post(ORI_CLASSIFIER_URL, json=request_json)
+        response.raise_for_status()
+        response_json = response.json()
+
+        theme_classifications = response_json.get(identifier_key, [])
+
+        # Do not try this at home
+        tags = {
+            '@id': '%s#tags' % item.get_ori_identifier(),
+            '@type': str(Uri(Rdf, 'Seq'))
+        }
+        i = 0
+        for name, value in sorted(theme_classifications.items(), key=operator.itemgetter(1), reverse=True):
+            tag = {
+                '@id': '%s#tags_%s' % (item.get_ori_identifier(), i),
+                '@type': str(Uri(MeetingNS, 'TagHit')),
+                str(Uri(MeetingNS, 'tag')): name,
+                str(Uri(MeetingNS, 'score')): value,
+            }
+
+            tags[str(Uri(Rdf, '_%s' % i))] = tag
+            i += 1
+        # No really, don't
+
+        item.tags = tags

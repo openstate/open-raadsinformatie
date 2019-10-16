@@ -5,9 +5,11 @@ from rdflib.namespace import XSD, Namespace, NamespaceManager
 from ocd_backend.models.definitions import ALL, Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty, IgnoredProperty
-from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
-    DateProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
+from ocd_backend.models.properties import StringProperty, URLProperty, \
+    IntegerProperty, FloatProperty, DateProperty, DateTimeProperty, \
+    ArrayProperty, JsonProperty, Relation, OrderedRelation
 from ocd_backend.utils.misc import iterate
+from ocd_backend.models.misc import Uri
 
 
 def get_serializer_class(format=None):
@@ -93,6 +95,9 @@ class BaseSerializer(object):
                 if isinstance(self.loader_class, klass):
                     raise IgnoredProperty()
 
+        if type(value) == Uri:
+            value = str(value)
+
         if type(prop) == StringProperty:
             return value
 
@@ -102,6 +107,9 @@ class BaseSerializer(object):
         elif type(prop) == IntegerProperty:
             return value
 
+        elif type(prop) == FloatProperty:
+            return value
+
         elif type(prop) == DateProperty or type(prop) == DateTimeProperty:
             try:
                 return value.isoformat()
@@ -109,6 +117,9 @@ class BaseSerializer(object):
                 pass
 
         elif type(prop) == ArrayProperty:
+            return value
+
+        elif type(prop) == JsonProperty:
             return value
 
         # else:

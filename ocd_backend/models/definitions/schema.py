@@ -5,7 +5,7 @@ http://schema.org/
 import owl
 from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
-    DateTimeProperty, DateProperty, ArrayProperty, Relation
+    DateTimeProperty, DateProperty, ArrayProperty, JsonProperty, Relation
 from ocd_backend.models.misc import Uri
 from ocd_backend.loaders.delta import DeltaLoader
 
@@ -27,8 +27,9 @@ class MediaObject(Schema, owl.Thing):
     text = ArrayProperty(Schema, 'text')
     isReferencedBy = Relation(Dcterms, 'isReferencedBy')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
+    tags = JsonProperty(MeetingNS, 'tags')
 
-    enricher_task = 'file_to_text'
+    enricher_task = ['file_to_text', 'theme_classifier']
 
 
 class AudioObject(Schema, owl.Thing):

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, func, CheckConstraint
+from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, JSON, func, CheckConstraint
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -52,5 +52,6 @@ class Property(Base):
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
     prop_url = Column(String, nullable=True)
+    prop_json = Column(JSON, nullable=True)
 
     resource = relationship("Resource", back_populates="properties", foreign_keys=resource_id)
