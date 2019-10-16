@@ -17,16 +17,6 @@ Meeting = definitions.meeting.Meeting
 AgendaItem = definitions.meeting.AgendaItem
 Amendment = definitions.meeting.Amendment
 
-# https://argu.co/voc/mapping/
-# OriIdentifier = definitions.mapping.OriIdentifier
-# RunIdentifier = definitions.mapping.RunIdentifier
-# MetadataIdentifier = definitions.mapping.MetadataIdentifier
-# IbabsIdentifier = definitions.mapping.IbabsIdentifier
-# NotubizIdentifier = definitions.mapping.NotubizIdentifier
-# CbsIdentifier = definitions.mapping.CbsIdentifier
-# AlmanakOrganizationName = definitions.mapping.AlmanakOrganizationName
-# GGMIdentifier = definitions.mapping.GGMIdentifier
-
 # http://www.w3.org/ns/opengov#
 VoteEvent = definitions.opengov.VoteEvent
 Motion = definitions.opengov.Motion

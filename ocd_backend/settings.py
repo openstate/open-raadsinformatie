@@ -287,7 +287,6 @@ ORI_CLASSIFIER_URL = 'http://{}/classificeer'.format(os.getenv('CLASSIFIER_HOST'
 DEFAULT_INDEX_PREFIX = 'ori'
 
 RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'https://api.openraadsinformatie.nl/v%s/static' % MAJOR_VERSION)
-RESOLVER_URL_INDEX = 'resolver'
 
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)

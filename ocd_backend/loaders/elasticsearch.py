@@ -13,11 +13,7 @@ log = get_source_logger('elasticsearch_loader')
 
 
 class ElasticsearchLoader(BaseLoader):
-    """Indexes items into Elasticsearch.
-
-    Each URL found in ``media_urls`` is added as a document to the
-    ``RESOLVER_URL_INDEX`` (if it doesn't already exist).
-    """
+    """Indexes items into Elasticsearch."""
 
     def start(self, *args, **kwargs):
         self.index_name = kwargs.get('new_index_name')
@@ -40,22 +36,6 @@ class ElasticsearchLoader(BaseLoader):
                                 id=model.get_short_identifier())
 
             log_identifiers.append(model.get_short_identifier())
-
-            if 'enricher_task' in model:
-                # The value seems to be enriched so add to resolver
-                url_doc = {
-                    'ori_identifier': model.get_short_identifier(),
-                    'original_url': model.original_url,
-                    'file_name': model.name,
-                }
-
-                if 'content_type' in model:
-                    url_doc['content_type'] = model.content_type
-
-                # Update if already exists
-                elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
-                                    id=get_sha1_hash(model.original_url),
-                                    body=url_doc)
 
         log.debug('ElasticsearchLoader indexing document id: %s' % ', '.join(log_identifiers))
 
@@ -113,22 +93,6 @@ class ElasticsearchUpsertLoader(ElasticsearchLoader):
             )
 
             log_identifiers.append(model.get_short_identifier())
-
-            if 'enricher_task' in model:
-                # The value seems to be enriched so add to resolver
-                url_doc = {
-                    'ori_identifier': model.get_short_identifier(),
-                    'original_url': model.original_url,
-                    'file_name': model.name,
-                }
-
-                if 'content_type' in model:
-                    url_doc['content_type'] = model.content_type
-
-                # Update if already exists
-                elasticsearch.index(index=settings.RESOLVER_URL_INDEX,
-                                    id=get_sha1_hash(model.original_url),
-                                    body=url_doc)
 
         log.debug('ElasticsearchUpsertLoader indexing document ids: %s' % ', '.join(log_identifiers))
 
