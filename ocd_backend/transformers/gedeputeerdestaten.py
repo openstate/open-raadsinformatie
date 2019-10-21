@@ -1,9 +1,7 @@
 from datetime import datetime
-from hashlib import sha1
 from urlparse import urljoin
 
 import requests
-from lxml import etree
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -11,9 +9,10 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 
-log = get_source_logger('gs')
+log = get_source_logger('gedeputeerdestaten')
 
-class GSTransformer(BaseTransformer):
+
+class GedeputeerdeStatenTransformer(BaseTransformer):
     def __init__(self, *args, **kwargs):
         self.date_mapping = {
             'januari': '01',
@@ -50,18 +49,18 @@ class GSTransformer(BaseTransformer):
             })
         return media_urls
 
-@celery_app.task(bind=True, base=GSTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def gs_besluit(self, content_type, raw_item, entity, source_item, **kwargs):
+
+@celery_app.task(bind=True, base=GedeputeerdeStatenTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
+def gs_meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
     source_defaults = {
         'source': self.source_definition['key'],
-        'supplier': self.source_definition.get('supplier', self.source_definition['key']),
-        'collection': 'report',
+        'supplier': 'greenvalley',
+        'collection': 'meeting',
     }
 
-    #log.info(raw_item)
     original_id = unicode(original_item.xpath(self.source_definition['item_id_xpath'])[0])
 
     try:
@@ -71,7 +70,7 @@ def gs_besluit(self, content_type, raw_item, entity, source_item, **kwargs):
         content = u''
 
     if content == '':
-        log.erorr('Could not get detailed gs page')
+        log.erorr('Could not get detailed gedeputeerde staten page')
         return
 
     province = TopLevelOrganization(self.source_definition['allmanak_id'],

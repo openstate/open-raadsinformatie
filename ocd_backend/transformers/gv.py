@@ -87,7 +87,7 @@ def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwar
     
     source_defaults = {
         'source': self.source_definition['key'],
-        'supplier': 'gemeenteoplossingen',
+        'supplier': 'greenvalley',
         'collection': 'report',
     }
 
