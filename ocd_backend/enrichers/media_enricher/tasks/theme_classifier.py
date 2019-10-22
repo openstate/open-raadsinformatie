@@ -16,7 +16,7 @@ class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
         if type(item.text) == list:
             text = ' '.join(text)
 
-        if len(text) < 76:
+        if not text or len(text) < 76:
             return
 
         identifier_key = 'result'
