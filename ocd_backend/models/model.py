@@ -153,7 +153,11 @@ class Model(object):
         return False
 
     def __repr__(self):
-        return '<%s Model>' % self.compact_uri()
+        try:
+            identifier = self.get_short_identifier()
+        except Exception:
+            identifier = '()'
+        return '<%s %s>' % (self.compact_uri(), identifier)
 
     def get_ori_identifier(self):
         try:

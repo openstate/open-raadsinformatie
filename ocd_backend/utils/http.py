@@ -46,7 +46,7 @@ class HttpRequestMixin(object):
     http_retries = 0
 
     @property
-    def http_session(self, retries=None):
+    def http_session(self, retries=3):
         """Returns a :class:`requests.Session` object. A new session is
         created if it doesn't already exist."""
         http_session = getattr(self, '_http_session', None)
@@ -85,7 +85,7 @@ class HttpRequestMixin(object):
         return data
 
     def download_url(self, url, partial_fetch=False):
-        http_resp = self.http_session.get(url, stream=True, timeout=(60, 120))
+        http_resp = self.http_session.get(url, stream=True, timeout=(60, 120), verify=False)
         http_resp.raise_for_status()
 
         # Create a temporary file to store the media item, write the file
