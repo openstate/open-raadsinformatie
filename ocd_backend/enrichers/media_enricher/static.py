@@ -21,5 +21,6 @@ def temporary_file_media_enricher(self, *args, **kwargs):
 
 
 @celery_app.task(bind=True, base=GCSStaticMediaEnricher, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
+@celery_app.profile
 def gcs_static_media_enricher(self, *args, **kwargs):
     return self.start(*args, **kwargs)

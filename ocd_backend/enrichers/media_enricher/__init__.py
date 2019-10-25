@@ -84,5 +84,6 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
 
 
 @celery_app.task(bind=True, base=MediaEnricher, autoretry_for=AUTORETRY_EXCEPTIONS, retry_backoff=True)
+@celery_app.profile
 def media_enricher(self, *args, **kwargs):
     return self.start(*args, **kwargs)

@@ -1,4 +1,4 @@
-from celery import Celery
+from profiling import Celery
 
 from ocd_backend.settings import CELERY_CONFIG
 
