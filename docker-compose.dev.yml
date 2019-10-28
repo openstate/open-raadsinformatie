@@ -24,6 +24,10 @@ services:
     depends_on:
       postgres:
         condition: service_started
+  theme_classifier:
+    image: "openstatefoundation/ori-theme-classifier:v1.0.0"
+    ports:
+      - "80:5000"
 
 volumes:
   pgadmindata:
