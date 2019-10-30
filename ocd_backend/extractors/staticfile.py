@@ -157,10 +157,7 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
             yield 'application/html', etree.tostring(item), str(item.xpath(self.item_id_xpath, namespaces=self.namespaces)[0]), etree.tostring(item)
             item_total += 1
 
-        log.info("[%s] Extracted total of %d %s %s items" % (self.source_definition['key'],
-                                                          item_total,
-                                                          self.source_definition.get('classification', ''),
-                                                          self.source_definition['entity']))
+        log.info("[%s] Extracted total of %d items" % (self.source_definition['key'], item_total))
 
 
 class StaticJSONExtractor(StaticFileBaseExtractor):
