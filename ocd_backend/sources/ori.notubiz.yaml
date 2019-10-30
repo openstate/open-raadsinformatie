@@ -48,8 +48,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     transformer: ocd_backend.transformers.notubiz_meeting.meeting_item
     enrichers:
-    - - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
-      - # reserved for enricher_settings
+      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
 
 _notubiz: &notubiz
   index_name: "{key}"

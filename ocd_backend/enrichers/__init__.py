@@ -22,7 +22,6 @@ class BaseEnricher(celery_app.Task):
         """
 
         self.source_definition = kwargs['source_definition']
-        self.enricher_settings = kwargs['enricher_settings']
 
         for _, doc in iterate(args):
             for model in doc.traverse():
