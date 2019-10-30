@@ -309,3 +309,17 @@ class PostgresDatabase(object):
                              'ID only' % (model_object.ori_identifier, model_object.source_iri))
 
         session.close()
+
+    def get_supplier(self, ori_id):
+        """
+        Retrieves the supplier portion of the IRI of the Resource with the given ORI ID.
+        """
+
+        session = self.Session()
+        try:
+            resource = session.query(Source).filter(Source.resource_ori_id == ori_id).first()
+            return resource.iri.split('/')[6]
+        except NoResultFound:
+            raise ValueError('No Source found for Resource with ID %d' % ori_id)
+        finally:
+            session.close()
