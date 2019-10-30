@@ -1,10 +1,11 @@
-# All underscored root keys are excluded
+# All underscored root keys aremeenteoplossingene excluded
 _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
   wait_until_finished: false
   es_prefix: osi
   source_type: "province"
+  supplier: "ibabs"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -68,6 +69,15 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
 

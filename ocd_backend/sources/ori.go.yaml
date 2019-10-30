@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   source_type: "municipality"
+  supplier: "gemeenteoplossingen"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -47,6 +48,15 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     transformer: ocd_backend.transformers.goapi_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
 
