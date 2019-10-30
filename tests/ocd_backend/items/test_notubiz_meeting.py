@@ -26,7 +26,6 @@
 #             'id': 'amsterdam_meetings',
 #             'index_name': 'amsterdam',
 #             'base_url': 'https://api.notubiz.nl',
-#             'entity': 'meetings',
 #             'extractor': 'ocd_backend.extractors.notubiz.NotubizMeetingExtractor',
 #             'key': 'amsterdam',
 #             'wait_until_finished': True,
