@@ -5,6 +5,7 @@ _defaults: &source_defaults
   wait_until_finished: false
   es_prefix: osi
   source_type: "province"
+  supplier: "greenvalley"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -39,6 +40,15 @@ _entities: &entities
     transformer: ocd_backend.transformers.greenvalley.meeting_item
     greenvalley_objecttypes:
       - agenda
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
@@ -79,6 +89,7 @@ osi.gv:
     - *organizations
     - *persons
     - *meetings
+    - *reprocess_meetings
     - *reports
     - entity: meetings
       #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor

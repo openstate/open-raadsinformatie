@@ -5,6 +5,7 @@ _defaults: &source_defaults
   wait_until_finished: false
   es_prefix: osi
   source_type: "province"
+  supplier: "ibabs"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -62,6 +63,15 @@ _entities: &entities
     entity: meetings
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 

@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   source_type: "municipality"
+  supplier: "notubiz"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -47,6 +48,15 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     transformer: ocd_backend.transformers.notubiz_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
