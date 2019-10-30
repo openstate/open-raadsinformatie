@@ -178,6 +178,10 @@ class Model(object):
         """ Returns namespaced properties with their inflated values """
         props_list = list()
         for name, prop in iterate({k: v for k, v in self.values.items() if k[0:1] != '_'}):
+            # Skip properties that are not part of the model definitions
+            if name in ('https://argu.co/ns/meeting/score', 'https://argu.co/ns/meeting/tag', '@id', '@type'):
+                continue
+
             definition = self.definition(name)
             if not definition:
                 continue

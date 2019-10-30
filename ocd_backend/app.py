@@ -22,6 +22,7 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.transformers.parlaeus_person',
     'ocd_backend.transformers.organizations',
     'ocd_backend.transformers.persons',
+    'ocd_backend.transformers.database',
     'ocd_backend.enrichers.media_enricher',
     'ocd_backend.enrichers.media_enricher.static',
     'ocd_backend.loaders.elasticsearch',

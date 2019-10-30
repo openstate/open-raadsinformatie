@@ -41,6 +41,7 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
+    supplier: "allmanak"
 
   - &committees
     <<: *entity_defaults
@@ -55,6 +56,7 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
+    supplier: "allmanak"
 
   - &persons
     <<: *entity_defaults

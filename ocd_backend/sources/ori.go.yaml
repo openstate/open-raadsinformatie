@@ -20,6 +20,7 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
     transformer: ocd_backend.transformers.organizations.municipality_organization_item
+    supplier: "allmanak"
 
   - &committees
     <<: *entity_defaults
@@ -34,6 +35,7 @@ _entities: &entities
     doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
+    supplier: "allmanak"
 
   - &persons
     <<: *entity_defaults
@@ -41,6 +43,7 @@ _entities: &entities
     doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.persons.allmanak_person_item
+    supplier: "allmanak"
 
   - &meetings
     <<: *entity_defaults
