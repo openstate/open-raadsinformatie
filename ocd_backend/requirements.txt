@@ -10,6 +10,7 @@ google-cloud-storage==1.19.1
 google-resumable-media==0.4.1
 iso8601==0.1.10
 lxml==4.3.3
+kombu==4.6.3
 msgpack-python==0.4.2
 pdftotext==2.1.2
 Pillow==5.2.0
