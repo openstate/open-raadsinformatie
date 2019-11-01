@@ -3,6 +3,8 @@ services:
   backend:
     ports:
       - "81:5555"
+    environment:
+      - "CLASSIFIER_HOST=localhost"
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
