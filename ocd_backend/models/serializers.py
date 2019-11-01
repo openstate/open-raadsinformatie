@@ -144,7 +144,10 @@ class PostgresSerializer(BaseSerializer):
         This serializer also returns the property type in the form of {uri: (value, property_type)} . The property
         type information is needed by the Postgres database to map the property value to the appropriate column.
         """
-        props_list = dict()
+
+        # Make sure that the rdf:type is also returned
+        props_list = {'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': (model_object.verbose_name(), StringProperty,)}
+
         for name, definition in model_object.definitions(props=props, rels=rels):
             value = model_object.values.get(name, None)
             if value:

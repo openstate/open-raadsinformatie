@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -126,15 +124,10 @@ class PostgresDatabase(object):
             resource = session.query(Resource).filter(Resource.ori_id == model_object.ori_identifier.partition(Ori.uri)[2]).one()
 
             # Delete properties that are about to be updated
-            predicates = [predicate for predicate, _ in serialized_properties.iteritems()]
+            predicates = serialized_properties.keys()
             session.query(Property).filter(Property.resource_id == resource.ori_id,
                                            Property.predicate.in_(predicates)
                                            ).delete(synchronize_session='fetch')
-
-            type_property = Property(id=uuid.uuid4(),
-                                     predicate='http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                     prop_string=model_object.verbose_name())
-            resource.properties.append(type_property)
 
             # Save new properties
             for predicate, value_and_property_type in serialized_properties.iteritems():
@@ -142,11 +135,11 @@ class PostgresDatabase(object):
                     # Create each item as a separate Property with the same predicate, and save the order to
                     # the `order` column
                     for order, item in enumerate(value_and_property_type[0], start=1):
-                        new_property = (Property(id=uuid.uuid4(), predicate=predicate, order=order))
+                        new_property = (Property(predicate=predicate, order=order))
                         setattr(new_property, self.map_column_type((item, value_and_property_type[1])), item)
                         resource.properties.append(new_property)
                 else:
-                    new_property = (Property(id=uuid.uuid4(), predicate=predicate))
+                    new_property = (Property(predicate=predicate))
                     setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
                     resource.properties.append(new_property)
 

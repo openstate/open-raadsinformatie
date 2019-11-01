@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, JSON, func, CheckConstraint
+from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, JSON, func, \
+    CheckConstraint, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -43,7 +44,7 @@ class Property(Base):
                         'prop_url IS NULL'),
     )
 
-    id = Column(UUIDType(), primary_key=True, index=True)
+    id = Column(UUIDType, primary_key=True, index=True, server_default=text("uuid_generate_v4()"))
     resource_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True)
     predicate = Column(String, nullable=False, index=True)
     order = Column(SmallInteger, nullable=True)
