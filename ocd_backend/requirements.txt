@@ -13,7 +13,7 @@ lxml==4.3.3
 kombu==4.6.3
 msgpack-python==0.4.2
 pdftotext==2.1.2
-Pillow==5.2.0
+Pillow==6.2.0
 psycopg2==2.8.3
 PyLD==1.0.5
 python-dateutil==2.7.3
