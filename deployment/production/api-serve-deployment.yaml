@@ -18,12 +18,15 @@ spec:
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /www/data/id
-          name: apidata
+          name: api-pvc
+        - mountPath: /www/data/api
+          name: api-pvc
+          subPath: api
         resources:
           requests:
             memory: 10Mi
       volumes:
-      - name: apidata
+      - name: api-pvc
         persistentVolumeClaim:
           claimName: apidata
       nodeSelector:

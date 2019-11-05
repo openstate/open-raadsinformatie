@@ -16,7 +16,7 @@ spec:
         app: redis
     spec:
       containers:
-      - image: redis:3.2-alpine
+      - image: redis:5.0-alpine
         name: redis
         ports:
         - containerPort: 6379
@@ -25,7 +25,7 @@ spec:
           name: redisdata
         resources:
           requests:
-            memory: 4G
+            memory: 8G
             cpu: 100m
       restartPolicy: Always
       volumes:
