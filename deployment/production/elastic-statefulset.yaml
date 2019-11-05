@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: elastic
-  replicas: 3
+  replicas: 5
   serviceName: "elastic"
   template:
     metadata:
@@ -77,8 +77,8 @@ spec:
           privileged: true
         resources:
           requests:
-            memory: 2G
-            cpu: 80m
+            memory: 1.8G
+            cpu: 120m
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata

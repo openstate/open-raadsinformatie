@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: api
-  replicas: 4
+  replicas: 2
   template:
     metadata:
       labels:
@@ -18,23 +18,47 @@ spec:
         image: ontola/ori_api:latest
         imagePullPolicy: Always
         env:
+        - name: API_DIR
+          value: /var/opt/ori_data/id/api/v1
         - name: KAFKA_HOSTNAME
           valueFrom:
             configMapKeyRef:
-              name: config
               key: KAFKA_HOST
+              name: config
+        - name: THREAD_COUNT
+          value: "6"
+        - name: KAFKA_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              key: KAFKA_HOST
+              name: config
+        - name: KAFKA_USERNAME
+          valueFrom:
+            secretKeyRef:
+              key: KAFKA_USERNAME
+              name: secrets
+        - name: KAFKA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: KAFKA_PASSWORD
+              name: secrets
+        - name: REDIS_ADDRESS
+          value: redis://redis:6379
+        - name: BUGSNAG_KEY
+          value: f74b79ff1f813488777566c864845056
         volumeMounts:
-        - mountPath: /var/lib/data/id
-          name: apidata
+        - mountPath: /var/opt/ori_data/id
+          name: api-pvc
         resources:
           requests:
-            memory: 800M
+            memory: 350M
             cpu: 100m
           limits:
+            memory: 600M
             cpu: 500m
       volumes:
-      - name: apidata
+      - name: api-pvc
         persistentVolumeClaim:
-          claimName: apidata
+          claimName: api-pvc
       nodeSelector:
         cloud.google.com/gke-nodepool: persistent

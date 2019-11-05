@@ -7,6 +7,8 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  strategy:
+    type: Recreate
   replicas: 1
   template:
     metadata:
@@ -36,10 +38,12 @@ spec:
           name: postgresdata
         resources:
           requests:
-            memory: 900M
-            cpu: 250m
+            memory: 4G
+            cpu: 1
       restartPolicy: Always
       volumes:
       - name: postgresdata
         persistentVolumeClaim:
           claimName: postgresdata
+      nodeSelector:
+        cloud.google.com/gke-preemptible: "true"
