@@ -64,4 +64,5 @@ ori.parlaeus:
     key: bodegravenreeuwijk
     source_name: "Bodegraven-Reeuwijk"
     allmanak_id: 33912
+    cbs_id: GM1901
     <<: *parlaeus

@@ -86,36 +86,43 @@ ori.ibabs:
   amstelveen:
     key: amstelveen
     allmanak_id: 28270
+    cbs_id: GM0362
     <<: *ibabs
 
   enschede:
     key: enschede
     allmanak_id: 25100
+    cbs_id: GM0153
     <<: *ibabs
 
   gouda:
     key: gouda
     allmanak_id: 28975
+    cbs_id: GM0513
     <<: *ibabs
 
   heerde:
     key: heerde
     allmanak_id: 23411
+    cbs_id: GM0246
     <<: *ibabs
 
   medemblik:
     key: medemblik
     allmanak_id: 23294
+    cbs_id: GM0420
     <<: *ibabs
 
   oss:
     key: oss
     allmanak_id: 37907
+    cbs_id: GM0828
     <<: *ibabs
 
   overbetuwe:
     key: overbetuwe
     allmanak_id: 26937
+    cbs_id: GM1734
     entities:
     - *municipality
     - *organizations
@@ -129,11 +136,13 @@ ori.ibabs:
   zoetermeer:
     key: zoetermeer
     allmanak_id: 28493
+    cbs_id: GM0637
     <<: *ibabs
 
   utrecht:
     key: utrecht
     allmanak_id: 38122
+    cbs_id: GM0344
     <<: *ibabs
     entities:
     - *municipality
@@ -267,41 +276,49 @@ ori.ibabs:
   barneveld:
     key: barneveld
     allmanak_id: 27179
+    cbs_id: GM0203
     <<: *ibabs
 
   krimpenerwaard:
     key: krimpenerwaard
     allmanak_id: 129780
+    cbs_id: GM1931
     <<: *ibabs
 
   teylingen:
     key: teylingen
     allmanak_id: 29957
+    cbs_id: GM1525
     <<: *ibabs
 
   arnhem:
     key: arnhem
     allmanak_id: 32510
+    cbs_id: GM0202
     <<: *ibabs
 
   heemskerk:
     key: heemskerk
     allmanak_id: 23365
+    cbs_id: GM0396
     <<: *ibabs
 
   oosterhout:
     key: oosterhout
     allmanak_id: 22438
+    cbs_id: GM0826
     <<: *ibabs
 
   landsmeer:
     key: landsmeer
     allmanak_id: 21723
+    cbs_id: GM0415
     <<: *ibabs
 
   voorschoten:
     key: voorschoten
     allmanak_id: 35396
+    cbs_id: GM0626
     ibabs_sitename: Duivenvoorde
     include: ".*[Vv]oorschoten$"
     exclude: ".*[Ww]assenaar$"
@@ -310,6 +327,7 @@ ori.ibabs:
   wassenaar:
     key: wassenaar
     allmanak_id: 40204
+    cbs_id: GM0629
     ibabs_sitename: Duivenvoorde
     include: ".*[Ww]assenaar$"
     exclude: ".*[Vv]oorschoten$"
@@ -318,31 +336,37 @@ ori.ibabs:
   aalsmeer:
     key: aalsmeer
     allmanak_id: 38409
+    cbs_id: GM0358
     <<: *ibabs
 
   noordwijk:
     key: noordwijk
     allmanak_id: 34729
+    cbs_id: GM0575
     <<: *ibabs
 
   texel:
     key: texel
     allmanak_id: 22715
+    cbs_id: GM0448
     <<: *ibabs
 
   staphorst:
     key: staphorst
     allmanak_id: 24378
+    cbs_id: GM0180
     <<: *ibabs
 
   almelo:
     key: almelo
     allmanak_id: 26572
+    cbs_id: GM0141
     <<: *ibabs
 
   nieuwkoop:
     key: nieuwkoop
     allmanak_id: 26403
+    cbs_id: GM0569
     <<: *ibabs
 
   loon_op_zand:
@@ -350,31 +374,37 @@ ori.ibabs:
     source_name: "Loon op Zand"
     ibabs_sitename: Loon op Zand
     allmanak_id: 25473
+    cbs_id: GM0809
     <<: *ibabs
 
   hilversum:
     key: hilversum
     allmanak_id: 28797
+    cbs_id: GM0402
     <<: *ibabs
 
   meppel:
     key: meppel
     allmanak_id: 41121
+    cbs_id: GM0119
     <<: *ibabs
 
   diemen:
     key: diemen
     allmanak_id: 21518
+    cbs_id: GM0384
     <<: *ibabs
 
   nieuwegein:
     key: nieuwegein
     allmanak_id: 24713
+    cbs_id: GM0356
     <<: *ibabs
 
   lingewaard:
     key: lingewaard
     allmanak_id: 37823
+    cbs_id: GM1705
     <<: *ibabs
 
   hollands_kroon:
@@ -382,129 +412,152 @@ ori.ibabs:
     source_name: "Hollands Kroon"
     ibabs_sitename: Hollands Kroon
     allmanak_id: 24449
+    cbs_id: GM1911
     <<: *ibabs
 
   meierijstad:
     key: meierijstad
     allmanak_id: 29116
+    cbs_id: GM1948
     <<: *ibabs
 
   # Added on 29-12-2017
   buren:
     key: buren
     allmanak_id: 40352
+    cbs_id: GM0214
     <<: *ibabs
 
   edam-volendam:
     key: edam-volendam
     source_name: "Edam-Volendam"
     allmanak_id: 22102
+    cbs_id: GM0385
     <<: *ibabs
 
   etten-leur:
     key: etten-leur
     source_name: "Etten-Leur"
     allmanak_id: 21760
+    cbs_id: GM0777
     <<: *ibabs
 
   velsen:
     key: velsen
     allmanak_id: 38811
+    cbs_id: GM0453
     <<: *ibabs
 
   emmen:
     key: emmen
     allmanak_id: 22781
     start_date: "2018-01-01" # Due to agreement with Frank te Winkel
+    cbs_id: GM0114
     <<: *ibabs
 
   oldambt:
     key: oldambt
     allmanak_id: 33197
+    cbs_id: GM1895
     <<: *ibabs
 
   rijswijk:
     key: rijswijk
     allmanak_id: 27300
+    cbs_id: GM0603
     <<: *ibabs
 
   zwolle:
     key: zwolle
     allmanak_id: 33731
+    cbs_id: GM0193
     <<: *ibabs
 
   raalte:
     key: raalte
     allmanak_id: 25053
+    cbs_id: GM0177
     <<: *ibabs
 
   # Added on 10-04-2018
   boxmeer:
     key: boxmeer
     allmanak_id: 30610
+    cbs_id: GM0756
     <<: *ibabs
 
   nijkerk:
     key: nijkerk
     allmanak_id: 31196
+    cbs_id: GM0267
     <<: *ibabs
 
   steenwijkerland:
     key: steenwijkerland
     allmanak_id: 24145
+    cbs_id: GM1708
     <<: *ibabs
 
   # Added on 02-04-2019
   houten:
     key: houten
     allmanak_id: 38261
+    cbs_id: GM0321
     <<: *ibabs
 
   # Added on 25-12-2018
   rheden:
     key: rheden
     allmanak_id: 38004
+    cbs_id: GM0275
     <<: *ibabs
 
   # Added on 5-9-2018
   roermond:
     key: roermond
     allmanak_id: 31636
+    cbs_id: GM0957
     <<: *ibabs
 
   # Added on 04-04-2019
   haarlemmermeer:
     key: haarlemmermeer
     allmanak_id: 25768
+    cbs_id: GM0394
     <<: *ibabs
 
   # Added on 08-04-2019
   zeewolde:
     key: zeewolde
     allmanak_id: 35858
+    cbs_id: GM0050
     <<: *ibabs
 
   # Added on 15-04-2019
   losser:
     key: losser
     allmanak_id: 27430
+    cbs_id: GM0168
     <<: *ibabs
 
   # Added on 16-04-2019
   drimmelen:
     key: drimmelen
     allmanak_id: 25896
+    cbs_id: GM1719
     <<: *ibabs
 
   # Added on 27-05-2019
   nijmegen:
     key: nijmegen
     allmanak_id: 33391
+    cbs_id: GM0268
     <<: *ibabs
 
   harderwijk:
     key: harderwijk
     allmanak_id: 32835
+    cbs_id: GM0243
     entities:
     - *municipality
     - *organizations
@@ -522,6 +575,7 @@ ori.ibabs:
     ibabs_sitename: wdw
     include: ".*[Ww]ijchen"
     exclude: ".*[Dd]ruten"
+    cbs_id: GM0296
     <<: *ibabs
 
   druten:
@@ -530,4 +584,5 @@ ori.ibabs:
     ibabs_sitename: wdw
     include: ".*[Dd]ruten"
     exclude: ".*[Ww]ijchen"
+    cbs_id: GM0225
     <<: *ibabs

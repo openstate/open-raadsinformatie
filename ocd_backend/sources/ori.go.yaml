@@ -62,6 +62,7 @@ ori.go:
     key: goirle
     base_url: "https://raad.goirle.nl/api"
     allmanak_id: 30496
+    cbs_id: GM0785
     <<: *go
 
   den_helder:
@@ -69,24 +70,28 @@ ori.go:
     source_name: "Den Helder"
     base_url: "https://gemeenteraad.denhelder.nl/api"
     allmanak_id: 24611
+    cbs_id: GM0400
     <<: *go
 
   doetinchem:
     key: doetinchem
     base_url: "https://besluitvorming.doetinchem.nl/api"
     allmanak_id: 36726
+    cbs_id: GM0222
     <<: *go
 
   noordoostpolder:
     key: noordoostpolder
     base_url: "https://raad.noordoostpolder.nl/api"
     allmanak_id: 26440
+    cbs_id: GM0171
     <<: *go
 
   steenbergen:
     key: steenbergen
     base_url: "https://raad.gemeente-steenbergen.nl/api"
     allmanak_id: 34909
+    cbs_id: GM0851
     <<: *go
 
   oude_ijsselstreek:
@@ -94,36 +99,42 @@ ori.go:
     source_name: "Oude IJsselstreek"
     base_url: "https://raad.oude-ijsselstreek.nl/api/"
     allmanak_id: 36780
+    cbs_id: GM1509
     <<: *go
 
   borne:
     key: borne
     base_url: "https://gemeenteraad.borne.nl/api"
     allmanak_id: 25660
+    cbs_id: GM0147
     <<: *go
 
   leiderdorp:
     key: leiderdorp
     base_url: "https://www.raadleiderdorp.nl/api"
     allmanak_id: 39225
+    cbs_id: GM0547
     <<: *go
 
   leusden:
     key: leusden
     base_url: "https://gemeentebestuur.leusden.nl/api"
     allmanak_id: 29800
+    cbs_id: GM0327
     <<: *go
 
   roosendaal:
     key: roosendaal
     base_url: "https://raad.roosendaal.nl/api"
     allmanak_id: 39382
+    cbs_id: GM1674
     <<: *go
 
   beemster:
     key: beemster
     base_url: "https://gemeentebestuur.beemster.net/api"
     allmanak_id: 31527
+    cbs_id: GM0370
     <<: *go
 
   # Added on 28-03-2019
@@ -131,6 +142,7 @@ ori.go:
     key: bloemendaal
     base_url: "https://gemeenteraad.bloemendaal.nl/api/"
     allmanak_id: 35480
+    cbs_id: GM0377
     <<: *go
 
   # Added on 15-04-2019
@@ -139,4 +151,5 @@ ori.go:
     source_name: "Stichtse Vecht"
     base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
     allmanak_id: 34861
+    cbs_id: GM1904
     <<: *go
