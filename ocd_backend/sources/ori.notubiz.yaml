@@ -62,18 +62,21 @@ ori.notubiz:
   alkmaar:
     key: alkmaar
     allmanak_id: 38624
+    cbs_id: GM0361
     notubiz_organization_id: 987
     <<: *notubiz
 
   groningen:
     key: groningen
     allmanak_id: 24194
+    cbs_id: GM0014
     notubiz_organization_id: 655
     <<: *notubiz
 
   amsterdam:
     key: amsterdam
     allmanak_id: 25698
+    cbs_id: GM0363
     notubiz_organization_id: 281
     <<: *notubiz
 
@@ -82,6 +85,7 @@ ori.notubiz:
     source_name: "Amsterdam-Centrum"
     municipality_prefix: "Amsterdam"
     allmanak_id: 21915
+    cbs_id: GM0363
     notubiz_organization_id: 547
     <<: *notubiz
 
@@ -90,6 +94,7 @@ ori.notubiz:
     source_name: "Amsterdam-Zuid"
     municipality_prefix: "Amsterdam"
     allmanak_id: 40007
+    cbs_id: GM0363
     notubiz_organization_id: 1424
     <<: *notubiz
 
@@ -98,6 +103,7 @@ ori.notubiz:
     source_name: "Amsterdam-Noord"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39732
+    cbs_id: GM0363
     notubiz_organization_id: 977
     <<: *notubiz
 
@@ -106,6 +112,7 @@ ori.notubiz:
     source_name: "Amsterdam-West"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39885
+    cbs_id: GM0363
     notubiz_organization_id: 1413
     <<: *notubiz
 
@@ -114,6 +121,7 @@ ori.notubiz:
     source_name: "Amsterdam-Oost"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39963
+    cbs_id: GM0363
     notubiz_organization_id: 1425
     <<: *notubiz
 
@@ -122,6 +130,7 @@ ori.notubiz:
     source_name: "Amsterdam-Zuidoost"
     municipality_prefix: "Amsterdam"
     allmanak_id: 39832
+    cbs_id: GM0363
     notubiz_organization_id: 2122
     <<: *notubiz
 
@@ -130,120 +139,140 @@ ori.notubiz:
     source_name: "Amsterdam Nieuw-West"
     municipality_prefix: "Amsterdam"
     allmanak_id: 40084
+    cbs_id: GM0363
     notubiz_organization_id: 2328
     <<: *notubiz
 
   castricum:
     key: castricum
     allmanak_id: 35518
+    cbs_id: GM0383
     notubiz_organization_id: 1812
     <<: *notubiz
 
   wageningen:
     key: wageningen
     allmanak_id: 32273
+    cbs_id: GM0289
     notubiz_organization_id: 1451
     <<: *notubiz
 
   hardenberg:
     key: hardenberg
     allmanak_id: 32576
+    cbs_id: GM0160
     notubiz_organization_id: 793
     <<: *notubiz
 
   zaanstad:
     key: zaanstad
     allmanak_id: 27115
+    cbs_id: GM0479
     notubiz_organization_id: 801
     <<: *notubiz
 
   waalwijk:
     key: waalwijk
     allmanak_id: 29448
+    cbs_id: GM0867
     notubiz_organization_id: 1429
     <<: *notubiz
 
   voorst:
     key: voorst
     allmanak_id: 30397
+    cbs_id: GM0285
     notubiz_organization_id: 742
     <<: *notubiz
 
   zandvoort:
     key: zandvoort
     allmanak_id: 28231
+    cbs_id: GM0473
     notubiz_organization_id: 924
     <<: *notubiz
 
   hilvarenbeek:
     key: hilvarenbeek
     allmanak_id: 31842
+    cbs_id: GM0798
     notubiz_organization_id: 545
     <<: *notubiz
 
   rhenen:
     key: rhenen
     allmanak_id: 31352
+    cbs_id: GM0340
     notubiz_organization_id: 1266
     <<: *notubiz
 
   baarn:
     key: baarn
     allmanak_id: 35974
+    cbs_id: GM0308
     notubiz_organization_id: 1742
     <<: *notubiz
 
   zeist:
     key: zeist
     allmanak_id: 28557
+    cbs_id: GM0355
     notubiz_organization_id: 1696
     <<: *notubiz
 
   soest:
     key: soest
     allmanak_id: 38312
+    cbs_id: GM0342
     notubiz_organization_id: 1674
     <<: *notubiz
 
   noordwijk:
     key: noordwijk
     allmanak_id: 27985
+    cbs_id: GM0575
     notubiz_organization_id: 574
     <<: *notubiz
 
   amersfoort:
     key: amersfoort
     allmanak_id: 35134
+    cbs_id: GM0307
     notubiz_organization_id: 867
     <<: *notubiz
 
   oisterwijk:
     key: oisterwijk
     allmanak_id: 26989
+    cbs_id: GM0824
     notubiz_organization_id: 531
     <<: *notubiz
 
   hulst:
     key: hulst
     allmanak_id: 34650
+    cbs_id: GM0677
     notubiz_organization_id: 885
     <<: *notubiz
 
   maassluis:
     key: maassluis
     allmanak_id: 30349
+    cbs_id: GM0556
     notubiz_organization_id: 269
     <<: *notubiz
 
   epe:
     key: epe
     allmanak_id: 30232
+    cbs_id: GM0232
     notubiz_organization_id: 429
     <<: *notubiz
 
   leeuwarden:
     key: leeuwarden
     allmanak_id: 32728
+    cbs_id: GM0080
     notubiz_organization_id: 330
     <<: *notubiz
 
@@ -251,6 +280,7 @@ ori.notubiz:
     key: den_haag
     source_name: "Den Haag"
     allmanak_id: 24873
+    cbs_id: GM0518
     notubiz_organization_id: 318
     <<: *notubiz
 
@@ -258,84 +288,98 @@ ori.notubiz:
     key: krimpen_ad_ijssel
     source_name: "Krimpen aan den IJssel"
     allmanak_id: 31244
+    cbs_id: GM0542
     notubiz_organization_id: 1273
     <<: *notubiz
 
   moerdijk:
     key: moerdijk
     allmanak_id: 30656
+    cbs_id: GM1709
     notubiz_organization_id: 659
     <<: *notubiz
 
   dongen:
     key: dongen
     allmanak_id: 35200
+    cbs_id: GM0766
     notubiz_organization_id: 503
     <<: *notubiz
 
   schiedam:
     key: schiedam
     allmanak_id: 23681
+    cbs_id: GM0606
     notubiz_organization_id: 1062
     <<: *notubiz
 
   leiden:
     key: leiden
     allmanak_id: 26226
+    cbs_id: GM0546
     notubiz_organization_id: 271
     <<: *notubiz
 
   vlaardingen:
     key: vlaardingen
     allmanak_id: 30793
+    cbs_id: GM0622
     notubiz_organization_id: 262
     <<: *notubiz
 
   ommen:
     key: ommen
     allmanak_id: 26754
+    cbs_id: GM0175
     notubiz_organization_id: 434
     <<: *notubiz
 
   maastricht:
     key: maastricht
     allmanak_id: 32664
+    cbs_id: GM0935
     notubiz_organization_id: 258
     <<: *notubiz
 
   culemborg:
     key: culemborg
     allmanak_id: 26183
+    cbs_id: GM0216
     notubiz_organization_id: 1643
     <<: *notubiz
 
   schagen:
     key: schagen
     allmanak_id: 28858
+    cbs_id: GM0441
     notubiz_organization_id: 1834
     <<: *notubiz
 
   almere:
     key: almere
     allmanak_id: 28393
+    cbs_id: GM0441
     notubiz_organization_id: 952
     <<: *notubiz
 
   katwijk:
     key: katwijk
     allmanak_id: 27030
+    cbs_id: GM0537
     notubiz_organization_id: 1660
     <<: *notubiz
 
   rucphen:
     key: rucphen
     allmanak_id: 27671
+    cbs_id: GM0840
     notubiz_organization_id: 1357
     <<: *notubiz
 
   hendrik-ido-ambacht:
     key: hendrik-ido-ambacht
     allmanak_id: 33795
+    cbs_id: GM0531
     notubiz_organization_id: 1781
     <<: *notubiz
 
@@ -343,12 +387,14 @@ ori.notubiz:
     key: stichtse_vecht
     source_name: "Stichtse Vecht"
     allmanak_id: 34861
+    cbs_id: GM1904
     notubiz_organization_id: 1770
     <<: *notubiz
 
   deventer:
     key: deventer
     allmanak_id: 36571
+    cbs_id: GM0150
     notubiz_organization_id: 427
     <<: *notubiz
 
@@ -356,6 +402,7 @@ ori.notubiz:
     key: capelle_ad_ijssel
     source_name: "Capelle aan den IJssel"
     allmanak_id: 22846
+    cbs_id: GM0502
     notubiz_organization_id: 1517
     <<: *notubiz
 
@@ -363,6 +410,7 @@ ori.notubiz:
     key: de_wolden
     source_name: "De Wolden"
     allmanak_id: 21391
+    cbs_id: GM1690
     notubiz_organization_id: 1317
     <<: *notubiz
 
@@ -370,24 +418,28 @@ ori.notubiz:
     key: oost_gelre
     source_name: "Oost Gelre"
     allmanak_id: 36871
+    cbs_id: GM1586
     notubiz_organization_id: 341
     <<: *notubiz
 
   vlissingen:
     key: vlissingen
     allmanak_id: 27711
+    cbs_id: GM0718
     notubiz_organization_id: 1631
     <<: *notubiz
 
   veenendaal:
     key: veenendaal
     allmanak_id: 32921
+    cbs_id: GM0345
     notubiz_organization_id: 1000
     <<: *notubiz
 
   binnenmaas:
     key: binnenmaas
     allmanak_id: 30982
+    cbs_id: GM0585
     notubiz_organization_id: 823
     <<: *notubiz
 
@@ -395,12 +447,14 @@ ori.notubiz:
   zwartewaterland:
     key: zwartewaterland
     allmanak_id: 24016
+    cbs_id: GM1896
     notubiz_organization_id: 438
     <<: *notubiz
 
   ede:
     key: ede
     allmanak_id: 32407
+    cbs_id: GM0228
     notubiz_organization_id: 794
     <<: *notubiz
 
@@ -408,17 +462,20 @@ ori.notubiz:
 #  blaricum:
 #    key: blaricum
 #    allmanak_id: 31318
+#    cbs_id: GM0376
 #    notubiz_organization_id: 2063
 #    <<: *notubiz
 #
 #  eemnes:
 #    key: eemnes
 #    allmanak_id: 29645
+#    cbs_id: GM0317
 #    notubiz_organization_id: 2022
 #    <<: *notubiz
 #
 #  laren:
 #    key: laren
 #    allmanak_id: 29164
-#    notubiz_organization_id: 2046
+cbs_id: #
+notubiz_organization_id: 2046
 #    <<: *notubiz
