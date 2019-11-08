@@ -114,6 +114,11 @@ class Vcard(Namespace):
 #     prefix = 'opaque'
 
 
+class Cbs(Namespace):
+    uri = 'http://betalinkeddata.cbs.nl/def/cbs#'
+    prefix = 'cbs'
+
+
 ALL = [
     Foaf, Ncal, Opengov, Org, Meeting, Mapping, Meta, Owl, Person,
     Schema, Rdf, Rdfs, Dcterms, Skos, Bio, Bibframe, Prov, Ori, Vcard

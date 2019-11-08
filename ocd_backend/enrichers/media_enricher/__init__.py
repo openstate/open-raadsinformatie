@@ -11,6 +11,7 @@ from tasks.file_to_text import FileToText
 from tasks.ggm_motion_text import GegevensmagazijnMotionText
 from tasks.image_metadata import ImageMetadata
 from tasks.theme_classifier import ThemeClassifier
+from tasks.waaroverheid import WaarOverheidEnricher
 
 log = get_source_logger('enricher')
 
@@ -33,6 +34,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         'file_to_text': FileToText,
         'ggm_motion_text': GegevensmagazijnMotionText,
         'theme_classifier': ThemeClassifier,
+        'waaroverheid': WaarOverheidEnricher,
     }
 
     def enrich_item(self, item):

@@ -1,0 +1,113 @@
+from datetime import datetime
+
+import requests
+
+from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
+from ocd_backend.log import get_source_logger
+from ocd_backend.models.definitions import schema
+from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.settings import LOCLINKVIS_URL
+
+log = get_source_logger('waaroverheid')
+
+
+class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
+    """WaarOverheid Enricher searches for location data in text sources and
+    returns which districts, neighborhoods and annotations were mentioned."""
+
+    def enrich_item(self, item, file_object):
+        if not isinstance(item, schema.MediaObject):
+            return
+
+        cbs_id = self.source_definition.get('cbs_id')
+        if not cbs_id:
+            # Provinces have no cbs_id and will not be processed
+            return
+
+        self.annotate_document(item, cbs_id)
+
+    def annotate_document(self, doc, municipality_code):
+        # They're sets because we want to keep duplicates away
+        municipal_refs = {
+            'districts': set(),
+            'neighborhoods': set(),
+        }
+
+        field_keys = []
+        if isinstance(doc, schema.MediaObject):
+            field_keys = ['text']
+
+        if not field_keys:
+            return doc
+
+        for field_key in field_keys:
+            text = getattr(doc, field_key, '')
+
+            if type(text) == list:
+                text = ' '.join(text)
+
+            clean_text = text.replace('-\n', '')
+            if clean_text:
+                setattr(doc, field_key, clean_text)
+            else:
+                continue
+
+            url = 'http://{}/annotate'.format(LOCLINKVIS_URL)
+            try:
+                resp = self.http_session.post(url, json={
+                    'municipality_code': municipality_code,
+                    'text': clean_text
+                })
+            except requests.ConnectionError:
+                # Return if no connection can be made
+                log.warning('No connection to LocLinkVis: %s' % url)
+                return
+
+            if not resp.ok:
+                error_dict = {
+                    'ori_identifier': doc.get_ori_identifier(),
+                    'doc_type': type(doc),
+                    'field_key': field_key,
+                    'municipality_code': municipality_code,
+                    'status_code': resp.status_code,
+                    'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                }
+                if resp.status_code == 500:
+                    error_dict['text'] = clean_text
+
+                log.warn(error_dict)
+                continue
+
+            data = resp.json()
+            if not data['districts'] and not data['neighborhoods']:
+                # No annotations were found, continue
+                continue
+
+            municipal_refs['districts'].update(data['districts'])
+            municipal_refs['neighborhoods'].update(data['neighborhoods'])
+
+        doc.districts = list(municipal_refs.get('districts'))
+
+        neighborhood_coordinates = list()
+        for neighborhood in municipal_refs.get('neighborhoods', []):
+            doc.neighborhoods = list(municipal_refs['neighborhoods'])
+
+            url = 'http://{}/municipal/{}'.format(LOCLINKVIS_URL, neighborhood)
+            try:
+                resp = self.http_session.get(url)
+                resp.raise_for_status()
+            except requests.ConnectionError:
+                # Return if no connection can be made
+                log.warning('No connection to LocLinkVis: %s' % url)
+                continue
+
+            json_response = resp.json()
+            neighborhood_coordinates.append(json_response['geometry']['coordinates'])
+
+        if neighborhood_coordinates:
+            doc.asGeojson = {
+                'type': 'multipolygon',
+                'coordinates': neighborhood_coordinates,
+            }
+
+        return doc

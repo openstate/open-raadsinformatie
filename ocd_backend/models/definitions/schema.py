@@ -3,7 +3,7 @@ http://schema.org/
 """
 
 import owl
-from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms, Meeting as MeetingNS
+from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms, Meeting as MeetingNS, Cbs
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, JsonProperty, Relation
 from ocd_backend.models.misc import Uri
@@ -28,8 +28,11 @@ class MediaObject(Schema, owl.Thing):
     isReferencedBy = Relation(Dcterms, 'isReferencedBy')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
     tags = JsonProperty(MeetingNS, 'tags')
+    asGeojson = JsonProperty(MeetingNS, 'asGeojson_v2016')  # https://mathib.github.io/fog-ontology/#
+    districts = ArrayProperty(Cbs, 'Wijk')
+    neighborhoods = ArrayProperty(Cbs, 'Buurt')
 
-    enricher_task = ['file_to_text', 'theme_classifier']
+    enricher_task = ['file_to_text', 'theme_classifier', 'waaroverheid']
 
 
 class AudioObject(Schema, owl.Thing):
