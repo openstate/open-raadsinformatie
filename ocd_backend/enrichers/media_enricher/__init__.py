@@ -76,7 +76,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         for task in enrich_tasks:
             # Seek to the beginning of the file before starting a task
             media_file.seek(0)
-            self.available_tasks[task]().enrich_item(item, media_file)
+            self.available_tasks[task](self.source_definition).enrich_item(item, media_file)
 
         media_file.close()
 
