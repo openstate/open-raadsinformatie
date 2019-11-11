@@ -4,9 +4,11 @@ import requests
 
 from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
 from ocd_backend.log import get_source_logger
+from ocd_backend.models.definitions import Geo, NeoGeo
 from ocd_backend.models.definitions import schema
-from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.models.misc import Uri
 from ocd_backend.settings import LOCLINKVIS_URL
+from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('waaroverheid')
 
@@ -46,13 +48,16 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
             if type(text) == list:
                 text = ' '.join(text)
 
+            if not text:
+                return
+
             clean_text = text.replace('-\n', '')
             if clean_text:
                 setattr(doc, field_key, clean_text)
             else:
                 continue
 
-            url = 'http://{}/annotate'.format(LOCLINKVIS_URL)
+            url = '{}/annotate'.format(LOCLINKVIS_URL)
             try:
                 resp = self.http_session.post(url, json={
                     'municipality_code': municipality_code,
@@ -92,7 +97,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
         for neighborhood in municipal_refs.get('neighborhoods', []):
             doc.neighborhoods = list(municipal_refs['neighborhoods'])
 
-            url = 'http://{}/municipal/{}'.format(LOCLINKVIS_URL, neighborhood)
+            url = '{}/municipal/{}'.format(LOCLINKVIS_URL, neighborhood)
             try:
                 resp = self.http_session.get(url)
                 resp.raise_for_status()
@@ -105,9 +110,31 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
             neighborhood_coordinates.append(json_response['geometry']['coordinates'])
 
         if neighborhood_coordinates:
-            doc.asGeojson = {
+            doc.neighborhood_polygons = {
                 'type': 'multipolygon',
                 'coordinates': neighborhood_coordinates,
+            }
+
+            polygons = list()
+            for polygon in neighborhood_coordinates:
+                pos_list = list()
+                for coordinates in polygon[0]:
+                    pos_list.append({
+                        str(Uri(Geo, 'lat')): coordinates[1],
+                        str(Uri(Geo, 'long')): coordinates[0],
+                    })
+
+                polygons.append({
+                    '@type': str(Uri(NeoGeo, 'Polygon')),
+                    str(Uri(NeoGeo, 'exterior')): {
+                        '@type': str(Uri(NeoGeo, 'LinearRing')),
+                        str(Uri(NeoGeo, 'posList')): pos_list
+                    }
+                })
+
+            doc.geometry = {
+                '@type': str(Uri(NeoGeo, 'MultiPolygon')),
+                str(Uri(NeoGeo, 'polygonMember')): polygons,
             }
 
         return doc

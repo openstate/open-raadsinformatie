@@ -28,7 +28,8 @@ class MediaObject(Schema, owl.Thing):
     isReferencedBy = Relation(Dcterms, 'isReferencedBy')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
     tags = JsonProperty(MeetingNS, 'tags')
-    asGeojson = JsonProperty(MeetingNS, 'asGeojson_v2016')  # https://mathib.github.io/fog-ontology/#
+    neighborhood_polygons = JsonProperty(MeetingNS, 'neighborhood_polygons')
+    geometry = JsonProperty(MeetingNS, 'geometry')
     districts = ArrayProperty(Cbs, 'Wijk')
     neighborhoods = ArrayProperty(Cbs, 'Buurt')
 
