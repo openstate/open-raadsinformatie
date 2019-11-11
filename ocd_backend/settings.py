@@ -280,7 +280,7 @@ tempfile.tempdir = TEMP_DIR_PATH
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
 
 ORI_CLASSIFIER_URL = 'http://{}:{}/classificeer'.format(os.getenv('CLASSIFIER_SERVICE_HOST', 'classifier'), os.getenv('CLASSIFIER_SERVICE_PORT', 5000))
-LOCLINKVIS_URL = 'http://{}/'.format(os.getenv('LOCLINKVIS_HOST', 'loclinkvis'))
+LOCLINKVIS_URL = 'http://{}:{}'.format(os.getenv('LOCLINKVIS_SERVICE_HOST', 'loclinkvis'), os.getenv('LOCLINKVIS_SERVICE_PORT', 8080))
 
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'

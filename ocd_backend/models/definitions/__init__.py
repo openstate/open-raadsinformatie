@@ -119,6 +119,16 @@ class Cbs(Namespace):
     prefix = 'cbs'
 
 
+class Geo(Namespace):
+    uri = 'http://www.w3.org/2003/01/geo/wgs84_pos#'
+    prefix = 'geo'
+
+
+class NeoGeo(Namespace):
+    uri = 'http://geovocab.org/geometry#'
+    prefix = 'ngeo'
+
+
 ALL = [
     Foaf, Ncal, Opengov, Org, Meeting, Mapping, Meta, Owl, Person,
     Schema, Rdf, Rdfs, Dcterms, Skos, Bio, Bibframe, Prov, Ori, Vcard
