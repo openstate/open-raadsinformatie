@@ -1,10 +1,14 @@
 import operator
+import requests
 
 from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
 from ocd_backend.models.definitions import Meeting as MeetingNS, Rdf
 from ocd_backend.models.misc import Uri
 from ocd_backend.settings import ORI_CLASSIFIER_URL
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('theme_classifier')
 
 
 class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
@@ -25,8 +29,14 @@ class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
             'name': text
         }
 
-        response = self.http_session.post(ORI_CLASSIFIER_URL, json=request_json)
-        response.raise_for_status()
+        try:
+            response = self.http_session.post(ORI_CLASSIFIER_URL, json=request_json)
+            response.raise_for_status()
+        except requests.ConnectionError:
+            # Return if no connection can be made
+            log.warning('No connection to theme classifier')
+            return
+
         response_json = response.json()
 
         theme_classifications = response_json.get(identifier_key, [])
