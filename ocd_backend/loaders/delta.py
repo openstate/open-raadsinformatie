@@ -15,7 +15,7 @@ class DeltaLoader(BaseLoader):
     """Serializes a model to N-Quads and then sends it to a Kafka bus."""
 
     config = {
-        'bootstrap.servers': settings.KAFKA_HOST,
+        'bootstrap.servers': '%s:%s' % (settings.KAFKA_HOST, settings.KAFKA_PORT),
         'session.timeout.ms': settings.KAFKA_SESSION_TIMEOUT,
     }
 
@@ -29,7 +29,7 @@ class DeltaLoader(BaseLoader):
     def load_item(self, doc):
 
         # Skip this loader if it is disabled in settings
-        if not settings.KAFKA_ENABLED:
+        if not settings.KAFKA_HOST or not settings.KAFKA_PORT:
             return
 
         kafka_producer = Producer(self.config)
