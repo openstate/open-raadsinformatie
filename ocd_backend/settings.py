@@ -22,8 +22,8 @@ BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
 RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'development')
 
-REDIS_HOST = os.getenv('REDIS_SERVER_HOST', "redis")
-REDIS_PORT = os.getenv('REDIS_SERVER_PORT', "6379")
+REDIS_HOST = os.getenv('REDIS_SERVICE_HOST', "redis")
+REDIS_PORT = os.getenv('REDIS_SERVICE_PORT', 6379)
 REDIS_URL = 'redis://%s:%s/0' % (REDIS_HOST, REDIS_PORT)
 
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -268,8 +268,8 @@ if BUGSNAG_APIKEY:
 # Configure python logging system with LOGGING dict
 logging.config.dictConfig(LOGGING)
 
-ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'elastic')
-ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_PORT', 9200)
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_SERVICE_HOST', 'elastic')
+ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_SERVICE_PORT', 9200)
 
 # The path of the directory used to store static files
 DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
@@ -281,7 +281,7 @@ tempfile.tempdir = TEMP_DIR_PATH
 # The path of the JSON file containing the sources config
 SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, 'sources/*')
 
-ORI_CLASSIFIER_URL = 'http://{}/classificeer'.format(os.getenv('CLASSIFIER_HOST', 'classifier'))
+ORI_CLASSIFIER_URL = 'http://{}:{}/classificeer'.format(os.getenv('CLASSIFIER_SERVICE_HOST', 'classifier'), os.getenv('CLASSIFIER_SERVICE_PORT', 5000))
 
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
@@ -305,8 +305,8 @@ PDF_MAX_MEDIABOX_PIXELS = 5000000
 AUTORETRY_EXCEPTIONS = []
 
 # Kafka settings for DeltaLoader
-KAFKA_ENABLED = os.getenv('KAFKA_ENABLED', True)
-KAFKA_HOST = os.getenv('KAFKA_HOST', 'localhost:9092')
+KAFKA_HOST = os.getenv('KAFKA_HOST')
+KAFKA_PORT = os.getenv('KAFKA_PORT')
 KAFKA_USERNAME = os.getenv('KAFKA_USERNAME')
 KAFKA_PASSWORD = os.getenv('KAFKA_PASSWORD')
 KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
@@ -314,7 +314,7 @@ KAFKA_MESSAGE_KEY = os.getenv('KAFKA_MESSAGE_KEY', 'ori_delta_message')
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
 
 # Postgres settings
-POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'postgres:5432')
+POSTGRES_HOST = '{}:{}'.format(os.getenv('POSTGRES_SERVICE_HOST', 'postgres'), os.getenv('POSTGRES_SERVICE_PORT', 5432))
 POSTGRES_DATABASE = os.getenv('POSTGRES_DATABASE', 'ori')
 POSTGRES_USERNAME = os.getenv('POSTGRES_USERNAME', 'ori_postgres_user')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
