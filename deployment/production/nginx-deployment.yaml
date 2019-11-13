@@ -28,5 +28,10 @@ spec:
       - name: nginx-conf
         configMap:
           name: nginx-conf
-      nodeSelector:
-        cloud.google.com/gke-nodepool: persistent
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cloud.google.com/gke-preemptible
+                operator: DoesNotExist
