@@ -44,18 +44,16 @@ CELERY_CONFIG = {
     'CELERY_TASK_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_SERIALIZER': 'ocd_serializer',
     'CELERY_RESULT_BACKEND': 'ocd_backend.result_backends:OCDRedisBackend+%s' % REDIS_URL,
-    'CELERY_IGNORE_RESULT': False,
     'CELERY_MESSAGE_COMPRESSION': 'gzip',
     'CELERYD_HIJACK_ROOT_LOGGER': False,
-    'CELERY_DISABLE_RATE_LIMITS': True,
     # ACKS_LATE prevents two tasks triggered at the same time to hang
     # https://wiredcraft.com/blog/3-gotchas-for-celery/
-    'CELERY_ACKS_LATE': True,
-    'WORKER_PREFETCH_MULTIPLIER': 1,
+    'CELERY_TASK_ACKS_LATE': True,
+    'CELERYD_PREFETCH_MULTIPLIER': 1,
     # Expire results after 30 minutes; otherwise Redis will keep
     # claiming memory for a day
     'CELERY_TASK_RESULT_EXPIRES': 1800,
-    'CELERY_REDIRECT_STDOUTS_LEVEL': 'INFO',
+    'CELERYD_REDIRECT_STDOUTS_LEVEL': 'INFO',
     'CELERY_ROUTES': {
         'ocd_backend.transformers.*': {
             'queue': 'transformers',
@@ -88,9 +86,9 @@ CELERY_CONFIG = {
         Queue('enrichers', enrichers_exchange, routing_key='enrichers'),
         Queue('loaders', loaders_exchange, routing_key='loaders'),
     ),
-    'CELERY_DEFAULT_QUEUE': 'transformers',
-    'CELERY_DEFAULT_EXCHANGE': 'transformers',
-    'CELERY_DEFAULT_ROUTING_KEY': 'transformers',
+    'CELERY_TASK_DEFAULT_QUEUE': 'transformers',
+    'CELERY_TASK_DEFAULT_EXCHANGE': 'transformers',
+    'CELERY_TASK_DEFAULT_ROUTING_KEY': 'transformers',
 }
 
 
