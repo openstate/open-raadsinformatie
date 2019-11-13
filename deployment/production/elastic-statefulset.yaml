@@ -32,7 +32,7 @@ spec:
           protocol: TCP
         env:
         - name: ES_JAVA_OPTS
-          value: -Xms1g -Xmx1g
+          value: -Xms2g -Xmx2g
         - name: cluster.name
           value: "docker-cluster"
         - name: xpack.security.enabled
@@ -77,14 +77,24 @@ spec:
           privileged: true
         resources:
           requests:
-            memory: 1.8G
-            cpu: 120m
+            memory: 4G
+            cpu: 250m
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata
       restartPolicy: Always
-      nodeSelector:
-        cloud.google.com/gke-nodepool: persistent
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cloud.google.com/gke-preemptible
+                operator: DoesNotExist
+      tolerations:
+      - key: persistent
+        operator: Equal
+        value: "true"
+        effect: NoSchedule
 
   volumeClaimTemplates:
     - metadata:

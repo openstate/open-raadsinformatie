@@ -51,14 +51,22 @@ spec:
           name: api-pvc
         resources:
           requests:
-            memory: 350M
-            cpu: 100m
+            memory: 450M
+            cpu: 200m
           limits:
-            memory: 600M
+            memory: 800M
             cpu: 500m
       volumes:
       - name: api-pvc
         persistentVolumeClaim:
           claimName: api-pvc
-      nodeSelector:
-        cloud.google.com/gke-nodepool: persistent
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - api-serve
+            topologyKey: kubernetes.io/hostname
