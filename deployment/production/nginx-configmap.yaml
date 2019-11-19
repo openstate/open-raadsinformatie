@@ -19,6 +19,12 @@ data:
 
     server {
         listen 80;
+        server_name zoek.openstateninformatie.nl;
+        return 302 https://ori.argu.co;
+    }
+
+    server {
+        listen 80;
         server_name api.openstateninformatie.nl;
         return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
     }
@@ -27,4 +33,14 @@ data:
         listen 80;
         server_name docs.openstateninformatie.nl;
         return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
+        server_name zoekv0.openraadsinformatie.nl;
+
+        location /{
+            proxy_set_header Host zoek.openraadsinformatie.nl;
+            proxy_pass http://5.196.82.198;
+        }
     }

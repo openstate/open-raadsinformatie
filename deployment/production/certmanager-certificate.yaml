@@ -32,6 +32,7 @@ spec:
   - zoek.openstateninformatie.nl
   - docs.openraadsinformatie.nl
   - ori.argu.co
+  - api.waaroverheid.nl
   acme:
     config:
     - http01:
@@ -46,3 +47,4 @@ spec:
       - zoek.openstateninformatie.nl
       - docs.openraadsinformatie.nl
       - ori.argu.co
+      - api.waaroverheid.nl

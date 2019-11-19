@@ -25,8 +25,8 @@ spec:
           name: redisdata
         resources:
           requests:
-            memory: 8G
-            cpu: 100m
+            memory: 2G
+            cpu: 80m
       restartPolicy: Always
       volumes:
       - name: redisdata
