@@ -33,6 +33,10 @@ spec:
   - docs.openraadsinformatie.nl
   - ori.argu.co
   - api.waaroverheid.nl
+  - openbesluitvorming.nl
+  - www.openbesluitvorming.nl
+  - api.openbesluitvorming.nl
+  - docs.openbesluitvorming.nl
   acme:
     config:
     - http01:
@@ -48,3 +52,7 @@ spec:
       - docs.openraadsinformatie.nl
       - ori.argu.co
       - api.waaroverheid.nl
+      - openbesluitvorming.nl
+      - www.openbesluitvorming.nl
+      - api.openbesluitvorming.nl
+      - docs.openbesluitvorming.nl

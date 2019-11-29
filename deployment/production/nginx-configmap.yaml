@@ -7,6 +7,24 @@ data:
   redirects.conf: |
     server {
         listen 80;
+        server_name www.openbesluitvorming.nl;
+        return 301 https://openbesluitvorming.nl;
+    }
+
+    server {
+        listen 80;
+        server_name api.openbesluitvorming.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
+        server_name docs.openbesluitvorming.nl;
+        return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
+    }
+
+    server {
+        listen 80;
         server_name api.openraadsinformatie.nl;
         return 301 https://github.com/ontola/ori-search/blob/master/docs.md;
     }

@@ -11,6 +11,20 @@ metadata:
   namespace: production
 spec:
   rules:
+  - host: openbesluitvorming.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: search
+          servicePort: 80
+  - host: www.openbesluitvorming.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
   - host: api.openraadsinformatie.nl
     http:
       paths:
@@ -49,6 +63,21 @@ spec:
         backend:
           serviceName: nginx
           servicePort: 80
+  - host: api.openbesluitvorming.nl
+    http:
+      paths:
+      - path: /v1/elastic/(.*)
+        backend:
+          serviceName: endpoints
+          servicePort: 8000
+      - path: /(v1/.*)
+        backend:
+          serviceName: api-serve
+          servicePort: 80
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
   - host: zoek.openraadsinformatie.nl
     http:
       paths:
@@ -78,6 +107,13 @@ spec:
           serviceName: nginx
           servicePort: 80
   - host: docs.openstateninformatie.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
+  - host: docs.openbesluitvorming.nl
     http:
       paths:
       - path: /(.*)
