@@ -5,6 +5,8 @@ metadata:
   namespace: production
 data:
   BUGSNAG_APIKEY: d83215ad00143ac50873ac2265c2dabb
+  BUGSNAG_KEY: f74b79ff1f813488777566c864845056
+  CLASSIFIER_HOST: classifier:5000
   GCE_STACKDRIVER: "true"
   RELEASE_STAGE: production
   RESOLVER_BASE_URL: https://api.openraadsinformatie.nl/v1/resolve
@@ -13,3 +15,4 @@ data:
   ORI_API_POSTGRESQL_DATABASE: ori_api_db
   ORI_API_RAILS_LOG_TO_STDOUT: truthy
   KAFKA_HOST: pkc-lzgmd.europe-west3.gcp.confluent.cloud
+  KAFKA_PORT: 9092
