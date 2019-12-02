@@ -110,7 +110,7 @@ def gs_meeting_item(self, content_type, raw_item, entity, source_item, **kwargs)
         attachment.identifier_url = doc['original_url']  # Trick to use the self url for enrichment
         attachment.original_url = doc['original_url']
         attachment.name = doc['note']
-        attachment.isReferencedBy = event
+        attachment.is_referenced_by = event
         attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 

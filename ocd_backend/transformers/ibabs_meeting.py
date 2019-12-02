@@ -114,7 +114,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
                     attachment.original_url = document['PublicDownloadURL']
                     attachment.size_in_bytes = document['FileSize']
                     attachment.name = document['DisplayName']
-                    attachment.isReferencedBy = agenda_item
+                    attachment.is_referenced_by = agenda_item
                     attachment.last_discussed_at = item.start_date
                     agenda_item.attachment.append(attachment)
 
@@ -160,7 +160,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.original_url = document['PublicDownloadURL']
             attachment.size_in_bytes = document['FileSize']
             attachment.name = document['DisplayName']
-            attachment.isReferencedBy = item
+            attachment.is_referenced_by = item
             attachment.last_discussed_at = item.start_date
             item.attachment.append(attachment)
 

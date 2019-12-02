@@ -25,7 +25,7 @@ class MediaObject(Schema, owl.Thing):
     date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
-    isReferencedBy = Relation(Dcterms, 'isReferencedBy')
+    is_referenced_by = Relation(Dcterms, 'isReferencedBy')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
     tags = JsonProperty(MeetingNS, 'tags')
     neighborhood_polygons = JsonProperty(MeetingNS, 'neighborhood_polygons')

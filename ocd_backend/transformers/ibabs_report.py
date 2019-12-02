@@ -103,7 +103,7 @@ def report_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment_file.original_url = document['PublicDownloadURL']
         attachment_file.size_in_bytes = document['FileSize']
         attachment_file.name = document['DisplayName']
-        attachment_file.isReferencedBy = report
+        attachment_file.is_referenced_by = report
         if report.start_date:
             attachment_file.last_discussed_at = report.start_date
         report.attachment.append(attachment_file)

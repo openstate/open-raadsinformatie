@@ -98,7 +98,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
             attachment.original_url = doc['url']
             attachment.name = doc['title']
             attachment.date_modified = doc['last_modified']
-            attachment.isReferencedBy = agendaitem
+            attachment.is_referenced_by = agendaitem
             attachment.last_discussed_at = event.start_date
             agendaitem.attachment.append(attachment)
 
@@ -132,7 +132,7 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         attachment.original_url = doc['url']
         attachment.name = doc['title']
         attachment.date_modified = doc['last_modified']
-        attachment.isReferencedBy = event
+        attachment.is_referenced_by = event
         attachment.last_discussed_at = event.start_date
         event.attachment.append(attachment)
 
