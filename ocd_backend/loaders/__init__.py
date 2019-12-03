@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.mixins import OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin
@@ -24,14 +22,7 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
         self.source_definition = kwargs['source_definition']
 
         for _, item in iterate(args):
-            self.post_processing(item)
             self.load_item(item)
 
     def load_item(self, doc):
         raise NotImplementedError
-
-    @staticmethod
-    def post_processing(doc):
-        # Add the 'processing.finished' datetime to the documents
-        finished = datetime.now()
-        # doc.Meta.processing_finished = finished
