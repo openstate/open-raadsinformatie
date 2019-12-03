@@ -15,7 +15,6 @@ _entities: &entities
   - &motions
     <<: *entity_defaults
     entity: motions
-    doc_type: motions
     extractor: ocd_backend.extractors.staticfile.StaticJSONDumpExtractor
     transformer: ocd_backend.transformers.partijgedrag.motion_item
     dump_path: "./json/pg_motions.json"

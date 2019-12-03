@@ -26,7 +26,6 @@ _entity_defaults: &entity_defaults
 #_voting_rounds_defaults: &voting_rounds_defaults
 #  <<: *entity_defaults
 #  entity: voting_rounds
-#  doc_type: vote_events
 #  extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
 #  transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
 #  loader: ocd_backend.loaders.ElasticsearchUpdateOnlyLoader
@@ -37,35 +36,30 @@ _entities: &entities
   - &province
     <<: *entity_defaults
     entity: province
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
-    doc_type: organizations
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
     transformer: ocd_backend.transformers.ibabs_committee.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
-    doc_type: persons
     extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
     transformer: ocd_backend.transformers.ibabs_person.person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
-    doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
     enrichers:
@@ -74,7 +68,6 @@ _entities: &entities
   - &reports
     <<: *entity_defaults
     entity: reports
-    doc_type: events
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     transformer: ocd_backend.transformers.ibabs_report.report_item
     enrichers:
@@ -158,7 +151,6 @@ osi.ibabs:
 #
 #    - &motions_voting
 #      entity: motions
-#      doc_type: motions
 #      classification: Moties
 #      include: moties
 #      exclude: "^$"
@@ -167,7 +159,6 @@ osi.ibabs:
 #
 #    - &amendments_voting
 #      entity: amendments
-#      doc_type: motions
 #      classification: Amendementen
 #      include: amendementen
 #      exclude: "^$"
@@ -176,7 +167,6 @@ osi.ibabs:
 #
 #    - &vote_events
 #      entity: vote_events
-#      doc_type: vote_events
 #      classification: Stemmingen
 #      include: (moties|amendementen)
 #      exclude: "^$"

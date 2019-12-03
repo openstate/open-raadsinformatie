@@ -17,28 +17,24 @@ _entities: &entities
   - &province
     <<: *entity_defaults
     entity: province
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
     transformer: ocd_backend.transformers.organizations.province_organization_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.organizations.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
-    doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.persons.allmanak_person_item
 
   - &meetings
     <<: *entity_defaults
     entity: meetings
-    doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     transformer: ocd_backend.transformers.gv.meeting_item
     greenvalley_objecttypes:
@@ -49,7 +45,6 @@ _entities: &entities
   - &reports
     <<: *entity_defaults
     entity: reports
-    doc_type: events
     extractor: ocd_backend.extractors.gv.GreenValleyMeetingsExtractor
     transformer: ocd_backend.transformers.gv.greenvalley_report
     greenvalley_date_key: publishdate
@@ -86,7 +81,6 @@ osi.gv:
     - *meetings
     - *reports
     - entity: meetings
-      doc_type: events
       #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
       extractor: ocd_backend.extractors.paging.PagingHTMLExtractor
       transformer: ocd_backend.transformers.gedeputeerdestaten.gs_meeting_item
