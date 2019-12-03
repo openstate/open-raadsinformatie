@@ -109,7 +109,7 @@ class Model(object):
             assert source
             assert supplier
             assert collection
-            self.had_primary_source = Uri(
+            self.source_iri = Uri(
                 Mapping,
                 '{}/{}/{}/{}'.format(
                     source,
@@ -165,7 +165,7 @@ class Model(object):
         except AttributeError:
             pass
 
-        self.ori_identifier = self.db.get_ori_identifier(iri=self.had_primary_source)
+        self.ori_identifier = self.db.get_ori_identifier(iri=self.source_iri)
         return self.ori_identifier
 
     def get_short_identifier(self):
@@ -194,7 +194,7 @@ class Model(object):
         rels = {}
 
         def inner(model):
-            identifier = model.had_primary_source
+            identifier = model.source_iri
 
             # Prevent circular recursion
             if identifier in rels.keys():

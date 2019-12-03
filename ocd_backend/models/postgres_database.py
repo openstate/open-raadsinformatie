@@ -101,14 +101,14 @@ class PostgresDatabase(object):
             session.close()
 
     def save(self, model_object):
-        if not model_object.had_primary_source:
+        if not model_object.source_iri:
             # If the item is an Individual, like EventConfirmed, we "save" it by setting an ORI identifier
             iri = self.serializer.label(model_object)
             if not model_object.values.get('ori_identifier'):
                 model_object.ori_identifier = self.get_ori_identifier(iri=iri)
         else:
             if not model_object.values.get('ori_identifier'):
-                model_object.ori_identifier = self.get_ori_identifier(iri=model_object.had_primary_source)
+                model_object.ori_identifier = self.get_ori_identifier(iri=model_object.source_iri)
 
             # Handle canonical IRI or ID
             if model_object.values.get('canonical_iri'):
@@ -206,7 +206,7 @@ class PostgresDatabase(object):
             except NoResultFound:
                 # If no Source and canonical IRI/ID combination exists for the given source IRI, create it
                 source = Source(resource=resource,
-                                iri=model_object.had_primary_source)
+                                iri=model_object.source_iri)
                 setattr(source, canonical_field, getattr(model_object, canonical_field))
                 session.add(source)
             except Exception:
