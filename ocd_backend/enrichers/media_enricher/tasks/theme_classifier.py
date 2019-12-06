@@ -4,7 +4,7 @@ import requests
 from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
 from ocd_backend.models.definitions import Meeting as MeetingNS, Rdf
 from ocd_backend.models.misc import Uri
-from ocd_backend.settings import ORI_CLASSIFIER_URL
+from ocd_backend.settings import ORI_CLASSIFIER_HOST, ORI_CLASSIFIER_PORT
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.log import get_source_logger
 
@@ -13,6 +13,12 @@ log = get_source_logger('theme_classifier')
 
 class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
     def enrich_item(self, item, file_object):
+        if not ORI_CLASSIFIER_HOST or not ORI_CLASSIFIER_PORT:
+            # Skip classifier if no host is specified
+            return
+
+        ori_classifier_url = 'http://{}:{}/classificeer'.format(ORI_CLASSIFIER_HOST, ORI_CLASSIFIER_PORT)
+
         if not hasattr(item, 'text'):
             return
 
@@ -30,7 +36,7 @@ class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
         }
 
         try:
-            response = self.http_session.post(ORI_CLASSIFIER_URL, json=request_json)
+            response = self.http_session.post(ori_classifier_url, json=request_json)
             response.raise_for_status()
         except requests.ConnectionError:
             # Return if no connection can be made

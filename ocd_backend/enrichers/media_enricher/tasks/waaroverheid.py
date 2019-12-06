@@ -7,7 +7,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models.definitions import Geo, NeoGeo
 from ocd_backend.models.definitions import schema
 from ocd_backend.models.misc import Uri
-from ocd_backend.settings import LOCLINKVIS_URL
+from ocd_backend.settings import LOCLINKVIS_HOST, LOCLINKVIS_PORT
 from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('waaroverheid')
@@ -16,10 +16,17 @@ log = get_source_logger('waaroverheid')
 class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
     """WaarOverheid Enricher searches for location data in text sources and
     returns which districts, neighborhoods and annotations were mentioned."""
+    loclinkvis_url = None
 
     def enrich_item(self, item, file_object):
         if not isinstance(item, schema.MediaObject):
             return
+
+        if not LOCLINKVIS_HOST or not LOCLINKVIS_PORT:
+            # Skip waaroverheid if no host is specified
+            return
+
+        self.loclinkvis_url = 'http://{}:{}'.format(LOCLINKVIS_HOST, LOCLINKVIS_PORT)
 
         cbs_id = self.source_definition.get('cbs_id')
         if not cbs_id:
@@ -57,7 +64,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
             else:
                 continue
 
-            url = '{}/annotate'.format(LOCLINKVIS_URL)
+            url = '{}/annotate'.format(self.loclinkvis_url)
             try:
                 resp = self.http_session.post(url, json={
                     'municipality_code': municipality_code,
@@ -97,7 +104,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
         for neighborhood in municipal_refs.get('neighborhoods', []):
             doc.neighborhoods = list(municipal_refs['neighborhoods'])
 
-            url = '{}/municipal/{}'.format(LOCLINKVIS_URL, neighborhood)
+            url = '{}/municipal/{}'.format(self.loclinkvis_url, neighborhood)
             try:
                 resp = self.http_session.get(url)
                 resp.raise_for_status()
