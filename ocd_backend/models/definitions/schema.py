@@ -33,7 +33,7 @@ class MediaObject(Schema, owl.Thing):
     districts = ArrayProperty(Cbs, 'Wijk')
     neighborhoods = ArrayProperty(Cbs, 'Buurt')
 
-    enricher_task = ['file_to_text', 'theme_classifier', 'waaroverheid']
+    enricher_task = ['theme_classifier', 'waaroverheid']
 
 
 class AudioObject(Schema, owl.Thing):

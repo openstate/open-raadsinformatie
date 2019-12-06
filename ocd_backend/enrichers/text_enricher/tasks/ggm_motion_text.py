@@ -2,11 +2,18 @@ import string
 
 import bugsnag
 
-from ocd_backend.enrichers.media_enricher.tasks.file_to_text import FileToText
+from ocd_backend.enrichers.text_enricher.tasks import BaseEnrichmentTask
 
 
-class GegevensmagazijnMotionText(FileToText):
-    def process_text(self, text, item):
+class GegevensmagazijnMotionText(BaseEnrichmentTask):
+    def enrich_item(self, item):
+        if not hasattr(item, 'text'):
+            return
+
+        text = item.text
+        if type(item.text) == list:
+            text = ' '.join(text)
+
         lines = text.split("\n")
 
         # Determine in the first 10 lines if it is an actual motion

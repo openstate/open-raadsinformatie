@@ -2,7 +2,7 @@ from datetime import datetime
 
 import requests
 
-from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
+from ocd_backend.enrichers.text_enricher.tasks import BaseEnrichmentTask
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.definitions import Geo, NeoGeo
 from ocd_backend.models.definitions import schema
@@ -18,7 +18,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
     returns which districts, neighborhoods and annotations were mentioned."""
     loclinkvis_url = None
 
-    def enrich_item(self, item, file_object):
+    def enrich_item(self, item):
         if not isinstance(item, schema.MediaObject):
             return
 

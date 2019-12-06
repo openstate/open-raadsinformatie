@@ -7,36 +7,27 @@ from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
-from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
-from tasks.file_to_text import FileToText
-from tasks.ggm_motion_text import GegevensmagazijnMotionText
 from tasks.image_metadata import ImageMetadata
-from tasks.theme_classifier import ThemeClassifier
-from tasks.waaroverheid import WaarOverheidEnricher
 
 log = get_source_logger('enricher')
 
 
-class MediaEnricher(BaseEnricher, HttpRequestMixin):
+class MediaEnricher(BaseEnricher, GCSCachingMixin):
     """An enricher that is responsible for enriching external media
-    (images, audio, video, etc.) referenced in items (in the
-    ``media_urls`` array).
+    (images, audio, video, etc.)
 
     Media items are fetched from the source and then passed on to a
     set of registered tasks that are responsible for the analysis.
     """
 
     #: The registry of available sub-tasks that are responsible for the
-    #: analysis of media items. Which tasks are executed depends on a
-    #: combination of the configuration in ``sources.json`` and the
-    #: returned ``content-type``.
+    #: analysis of media items.
+    bucket_name = 'ori-static'
+
     available_tasks = {
         'image_metadata': ImageMetadata,
-        'file_to_text': FileToText,
-        'ggm_motion_text': GegevensmagazijnMotionText,
-        'theme_classifier': ThemeClassifier,
-        'waaroverheid': WaarOverheidEnricher,
     }
 
     def enrich_item(self, item):

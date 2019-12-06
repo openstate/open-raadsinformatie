@@ -43,7 +43,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.parlaeus.ParlaeusMeetingsExtractor
     transformer: ocd_backend.transformers.parlaeus_meeting.meeting_item
     enrichers:
-      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - ocd_backend.enrichers.text_enricher.text_enricher
 
 _parlaeus: &parlaeus
   index_name: "{key}"

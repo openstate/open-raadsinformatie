@@ -288,7 +288,7 @@ LOCLINKVIS_PORT = os.getenv('LOCLINKVIS_SERVICE_PORT', 8080)
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
-RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'https://api.openraadsinformatie.nl/v%s/static' % MAJOR_VERSION)
+RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'https://api.openraadsinformatie.nl/v%s/resolve' % MAJOR_VERSION)
 
 # The User-Agent that is used when retrieving data from external sources
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)

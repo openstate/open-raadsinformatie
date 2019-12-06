@@ -63,7 +63,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
     enrichers:
-      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - ocd_backend.enrichers.text_enricher.text_enricher
 
   - &reports
     <<: *entity_defaults
@@ -71,7 +71,7 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
     transformer: ocd_backend.transformers.ibabs_report.report_item
     enrichers:
-      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - ocd_backend.enrichers.text_enricher.text_enricher
     include: ".*"
     exclude: (moties|amendementen)
     pdf_max_pages: 0

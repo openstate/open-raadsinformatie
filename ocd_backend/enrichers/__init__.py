@@ -26,7 +26,7 @@ class BaseEnricher(celery_app.Task):
         for _, doc in iterate(args):
             for model in doc.traverse():
                 try:
-                    if not hasattr(model, 'enricher_task'):
+                    if not model.enricher_task:
                         continue
                 except AttributeError:
                     continue

@@ -40,7 +40,7 @@ _entities: &entities
     greenvalley_objecttypes:
       - agenda
     enrichers:
-      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - ocd_backend.enrichers.text_enricher.text_enricher
 
   - &reports
     <<: *entity_defaults
@@ -54,7 +54,7 @@ _entities: &entities
       - ingekomenstuk
       - notule
     enrichers:
-      - ocd_backend.enrichers.media_enricher.static.gcs_static_media_enricher
+      - ocd_backend.enrichers.text_enricher.text_enricher
 
 _gv: &gv
   index_name: "{key}"
@@ -90,5 +90,5 @@ osi.gv:
       next_page_xpath: "//a[contains(@class, \"volgende\")]/@href"
       next_page_max_count: 1
       enrichers:
-        - ocd_backend.enrichers.media_enricher.static.temporary_file_media_enricher
+        - ocd_backend.enrichers.text_enricher.text_enricher
       <<: *entity_defaults

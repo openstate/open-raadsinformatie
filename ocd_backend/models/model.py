@@ -49,6 +49,8 @@ class ModelMetaclass(type):
 class Model(object):
     __metaclass__ = ModelMetaclass
 
+    enricher_task = []
+
     def absolute_uri(self):
         return '%s%s' % (self.uri, self.verbose_name())
 
@@ -95,6 +97,7 @@ class Model(object):
         # Set defaults
         self.skip_validation = None
         self.values = dict()
+        self.enricher_task = self.enricher_task
 
         if merge_into:
             if not isinstance(merge_into, tuple) or len(merge_into) != 3:

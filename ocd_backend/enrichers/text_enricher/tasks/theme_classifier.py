@@ -1,7 +1,7 @@
 import operator
 import requests
 
-from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
+from ocd_backend.enrichers.text_enricher.tasks import BaseEnrichmentTask
 from ocd_backend.models.definitions import Meeting as MeetingNS, Rdf
 from ocd_backend.models.misc import Uri
 from ocd_backend.settings import ORI_CLASSIFIER_HOST, ORI_CLASSIFIER_PORT
@@ -12,7 +12,7 @@ log = get_source_logger('theme_classifier')
 
 
 class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
-    def enrich_item(self, item, file_object):
+    def enrich_item(self, item):
         if not ORI_CLASSIFIER_HOST or not ORI_CLASSIFIER_PORT:
             # Skip classifier if no host is specified
             return
