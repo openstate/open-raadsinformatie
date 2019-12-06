@@ -1,6 +1,5 @@
 from collections import namedtuple
 from copy import deepcopy
-import sys
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -25,6 +24,7 @@ class DatabaseTransformer(BaseTransformer):
         super(DatabaseTransformer, self).__init__(*args, **kwargs)
         self.database = PostgresDatabase(serializer=PostgresSerializer)
         self.created_models = dict()
+        self.processed_subresources = set()
 
     @staticmethod
     def get_model_class(properties):
@@ -41,7 +41,7 @@ class DatabaseTransformer(BaseTransformer):
 
     def get_supplier(self, ori_id):
         """
-        Retrieve the supplier of the Resource with the given ORI ID from the database.
+        Retrieves the supplier of the Resource with the given ORI ID from the database.
         """
         try:
             return self.database.get_supplier(ori_id)
@@ -59,8 +59,9 @@ class DatabaseTransformer(BaseTransformer):
             'collection': model_class.__name__.lower(),
         }
         item = model_class(entity, **source_defaults)
+        item.ori_identifier = 'https://id.openraadsinformatie.nl/' + str(resource['ori_id'])
 
-        # Reconstruct properties
+        # Reconstruct properties with RelationPlaceholders for references to subresources
         for _property in resource['properties']:
             # Ignore the "type" property
             if _property['predicate'] == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type':
@@ -85,19 +86,17 @@ class DatabaseTransformer(BaseTransformer):
             except AttributeError:
                 setattr(item, attr_name, attr_value)
 
+        # Set the identifier_url for the enricher
         if item.values.get('original_url'):
             item.values['identifier_url'] = item.values.get('original_url')
 
         self.created_models[resource['ori_id']] = item
         return item
 
-    def create_subresource(self, resource, entity, collection, subresources):
+    def create_subresource(self, resource, entity, collection):
         """
-        Recursively create all subresources.
+        Creates all subresources (without properties).
         """
-
-        sys.setrecursionlimit(500)
-
         if resource['ori_id'] in self.created_models:
             return self.created_models[resource['ori_id']]
 
@@ -108,46 +107,58 @@ class DatabaseTransformer(BaseTransformer):
             'collection': collection,
         }
         item = model_class(entity, **source_defaults)
+        item.ori_identifier = 'https://id.openraadsinformatie.nl/' + str(resource['ori_id'])
 
-        # Reconstruct properties
-        for _property in resource['properties']:
+        self.created_models[resource['ori_id']] = item
+        return item
+
+    def add_subresource_properties(self, subresource, subresources):
+        """
+        Adds properties to the given subresource.
+        """
+        if subresource.ori_identifier.rsplit('/')[-1] in self.processed_subresources:
+            return
+
+        try:
+            properties = subresources[int(subresource.ori_identifier.rsplit('/')[-1])][0]['properties']
+        except KeyError:
+            properties = subresources[subresource.ori_identifier.rsplit('/')[-1]][0]['properties']
+
+        for _property in properties:
             # Ignore the "type" property
             if _property['predicate'] == 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type':
                 continue
 
             try:
-                attr_name = self.match_predicate(_property, item._definitions)
+                attr_name = self.match_predicate(_property, subresource._definitions)
             except ValueError:
                 continue
 
             if _property['type'] == 'resource':
-                attr_value = self.create_subresource(subresources[_property['value']][0],
-                                                     subresources[_property['value']][1],
-                                                     subresources[_property['value']][2],
-                                                     subresources)
+                attr_value = self.created_models[_property['value']]
             else:
                 attr_value = _property['value']
 
             try:
                 # If the attribute already exists, turn it into a list of attributes
-                attr = getattr(item, attr_name)
+                attr = getattr(subresource, attr_name)
                 if not isinstance(attr, list):
-                    setattr(item, attr_name, [attr,])
-                getattr(item, attr_name).append(attr_value)
+                    setattr(subresource, attr_name, [attr,])
+                getattr(subresource, attr_name).append(attr_value)
             except AttributeError:
-                setattr(item, attr_name, attr_value)
+                setattr(subresource, attr_name, attr_value)
 
-        if item.values.get('original_url'):
-            item.values['identifier_url'] = item.values.get('original_url')
+        # Set the identifier_url for the enricher
+        if subresource.values.get('original_url'):
+            subresource.values['identifier_url'] = subresource.values.get('original_url')
 
-        self.created_models[resource['ori_id']] = item
-        return item
+        self.processed_subresources.add(subresource.ori_identifier.rsplit('/')[-1])
 
-    def match_predicate(self, _property, definitions):
+    @staticmethod
+    def match_predicate(_property, definitions):
         """
         Matches the predicate of a property with the definition on a model class.
         """
-
         for definition in definitions.iteritems():
             if definition[1].ns.uri + definition[1]._name == _property['predicate']:
                 return definition[0]
@@ -162,9 +173,16 @@ def database_item(self, content_type, raw_item, entity, source_item, **kwargs):
     # Create the main resource
     item = self.create_resource(resource, entity)
 
-    # Create subresources
+    # Create subresources (without properties)
     for subresource in subresources.iteritems():
-        self.create_subresource(subresource[1][0], subresource[1][1], subresource[1][2], subresources)
+        self.create_subresource(subresource[1][0], subresource[1][1], subresource[1][2])
+
+    # Add the main resource to the list of processed subresources to prevent overwriting of its properties
+    self.processed_subresources.add(item.ori_identifier.rsplit('/')[-1])
+
+    # Add properties to subresources
+    for subresource in self.created_models.iteritems():
+        self.add_subresource_properties(subresource[1], subresources)
 
     # Replace relation placeholders on main resource
     for _property in item.values.iteritems():

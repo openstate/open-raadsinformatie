@@ -64,9 +64,12 @@ class DatabaseBaseExtractor(BaseExtractor):
 
             for resource_property in self.session.query(Property).filter(Property.resource_id == subresource_id).order_by(
                     Property.predicate, Property.order):
-                subresource['properties'].append(self.flatten_property(resource_property))
-                entity = resource_property.resource.sources[0].iri.rsplit('/')[-1]
-                collection = resource_property.resource.sources[0].iri.rsplit('/')[-2]
+                try:
+                    subresource['properties'].append(self.flatten_property(resource_property))
+                    entity = resource_property.resource.sources[0].iri.rsplit('/')[-1]
+                    collection = resource_property.resource.sources[0].iri.rsplit('/')[-2]
+                except ValueError as e:
+                    log.warning(e)
 
             self.loaded_subresources[subresource_id] = (subresource, entity, collection)
             return subresource, entity, collection
