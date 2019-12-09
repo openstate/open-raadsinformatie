@@ -38,3 +38,12 @@ class Uri(str):
 
     def short(self):
         return self.local_name
+
+
+class Url(str):
+    """Serializes to a full URL to a linked property"""
+    def __new__(cls, url):
+        if not url:
+            return None
+
+        return super(Url, cls).__new__(cls, url)

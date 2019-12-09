@@ -1,4 +1,4 @@
-from .misc import Namespace
+from .misc import Namespace, Uri, Url
 from ocd_backend.utils.misc import str_to_datetime
 
 
@@ -53,6 +53,9 @@ class StringProperty(Property):
     @staticmethod
     def sanitize(value):
         """Strip the value of spaces and make it unicode"""
+        if isinstance(value, Uri) or isinstance(value, Url):
+            return value
+
         if value:
             return unicode(value).strip()
 
@@ -82,7 +85,6 @@ class FloatProperty(Property):
             return float(value)
 
 
-
 class DateProperty(Property):
     """A property which defines a date type."""
 
@@ -101,6 +103,11 @@ class DateTimeProperty(Property):
         """Strip the value of spaces and make it unicode"""
         if value:
             return str_to_datetime(value)
+
+
+class NestedProperty(Property):
+    """A property that will contain nested children"""
+    pass
 
 
 class ArrayProperty(Property):

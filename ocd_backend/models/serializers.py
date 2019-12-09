@@ -2,14 +2,14 @@ from rdflib import Literal, URIRef, Graph, BNode
 from rdflib.collection import Collection
 from rdflib.namespace import XSD, Namespace, NamespaceManager
 
-from ocd_backend.models.definitions import ALL, Rdf, Ori
+from ocd_backend.models.definitions import Rdf, Ori
 from ocd_backend.models.exceptions import SerializerError, SerializerNotFound, \
     RequiredProperty, MissingProperty, IgnoredProperty
 from ocd_backend.models.properties import StringProperty, URLProperty, \
     IntegerProperty, FloatProperty, DateProperty, DateTimeProperty, \
-    ArrayProperty, JsonProperty, Relation, OrderedRelation
+    ArrayProperty, JsonProperty, Relation, OrderedRelation, NestedProperty
 from ocd_backend.utils.misc import iterate
-from ocd_backend.models.misc import Uri
+from ocd_backend.models.misc import Uri, Url
 
 
 def get_serializer_class(format=None):
@@ -95,7 +95,7 @@ class BaseSerializer(object):
                 if isinstance(self.loader_class, klass):
                     raise IgnoredProperty()
 
-        if type(value) == Uri:
+        if type(value) == Uri or type(value) == Url:
             value = str(value)
 
         if type(prop) == StringProperty:
@@ -121,11 +121,6 @@ class BaseSerializer(object):
 
         elif type(prop) == JsonProperty:
             return value
-
-        # else:
-        #     raise SerializerError(
-        #         "Cannot serialize the property of type '{}'".format(type(prop))
-        #     )
 
 
 class PostgresSerializer(BaseSerializer):
@@ -309,6 +304,11 @@ class JsonSerializer(BaseSerializer):
 
         For all other properties the super method is called as a fallback.
         """
+
+        if type(prop) == NestedProperty:
+            for _, item in iterate(value):
+                return self.serialize(item)
+
         serialized = super(JsonSerializer, self).serialize_prop(prop, value)
 
         if type(prop) == Relation or type(prop) == OrderedRelation:
@@ -348,12 +348,23 @@ class JsonLDSerializer(JsonSerializer):
                 '@id': definition.absolute_uri(),
             }
 
+        for name, value in model_object.values.items():
+            if isinstance(value, Uri) or isinstance(value, Url):
+                context[name] = {
+                    '@id': model_object.definition(name).absolute_uri(),
+                    '@type': '@id',
+                }
+
         deflated = self.deflate(model_object, props=True, rels=True)
         deflated['@context'] = {k: v for k, v in context.items() if k in deflated}
         deflated['@context']['@base'] = Ori.uri
         deflated['@context'][model_object.verbose_name()] = model_object.absolute_uri()
-        deflated['@id'] = model_object.get_short_identifier()
         deflated['@type'] = model_object.verbose_name()
+
+        ori_identifier = model_object.get_short_identifier()
+        if ori_identifier:
+            deflated['@id'] = ori_identifier
+
         return deflated
 
     def serialize_prop(self, prop, value):

@@ -10,6 +10,7 @@ import definitions.opengov
 import definitions.org
 import definitions.owl
 import definitions.person
+import definitions.prov
 import definitions.schema
 
 # https://argu.co/ns/meeting#
@@ -42,6 +43,9 @@ Organization = definitions.org.Organization
 # TopLevelOrganization is an alias for Organization
 TopLevelOrganization = definitions.org.Organization
 Membership = definitions.org.Membership
+
+# http://www.w3.org/ns/prov#
+Activity = definitions.prov.Activity
 
 # Constants
 

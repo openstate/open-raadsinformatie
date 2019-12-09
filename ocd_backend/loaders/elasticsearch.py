@@ -1,5 +1,3 @@
-from datetime import datetime
-
 import simplejson as json
 
 from ocd_backend import settings
@@ -17,7 +15,6 @@ log = get_source_logger('elasticsearch_loader')
 class ElasticsearchBaseLoader(BaseLoader):
     def start(self, *args, **kwargs):
         self.index_name = kwargs.get('new_index_name')
-        self.start_time = kwargs.get('start_time')
 
         if not self.index_name:
             raise ConfigurationError('The name of the index is not provided')
@@ -29,11 +26,12 @@ class ElasticsearchBaseLoader(BaseLoader):
 
         # Recursively index associated models like attachments
         for model in doc.traverse():
+            self.add_metadata(model, doc == model)
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
             self.process(model, model_body)
-
             log_identifiers.append(model.get_short_identifier())
+
         log.debug('%s indexing document id: %s' % (self.__name__, ', '.join(log_identifiers)))
 
     def process(self, model, model_body):

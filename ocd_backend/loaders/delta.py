@@ -37,6 +37,8 @@ class DeltaLoader(BaseLoader):
         log_identifiers = []
         # Recursively index associated models like attachments
         for model in doc.traverse():
+            self.add_metadata(model, doc == model)
+
             # Serialize the body to JSON-LD
             jsonld_body = JsonLDSerializer(loader_class=self).serialize(model)
 

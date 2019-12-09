@@ -57,7 +57,7 @@ def setup_pipeline(source_definition):
         'run_identifier': 'pipeline_{}'.format(uuid4().hex),
         'current_index_name': current_index_name,
         'new_index_name': new_index_name,
-        'index_alias': index_alias
+        'index_alias': index_alias,
     }
 
     logger.debug('[%s] Starting run with identifier %s' % (source_definition['key'], params['run_identifier']))
@@ -107,10 +107,11 @@ def setup_pipeline(source_definition):
             # The first extractor should be a generator instead of a task
             for item in pipeline_extractors[pipeline['id']](
                     source_definition=pipeline_definitions[pipeline['id']]).run():
-
                 step_chain = list()
 
                 params['chain_id'] = uuid4().hex
+                params['start_time'] = datetime.now()
+
                 celery_app.backend.add_value_to_set(
                     set_name=run_identifier_chains,
                     value=params['chain_id'])

@@ -175,11 +175,18 @@ class Model(object):
         except AttributeError:
             pass
 
-        self.ori_identifier = self.db.get_ori_identifier(iri=self.source_iri)
+        try:
+            self.ori_identifier = self.db.get_ori_identifier(iri=self.source_iri)
+        except AttributeError:
+            return None
+
         return self.ori_identifier
 
     def get_short_identifier(self):
         ori_identifier = self.get_ori_identifier()
+        if not ori_identifier:
+            return None
+
         _, _, identifier = ori_identifier.partition(Ori.uri)
         assert len(identifier) > 0
         return identifier
