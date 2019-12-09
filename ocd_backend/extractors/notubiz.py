@@ -142,12 +142,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     self.default_query_params
                 )
                 try:
-                    data = self.fetch_data(
-                        meeting_url,
-                        "events/meetings/%i" % item['id'],
-                        item['last_modified']
-                    )
-                    meeting_json = json.loads(data)['meeting']
+                    resource = self.fetch(meeting_url, "events/meetings/%i" % item['id'], item['last_modified'])
+                    meeting_json = json.load(resource.media_file)['meeting']
                 except ItemAlreadyProcessed, e:
                     # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1

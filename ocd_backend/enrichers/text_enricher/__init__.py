@@ -57,18 +57,16 @@ class TextEnricher(BaseEnricher):
 
         ori_enriched = GCSCachingMixin.factory('ori-enriched')
         if ori_enriched.exists(identifier):
-            _, _, cached_file = ori_enriched.download_cache(identifier)
+            resource = ori_enriched.download_cache(identifier)
             try:
-                item.text = json.load(cached_file)['data']
+                item.text = json.load(resource.media_file)['data']
             except (ValueError, KeyError):
                 # No json could be decoded or data not found, pass and parse again
                 pass
-            finally:
-                cached_file.close()
 
         if not hasattr(item, 'text') or not item.text:
             try:
-                content_type, content_length, media_file = GCSCachingMixin.factory('ori-static').fetch(
+                resource = GCSCachingMixin.factory('ori-static').fetch(
                     item.original_url,
                     identifier,
                     date_modified,
@@ -82,7 +80,7 @@ class TextEnricher(BaseEnricher):
 
             # Make sure file_object is actually on the disk for pdf parsing
             temporary_file = NamedTemporaryFile(delete=True)
-            temporary_file.write(media_file.read())
+            temporary_file.write(resource.read())
             temporary_file.seek(0, 0)
 
             if os.path.exists(temporary_file.name):
@@ -90,7 +88,6 @@ class TextEnricher(BaseEnricher):
                 item.text = file_parser(path, max_pages=100)
 
             temporary_file.close()
-            media_file.close()
 
             if hasattr(item, 'text') and item.text:
                 # Save the enriched version to the ori-enriched bucket

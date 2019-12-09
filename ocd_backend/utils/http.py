@@ -1,26 +1,24 @@
 import base64
 import cStringIO
-import errno
-import glob
 import gzip
-import os
-from datetime import datetime
+import hashlib
 from tempfile import NamedTemporaryFile
 
 import requests
 import urllib3
+from google.api_core import retry
 from google.auth.exceptions import GoogleAuthError
 from google.cloud import storage, exceptions
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from ocd_backend.exceptions import InvalidFile, ItemAlreadyProcessed, NotFound
+from ocd_backend.exceptions import NotFound
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import USER_AGENT, DATA_DIR_PATH
-from ocd_backend.utils.misc import localize_datetime, datetime_to_unixstamp, \
-    str_to_datetime
+from ocd_backend.settings import USER_AGENT
 
 log = get_source_logger('http')
+
+RETRY_DEADLINE = 60 * 2
 
 
 class CustomRetry(Retry):
@@ -32,6 +30,22 @@ class CustomRetry(Retry):
                                                  error, _pool, _stacktrace)
         log.info("Retrying url: %s" % url)
         return res
+
+
+class FileResource(object):
+    def __init__(self, media_file):
+        self.data = None
+        self.existed = None
+        self.content_type = None
+        self.file_size = None
+        self.revision_path = None
+        self.from_cache = False
+        self.media_file = media_file
+
+    def read(self):
+        self.data = self.media_file.read()
+        self.media_file.seek(0, 0)
+        return self.data
 
 
 class HttpRequestMixin(object):
@@ -75,14 +89,8 @@ class HttpRequestMixin(object):
 
         return self._http_session
 
-    def fetch(self, url, path, modified_date):
+    def fetch(self, url, path):
         return self.download_url(url)
-
-    def fetch_data(self, url, path, modified_date):
-        _, _, media_file = self.fetch(url, path, modified_date)
-        data = media_file.read()
-        media_file.close()
-        return data
 
     def download_url(self, url, partial_fetch=False):
         http_resp = self.http_session.get(url, stream=True, timeout=(60, 120), verify=False)
@@ -119,115 +127,14 @@ class HttpRequestMixin(object):
 
         media_file.seek(0, 0)
 
-        return (
-            http_resp.headers.get('content-type'),
-            content_length,
-            media_file
-        )
+        resource = FileResource(media_file)
+        resource.content_type = http_resp.headers.get('content-type')
+        resource.file_size = content_length
+        return resource
 
-    def save(self, path, data, content_type=None):
-        """Save is only implemented for GCSCachingMixin"""
+    def upload(self, path, data, content_type=None):
+        """Upload is only implemented for GCSCachingMixin"""
         pass
-
-
-class LocalCachingMixin(HttpRequestMixin):
-    """Deprecated now in favor of GCSCachingMixin"""
-
-    def __init__(self, *args, **kwargs):
-        raise DeprecationWarning
-
-    def base_path(self, file_name):
-        first_dir = file_name[0:2]
-        second_dir = file_name[2:4]
-
-        return os.path.join(
-            DATA_DIR_PATH,
-            'cache',
-            self.source_definition['index_name'],
-            first_dir,
-            second_dir,
-            file_name,
-        )
-
-    @staticmethod
-    def _latest_version(file_path):
-        version_paths = glob.glob('%s-*' % file_path)
-
-        if len(version_paths) < 1:
-            raise OSError
-
-        versions = [os.path.basename(version_path).rpartition("-")[2] for version_path in version_paths]
-        latest_version = sorted(versions, reverse=True)[0]
-
-        return file_path, latest_version,
-
-    @staticmethod
-    def _check_path(path):
-        file_bytes = os.path.getsize(path)
-
-        # Raise OSError if the filesize is smaller than two bytes
-        if file_bytes < 2:
-            raise InvalidFile
-
-    def fetch(self, url, path, modified_date):
-        if modified_date:
-            modified_date = localize_datetime(str_to_datetime(modified_date))
-        else:
-            modified_date = None
-
-        url_hash = base64.urlsafe_b64encode(path)
-        base_path = self.base_path(url_hash)
-
-        try:
-            file_path, latest_version = self._latest_version(base_path)
-            latest_version_path = '%s-%s' % (file_path, latest_version)
-            self._check_path(latest_version_path)
-        except OSError:
-            # File does not exist, download and cache the url
-            content_type, content_length, media_file = self.download_url(url)
-            data = media_file.read()
-            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
-            media_file.seek(0, 0)
-            self._write_to_cache(base_path, data, modified_date)
-            return content_type, content_length, media_file
-
-        if modified_date and modified_date > str_to_datetime(latest_version):
-            # If file has been modified download it
-            content_type, content_length, media_file = self.download_url(url)
-            data = media_file.read()
-            media_file.seek(0, 0)
-            self._write_to_cache(base_path, data, modified_date)
-            return content_type, content_length, media_file
-        else:
-            if self.source_definition.get('force_old_files'):
-                with open(latest_version_path, 'rb') as f:
-                    f.seek(0, 2)
-                    content_length = f.tell()
-                    f.seek(0, 0)
-                    return None, content_length, f.read()
-
-        raise ItemAlreadyProcessed("Item %s has already been processed on %s. "
-                                   "Set 'force_old_files' in source_definition "
-                                   "to download old files from cache." %
-                                   (url, latest_version))
-
-    @staticmethod
-    def _write_to_cache(file_path, data, modified_date=None):
-        try:
-            # Create all subdirectories
-            os.makedirs(os.path.dirname(file_path))
-        except OSError, e:
-            # Reraise if error is not 'File exists'
-            if e.errno != errno.EEXIST:
-                raise e
-
-        if not modified_date:
-            modified_date = datetime.now()
-
-        modified_date = datetime_to_unixstamp(localize_datetime(modified_date))
-
-        with open('%s-%s' % (file_path, modified_date), 'w') as f:
-            f.write(data)
 
 
 class GCSCachingMixin(HttpRequestMixin):
@@ -246,6 +153,12 @@ class GCSCachingMixin(HttpRequestMixin):
     bucket_name = None
     default_content_type = None
     _bucket = None
+
+    @classmethod
+    def factory(cls, bucket_name):
+        ins = cls()
+        ins.bucket_name = bucket_name
+        return ins
 
     def get_bucket(self):
         """Get the bucket defined by 'bucket_name' from the storage_client.
@@ -279,52 +192,67 @@ class GCSCachingMixin(HttpRequestMixin):
 
         return self._bucket
 
-    def fetch(self, url, path, modified_date=None):
+    def fetch(self, url, path, condition=None):
         """Fetch a resource url and save it to a path in GCS. The resource will
-        only be downloaded from the source when the file has been modified,
-        otherwise the file will be downloaded from cache unless 'force_old_files'
-        has been set.
+        only be actually downloaded from the source when the cached file does
+        not exist, otherwise the file will be downloaded from cache unless
+        'force_old_files' has been set.
         """
 
         # If the storage_client has not been loaded fall back to HttpRequestMixin fetch
         if not self.storage_client:
-            return super(GCSCachingMixin, self).fetch(url, path, modified_date)
+            return super(GCSCachingMixin, self).fetch(url, path)
 
         bucket = self.get_bucket()
-        blob = bucket.get_blob(path)
+        blob = self.exists(path)
 
-        if not blob or self.source_definition.get('force_old_files'):
+        try:
+            force_old_files = self.source_definition['force_old_files']
+        except (TypeError, KeyError):
+            force_old_files = getattr(self, 'force_old_files', False)
+
+        # try:
+        #     skip_old_files = self.source_definition['skip_old_files']
+        # except (TypeError, KeyError):
+        #     skip_old_files = getattr(self, 'skip_old_files', False)
+
+        if not blob or force_old_files:
             # File does not exist in the cache or we want to ignore the cache with force_old_files
-            blob = bucket.blob(path)
-            content_type, content_length, media_file = self.download_url(url)
-            data = media_file.read()
-            # read() iterates over the file to the end, so we have to seek to the beginning to use it again!
-            media_file.seek(0, 0)
-            self.compressed_upload(blob, data, content_type)
-            log.debug('Uploaded file %s to GCS bucket %s' % (path, self.bucket_name))
-            return content_type, content_length, media_file
-        else:
-            return self.download_cache(path)
+            resource = self.download_url(url)
+            resource.existed = bool(blob)
 
-    def save(self, path, data, content_type=None):
+            blob = bucket.blob(path)
+            revision_path = self.upload_blob(blob, resource.read(), resource.content_type)
+            log.debug('Uploaded file to GCS bucket %s: %s' % (self.bucket_name, revision_path))
+
+            resource.revision_path = revision_path
+            return resource
+        else:
+            resource = self.download_cache(path)
+            resource.from_cache = True
+            return resource
+
+    def upload(self, path, data, content_type=None):
         """Save data to a path in GCS. The content_type can be specified, or
         will default to default_content_type.
         """
 
         # If the storage_client has not been loaded fall back to HttpRequestMixin save
         if not self.storage_client:
-            return super(GCSCachingMixin, self).save(path, data, content_type)
+            return super(GCSCachingMixin, self).upload(path, data, content_type)
 
         bucket = self.get_bucket()
         blob = bucket.blob(path)
 
-        self.compressed_upload(blob, data, content_type)
+        return self.upload_blob(blob, data, content_type)
 
-    def compressed_upload(self, blob, data, content_type=None):
-        """Upload a gzip compressed file to GCS. If content_type is empty, the
-        default_content_type will be used. If both are empty a ValueError will
-        be raised.
+    def upload_blob(self, blob, data, content_type=None, skip_exists=True):
+        """Upload a gzip compressed file to a GCS blob. If content_type is
+        empty, the default_content_type will be used. If both are empty a
+        ValueError will be raised. It returns the path with revision generation.
         """
+        assert blob, "blob must not be None"
+        assert data, "data must not be None"
 
         if not content_type:
             if self.default_content_type:
@@ -338,8 +266,24 @@ class GCSCachingMixin(HttpRequestMixin):
         with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
             gf.write(data)
 
+        if skip_exists:
+            md5_hash = base64.b64encode(hashlib.md5(f.read()).digest())
+            f.seek(0, 0)
+
+            if blob.md5_hash == md5_hash:
+                assert blob.generation
+                return '{}/{}#{}'.format(blob.bucket.name, blob.name, blob.generation)
+
         blob.content_encoding = 'gzip'
-        blob.upload_from_file(f, rewind=True, content_type=content_type)
+        self._do_upload(f, blob, rewind=True, content_type=content_type)
+        return '{}/{}#{}'.format(blob.bucket.name, blob.name, blob.generation)
+
+    @retry.Retry(deadline=RETRY_DEADLINE)
+    def _do_upload(self, f, blob, *args, **kwargs):
+        """Do the actual uploading. This action will retry using exponential
+        back-off if it is raises an transient API error.
+        """
+        return blob.upload_from_file(f, *args, **kwargs)
 
     def download_cache(self, path):
         """Retrieve and return the cached file"""
@@ -350,13 +294,26 @@ class GCSCachingMixin(HttpRequestMixin):
             raise NotFound(path)
 
         media_file = cStringIO.StringIO()
-        blob.download_to_file(media_file)
+        self._do_download(blob, media_file)
         media_file.seek(0, 0)
-        log.debug('Retrieved file %s from GCS bucket %s' % (path, self.bucket_name))
-        return blob.content_type, blob.size, media_file
+        log.debug('Retrieved file from GCS bucket %s: %s' % (self.bucket_name, path))
 
+        resource = FileResource(media_file)
+        resource.content_type = blob.content_type
+        resource.file_size = blob.size
+        return resource
+
+    @retry.Retry(deadline=RETRY_DEADLINE)
+    def _do_download(self, blob, media_file):
+        """Do the actual downloading. This action will retry using exponential
+        back-off if it is raises an transient API error.
+        """
+        return blob.download_to_file(media_file)
+
+    @retry.Retry(deadline=RETRY_DEADLINE)
     def exists(self, path):
+        """Check if path exists and returns the blob. This action will retry
+        using exponential back-off if it is raises an transient API error.
+        """
         bucket = self.get_bucket()
-        blob = bucket.get_blob(path)
-
-        return bool(blob)
+        return bucket.get_blob(path)

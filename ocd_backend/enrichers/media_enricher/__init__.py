@@ -51,7 +51,7 @@ class MediaEnricher(BaseEnricher, GCSCachingMixin):
             date_modified = None
 
         try:
-            content_type, content_length, media_file = self.fetch(
+            resource = self.fetch(
                 item.original_url,
                 identifier,
                 date_modified,
@@ -60,8 +60,8 @@ class MediaEnricher(BaseEnricher, GCSCachingMixin):
             raise SkipEnrichment(e)
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, urllib.quote(identifier))
-        item.content_type = content_type
-        item.size_in_bytes = content_length
+        item.content_type = resource.content_type
+        item.size_in_bytes = resource.file_size
 
         enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, basestring):
@@ -70,10 +70,10 @@ class MediaEnricher(BaseEnricher, GCSCachingMixin):
         # The enricher tasks will executed in specified order
         for task in enrich_tasks:
             # Seek to the beginning of the file before starting a task
-            media_file.seek(0)
-            self.available_tasks[task](self.source_definition).enrich_item(item, media_file)
+            resource.media_file.seek(0)
+            self.available_tasks[task](self.source_definition).enrich_item(item, resource.media_file)
 
-        media_file.close()
+        resource.media_file.close()
 
         item.db.save(item)
 
