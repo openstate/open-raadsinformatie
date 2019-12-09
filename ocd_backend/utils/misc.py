@@ -483,3 +483,23 @@ def strip_scheme(url):
     parsed = urlparse(url)
     scheme = "%s://" % parsed.scheme
     return parsed.geturl().replace(scheme, '', 1)
+
+
+def deep_get(item, *keys):
+    """Based on https://stackoverflow.com/a/36131992/5081021"""
+
+    def inner(d, key):
+        try:
+            return d[key]
+        except (KeyError, IndexError, TypeError):
+            return None
+
+    return reduce(inner, keys, item)
+
+
+def compare_insensitive(a, b):
+    """Compares insensitive if a contains b"""
+    if a is None or b is None:
+        return
+
+    return b.lower() in a.lower()
