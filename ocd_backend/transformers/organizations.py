@@ -24,7 +24,7 @@ def transform_contact_details(data):
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def municipality_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def municipality_organization_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
@@ -32,10 +32,11 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
         'source': self.source_definition['key'],
         'supplier': 'allmanak',
         'collection': 'municipality',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.canonical_iri = entity
     object_model.classification = u'Municipality'
     object_model.collection = self.source_definition['key']
     object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(original_item['naam'])])
@@ -52,7 +53,7 @@ def municipality_organization_item(self, content_type, raw_item, entity, source_
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def province_organization_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def province_organization_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
@@ -60,10 +61,11 @@ def province_organization_item(self, content_type, raw_item, entity, source_item
         'source': self.source_definition['key'],
         'supplier': 'allmanak',
         'collection': 'province',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.canonical_iri = entity
     object_model.classification = u'Province'
     object_model.collection = self.source_definition['key']
     object_model.name = unicode(original_item['naam'])
@@ -77,7 +79,7 @@ def province_organization_item(self, content_type, raw_item, entity, source_item
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def party_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
@@ -85,9 +87,11 @@ def party_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'source': self.source_definition['key'],
         'supplier': 'allmanak',
         'collection': 'party',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
-    # When the Allmanak implements parties as entities, the entity ID should be used
+    # When the Allmanak implements parties as entities, the canonical_iri should be used
     object_model = Organization(original_item['partij'], **source_defaults)
     object_model.canonical_id = original_item['partij']
     object_model.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],

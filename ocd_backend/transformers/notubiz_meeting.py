@@ -8,7 +8,7 @@ log = get_source_logger('notubiz_meeting')
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
     
@@ -16,10 +16,11 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'source': self.source_definition['key'],
         'supplier': 'notubiz',
         'collection': 'meeting',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     event = Meeting(original_item['id'], **source_defaults)
-    event.canonical_iri = entity
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',

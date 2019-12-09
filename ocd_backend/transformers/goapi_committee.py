@@ -8,7 +8,7 @@ log = get_source_logger('goapi_committee')
 
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
     
@@ -16,6 +16,8 @@ def committee_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'source': self.source_definition['key'],
         'supplier': 'gemeenteoplossingen',
         'collection': 'committee',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     committee = Organization(original_item['id'], **source_defaults)

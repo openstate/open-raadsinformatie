@@ -93,7 +93,8 @@ class Model(object):
 
         return instance
 
-    def __init__(self, source_id=None, source=None, supplier=None, collection=None, merge_into=None):
+    def __init__(self, source_id=None, source=None, supplier=None, collection=None,
+                 merge_into=None, cached_path=None, canonical_iri=None):
         # Set defaults
         self.skip_validation = None
         self.values = dict()
@@ -105,6 +106,15 @@ class Model(object):
             self.merge_into = merge_into
         else:
             self.merge_into = None
+
+        self.canonical_id = source_id
+        self.cached_path = cached_path
+
+        try:
+            # if canonical_iri is a lambda function
+            self.canonical_iri = canonical_iri(self)
+        except TypeError:
+            self.canonical_iri = canonical_iri
 
         # https://argu.co/voc/mapping/<organization>/<source>/<source_id_key>/<source_id>
         # i.e. https://argu.co/voc/mapping/nl/ggm/vrsnummer/6655476
@@ -136,9 +146,6 @@ class Model(object):
             definition = self.definition(key)
         except MissingProperty:
             definition = None
-
-        # if key[0:1] != '_' and not definition:
-        #     raise AttributeError("'%s' is not defined in %s" % (key, self.compact_uri()))
 
         if definition:
             value = definition.sanitize(value)

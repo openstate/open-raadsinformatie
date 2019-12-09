@@ -81,7 +81,7 @@ class GreenValleyTransformer(BaseTransformer):
         
 
 @celery_app.task(bind=True, base=GreenValleyTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwargs):
+def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
     
@@ -89,6 +89,8 @@ def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwar
         'source': self.source_definition['key'],
         'supplier': 'greenvalley',
         'collection': 'report',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     meeting = original_item[u'default']
@@ -175,7 +177,7 @@ def greenvalley_report(self, content_type, raw_item, entity, source_item, **kwar
 
 
 @celery_app.task(bind=True, base=GreenValleyTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
     
@@ -183,6 +185,8 @@ def meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
         'source': self.source_definition['key'],
         'supplier': 'greenvalley',
         'collection': 'meeting',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     meeting = original_item[u'default']

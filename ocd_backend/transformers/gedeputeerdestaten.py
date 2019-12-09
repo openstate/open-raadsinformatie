@@ -51,7 +51,7 @@ class GedeputeerdeStatenTransformer(BaseTransformer):
 
 
 @celery_app.task(bind=True, base=GedeputeerdeStatenTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
-def gs_meeting_item(self, content_type, raw_item, entity, source_item, **kwargs):
+def gs_meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
@@ -59,6 +59,8 @@ def gs_meeting_item(self, content_type, raw_item, entity, source_item, **kwargs)
         'source': self.source_definition['key'],
         'supplier': 'greenvalley',
         'collection': 'meeting',
+        'canonical_iri': canonical_iri,
+        'cached_path': cached_path,
     }
 
     original_id = unicode(original_item.xpath(self.source_definition['item_id_xpath'])[0])
