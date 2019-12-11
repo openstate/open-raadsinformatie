@@ -1,4 +1,5 @@
 import os
+import urllib
 from tempfile import NamedTemporaryFile
 
 import requests
