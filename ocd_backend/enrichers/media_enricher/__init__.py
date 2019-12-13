@@ -1,3 +1,5 @@
+import urllib
+
 import requests
 
 from ocd_backend.app import celery_app
@@ -66,7 +68,7 @@ class MediaEnricher(BaseEnricher, HttpRequestMixin):
         except requests.HTTPError as e:
             raise SkipEnrichment(e)
 
-        item.url = '%s/%s' % (RESOLVER_BASE_URL, identifier)
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, urllib.quote(identifier))
         item.content_type = content_type
         item.size_in_bytes = content_length
 
