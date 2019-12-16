@@ -269,6 +269,32 @@ paths:
         200:
           description: ""
 
+  /_mapping:
+    get:
+      tags:
+      - "Elasticsearch API"
+      description: |
+        Retrieves mapping definitions for indices in a cluster.
+        See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html for more information.
+      operationId: "elastic_mapping_get"
+      responses:
+        200:
+          description: ""
+
+  /{index}/_mapping:
+    get:
+      tags:
+      - "Elasticsearch API"
+      description: |
+        Retrieves mapping definitions for indices in a cluster.
+        See https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-mapping.html for more information.
+      operationId: "elastic_mapping_index_get"
+      parameters:
+      - $ref: "#/parameters/index"
+      responses:
+        200:
+          description: ""
+
 parameters:
   index:
     name: "index"
