@@ -89,7 +89,7 @@ paths:
         200:
           description: ""
 
-  /_search/scroll/{scrollId}:
+  /_search/scroll:
     get:
       tags:
         - "Elasticsearch API"
@@ -98,7 +98,7 @@ paths:
         See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html for more information.
       operationId: "elastic_search_scroll_get"
       parameters:
-      - $ref: "#/parameters/scrollId"
+      - $ref: "#/parameters/scroll_id"
       responses:
         200:
           description: ""
@@ -110,7 +110,7 @@ paths:
         See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html for more information.
       operationId: "elastic_search_scroll_post"
       parameters:
-      - $ref: "#/parameters/scrollId"
+      - $ref: "#/parameters/scroll_id"
       responses:
         200:
           description: ""
@@ -121,6 +121,44 @@ paths:
         Elasticsearch endpoint to clear a scroll search context.
         See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html#_clear_scroll_api for more information.
       operationId: "elastic_search_scroll_delete"
+      parameters:
+      - $ref: "#/parameters/scroll_id"
+      responses:
+        200:
+          description: ""
+
+  /_search/scroll/{scrollId}:
+    get:
+      tags:
+      - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for scrolled searches.
+        See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html for more information.
+      operationId: "elastic_search_scrollId_get"
+      parameters:
+      - $ref: "#/parameters/scrollId"
+      responses:
+        200:
+          description: ""
+    post:
+      tags:
+      - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint for scrolled searches.
+        See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html for more information.
+      operationId: "elastic_search_scrollId_post"
+      parameters:
+      - $ref: "#/parameters/scrollId"
+      responses:
+        200:
+          description: ""
+    delete:
+      tags:
+      - "Elasticsearch API"
+      description: |
+        Elasticsearch endpoint to clear a scroll search context.
+        See https://elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html#_clear_scroll_api for more information.
+      operationId: "elastic_search_scrollId_delete"
       parameters:
       - $ref: "#/parameters/scrollId"
       responses:
@@ -249,4 +287,10 @@ parameters:
     in: "path"
     description: "The base64-encoded scroll ID to fetch the next batch of results from"
     required: true
+    type: "string"
+  scroll_id:
+    name: "scroll_id"
+    in: "query"
+    description: "The base64-encoded scroll ID to fetch the next batch of results from"
+    required: false
     type: "string"
