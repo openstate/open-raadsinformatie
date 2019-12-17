@@ -132,7 +132,7 @@ spec:
       paths:
       - path: /(.*)
         backend:
-          serviceName: search
+          serviceName: nginx
           servicePort: 80
   - host: api.waaroverheid.nl
     http:
