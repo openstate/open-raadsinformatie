@@ -53,8 +53,6 @@ _entities: &entities
 _parlaeus: &parlaeus
   index_name: "{key}"
   source_name: "{key!c}"
-  base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
-  session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
   allmanak_api_version: "v1"
   entities: *entities
   <<: *source_defaults
@@ -63,6 +61,17 @@ ori.parlaeus:
   bodegraven_reeuwijk:
     key: bodegravenreeuwijk
     source_name: "Bodegraven-Reeuwijk"
+    base_url: "https://bodegraven-reeuwijk.parlaeus.nl/receive/opendata"
+    session_id: "97636d2c-7ac2-4f1f-8a27-8f458cbc3097"
     allmanak_id: 33912
     cbs_id: GM1901
+    <<: *parlaeus
+
+  apeldoorn:
+    key: apeldoorn
+    source_name: "Apeldoorn"
+    base_url: "https://apeldoorn.parlaeus.nl/receive/opendata"
+    session_id: "76b3235f-ac96-4860-b2ed-977ea959fd1c"
+    allmanak_id: 37707
+    cbs_id: GM0200
     <<: *parlaeus

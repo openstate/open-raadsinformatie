@@ -457,24 +457,24 @@ ori.notubiz:
     notubiz_organization_id: 794
     <<: *notubiz
 
-#  # Added on 08-04-2019
-#  blaricum:
-#    key: blaricum
-#    allmanak_id: 31318
-#    cbs_id: GM0376
-#    notubiz_organization_id: 2063
-#    <<: *notubiz
-#
-#  eemnes:
-#    key: eemnes
-#    allmanak_id: 29645
-#    cbs_id: GM0317
-#    notubiz_organization_id: 2022
-#    <<: *notubiz
-#
-#  laren:
-#    key: laren
-#    allmanak_id: 29164
-cbs_id: #
-notubiz_organization_id: 2046
-#    <<: *notubiz
+  # Added on 23-12-2019
+  wijk_bij_duurstede:
+    key: wijk_bij_duurstede
+    allmanak_id: 25942
+    cbs_id: GM0352
+    notubiz_organization_id: 1263
+    <<: *notubiz
+
+  zaltbommel:
+    key: zaltbommel
+    allmanak_id: 32790
+    cbs_id: GM0297
+    notubiz_organization_id: 1745
+    <<: *notubiz
+
+  nijmegen:
+    key: nijmegen
+    allmanak_id: 33391
+    cbs_id: GM0268
+    notubiz_organization_id: 799
+    <<: *notubiz

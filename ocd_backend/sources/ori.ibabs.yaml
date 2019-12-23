@@ -586,3 +586,46 @@ ori.ibabs:
     exclude: ".*[Ww]ijchen"
     cbs_id: GM0225
     <<: *ibabs
+
+  # Added on 23-12-2019
+  rozendaal:
+    key: rozendaal
+    allmanak_id: 25634
+    cbs_id: GM0277
+    <<: *ibabs
+
+  leudal:
+    key: leudal
+    allmanak_id: 24482
+    cbs_id: GM1640
+    <<: *ibabs
+
+  oldebroek:
+    key: oldebroek
+    allmanak_id: 22938
+    cbs_id: GM0269
+    <<: *ibabs
+
+  asten:
+    key: asten
+    allmanak_id: 30279
+    cbs_id: GM0743
+    <<: *ibabs
+
+  molenlanden:
+    key: molenlanden
+    allmanak_id: 27465430
+    cbs_id: GM1978
+    <<: *ibabs
+
+  vught:
+    key: vught
+    allmanak_id: 37665
+    cbs_id: GM0865
+    <<: *ibabs
+
+  mook_en_middelaar:
+    key: mook_en_middelaar
+    allmanak_id: 21431
+    cbs_id: GM0944
+    <<: *ibabs
