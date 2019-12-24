@@ -30,9 +30,7 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
         resp.raise_for_status()
 
         json_data = resp.json()
-        meetings = json_data.get('list')
-
-        for meeting in meetings:
+        for meeting in json_data.get('list', []):
             if not meeting['agid']:
                 log.error("The value for 'agid' seems to be empty, skipping")
                 continue
@@ -65,7 +63,7 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
         resp.raise_for_status()
 
         json_data = resp.json()
-        for committee in json_data.get('list'):
+        for committee in json_data.get('list', []):
             committee['url'] = url
             yield 'application/json', json.dumps(committee), url, committee
 
@@ -84,6 +82,6 @@ class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
         resp.raise_for_status()
 
         json_data = resp.json()
-        for person in json_data.get('list'):
+        for person in json_data.get('list', []):
             person['url'] = url
             yield 'application/json', json.dumps(person), url, person
