@@ -16,6 +16,8 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
     to use for accessing the API and creates an 'organizations' dictionary that contains
     information needed by child classes.
     """
+    base_url = 'https://api.notubiz.nl'
+    default_query_params = 'format=json&application_token=11ef5846eaf0242ec4e0bea441379d699a77f703d&version=1.17.0'
 
     def run(self):
         raise NotImplementedError
@@ -23,13 +25,11 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
     def __init__(self, *args, **kwargs):
         super(NotubizBaseExtractor, self).__init__(*args, **kwargs)
 
-        self.base_url = self.source_definition['base_url']
         # Set the bucket name for Google Cloud Storage
         self.bucket_name = 'notubiz'
 
         response = self.http_session.get(
-            "%s/organisations"
-            "?format=json&version=1.10.8" % self.base_url
+            "%s/organisations?%s" % (self.base_url, self.default_query_params)
         )
 
         try:
@@ -58,17 +58,22 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
     def run(self):
         response = self.http_session.get(
-            "%s/organisations/%s/gremia"
-            "?format=json&version=1.10.8" % (self.base_url, self.source_definition['notubiz_organization_id'])
+            "%s/organisations/%s/gremia?%s" % (
+                self.base_url,
+                self.source_definition['notubiz_organization_id'],
+                self.default_query_params
+            )
         )
         response.raise_for_status()
 
         committee_count = 0
         for committee in json.loads(response.content)['gremia']:
-            entity = '%s/organisations/%s/gremia/%s?format=json&version=1.10.8' % (
+            entity = '%s/organisations/%s/gremia/%s?%s' % (
                 self.base_url,
                 self.source_definition['notubiz_organization_id'],
-                committee['id'])
+                committee['id'],
+                self.default_query_params,
+            )
             yield 'application/json', \
                   json.dumps(committee), \
                   entity, \
@@ -97,13 +102,14 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             try:
                 response = self.http_session.get(
                     "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                    "&format=json&version=1.10.8&page=%i" %
+                    "&page=%i&%s" %
                     (
                         self.base_url,
                         self.source_definition['notubiz_organization_id'],
                         start_date.strftime("%Y-%m-%d %H:%M:%S"),
                         end_date.strftime("%Y-%m-%d %H:%M:%S"),
-                        page
+                        page,
+                        self.default_query_params,
                     )
                 )
             except (HTTPError, RetryError), e:
@@ -130,17 +136,30 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     meetings_skipped += 1
                     continue
 
-                meeting_url = "%s/events/meetings/%i?format=json&version=1.10.8" % (self.base_url, item['id'])
+                meeting_url = "%s/events/meetings/%i?%s" % (
+                    self.base_url,
+                    item['id'],
+                    self.default_query_params
+                )
                 try:
-                    data = self.fetch_data(meeting_url,
-                                           "events/meetings/%i" % item['id'],
-                                           item['last_modified'])
+                    data = self.fetch_data(
+                        meeting_url,
+                        "events/meetings/%i" % item['id'],
+                        item['last_modified']
+                    )
                     meeting_json = json.loads(data)['meeting']
                 except ItemAlreadyProcessed, e:
                     # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1
                     log.debug("[%s] %s" % (self.source_definition['key'], e))
                     continue
+                except HTTPError, e:
+                    error_json = e.response.json()
+                    if error_json.get('message') == 'No rights to see this meeting':
+                        log.info('[%s] no rights to view: %s' % (self.source_definition['key'], meeting_url))
+                        break
+                    # Reraise all other HTTPError
+                    raise
                 except Exception as e:
                     meetings_skipped += 1
                     log.warning('[%s] %s: %s' % (self.source_definition['key'], e, meeting_url))
