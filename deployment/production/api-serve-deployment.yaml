@@ -29,7 +29,7 @@ spec:
       volumes:
       - name: api-pvc
         persistentVolumeClaim:
-          claimName: api-pvc
+          claimName: ori-api-pvc
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

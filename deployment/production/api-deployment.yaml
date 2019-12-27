@@ -30,7 +30,7 @@ spec:
         - name: KAFKA_ADDRESS
           valueFrom:
             configMapKeyRef:
-              key: KAFKA_HOST
+              key: KAFKA_ADDRESS
               name: config
         - name: KAFKA_USERNAME
           valueFrom:
@@ -59,7 +59,7 @@ spec:
       volumes:
       - name: api-pvc
         persistentVolumeClaim:
-          claimName: api-pvc
+          claimName: ori-api-pvc
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

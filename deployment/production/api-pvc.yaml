@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: api-pvc
+  name: ori-api-pvc
   namespace: production
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 100G
+      storage: 1000G

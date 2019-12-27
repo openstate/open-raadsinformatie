@@ -20,6 +20,17 @@ spec:
         - node
         image: argu/ori-search
         imagePullPolicy: Always
+        env:
+        - name: SEARCH_GLOSS_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: SEARCH_GLOSS_CLIENT_ID
+              name: secrets
+        - name: SEARCH_GLOSS_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: SEARCH_GLOSS_CLIENT_SECRET
+              name: secrets
         resources:
           requests:
             memory: 30Mi
