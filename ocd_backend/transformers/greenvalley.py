@@ -58,7 +58,8 @@ class GreenValleyTransformer(BaseTransformer):
                     sha1(url + ':' + att[u'objectname'].encode('utf8')).hexdigest())
                 media_urls[doc_hash] = {
                     "note": att[u'objectname'],
-                    "original_url": url
+                    "original_url": url,
+                    "object_id": att[u'objectid'],
                 }
         else:
             default = original_item['default']
@@ -71,7 +72,8 @@ class GreenValleyTransformer(BaseTransformer):
                 )
                 media_urls[doc_hash] = {
                     "note": default[u'objectname'],
-                    "original_url": url
+                    "original_url": url,
+                    "object_id": default[u'objectid'],
                 }
 
         if media_urls:
@@ -155,7 +157,7 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
 
     event.attachment = []
     for doc in self._get_documents_as_media_urls(original_item):
-        attachment = MediaObject(doc['original_url'].rpartition('/')[2].split('=')[1],
+        attachment = MediaObject(doc['object_id'],
                                  source=self.source_definition['key'],
                                  supplier='greenvalley',
                                  collection='attachment')
