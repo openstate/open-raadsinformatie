@@ -48,36 +48,40 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     municipality_member.organization = municipality
     municipality_member.member = person
 
+    if original_item['function']:
+        municipality_member.role = original_item['function']
+
     person.member_of = [municipality_member]
 
-    party = Organization(original_item['party'],
-                         source=self.source_definition['key'],
-                         supplier='parlaeus',
-                         collection='party')
-    party.canonical_id = original_item['party']
-    party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                       source=self.source_definition['key'],
-                                                       supplier='allmanak',
-                                                       collection=self.source_definition['source_type'])
+    if original_item['party']:
+        party = Organization(original_item['party'],
+                             source=self.source_definition['key'],
+                             supplier='parlaeus',
+                             collection='party')
+        party.canonical_id = original_item['party']
+        party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                           source=self.source_definition['key'],
+                                                           supplier='allmanak',
+                                                           collection=self.source_definition['source_type'])
 
-    party.name = original_item['party']
+        party.name = original_item['party']
 
-    # The source ID for the party membership is constructed by combining the person's iBabs ID and the
-    # name of the party
-    party_membership_id = '%s_%s' % (original_item['raid'], original_item['party'])
-    party_member = Membership(party_membership_id,
-                              source=self.source_definition['key'],
-                              supplier='parlaeus',
-                              collection='party_membership')
-    party_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                              source=self.source_definition['key'],
-                                                              supplier='allmanak',
-                                                              collection=self.source_definition['source_type'])
+        # The source ID for the party membership is constructed by combining the person's iBabs ID and the
+        # name of the party
+        party_membership_id = '%s_%s' % (original_item['raid'], original_item['party'])
+        party_member = Membership(party_membership_id,
+                                  source=self.source_definition['key'],
+                                  supplier='parlaeus',
+                                  collection='party_membership')
+        party_member.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                  source=self.source_definition['key'],
+                                                                  supplier='allmanak',
+                                                                  collection=self.source_definition['source_type'])
 
-    party_member.organization = party
-    party_member.member = person
-    party_member.role = original_item['function']
+        party_member.organization = party
+        party_member.member = person
+        party_member.role = original_item['function'] or 'Lid'
 
-    person.member_of.append(party_member)
+        person.member_of.append(party_member)
 
     return person
