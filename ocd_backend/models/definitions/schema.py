@@ -25,6 +25,7 @@ class MediaObject(Schema, owl.Thing):
     date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
+    enriched_text = ArrayProperty(MeetingNS, 'enrichedText')
     is_referenced_by = Relation(Dcterms, 'isReferencedBy')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
     tags = JsonProperty(MeetingNS, 'tags')
@@ -51,7 +52,7 @@ class CreativeWork(Schema, owl.Thing):
 
 class Event(Schema, owl.Thing):
     end_date = DateTimeProperty(Schema, 'endDate')
-    start_date = DateTimeProperty(Schema, 'startDate', required=True)
+    start_date = DateTimeProperty(Schema, 'startDate')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
 
 

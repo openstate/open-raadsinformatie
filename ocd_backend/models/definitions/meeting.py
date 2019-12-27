@@ -9,6 +9,7 @@ an assembly of people) discussion.
 
 import opengov
 import schema
+import org
 from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     Relation, OrderedRelation, DateTimeProperty
@@ -29,12 +30,14 @@ class Meeting(MeetingNS, schema.Event):
     status = URLProperty(Schema, 'eventStatus')
     location = StringProperty(Schema, 'location')
     name = StringProperty(Schema, 'name', required=True)
-    organization = Relation(Schema, 'organizer', required=True)
+    organization = Relation(Schema, 'organizer')
     committee = Relation(MeetingNS, 'committee')
     parent = Relation(Schema, 'superEvent')
     chair = StringProperty(MeetingNS, 'chair')
     absentee = Relation(Schema, 'absentee')
     invitee = Relation(Schema, 'invitee')
+    replaces = Relation(MeetingNS, 'replaces')
+    replaced_by = Relation(MeetingNS, 'replaced_by')
 
 
 class Amendment(MeetingNS, opengov.Motion):
@@ -59,6 +62,10 @@ class AgendaItem(MeetingNS, schema.Event):
     absentee = Relation(Schema, 'absentee')
     agenda = Relation(MeetingNS, 'agenda')
     last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
+
+
+class Committee(MeetingNS, org.Organization):
+    pass
 
 
 ResultKept = Uri(MeetingNS, "ResultKept")

@@ -17,6 +17,7 @@ import definitions.schema
 Meeting = definitions.meeting.Meeting
 AgendaItem = definitions.meeting.AgendaItem
 Amendment = definitions.meeting.Amendment
+Committee = definitions.meeting.Committee
 
 # http://www.w3.org/ns/opengov#
 VoteEvent = definitions.opengov.VoteEvent

@@ -16,13 +16,16 @@ class Motion(Opengov, owl.Thing):
     legislative_session = StringProperty(Opengov, 'legislativeSession')
     requirement = StringProperty(Opengov, 'requirement')
     classification = StringProperty(Schema, 'additionalType')
+    status = StringProperty(Meeting, 'status')
     creator = Relation(Schema, 'creator')
     cocreator = Relation(Meeting, 'cocreator')
     date = DateProperty(Schema, 'dateSubmitted')
     name = StringProperty(Schema, 'name')
     organization = Relation(Schema, 'publisher')
+    is_referenced_by = Relation(Dcterms, 'isReferencedBy')
     text = StringProperty(Schema, 'text')
-    vote_events = Relation(Opengov, 'voteEvent')
+    result = StringProperty(Opengov, 'result')
+    vote_event = Relation(Opengov, 'voteEvent')
 
 
 class VoteEvent(Opengov, schema.Event):
@@ -30,9 +33,9 @@ class VoteEvent(Opengov, schema.Event):
     created_at = DateTimeProperty(Dcterms, 'created')
     updated_at = DateTimeProperty(Dcterms, 'modified')
     motion = Relation(Opengov, 'motion')
-    result = Relation(Opengov, 'result')
+    result = StringProperty(Opengov, 'result')
     organization = Relation(Schema, 'organizer')
-    legislative_session = Relation(Schema, 'superEvent')
+    legislative_session = StringProperty(Opengov, 'legislativeSession')
     votes = Relation(Opengov, 'vote')
     counts = Relation(Opengov, 'count')
 
@@ -105,7 +108,7 @@ class Vote(Opengov, owl.Thing):
     role = StringProperty(Opengov, 'role')
     voter = Relation(Schema, 'agent')
     vote_event = Relation(Opengov, 'voteEvent')
-    option = Relation(Opengov, 'voteOption')
+    option = StringProperty(Opengov, 'voteOption')
     weight = IntegerProperty(Opengov, 'weight')
 
 

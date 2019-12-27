@@ -14,4 +14,5 @@ class Activity(Prov, owl.Thing):
     had_primary_source = StringProperty(Prov, 'hadPrimarySource')
     same_as = StringProperty(Owl, 'sameAs')
     app_semver = StringProperty(Meeting, 'semver')
-    external_identifier = StringProperty(Meeting, 'externalIdentifier')
+    original_identifier = StringProperty(Meeting, 'originalIdentifier')
+    reference_identifier = StringProperty(Meeting, 'referenceIdentifier')

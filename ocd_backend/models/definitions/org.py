@@ -7,10 +7,11 @@ import owl
 from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
     Schema, Rdf, Meta, Vcard
 from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \
-    Relation, OrderedRelation, ArrayProperty
+    Relation, OrderedRelation
 
 
 class Membership(Org, owl.Thing):
+    label = StringProperty(Skos, 'prefLabel')
     member = Relation(Org, 'member')
     organization = Relation(Org, 'organization')
     role = StringProperty(Org, 'role')
