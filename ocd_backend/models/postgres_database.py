@@ -111,12 +111,12 @@ class PostgresDatabase(object):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.source_iri)
 
             # Handle canonical IRI or ID
-            if model_object.values.get('canonical_iri'):
+            if hasattr(model_object, 'canonical_iri'):
                 self.update_source(model_object, iri=True)
-                del model_object.values['canonical_iri']
-            elif model_object.values.get('canonical_id'):
+                delattr(model_object, 'canonical_iri')
+            elif hasattr(model_object, 'canonical_id'):
                 self.update_source(model_object, id=True)
-                del model_object.values['canonical_id']
+                delattr(model_object, 'canonical_id')
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
