@@ -1,10 +1,13 @@
-import simplejson as json
 from time import sleep
+
+import simplejson as json
 
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.utils.misc import strip_scheme
+import urllib
 
 log = get_source_logger('extractor')
 
@@ -29,15 +32,17 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
 
             setattr(self, opt, self.source_definition[opt_key])
 
-    def _fetch(self, action, params={}):
-        payload = {
+    def _url(self, action, params):
+        params['action'] = action
+        return '{}?{}'.format(self.base_url, urllib.urlencode(params))
+
+    def _fetch(self, url):
+        auth = {
             'username': self.username,
             'key': self.key,
             'hash': self.hash,
-            'action': action
         }
-        payload.update(params)
-        return self.http_session.get(self.base_url, params=payload, verify=False)
+        return self.http_session.get('{}&{}'.format(url, urllib.urlencode(auth)), verify=False)
 
 
 class GreenValleyExtractor(GreenValleyBaseExtractor):
@@ -60,34 +65,29 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
 
         while fetch_next_page:
             sleep(self.source_definition.get('greenvalley_extract_timeout', 5))
-            print "Fetching items, starting from %s ..." % (params['start'],)
-            results = self._fetch('GetModelsByQuery', params).json()
-            print "Got %s items ..." % (len(results['objects']),)
+            log.info("Fetching items, starting from %s ..." % (params['start'],))
+            url = self._url('GetModelsByQuery', params)
+            cached_path = strip_scheme(url)
+            results = self._fetch(url).json()
+            log.info("Got %s items ..." % len(results['objects']))
             for result in results['objects']:
-                print "Object %s/%s has %s attachments and %s sets" % (
+                log.info("Object %s/%s has %s attachments and %s sets" % (
                     result[u'default'][u'objecttype'],
                     result[u'default'][u'objectname'],
                     len(result.get(u'attachmentlist', [])),
-                    len(result.get(u'SETS', [])),)
-                # printed_sets = 0
-                # if len(result.get(u'SETS', [])):
-                #     print "Sets:"
-                #     for key, osett in result[u'SETS'].iteritems():
-                #         print "* %s %s/%s" % (
-                #             osett[u'nodeorder'], osett[u'objecttype'],
-                #             osett[u'objectname'],)
-                #         if printed_sets == 0:
-                #             pprint(osett)
-                #             printed_sets += 1
+                    len(result.get(u'SETS', []))
+                ))
 
                 for k, v in result.get(u'SETS', {}).iteritems():
                     v[u'parent_objectid'] = result[u'default'][u'objectid']
                     v[u'bis_vergaderdatum'] = result[u'default'][u'bis_vergaderdatum']
 
                     result2 = {u'default': v}
-                    yield 'application/json', json.dumps(result2), result2['default']['objectid'], result2
+                    # identifier = result2['default']['objectid']
+                    yield 'application/json', json.dumps(result2), None, 'greenvalley/' + cached_path
 
-                yield 'application/json', json.dumps(result), result['default']['objectid'], result
+                # identifier = result['default']['objectid']
+                yield 'application/json', json.dumps(result), None, 'greenvalley/' + cached_path
 
             params['start'] += len(results['objects'])
             fetch_next_page = (len(results['objects']) > 0)

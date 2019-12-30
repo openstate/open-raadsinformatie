@@ -35,18 +35,19 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
                 log.error("The value for 'agid' seems to be empty, skipping")
                 continue
 
-            url = '%s?rid=%s&fn=agenda_detail&agid=%s' % (
+            cached_path = 'agenda_detail/%s' % meeting['agid']
+
+            url = '%s?fn=agenda_detail&agid=%s' % (
                 self.base_url,
-                self.rid,
                 meeting['agid'],
             )
-            resp = self.http_session.get(url)
+            resp = self.http_session.get(url + '&rid=%s' % self.rid)
             resp.raise_for_status()
 
             meeting_data = resp.json()
             agenda = meeting_data['agenda']
             agenda['url'] = url
-            yield 'application/json', json.dumps(agenda), url, agenda
+            yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path
 
 
 class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
@@ -55,6 +56,8 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
     """
 
     def run(self):
+        cached_path = 'cie_list'
+
         url = '%s?rid=%s&fn=cie_list' % (
             self.base_url,
             self.rid,
@@ -65,7 +68,7 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
         json_data = resp.json()
         for committee in json_data.get('list', []):
             committee['url'] = url
-            yield 'application/json', json.dumps(committee), url, committee
+            yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path
 
 
 class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
@@ -74,6 +77,8 @@ class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
     """
 
     def run(self):
+        cached_path = 'person_list'
+
         url = '%s?rid=%s&fn=person_list' % (
             self.base_url,
             self.rid,
@@ -84,4 +89,4 @@ class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
         json_data = resp.json()
         for person in json_data.get('list', []):
             person['url'] = url
-            yield 'application/json', json.dumps(person), url, person
+            yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path

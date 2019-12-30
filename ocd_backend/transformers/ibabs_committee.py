@@ -16,7 +16,6 @@ def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **k
         'source': self.source_definition['key'],
         'supplier': 'ibabs',
         'collection': 'committee',
-        'canonical_iri': canonical_iri,
         'cached_path': cached_path,
     }
 

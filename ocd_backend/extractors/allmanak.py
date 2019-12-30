@@ -28,7 +28,7 @@ class AllmanakBaseExtractor(BaseExtractor, HttpRequestMixin):
         else:
             log.error('[%s] Failed to extract from Allmanak path %s' % (
                 self.source_definition['key'], urljoin(self.base_url, path))
-                      )
+            )
             return 0, []
 
 
@@ -46,12 +46,12 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
             log.error('[%s] Number of extracted municipalities for %s is not equal to 1' % (
                 self.source_definition['key'],
                 self.source_definition['key'])
-                      )
+            )
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
-                  static_json
+                  None,
             log.info("[%s] Extracted 1 Allmanak municipality." % self.source_definition['key'])
 
 
@@ -69,12 +69,12 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
             log.error('[%s] Number of extracted provinces for %s is not equal to 1' % (
                 self.source_definition['key'],
                 self.source_definition['key'])
-                      )
+            )
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
-                  static_json
+                  None,
             log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['key'])
 
 
@@ -94,7 +94,7 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
                 yield 'application/json', \
                       json.dumps(party), \
                       path, \
-                      static_json
+                      None
                 total_parties += 1
             log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['key'], total_parties))
         else:
@@ -121,7 +121,7 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
                         yield 'application/json', \
                               json.dumps(person['persoon']), \
                               path, \
-                              static_json
+                              None
                         total_persons += 1
             log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['key'], total_persons))
         else:

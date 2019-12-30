@@ -4,7 +4,7 @@ import re
 
 from zeep.client import Client, Settings
 from zeep.helpers import serialize_object
-from zeep.exceptions import Error, TransportError
+from zeep.exceptions import Error
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
@@ -32,7 +32,7 @@ class IBabsBaseExtractor(BaseExtractor):
 
         try:
             ibabs_wsdl = self.source_definition['wsdl']
-        except Exception as e:
+        except Exception:
             ibabs_wsdl = settings.IBABS_WSDL
 
         soap_settings = Settings(extra_http_headers={'User-Agent': settings.USER_AGENT})
@@ -61,6 +61,8 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
             self.source_definition['ibabs_sitename']
         )
 
+        cached_path = 'GetMeetingtypes/Sitename=%s' % self.source_definition['ibabs_sitename']
+
         if meeting_types.Meetingtypes:
             total_count = 0
             for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
@@ -68,8 +70,8 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                     committee = serialize_object(mt, dict)
                     yield 'application/json', \
                           json.dumps(committee), \
-                          committee['Id'], \
-                          'used_file_placeholder'
+                          None, \
+                          'ibabs/' + cached_path
                     total_count += 1
             log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
         else:
@@ -96,9 +98,16 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                     identifier
                 )
 
+                cached_path = 'GetUser/Sitename=%s/UserId=%s' % (
+                    self.source_definition['ibabs_sitename'], identifier)
+
                 profile = serialize_object(user_details.User.PublicProfile, dict)
-                profile['Picture'] = base64.encodestring(user_details.User.PublicProfile.Picture).decode('ascii')
-                yield 'application/json', json.dumps(profile), profile['UserId'], profile
+
+                image = user_details.User.PublicProfile.Picture
+                if image:
+                    profile['Picture'] = base64.encodestring(image).decode('ascii')
+
+                yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
                 total_count += 1
 
             log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
@@ -140,11 +149,18 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             log.debug("[%s] Now processing meetings from %s to %s" % (
                 self.source_definition['key'], start_date, end_date,))
 
+            start_date = start_date.strftime('%Y-%m-%dT%H:%M:%S')
+            end_date = end_date.strftime('%Y-%m-%dT%H:%M:%S')
+
+            cached_path = 'GetMeetingsByDateRange/Sitename=%s/StartDate=%s/EndDate=%s' % (
+                self.source_definition['ibabs_sitename'], start_date, end_date)
+
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['ibabs_sitename'],
-                StartDate=start_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                EndDate=end_date.strftime('%Y-%m-%dT%H:%M:%S'),
-                MetaDataOnly=False)
+                StartDate=start_date,
+                EndDate=end_date,
+                MetaDataOnly=False
+            )
 
             meeting_types = self._meetingtypes_as_dict()
 
@@ -165,8 +181,8 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
                     yield 'application/json', \
                           json.dumps(meeting_dict), \
-                          meeting_dict['Id'], \
-                          meeting_dict
+                          None, \
+                          'ibabs/' + cached_path,
 
                     meeting_count += 1
 
@@ -205,7 +221,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 try:
                     report = [
                         r for r in reports if r.Value == l.Value][0]
-                except IndexError as e:
+                except IndexError:
                     pass
 
             active_page_nr = 0
@@ -225,17 +241,16 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         self.source_definition['key'], active_page_nr, e.message))
                     result = None
                 result_count = 0
-                # log.debug("* %s: %s/%s - %d/%d" % (
-                #     self.source_definition['key'],
-                #     result.ListName, result.ReportName,
-                #     active_page_nr, max_pages,))
+
+                cached_path = 'GetListReportDataSet/Sitename=%s/ListId=%s/ReportId=%s/ActivePageNr=%s/RecordsPerPage=%s' % (
+                    self.source_definition['ibabs_sitename'], l.Key, report.Key, active_page_nr, per_page)
 
                 if result is not None:
                     try:
                         document_element = result.Data.diffgram[0].DocumentElement[0]
-                    except AttributeError as e:
+                    except AttributeError:
                         document_element = None
-                    except IndexError as e:
+                    except IndexError:
                         document_element = None
                 else:
                     document_element = None
@@ -254,15 +269,9 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, EntryId=dict_item['id'][0])
                     dict_item['_Extra'] = list_entry_response_to_dict(
                         extra_info_item)
-                    # if dict_item['kenmerk'][0].startswith('2018 M67'):
-                    #     log.debug(dict_item)
-                    # try:
-                    #     # this should be the motion's unique identifier
-                    #     log.debug(full_normalized_motion_id(
-                    #         dict_item['_Extra']['Values'][u'Onderwerp']))
-                    # except (KeyError, AttributeError) as e:
-                    #     pass
-                    yield 'application/json', json.dumps(dict_item), dict_item['id'][0], dict_item
+
+                    # identifier = dict_item['id'][0]
+                    yield 'application/json', json.dumps(dict_item), None, 'ibabs/' + cached_path
                     yield_count += 1
                     total_yield_count += 1
                     result_count += 1
@@ -390,7 +399,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
             # log.debug(processed)
             for result in processed:
-                yield 'application/json', json.dumps(result), 'entity_placeholder', result
+                yield 'application/json', json.dumps(result), None, None
                 passed_vote_count += 1
             log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['index_name'], start_date, end_date,))
 

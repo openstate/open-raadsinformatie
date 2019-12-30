@@ -17,7 +17,8 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
     information needed by child classes.
     """
     base_url = 'https://api.notubiz.nl'
-    default_query_params = 'format=json&application_token=11ef5846eaf0242ec4e0bea441379d699a77f703d&version=1.17.0'
+    application_token = '&application_token=11ef5846eaf0242ec4e0bea441379d699a77f703d'
+    default_query_params = 'format=json&version=1.17.0'
 
     def run(self):
         raise NotImplementedError
@@ -57,27 +58,21 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
     """
 
     def run(self):
-        response = self.http_session.get(
-            "%s/organisations/%s/gremia?%s" % (
-                self.base_url,
-                self.source_definition['notubiz_organization_id'],
-                self.default_query_params
-            )
+        committee_url = "%s/organisations/%s/gremia?%s" % (
+            self.base_url,
+            self.source_definition['notubiz_organization_id'],
+            self.default_query_params
         )
-        response.raise_for_status()
+        cached_path = 'gremia'
+        response = self.fetch(committee_url + self.application_token, cached_path, None)
 
         committee_count = 0
-        for committee in json.loads(response.content)['gremia']:
-            entity = '%s/organisations/%s/gremia/%s?%s' % (
-                self.base_url,
-                self.source_definition['notubiz_organization_id'],
-                committee['id'],
-                self.default_query_params,
-            )
+        for committee in json.load(response.media_file)['gremia']:
+
             yield 'application/json', \
                   json.dumps(committee), \
-                  entity, \
-                  committee
+                  committee_url, \
+                  'notubiz/' + cached_path,
             committee_count += 1
 
         log.info("[%s] Extracted total of %d notubiz committees." % (self.source_definition['key'], committee_count))
@@ -141,8 +136,9 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     item['id'],
                     self.default_query_params
                 )
+                cached_path = "events/meetings/%i" % item['id']
                 try:
-                    resource = self.fetch(meeting_url, "events/meetings/%i" % item['id'], item['last_modified'])
+                    resource = self.fetch(meeting_url + self.application_token, cached_path, item['last_modified'])
                     meeting_json = json.load(resource.media_file)['meeting']
                 except ItemAlreadyProcessed, e:
                     # This should no longer be triggered after the change to GCS caching
@@ -174,7 +170,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 yield 'application/json', \
                       json.dumps(meeting_json), \
                       meeting_url, \
-                      meeting_json
+                      'notubiz/' + cached_path,
                 meeting_count += 1
 
             page += 1
