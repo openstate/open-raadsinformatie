@@ -111,12 +111,10 @@ class PostgresDatabase(object):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.source_iri)
 
             # Handle canonical IRI or ID
-            if hasattr(model_object, 'canonical_iri'):
+            if hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None:
                 self.update_source(model_object, iri=True)
-                delattr(model_object, 'canonical_iri')
-            elif hasattr(model_object, 'canonical_id'):
+            if hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None:
                 self.update_source(model_object, id=True)
-                delattr(model_object, 'canonical_id')
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -172,8 +170,7 @@ class PostgresDatabase(object):
             raise ValueError('Unable to map property of type "%s" to a column.' % property_type)
 
     def update_source(self, model_object, iri=False, id=False):
-        """Updates the canonical IRI or ID field of the Source of the corresponding model object. One Source can have
-        multiple different canonical IRI/ID entries."""
+        """Updates the canonical IRI or ID field of the Source of the corresponding model object."""
 
         if iri:
             canonical_field = 'canonical_iri'
@@ -186,32 +183,16 @@ class PostgresDatabase(object):
         resource = session.query(Resource).get(model_object.get_short_identifier())
 
         try:
-            # First check if there is a Source record with an empty canonical IRI/ID field, and if so fill that record
-            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
-                                                  Source.canonical_iri == None,
-                                                  Source.canonical_id == None).one()
+            # Check if there is already a Source record, and if so update its canonical field
+            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id).one()
             setattr(source, canonical_field, getattr(model_object, canonical_field))
         except NoResultFound:
-            try:
-                # If no empty record exists, check if one already exists with the given source IRI and canonical IRI/ID
-                if iri:
-                    source = session.query(Source).filter(Source.resource == resource,
-                                                          Source.canonical_iri == model_object.canonical_iri).one()
-                elif id:
-                    source = session.query(Source).filter(Source.resource == resource,
-                                                          Source.canonical_id == model_object.canonical_id).one()
-                # At this point it's not really necessary to update the field again, but it's here in case
-                # more fields are added later
-                setattr(source, canonical_field, getattr(model_object, canonical_field))
-            except NoResultFound:
-                # If no Source and canonical IRI/ID combination exists for the given source IRI, create it
-                source = Source(resource=resource,
-                                iri=model_object.source_iri)
-                setattr(source, canonical_field, getattr(model_object, canonical_field))
-                session.add(source)
-            except Exception:
-                raise
-        except Exception:
+            # No Source exists for the given source IRI, so create it and fill the corresponding canonical field
+            source = Source(resource=resource,
+                            iri=model_object.source_iri)
+            setattr(source, canonical_field, getattr(model_object, canonical_field))
+            session.add(source)
+        except MultipleResultsFound:
             raise
 
         session.commit()
