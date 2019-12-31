@@ -35,7 +35,12 @@ class IBabsBaseExtractor(BaseExtractor):
         except Exception:
             ibabs_wsdl = settings.IBABS_WSDL
 
-        soap_settings = Settings(extra_http_headers={'User-Agent': settings.USER_AGENT})
+        soap_settings = Settings(
+            strict=False,
+            xml_huge_tree=True,
+            xsd_ignore_sequence_order=True,
+            extra_http_headers={'User-Agent': settings.USER_AGENT},
+        )
 
         try:
             self.client = Client(ibabs_wsdl,
