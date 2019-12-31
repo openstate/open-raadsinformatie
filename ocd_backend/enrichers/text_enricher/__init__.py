@@ -61,6 +61,13 @@ class TextEnricher(BaseEnricher):
             resource = ori_enriched.download_cache(identifier)
             try:
                 item.text = json.load(resource.media_file)['data']
+
+                # Adding the same text again for Elastic nesting
+                item.text_pages = [
+                    {'text': text, 'page_number': i}
+                    for i, text in enumerate(item.text, start=1)
+                    if text
+                ]
             except (ValueError, KeyError):
                 # No json could be decoded or data not found, pass and parse again
                 pass
@@ -87,6 +94,13 @@ class TextEnricher(BaseEnricher):
             if os.path.exists(temporary_file.name):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, max_pages=100)
+
+                # Adding the same text again for Elastic nesting
+                item.text_pages = [
+                    {'text': text, 'page_number': i}
+                    for i, text in enumerate(item.text, start=1)
+                    if text
+                ]
 
             temporary_file.close()
 

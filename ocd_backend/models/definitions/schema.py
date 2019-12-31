@@ -26,8 +26,9 @@ class MediaObject(Schema, owl.Thing):
     original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
     enriched_text = ArrayProperty(MeetingNS, 'enrichedText')
+    text_pages = JsonProperty(MeetingNS, 'textPages', ignore_for_loader=[DeltaLoader])
     is_referenced_by = Relation(Dcterms, 'isReferencedBy')
-    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader])
     tags = JsonProperty(MeetingNS, 'tags')
     neighborhood_polygons = JsonProperty(MeetingNS, 'neighborhood_polygons')
     geometry = JsonProperty(MeetingNS, 'geometry')
@@ -53,7 +54,7 @@ class CreativeWork(Schema, owl.Thing):
 class Event(Schema, owl.Thing):
     end_date = DateTimeProperty(Schema, 'endDate')
     start_date = DateTimeProperty(Schema, 'startDate')
-    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader])
 
 
 class ImageObject(Schema, owl.Thing):

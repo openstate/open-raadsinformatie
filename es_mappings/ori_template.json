@@ -1,5 +1,5 @@
 {
-  "index_patterns": ["ori_*", "osi_*"],
+  "index_patterns": ["ori_*", "osi_*", "ggm_*"],
   "settings": {
     "index": {
       "number_of_shards": 1,
@@ -7,6 +7,7 @@
     }
   },
   "mappings": {
+    "dynamic_date_formats": ["yyyy-MM-dd'T'HH:mm:ss.SSSSSS", "date_time_no_millis", "date_optional_time"],
     "properties": {
       "text": {
         "type": "text"
@@ -22,6 +23,9 @@
       },
       "neighborhood_polygons": {
         "type": "geo_shape"
+      },
+      "text_pages": {
+        "type": "nested"
       }
     }
   }
