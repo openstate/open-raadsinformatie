@@ -65,7 +65,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                 source=self.source_definition['key'],
                                 supplier='notubiz',
                                 collection='agenda_item')
-        agendaitem.canonical_id = item['id']
         agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',

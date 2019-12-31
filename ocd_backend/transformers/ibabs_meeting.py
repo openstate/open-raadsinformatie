@@ -86,7 +86,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                      source=self.source_definition['key'],
                                      supplier='ibabs',
                                      collection='agenda_item')
-            agenda_item.canonical_id = mi['Id']
             agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                      source=self.source_definition['key'],
                                                                      supplier='allmanak',
@@ -104,7 +103,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                              source=self.source_definition['key'],
                                              supplier='ibabs',
                                              collection='attachment')
-                    attachment.canonical_id = document['Id']
                     attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                             source=self.source_definition['key'],
                                                                             supplier='allmanak',
@@ -127,7 +125,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                   source=self.source_definition['key'],
                                   supplier='ibabs',
                                   collection='person')
-            invitee_item.canonical_id = invitee['UniqueId']
             invitee_item.name = invitee['Name']
             invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                       source=self.source_definition['key'],
@@ -150,7 +147,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                      source=self.source_definition['key'],
                                      supplier='ibabs',
                                      collection='attachment')
-            attachment.canonical_id = document['Id']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                     source=self.source_definition['key'],
                                                                     supplier='allmanak',

@@ -98,7 +98,6 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'], **source_defaults)
-    event.canonical_id = meeting[u'objectid']
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -133,7 +132,6 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
-            event.committee.canonical_id = meeting['bis_orgaan']
             event.committee.name = meeting['bis_orgaan']
             event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                          source=self.source_definition['key'],
@@ -194,7 +192,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     meeting = original_item[u'default']
 
     event = Meeting(meeting[u'objectid'], **source_defaults)
-    event.canonical_id = meeting[u'objectid']
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -228,7 +225,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
-            event.committee.canonical_id = meeting['bis_orgaan']
             event.committee.name = meeting['bis_orgaan']
             event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                          source=self.source_definition['key'],
@@ -283,7 +279,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                 source=self.source_definition['key'],
                                 supplier='greenvalley',
                                 collection='agenda_item')
-        agendaitem.canonical_id = agenda_item['objectid']
         agendaitem.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                 source=self.source_definition['key'],
                                                                 supplier='allmanak',

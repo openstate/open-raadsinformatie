@@ -21,7 +21,6 @@ def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **k
     }
 
     committee = Organization(original_item['id'], **source_defaults)
-    committee.canonical_id = original_item['id']
     committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                            source=self.source_definition['key'],
                                                            supplier='allmanak',

@@ -69,7 +69,6 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                              source=self.source_definition['key'],
                              supplier='ibabs',
                              collection='party')
-        party.canonical_id = original_item['PoliticalPartyId']
         party.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                            source=self.source_definition['key'],
                                                            supplier='allmanak',

@@ -28,7 +28,6 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                           source=self.source_definition['key'],
                           supplier='ibabs',
                           collection='report')
-    report.canonical_id = original_item['id'][0]
     report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
@@ -96,7 +95,6 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                                       source=self.source_definition['key'],
                                       supplier='ibabs',
                                       collection='attachment')
-        attachment_file.canonical_id = document['Id']
         attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                      source=self.source_definition['key'],
                                                                      supplier='allmanak',

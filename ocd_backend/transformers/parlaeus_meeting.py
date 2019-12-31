@@ -55,7 +55,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     meeting.agenda = list()
     for item in original_item.get('points'):
         agenda_item = AgendaItem(item['apid'], **source_defaults)
-        agenda_item.canonical_id = item['apid']
         agenda_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                  source=self.source_definition['key'],
                                                                  supplier='allmanak',
@@ -72,7 +71,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         agenda_item.attachment = list()
         for document in item.get('documents', []):
             attachment = MediaObject(document['dcid'], **source_defaults)
-            attachment.canonical_id = document['dcid']
             attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                     source=self.source_definition['key'],
                                                                     supplier='allmanak',
