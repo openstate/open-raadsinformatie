@@ -1,10 +1,10 @@
 import base64
-import simplejson as json
 import re
 
+import simplejson as json
 from zeep.client import Client, Settings
-from zeep.helpers import serialize_object
 from zeep.exceptions import Error
+from zeep.helpers import serialize_object
 
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
@@ -12,8 +12,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.utils.api import FrontendAPIMixin
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
-    meeting_to_dict, list_report_response_to_dict,
-    list_entry_response_to_dict, votes_to_dict)
+    meeting_to_dict, list_entry_response_to_dict, votes_to_dict)
+from ocd_backend.utils.misc import json_encoder
 
 log = get_source_logger('extractor')
 
@@ -230,8 +230,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     pass
 
             active_page_nr = 0
-            max_pages = self.source_definition.get('max_pages', 1)
-            per_page = self.source_definition.get('per_page', 100)
+            max_pages = self.source_definition.get('max_pages', 100)
+            per_page = self.source_definition.get('per_page', 300)
             result_count = per_page
             total_count = 0
             yield_count = 0
@@ -252,38 +252,43 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                 if result is not None:
                     try:
-                        document_element = result.Data.diffgram[0].DocumentElement[0]
+                        results = serialize_object([value.results for value in result.Data.diffgram[0].DocumentElement[0]], list)
                     except AttributeError:
-                        document_element = None
+                        # Fallback for when document is not parsed properly
+                        # noinspection PyProtectedMember
+                        try:
+                            results = [value['results'] for value in result.Data._value_1._value_1]
+                        except AttributeError:
+                            results = None
                     except IndexError:
-                        document_element = None
+                        results = None
                 else:
-                    document_element = None
+                    results = None
 
-                if document_element is None:
+                if results is None:
                     log.debug("[%s] No correct document element for this page!" % self.source_definition['key'])
                     total_count += per_page
                     continue
 
-                for item in document_element.results:
-                    dict_item = list_report_response_to_dict(item)
-                    dict_item['_ListName'] = result.ListName
-                    dict_item['_ReportName'] = result.ReportName
+                for item in results:
+                    item['_ListName'] = result.ListName
+                    item['_ReportName'] = result.ReportName
                     extra_info_item = self.client.service.GetListEntry(
                         Sitename=self.source_definition['ibabs_sitename'],
-                        ListId=l.Key, EntryId=dict_item['id'][0])
-                    dict_item['_Extra'] = list_entry_response_to_dict(
-                        extra_info_item)
+                        ListId=l.Key,
+                        EntryId=item['id']
+                    )
+                    item['_Extra'] = list_entry_response_to_dict(extra_info_item)
 
-                    # identifier = dict_item['id'][0]
-                    yield 'application/json', json.dumps(dict_item), None, 'ibabs/' + cached_path
+                    # identifier = item['id'][0]
+                    yield 'application/json', json_encoder.encode(serialize_object(item, dict)), None, 'ibabs/' + cached_path
                     yield_count += 1
                     total_yield_count += 1
                     result_count += 1
                 total_count += result_count
                 active_page_nr += 1
-            log.debug("[%s] Report: %s -- total %s, results %s, yielded %s" % (
-                self.source_definition['key'], l.Value, total_count, result_count, yield_count))
+            log.debug("[%s] Report: %s -- total %s, yielded %s" % (
+                self.source_definition['key'], l.Value, total_count, yield_count))
 
         log.info("[%s] Extracted total of %s ibabs reports yielded" % (
             self.source_definition['key'], total_yield_count))

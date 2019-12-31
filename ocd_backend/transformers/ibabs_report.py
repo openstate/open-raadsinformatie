@@ -19,53 +19,63 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     source_defaults = {
         'source': self.source_definition['key'],
         'supplier': 'ibabs',
-        'collection': 'report',
         'canonical_iri': canonical_iri,
         'cached_path': cached_path,
     }
 
-    report = CreativeWork(original_item['id'][0],
-                          source=self.source_definition['key'],
-                          supplier='ibabs',
-                          collection='report')
+    report = Report(original_item['id'],
+                    collection='report',
+                    **source_defaults)
     report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
                                                         collection=self.source_definition['source_type'])
 
     report_name = original_item['_ReportName'].split(r'\s+')[0]
-    report.classification = u'Report'
-
     name_field = None
     try:
         name_field = self.source_definition['fields'][report_name]['name']
     except KeyError:
-        for field in original_item.keys():
+        keys = sorted(original_item.keys(), key=len)
+        for field in keys:
             # Search for things that look like title
             if field.lower()[0:3] == 'tit':
                 name_field = field
                 break
 
-            id_for_field = '%sIds' % (field,)
+        for field in keys:
+            id_for_field = '%sIds' % field
             if id_for_field in original_item and name_field is None:
                 name_field = field
                 break
 
-    report.name = original_item[name_field][0]
+    report.name = original_item[name_field]
+    report.classification = original_item.get('_ReportName')
 
     # Temporary binding reports to municipality as long as events and agendaitems are not
     # referenced in the iBabs API
-    report.creator = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                          source=self.source_definition['key'],
-                                          supplier='allmanak',
-                                          collection=self.source_definition['source_type'])
+    report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                        source=self.source_definition['key'],
+                                                        supplier='allmanak',
+                                                        collection=self.source_definition['source_type'])
+
+    try:
+        report.creator = Organization(original_item['_Extra']['Values']['Fractie(s)'],
+                                      collection='party',
+                                      **source_defaults)
+        report.creator.name = original_item['_Extra']['Values']['Fractie(s)']
+    except KeyError:
+        pass
 
     try:
         name_field = self.source_definition['fields'][report_name]['description']
-        report.description = original_item[name_field][0]
+        report.description = original_item[name_field]
     except KeyError:
         try:
-            report.description = original_item['_Extra']['Values']['Toelichting']
+            report.description = original_item['_Extra']['Values']['Toelichting'] or \
+                                 original_item['_Extra']['Values']['Onderwerp'] or \
+                                 original_item['_Extra']['Values']['Opmerkingen'] or \
+                                 original_item['_Extra']['Values']['Agendapunt']
         except KeyError:
             pass
 
@@ -87,14 +97,17 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
         report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
-    report.status = EventConfirmed
+    if original_item.get('status') == 'Aangenomen':
+        report.result = ResultPassed
+    elif original_item.get('status') == 'Verworpen':
+        report.result = ResultFailed
 
     report.attachment = list()
     for document in original_item['_Extra']['Documents'] or []:
         attachment_file = MediaObject(document['Id'],
-                                      source=self.source_definition['key'],
-                                      supplier='ibabs',
-                                      collection='attachment')
+                                      collection='attachment',
+                                      **source_defaults)
+        attachment_file.identifier_url = 'ibabs/report/%s' % document['Id']
         attachment_file.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                      source=self.source_definition['key'],
                                                                      supplier='allmanak',

@@ -40,6 +40,12 @@ class Meeting(MeetingNS, schema.Event):
     replaced_by = Relation(MeetingNS, 'replaced_by')
 
 
+class Report(MeetingNS, schema.Event, schema.CreativeWork):
+    description = StringProperty(Schema, 'description')
+    result = StringProperty(Opengov, 'result')
+    attachment = Relation(MeetingNS, 'attachment')
+
+
 class Amendment(MeetingNS, opengov.Motion):
     """A proposal to modify another proposal. Subclass of
     :class:`.opengov.Motion`

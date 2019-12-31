@@ -16,6 +16,7 @@ import definitions.schema
 # https://argu.co/ns/meeting#
 Meeting = definitions.meeting.Meeting
 AgendaItem = definitions.meeting.AgendaItem
+Report = definitions.meeting.Report
 Amendment = definitions.meeting.Amendment
 Committee = definitions.meeting.Committee
 
