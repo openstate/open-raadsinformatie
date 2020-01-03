@@ -37,20 +37,21 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                               supplier='allmanak',
                                               collection=self.source_definition['source_type'])
 
-    event.committee = Organization(original_item['gremium']['id'],
-                                   source=self.source_definition['key'],
-                                   supplier='notubiz',
-                                   collection='committee')
-    event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+    if original_item.get('gremium'):
+        event.committee = Organization(original_item['gremium']['id'],
+                                       source=self.source_definition['key'],
+                                       supplier='notubiz',
+                                       collection='committee')
+        event.committee.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                     source=self.source_definition['key'],
+                                                                     supplier='allmanak',
+                                                                     collection=self.source_definition['source_type'])
+
+        # Re-attach the committee node to the municipality node
+        event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                                  source=self.source_definition['key'],
                                                                  supplier='allmanak',
                                                                  collection=self.source_definition['source_type'])
-
-    # Re-attach the committee node to the municipality node
-    event.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                             source=self.source_definition['key'],
-                                                             supplier='allmanak',
-                                                             collection=self.source_definition['source_type'])
 
     event.agenda = []
     for item in original_item.get('agenda_items', []):
@@ -72,10 +73,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
         try:
             agendaitem.name = item['type_data']['attributes'][0]['value']
-        except KeyError:
+        except (KeyError, IndexError):
             try:
                 agendaitem.name = item['type_data']['attributes'][1]['value']
-            except KeyError:
+            except (KeyError, IndexError):
                 pass
         agendaitem.position = original_item['order']
         agendaitem.parent = event

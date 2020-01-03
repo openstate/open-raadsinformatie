@@ -95,6 +95,9 @@ class TextEnricher(BaseEnricher):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, max_pages=100)
 
+            temporary_file.close()
+
+            if hasattr(item, 'text') and item.text:
                 # Adding the same text again for Elastic nesting
                 item.text_pages = [
                     {'text': text, 'page_number': i}
@@ -102,9 +105,6 @@ class TextEnricher(BaseEnricher):
                     if text
                 ]
 
-            temporary_file.close()
-
-            if hasattr(item, 'text') and item.text:
                 # Save the enriched version to the ori-enriched bucket
                 data = json.dumps({
                     'data': item.text,
