@@ -14,6 +14,9 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
         if type(item.text) == list:
             text = ' '.join(text)
 
+        if not text:
+            return
+
         lines = text.split("\n")
 
         # Determine in the first 10 lines if it is an actual motion
@@ -27,20 +30,25 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
                 break
 
         if not header or not motion:
-            bugsnag.notify(
-                "Invalid motion, stop processing: ",
-                severity="info",
-                meta_data={"text": text}
-            )
+            # bugsnag.notify(
+            #     Exception("Invalid motion, stop processing"),
+            #     severity="info",
+            #     meta_data={"text": text}
+            # )
+            return
 
-        opening_offset = 1
+        lines = [x.strip() for x in lines]
+
+        opening_offset = -1
         opening_number = None
         for opening_number, line in enumerate(lines):
+            # De kamer
+            # gehoord de beraadslaging
             if line.startswith("gehoord de beraadslaging"):
                 opening_number += opening_offset
                 break
 
-        closing_offset = 0
+        closing_offset = 1
         closing_number = None
         for closing_number, line in enumerate(lines):
             if line.startswith("en gaat over tot de orde van de dag"):
@@ -53,9 +61,14 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
             motion_lines = None
 
         # Make last
-        if motion_lines[-1][-1] in string.punctuation:
-            motion_lines[-1] = motion_lines[-1][:-1]
-        motion_lines[-1] += "."
+        try:
+            if motion_lines[-1][-1] in string.punctuation:
+                motion_lines[-1] = motion_lines[-1][:-1]
+            motion_lines[-1] += "."
+        except IndexError:
+            pass
+
+        motion_lines = [x for x in motion_lines if not x.startswith('Tweede Kamer, vergaderjaar ')]
 
         # The request in the motion is marked bold in Markdown
         first_request = True
@@ -73,4 +86,5 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
         if not first_request:
             motion_lines[-1] += "**"
 
-        item.text = "\n".join(motion_lines)
+        if motion_lines:
+            item.enriched_text = "\n".join(motion_lines)

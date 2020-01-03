@@ -1,0 +1,37 @@
+# All underscored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: false
+  source_type: parliament
+  es_prefix: ggm
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  loaders:
+    - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
+
+tweedekamer:
+  key: tweedekamer
+  index_name: "{key}"
+  source_name: "{key!c}"
+  entities:
+    - <<: *entity_defaults
+      entity: meetings
+      extractor: ocd_backend.extractors.ggm.GGMMeetingsExtractor
+      transformer: ocd_backend.transformers.ggm_meeting.meeting_item
+      enrichers:
+        - ocd_backend.enrichers.text_enricher.text_enricher
+    - <<: *entity_defaults
+      entity: persons
+      extractor: ocd_backend.extractors.ggm.GGMPersonExtractor
+      transformer: ocd_backend.transformers.ggm_person.person_item
+      enrichers:
+        - ocd_backend.enrichers.media_enricher.media_enricher
+    - <<: *entity_defaults
+      entity: committee
+      extractor: ocd_backend.extractors.ggm.GGMCommitteeExtractor
+      transformer: ocd_backend.transformers.ggm_committee.committee_item
+  <<: *source_defaults
