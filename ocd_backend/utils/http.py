@@ -254,13 +254,6 @@ class GCSCachingMixin(HttpRequestMixin):
         assert blob, "blob must not be None"
         assert data, "data must not be None"
 
-        if not content_type:
-            if self.default_content_type:
-                content_type = self.default_content_type
-            else:
-                raise ValueError("No 'content_type' or 'default_content_type' "
-                                 "specified")
-
         f = cStringIO.StringIO()
 
         with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
@@ -272,7 +265,9 @@ class GCSCachingMixin(HttpRequestMixin):
 
             if blob.md5_hash == md5_hash:
                 assert blob.generation
-                return '{}/{}#{}'.format(blob.bucket.name, blob.name, blob.generation)
+                revision_path = '{}/{}#{}'.format(blob.bucket.name, blob.name, blob.generation)
+                log.debug('Hash match before upload, skipping: %s' % revision_path)
+                return revision_path
 
         blob.content_encoding = 'gzip'
         self._do_upload(f, blob, rewind=True, content_type=content_type)
