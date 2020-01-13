@@ -111,10 +111,9 @@ class PostgresDatabase(object):
                 model_object.ori_identifier = self.get_ori_identifier(iri=model_object.source_iri)
 
             # Handle canonical IRI or ID
-            if hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None:
-                self.update_source(model_object, iri=True)
-            if hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None:
-                self.update_source(model_object, id=True)
+            if (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) or \
+                    (hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None):
+                self.update_source(model_object)
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -169,31 +168,144 @@ class PostgresDatabase(object):
         else:
             raise ValueError('Unable to map property of type "%s" to a column.' % property_type)
 
-    def update_source(self, model_object, iri=False, id=False):
-        """Updates the canonical IRI or ID field of the Source of the corresponding model object."""
+    def update_source(self, model_object):
+        """Updates the canonical IRI or ID field of the Source of the corresponding model object.
 
-        if iri:
-            canonical_field = 'canonical_iri'
-        elif id:
-            canonical_field = 'canonical_id'
-        else:
-            raise ValueError('update_source must be called with either iri or id as True')
+        Scenarios:
+        1) Canonical ID and IRI both set on model object:
+            A) Check for Source record with ID only and add IRI
+            B) Check for empty Source record and set ID and IRI
+            C) Check for Source record with ID and IRI set and do nothing
+        2) Only canonical ID set on model object:
+            A) Check for Source record with only ID set and do nothing
+            B) Check for empty Source record and set ID
+            C) Check for Source record with ID and IRI set and do nothing
+        """
 
         session = self.Session()
         resource = session.query(Resource).get(model_object.get_short_identifier())
 
-        try:
-            # Check if there is already a Source record, and if so update its canonical field
-            source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id).one()
-            setattr(source, canonical_field, getattr(model_object, canonical_field))
-        except NoResultFound:
-            # No Source exists for the given source IRI, so create it and fill the corresponding canonical field
-            source = Source(resource=resource,
-                            iri=model_object.source_iri)
-            setattr(source, canonical_field, getattr(model_object, canonical_field))
-            session.add(source)
-        except MultipleResultsFound:
-            raise
+        # Scenario 1
+        if (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and \
+                (hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None):
 
-        session.commit()
+            # Scenario 1A
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == str(model_object.canonical_id)).one()
+                source.canonical_iri = model_object.canonical_iri
+                session.commit()
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 1A/ID+X Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                # Continue to next scenario
+                pass
+            except Exception as e:
+                print(e)
+
+            # Scenario 1B
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == None,
+                                                      Source.canonical_iri == None).one()
+                source.canonical_id = str(model_object.canonical_id)
+                source.canonical_iri = model_object.canonical_iri
+                session.commit()
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 1B/X+X Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                # Continue to next scenario
+                pass
+            except Exception as e:
+                print(e)
+
+            # Scenario 1C
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == str(model_object.canonical_id),
+                                                      Source.canonical_iri == model_object.canonical_iri).one()
+                # Nothing needs to be updated
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 1C/ID+IRI Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                raise ValueError('No updatable Source record found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except Exception as e:
+                print(e)
+
+        # Scenario 2
+        elif (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and not \
+                (hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None):
+
+            # Scenario 2A
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == str(model_object.canonical_id)).one()
+                # Nothing needs to be updated
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 2A/ID+X Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                # Continue to next scenario
+                pass
+            except Exception as e:
+                print(e)
+
+            # Scenario 2B
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == None,
+                                                      Source.canonical_iri == None).one()
+                source.canonical_id = str(model_object.canonical_id)
+                session.commit()
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 2B/X+X Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                # Continue to next scenario
+                pass
+            except Exception as e:
+                print(e)
+
+            # Scenario 1C
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == str(model_object.canonical_id),
+                                                      Source.canonical_iri != None).one()
+                # Nothing needs to be updated
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 2C/ID+IRI Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                raise ValueError('No updatable Source record found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except Exception as e:
+                print(e)
+
+        else:
+
+            raise ValueError('Resource %s with IRI %s must be called with either canonical ID+IRI or canonical'
+                             'ID only' % (model_object.ori_identifier, model_object.source_iri))
+
         session.close()
