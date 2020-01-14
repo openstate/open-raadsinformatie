@@ -87,7 +87,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
                 if resp.status_code == 500:
                     error_dict['text'] = clean_text
 
-                log.warn(error_dict)
+                log.warning(error_dict)
                 continue
 
             data = resp.json()

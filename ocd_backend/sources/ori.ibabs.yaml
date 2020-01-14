@@ -608,6 +608,7 @@ ori.ibabs:
 
   mook_en_middelaar:
     key: mook_en_middelaar
+    ibabs_sitename: Mook en Middelaar
     allmanak_id: 21431
     cbs_id: GM0944
     <<: *ibabs
