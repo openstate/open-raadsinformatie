@@ -173,13 +173,14 @@ class PostgresDatabase(object):
 
         Scenarios:
         1) Canonical ID and IRI both set on model object:
-            A) Check for Source record with ID only and add IRI
+            A) Check for Source record with only matching ID set and add IRI
             B) Check for empty Source record and set ID and IRI
-            C) Check for Source record with ID and IRI set and do nothing
+            C) Check for Source record with matching ID and IRI set and do nothing
+            D) Create new Source record with new ID and IRI
         2) Only canonical ID set on model object:
-            A) Check for Source record with only ID set and do nothing
+            A) Check for Source record with only matching ID set and do nothing
             B) Check for empty Source record and set ID
-            C) Check for Source record with ID and IRI set and do nothing
+            C) Check for Source record with matching ID and non-empty IRI set and do nothing
         """
 
         session = self.Session()
@@ -193,7 +194,8 @@ class PostgresDatabase(object):
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
-                                                      Source.canonical_id == str(model_object.canonical_id)).one()
+                                                      Source.canonical_id == str(model_object.canonical_id),
+                                                      Source.canonical_iri == None).one()
                 source.canonical_iri = model_object.canonical_iri
                 session.commit()
                 session.close()
@@ -240,10 +242,26 @@ class PostgresDatabase(object):
                 raise ValueError('Multiple 1C/ID+IRI Source records found for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
             except NoResultFound:
-                raise ValueError('No updatable Source record found for resource %s with IRI %s' %
-                                 (model_object.ori_identifier, model_object.source_iri))
+                # Continue to next scenario
+                pass
             except Exception as e:
                 print(e)
+
+            # Scenario 1D
+            try:
+                source = Source(resource=resource,
+                                iri=model_object.source_iri,
+                                canonical_id=str(model_object.canonical_id),
+                                canonical_iri=model_object.canonical_iri)
+                session.add(source)
+                session.commit()
+                session.close()
+                return
+            except Exception as e:
+                print(e)
+
+            raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
+                             (model_object.ori_identifier, model_object.source_iri))
 
         # Scenario 2
         elif (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and not \
@@ -253,7 +271,8 @@ class PostgresDatabase(object):
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
-                                                      Source.canonical_id == str(model_object.canonical_id)).one()
+                                                      Source.canonical_id == str(model_object.canonical_id),
+                                                      Source.canonical_iri == None).one()
                 # Nothing needs to be updated
                 session.close()
                 return
@@ -285,7 +304,7 @@ class PostgresDatabase(object):
             except Exception as e:
                 print(e)
 
-            # Scenario 1C
+            # Scenario 2C
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
