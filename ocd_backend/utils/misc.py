@@ -474,11 +474,6 @@ def localize_datetime(date):
     return tz.localize(date)
 
 
-def doc_type(name):
-    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
-
-
 def strip_scheme(url):
     parsed = urlparse(url)
     scheme = "%s://" % parsed.scheme

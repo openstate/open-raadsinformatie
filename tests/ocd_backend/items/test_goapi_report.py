@@ -26,7 +26,6 @@
 #             "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
 #             "hidden": False,
 #             "index_name": "den_helder",
-#             "doc_type": "events",
 #             "keep_index_on_update": True,
 #             "base_url": "https://gemeenteraad.denhelder.nl",
 #             "extract_meeting_items": False,

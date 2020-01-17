@@ -9,8 +9,6 @@ from zeep.helpers import serialize_object
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, list_entry_response_to_dict, votes_to_dict)
 from ocd_backend.utils.misc import json_encoder
@@ -417,125 +415,126 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             self.source_definition['index_name'], meeting_count, passed_vote_count, vote_count,))
 
 
-class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpRequestMixin, FrontendAPIMixin):
-    """
-    Gets a voting record where the number of voters is complete ...
-    """
-
-    def valid_meeting(self, meeting):
-        if meeting['votes'] is not None:
-            try:
-                return (
-                        len(meeting['votes']) ==
-                        int(self.source_definition['council_members_count']))
-            except ValueError:
-                pass
-        return False
-
-    def process_meeting(self, meeting):
-        meeting_count = getattr(self, 'meeting_count', 0)
-        max_meetings = self.source_definition.get('max_processed_meetings', 1)
-        entity_type = self.source_definition.get(
-            'vote_entity', 'organizations')
-        result = None
-        if (max_meetings <= 0) or (meeting_count < max_meetings):
-            setattr(self, 'meeting_count', meeting_count + 1)
-            log.debug("[%s] Processing meeting %d" % (self.source_definition['key'], meeting_count,))
-            council = self.api_request(
-                self.source_definition['index_name'], 'organizations',
-                classification=u'Council')
-            groups = {
-                v['GroupId']: {
-                    'id': v['GroupId'],
-                    'classification': 'Party',
-                    'name': v['GroupName'],
-                    'identifiers': [
-                        {
-                            'id': u'id-g-%s' % (v['GroupId'],),
-                            'identifier': v['GroupId'],
-                            'scheme': u'iBabs'
-                        }
-                    ],
-                    'meta': {
-                        '_type': 'organizations'
-                    }
-                } for v in meeting['votes']}
-            if council is None:
-                groups.update(
-                    {u'council': {
-                        'id': 'council',
-                        'classification': 'Council',
-                        'name': u'Gemeenteraad',
-                        'identifiers': [
-                        ],
-                        'meta': {
-                            '_type': 'organizations'
-                        }
-                    }})
-            else:
-                groups[u'council'] = council[0]
-            persons = {
-                v['UserId']: {
-                    'id': v['UserId'],
-                    'name': v['UserName'],
-                    'identifiers': [
-                        {
-                            'id': u'id-p-%s' % (v['UserId'],),
-                            'identifier': v['UserId'],
-                            'scheme': u'iBabs'
-                        }
-                    ],
-                    'meta': {
-                        '_type': 'persons'
-                    }
-                } for v in meeting['votes']}
-            if entity_type == 'organizations':
-                # process parties
-                unique_groups = list(set(groups.keys()))
-                for g in unique_groups:
-                    # log.debug(meeting['votes'])
-                    groups[g]['memberships'] = [
-                        {
-                            'person_id': v['UserId'],
-                            'person': persons[v['UserId']],
-                            'organization_id': g,
-                            'organization': {
-                                'id': g,
-                                'classification': 'Party',
-                                'name': groups[g]['name'],
-                                'identifiers': [
-                                    {
-                                        'id': u'id-g-%s' % (g,),
-                                        'identifier': g,
-                                        'scheme': u'iBabs'
-                                    }
-                                ]
-                            }
-                        }
-                        for v in meeting['votes'] if ((v['GroupId'] == g) or (g == u'council'))]
-                result = groups.values()
-            elif entity_type == 'persons':
-                # process persons
-                for v in meeting['votes']:
-                    p = v['UserId']
-                    persons[p]['memberships'] = [
-                        {
-                            'person_id': p,
-                            'person': {
-                                'id': p,
-                                'name': persons[p]['name'],
-                                'identifiers': [
-                                    {
-                                        'id': u'id-p-%s' % (p,),
-                                        'identifier': p,
-                                        'scheme': u'iBabs'
-                                    }
-                                ]
-                            },
-                            'organization_id': v['GroupId'],
-                            'organization': groups[v['GroupId']]
-                        }]
-                result = persons.values()
-            return result
-        else:
-            return []
+# Needs to be re-written without using FrontendAPIMixin which has been removed
+# class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpRequestMixin, FrontendAPIMixin):
+#     """
+#     Gets a voting record where the number of voters is complete ...
+#     """
+#
+#     def valid_meeting(self, meeting):
+#         if meeting['votes'] is not None:
+#             try:
+#                 return (
+#                         len(meeting['votes']) ==
+#                         int(self.source_definition['council_members_count']))
+#             except ValueError:
+#                 pass
+#         return False
+#
+#     def process_meeting(self, meeting):
+#         meeting_count = getattr(self, 'meeting_count', 0)
+#         max_meetings = self.source_definition.get('max_processed_meetings', 1)
+#         entity_type = self.source_definition.get(
+#             'vote_entity', 'organizations')
+#         result = None
+#         if (max_meetings <= 0) or (meeting_count < max_meetings):
+#             setattr(self, 'meeting_count', meeting_count + 1)
+#             log.debug("[%s] Processing meeting %d" % (self.source_definition['key'], meeting_count,))
+#             council = self.api_request(
+#                 self.source_definition['index_name'], 'organizations',
+#                 classification=u'Council')
+#             groups = {
+#                 v['GroupId']: {
+#                     'id': v['GroupId'],
+#                     'classification': 'Party',
+#                     'name': v['GroupName'],
+#                     'identifiers': [
+#                         {
+#                             'id': u'id-g-%s' % (v['GroupId'],),
+#                             'identifier': v['GroupId'],
+#                             'scheme': u'iBabs'
+#                         }
+#                     ],
+#                     'meta': {
+#                         '_type': 'organizations'
+#                     }
+#                 } for v in meeting['votes']}
+#             if council is None:
+#                 groups.update(
+#                     {u'council': {
+#                         'id': 'council',
+#                         'classification': 'Council',
+#                         'name': u'Gemeenteraad',
+#                         'identifiers': [
+#                         ],
+#                         'meta': {
+#                             '_type': 'organizations'
+#                         }
+#                     }})
+#             else:
+#                 groups[u'council'] = council[0]
+#             persons = {
+#                 v['UserId']: {
+#                     'id': v['UserId'],
+#                     'name': v['UserName'],
+#                     'identifiers': [
+#                         {
+#                             'id': u'id-p-%s' % (v['UserId'],),
+#                             'identifier': v['UserId'],
+#                             'scheme': u'iBabs'
+#                         }
+#                     ],
+#                     'meta': {
+#                         '_type': 'persons'
+#                     }
+#                 } for v in meeting['votes']}
+#             if entity_type == 'organizations':
+#                 # process parties
+#                 unique_groups = list(set(groups.keys()))
+#                 for g in unique_groups:
+#                     # log.debug(meeting['votes'])
+#                     groups[g]['memberships'] = [
+#                         {
+#                             'person_id': v['UserId'],
+#                             'person': persons[v['UserId']],
+#                             'organization_id': g,
+#                             'organization': {
+#                                 'id': g,
+#                                 'classification': 'Party',
+#                                 'name': groups[g]['name'],
+#                                 'identifiers': [
+#                                     {
+#                                         'id': u'id-g-%s' % (g,),
+#                                         'identifier': g,
+#                                         'scheme': u'iBabs'
+#                                     }
+#                                 ]
+#                             }
+#                         }
+#                         for v in meeting['votes'] if ((v['GroupId'] == g) or (g == u'council'))]
+#                 result = groups.values()
+#             elif entity_type == 'persons':
+#                 # process persons
+#                 for v in meeting['votes']:
+#                     p = v['UserId']
+#                     persons[p]['memberships'] = [
+#                         {
+#                             'person_id': p,
+#                             'person': {
+#                                 'id': p,
+#                                 'name': persons[p]['name'],
+#                                 'identifiers': [
+#                                     {
+#                                         'id': u'id-p-%s' % (p,),
+#                                         'identifier': p,
+#                                         'scheme': u'iBabs'
+#                                     }
+#                                 ]
+#                             },
+#                             'organization_id': v['GroupId'],
+#                             'organization': groups[v['GroupId']]
+#                         }]
+#                 result = persons.values()
+#             return result
+#         else:
+#             return []
