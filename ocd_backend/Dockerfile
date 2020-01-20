@@ -21,6 +21,14 @@ RUN apk add --update \
   && echo "Europe/Amsterdam" > /etc/timezone \
   && apk del build-base git tzdata
 
+# Install hieroverheid-base
+RUN wget "https://github.com/politicalmashup/hieroverheid-base/archive/master.tar.gz" \
+  && tar --directory /opt/ori -xf master.tar.gz \
+  && rm master.tar.gz \
+  && pip3 install --upgrade pip \
+  && pip3 install --no-cache-dir -r "/opt/ori/hieroverheid-base-master/requirements.txt"
+
+
 # Setup Celery
 # Trick to redirect logs to process 1 when running multiple processes
 RUN adduser -D -H celery \

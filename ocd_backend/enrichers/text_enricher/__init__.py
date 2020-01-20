@@ -14,6 +14,7 @@ from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
 from tasks.ggm_motion_text import GegevensmagazijnMotionText
+from tasks.hieroverheid import HierOverheidUploader
 from tasks.theme_classifier import ThemeClassifier
 from tasks.waaroverheid import WaarOverheidEnricher
 
@@ -32,6 +33,7 @@ class TextEnricher(BaseEnricher):
     #: analysis of media items.
     available_tasks = {
         'ggm_motion_text': GegevensmagazijnMotionText,
+        'hieroverheid': HierOverheidUploader,
         'theme_classifier': ThemeClassifier,
         'waaroverheid': WaarOverheidEnricher,
     }

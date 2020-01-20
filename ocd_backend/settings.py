@@ -285,6 +285,11 @@ ORI_CLASSIFIER_PORT = os.getenv('CLASSIFIER_SERVICE_PORT', 5000)
 LOCLINKVIS_HOST = os.getenv('LOCLINKVIS_SERVICE_HOST', 'loclinkvis')
 LOCLINKVIS_PORT = os.getenv('LOCLINKVIS_SERVICE_PORT', 8080)
 
+TAPI_ROOT_URL = os.getenv('TAPI_ROOT_URL', 'https://topics.platform.co.nl/')
+TAPI_DOCUMENT_LIST_URL = TAPI_ROOT_URL + 'dev/document/'
+TAPI_CLIENT_ID = os.getenv('TAPI_CLIENT_ID')
+TAPI_CLIENT_SECRET = os.getenv('TAPI_CLIENT_SECRET')
+
 # The default prefix used for all data
 DEFAULT_INDEX_PREFIX = 'ori'
 
