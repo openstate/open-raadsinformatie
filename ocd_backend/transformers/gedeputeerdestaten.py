@@ -83,7 +83,6 @@ def gs_meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **
     details = self.deserialize_item('application/html', content)
 
     event = Meeting(original_id, **source_defaults)
-    event.canonical_id = original_id
     event.has_organization_name = province
 
     raw_datum_str = u''.join(

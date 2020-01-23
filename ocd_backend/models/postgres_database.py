@@ -4,11 +4,14 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.pool import StaticPool
 
 from ocd_backend import settings
+from ocd_backend.log import get_source_logger
 from ocd_backend.models.definitions import Ori
 from ocd_backend.models.misc import Uri
 from ocd_backend.models.postgres_models import Source, Resource, Property
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, JsonProperty, \
     DateTimeProperty, ArrayProperty, Relation, OrderedRelation
+
+log = get_source_logger('postgres_database')
 
 
 class PostgresDatabase(object):
@@ -113,7 +116,10 @@ class PostgresDatabase(object):
             # Handle canonical IRI or ID
             if (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) or \
                     (hasattr(model_object, 'canonical_iri') and model_object.canonical_iri is not None):
-                self.update_source(model_object)
+                try:
+                    self.update_source(model_object)
+                except ValueError as e:
+                    log.error("Unable to update source: " + str(e))
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -173,9 +179,9 @@ class PostgresDatabase(object):
 
         Scenarios:
         1) Canonical ID and IRI both set on model object:
-            A) Check for Source record with only matching ID set and add IRI
-            B) Check for empty Source record and set ID and IRI
-            C) Check for Source record with matching ID and IRI set and do nothing
+            A) Check for Source record with matching ID and IRI set and do nothing
+            B) Check for Source record with only matching ID set and add IRI
+            C) Check for empty Source record and set ID and IRI
             D) Create new Source record with new ID and IRI
         2) Only canonical ID set on model object:
             A) Check for Source record with only matching ID set and do nothing
@@ -195,21 +201,35 @@ class PostgresDatabase(object):
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
                                                       Source.canonical_id == str(model_object.canonical_id),
+                                                      Source.canonical_iri == model_object.canonical_iri).one()
+                # Nothing needs to be updated
+                session.close()
+                return
+            except MultipleResultsFound:
+                raise ValueError('Multiple 1A/ID+IRI Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
+            except NoResultFound:
+                # Continue to next scenario
+                pass
+
+            # Scenario 1B
+            try:
+                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
+                                                      Source.iri == model_object.source_iri,
+                                                      Source.canonical_id == str(model_object.canonical_id),
                                                       Source.canonical_iri == None).one()
                 source.canonical_iri = model_object.canonical_iri
                 session.commit()
                 session.close()
                 return
             except MultipleResultsFound:
-                raise ValueError('Multiple 1A/ID+X Source records found for resource %s with IRI %s' %
+                raise ValueError('Multiple 1B/ID+X Source records found for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
             except NoResultFound:
                 # Continue to next scenario
                 pass
-            except Exception as e:
-                print(e)
 
-            # Scenario 1B
+            # Scenario 1C
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
@@ -221,31 +241,11 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except MultipleResultsFound:
-                raise ValueError('Multiple 1B/X+X Source records found for resource %s with IRI %s' %
+                raise ValueError('Multiple 1C/X+X Source records found for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
             except NoResultFound:
                 # Continue to next scenario
                 pass
-            except Exception as e:
-                print(e)
-
-            # Scenario 1C
-            try:
-                source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
-                                                      Source.iri == model_object.source_iri,
-                                                      Source.canonical_id == str(model_object.canonical_id),
-                                                      Source.canonical_iri == model_object.canonical_iri).one()
-                # Nothing needs to be updated
-                session.close()
-                return
-            except MultipleResultsFound:
-                raise ValueError('Multiple 1C/ID+IRI Source records found for resource %s with IRI %s' %
-                                 (model_object.ori_identifier, model_object.source_iri))
-            except NoResultFound:
-                # Continue to next scenario
-                pass
-            except Exception as e:
-                print(e)
 
             # Scenario 1D
             try:
@@ -258,10 +258,8 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except Exception as e:
-                print(e)
-
-            raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
-                             (model_object.ori_identifier, model_object.source_iri))
+                raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
 
         # Scenario 2
         elif (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and not \
@@ -282,8 +280,6 @@ class PostgresDatabase(object):
             except NoResultFound:
                 # Continue to next scenario
                 pass
-            except Exception as e:
-                print(e)
 
             # Scenario 2B
             try:
@@ -301,8 +297,6 @@ class PostgresDatabase(object):
             except NoResultFound:
                 # Continue to next scenario
                 pass
-            except Exception as e:
-                print(e)
 
             # Scenario 2C
             try:
@@ -317,17 +311,14 @@ class PostgresDatabase(object):
                 raise ValueError('Multiple 2C/ID+IRI Source records found for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
             except NoResultFound:
-                raise ValueError('No updatable Source record found for resource %s with IRI %s' %
+                raise ValueError('No matching scenario 2 while updating Source for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
-            except Exception as e:
-                print(e)
 
         else:
 
-            raise ValueError('Resource %s with IRI %s must be called with either canonical ID+IRI or canonical'
-                             'ID only' % (model_object.ori_identifier, model_object.source_iri))
-
-        session.close()
+            session.close()
+            raise ValueError('update_source for Resource %s with IRI %s must be called with either canonical ID+IRI '
+                             'or canonical ID only' % (model_object.ori_identifier, model_object.source_iri))
 
     def get_supplier(self, ori_id):
         """
