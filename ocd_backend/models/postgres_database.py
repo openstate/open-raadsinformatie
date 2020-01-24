@@ -258,6 +258,7 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except Exception as e:
+                session.close()
                 raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
 
@@ -292,9 +293,8 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except MultipleResultsFound:
-                # TODO - Decide how to handle this
-                session.close()
-                return
+                raise ValueError('Multiple 2B/X+X Source records found for resource %s with IRI %s' %
+                                 (model_object.ori_identifier, model_object.source_iri))
             except NoResultFound:
                 # Continue to next scenario
                 pass
@@ -309,9 +309,11 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except MultipleResultsFound:
-                raise ValueError('Multiple 2C/ID+IRI Source records found for resource %s with IRI %s' %
-                                 (model_object.ori_identifier, model_object.source_iri))
+                # TODO - Decide how to handle this
+                session.close()
+                return
             except NoResultFound:
+                session.close()
                 raise ValueError('No matching scenario 2 while updating Source for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
 
