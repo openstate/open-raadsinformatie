@@ -119,7 +119,7 @@ class PostgresDatabase(object):
                 try:
                     self.update_source(model_object)
                 except ValueError as e:
-                    log.error("Unable to update source: " + str(e))
+                    log.warning("Unable to update source: " + str(e))
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -292,8 +292,9 @@ class PostgresDatabase(object):
                 session.close()
                 return
             except MultipleResultsFound:
-                raise ValueError('Multiple 2B/X+X Source records found for resource %s with IRI %s' %
-                                 (model_object.ori_identifier, model_object.source_iri))
+                # TODO - Decide how to handle this
+                session.close()
+                return
             except NoResultFound:
                 # Continue to next scenario
                 pass
