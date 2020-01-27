@@ -91,10 +91,12 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         else:
             datum = original_item[datum_field]
 
+    start_date = None
     if datum is not None:
         # msgpack does not like microseconds for some reason.
         # no biggie if we disregard it, though
         report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
+        start_date = True
         report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
 
     if original_item.get('status') == 'Aangenomen':
@@ -117,7 +119,7 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         attachment_file.size_in_bytes = document['FileSize']
         attachment_file.name = document['DisplayName']
         attachment_file.is_referenced_by = report
-        if report.start_date:
+        if start_date:
             attachment_file.last_discussed_at = report.start_date
         report.attachment.append(attachment_file)
 
