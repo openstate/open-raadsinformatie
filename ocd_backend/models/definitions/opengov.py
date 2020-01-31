@@ -12,7 +12,7 @@ from ocd_backend.models.misc import Uri
 
 
 class Motion(Opengov, owl.Thing):
-    attachment = Relation(Schema, 'attachment')
+    attachment = Relation(Meeting, 'attachment')
     legislative_session = StringProperty(Opengov, 'legislativeSession')
     requirement = StringProperty(Opengov, 'requirement')
     classification = StringProperty(Schema, 'additionalType')
