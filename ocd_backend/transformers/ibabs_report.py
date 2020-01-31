@@ -1,6 +1,7 @@
 import re
 
 import iso8601
+import simplejson as json
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -31,34 +32,31 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                                                         supplier='allmanak',
                                                         collection=self.source_definition['source_type'])
 
-    report_name = original_item['_ReportName'].split(r'\s+')[0]
-    name_field = None
-    try:
-        name_field = self.source_definition['fields'][report_name]['name']
-    except KeyError:
-        keys = sorted(original_item.keys(), key=len)
-        for field in keys:
-            # Search for things that look like title
-            if field.lower()[0:3] == 'tit':
-                name_field = field
-                break
+    # Determine title field
+    title_field = None
+    keys = sorted(original_item.keys(), key=len)
+    for field in keys:
+        # Search for things that look like title
+        if field.lower()[0:3] == 'tit':
+            title_field = field
+            break
 
-        for field in keys:
-            id_for_field = '%sIds' % field
-            if id_for_field in original_item and name_field is None:
-                name_field = field
-                break
+    for field in keys:
+        id_for_field = '%sIds' % field
+        if id_for_field in original_item and title_field is None:
+            title_field = field
+            break
 
-    report.name = original_item[name_field]
+    if title_field is None:
+        log.error("Unable to determine title field. Original item: %s" % json.dumps(original_item))
+    else:
+        report.name = original_item[title_field]
+
     report.classification = original_item.get('_ReportName')
-
-    # Temporary binding reports to municipality as long as events and agendaitems are not
-    # referenced in the iBabs API
     report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
                                                         collection=self.source_definition['source_type'])
-
     try:
         report.creator = Organization(original_item['_Extra']['Values']['Fractie(s)'],
                                       collection='party',
@@ -67,29 +65,38 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     except KeyError:
         pass
 
+    # Determine description field
+    description_field = None
+    possible_fields = ('agendapunt', 'onderwerp', 'indieners')
+    for field in possible_fields:
+        if field in original_item.keys():
+            description_field = field
     try:
-        name_field = self.source_definition['fields'][report_name]['description']
-        report.description = original_item[name_field]
+        report.description = original_item[description_field]
     except KeyError:
         try:
-            report.description = original_item['_Extra']['Values']['Toelichting'] or \
-                                 original_item['_Extra']['Values']['Onderwerp'] or \
-                                 original_item['_Extra']['Values']['Opmerkingen'] or \
-                                 original_item['_Extra']['Values']['Agendapunt']
+            report.description = original_item['_Extra']['Values']['Omschrijving']
         except KeyError:
             pass
 
-    try:
-        datum_field = self.source_definition['fields'][report_name]['start_date']
-    except KeyError:
-        datum_field = 'datum'
+    # Determine date field
+    date_field = None
+    keys = sorted(original_item.keys(), key=len)
+    for field in keys:
+        # Search for things that look like title
+        if 'datum' in field.lower():
+            date_field = field
+            break
+
+    if date_field is None:
+        log.error("Unable to determine date field. Original item: %s" % json.dumps(original_item))
 
     datum = None
-    if datum_field in original_item:
-        if isinstance(original_item[datum_field], list):
-            datum = original_item[datum_field][0]
+    if date_field in original_item:
+        if isinstance(original_item[date_field], list):
+            datum = original_item[date_field][0]
         else:
-            datum = original_item[datum_field]
+            datum = original_item[date_field]
 
     start_date = None
     if datum is not None:
