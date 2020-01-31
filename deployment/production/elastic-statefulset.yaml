@@ -37,8 +37,8 @@ spec:
           value: "docker-cluster"
         - name: xpack.security.enabled
           value: "false"
-        - name: xpack.monitoring.enabled
-          value: "false"
+        - name: xpack.monitoring.collection.enabled
+          value: "true"
         - name: bootstrap.memory_lock
           value: "false"
         - name: network.host
@@ -78,7 +78,7 @@ spec:
         resources:
           requests:
             memory: 6G
-            cpu: 200m
+            cpu: 500m
         volumeMounts:
         - mountPath: /usr/share/elasticsearch/data
           name: esdata
@@ -103,4 +103,4 @@ spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
           requests:
-            storage: 30Gi
+            storage: 60Gi
