@@ -87,4 +87,4 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
             motion_lines[-1] += "**"
 
         if motion_lines:
-            item.enriched_text = "\n".join(motion_lines)
+            item.enriched_text = "  \n".join(motion_lines)
