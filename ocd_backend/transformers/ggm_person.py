@@ -52,7 +52,7 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
 
     image_url = deep_get(original_item, '#TK.DA.GGM.OData.Resource', 'target')
     if image_url:
-        person.image = ImageObject(original_item.get('Id'), collection='attachment', **source_defaults)
+        person.image = ImageObject(original_item.get('Id'), collection='image', **source_defaults)
         person.image.original_url = image_url
         person.image.identifier_url = 'ggm/resource/%s' % original_item['Id']
         person.image.date_modified = original_item.get('GewijzigdOp')

@@ -34,6 +34,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                       collection=self.source_definition['source_type'])
 
     item.name = meeting['Meetingtype']
+    item.description = meeting['Explanation']
     item.chair = meeting['Chairman']
     item.location = meeting['Location']
     item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
@@ -93,6 +94,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
             agenda_item.parent = item
             agenda_item.name = mi['Title']
+            agenda_item.description = mi['Explanation']
+            agenda_item.position = mi['Features']
             agenda_item.start_date = item.start_date
             agenda_item.last_discussed_at = item.start_date
 
@@ -132,13 +135,27 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                       collection=self.source_definition['source_type'])
             item.invitee.append(invitee_item)
 
+    item.attendee = list()
+    if meeting['Attendees'] and 'iBabsUserBasic' in meeting['Attendees']:
+        for attendee in meeting['Attendees']['iBabsUserBasic'] or []:
+            attendee_item = Person(attendee['UniqueId'],
+                                   source=self.source_definition['key'],
+                                   supplier='ibabs',
+                                   collection='person')
+            attendee_item.name = attendee['Name']
+            attendee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                       source=self.source_definition['key'],
+                                                                       supplier='allmanak',
+                                                                       collection=self.source_definition['source_type'])
+            item.attendee.append(attendee_item)
+
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
     if 'EndTime' in meeting and meeting['EndTime']:
         meeting_date, _, _ = meeting['MeetingDate'].partition('T')
         meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
         item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
     else:
-        item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+        item.end_date = iso8601.parse_date(meeting['MeetingDate']).strftime("%s")
 
     item.attachment = list()
     if meeting['Documents'] and 'iBabsDocument' in meeting['Documents']:
