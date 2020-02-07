@@ -79,32 +79,10 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         except KeyError:
             pass
 
-    # Determine date field
-    date_field = None
-    keys = sorted(original_item.keys(), key=len)
-    for field in keys:
-        # Search for things that look like title
-        if 'datum' in field.lower():
-            date_field = field
-            break
-
-    if date_field is None:
-        log.error("Unable to determine date field. Original item: %s" % json.dumps(original_item))
-
-    datum = None
-    if date_field in original_item:
-        if isinstance(original_item[date_field], list):
-            datum = original_item[date_field][0]
-        else:
-            datum = original_item[date_field]
-
-    start_date = None
+    datum = original_item.get('datum')
     if datum is not None:
-        # msgpack does not like microseconds for some reason.
-        # no biggie if we disregard it, though
-        report.start_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
-        start_date = True
-        report.end_date = iso8601.parse_date(re.sub(r'\.\d+\+', '+', datum))
+        report.start_date = datum
+        report.end_date = datum
 
     if original_item.get('status') == 'Aangenomen':
         report.result = ResultPassed
@@ -126,8 +104,8 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         attachment_file.size_in_bytes = document['FileSize']
         attachment_file.name = document['DisplayName']
         attachment_file.is_referenced_by = report
-        if start_date:
-            attachment_file.last_discussed_at = report.start_date
+        if datum:
+            attachment_file.last_discussed_at = datum
         report.attachment.append(attachment_file)
 
     report.save()

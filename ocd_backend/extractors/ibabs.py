@@ -1,6 +1,8 @@
 import base64
+import functools
 import re
 
+import iso8601
 import simplejson as json
 from zeep.client import Client, Settings
 from zeep.exceptions import Error
@@ -216,6 +218,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 continue
             selected_lists.append(l)
 
+        start_date, end_date = self.date_interval()
+
         total_yield_count = 0
         for l in selected_lists:
             reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
@@ -278,8 +282,25 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     )
                     item['_Extra'] = list_entry_response_to_dict(extra_info_item)
 
+                    report_dict = serialize_object(item, dict)
+
+                    date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
+                    if date_field is None:
+                        log.warning("Unable to determine date field. Original item: %s" % json.dumps(report_dict))
+
+                    try:
+                        report_dict['datum'] = report_dict[date_field][0]
+                    except (IndexError, TypeError):
+                        report_dict['datum'] = report_dict[date_field]
+                    except KeyError:
+                        report_dict['datum'] = None
+
+                    if report_dict['datum'] and not start_date < report_dict['datum'].replace(tzinfo=None) < end_date:
+                        # Skip report if date is outside date interval
+                        continue
+
                     # identifier = item['id'][0]
-                    yield 'application/json', json_encoder.encode(serialize_object(item, dict)), None, 'ibabs/' + cached_path
+                    yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path
                     yield_count += 1
                     total_yield_count += 1
                     result_count += 1
@@ -288,8 +309,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             log.debug("[%s] Report: %s -- total %s, yielded %s" % (
                 self.source_definition['key'], l.Value, total_count, yield_count))
 
-        log.info("[%s] Extracted total of %s ibabs reports yielded" % (
-            self.source_definition['key'], total_yield_count))
+        log.info("[{}] Extracted total of {} ibabs reports yielded within {:%Y-%m-%d} and {:%Y-%m-%d}".format(
+            self.source_definition['key'], total_yield_count, start_date, end_date))
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
