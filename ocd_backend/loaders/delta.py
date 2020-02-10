@@ -54,7 +54,9 @@ class DeltaLoader(BaseLoader):
             # Send document to the Kafka bus
             log_identifiers.append(model.get_short_identifier())
             message_key_id = '%s_%s' % (settings.KAFKA_MESSAGE_KEY, model.get_short_identifier())
-            kafka_producer.produce(settings.KAFKA_TOPIC, nquads.encode('utf-8'), message_key_id, callback=delivery_report)
+            # Send statements individually to avoid too large message size
+            for message in nquads.strip().split('\n'):
+                kafka_producer.produce(settings.KAFKA_TOPIC, message.encode('utf-8'), message_key_id, callback=delivery_report)
 
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
