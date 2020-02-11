@@ -2,8 +2,7 @@
 http://www.w3.org/ns/org#
 """
 
-import foaf
-import owl
+from ocd_backend.models.definitions import foaf, owl
 from ocd_backend.models.definitions import Org, Skos, Opengov, Dcterms, \
     Schema, Rdf, Meta, Vcard
 from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \

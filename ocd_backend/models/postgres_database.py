@@ -14,7 +14,7 @@ from ocd_backend.models.properties import StringProperty, URLProperty, IntegerPr
 log = get_source_logger('postgres_database')
 
 
-class PostgresDatabase(object):
+class PostgresDatabase:
 
     def __init__(self, serializer):
         self.serializer = serializer
@@ -133,7 +133,7 @@ class PostgresDatabase(object):
                                            ).delete(synchronize_session='fetch')
 
             # Save new properties
-            for predicate, value_and_property_type in serialized_properties.iteritems():
+            for predicate, value_and_property_type in serialized_properties.items():
                 if isinstance(value_and_property_type[0], list):
                     # Create each item as a separate Property with the same predicate, and save the order to
                     # the `order` column

@@ -9,7 +9,7 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('extractor')
 
 
-class BaseExtractor(object):
+class BaseExtractor:
     """The base class that other extractors should inherit."""
 
     def __init__(self, source_definition):

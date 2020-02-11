@@ -1,6 +1,6 @@
 from PIL import Image
 
-from . import BaseEnrichmentTask
+from ocd_backend.enrichers.media_enricher.tasks import BaseEnrichmentTask
 
 
 class ImageMetadata(BaseEnrichmentTask):

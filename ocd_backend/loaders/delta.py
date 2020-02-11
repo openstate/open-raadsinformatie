@@ -1,6 +1,6 @@
+from urllib import parse
 from confluent_kafka import Producer
 from pyld import jsonld
-import urllib
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -48,8 +48,8 @@ class DeltaLoader(BaseLoader):
             # Add the graph name to the body. This is done the low-tech way, but could be improved by updating the
             # JSON-LD so that the graph information is included when serializing to N-Quads.
             ntriples_split = ntriples.split(' .\n')
-            nquads = ' <http://purl.org/linked-delta/replace?graph={}> .\n'.format(urllib.quote(model.get_ori_identifier()))\
-                .join(ntriples_split)
+            nquads = ' <http://purl.org/linked-delta/replace?graph={}> .\n'.format(
+                parse.quote(model.get_ori_identifier())).join(ntriples_split)
 
             # Send document to the Kafka bus
             log_identifiers.append(model.get_short_identifier())

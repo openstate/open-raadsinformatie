@@ -1,9 +1,7 @@
 import base64
-import functools
 import re
+import json
 
-import iso8601
-import simplejson as json
 from zeep.client import Client, Settings
 from zeep.exceptions import Error
 from zeep.helpers import serialize_object
@@ -245,7 +243,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
                     log.warning("[%s] Could not parse page %s correctly!: %s" % (
-                        self.source_definition['key'], active_page_nr, e.message))
+                        self.source_definition['key'], active_page_nr, e))
                     result = None
                 result_count = 0
 
@@ -511,7 +509,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 #                 } for v in meeting['votes']}
 #             if entity_type == 'organizations':
 #                 # process parties
-#                 unique_groups = list(set(groups.keys()))
+#                 unique_groups = set(groups.keys())
 #                 for g in unique_groups:
 #                     # log.debug(meeting['votes'])
 #                     groups[g]['memberships'] = [

@@ -1,9 +1,9 @@
 # todo needs to be rewritten with new data
-# import simplejson as json
+
 # import os
 #
 # from ocd_backend.items import LocalDumpItem
-# from . import ItemTestCase
+# from tests.ocd_backend.items import ItemTestCase
 #
 #
 # class LocalDumpItemTestCase(ItemTestCase):

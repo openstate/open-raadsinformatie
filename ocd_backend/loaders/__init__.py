@@ -52,7 +52,7 @@ class BaseLoader(OCDBackendTaskSuccessMixin, OCDBackendTaskFailureMixin,
 
         meta.ori_identifier = Url(model.get_ori_identifier() + '#meta')
         if model.cached_path:
-            meta.used = Url('{}/{}'.format(settings.RESOLVER_BASE_URL, urllib.quote(model.cached_path)))
+            meta.used = Url('{}/{}'.format(settings.RESOLVER_BASE_URL, urllib.parse.quote(model.cached_path)))
         meta.generated = model.get_ori_identifier()
         meta.same_as = Url(model.source_iri)
         meta.started_at_time = self.start_time

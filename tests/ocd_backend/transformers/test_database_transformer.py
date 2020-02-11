@@ -1,7 +1,6 @@
 import os
+import json
 from unittest import TestCase
-
-import simplejson as json
 
 from ocd_backend.models.model import Model
 from ocd_backend.transformers.database import database_item
@@ -41,7 +40,7 @@ class DatabaseTransformerTestCase(TestCase):
         extracted_properties = {_prop['predicate']: _prop['value'] for _prop in extracted_resource['properties']
                                 if _prop['predicate'] != 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}
         self.assertEqual(len(transformed_meeting.values), len(extracted_properties))
-        for _property in transformed_meeting.values.iteritems():
+        for _property in transformed_meeting.values.items():
             if isinstance(_property[1], Model):
                 self.untested_models.add(_property[1])
             else:
@@ -55,7 +54,7 @@ class DatabaseTransformerTestCase(TestCase):
             extracted_properties = {_prop['predicate']: _prop['value'] for _prop in extracted_subresource_properties
                                     if _prop['predicate'] != 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}
             self.assertEqual(len(subresource.values), len(extracted_properties))
-            for _property in subresource.values.iteritems():
+            for _property in subresource.values.items():
                 if isinstance(_property[1], Model):
                     self.untested_models.add(_property[1])
                 else:

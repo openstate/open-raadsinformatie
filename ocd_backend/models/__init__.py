@@ -3,75 +3,68 @@
 This file is used to specify custom model mappings.
 By mapping these names definitions can be remapped if needed later on.
 """
-import definitions.foaf
-import definitions.meeting
-import definitions.ncal
-import definitions.opengov
-import definitions.org
-import definitions.owl
-import definitions.person
-import definitions.prov
-import definitions.schema
+from .definitions import meeting, opengov, schema, person, org, prov
+
 
 # https://argu.co/ns/meeting#
-Meeting = definitions.meeting.Meeting
-AgendaItem = definitions.meeting.AgendaItem
-Report = definitions.meeting.Report
-Amendment = definitions.meeting.Amendment
-Committee = definitions.meeting.Committee
+Meeting = meeting.Meeting
+AgendaItem = meeting.AgendaItem
+Report = meeting.Report
+Amendment = meeting.Amendment
+Committee = meeting.Committee
 
 # http://www.w3.org/ns/opengov#
-VoteEvent = definitions.opengov.VoteEvent
-Motion = definitions.opengov.Motion
-Result = definitions.opengov.Result
-Count = definitions.opengov.Count
-YesCount = definitions.opengov.YesCount
-NoCount = definitions.opengov.NoCount
-AbstainCount = definitions.opengov.AbstainCount
-AbsentCount = definitions.opengov.AbsentCount
-Vote = definitions.opengov.Vote
+VoteEvent = opengov.VoteEvent
+Motion = opengov.Motion
+Result = opengov.Result
+Count = opengov.Count
+YesCount = opengov.YesCount
+NoCount = opengov.NoCount
+AbstainCount = opengov.AbstainCount
+AbsentCount = opengov.AbsentCount
+Vote = opengov.Vote
 
 # http://schema.org/
-MediaObject = definitions.schema.MediaObject
-ImageObject = definitions.schema.ImageObject
-CreativeWork = definitions.schema.CreativeWork
-PropertyValue = definitions.schema.PropertyValue
+MediaObject = schema.MediaObject
+ImageObject = schema.ImageObject
+CreativeWork = schema.CreativeWork
+PropertyValue = schema.PropertyValue
 
 # http://www.w3.org/ns/person#
-Person = definitions.person.Person
+Person = person.Person
 
 # http://www.w3.org/ns/org#
-Organization = definitions.org.Organization
+Organization = org.Organization
 # TopLevelOrganization is an alias for Organization
-TopLevelOrganization = definitions.org.Organization
-Membership = definitions.org.Membership
+TopLevelOrganization = org.Organization
+Membership = org.Membership
 
 # http://www.w3.org/ns/prov#
-Activity = definitions.prov.Activity
+Activity = prov.Activity
 
 # Constants
 
-ResultKept = definitions.meeting.ResultKept
-ResultPostponed = definitions.meeting.ResultPostponed
-ResultWithdrawn = definitions.meeting.ResultWithdrawn
-ResultExpired = definitions.meeting.ResultExpired
-ResultDiscussed = definitions.meeting.ResultDiscussed
-ResultPublished = definitions.meeting.ResultPublished
+ResultKept = meeting.ResultKept
+ResultPostponed = meeting.ResultPostponed
+ResultWithdrawn = meeting.ResultWithdrawn
+ResultExpired = meeting.ResultExpired
+ResultDiscussed = meeting.ResultDiscussed
+ResultPublished = meeting.ResultPublished
 
-ResultFailed = definitions.opengov.ResultFailed
-ResultPassed = definitions.opengov.ResultPassed
+ResultFailed = opengov.ResultFailed
+ResultPassed = opengov.ResultPassed
 
-EventCompleted = definitions.meeting.EventCompleted
-EventConfirmed = definitions.meeting.EventConfirmed
-EventUnconfirmed = definitions.meeting.EventUnconfirmed
-EventScheduled = definitions.schema.EventScheduled
-EventRescheduled = definitions.schema.EventRescheduled
-EventCancelled = definitions.schema.EventCancelled
-EventPostponed = definitions.schema.EventPostponed
+EventCompleted = meeting.EventCompleted
+EventConfirmed = meeting.EventConfirmed
+EventUnconfirmed = meeting.EventUnconfirmed
+EventScheduled = schema.EventScheduled
+EventRescheduled = schema.EventRescheduled
+EventCancelled = schema.EventCancelled
+EventPostponed = schema.EventPostponed
 
-VoteOptionYes = definitions.opengov.VoteOptionYes
-VoteOptionNo = definitions.opengov.VoteOptionNo
-VoteOptionAbstain = definitions.opengov.VoteOptionAbstain
-VoteOptionAbsent = definitions.opengov.VoteOptionAbsent
-VoteOptionNotVoting = definitions.opengov.VoteOptionNotVoting
-VoteOptionPaired = definitions.opengov.VoteOptionPaired
+VoteOptionYes = opengov.VoteOptionYes
+VoteOptionNo = opengov.VoteOptionNo
+VoteOptionAbstain = opengov.VoteOptionAbstain
+VoteOptionAbsent = opengov.VoteOptionAbsent
+VoteOptionNotVoting = opengov.VoteOptionNotVoting
+VoteOptionPaired = opengov.VoteOptionPaired

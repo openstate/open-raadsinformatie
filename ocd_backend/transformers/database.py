@@ -159,7 +159,7 @@ class DatabaseTransformer(BaseTransformer):
         """
         Matches the predicate of a property with the definition on a model class.
         """
-        for definition in definitions.iteritems():
+        for definition in definitions.items():
             if definition[1].ns.uri + definition[1]._name == _property['predicate']:
                 return definition[0]
         raise ValueError('No match found in model definitions for property with predicate "%s"' % _property['predicate'])
@@ -174,18 +174,18 @@ def database_item(self, content_type, raw_item, entity, source_item, **kwargs):
     item = self.create_resource(resource, entity)
 
     # Create subresources (without properties)
-    for subresource in subresources.iteritems():
+    for subresource in subresources.items():
         self.create_subresource(subresource[1][0], subresource[1][1], subresource[1][2])
 
     # Add the main resource to the list of processed subresources to prevent overwriting of its properties
     self.processed_subresources.add(item.ori_identifier.rsplit('/')[-1])
 
     # Add properties to subresources
-    for subresource in self.created_models.iteritems():
+    for subresource in self.created_models.items():
         self.add_subresource_properties(subresource[1], subresources)
 
     # Replace relation placeholders on main resource
-    for _property in item.values.iteritems():
+    for _property in item.values.items():
         if isinstance(_property[1], RelationPlaceholder):
             setattr(item, _property[0], self.created_models[_property[1].ori_id])
         elif isinstance(_property[1], list):

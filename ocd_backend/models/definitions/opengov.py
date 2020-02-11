@@ -2,8 +2,7 @@
 http://www.w3.org/ns/opengov#
 """
 
-import owl
-import schema
+from ocd_backend.models.definitions import owl, schema
 from ocd_backend.models.definitions import Opengov, Schema, Meeting, Dcterms, \
     Ncal, Rdf, Rdfs, Skos, Bibframe
 from ocd_backend.models.properties import StringProperty, IntegerProperty, \

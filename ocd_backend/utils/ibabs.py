@@ -25,11 +25,11 @@ def vote_to_dict(v):
     """
 
     fields = {
-        'EntryId': lambda x: unicode(x),
-        'GroupId': lambda x: unicode(x),
-        'GroupName': lambda x: unicode(x),
-        'UserId': lambda x: unicode(x),
-        'UserName': lambda x: unicode(x),
+        'EntryId': lambda x: str(x),
+        'GroupId': lambda x: str(x),
+        'GroupName': lambda x: str(x),
+        'UserId': lambda x: str(x),
+        'UserName': lambda x: str(x),
         'Vote': None,
     }
 
@@ -49,11 +49,11 @@ def document_to_dict(d):
     Converts an iBabsDocument SOAP response to a JSON serializable dict
     """
     fields = {
-        'Id': lambda x: unicode(x),
-        'FileName': lambda x: unicode(x),
-        'DisplayName': lambda x: unicode(x),
+        'Id': lambda x: str(x),
+        'FileName': lambda x: str(x),
+        'DisplayName': lambda x: str(x),
         'Confidential': None,
-        'PublicDownloadURL': lambda x: unicode(x),
+        'PublicDownloadURL': lambda x: str(x),
         'FileSize': lambda x: int(x) if x is not None else None
     }
     return _ibabs_to_dict(d, fields)
@@ -70,10 +70,10 @@ def meeting_to_dict(m, excludes=None):
         'Id': None,
         'MeetingtypeId': None,
         'MeetingDate': lambda x: x.isoformat(),
-        'StartTime': lambda x: unicode(x),
-        'EndTime': lambda x: unicode(x),
-        'Location': lambda x: unicode(x),
-        'Chairman': lambda x: unicode(x),
+        'StartTime': lambda x: str(x),
+        'EndTime': lambda x: str(x),
+        'Location': lambda x: str(x),
+        'Chairman': lambda x: str(x),
         'Invitees': lambda x: [
             user_to_dict(y) if y is not None else [] for y in x[0]],
         'Attendees': lambda x: [
@@ -84,7 +84,7 @@ def meeting_to_dict(m, excludes=None):
             meeting_item_to_dict(y) if y is not None else [] for y in x[0]],
         'Documents': lambda x: [
             document_to_dict(y) if y is not None else [] for y in x[0]],
-        'Webcast': lambda x: unicode(x['Code']),
+        'Webcast': lambda x: str(x['Code']),
     }
     return _ibabs_to_dict(m, fields, excludes)
 
@@ -94,11 +94,11 @@ def list_entry_to_dict(l):
     Converts an iBabsListEntryBasic to a JSON serializable dict
     """
     fields = {
-        'EntryId': lambda x: unicode(x),
-        'EntryTitle': lambda x: unicode(x),
+        'EntryId': lambda x: str(x),
+        'EntryTitle': lambda x: str(x),
         'ListCanVote': None,
-        'ListId': lambda x: unicode(x),
-        'ListName': lambda x: unicode(x),
+        'ListId': lambda x: str(x),
+        'ListName': lambda x: str(x),
         'VoteResult': None,
         'VotesAgainst': None,
         'VotesInFavour': None,
@@ -111,9 +111,9 @@ def user_to_dict(u):
     Converts an iBabsUserBasic to a JSON serializable dict
     """
     fields = {
-        'UniqueId': lambda x: unicode(x),
-        'Name': lambda x: unicode(x),
-        'Emailaddress': lambda x: unicode(x),
+        'UniqueId': lambda x: str(x),
+        'Name': lambda x: str(x),
+        'Emailaddress': lambda x: str(x),
     }
     return _ibabs_to_dict(u, fields)
 
@@ -137,9 +137,9 @@ def meeting_item_to_dict(m):
 
 def _list_response_field_to_val(r):
     if isinstance(r, list):
-        return [unicode(l) for l in r]
+        return [str(l) for l in r]
     else:
-        return unicode(r)
+        return str(r)
 
 
 def list_report_response_to_dict(r):
@@ -162,7 +162,7 @@ def list_entry_response_to_dict(m):
         'Status': None,
         'Documents': lambda x: [document_to_dict(y) if y is not None else [] for y in x.iBabsDocument],
         'Values': lambda x: {
-            unicode(y.Key): unicode(y.Value) if y.Value is not None else None for y in x.KeyValueOfstringstring
+            str(y.Key): str(y.Value) if y.Value is not None else None for y in x.KeyValueOfstringstring
         }
     }
     return _ibabs_to_dict(m, fields)

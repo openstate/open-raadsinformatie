@@ -1,6 +1,5 @@
-import urllib
-
 import requests
+from urllib import parse
 
 from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
@@ -9,7 +8,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
-from tasks.image_metadata import ImageMetadata
+from ocd_backend.enrichers.media_enricher.tasks.image_metadata import ImageMetadata
 
 log = get_source_logger('enricher')
 
@@ -59,12 +58,12 @@ class MediaEnricher(BaseEnricher, GCSCachingMixin):
         except requests.HTTPError as e:
             raise SkipEnrichment(e)
 
-        item.url = '%s/%s' % (RESOLVER_BASE_URL, urllib.quote(identifier))
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
         item.content_type = resource.content_type
         item.size_in_bytes = resource.file_size
 
         enrich_tasks = item.enricher_task
-        if isinstance(enrich_tasks, basestring):
+        if isinstance(enrich_tasks, str):
             enrich_tasks = [item.enricher_task]
 
         # The enricher tasks will executed in specified order

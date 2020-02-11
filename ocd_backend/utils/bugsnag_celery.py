@@ -1,11 +1,8 @@
-from __future__ import division, print_function, absolute_import
-
 import bugsnag
 from celery.signals import task_failure
 
 
-def failure_handler(sender, task_id, exception, args, kwargs, traceback, einfo,
-                    **kw):
+def failure_handler(sender, task_id, exception, args, kwargs, traceback, einfo, **kw):
     """
     Overriding configuration in bugsnag.celery in order to set the severity
     to warning instead of error.

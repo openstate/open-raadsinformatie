@@ -1,7 +1,6 @@
+import json
 from datetime import datetime
-from urlparse import urljoin
-
-import simplejson as json
+from urllib.parse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
@@ -143,7 +142,7 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
     def run(self):
         meeting_count = 0
         for start_date, end_date in self.interval_generator():
-            url = u'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
+            url = 'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
                 start_date.isoformat(),
                 end_date.isoformat()
             )

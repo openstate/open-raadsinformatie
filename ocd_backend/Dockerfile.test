@@ -7,12 +7,13 @@ USER root
 RUN apk --update add nano
 
 # Install backend testing dependencies
-RUN pip install --no-warn-conflicts pylint==1.8.4 nose2==0.9.1 coverage==4.5.1
+RUN pip install --no-warn-conflicts pylint==2.4.4 nose2==0.9.2 coverage==5.0.3
 
 # Copy backend testing files
 COPY  .pylintrc /opt/ori/.pylintrc
 COPY tests/__init__.py  /opt/ori/tests/__init__.py
 COPY tests/ocd_backend /opt/ori/tests/ocd_backend
+COPY version.py /opt/ori/version.py
 
 RUN chown -R celery:celery tests
 

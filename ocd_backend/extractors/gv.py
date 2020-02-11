@@ -1,13 +1,12 @@
+import json
 from time import sleep
-
-import simplejson as json
+from urllib import parse
 
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.misc import strip_scheme
-import urllib
 
 log = get_source_logger('extractor')
 
@@ -34,7 +33,7 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
 
     def _url(self, action, params):
         params['action'] = action
-        return '{}?{}'.format(self.base_url, urllib.urlencode(params))
+        return '{}?{}'.format(self.base_url, parse.urlencode(params))
 
     def _fetch(self, url):
         auth = {
@@ -42,7 +41,7 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
             'key': self.key,
             'hash': self.hash,
         }
-        return self.http_session.get('{}&{}'.format(url, urllib.urlencode(auth)), verify=False)
+        return self.http_session.get('{}&{}'.format(url, parse.urlencode(auth)), verify=False)
 
 
 class GreenValleyExtractor(GreenValleyBaseExtractor):
@@ -72,17 +71,17 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
             log.info("Got %s items ..." % len(results['objects']))
             for result in results['objects']:
                 log.info("Object %s/%s has %s attachments and %s sets" % (
-                    result[u'default'][u'objecttype'],
-                    result[u'default'][u'objectname'],
-                    len(result.get(u'attachmentlist', [])),
-                    len(result.get(u'SETS', []))
+                    result['default']['objecttype'],
+                    result['default']['objectname'],
+                    len(result.get('attachmentlist', [])),
+                    len(result.get('SETS', []))
                 ))
 
-                for k, v in result.get(u'SETS', {}).iteritems():
-                    v[u'parent_objectid'] = result[u'default'][u'objectid']
-                    v[u'bis_vergaderdatum'] = result[u'default'][u'bis_vergaderdatum']
+                for k, v in result.get('SETS', {}).items():
+                    v['parent_objectid'] = result['default']['objectid']
+                    v['bis_vergaderdatum'] = result['default']['bis_vergaderdatum']
 
-                    result2 = {u'default': v}
+                    result2 = {'default': v}
                     # identifier = result2['default']['objectid']
                     yield 'application/json', json.dumps(result2), None, 'greenvalley/' + cached_path
 

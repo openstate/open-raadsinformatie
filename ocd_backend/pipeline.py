@@ -41,7 +41,7 @@ def setup_pipeline(source_definition):
         raise ConfigurationError('Index with alias "{index_alias}" does '
                                  'not exist'.format(index_alias=index_alias))
 
-    current_index_name = current_index_aliases.keys()[0]
+    current_index_name = list(current_index_aliases)[0]
     # Check if the source specifies that any update should be added to
     # the current index instead of a new one
     if source_definition.get('keep_index_on_update'):
@@ -149,7 +149,7 @@ def setup_pipeline(source_definition):
         except KeyboardInterrupt:
             logger.warning('KeyboardInterrupt received. Stopping the program.')
             exit()
-        except Exception, e:
+        except Exception as e:
             logger.error('[{site_name}] Pipeline has failed. Setting status of '
                          'run identifier "{run_identifier}" to "error":\n{message}'
                          .format(index=params['new_index_name'],

@@ -5,7 +5,7 @@
 # from mock import MagicMock
 #
 # from ocd_backend.items.go_report import ReportItem
-# from . import ItemTestCase
+# from tests.ocd_backend.items import ItemTestCase
 #
 #
 # class ReportItemTestCase(ItemTestCase):
