@@ -1,6 +1,6 @@
 import gzip
-import simplejson as json
 import os
+import json
 
 from click import progressbar
 from lxml import etree
@@ -53,7 +53,7 @@ class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
             r = self.http_session.get(self.file_url, verify=False)
             static_content = r.content
         except Exception:
-            static_content = u''
+            static_content = ''
         # Extract and yield the items
         if static_content != '':
             for item in self.extract_items(static_content):

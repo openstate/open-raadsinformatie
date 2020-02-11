@@ -1,8 +1,8 @@
-from .misc import Namespace, Uri, Url
+from ocd_backend.models.misc import Namespace, Uri, Url
 from ocd_backend.utils.misc import str_to_datetime
 
 
-class PropertyBase(object):
+class PropertyBase:
     """The base property all properties and relations should inherit from."""
 
     def __init__(self, ns, name, required=False, ignore_for_loader=None):
@@ -57,7 +57,7 @@ class StringProperty(Property):
             return value
 
         if value:
-            return unicode(value).strip()
+            return str(value).strip()
 
 
 class URLProperty(StringProperty):

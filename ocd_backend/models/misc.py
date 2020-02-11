@@ -1,4 +1,4 @@
-class Namespace(object):
+class Namespace:
     """A shortcut for defining a namespace with a prefix.
 
     Attributes:
@@ -13,8 +13,8 @@ class Namespace(object):
         return self.prefix
 
 
-class Uri(str):
-    """A shortcut for writing full URI's.
+class Uri:
+    """A shortcut for constructing URI's as strings.
 
     Attributes:
         ns: The `Namespace` object prefix
@@ -27,17 +27,7 @@ class Uri(str):
     def __new__(cls, ns, local_name):
         """Creates a full uri str with extra attributes"""
         assert issubclass(ns, Namespace)
-        cls.ns = ns
-        cls.local_name = local_name
-        return super(Uri, cls).__new__(cls, '{}{}'.format(ns.uri,
-                                                          cls.local_name))
-
-    def __init__(self, ns, local_name):
-        """Just here to match the signature"""
-        super(Uri, self).__init__()
-
-    def short(self):
-        return self.local_name
+        return '{}{}'.format(ns.uri, local_name)
 
 
 class Url(str):

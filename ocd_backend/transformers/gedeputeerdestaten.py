@@ -1,5 +1,5 @@
 from datetime import datetime
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 import requests
 
@@ -32,7 +32,7 @@ class GedeputeerdeStatenTransformer(BaseTransformer):
 
     def get_meeting_date(self, nl_date_str):
         result = nl_date_str
-        for m, n in self.date_mapping.iteritems():
+        for m, n in self.date_mapping.items():
             result = result.replace('%s' % (m,), n)
         result = result.strip().replace(' ', '-')
         if len(result) < 10:
@@ -45,7 +45,7 @@ class GedeputeerdeStatenTransformer(BaseTransformer):
         details_url = details.xpath('//meta[contains(@property, "og:url")]/@content')[0]
         for node in details.xpath('//a[contains(@class, "importLink")]'):
             media_urls.append({
-                'note': u''.join(node.xpath('.//text()')),
+                'note': ''.join(node.xpath('.//text()')),
                 'original_url': urljoin(details_url, node.xpath('./@href')[0])
             })
         return media_urls
@@ -64,13 +64,13 @@ def gs_meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **
         'cached_path': cached_path,
     }
 
-    original_id = unicode(original_item.xpath(self.source_definition['item_id_xpath'])[0])
+    original_id = str(original_item.xpath(self.source_definition['item_id_xpath'])[0])
 
     try:
         content = requests.get(original_id).content
     except Exception as e:
         log.error(e)
-        content = u''
+        content = ''
 
     if content == '':
         log.erorr('Could not get detailed gedeputeerde staten page')
@@ -85,15 +85,15 @@ def gs_meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **
     event = Meeting(original_id, **source_defaults)
     event.has_organization_name = province
 
-    raw_datum_str = u''.join(
+    raw_datum_str = ''.join(
         details.xpath('//div[contains(@class, "type-meta")]//text()')).split(':')[-1]
     clean_date_str = self.get_meeting_date(raw_datum_str)
     event.start_date = event.end_date = clean_date_str
     event.last_discussed_at = event.start_date
 
-    event.name = u''.join(details.xpath('//h1//text()'))
-    event.classification = [u'GS-Besluit']
-    event.description = u''.join(details.xpath('//div[contains(@class, "type-inhoud")]//text()'))
+    event.name = ''.join(details.xpath('//h1//text()'))
+    event.classification = ['GS-Besluit']
+    event.description = ''.join(details.xpath('//div[contains(@class, "type-inhoud")]//text()'))
 
     event.organization = province
 

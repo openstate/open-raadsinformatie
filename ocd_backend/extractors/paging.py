@@ -6,6 +6,7 @@ from ocd_backend.log import get_source_logger
 
 log = get_source_logger('extractor')
 
+
 class PagingHTMLExtractor(StaticHtmlExtractor):
     def __init__(self, *args, **kwargs):
         super(PagingHTMLExtractor, self).__init__(*args, **kwargs)
@@ -24,8 +25,8 @@ class PagingHTMLExtractor(StaticHtmlExtractor):
     def get_next_url(self, static_content):
         tree = etree.HTML(static_content)
         next_page_elems = tree.xpath(self.next_page_xpath)
-        if  len(next_page_elems) > 0:
-            return u''.join(next_page_elems[0])
+        if len(next_page_elems) > 0:
+            return ''.join(next_page_elems[0])
         return 0
 
     def run(self):
@@ -39,7 +40,7 @@ class PagingHTMLExtractor(StaticHtmlExtractor):
                 r = self.http_session.get(next_url, verify=False)
                 static_content = r.content
             except Exception:
-                static_content = u''
+                static_content = ''
 
             next_page_count += 1
 

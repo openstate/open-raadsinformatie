@@ -2,9 +2,9 @@
 
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
-from ocd_backend.models.definitions import Mapping, Prov, Ori, Meta
+from ocd_backend.models.definitions import Mapping, Ori
 from ocd_backend.models.exceptions import MissingProperty
-from ocd_backend.models.properties import PropertyBase, Property, StringProperty, Relation
+from ocd_backend.models.properties import PropertyBase, Property, Relation
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.models.misc import Namespace, Uri
 from ocd_backend.utils.misc import iterate
@@ -46,9 +46,7 @@ class ModelMetaclass(type):
         return new_class
 
 
-class Model(object):
-    __metaclass__ = ModelMetaclass
-
+class Model(object, metaclass=ModelMetaclass):
     enricher_task = []
 
     def absolute_uri(self):
@@ -251,11 +249,11 @@ class Model(object):
         filtering on a Property with the given predicate and value in the specified column."""
         try:
             self.ori_identifier = self.db.get_mergeable_resource_identifier(self, predicate, column, value)
-        except (NoResultFound, MultipleResultsFound, ValueError), e:
+        except (NoResultFound, MultipleResultsFound, ValueError) as e:
             logger.warning("Unable to merge: %s", e)
 
 
-class Relationship(object):
+class Relationship:
     """
     The Relationship model is used to explicitly specify one or more
     object model relations and describe what the relationship is about. The

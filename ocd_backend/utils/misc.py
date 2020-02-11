@@ -2,21 +2,23 @@ import datetime
 import glob
 import importlib
 import re
+import json
 from calendar import timegm
 from hashlib import sha1
 from string import Formatter
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 import pytz
-import simplejson as json
 # noinspection PyUnresolvedReferences
 import translitcodec  # used for encoding, search 'translit'
+import codecs
 from dateutil.parser import parse
 from elasticsearch.helpers import scan, bulk
 from lxml import etree
 
 from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
+from functools import reduce
 
 
 def full_normalized_motion_id(motion_id, date_as_str=None):
@@ -45,7 +47,7 @@ def normalize_motion_id(motion_id, date_as_str=None):
             try:
                 kind = res.group('kind')
             except IndexError as e:
-                kind = u'M'
+                kind = 'M'
             try:
                 year = res.group('year')
             except IndexError as e:
@@ -55,7 +57,7 @@ def normalize_motion_id(motion_id, date_as_str=None):
                     date_as_str = datetime.datetime.now().isoformat()
                 year = date_as_str[0:4]
             mid = res.group('id')
-            return u'%s%s%s' % (year, kind, mid,)
+            return '%s%s%s' % (year, kind, mid,)
     return None
 
 
@@ -162,11 +164,11 @@ def load_sources_config(path):
                 if key[0:1] == '_':
                     continue
 
-                if isinstance(value, basestring):
+                if isinstance(value, str):
                     try:
                         new_data[key] = ExtendedFormatter().format(value, **chain)
                         chain[key] = new_data[key]
-                    except KeyError, e:
+                    except KeyError as e:
                         raise MissingTemplateTag('Missing template tag %s in configuration for key \'%s\'' % (e, key))
                 else:
                     chain[key] = value
@@ -201,7 +203,7 @@ def load_sources_config(path):
                     for entry in json.load(f):
                         result[entry['id']] = entry
 
-        except IOError, e:
+        except IOError as e:
             e.strerror = 'Unable to load sources configuration file (%s)' % (
                 e.strerror,)
             raise
@@ -225,7 +227,7 @@ def load_object(path):
     m, name = path[:dot], path[dot + 1:]
     try:
         mod = importlib.import_module(m)
-    except ImportError, e:
+    except ImportError as e:
         raise ImportError("Error loading object '%s': %s" % (path, e))
 
     try:
@@ -305,14 +307,14 @@ json_encoder = DatetimeJSONEncoder()
 _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
-def slugify(text, delim=u'-'):
+def slugify(text, delim='-'):
     """Generates an ASCII-only slug."""
     result = []
-    for word in _punct_re.split(unicode(text).lower()):
-        word = word.encode('translit/long')
+    for word in _punct_re.split(str(text).lower()):
+        word = codecs.encode(word, 'translit/long')
         if word:
             result.append(word)
-    return unicode(delim.join(result))
+    return delim.join(result)
 
 
 def strip_namespaces(item):
@@ -432,7 +434,7 @@ def datetime_to_unixstamp(date):
         date = localize_datetime(date)
         utc = date.astimezone(pytz.utc)
         return timegm(utc.timetuple())
-    except ValueError, e:
+    except ValueError as e:
         raise InvalidDatetime(e)
 
 
@@ -498,3 +500,8 @@ def compare_insensitive(a, b):
         return
 
     return b.lower() in a.lower()
+
+
+def get_delta_loader():
+    from ocd_backend.loaders.delta import DeltaLoader
+    return DeltaLoader

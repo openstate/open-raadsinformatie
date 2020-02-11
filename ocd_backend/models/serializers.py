@@ -26,7 +26,7 @@ def get_serializer_class(format=None):
     return serializer
 
 
-class BaseSerializer(object):
+class BaseSerializer:
     """The base serializer where all serializer should inherit from."""
 
     def __init__(self, uri_format_type='term', loader_class=None):
@@ -169,7 +169,7 @@ class PostgresSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Relationship
+                from ocd_backend.models.model import Relationship
                 if isinstance(item, Relationship):
                     item = item.model
 
@@ -273,7 +273,7 @@ class RdfSerializer(BaseSerializer):
             props = list()
             o = BNode()
             for _, item in iterate(value):
-                from .model import Relationship
+                from ocd_backend.models.model import Relationship
                 if isinstance(item, Relationship):
                     item = item.model
                 self.deflate(item, props=True, rels=True)
@@ -314,7 +314,7 @@ class JsonSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Relationship
+                from ocd_backend.models.model import Relationship
                 if isinstance(item, Relationship):
                     item = item.model
 

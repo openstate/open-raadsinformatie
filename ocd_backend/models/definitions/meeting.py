@@ -7,14 +7,12 @@ used to describe both virtual (eg. online discussion) and non-virtual (eg.
 an assembly of people) discussion.
 """
 
-import opengov
-import schema
-import org
+from ocd_backend.models.definitions import opengov, schema, org
 from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     Relation, OrderedRelation, DateTimeProperty
 from ocd_backend.models.misc import Uri
-from ocd_backend.loaders.delta import DeltaLoader
+from ocd_backend.utils.misc import get_delta_loader
 
 
 class Meeting(MeetingNS, schema.Event):
@@ -67,7 +65,7 @@ class AgendaItem(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     absentee = Relation(Schema, 'absentee')
     agenda = Relation(MeetingNS, 'agenda')
-    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader,])
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[get_delta_loader()])
 
 
 class Committee(MeetingNS, org.Organization):

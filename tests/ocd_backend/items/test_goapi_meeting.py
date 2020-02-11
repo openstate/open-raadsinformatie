@@ -5,7 +5,7 @@
 # from mock import MagicMock
 #
 # from ocd_backend.items.go_meeting import MeetingItem
-# from . import ItemTestCase
+# from tests.ocd_backend.items import ItemTestCase
 #
 #
 # class MeetingItemTestCase(ItemTestCase):

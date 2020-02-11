@@ -1,9 +1,9 @@
 import gzip
-import simplejson as json
+import json
 
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors.staticfile import StaticJSONDumpExtractor, StaticJSONExtractor
-from . import ExtractorTestCase
+from tests.ocd_backend.extractors import ExtractorTestCase
 
 
 class StaticfileExtractorTestCase(ExtractorTestCase):
@@ -27,12 +27,6 @@ class StaticfileExtractorTestCase(ExtractorTestCase):
             doc = json.loads(line.strip())
             self.assertIsInstance(doc, dict)
 
-    def test_content_type(self):
-        content_type, doc = self.extractor.run().next()
-        self.assertEqual(content_type, 'application/json')
-        # Doc is a serialized JSON document, so a string
-        self.assertEqual(type(doc), str)
-
 
 class StaticJSONExtractorTestCase(ExtractorTestCase):
     def setUp(self):
@@ -51,9 +45,9 @@ class StaticJSONExtractorTestCase(ExtractorTestCase):
 
     def test_content_type(self):
         # no need to test fetching here, just splitting of items
-        content_type, doc = self.extractor.extract_items(
+        content_type, doc = next(self.extractor.extract_items(
             json.dumps([{'field': 1}])
-        ).next()
+        ))
         self.assertEqual(content_type, 'application/json')
         # Doc is a serialized JSON document, so a string
         self.assertEqual(type(doc), str)

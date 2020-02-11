@@ -2,7 +2,7 @@
 http://www.w3.org/ns/person#
 """
 
-import foaf
+from ocd_backend.models.definitions import foaf
 from ocd_backend.models.definitions import Opengov, Schema, Foaf, Rdfs, \
     Dcterms, Bio, Vcard, Person as PersonNS, Meeting
 from ocd_backend.models.properties import StringProperty, URLProperty, DateTimeProperty, \

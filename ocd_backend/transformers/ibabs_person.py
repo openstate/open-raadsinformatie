@@ -37,7 +37,7 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     image = original_item.get('Picture')
     if image:
         path = 'ibabs/image/%s' % original_item['Id']
-        GCSCachingMixin.factory('ori-static').upload(path, base64.decodestring(image), content_type='image/jpeg')
+        GCSCachingMixin.factory('ori-static').upload(path, base64.b64decode(image), content_type='image/jpeg')
         person.image = ImageObject(original_item.get('Id'), collection='image', **source_defaults)
         person.image.content_url = '%s/%s' % (RESOLVER_BASE_URL, path)
         person.image.is_referenced_by = person

@@ -1,9 +1,9 @@
 import os
-import urllib
+import json
+from urllib import parse
 from tempfile import NamedTemporaryFile
 
 import requests
-import simplejson as json
 
 from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
@@ -13,9 +13,9 @@ from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
-from tasks.ggm_motion_text import GegevensmagazijnMotionText
-from tasks.theme_classifier import ThemeClassifier
-from tasks.waaroverheid import WaarOverheidEnricher
+from ocd_backend.enrichers.text_enricher.tasks.ggm_motion_text import GegevensmagazijnMotionText
+from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
+from ocd_backend.enrichers.text_enricher.tasks.waaroverheid import WaarOverheidEnricher
 
 log = get_source_logger('enricher')
 
@@ -82,7 +82,7 @@ class TextEnricher(BaseEnricher):
             except requests.HTTPError as e:
                 raise SkipEnrichment(e)
 
-            item.url = '%s/%s' % (RESOLVER_BASE_URL, urllib.quote(identifier))
+            item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
             item.content_type = resource.content_type
             item.size_in_bytes = resource.file_size
 
@@ -113,7 +113,7 @@ class TextEnricher(BaseEnricher):
                 ori_enriched.upload(identifier, data, content_type='application/json')
 
         enrich_tasks = item.enricher_task
-        if isinstance(enrich_tasks, basestring):
+        if isinstance(enrich_tasks, str):
             enrich_tasks = [item.enricher_task]
 
         # The enricher tasks will executed in specified order

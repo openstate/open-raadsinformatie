@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from ocd_backend.app import celery_app
 from ocd_backend.extractors import BaseExtractor

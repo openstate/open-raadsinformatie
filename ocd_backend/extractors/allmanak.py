@@ -1,5 +1,5 @@
-import simplejson as json
-from urlparse import urljoin
+import json
+from urllib.parse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 from copy import deepcopy
 from datetime import datetime
-import simplejson as json
 from glob import glob
 from hashlib import sha1
+import json
 import os
 import requests
 import sys
@@ -260,7 +260,7 @@ def delete_indexes(delete_template):
     indices = es.indices.status(index=index_glob, human=True)
 
     click.echo('Open Cultuur Data indices:')
-    for index, stats in indices['indices'].iteritems():
+    for index, stats in indices['indices'].items():
         click.echo('- %s (%s docs, %s)' % (index, stats['docs']['num_docs'],
                                            stats['index']['size']))
     if click.confirm('Are you sure you want to delete the above indices?'):
@@ -308,7 +308,7 @@ def extract_list_sources(sources_config):
     for key, source in sources.items():
         all_keys.append(key)
         if 'id' not in source and 'entities' not in source:
-            for sub_key in source.keys():
+            for sub_key in list(source):
                 all_keys.append('%s -s %s' % (key, sub_key))
 
     click.echo('Available sources:')

@@ -1,7 +1,7 @@
 from celery.backends.redis import RedisBackend
 
 
-class OCDBackendMixin(object):
+class OCDBackendMixin:
     """
     This mixin defines the methods that we expect the result backend to
     implement. We use this to make sure the backend that is used supports the

@@ -29,9 +29,9 @@ def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **k
     committee.description = original_item['Abbreviation']
 
     if 'sub' in original_item['Meetingtype']:
-        committee.classification = u'Subcommittee'
+        committee.classification = 'Subcommittee'
     else:
-        committee.classification = u'Committee'
+        committee.classification = 'Committee'
 
     # Attach the committee node to the municipality node
     committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],

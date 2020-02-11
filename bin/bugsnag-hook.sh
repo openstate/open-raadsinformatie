@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APP_VERSION=$(python -c "import version; print version.__version__")
+APP_VERSION=$(python -c "import version; print(version.__version__)")
 
 curl https://build.bugsnag.com/ \
   --header "Content-Type: application/json" \

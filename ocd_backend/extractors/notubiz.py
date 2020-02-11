@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from requests.exceptions import HTTPError, RetryError
 
@@ -35,7 +35,7 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
 
         try:
             response.raise_for_status()
-        except HTTPError, e:
+        except HTTPError as e:
             log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
             return
 
@@ -107,13 +107,13 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         self.default_query_params,
                     )
                 )
-            except (HTTPError, RetryError), e:
+            except (HTTPError, RetryError) as e:
                 log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
                 break
 
             try:
                 response.raise_for_status()
-            except HTTPError, e:
+            except HTTPError as e:
                 log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
                 break
 
@@ -140,12 +140,12 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 try:
                     resource = self.fetch(meeting_url + self.application_token, cached_path, item['last_modified'])
                     meeting_json = json.load(resource.media_file)['meeting']
-                except ItemAlreadyProcessed, e:
+                except ItemAlreadyProcessed as e:
                     # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1
                     log.debug("[%s] %s" % (self.source_definition['key'], e))
                     continue
-                except HTTPError, e:
+                except HTTPError as e:
                     error_json = e.response.json()
                     if error_json.get('message') == 'No rights to see this meeting':
                         log.info('[%s] no rights to view: %s' % (self.source_definition['key'], meeting_url))

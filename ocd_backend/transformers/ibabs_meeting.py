@@ -70,9 +70,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
         item.committee.name = meeting['Meetingtype']
         if 'sub' in meeting['MeetingtypeId']:
-            item.committee.classification = u'Subcommittee'
+            item.committee.classification = 'Subcommittee'
         else:
-            item.committee.classification = u'Committee'
+            item.committee.classification = 'Committee'
 
         # Re-attach the committee node to the municipality node
         item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
