@@ -1,3 +1,5 @@
+import sys
+
 from urllib import parse
 from confluent_kafka import Producer
 from pyld import jsonld
@@ -17,6 +19,7 @@ class DeltaLoader(BaseLoader):
     config = {
         'bootstrap.servers': '%s:%s' % (settings.KAFKA_HOST, settings.KAFKA_PORT),
         'session.timeout.ms': settings.KAFKA_SESSION_TIMEOUT,
+        'message.max.bytes': settings.KAFKA_MAX_MESSAGE_BYTES
     }
 
     if settings.KAFKA_USERNAME:
@@ -28,7 +31,7 @@ class DeltaLoader(BaseLoader):
 
     def load_item(self, doc):
 
-        # Skip this loader if it is disabled in settings
+        # Skip this loader if host and port are not set
         if not settings.KAFKA_HOST or not settings.KAFKA_PORT:
             return
 
@@ -48,15 +51,26 @@ class DeltaLoader(BaseLoader):
             # Add the graph name to the body. This is done the low-tech way, but could be improved by updating the
             # JSON-LD so that the graph information is included when serializing to N-Quads.
             ntriples_split = ntriples.split(' .\n')
-            nquads = ' <http://purl.org/linked-delta/replace?graph={}> .\n'.format(
-                parse.quote(model.get_ori_identifier())).join(ntriples_split)
+            nquads = f' <http://purl.org/linked-delta/replace?graph={parse.quote(model.get_ori_identifier())}> .\n' \
+                .join(ntriples_split) \
+                .strip()
 
-            # Send document to the Kafka bus
             log_identifiers.append(model.get_short_identifier())
             message_key_id = '%s_%s' % (settings.KAFKA_MESSAGE_KEY, model.get_short_identifier())
-            # Send statements individually to avoid too large message size
-            for message in nquads.strip().split('\n'):
-                kafka_producer.produce(settings.KAFKA_TOPIC, message.encode('utf-8'), message_key_id, callback=delivery_report)
+
+            if sys.getsizeof(nquads.encode('utf-8')) > settings.KAFKA_MAX_MESSAGE_BYTES:
+                # Send statements one by one to avoid exceding max message size in bytes
+                for message in nquads.split('\n'):
+                    kafka_producer.produce(settings.KAFKA_TOPIC,
+                                           message.encode('utf-8'),
+                                           message_key_id,
+                                           callback=delivery_report)
+            else:
+                # Send whole document at once
+                kafka_producer.produce(settings.KAFKA_TOPIC,
+                                       nquads.encode('utf-8'),
+                                       message_key_id,
+                                       callback=delivery_report)
 
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
