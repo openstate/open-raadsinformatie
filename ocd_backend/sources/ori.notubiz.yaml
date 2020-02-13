@@ -274,13 +274,6 @@ ori.notubiz:
     notubiz_organization_id: 429
     <<: *notubiz
 
-  leeuwarden:
-    key: leeuwarden
-    allmanak_id: 32728
-    cbs_id: GM0080
-    notubiz_organization_id: 330
-    <<: *notubiz
-
   den_haag:
     key: den_haag
     source_name: "Den Haag"
