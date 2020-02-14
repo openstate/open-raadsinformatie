@@ -1,4 +1,5 @@
 import json
+from urllib import parse
 
 from requests.exceptions import HTTPError, RetryError
 
@@ -94,11 +95,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
 
         page = 1
         while True:
-            try:
-                response = self.http_session.get(
-                    "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                    "&page=%i&%s" %
-                    (
+            url = "%s/events?organisation_id=%i&date_from=%s&date_to=%s&page=%i&%s" % (
                         self.base_url,
                         self.source_definition['notubiz_organization_id'],
                         start_date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -106,9 +103,10 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         page,
                         self.default_query_params,
                     )
-                )
+            try:
+                response = self.http_session.get(url)
             except (HTTPError, RetryError) as e:
-                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
+                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, parse.quote(url)))
                 break
 
             try:
