@@ -5,6 +5,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
+from ocd_backend.utils.ibabs import translate_position
 
 log = get_source_logger('ibabs_meeting')
 
@@ -95,7 +96,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
             agenda_item.parent = item
             agenda_item.name = mi['Title']
             agenda_item.description = mi['Explanation']
-            agenda_item.position = mi['Features']
+            agenda_item.position, agenda_item.raw_position = translate_position(mi['Features'])
             agenda_item.start_date = item.start_date
             agenda_item.last_discussed_at = item.start_date
 
