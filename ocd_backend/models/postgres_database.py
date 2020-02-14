@@ -8,8 +8,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models.definitions import Ori
 from ocd_backend.models.misc import Uri
 from ocd_backend.models.postgres_models import Source, Resource, Property
-from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, DateProperty, JsonProperty, \
-    DateTimeProperty, ArrayProperty, Relation, OrderedRelation
+from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, FloatProperty, \
+    DateProperty, JsonProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
 
 log = get_source_logger('postgres_database')
 
@@ -88,6 +88,8 @@ class PostgresDatabase:
                 query_result = query_result.filter(Property.prop_datetime == value)
             elif column == 'prop_integer':
                 query_result = query_result.filter(Property.prop_integer == value)
+            elif column == 'prop_float':
+                query_result = query_result.filter(Property.prop_float == value)
             elif column == 'prop_url':
                 query_result = query_result.filter(Property.prop_url == value)
             else:
@@ -157,10 +159,12 @@ class PostgresDatabase:
 
         if property_type == StringProperty:
             return 'prop_string'
-        if property_type is URLProperty:
+        elif property_type is URLProperty:
             return 'prop_url'
         elif property_type is IntegerProperty:
             return 'prop_integer'
+        elif property_type is FloatProperty:
+            return 'prop_float'
         elif property_type in (DateProperty, DateTimeProperty):
             return 'prop_datetime'
         elif property_type is JsonProperty:
