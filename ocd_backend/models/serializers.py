@@ -263,6 +263,9 @@ class RdfSerializer(BaseSerializer):
         elif type(prop) == IntegerProperty:
             return Literal(serialized, datatype=XSD.integer)
 
+        elif type(prop) == FloatProperty:
+            return Literal(serialized, datatype=XSD.float)
+
         elif type(prop) == DateTimeProperty:
             return Literal(serialized, datatype=XSD.dateTime)
 

@@ -9,7 +9,7 @@ an assembly of people) discussion.
 
 from ocd_backend.models.definitions import opengov, schema, org
 from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
-from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
+from ocd_backend.models.properties import StringProperty, URLProperty, FloatProperty, \
     Relation, OrderedRelation, DateTimeProperty
 from ocd_backend.models.misc import Uri
 from ocd_backend.utils.misc import get_delta_loader
@@ -59,7 +59,8 @@ class AgendaItem(MeetingNS, schema.Event):
     motion = Relation(Opengov, 'motion')
     description = StringProperty(Schema, 'description')
     name = StringProperty(Schema, 'name', required=True)
-    position = IntegerProperty(Schema, 'position')
+    position = FloatProperty(Schema, 'position')
+    raw_position = StringProperty(Schema, 'raw_position')
     parent = Relation(Schema, 'superEvent', required=True)
     vote_event = Relation(Opengov, 'voteEvent')
     attendee = Relation(Schema, 'attendee')
