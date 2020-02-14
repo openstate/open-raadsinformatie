@@ -166,3 +166,28 @@ def list_entry_response_to_dict(m):
         }
     }
     return _ibabs_to_dict(m, fields)
+
+
+def translate_position(position):
+    """
+    Returns the position as a float if it is castable to float. If the position is not castable to float,
+    removes all non-digits from the string and casts to float, and also returns the original position as the
+    second return value so it can be stored as raw_position.
+
+    If the position is not castable to float even after removing all non-digits, returns None and the original
+    position as the second return value so it can be stored as raw_position.
+
+    Examples:
+        '1'    -> 1.0, None
+        '1.1'  -> 1.1, None
+        '1A'   -> 1.0, '1A'
+        '1.4C' -> 1.4, '1.4C'
+        'A'    -> None, 'A'
+    """
+    try:
+        return float(position), None
+    except ValueError:
+        try:
+            return float(''.join([c for c in position if c.isdigit() or c == "."])), position
+        except ValueError:
+            return None, position
