@@ -45,7 +45,7 @@ class IBabsBaseExtractor(BaseExtractor):
                                  port_name='BasicHttpsBinding_IPublic',
                                  settings=soap_settings)
         except Error as e:
-            log.error('Unable to instantiate iBabs client: ' + str(e))
+            log.error(f'Unable to instantiate iBabs client: {str(e)}')
 
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
@@ -58,8 +58,7 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
     def run(self):
         committee_designator = self.source_definition.get(
             'committee_designator', 'commissie')
-        log.debug("[%s] Getting ibabs committees with designator: %s" %
-                  (self.source_definition['index_name'], committee_designator))
+        log.debug(f'[{self.source_definition["key"]}] Getting ibabs committees with designator: {committee_designator}')
         meeting_types = self.client.service.GetMeetingtypes(
             self.source_definition['ibabs_sitename']
         )
@@ -76,10 +75,9 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                           None, \
                           'ibabs/' + cached_path
                     total_count += 1
-            log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees.')
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], meeting_types.Message))
-
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
 class IbabsPersonsExtractor(IBabsBaseExtractor):
     """
@@ -113,12 +111,12 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
                 total_count += 1
 
-            log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs persons')
 
         elif users.Message == 'No users found!':
-            log.info('[%s] No ibabs persons were found' % self.source_definition['index_name'])
+            log.info(f'[{self.source_definition["key"]}] No ibabs persons were found')
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], users.Message))
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {users.Message}')
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -143,14 +141,13 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 meeting_types[o.Id] = o.Description
             return meeting_types
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], meeting_types.Message))
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
     def run(self):
         meeting_count = 0
         meetings_skipped = 0
         for start_date, end_date in self.interval_generator():
-            log.debug("[%s] Now processing meetings from %s to %s" % (
-                self.source_definition['key'], start_date, end_date,))
+            log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
             start_date = start_date.strftime('%Y-%m-%dT%H:%M:%S')
             end_date = end_date.strftime('%Y-%m-%dT%H:%M:%S')
@@ -189,8 +186,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
                     meeting_count += 1
 
-        log.info("[%s] Extracted total of %d ibabs meetings. Also skipped %d meetings in total." %
-                 (self.source_definition['key'], meeting_count, meetings_skipped,))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} meetings.')
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
@@ -203,7 +199,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
 
         if not lists or len(lists) < 1:
-            log.info("[%s] No ibabs reports defined" % (self.source_definition['ibabs_sitename'],))
+            log.info(f'[{self.source_definition["key"]}] No ibabs reports defined')
             return
 
         selected_lists = []
@@ -242,8 +238,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
-                    log.warning("[%s] Could not parse page %s correctly!: %s" % (
-                        self.source_definition['key'], active_page_nr, e))
+                    log.warning(f'[{self.source_definition["key"]}] Could not parse page {active_page_nr} correctly!: {str(e)}')
                     result = None
                 result_count = 0
 
@@ -266,7 +261,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     results = None
 
                 if results is None:
-                    log.debug("[%s] No correct document element for this page!" % self.source_definition['key'])
+                    log.debug(f'[{self.source_definition["key"]}] No correct document element for this page!')
                     total_count += per_page
                     continue
 
@@ -306,11 +301,9 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     result_count += 1
                 total_count += result_count
                 active_page_nr += 1
-            log.debug("[%s] Report: %s -- total %s, yielded %s" % (
-                self.source_definition['key'], l.Value, total_count, yield_count))
+            log.debug(f'[{self.source_definition["key"]}] Report: {l.Value} -- total {total_count}, yielded {total_yield_count}')
 
-        log.info("[{}] Extracted total of {} ibabs reports yielded within {:%Y-%m-%d} and {:%Y-%m-%d}".format(
-            self.source_definition['key'], total_yield_count, start_date, end_date))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {total_yield_count} ibabs reports within {start_date:%Y-%m-%d} and {end_date:%Y-%m-%d}')
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
@@ -430,10 +423,10 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             for result in processed:
                 yield 'application/json', json.dumps(result), None, None
                 passed_vote_count += 1
-            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['index_name'], start_date, end_date,))
+            log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
-        log.info("[%s] Extracted total of %d ibabs meetings and passed %s out of %d voting rounds." % (
-            self.source_definition['index_name'], meeting_count, passed_vote_count, vote_count,))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings and passed '
+                 f'{passed_vote_count} out of {vote_count} voting rounds.')
 
 
 # Needs to be re-written without using FrontendAPIMixin which has been removed

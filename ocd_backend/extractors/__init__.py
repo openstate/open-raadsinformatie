@@ -101,8 +101,7 @@ class BaseExtractor:
             # If next current_end exceeds end_date then stop at end_date
             if current_end > end_date:
                 current_end = end_date
-                log.debug("Next interval exceeds %s, months_interval not used"
-                          % end_date)
+                log.debug(f'[{self.source_definition["key"]}] Next interval exceeds {end_date}, months_interval not used')
 
             yield current_start, current_end
 

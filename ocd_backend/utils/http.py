@@ -147,7 +147,7 @@ class GCSCachingMixin(HttpRequestMixin):
     try:
         storage_client = storage.Client()
     except GoogleAuthError as e:
-        log.warning('GCSCachingMixin: storage client failed, using HttpRequestMixin instead. %s', e)
+        log.warning(f'GCSCachingMixin: storage client authentication failed, using HttpRequestMixin instead: {str(e)}')
         storage_client = False
 
     bucket_name = None

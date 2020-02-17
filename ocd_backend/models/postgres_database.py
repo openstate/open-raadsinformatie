@@ -121,7 +121,7 @@ class PostgresDatabase:
                 try:
                     self.update_source(model_object)
                 except ValueError as e:
-                    log.warning("Unable to update source: " + str(e))
+                    log.warning(f'Unable to update source: {str(e)}')
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -261,7 +261,7 @@ class PostgresDatabase:
                 session.commit()
                 session.close()
                 return
-            except Exception as e:
+            except Exception:
                 session.close()
                 raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))

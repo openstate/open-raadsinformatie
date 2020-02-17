@@ -64,18 +64,15 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
 
         while fetch_next_page:
             sleep(self.source_definition.get('greenvalley_extract_timeout', 5))
-            log.info("Fetching items, starting from %s ..." % (params['start'],))
+            log.info(f'[{self.source_definition["key"]}] Fetching items, starting from {params["start"]}')
             url = self._url('GetModelsByQuery', params)
             cached_path = strip_scheme(url)
             results = self._fetch(url).json()
-            log.info("Got %s items ..." % len(results['objects']))
+            log.info(f'[{self.source_definition["key"]}] Got {len(results["objects"])} items')
             for result in results['objects']:
-                log.info("Object %s/%s has %s attachments and %s sets" % (
-                    result['default']['objecttype'],
-                    result['default']['objectname'],
-                    len(result.get('attachmentlist', [])),
-                    len(result.get('SETS', []))
-                ))
+                log.info(f'[{self.source_definition["key"]}] Object {result["default"]["objecttype"]}/'
+                         f'{result["default"]["objectname"]} has {len(result.get("attachmentlist", []))} '
+                         f'attachments and {len(result.get("SETS", []))} sets')
 
                 for k, v in result.get('SETS', {}).items():
                     v['parent_objectid'] = result['default']['objectid']
@@ -123,13 +120,11 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             if self.start_date is None:
                 self.start_date = cur_start
             self.end_date = cur_end
-        log.debug("[%s] Now processing meetings from %s to %s" % (
-            self.source_definition['key'], self.start_date, self.end_date,))
+        log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {self.start_date} to {self.end_date}')
 
         total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
             yield item[0], item[1], item[2], item[3]
             total_meetings += 1
 
-        log.info("[%s] Extracting total of %d GreenValley meetings" % (
-            self.source_definition['key'], total_meetings))
+        log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings')

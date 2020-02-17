@@ -104,10 +104,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in original_item and original_item['canceled']:
-        log.info('Found a GOAPI event with status EventCancelled: %s' % str(event.values))
+        log.info(f'Found a GOAPI event with status EventCancelled: {str(event.values)}')
         event.status = EventCancelled
     elif 'inactive' in original_item and original_item['inactive']:
-        log.info('Found a GOAPI event with status EventUnconmfirmed: %s' % str(event.values))
+        log.info(f'Found a GOAPI event with status EventUnconmfirmed: {str(event.values)}')
         event.status = EventUnconfirmed
     else:
         event.status = EventConfirmed
