@@ -69,7 +69,7 @@ def gs_meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **
     try:
         content = requests.get(original_id).content
     except Exception as e:
-        log.error(e)
+        log.error(str(e))
         content = ''
 
     if content == '':

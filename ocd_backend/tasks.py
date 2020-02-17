@@ -73,7 +73,7 @@ class CleanupElasticsearch(BaseCleanup):
 
 class DummyCleanup(BaseCleanup):
     def run_finished(self, run_identifier, **kwargs):
-        log.info('Finished run {}.'.format(run_identifier))
+        log.info(f'Finished run {run_identifier}')
 
 
 @celery_app.task(bind=True, base=CleanupElasticsearch, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)

@@ -75,7 +75,7 @@ class DeltaLoader(BaseLoader):
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
 
-        log.debug('DeltaLoader sending document ids to Kafka: %s' % ', '.join(log_identifiers))
+        log.debug(f'DeltaLoader sending document ids to Kafka: {", ".join(log_identifiers)}')
 
         kafka_producer.flush()
 
@@ -84,7 +84,7 @@ def delivery_report(err, msg):
     """ Called once for each message produced to indicate delivery result.
         Triggered by poll() or flush(). """
     if err is not None:
-        log.warning('Message delivery failed: {}'.format(err))
+        log.warning(f'Message delivery failed: {err}')
 
 
 @celery_app.task(bind=True, base=DeltaLoader, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)

@@ -72,7 +72,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
                 })
             except requests.ConnectionError:
                 # Return if no connection can be made
-                log.warning('No connection to LocLinkVis: %s' % url)
+                log.warning(f'No connection to LocLinkVis: {url}')
                 return
 
             if not resp.ok:
@@ -110,7 +110,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
                 resp.raise_for_status()
             except requests.ConnectionError:
                 # Return if no connection can be made
-                log.warning('No connection to LocLinkVis: %s' % url)
+                log.warning(f'No connection to LocLinkVis: {url}')
                 continue
 
             json_response = resp.json()

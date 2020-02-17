@@ -32,7 +32,7 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
         json_data = resp.json()
         for meeting in json_data.get('list', []):
             if not meeting['agid']:
-                log.error("The value for 'agid' seems to be empty, skipping")
+                log.error(f'[{self.source_definition["key"]}] The value for "agid" seems to be empty, skipping')
                 continue
 
             cached_path = 'agenda_detail/%s' % meeting['agid']

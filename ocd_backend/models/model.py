@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import slugify
 from ocd_backend.models.postgres_database import PostgresDatabase
 
-logger = get_source_logger('model')
+log = get_source_logger('model')
 
 
 class ModelMetaclass(type):
@@ -250,7 +250,7 @@ class Model(object, metaclass=ModelMetaclass):
         try:
             self.ori_identifier = self.db.get_mergeable_resource_identifier(self, predicate, column, value)
         except (NoResultFound, MultipleResultsFound, ValueError) as e:
-            logger.warning("Unable to merge: %s", e)
+            log.warning(f'Unable to merge: {str(e)}')
 
 
 class Relationship:

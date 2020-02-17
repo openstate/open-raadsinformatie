@@ -132,5 +132,5 @@ class DatabaseMeetingsExtractor(DatabaseBaseExtractor):
             yield 'tuple', (meeting, subresources), entity, 'source_item_dummy'
             meeting_count += 1
 
-        log.info("[%s] Extracted total of %d meetings from database." % (self.source_definition['key'], meeting_count))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} meetings from database.')
         self.session.close()
