@@ -177,13 +177,19 @@ def translate_position(position):
     If the position is not castable to float even after removing all non-digits, returns None and the original
     position as the second return value so it can be stored as raw_position.
 
+    If the input position is None, returns None for both return values.
+
     Examples:
         '1'    -> 1.0, None
         '1.1'  -> 1.1, None
         '1A'   -> 1.0, '1A'
         '1.4C' -> 1.4, '1.4C'
         'A'    -> None, 'A'
+        None   -> None, None
     """
+    if position is None:
+        return None, None
+
     try:
         return float(position), None
     except ValueError:
