@@ -282,9 +282,11 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                     report_dict = serialize_object(item, dict)
 
-                    date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
-                    if date_field is None:
-                        log.warning("Unable to determine date field. Original item: %s" % json.dumps(report_dict))
+                    date_field = None
+                    try:
+                        date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
+                    except StopIteration:
+                        log.warning(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: {json.dumps(report_dict)}')
 
                     try:
                         report_dict['datum'] = report_dict[date_field][0]
