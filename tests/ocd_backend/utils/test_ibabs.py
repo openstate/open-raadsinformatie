@@ -15,3 +15,4 @@ class TranslatePositionTestCase(TestCase):
     def test_untranslatable_value(self):
         self.assertEqual(translate_position('A'), (None, 'A'))
         self.assertEqual(translate_position('.'), (None, '.'))
+        self.assertEqual(translate_position(None), (None, None))
