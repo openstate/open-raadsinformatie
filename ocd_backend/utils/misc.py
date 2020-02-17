@@ -46,11 +46,11 @@ def normalize_motion_id(motion_id, date_as_str=None):
         if res is not None:
             try:
                 kind = res.group('kind')
-            except IndexError as e:
+            except IndexError:
                 kind = 'M'
             try:
                 year = res.group('year')
-            except IndexError as e:
+            except IndexError:
                 year = None
             if year is None:
                 if date_as_str is None:

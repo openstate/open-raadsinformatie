@@ -18,7 +18,7 @@ def file_parser(fname, max_pages=None):
                     if max_pages and i >= max_pages:  # break after x pages
                         break
             except pdftotext.Error as e:
-                log.warning(e)
+                log.warning(str(e))
 
             log.debug("Processed %i pages" % i)
             return result_pages

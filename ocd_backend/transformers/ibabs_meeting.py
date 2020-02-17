@@ -43,10 +43,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in meeting and meeting['canceled']:
-        log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
+        log.info(f'[{self.source_definition["key"]}] Found an iBabs event with status EventCancelled: {str(item.values)}')
         item.status = EventCancelled
     elif 'inactive' in meeting and meeting['inactive']:
-        log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
+        log.info(f'[{self.source_definition["key"]}] Found an iBabs event with status EventUnconfirmed: {str(item.values)}')
         item.status = EventUnconfirmed
     else:
         item.status = EventConfirmed

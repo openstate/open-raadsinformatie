@@ -32,7 +32,7 @@ class ElasticsearchBaseLoader(BaseLoader):
             self.process(model, model_body)
             log_identifiers.append(model.get_short_identifier())
 
-        log.debug('%s indexing document id: %s' % (self.__name__, ', '.join(log_identifiers)))
+        log.debug(f'{self.__name__} indexing document id: {", ".join(log_identifiers)}')
 
     def process(self, model, model_body):
         raise NotImplementedError
