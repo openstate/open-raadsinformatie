@@ -79,3 +79,22 @@ ori.parlaeus:
     allmanak_id: 37707
     cbs_id: GM0200
     <<: *parlaeus
+
+  # Added on 18-02-2020
+  eindhoven:
+    key: eindhoven
+    source_name: "Eindhoven"
+    base_url: "https://eindhoven.parlaeus.nl/receive/opendata"
+    session_id: "38ab0fe1-fe6e-4900-bbf4-1d16bdb26449"
+    allmanak_id: 34435
+    cbs_id: GM0772
+    <<: *parlaeus
+
+  maastricht:
+    key: maastricht
+    source_name: "Maastricht"
+    base_url: "https://maastricht.parlaeus.nl/receive/opendata"
+    session_id: "9feb742b-67b4-4c07-9f8c-de90dd460973"
+    allmanak_id: 32664
+    cbs_id: GM0935
+    <<: *parlaeus
