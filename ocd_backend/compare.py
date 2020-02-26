@@ -16,7 +16,7 @@ mixin = HttpRequestMixin()
 
 identifier_sample = []
 if SAMPLE_SIZE > 0:
-    identifier_list = xrange(1, max_count)
+    identifier_list = range(1, max_count)
     identifier_sample = random.sample(identifier_list, k=SAMPLE_SIZE)
 identifier_sample.extend(EXTRA_IDENTIFIERS)
 identifier_sample = list(set(identifier_sample))
@@ -80,8 +80,8 @@ def stats(text, stat_list):
     print(text, stat_count, '{:.1f}%'.format(percent), stat_list)
 
 
-print
-print
+print()
+print()
 print('Sample size', sample_size)
 stats('ORI API request failed', ori_api_request_failed)
 stats('ORI API not found', ori_api_not_found)
@@ -89,4 +89,4 @@ stats('Elastic not found', elastic_not_found)
 stats('Resource not found', resource_not_found)
 stats('Resource no match', resource_no_match)
 stats('Resource type match', resource_type_match)
-print
+print()
