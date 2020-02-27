@@ -45,7 +45,8 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
             break
 
     if title_field is None:
-        log.error(f'[{self.source_definition["key"]}] Unable to determine title field. Original item: {json.dumps(original_item)}')
+        log.error(f'[{self.source_definition["key"]}] Unable to determine title field. Original item: '
+                  f'{json.dumps(original_item, default=str)}')
     else:
         report.name = original_item[title_field]
 

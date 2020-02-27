@@ -281,7 +281,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     try:
                         date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
                     except StopIteration:
-                        log.warning(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: {json.dumps(report_dict)}')
+                        log.info(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: '
+                                 f'{json.dumps(report_dict, default=str)}')
 
                     try:
                         report_dict['datum'] = report_dict[date_field][0]
