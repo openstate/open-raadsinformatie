@@ -12,7 +12,7 @@ from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, FloatProperty, \
     Relation, OrderedRelation, DateTimeProperty
 from ocd_backend.models.misc import Uri
-from ocd_backend.utils.misc import get_delta_loader
+from ocd_backend.loaders.delta import DeltaLoader
 
 
 class Meeting(MeetingNS, schema.Event):
@@ -66,7 +66,7 @@ class AgendaItem(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     absentee = Relation(Schema, 'absentee')
     agenda = Relation(MeetingNS, 'agenda')
-    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[get_delta_loader()])
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader])
 
 
 class Committee(MeetingNS, org.Organization):

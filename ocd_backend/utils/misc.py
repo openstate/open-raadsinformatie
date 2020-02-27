@@ -500,8 +500,3 @@ def compare_insensitive(a, b):
         return
 
     return b.lower() in a.lower()
-
-
-def get_delta_loader():
-    from ocd_backend.loaders.delta import DeltaLoader
-    return DeltaLoader
