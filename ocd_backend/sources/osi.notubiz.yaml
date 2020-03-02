@@ -71,3 +71,9 @@ osi.notubiz:
     allmanak_id: 16771
     notubiz_organization_id: 1750
     <<: *notubiz
+
+  flevoland:
+    key: flevoland
+    allmanak_id: 14866
+    notubiz_organization_id: 2163
+    <<: *notubiz
