@@ -217,8 +217,8 @@ class Model(object, metaclass=ModelMetaclass):
 
             rels[identifier] = model
 
-            for _, prop in iterate(model.values.items()):
-                if isinstance(prop, Model) or isinstance(prop, Relationship):
+            for _, prop in iterate(model.values):
+                if isinstance(prop, Model):
                     inner(prop)
 
         inner(self)
