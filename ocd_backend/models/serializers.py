@@ -169,10 +169,6 @@ class PostgresSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from ocd_backend.models.model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
                 props.append(self.ori_uri(item))
 
             if len(props) == 1:
@@ -276,9 +272,6 @@ class RdfSerializer(BaseSerializer):
             props = list()
             o = BNode()
             for _, item in iterate(value):
-                from ocd_backend.models.model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
                 self.deflate(item, props=True, rels=True)
                 props.append(URIRef('{}{}'.format(Ori.uri,
                                                   item.get_ori_identifier())))
@@ -317,10 +310,6 @@ class JsonSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from ocd_backend.models.model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
                 props.append(self.ori_uri(item))
 
             if len(props) == 1:
