@@ -197,8 +197,7 @@ class Model(object, metaclass=ModelMetaclass):
             if not definition:
                 continue
 
-            if (props and not isinstance(prop, Model)) or \
-                    (rels and (isinstance(prop, Model) or isinstance(prop, Relationship))):
+            if (props and not isinstance(prop, Model)) or (rels and isinstance(prop, Model)):
                 props_list.append((self.serializer.uri_format(definition), prop,))  # pylint: disable=no-member
         return props_list
 
@@ -251,41 +250,3 @@ class Model(object, metaclass=ModelMetaclass):
             self.ori_identifier = self.db.get_mergeable_resource_identifier(self, predicate, column, value)
         except (NoResultFound, MultipleResultsFound, ValueError) as e:
             log.warning(f'Unable to merge: {str(e)}')
-
-
-class Relationship:
-    """
-    The Relationship model is used to explicitly specify one or more
-    object model relations and describe what the relationship is about. The
-    `rel` parameter is used to point to a object model that describes the
-    relation, in a graph this is the edge between nodes. Note that not all
-    serializers will make use of this.
-
-    Relationship can have multiple arguments in order to specify multiple
-    relations at once. Arguments of Relationship always relate to the property
-    the Relationship is assigned to, and not to each other.
-
-    ``
-    # Basic way to assign relations
-    object_model.parent = [a, b]
-
-    # Relationship adds a way to describe the relation
-    object_model.parent = Relationship(a, b, rel=c)
-
-    # Under water this is translated to a list
-    object_model.parent = [Relationship(a, rel=c), Relationship(b, rel=c)]
-    ``
-    """
-
-    def __new__(cls, *args, **kwargs):
-        if len(args) == 1:
-            return super(Relationship, cls).__new__(cls)
-
-        rel_list = list()
-        for arg in args:
-            rel_list.append(Relationship(arg, **kwargs))
-        return rel_list
-
-    def __init__(self, *args, **kwargs):
-        self.model = args[0]
-        self.rel = kwargs['rel']
