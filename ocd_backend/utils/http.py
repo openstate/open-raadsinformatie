@@ -257,6 +257,8 @@ class GCSCachingMixin(HttpRequestMixin):
         f = io.BytesIO()
 
         with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
+            if isinstance(data, str):
+                data = data.encode('utf-8')
             gf.write(data)
 
         if skip_exists:
