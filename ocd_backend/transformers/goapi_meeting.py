@@ -17,11 +17,15 @@ class GOAPITransformer(BaseTransformer):
 
         return '%s/meetings/%i' % (base_url, original_item['id'],)
 
-    def get_documents_as_media_urls(self, original_item):
-        current_permalink = self.get_current_permalink(original_item)
+    def get_documents_as_media_urls(self, meeting, meeting_item=None):
+        item = meeting
+        if meeting_item:
+            item = meeting_item
+
+        current_permalink = self.get_current_permalink(meeting)
 
         output = []
-        for document in original_item.get('documents', []):
+        for document in item.get('documents', []):
             # sleep(1)
             url = "%s/documents/%s" % (current_permalink, document['id'])
             output.append({
@@ -134,7 +138,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         agendaitem.last_discussed_at = event.start_date
         agendaitem.attachment = []
 
-        for doc in self.get_documents_as_media_urls(original_item):
+        for doc in self.get_documents_as_media_urls(original_item, item):
             attachment = MediaObject(doc['url'].rpartition('/')[2],
                                      source=self.source_definition['key'],
                                      supplier='gemeenteoplossingen',
