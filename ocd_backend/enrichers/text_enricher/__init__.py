@@ -56,6 +56,8 @@ class TextEnricher(BaseEnricher):
         except AttributeError:
             date_modified = None
 
+        item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
+
         ori_enriched = GCSCachingMixin.factory('ori-enriched')
         if ori_enriched.exists(identifier):
             resource = ori_enriched.download_cache(identifier)
@@ -82,7 +84,6 @@ class TextEnricher(BaseEnricher):
             except requests.HTTPError as e:
                 raise SkipEnrichment(e)
 
-            item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
             item.content_type = resource.content_type
             item.size_in_bytes = resource.file_size
 
