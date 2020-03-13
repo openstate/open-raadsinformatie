@@ -261,10 +261,11 @@ class PostgresDatabase:
                 session.commit()
                 session.close()
                 return
-            except Exception:
+            except Exception as e:
                 session.close()
-                raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
-                                 (model_object.ori_identifier, model_object.source_iri))
+                log.error(f'{str(e)}: {model_object.ori_identifier} - {model_object.source_iri}')
+                # raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
+                #                  (model_object.ori_identifier, model_object.source_iri))
 
         # Scenario 2
         elif (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and not \
