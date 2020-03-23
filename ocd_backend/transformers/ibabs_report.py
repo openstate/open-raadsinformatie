@@ -56,10 +56,12 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                                                         supplier='allmanak',
                                                         collection=self.source_definition['source_type'])
     try:
-        report.creator = Organization(original_item['_Extra']['Values']['Fractie(s)'],
-                                      collection='party',
-                                      **source_defaults)
-        report.creator.name = original_item['_Extra']['Values']['Fractie(s)']
+        if original_item['_Extra']['Values']['Fractie(s)'] and \
+                original_item['_Extra']['Values']['Fractie(s)'] is not None:
+            report.creator = Organization(original_item['_Extra']['Values']['Fractie(s)'],
+                                          collection='party',
+                                          **source_defaults)
+            report.creator.name = original_item['_Extra']['Values']['Fractie(s)']
     except KeyError:
         pass
 
