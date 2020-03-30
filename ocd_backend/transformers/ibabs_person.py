@@ -1,8 +1,12 @@
+import base64
+
 from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
+from ocd_backend.settings import RESOLVER_BASE_URL
 from ocd_backend.transformers import BaseTransformer
+from ocd_backend.utils.http import GCSCachingMixin
 
 log = get_source_logger('ibabs_person')
 
@@ -15,11 +19,10 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     source_defaults = {
         'source': self.source_definition['key'],
         'supplier': 'ibabs',
-        'collection': 'person',
         'cached_path': cached_path,
     }
 
-    person = Person(original_item['UserId'], **source_defaults)
+    person = Person(original_item['UserId'], collection='person', **source_defaults)
     person.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
@@ -30,6 +33,14 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
     person.biography = original_item['AboutMe']
     person.email = original_item['Email']
     person.phone = original_item['Phone']
+
+    image = original_item.get('Picture')
+    if image:
+        path = 'ibabs/image/%s' % original_item['Id']
+        GCSCachingMixin.factory('ori-static').upload(path, base64.b64decode(image), content_type='image/jpeg')
+        person.image = ImageObject(original_item.get('Id'), collection='image', **source_defaults)
+        person.image.content_url = '%s/%s' % (RESOLVER_BASE_URL, path)
+        person.image.is_referenced_by = person
 
     municipality = TopLevelOrganization(self.source_definition['allmanak_id'],
                                         source=self.source_definition['key'],

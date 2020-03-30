@@ -1,5 +1,5 @@
 import base64
-import cStringIO
+import io
 import gzip
 import hashlib
 from tempfile import NamedTemporaryFile
@@ -32,7 +32,7 @@ class CustomRetry(Retry):
         return res
 
 
-class FileResource(object):
+class FileResource:
     def __init__(self, media_file):
         self.data = None
         self.existed = None
@@ -48,7 +48,7 @@ class FileResource(object):
         return self.data
 
 
-class HttpRequestMixin(object):
+class HttpRequestMixin:
     """A mixin that can be used by extractors that use HTTP as a method
     to fetch data from a remote source. A persistent
     :class:`requests.Session` is used to take advantage of
@@ -147,7 +147,7 @@ class GCSCachingMixin(HttpRequestMixin):
     try:
         storage_client = storage.Client()
     except GoogleAuthError as e:
-        log.warning('GCSCachingMixin: storage client failed, using HttpRequestMixin instead. %s', e)
+        log.warning(f'GCSCachingMixin: storage client authentication failed, using HttpRequestMixin instead: {str(e)}')
         storage_client = False
 
     bucket_name = None
@@ -254,9 +254,11 @@ class GCSCachingMixin(HttpRequestMixin):
         assert blob, "blob must not be None"
         assert data, "data must not be None"
 
-        f = cStringIO.StringIO()
+        f = io.BytesIO()
 
         with gzip.GzipFile(filename='', mode='wb', fileobj=f) as gf:
+            if isinstance(data, str):
+                data = data.encode('utf-8')
             gf.write(data)
 
         if skip_exists:
@@ -288,7 +290,7 @@ class GCSCachingMixin(HttpRequestMixin):
         if not blob:
             raise NotFound(path)
 
-        media_file = cStringIO.StringIO()
+        media_file = io.BytesIO()
         self._do_download(blob, media_file)
         media_file.seek(0, 0)
         log.debug('Retrieved file from GCS bucket %s: %s' % (self.bucket_name, path))

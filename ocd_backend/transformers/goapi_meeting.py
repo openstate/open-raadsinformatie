@@ -15,18 +15,22 @@ class GOAPITransformer(BaseTransformer):
         base_url = '%s/%s' % (
             self.source_definition['base_url'], api_version,)
 
-        return u'%s/meetings/%i' % (base_url, original_item[u'id'],)
+        return '%s/meetings/%i' % (base_url, original_item['id'],)
 
-    def get_documents_as_media_urls(self, original_item):
-        current_permalink = self.get_current_permalink(original_item)
+    def get_documents_as_media_urls(self, meeting, meeting_item=None):
+        item = meeting
+        if meeting_item:
+            item = meeting_item
+
+        current_permalink = self.get_current_permalink(meeting)
 
         output = []
-        for document in original_item.get('documents', []):
+        for document in item.get('documents', []):
             # sleep(1)
-            url = u"%s/documents/%s" % (current_permalink, document['id'])
+            url = "%s/documents/%s" % (current_permalink, document['id'])
             output.append({
                 'url': url,
-                'note': document[u'filename']})
+                'note': document['filename']})
         return output
 
 
@@ -44,7 +48,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         'cached_path': cached_path,
     }
 
-    event = Meeting(original_item[u'id'], **source_defaults)
+    event = Meeting(original_item['id'], **source_defaults)
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -66,15 +70,15 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     # In this case we create the name from the name of the commission and the start date of the meeting.
     # See issue #124.
     if original_item['description'] == '':
-        event.name = 'Vergadering - %s - %s' % (original_item[u'dmu'][u'name'], event.start_date)
+        event.name = 'Vergadering - %s - %s' % (original_item['dmu']['name'], event.start_date)
     else:
-        event.name = original_item[u'description']
+        event.name = original_item['description']
 
-    event.classification = [u'Agenda']
-    event.description = original_item[u'description']
+    event.classification = ['Agenda']
+    event.description = original_item['description']
 
     try:
-        event.location = original_item[u'location'].strip()
+        event.location = original_item['location'].strip()
     except (AttributeError, KeyError):
         pass
 
@@ -86,7 +90,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     # Attach the meeting to the committee node. GO always lists either the name of the committee or 'Raad'
     # if it is a non-committee meeting so we can attach it to a committee node without any extra checks.
-    event.committee = Organization(original_item[u'dmu'][u'id'],
+    event.committee = Organization(original_item['dmu']['id'],
                                    source=self.source_definition['key'],
                                    supplier='gemeenteoplossingen',
                                    collection='committee')
@@ -104,10 +108,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in original_item and original_item['canceled']:
-        log.info('Found a GOAPI event with status EventCancelled: %s' % str(event.values))
+        log.info(f'Found a GOAPI event with status EventCancelled: {str(event.values)}')
         event.status = EventCancelled
     elif 'inactive' in original_item and original_item['inactive']:
-        log.info('Found a GOAPI event with status EventUnconmfirmed: %s' % str(event.values))
+        log.info(f'Found a GOAPI event with status EventUnconmfirmed: {str(event.values)}')
         event.status = EventUnconfirmed
     else:
         event.status = EventConfirmed
@@ -134,7 +138,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         agendaitem.last_discussed_at = event.start_date
         agendaitem.attachment = []
 
-        for doc in self.get_documents_as_media_urls(original_item):
+        for doc in self.get_documents_as_media_urls(original_item, item):
             attachment = MediaObject(doc['url'].rpartition('/')[2],
                                      source=self.source_definition['key'],
                                      supplier='gemeenteoplossingen',

@@ -2,7 +2,7 @@
 http://schema.org/
 """
 
-import owl
+from ocd_backend.models.definitions import owl
 from ocd_backend.models.definitions import Schema, Opengov, Dbo, Dcterms, Meeting as MeetingNS, Cbs
 from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, \
     DateTimeProperty, DateProperty, ArrayProperty, JsonProperty, Relation

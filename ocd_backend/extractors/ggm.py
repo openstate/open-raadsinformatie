@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from ocd_backend.app import celery_app
 from ocd_backend.extractors import BaseExtractor
@@ -48,9 +48,9 @@ class GGMBaseExtractor(BaseExtractor, GCSCachingMixin):
 
                     yield 'application/json', json.dumps(item), full_url, 'ggm/' + odata_substring,
 
-                log.debug('Processed skip value {}'.format(skip))
+                log.debug(f'Processed skip value {skip}')
             else:
-                log.debug('Already downloaded, skipping value {}'.format(skip))
+                log.debug(f'Already downloaded, skipping value {skip}')
 
             next_link = response_json.get('@odata.nextLink')
             if next_link:

@@ -1,4 +1,4 @@
-FROM python:2.7-alpine
+FROM python:3.8-alpine
 MAINTAINER Jurrian Tromp <jurrian@argu.co>
 
 COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
@@ -42,6 +42,7 @@ COPY manage.py /opt/ori/manage.py
 COPY es_mappings /opt/ori/es_mappings
 COPY ocd_backend /opt/ori/ocd_backend
 COPY version.py /opt/ori/ocd_backend/version.py
+COPY version.py /opt/ori/version.py
 
 RUN chown -R 1000:1000 /opt/ori /var/run/celery
 

@@ -32,7 +32,6 @@ spec:
   - zoek.openstateninformatie.nl
   - docs.openraadsinformatie.nl
   - ori.argu.co
-  - api.waaroverheid.nl
   - openbesluitvorming.nl
   - www.openbesluitvorming.nl
   - api.openbesluitvorming.nl
@@ -51,7 +50,6 @@ spec:
       - zoek.openstateninformatie.nl
       - docs.openraadsinformatie.nl
       - ori.argu.co
-      - api.waaroverheid.nl
       - openbesluitvorming.nl
       - www.openbesluitvorming.nl
       - api.openbesluitvorming.nl

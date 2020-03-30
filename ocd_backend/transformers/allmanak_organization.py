@@ -37,9 +37,9 @@ def municipality_organization_item(self, content_type, raw_item, canonical_iri, 
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.classification = u'Municipality'
+    object_model.classification = 'Municipality'
     object_model.collection = self.source_definition['key']
-    object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), unicode(original_item['naam'])])
+    object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), original_item['naam']])
     object_model.description = original_item['omvatplaats']
     try:
         object_model.homepage = original_item['contact']['internet']['value']
@@ -66,9 +66,9 @@ def province_organization_item(self, content_type, raw_item, canonical_iri, cach
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.classification = u'Province'
+    object_model.classification = 'Province'
     object_model.collection = self.source_definition['key']
-    object_model.name = unicode(original_item['naam'])
+    object_model.name = original_item['naam']
     object_model.description = original_item['omvatplaats']
     object_model.homepage = original_item['contact']['internet']['value']
     object_model.email = original_item['contact']['emailadres']['value']

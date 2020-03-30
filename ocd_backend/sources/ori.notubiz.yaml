@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   source_type: "municipality"
+  supplier: "notubiz"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -16,28 +17,24 @@ _entities: &entities
   - &municipality
     <<: *entity_defaults
     entity: municipality
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
     transformer: ocd_backend.transformers.allmanak_organization.municipality_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
-    doc_type: organizations
     extractor: ocd_backend.extractors.notubiz.NotubizCommitteesExtractor
     transformer: ocd_backend.transformers.notubiz_committee.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.allmanak_organization.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
-    doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.allmanak_person.allmanak_person_item
 
@@ -47,6 +44,15 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     transformer: ocd_backend.transformers.notubiz_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
@@ -268,13 +274,6 @@ ori.notubiz:
     notubiz_organization_id: 429
     <<: *notubiz
 
-  leeuwarden:
-    key: leeuwarden
-    allmanak_id: 32728
-    cbs_id: GM0080
-    notubiz_organization_id: 330
-    <<: *notubiz
-
   den_haag:
     key: den_haag
     source_name: "Den Haag"
@@ -477,4 +476,19 @@ ori.notubiz:
     allmanak_id: 33391
     cbs_id: GM0268
     notubiz_organization_id: 799
+    <<: *notubiz
+
+  # Added on 05-03-2020
+  nunspeet:
+    key: nunspeet
+    allmanak_id: 38081
+    cbs_id: GM0302
+    notubiz_organization_id: 1762
+    <<: *notubiz
+
+  horst_aan_de_maas:
+    key: horst_aan_de_maas
+    allmanak_id: 26292
+    cbs_id: GM1507
+    notubiz_organization_id: 273
     <<: *notubiz

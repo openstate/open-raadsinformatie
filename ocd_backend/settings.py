@@ -251,7 +251,7 @@ if os.getenv('GCE_STACKDRIVER'):
 
 if BUGSNAG_APIKEY:
     import bugsnag
-    from .utils.bugsnag_celery import connect_failure_handler
+    from ocd_backend.utils.bugsnag_celery import connect_failure_handler
 
     bugsnag.configure(
         api_key=BUGSNAG_APIKEY,
@@ -299,13 +299,13 @@ RESOLVER_BASE_URL = os.getenv('RESOLVER_BASE_URL', 'https://api.openraadsinforma
 USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' % (MAJOR_VERSION, MINOR_VERSION)
 
 # The endpoint for the iBabs API
-IBABS_WSDL = u'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
+IBABS_WSDL = 'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
 
 # The endpoint for the CompanyWebcast API
-CWC_WSDL = u'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
+CWC_WSDL = 'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
 
 # define the location of pdftotext
-PDF_TO_TEXT = u'pdftotext'
+PDF_TO_TEXT = 'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
 
 # Exceptions that when raised should be autoretried by celery
@@ -319,6 +319,7 @@ KAFKA_PASSWORD = os.getenv('KAFKA_PASSWORD')
 KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
 KAFKA_MESSAGE_KEY = os.getenv('KAFKA_MESSAGE_KEY', 'ori_delta_message')
 KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
+KAFKA_MAX_MESSAGE_BYTES = 8388608
 
 # Postgres settings
 POSTGRES_HOST = '{}:{}'.format(os.getenv('POSTGRES_SERVICE_HOST', 'postgres'), os.getenv('POSTGRES_SERVICE_PORT', 5432))
@@ -330,6 +331,6 @@ POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
 # ignored in your version control system allowing for settings to be
 # defined per machine.
 try:
-    from local_settings import *
+    from ocd_backend.local_settings import *
 except ImportError:
     pass

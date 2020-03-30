@@ -27,53 +27,48 @@ class GreenValleyTransformer(BaseTransformer):
         start_date = None
         end_date = None
 
-        if meeting.get(u'bis_vergaderdatum', u'').strip() != u'':
+        if meeting.get('bis_vergaderdatum', '').strip() != '':
             start_date = datetime.fromtimestamp(
-                float(meeting[u'bis_vergaderdatum']) +
-                (float(meeting.get(u'bis_starttijduren', '0') or '0') * 3600) +
-                (float(meeting.get(u'bis_starttijdminuten', '0') or '0') * 60))
+                float(meeting['bis_vergaderdatum']) +
+                (float(meeting.get('bis_starttijduren', '0') or '0') * 3600) +
+                (float(meeting.get('bis_starttijdminuten', '0') or '0') * 60))
             end_date = datetime.fromtimestamp(
-                float(meeting[u'bis_vergaderdatum']) +
-                (float(meeting.get(u'bis_eindtijduren', '0') or '0') * 3600) +
-                (float(meeting.get(u'bis_eindtijdminuten', '0') or '0') * 60))
-        elif u'publishdate' in meeting:
+                float(meeting['bis_vergaderdatum']) +
+                (float(meeting.get('bis_eindtijduren', '0') or '0') * 3600) +
+                (float(meeting.get('bis_eindtijdminuten', '0') or '0') * 60))
+        elif 'publishdate' in meeting:
             start_date = datetime.fromtimestamp(
-                float(meeting[u'publishdate']))
+                float(meeting['publishdate']))
             end_date = datetime.fromtimestamp(
-                float(meeting[u'publishdate']))
+                float(meeting['publishdate']))
 
         return start_date, end_date
 
     def _get_documents_as_media_urls(self, original_item):
         media_urls = {}
-        if u'attachmentlist' in original_item:
-            for att_key, att in original_item.get(u'attachmentlist', {}).iteritems():
-                if att[u'objecttype'] == 'AGENDAPAGE':
+        if 'attachmentlist' in original_item:
+            for att_key, att in original_item.get('attachmentlist', {}).items():
+                if att['objecttype'] == 'AGENDAPAGE':
                     continue
 
-                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
-                    att[u'objectid'].encode('utf8'),)
+                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % att['objectid']
 
-                doc_hash = unicode(
-                    sha1(url + ':' + att[u'objectname'].encode('utf8')).hexdigest())
+                doc_hash = sha1(f"{url}:{att['objectname']})".encode('utf-8')).hexdigest()
                 media_urls[doc_hash] = {
-                    "note": att[u'objectname'],
+                    "note": att['objectname'],
                     "original_url": url,
-                    "object_id": att[u'objectid'],
+                    "object_id": att['objectid'],
                 }
         else:
             default = original_item['default']
-            if default[u'objecttype'] != 'AGENDAPAGE':
-                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % (
-                    default[u'objectid'].encode('utf8'),)
+            if default['objecttype'] != 'AGENDAPAGE':
+                url = "https://staten.zuid-holland.nl/dsresource?objectid=%s" % default['objectid']
 
-                doc_hash = unicode(
-                    sha1(url + ':' + default[u'objectname'].encode('utf8')).hexdigest()
-                )
+                doc_hash = sha1(f"{url}:{default['objectname']})".encode('utf-8')).hexdigest()
                 media_urls[doc_hash] = {
-                    "note": default[u'objectname'],
+                    "note": default['objectname'],
                     "original_url": url,
-                    "object_id": default[u'objectid'],
+                    "object_id": default['objectid'],
                 }
 
         if media_urls:
@@ -95,9 +90,9 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
         'cached_path': cached_path,
     }
 
-    meeting = original_item[u'default']
+    meeting = original_item['default']
 
-    event = Meeting(meeting[u'objectid'], **source_defaults)
+    event = Meeting(meeting['objectid'], **source_defaults)
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -106,18 +101,16 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
     event.start_date, event.end_date = self.get_meeting_dates(meeting)
     event.last_discussed_at = event.start_date
 
-    event.name = meeting[u'objectname']
-    event.classification = [u'Agenda']
+    event.name = meeting['objectname']
+    event.classification = ['Agenda']
     try:
-        event.classification = [unicode(
-            self.classification_mapping[meeting[u'objecttype'].lower()])]
+        event.classification = [self.classification_mapping[meeting['objecttype'].lower()]]
     except LookupError:
-        event.classification = [unicode(
-            meeting[u'objecttype'].capitalize())]
-    event.description = meeting[u'objectname']
+        event.classification = [meeting['objecttype'].capitalize()]
+    event.description = meeting['objectname']
 
     try:
-        event.location = meeting[u'bis_locatie'].strip()
+        event.location = meeting['bis_locatie'].strip()
     except (AttributeError, KeyError):
         pass
 
@@ -128,7 +121,7 @@ def greenvalley_report(self, content_type, raw_item, canonical_iri, cached_path,
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
-            event.committee = Organization(meeting[u'bis_orgaan'],
+            event.committee = Organization(meeting['bis_orgaan'],
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
@@ -189,9 +182,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         'cached_path': cached_path,
     }
 
-    meeting = original_item[u'default']
+    meeting = original_item['default']
 
-    event = Meeting(meeting[u'objectid'], **source_defaults)
+    event = Meeting(meeting['objectid'], **source_defaults)
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',
@@ -199,18 +192,16 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     event.start_date, event.end_date = self.get_meeting_dates(meeting)
 
-    event.name = meeting[u'objectname']
-    event.classification = [u'Agenda']
+    event.name = meeting['objectname']
+    event.classification = ['Agenda']
     try:
-        event.classification = [unicode(
-            self.classification_mapping[meeting[u'objecttype'].lower()])]
+        event.classification = [self.classification_mapping[meeting['objecttype'].lower()]]
     except LookupError:
-        event.classification = [unicode(
-            meeting[u'objecttype'].capitalize())]
-    event.description = meeting[u'objectname']
+        event.classification = [meeting['objecttype'].capitalize()]
+    event.description = meeting['objectname']
 
     try:
-        event.location = meeting[u'bis_locatie'].strip()
+        event.location = meeting['bis_locatie'].strip()
     except (AttributeError, KeyError):
         pass
 
@@ -221,7 +212,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     if 'bis_orgaan' in meeting:
         if meeting['bis_orgaan'] != '':
-            event.committee = Organization(meeting[u'bis_orgaan'],
+            event.committee = Organization(meeting['bis_orgaan'],
                                            source=self.source_definition['key'],
                                            supplier='greenvalley',
                                            collection='committee')
@@ -268,13 +259,13 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     event.agenda = []
 
     children = []
-    for a, v in original_item.get(u'SETS', {}).iteritems():
-        if v[u'objecttype'].lower() == u'agendapage':
-            result = {u'default': v}
+    for a, v in original_item.get('SETS', {}).items():
+        if v['objecttype'].lower() == 'agendapage':
+            result = {'default': v}
             children.append(result)
 
     for item in children:
-        agenda_item = item[u'default']
+        agenda_item = item['default']
         agendaitem = AgendaItem(agenda_item['objectid'],
                                 source=self.source_definition['key'],
                                 supplier='greenvalley',
@@ -284,8 +275,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                 supplier='allmanak',
                                                                 collection='province')
 
-        agendaitem.description = agenda_item[u'objectname']
-        agendaitem.name = agenda_item[u'objectname']
+        agendaitem.description = agenda_item['objectname']
+        agendaitem.name = agenda_item['objectname']
         agendaitem.position = int(agenda_item['agendapagenumber'])
         agendaitem.parent = event
         # AgendaItem requires a start_date because it derives from Meeting

@@ -2,8 +2,7 @@
 http://xmlns.com/foaf/0.1/
 """
 
-import owl
-from ocd_backend.models.definitions import Org, Foaf
+from ocd_backend.models.definitions import owl, Org, Foaf
 from ocd_backend.models.properties import Relation
 
 

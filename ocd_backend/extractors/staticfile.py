@@ -1,6 +1,6 @@
 import gzip
-import simplejson as json
 import os
+import json
 
 from click import progressbar
 from lxml import etree
@@ -53,7 +53,7 @@ class StaticFileBaseExtractor(BaseExtractor, HttpRequestMixin):
             r = self.http_session.get(self.file_url, verify=False)
             static_content = r.content
         except Exception:
-            static_content = u''
+            static_content = ''
         # Extract and yield the items
         if static_content != '':
             for item in self.extract_items(static_content):
@@ -97,7 +97,7 @@ class StaticXmlExtractor(StaticFileBaseExtractor):
             try:
                 self.namespaces[self.default_namespace] = self.namespaces[None]
                 del self.namespaces[None]
-            except KeyError as e:
+            except KeyError:
                 pass
 
         for item in tree.xpath(self.item_xpath, namespaces=self.namespaces):
@@ -149,7 +149,7 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
             try:
                 self.namespaces[self.default_namespace] = self.namespaces[None]
                 del self.namespaces[None]
-            except KeyError as e:
+            except KeyError:
                 pass
 
         item_total = 0
@@ -157,7 +157,7 @@ class StaticHtmlExtractor(StaticFileBaseExtractor):
             yield 'application/html', etree.tostring(item), str(item.xpath(self.item_id_xpath, namespaces=self.namespaces)[0]), etree.tostring(item)
             item_total += 1
 
-        log.info("[%s] Extracted total of %d items" % (self.source_definition['key'], item_total))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {item_total} items')
 
 
 class StaticJSONExtractor(StaticFileBaseExtractor):

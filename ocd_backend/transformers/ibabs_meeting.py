@@ -5,6 +5,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
+from ocd_backend.utils.ibabs import translate_position
 
 log = get_source_logger('ibabs_meeting')
 
@@ -34,6 +35,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                       collection=self.source_definition['source_type'])
 
     item.name = meeting['Meetingtype']
+    item.description = meeting['Explanation']
     item.chair = meeting['Chairman']
     item.location = meeting['Location']
     item.start_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
@@ -41,10 +43,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     # TODO: This is untested so we log any cases that are not the default
     if 'canceled' in meeting and meeting['canceled']:
-        log.info('Found an iBabs event with status EventCancelled: %s' % str(item.values))
+        log.info(f'[{self.source_definition["key"]}] Found an iBabs event with status EventCancelled: {str(item.values)}')
         item.status = EventCancelled
     elif 'inactive' in meeting and meeting['inactive']:
-        log.info('Found an iBabs event with status EventUnconfirmed: %s' % str(item.values))
+        log.info(f'[{self.source_definition["key"]}] Found an iBabs event with status EventUnconfirmed: {str(item.values)}')
         item.status = EventUnconfirmed
     else:
         item.status = EventConfirmed
@@ -69,9 +71,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
         item.committee.name = meeting['Meetingtype']
         if 'sub' in meeting['MeetingtypeId']:
-            item.committee.classification = u'Subcommittee'
+            item.committee.classification = 'Subcommittee'
         else:
-            item.committee.classification = u'Committee'
+            item.committee.classification = 'Committee'
 
         # Re-attach the committee node to the municipality node
         item.committee.subOrganizationOf = TopLevelOrganization(self.source_definition['allmanak_id'],
@@ -93,6 +95,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
             agenda_item.parent = item
             agenda_item.name = mi['Title']
+            agenda_item.description = mi['Explanation']
+            agenda_item.position, agenda_item.raw_position = translate_position(mi['Features'])
             agenda_item.start_date = item.start_date
             agenda_item.last_discussed_at = item.start_date
 
@@ -132,13 +136,27 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                       collection=self.source_definition['source_type'])
             item.invitee.append(invitee_item)
 
+    item.attendee = list()
+    if meeting['Attendees'] and 'iBabsUserBasic' in meeting['Attendees']:
+        for attendee in meeting['Attendees']['iBabsUserBasic'] or []:
+            attendee_item = Person(attendee['UniqueId'],
+                                   source=self.source_definition['key'],
+                                   supplier='ibabs',
+                                   collection='person')
+            attendee_item.name = attendee['Name']
+            attendee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                       source=self.source_definition['key'],
+                                                                       supplier='allmanak',
+                                                                       collection=self.source_definition['source_type'])
+            item.attendee.append(attendee_item)
+
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
     if 'EndTime' in meeting and meeting['EndTime']:
         meeting_date, _, _ = meeting['MeetingDate'].partition('T')
         meeting_datetime = '%sT%s:00' % (meeting_date, meeting['EndTime'])
         item.end_date = iso8601.parse_date(meeting_datetime).strftime("%s")
     else:
-        item.end_date = iso8601.parse_date(meeting['MeetingDate'], ).strftime("%s")
+        item.end_date = iso8601.parse_date(meeting['MeetingDate']).strftime("%s")
 
     item.attachment = list()
     if meeting['Documents'] and 'iBabsDocument' in meeting['Documents']:

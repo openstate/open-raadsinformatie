@@ -29,7 +29,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     event.end_date = original_item['plannings'][0]['end_date']
     event.last_discussed_at = event.start_date
     event.name = original_item['attributes'].get('Titel', 'Vergadering %s' % event.start_date)
-    event.classification = [u'Agenda']
+    event.classification = ['Agenda']
     event.location = original_item['attributes'].get('Locatie')
 
     event.organization = TopLevelOrganization(self.source_definition['allmanak_id'],
@@ -109,10 +109,10 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     #    original_item['last_modified'])
 
     if 'canceled' in original_item and original_item['canceled']:
-        log.info('Found a Notubiz event with status EventCancelled: %s' % str(event.values))
+        log.info(r'Found a Notubiz event with status EventCancelled: {str(event.values)}')
         event.status = EventCancelled
     elif 'inactive' in original_item and original_item['inactive']:
-        log.info('Found a Notubiz event with status EventUncomfirmed: %s' % str(event.values))
+        log.info(f'Found a Notubiz event with status EventUncomfirmed: {str(event.values)}')
         event.status = EventConfirmed
     else:
         event.status = EventUnconfirmed

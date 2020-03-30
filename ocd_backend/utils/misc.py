@@ -2,97 +2,19 @@ import datetime
 import glob
 import importlib
 import re
-from calendar import timegm
-from hashlib import sha1
+import json
+import codecs
 from string import Formatter
-from urlparse import urlparse
+from urllib.parse import urlparse
+from functools import reduce
 
 import pytz
-import simplejson as json
 # noinspection PyUnresolvedReferences
 import translitcodec  # used for encoding, search 'translit'
 from dateutil.parser import parse
-from elasticsearch.helpers import scan, bulk
-from lxml import etree
 
 from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
-
-
-def full_normalized_motion_id(motion_id, date_as_str=None):
-    n_id = normalize_motion_id(motion_id, date_as_str)
-    if n_id is not None:
-        return n_id
-    return sha1(motion_id.encode('utf8')).hexdigest()
-    # return motion_id
-
-
-def normalize_motion_id(motion_id, date_as_str=None):
-    """
-    Normalizes forms of motion ids
-    """
-
-    regexes = [
-        r'^(?P<kind>M|A)(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
-        r'^(?P<year>\d{4})\s*(?P<kind>M|A)\s*(?P<id>\d+)',
-        r'^(?P<year>\d{4})\s*\-\s*(?P<id>\d+)',
-        r'^(?P<kind>M|A)\s+(?P<id>\d+)'
-    ]
-
-    for regex in regexes:
-        res = re.match(regex, motion_id.upper())
-        if res is not None:
-            try:
-                kind = res.group('kind')
-            except IndexError as e:
-                kind = u'M'
-            try:
-                year = res.group('year')
-            except IndexError as e:
-                year = None
-            if year is None:
-                if date_as_str is None:
-                    date_as_str = datetime.datetime.now().isoformat()
-                year = date_as_str[0:4]
-            mid = res.group('id')
-            return u'%s%s%s' % (year, kind, mid,)
-    return None
-
-
-def reindex(client, source_index, target_index, target_client=None, chunk_size=500, scroll='5m',
-            transformation_callable=None):
-    """
-    Reindex all documents from one index to another, potentially (if
-    `target_client` is specified) on a different cluster.
-
-    .. note::
-
-        This helper doesn't transfer mappings, just the data.
-
-    :arg client: instance of :class:`~elasticsearch.Elasticsearch` to use (for
-        read if `target_client` is specified as well)
-    :arg source_index: index (or list of indices) to read documents from
-    :arg target_index: name of the index in the target cluster to populate
-    :arg target_client: optional, is specified will be used for writing (thus
-        enabling reindex between clusters)
-    :arg chunk_size: number of docs in one chunk sent to es (default: 500)
-    :arg scroll: Specify how long a consistent view of the index should be
-        maintained for scrolled search
-    :arg transformation_callable: transform each document using a function
-    """
-    target_client = client if target_client is None else target_client
-
-    docs = scan(client, index=source_index, scroll=scroll, _source_include=['*'])
-
-    def _change_doc_index(hits, index):
-        for h in hits:
-            h['_index'] = index
-            if transformation_callable is not None:
-                h = transformation_callable(h)
-            yield h
-
-    return bulk(target_client, _change_doc_index(docs, target_index),
-                chunk_size=chunk_size, stats_only=True)
 
 
 class ExtendedFormatter(Formatter):
@@ -162,11 +84,11 @@ def load_sources_config(path):
                 if key[0:1] == '_':
                     continue
 
-                if isinstance(value, basestring):
+                if isinstance(value, str):
                     try:
                         new_data[key] = ExtendedFormatter().format(value, **chain)
                         chain[key] = new_data[key]
-                    except KeyError, e:
+                    except KeyError as e:
                         raise MissingTemplateTag('Missing template tag %s in configuration for key \'%s\'' % (e, key))
                 else:
                     chain[key] = value
@@ -201,7 +123,7 @@ def load_sources_config(path):
                     for entry in json.load(f):
                         result[entry['id']] = entry
 
-        except IOError, e:
+        except IOError as e:
             e.strerror = 'Unable to load sources configuration file (%s)' % (
                 e.strerror,)
             raise
@@ -225,7 +147,7 @@ def load_object(path):
     m, name = path[:dot], path[dot + 1:]
     try:
         mod = importlib.import_module(m)
-    except ImportError, e:
+    except ImportError as e:
         raise ImportError("Error loading object '%s': %s" % (path, e))
 
     try:
@@ -235,13 +157,6 @@ def load_object(path):
             m, name))
 
     return obj
-
-
-def try_convert(conv, value):
-    try:
-        return conv(value)
-    except ValueError:
-        return value
 
 
 def parse_date(regexen, date_str):
@@ -305,69 +220,14 @@ json_encoder = DatetimeJSONEncoder()
 _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 
 
-def slugify(text, delim=u'-'):
+def slugify(text, delim='-'):
     """Generates an ASCII-only slug."""
     result = []
-    for word in _punct_re.split(unicode(text).lower()):
-        word = word.encode('translit/long')
+    for word in _punct_re.split(str(text).lower()):
+        word = codecs.encode(word, 'translit/long')
         if word:
             result.append(word)
-    return unicode(delim.join(result))
-
-
-def strip_namespaces(item):
-    xslt = '''
-    <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:output method="xml" indent="no"/>
-
-    <xsl:template match="/|comment()|processing-instruction()">
-        <xsl:copy>
-          <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template>
-
-    <xsl:template match="*">
-        <xsl:element name="{local-name()}">
-          <xsl:apply-templates select="@*|node()"/>
-        </xsl:element>
-    </xsl:template>
-
-    <xsl:template match="@*">
-        <xsl:attribute name="{local-name()}">
-          <xsl:value-of select="."/>
-        </xsl:attribute>
-    </xsl:template>
-    </xsl:stylesheet>
-    '''
-
-    xslt_root = etree.XML(xslt)
-    transform = etree.XSLT(xslt_root)
-
-    return transform(item)
-
-
-def json_datetime(o):
-    if isinstance(o, datetime.datetime):
-        return o.__str__()
-
-
-def get_secret(item_id):
-    try:
-        from ocd_backend.secrets import SECRETS
-    except ImportError:
-        raise UserWarning("The SECRETS variable in ocd_backend/secrets.py "
-                          "does not exist. Copy secrets.default.py to "
-                          "secrets.py and make sure that SECRETS is correct.")
-
-    try:
-        return SECRETS[item_id]
-    except:
-        for k in sorted(SECRETS, key=len, reverse=True):
-            if item_id.startswith(k):
-                return SECRETS[k]
-        raise UserWarning("No secrets found for %s! Make sure that the "
-                          "correct secrets are supplied in ocd_backend/"
-                          "secrets.py" % item_id)
+    return delim.join(result)
 
 
 def propagate_chain_get(terminal_node, timeout=None):
@@ -400,40 +260,6 @@ def iterate(item, parent=None):
                 yield value
     else:
         yield parent, item,
-
-
-def get_sha1_hash(data):
-    return sha1(data).hexdigest()
-
-
-def get_sha1_file_hash(file_path):
-    # https://stackoverflow.com/a/22058673/5081021
-    buffer_size = 10485760  # lets read stuff in 10MB chunks!
-
-    sha1_hash = sha1()
-    with open(file_path, 'rb') as f:
-        while True:
-            data = f.read(buffer_size)
-            if not data:
-                break
-            sha1_hash.update(data)
-
-    return sha1_hash.hexdigest()
-
-
-def datetime_to_unixstamp(date):
-    """
-    Convert a datetime to a unix timestamp using timezone
-    Input date *must* be a timezone aware datetime
-    :param date: a datetime object
-    :return: unix timestamp
-    """
-    try:
-        date = localize_datetime(date)
-        utc = date.astimezone(pytz.utc)
-        return timegm(utc.timetuple())
-    except ValueError, e:
-        raise InvalidDatetime(e)
 
 
 def str_to_datetime(date_str):
@@ -472,11 +298,6 @@ def localize_datetime(date):
 
     tz = pytz.timezone(TIMEZONE)
     return tz.localize(date)
-
-
-def doc_type(name):
-    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
 
 
 def strip_scheme(url):

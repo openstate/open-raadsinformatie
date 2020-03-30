@@ -1,4 +1,4 @@
-import simplejson as json
+import json
 
 from elasticsearch import Elasticsearch, serializer, compat, exceptions
 

@@ -5,6 +5,7 @@ _defaults: &source_defaults
   wait_until_finished: false
   es_prefix: osi
   source_type: "province"
+  supplier: "gemeenteoplossingen"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -46,6 +47,14 @@ _entities: &entities
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
 _go: &go
   index_name: "{key}"
   source_name: "{key!c}"
@@ -58,13 +67,6 @@ osi.go:
     key: provincie-utrecht
     source_name: "Provincie Utrecht"
     base_url: "https://www.stateninformatie.provincie-utrecht.nl/api"
-    api_version: v2
+    api_version: v1
     allmanak_id: 17166
-    <<: *go
-
-  flevoland:
-    key: flevoland
-    base_url: "https://stateninformatie.flevoland.nl/api"
-    api_version: v2
-    allmanak_id: 14866
     <<: *go

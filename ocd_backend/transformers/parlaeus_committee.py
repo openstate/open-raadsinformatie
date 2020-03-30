@@ -25,6 +25,6 @@ def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **k
 
     committee.name = original_item['committeename']
     committee.other_names = original_item['committeecode']
-    committee.classification = u'Committee'
+    committee.classification = 'Committee'
 
     return committee

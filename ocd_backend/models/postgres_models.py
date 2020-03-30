@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, JSON, func, \
+from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, Float, JSON, func, \
     CheckConstraint, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -41,7 +41,9 @@ class Property(Base):
                         'prop_string IS NULL AND '
                         'prop_datetime IS NULL AND '
                         'prop_integer IS NULL AND '
-                        'prop_url IS NULL'),
+                        'prop_float IS NULL AND '
+                        'prop_url IS NULL AND '
+                        'prop_json IS NULL'),
     )
 
     id = Column(UUIDType, primary_key=True, index=True, server_default=text("uuid_generate_v4()"))
@@ -52,6 +54,7 @@ class Property(Base):
     prop_string = Column(String, nullable=True)
     prop_datetime = Column(DateTime, nullable=True)
     prop_integer = Column(BigInteger, nullable=True)
+    prop_float = Column(Float, nullable=True)
     prop_url = Column(String, nullable=True)
     prop_json = Column(JSON, nullable=True)
 

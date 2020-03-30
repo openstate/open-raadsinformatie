@@ -17,22 +17,20 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
         self.base_url = self.source_definition['base_url']
         self.rid = self.source_definition['session_id']
 
+    def get_response(self, url):
+        response = self.http_session.get(url).json()
+        if response['status'] != 200:
+            log.error(f'[{self.source_definition["key"]}] Parlaeus request error: {response["message"]}')
+        return response
+
     def run(self):
         start_date, end_date = self.date_interval()
-        resp = self.http_session.get(
-            '%s?rid=%s&fn=agenda_list&since=%s&until=%s' % (
-                self.base_url,
-                self.rid,
-                start_date.strftime("%Y%m%d"),
-                end_date.strftime("%Y%m%d"),
-            )
-        )
-        resp.raise_for_status()
+        url = f'{self.base_url}?rid={self.rid}&fn=agenda_list&since={start_date:%Y%m%d}&until={end_date:%Y%m%d}'
+        response = self.get_response(url)
 
-        json_data = resp.json()
-        for meeting in json_data.get('list', []):
+        for meeting in response.get('list', []):
             if not meeting['agid']:
-                log.error("The value for 'agid' seems to be empty, skipping")
+                log.error(f'[{self.source_definition["key"]}] The value for "agid" seems to be empty, skipping')
                 continue
 
             cached_path = 'agenda_detail/%s' % meeting['agid']
@@ -52,41 +50,29 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
 
 class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
     """
-    Extracts committees from the Parleaus API.
+    Extracts committees from the Parlaeus API.
     """
 
     def run(self):
         cached_path = 'cie_list'
+        url = f'{self.base_url}?rid={self.rid}&fn=cie_list'
+        response = self.get_response(url)
 
-        url = '%s?rid=%s&fn=cie_list' % (
-            self.base_url,
-            self.rid,
-        )
-        resp = self.http_session.get(url)
-        resp.raise_for_status()
-
-        json_data = resp.json()
-        for committee in json_data.get('list', []):
+        for committee in response.get('list', []):
             committee['url'] = url
             yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path
 
 
 class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
     """
-    Extracts persons from the Parleaus API.
+    Extracts persons from the Parlaeus API.
     """
 
     def run(self):
         cached_path = 'person_list'
+        url = f'{self.base_url}?rid={self.rid}&fn=person_list'
+        response = self.get_response(url)
 
-        url = '%s?rid=%s&fn=person_list' % (
-            self.base_url,
-            self.rid,
-        )
-        resp = self.http_session.get(url)
-        resp.raise_for_status()
-
-        json_data = resp.json()
-        for person in json_data.get('list', []):
+        for person in response.get('list', []):
             person['url'] = url
             yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path

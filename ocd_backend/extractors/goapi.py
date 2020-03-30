@@ -1,7 +1,6 @@
+import json
 from datetime import datetime
-from urlparse import urljoin
-
-import simplejson as json
+from urllib.parse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
@@ -28,7 +27,7 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
             self.source_definition['base_url'], self.api_version,)
 
     def _request(self, path):
-        log.debug('Now retrieving: %s' % (urljoin(self.base_url, path),))
+        log.debug(f'Now retrieving: {urljoin(self.base_url, path)}')
         resp = self.http_session.get(
             urljoin(self.base_url, path), verify=False)
 
@@ -69,7 +68,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
                   'gemeenteoplossingen/' + cached_path
             committee_count += 1
 
-        log.info("[%s] Extracted total of %d GO API committees." % (self.source_definition['key'], committee_count))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} GO API committees.')
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -101,8 +100,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                       'gemeenteoplossingen/' + cached_path
                 meeting_count += 1
 
-            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['key'], start_date, end_date,))
-        log.info("[%s] Extracted total of %d GO API meetings." % (self.source_definition['key'], meeting_count))
+            log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API meetings.')
 
 
 # class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor):
@@ -143,7 +142,7 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
     def run(self):
         meeting_count = 0
         for start_date, end_date in self.interval_generator():
-            url = u'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
+            url = 'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
                 start_date.isoformat(),
                 end_date.isoformat()
             )
@@ -160,5 +159,5 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
                       'gemeenteoplossingen/' + cached_path
                 meeting_count += 1
 
-            log.debug("[%s] Now processing documents from %s to %s" % (self.source_definition['key'], start_date, end_date,))
-        log.info("[%s] Extracted total of %d GO API documents." % (self.source_definition['key'], meeting_count))
+            log.debug(f'[{self.source_definition["key"]}] Now processing documents from {start_date} to {end_date}')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API documents.')

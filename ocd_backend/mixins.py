@@ -1,7 +1,7 @@
 from ocd_backend.utils.misc import load_object
 
 
-class OCDBackendTaskMixin(object):
+class OCDBackendTaskMixin:
     """
     This Mixin provides a cleanup method that is called from the classes that
     inherit from it: this way, we can provide cleanup behaviour that is either

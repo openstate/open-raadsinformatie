@@ -1,4 +1,5 @@
-import simplejson as json
+import json
+
 from lxml import etree
 
 from ocd_backend.app import celery_app

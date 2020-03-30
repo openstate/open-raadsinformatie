@@ -5,6 +5,7 @@ _defaults: &source_defaults
   wait_until_finished: false
   es_prefix: osi
   source_type: "province"
+  supplier: "notubiz"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -17,28 +18,24 @@ _entities: &entities
   - &municipality
     <<: *entity_defaults
     entity: municipality
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
     transformer: ocd_backend.transformers.allmanak_organization.municipality_organization_item
 
   - &committees
     <<: *entity_defaults
     entity: committees
-    doc_type: organizations
     extractor: ocd_backend.extractors.notubiz.NotubizCommitteesExtractor
     transformer: ocd_backend.transformers.notubiz_committee.committee_item
 
   - &organizations
     <<: *entity_defaults
     entity: organizations
-    doc_type: organizations
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.allmanak_organization.party_item
 
   - &persons
     <<: *entity_defaults
     entity: persons
-    doc_type: persons
     extractor: ocd_backend.extractors.allmanak.AllmanakPersonsExtractor
     transformer: ocd_backend.transformers.allmanak_person.allmanak_person_item
 
@@ -48,6 +45,15 @@ _entities: &entities
     doc_type: events
     extractor: ocd_backend.extractors.notubiz.NotubizMeetingsExtractor
     transformer: ocd_backend.transformers.notubiz_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    doc_type: events
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
@@ -64,4 +70,10 @@ osi.notubiz:
     key: overijssel
     allmanak_id: 16771
     notubiz_organization_id: 1750
+    <<: *notubiz
+
+  flevoland:
+    key: flevoland
+    allmanak_id: 14866
+    notubiz_organization_id: 2163
     <<: *notubiz

@@ -1,13 +1,12 @@
+import json
 from time import sleep
-
-import simplejson as json
+from urllib import parse
 
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.misc import strip_scheme
-import urllib
 
 log = get_source_logger('extractor')
 
@@ -34,7 +33,7 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
 
     def _url(self, action, params):
         params['action'] = action
-        return '{}?{}'.format(self.base_url, urllib.urlencode(params))
+        return '{}?{}'.format(self.base_url, parse.urlencode(params))
 
     def _fetch(self, url):
         auth = {
@@ -42,7 +41,7 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
             'key': self.key,
             'hash': self.hash,
         }
-        return self.http_session.get('{}&{}'.format(url, urllib.urlencode(auth)), verify=False)
+        return self.http_session.get('{}&{}'.format(url, parse.urlencode(auth)), verify=False)
 
 
 class GreenValleyExtractor(GreenValleyBaseExtractor):
@@ -65,24 +64,21 @@ class GreenValleyExtractor(GreenValleyBaseExtractor):
 
         while fetch_next_page:
             sleep(self.source_definition.get('greenvalley_extract_timeout', 5))
-            log.info("Fetching items, starting from %s ..." % (params['start'],))
+            log.info(f'[{self.source_definition["key"]}] Fetching items, starting from {params["start"]}')
             url = self._url('GetModelsByQuery', params)
             cached_path = strip_scheme(url)
             results = self._fetch(url).json()
-            log.info("Got %s items ..." % len(results['objects']))
+            log.info(f'[{self.source_definition["key"]}] Got {len(results["objects"])} items')
             for result in results['objects']:
-                log.info("Object %s/%s has %s attachments and %s sets" % (
-                    result[u'default'][u'objecttype'],
-                    result[u'default'][u'objectname'],
-                    len(result.get(u'attachmentlist', [])),
-                    len(result.get(u'SETS', []))
-                ))
+                log.info(f'[{self.source_definition["key"]}] Object {result["default"]["objecttype"]}/'
+                         f'{result["default"]["objectname"]} has {len(result.get("attachmentlist", []))} '
+                         f'attachments and {len(result.get("SETS", []))} sets')
 
-                for k, v in result.get(u'SETS', {}).iteritems():
-                    v[u'parent_objectid'] = result[u'default'][u'objectid']
-                    v[u'bis_vergaderdatum'] = result[u'default'][u'bis_vergaderdatum']
+                for k, v in result.get('SETS', {}).items():
+                    v['parent_objectid'] = result['default']['objectid']
+                    v['bis_vergaderdatum'] = result['default']['bis_vergaderdatum']
 
-                    result2 = {u'default': v}
+                    result2 = {'default': v}
                     # identifier = result2['default']['objectid']
                     yield 'application/json', json.dumps(result2), None, 'greenvalley/' + cached_path
 
@@ -124,13 +120,11 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             if self.start_date is None:
                 self.start_date = cur_start
             self.end_date = cur_end
-        log.debug("[%s] Now processing meetings from %s to %s" % (
-            self.source_definition['key'], self.start_date, self.end_date,))
+        log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {self.start_date} to {self.end_date}')
 
         total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
             yield item[0], item[1], item[2], item[3]
             total_meetings += 1
 
-        log.info("[%s] Extracting total of %d GreenValley meetings" % (
-            self.source_definition['key'], total_meetings))
+        log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings')

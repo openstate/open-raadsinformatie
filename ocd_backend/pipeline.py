@@ -12,12 +12,12 @@ from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import load_object, propagate_chain_get
 
-logger = get_source_logger('pipeline')
+log = get_source_logger('pipeline')
 
 
 @celery_app.task(autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def setup_pipeline(source_definition):
-    logger.debug('[%s] Starting pipeline for source: %s' % (source_definition['key'], source_definition.get('id')))
+    log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")}')
 
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
@@ -41,7 +41,7 @@ def setup_pipeline(source_definition):
         raise ConfigurationError('Index with alias "{index_alias}" does '
                                  'not exist'.format(index_alias=index_alias))
 
-    current_index_name = current_index_aliases.keys()[0]
+    current_index_name = list(current_index_aliases)[0]
     # Check if the source specifies that any update should be added to
     # the current index instead of a new one
     if source_definition.get('keep_index_on_update'):
@@ -60,7 +60,7 @@ def setup_pipeline(source_definition):
         'index_alias': index_alias,
     }
 
-    logger.debug('[%s] Starting run with identifier %s' % (source_definition['key'], params['run_identifier']))
+    log.debug(f'[{source_definition["key"]}] Starting run with identifier {params["run_identifier"]}')
 
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
@@ -147,18 +147,11 @@ def setup_pipeline(source_definition):
 
                 result = chain(step_chain).delay()
         except KeyboardInterrupt:
-            logger.warning('KeyboardInterrupt received. Stopping the program.')
+            log.warning('KeyboardInterrupt received. Stopping the program.')
             exit()
-        except Exception, e:
-            logger.error('[{site_name}] Pipeline has failed. Setting status of '
-                         'run identifier "{run_identifier}" to "error":\n{message}'
-                         .format(index=params['new_index_name'],
-                                 run_identifier=params['run_identifier'],
-                                 extractor=pipeline_extractors[pipeline['id']],
-                                 message=e,
-                                 site_name=source_definition['key'],
-                                 )
-                         )
+        except Exception as e:
+            log.error(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
+                      f'{params["run_identifier"]} to "error":\n{str(e)}')
 
             celery_app.backend.set(params['run_identifier'], 'error')
 
@@ -166,9 +159,9 @@ def setup_pipeline(source_definition):
             raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
-    logger.info("[%s] Finished run with identifier %s" % (source_definition['key'], params['run_identifier']))
+    log.info(f'[{source_definition["key"]}] Finished run with identifier {params["run_identifier"]}')
 
     if result and source_definition.get('wait_until_finished'):
         # Wait for last task chain to end before continuing
-        logger.info("[%s] Waiting for last chain to finish" % source_definition['key'])
+        log.info(f'[{source_definition["key"]}] Waiting for last chain to finish')
         propagate_chain_get(result)

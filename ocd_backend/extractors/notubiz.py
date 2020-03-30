@@ -1,4 +1,5 @@
-import simplejson as json
+import json
+from urllib import parse
 
 from requests.exceptions import HTTPError, RetryError
 
@@ -35,8 +36,8 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
 
         try:
             response.raise_for_status()
-        except HTTPError, e:
-            log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
+        except HTTPError as e:
+            log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
             return
 
         # Create a dictionary of Notubiz organizations. Some child classes need information
@@ -75,7 +76,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
                   'notubiz/' + cached_path,
             committee_count += 1
 
-        log.info("[%s] Extracted total of %d notubiz committees." % (self.source_definition['key'], committee_count))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} notubiz committees.')
 
 
 class NotubizMeetingsExtractor(NotubizBaseExtractor):
@@ -89,16 +90,11 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
 
         start_date, end_date = self.date_interval()
 
-        log.debug("Now processing first page meeting(items) from %s to %s" % (
-            start_date, end_date,))
+        log.debug(f'[{self.source_definition["key"]}] Now processing first page meeting(items) from {start_date} to {end_date}')
 
         page = 1
         while True:
-            try:
-                response = self.http_session.get(
-                    "%s/events?organisation_id=%i&date_from=%s&date_to=%s"
-                    "&page=%i&%s" %
-                    (
+            url = "%s/events?organisation_id=%i&date_from=%s&date_to=%s&page=%i&%s" % (
                         self.base_url,
                         self.source_definition['notubiz_organization_id'],
                         start_date.strftime("%Y-%m-%d %H:%M:%S"),
@@ -106,15 +102,16 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         page,
                         self.default_query_params,
                     )
-                )
-            except (HTTPError, RetryError), e:
-                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
+            try:
+                response = self.http_session.get(url)
+            except (HTTPError, RetryError) as e:
+                log.warning(f'[{self.source_definition["key"]}] {str(e)}: {parse.quote(url)}')
                 break
 
             try:
                 response.raise_for_status()
-            except HTTPError, e:
-                log.warning('[%s] %s: %s' % (self.source_definition['key'], e, response.request.url))
+            except HTTPError as e:
+                log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
                 break
 
             event_json = response.json()
@@ -123,7 +120,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 break
 
             if page > 1:
-                log.debug("[%s] Processing events page %i" % (self.source_definition['key'], page))
+                log.debug(f'[{self.source_definition["key"]}] Processing events page {page}')
 
             for item in event_json[self.source_definition['doc_type']]:
                 # Skip meetings that are not public
@@ -140,21 +137,21 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 try:
                     resource = self.fetch(meeting_url + self.application_token, cached_path, item['last_modified'])
                     meeting_json = json.load(resource.media_file)['meeting']
-                except ItemAlreadyProcessed, e:
+                except ItemAlreadyProcessed as e:
                     # This should no longer be triggered after the change to GCS caching
                     meetings_skipped += 1
-                    log.debug("[%s] %s" % (self.source_definition['key'], e))
+                    log.debug(f'[{self.source_definition["key"]}] {str(e)}')
                     continue
-                except HTTPError, e:
+                except HTTPError as e:
                     error_json = e.response.json()
                     if error_json.get('message') == 'No rights to see this meeting':
-                        log.info('[%s] no rights to view: %s' % (self.source_definition['key'], meeting_url))
+                        log.info(f'[{self.source_definition["key"]}] No rights to view: {meeting_url}')
                         break
-                    # Reraise all other HTTPError
+                    # Reraise all other HTTP errors
                     raise
                 except Exception as e:
                     meetings_skipped += 1
-                    log.warning('[%s] %s: %s' % (self.source_definition['key'], e, meeting_url))
+                    log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
                     continue
 
                 organization = self.organizations[self.source_definition['notubiz_organization_id']]
@@ -176,11 +173,11 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             page += 1
 
             if not event_json['pagination']['has_more_pages']:
-                log.debug("[%s] Done processing all %d pages!" % (self.source_definition['key'], page))
+                log.debug(f'[{self.source_definition["key"]}] Done processing all {page} pages')
                 break
 
-        log.info("[%s] Extracted total of %d notubiz meeting(items). Also skipped %d "
-                 "meetings in total." % (self.source_definition['key'], meeting_count, meetings_skipped,))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} notubiz meeting(items). '
+                 f'Also skipped {meetings_skipped} meetings')
 
 
 # class NotubizMeetingItemExtractor(NotubizBaseExtractor):

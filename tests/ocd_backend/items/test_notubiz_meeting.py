@@ -1,13 +1,12 @@
 # TODO: Rewrite for Postgres
 
-# import simplejson as json
 # import os
 # 
 # from ocd_backend import celery_app
 # from ocd_backend.items.notubiz_meeting import NotubizMeetingItem
 # from ocd_backend.models import Meeting
 # from ocd_backend.models.serializers import JsonLDSerializer, JsonSerializer
-# from . import ItemTestCase
+# from tests.ocd_backend.items import ItemTestCase
 #
 #
 # class NotubizMeetingTestCase(ItemTestCase):

@@ -26,7 +26,7 @@ def get_serializer_class(format=None):
     return serializer
 
 
-class BaseSerializer(object):
+class BaseSerializer:
     """The base serializer where all serializer should inherit from."""
 
     def __init__(self, uri_format_type='term', loader_class=None):
@@ -169,10 +169,6 @@ class PostgresSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
                 props.append(self.ori_uri(item))
 
             if len(props) == 1:
@@ -263,6 +259,9 @@ class RdfSerializer(BaseSerializer):
         elif type(prop) == IntegerProperty:
             return Literal(serialized, datatype=XSD.integer)
 
+        elif type(prop) == FloatProperty:
+            return Literal(serialized, datatype=XSD.float)
+
         elif type(prop) == DateTimeProperty:
             return Literal(serialized, datatype=XSD.dateTime)
 
@@ -273,9 +272,6 @@ class RdfSerializer(BaseSerializer):
             props = list()
             o = BNode()
             for _, item in iterate(value):
-                from .model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
                 self.deflate(item, props=True, rels=True)
                 props.append(URIRef('{}{}'.format(Ori.uri,
                                                   item.get_ori_identifier())))
@@ -314,10 +310,6 @@ class JsonSerializer(BaseSerializer):
         if type(prop) == Relation or type(prop) == OrderedRelation:
             props = list()
             for _, item in iterate(value):
-                from .model import Relationship
-                if isinstance(item, Relationship):
-                    item = item.model
-
                 props.append(self.ori_uri(item))
 
             if len(props) == 1:

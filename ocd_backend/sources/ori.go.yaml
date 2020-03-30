@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   source_type: "municipality"
+  supplier: "gemeenteoplossingen"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -42,6 +43,14 @@ _entities: &entities
     entity: meetings
     extractor: ocd_backend.extractors.goapi.GemeenteOplossingenMeetingsExtractor
     transformer: ocd_backend.transformers.goapi_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
@@ -147,4 +156,13 @@ ori.go:
     base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
     allmanak_id: 34861
     cbs_id: GM1904
+    <<: *go
+
+  # Added on 14-02-2020
+  west_betuwe:
+    key: west_betuwe
+    source_name: "West Betuwe"
+    base_url: "https://gemeenteraad.westbetuwe.nl/api/"
+    allmanak_id: 27465448
+    cbs_id: GM1960
     <<: *go

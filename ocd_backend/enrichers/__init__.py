@@ -35,8 +35,7 @@ class BaseEnricher(celery_app.Task):
                     self.enrich_item(model)
                 except SkipEnrichment as e:
                     bugsnag.notify(e, severity="info")
-                    log.info('Skipping %s, reason: %s'
-                             % (self.__class__.__name__, e.message))
+                    log.info(f'[{self.source_definition["key"]}] Skipping {self.__class__.__name__}, reason: {e}')
                 except IOError as e:
                     # In the case of an IOError, disk space or some other
                     # serious problem might occur.
@@ -45,7 +44,7 @@ class BaseEnricher(celery_app.Task):
                     raise
                 except Exception as e:
                     bugsnag.notify(e, severity="warning")
-                    log.warning('Unexpected error: %s, reason: %s' % (self.__class__.__name__, e))
+                    log.warning(f'[{self.source_definition["key"]}] Unexpected error: {self.__class__.__name__}, reason: {e}')
                     raise
 
         return args

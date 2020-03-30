@@ -4,6 +4,7 @@ _defaults: &source_defaults
   keep_index_on_update: true
   wait_until_finished: false
   source_type: "municipality"
+  supplier: "ibabs"
 
 _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
@@ -42,6 +43,14 @@ _entities: &entities
     entity: meetings
     extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
     transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reprocess_meetings
+    <<: *entity_defaults
+    entity: reprocess_meetings
+    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
+    transformer: ocd_backend.transformers.database.database_item
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
@@ -142,6 +151,7 @@ ori.ibabs:
     - *committees
     - *persons
     - *meetings
+    - *reprocess_meetings
 
     - entity: reports
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
@@ -151,31 +161,6 @@ ori.ibabs:
       include: ".*"
       exclude: (moties|amendementen)
       pdf_max_pages: 0
-      fields:
-        Moties:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Amendementen:
-          name: onderwerp
-          description: status
-          start_date: datum
-        Commissiebrieven C&F:
-          name: onderwerp
-          description: status
-          start_date: datuminvoer
-        Commissiebrieven M&S:
-          name: onderwerp
-          description: onderwerp
-          start_date: datuminvoer
-        Commissiebrieven S&R:
-          name: onderwerp
-          description: onderwerp
-          start_date: datuminvoer
-        Schriftelijke vragen:
-          name: onderwerp
-          description: indieners
-          start_date: datum
       <<: *entity_defaults
 
 #    - entity: motions
@@ -546,6 +531,7 @@ ori.ibabs:
     - *committees
     - *persons
     - *meetings
+    - *reprocess_meetings
     - *reports
     # - *videotulen
     <<: *ibabs
@@ -611,4 +597,12 @@ ori.ibabs:
     ibabs_sitename: Mook en Middelaar
     allmanak_id: 21431
     cbs_id: GM0944
+    <<: *ibabs
+
+  # Added on 18-02-2020
+  leeuwarden:
+    key: leeuwarden
+    ibabs_sitename: Leeuwarden
+    allmanak_id: 32728
+    cbs_id: GM0080
     <<: *ibabs

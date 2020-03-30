@@ -1,5 +1,5 @@
-import simplejson as json
-from urlparse import urljoin
+import json
+from urllib.parse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
@@ -26,9 +26,8 @@ class AllmanakBaseExtractor(BaseExtractor, HttpRequestMixin):
             static_json = json.loads(response.content)
             return len(static_json), static_json
         else:
-            log.error('[%s] Failed to extract from Allmanak path %s' % (
-                self.source_definition['key'], urljoin(self.base_url, path))
-            )
+            log.error(f'[{self.source_definition["key"]}] Failed to extract from Allmanak path '
+                      f'{urljoin(self.base_url, path)}')
             return 0, []
 
 
@@ -43,16 +42,13 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if total != 1:
-            log.error('[%s] Number of extracted municipalities for %s is not equal to 1' % (
-                self.source_definition['key'],
-                self.source_definition['key'])
-            )
+            log.error(f'[{self.source_definition["key"]}] Number of extracted municipalities is not equal to 1')
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
                   None,
-            log.info("[%s] Extracted 1 Allmanak municipality." % self.source_definition['key'])
+            log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak municipality.')
 
 
 class AllmanakProvinceExtractor(AllmanakBaseExtractor):
@@ -66,16 +62,13 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if total != 1:
-            log.error('[%s] Number of extracted provinces for %s is not equal to 1' % (
-                self.source_definition['key'],
-                self.source_definition['key'])
-            )
+            log.error(f'[{self.source_definition["key"]}] Number of extracted provinces is not equal to 1')
         else:
             yield 'application/json', \
                   json.dumps(static_json[0]), \
                   path, \
                   None,
-            log.info("[%s] Extracted 1 Allmanak province." % self.source_definition['key'])
+            log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak province.')
 
 
 class AllmanakPartiesExtractor(AllmanakBaseExtractor):
@@ -96,9 +89,9 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
                       path, \
                       None
                 total_parties += 1
-            log.info("[%s] Extracted %d Allmanak parties." % (self.source_definition['key'], total_parties))
+            log.info(f'[{self.source_definition["key"]}] Extracted {total_parties} Allmanak parties.')
         else:
-            log.warning('[%s] Allmanak does not list any parties for this source.' % self.source_definition['key'])
+            log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any parties for this source.')
 
 
 class AllmanakPersonsExtractor(AllmanakBaseExtractor):
@@ -123,6 +116,6 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
                               path, \
                               None
                         total_persons += 1
-            log.info("[%s] Extracted %d Allmanak persons." % (self.source_definition['key'], total_persons))
+            log.info(f'[{self.source_definition["key"]}] Extracted {total_persons} Allmanak persons.')
         else:
-            log.warning('[%s] Allmanak does not list any persons for this source.' % self.source_definition['key'])
+            log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any persons for this source.')

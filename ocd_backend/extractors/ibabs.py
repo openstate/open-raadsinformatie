@@ -1,7 +1,7 @@
 import base64
 import re
+import json
 
-import simplejson as json
 from zeep.client import Client, Settings
 from zeep.exceptions import Error
 from zeep.helpers import serialize_object
@@ -9,8 +9,6 @@ from zeep.helpers import serialize_object
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.api import FrontendAPIMixin
-from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, list_entry_response_to_dict, votes_to_dict)
 from ocd_backend.utils.misc import json_encoder
@@ -47,7 +45,7 @@ class IBabsBaseExtractor(BaseExtractor):
                                  port_name='BasicHttpsBinding_IPublic',
                                  settings=soap_settings)
         except Error as e:
-            log.error('Unable to instantiate iBabs client: ' + str(e))
+            log.error(f'Unable to instantiate iBabs client: {str(e)}')
 
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
@@ -60,8 +58,7 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
     def run(self):
         committee_designator = self.source_definition.get(
             'committee_designator', 'commissie')
-        log.debug("[%s] Getting ibabs committees with designator: %s" %
-                  (self.source_definition['index_name'], committee_designator))
+        log.debug(f'[{self.source_definition["key"]}] Getting ibabs committees with designator: {committee_designator}')
         meeting_types = self.client.service.GetMeetingtypes(
             self.source_definition['ibabs_sitename']
         )
@@ -78,10 +75,9 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                           None, \
                           'ibabs/' + cached_path
                     total_count += 1
-            log.info("[%s] Extracted total of %d ibabs committees." % (self.source_definition['index_name'], total_count))
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees.')
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], meeting_types.Message))
-
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
 class IbabsPersonsExtractor(IBabsBaseExtractor):
     """
@@ -115,12 +111,12 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
                 total_count += 1
 
-            log.info("[%s] Extracted total of %s ibabs persons" % (self.source_definition['index_name'], total_count))
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs persons')
 
         elif users.Message == 'No users found!':
-            log.info('[%s] No ibabs persons were found' % self.source_definition['index_name'])
+            log.info(f'[{self.source_definition["key"]}] No ibabs persons were found')
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], users.Message))
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {users.Message}')
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -145,14 +141,13 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 meeting_types[o.Id] = o.Description
             return meeting_types
         else:
-            log.warning('[%s] SOAP service error: %s' % (self.source_definition['index_name'], meeting_types.Message))
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
     def run(self):
         meeting_count = 0
         meetings_skipped = 0
         for start_date, end_date in self.interval_generator():
-            log.debug("[%s] Now processing meetings from %s to %s" % (
-                self.source_definition['key'], start_date, end_date,))
+            log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
             start_date = start_date.strftime('%Y-%m-%dT%H:%M:%S')
             end_date = end_date.strftime('%Y-%m-%dT%H:%M:%S')
@@ -191,8 +186,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
                     meeting_count += 1
 
-        log.info("[%s] Extracted total of %d ibabs meetings. Also skipped %d meetings in total." %
-                 (self.source_definition['key'], meeting_count, meetings_skipped,))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} meetings.')
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
@@ -205,7 +199,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
 
         if not lists or len(lists) < 1:
-            log.info("[%s] No ibabs reports defined" % (self.source_definition['ibabs_sitename'],))
+            log.info(f'[{self.source_definition["key"]}] No ibabs reports defined')
             return
 
         selected_lists = []
@@ -217,6 +211,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             if re.search(exclude_regex, l.Value.lower()):
                 continue
             selected_lists.append(l)
+
+        start_date, end_date = self.date_interval()
 
         total_yield_count = 0
         for l in selected_lists:
@@ -242,8 +238,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
-                    log.warning("[%s] Could not parse page %s correctly!: %s" % (
-                        self.source_definition['key'], active_page_nr, e.message))
+                    log.warning(f'[{self.source_definition["key"]}] Could not parse page {active_page_nr} correctly!: {str(e)}')
                     result = None
                 result_count = 0
 
@@ -266,7 +261,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     results = None
 
                 if results is None:
-                    log.debug("[%s] No correct document element for this page!" % self.source_definition['key'])
+                    log.debug(f'[{self.source_definition["key"]}] No correct document element for this page!')
                     total_count += per_page
                     continue
 
@@ -280,18 +275,36 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     )
                     item['_Extra'] = list_entry_response_to_dict(extra_info_item)
 
+                    report_dict = serialize_object(item, dict)
+
+                    date_field = None
+                    try:
+                        date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
+                    except StopIteration:
+                        log.info(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: '
+                                 f'{json.dumps(report_dict, default=str)}')
+
+                    try:
+                        report_dict['datum'] = report_dict[date_field][0]
+                    except (IndexError, TypeError):
+                        report_dict['datum'] = report_dict[date_field]
+                    except KeyError:
+                        report_dict['datum'] = None
+
+                    if report_dict['datum'] and not start_date < report_dict['datum'].replace(tzinfo=None) < end_date:
+                        # Skip report if date is outside date interval
+                        continue
+
                     # identifier = item['id'][0]
-                    yield 'application/json', json_encoder.encode(serialize_object(item, dict)), None, 'ibabs/' + cached_path
+                    yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path
                     yield_count += 1
                     total_yield_count += 1
                     result_count += 1
                 total_count += result_count
                 active_page_nr += 1
-            log.debug("[%s] Report: %s -- total %s, yielded %s" % (
-                self.source_definition['key'], l.Value, total_count, yield_count))
+            log.debug(f'[{self.source_definition["key"]}] Report: {l.Value} -- total {total_count}, yielded {total_yield_count}')
 
-        log.info("[%s] Extracted total of %s ibabs reports yielded" % (
-            self.source_definition['key'], total_yield_count))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {total_yield_count} ibabs reports within {start_date:%Y-%m-%d} and {end_date:%Y-%m-%d}')
 
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
@@ -411,131 +424,132 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
             for result in processed:
                 yield 'application/json', json.dumps(result), None, None
                 passed_vote_count += 1
-            log.debug("[%s] Now processing meetings from %s to %s" % (self.source_definition['index_name'], start_date, end_date,))
+            log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
-        log.info("[%s] Extracted total of %d ibabs meetings and passed %s out of %d voting rounds." % (
-            self.source_definition['index_name'], meeting_count, passed_vote_count, vote_count,))
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings and passed '
+                 f'{passed_vote_count} out of {vote_count} voting rounds.')
 
 
-class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpRequestMixin, FrontendAPIMixin):
-    """
-    Gets a voting record where the number of voters is complete ...
-    """
-
-    def valid_meeting(self, meeting):
-        if meeting['votes'] is not None:
-            try:
-                return (
-                        len(meeting['votes']) ==
-                        int(self.source_definition['council_members_count']))
-            except ValueError:
-                pass
-        return False
-
-    def process_meeting(self, meeting):
-        meeting_count = getattr(self, 'meeting_count', 0)
-        max_meetings = self.source_definition.get('max_processed_meetings', 1)
-        entity_type = self.source_definition.get(
-            'vote_entity', 'organizations')
-        result = None
-        if (max_meetings <= 0) or (meeting_count < max_meetings):
-            setattr(self, 'meeting_count', meeting_count + 1)
-            log.debug("[%s] Processing meeting %d" % (self.source_definition['key'], meeting_count,))
-            council = self.api_request(
-                self.source_definition['index_name'], 'organizations',
-                classification=u'Council')
-            groups = {
-                v['GroupId']: {
-                    'id': v['GroupId'],
-                    'classification': 'Party',
-                    'name': v['GroupName'],
-                    'identifiers': [
-                        {
-                            'id': u'id-g-%s' % (v['GroupId'],),
-                            'identifier': v['GroupId'],
-                            'scheme': u'iBabs'
-                        }
-                    ],
-                    'meta': {
-                        '_type': 'organizations'
-                    }
-                } for v in meeting['votes']}
-            if council is None:
-                groups.update(
-                    {u'council': {
-                        'id': 'council',
-                        'classification': 'Council',
-                        'name': u'Gemeenteraad',
-                        'identifiers': [
-                        ],
-                        'meta': {
-                            '_type': 'organizations'
-                        }
-                    }})
-            else:
-                groups[u'council'] = council[0]
-            persons = {
-                v['UserId']: {
-                    'id': v['UserId'],
-                    'name': v['UserName'],
-                    'identifiers': [
-                        {
-                            'id': u'id-p-%s' % (v['UserId'],),
-                            'identifier': v['UserId'],
-                            'scheme': u'iBabs'
-                        }
-                    ],
-                    'meta': {
-                        '_type': 'persons'
-                    }
-                } for v in meeting['votes']}
-            if entity_type == 'organizations':
-                # process parties
-                unique_groups = list(set(groups.keys()))
-                for g in unique_groups:
-                    # log.debug(meeting['votes'])
-                    groups[g]['memberships'] = [
-                        {
-                            'person_id': v['UserId'],
-                            'person': persons[v['UserId']],
-                            'organization_id': g,
-                            'organization': {
-                                'id': g,
-                                'classification': 'Party',
-                                'name': groups[g]['name'],
-                                'identifiers': [
-                                    {
-                                        'id': u'id-g-%s' % (g,),
-                                        'identifier': g,
-                                        'scheme': u'iBabs'
-                                    }
-                                ]
-                            }
-                        }
-                        for v in meeting['votes'] if ((v['GroupId'] == g) or (g == u'council'))]
-                result = groups.values()
-            elif entity_type == 'persons':
-                # process persons
-                for v in meeting['votes']:
-                    p = v['UserId']
-                    persons[p]['memberships'] = [
-                        {
-                            'person_id': p,
-                            'person': {
-                                'id': p,
-                                'name': persons[p]['name'],
-                                'identifiers': [
-                                    {
-                                        'id': u'id-p-%s' % (p,),
-                                        'identifier': p,
-                                        'scheme': u'iBabs'
-                                    }
-                                ]
-                            },
-                            'organization_id': v['GroupId'],
-                            'organization': groups[v['GroupId']]
-                        }]
-                result = persons.values()
-            return result
-        else:
-            return []
+# Needs to be re-written without using FrontendAPIMixin which has been removed
+# class IBabsMostRecentCompleteCouncilExtractor(IBabsVotesMeetingsExtractor, HttpRequestMixin, FrontendAPIMixin):
+#     """
+#     Gets a voting record where the number of voters is complete ...
+#     """
+#
+#     def valid_meeting(self, meeting):
+#         if meeting['votes'] is not None:
+#             try:
+#                 return (
+#                         len(meeting['votes']) ==
+#                         int(self.source_definition['council_members_count']))
+#             except ValueError:
+#                 pass
+#         return False
+#
+#     def process_meeting(self, meeting):
+#         meeting_count = getattr(self, 'meeting_count', 0)
+#         max_meetings = self.source_definition.get('max_processed_meetings', 1)
+#         entity_type = self.source_definition.get(
+#             'vote_entity', 'organizations')
+#         result = None
+#         if (max_meetings <= 0) or (meeting_count < max_meetings):
+#             setattr(self, 'meeting_count', meeting_count + 1)
+#             log.debug("[%s] Processing meeting %d" % (self.source_definition['key'], meeting_count,))
+#             council = self.api_request(
+#                 self.source_definition['index_name'], 'organizations',
+#                 classification=u'Council')
+#             groups = {
+#                 v['GroupId']: {
+#                     'id': v['GroupId'],
+#                     'classification': 'Party',
+#                     'name': v['GroupName'],
+#                     'identifiers': [
+#                         {
+#                             'id': u'id-g-%s' % (v['GroupId'],),
+#                             'identifier': v['GroupId'],
+#                             'scheme': u'iBabs'
+#                         }
+#                     ],
+#                     'meta': {
+#                         '_type': 'organizations'
+#                     }
+#                 } for v in meeting['votes']}
+#             if council is None:
+#                 groups.update(
+#                     {u'council': {
+#                         'id': 'council',
+#                         'classification': 'Council',
+#                         'name': u'Gemeenteraad',
+#                         'identifiers': [
+#                         ],
+#                         'meta': {
+#                             '_type': 'organizations'
+#                         }
+#                     }})
+#             else:
+#                 groups[u'council'] = council[0]
+#             persons = {
+#                 v['UserId']: {
+#                     'id': v['UserId'],
+#                     'name': v['UserName'],
+#                     'identifiers': [
+#                         {
+#                             'id': u'id-p-%s' % (v['UserId'],),
+#                             'identifier': v['UserId'],
+#                             'scheme': u'iBabs'
+#                         }
+#                     ],
+#                     'meta': {
+#                         '_type': 'persons'
+#                     }
+#                 } for v in meeting['votes']}
+#             if entity_type == 'organizations':
+#                 # process parties
+#                 unique_groups = set(groups.keys())
+#                 for g in unique_groups:
+#                     # log.debug(meeting['votes'])
+#                     groups[g]['memberships'] = [
+#                         {
+#                             'person_id': v['UserId'],
+#                             'person': persons[v['UserId']],
+#                             'organization_id': g,
+#                             'organization': {
+#                                 'id': g,
+#                                 'classification': 'Party',
+#                                 'name': groups[g]['name'],
+#                                 'identifiers': [
+#                                     {
+#                                         'id': u'id-g-%s' % (g,),
+#                                         'identifier': g,
+#                                         'scheme': u'iBabs'
+#                                     }
+#                                 ]
+#                             }
+#                         }
+#                         for v in meeting['votes'] if ((v['GroupId'] == g) or (g == u'council'))]
+#                 result = groups.values()
+#             elif entity_type == 'persons':
+#                 # process persons
+#                 for v in meeting['votes']:
+#                     p = v['UserId']
+#                     persons[p]['memberships'] = [
+#                         {
+#                             'person_id': p,
+#                             'person': {
+#                                 'id': p,
+#                                 'name': persons[p]['name'],
+#                                 'identifiers': [
+#                                     {
+#                                         'id': u'id-p-%s' % (p,),
+#                                         'identifier': p,
+#                                         'scheme': u'iBabs'
+#                                     }
+#                                 ]
+#                             },
+#                             'organization_id': v['GroupId'],
+#                             'organization': groups[v['GroupId']]
+#                         }]
+#                 result = persons.values()
+#             return result
+#         else:
+#             return []

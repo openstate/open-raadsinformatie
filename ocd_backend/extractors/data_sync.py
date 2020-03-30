@@ -23,7 +23,7 @@ class DataSyncBaseExtractor(BaseExtractor):
         """
         try:
             source = [s for s in self.sources if s['id'] == source_name][0]
-        except IndexError as e:
+        except IndexError:
             source = None
 
         if source is None:
@@ -53,7 +53,7 @@ class DataSyncBaseExtractor(BaseExtractor):
         for x in self.extractors:
             try:
                 data_for_dataset = [y for y in x.run()]
-            except TypeError as e:
+            except TypeError:
                 data_for_dataset = []
             datasets.append({
                 'id': x.source_definition['id'],
@@ -66,7 +66,7 @@ class DataSyncBaseExtractor(BaseExtractor):
         # log.debug(matched_data)
         num_counted = 0
         num_matched = 0
-        for item_id, data_items in matched_data.iteritems():
+        for item_id, data_items in matched_data.items():
             num_counted += 1
             if len(data_items.keys()) > 1:
                 # log.debug((data_items)
