@@ -166,3 +166,12 @@ ori.go:
     allmanak_id: 27465448
     cbs_id: GM1960
     <<: *go
+
+  # Added on 09-04-2020
+  midden-groningen:
+    key: midden-groningen
+    source_name: "Midden-Groningen"
+    base_url: "https://bestuur.midden-groningen.nl/api/"
+    allmanak_id: 23087145
+    cbs_id: GM1952
+    <<: *go
