@@ -101,7 +101,7 @@ ori.go:
   oude_ijsselstreek:
     key: oude_ijsselstreek
     source_name: "Oude IJsselstreek"
-    base_url: "https://raad.oude-ijsselstreek.nl/api/"
+    base_url: "https://raad.oude-ijsselstreek.nl/api"
     allmanak_id: 36780
     cbs_id: GM1509
     <<: *go
@@ -144,7 +144,7 @@ ori.go:
   # Added on 28-03-2019
   bloemendaal:
     key: bloemendaal
-    base_url: "https://gemeenteraad.bloemendaal.nl/api/"
+    base_url: "https://gemeenteraad.bloemendaal.nl/api"
     allmanak_id: 35480
     cbs_id: GM0377
     <<: *go
@@ -153,7 +153,7 @@ ori.go:
   stichtse_vecht:
     key: stichtse_vecht
     source_name: "Stichtse Vecht"
-    base_url: "https://raadsinformatie.stichtsevecht.nl/api/"
+    base_url: "https://raadsinformatie.stichtsevecht.nl/api"
     allmanak_id: 34861
     cbs_id: GM1904
     <<: *go
@@ -162,7 +162,7 @@ ori.go:
   west_betuwe:
     key: west_betuwe
     source_name: "West Betuwe"
-    base_url: "https://gemeenteraad.westbetuwe.nl/api/"
+    base_url: "https://gemeenteraad.westbetuwe.nl/api"
     allmanak_id: 27465448
     cbs_id: GM1960
     <<: *go
@@ -171,7 +171,7 @@ ori.go:
   midden-groningen:
     key: midden-groningen
     source_name: "Midden-Groningen"
-    base_url: "https://bestuur.midden-groningen.nl/api/"
+    base_url: "https://bestuur.midden-groningen.nl/api"
     allmanak_id: 23087145
     cbs_id: GM1952
     <<: *go
