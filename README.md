@@ -27,6 +27,8 @@ Data extraction support is available for the following source systems:
 - [GreenValley](https://www.greenvalley.nl/)
 - [Notubiz](https://notubiz.nl/)
 - [iBabs](https://www.ibabs.eu/nl/)
+- [Parlaeus](https://parlaeus.nl/)
+- [Tweede Kamer](https://opendata.tweedekamer.nl/documentatie/api-documentatie-20/)
 
 ## How to add your municipality
 
