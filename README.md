@@ -24,7 +24,7 @@ See this guide to [install the Open Raadsinformatie API](https://github.com/open
 Data extraction support is available for the following source systems:
 
 - [GO GemeenteOplossingen](https://www.gemeenteoplossingen.nl/)
-- [GreenValley](https://www.greenvalley.nl/)
+- [Visma Roxit / GreenValley](https://www.greenvalley.nl/)
 - [Notubiz](https://notubiz.nl/)
 - [iBabs](https://www.ibabs.eu/nl/)
 - [Parlaeus](https://parlaeus.nl/)
