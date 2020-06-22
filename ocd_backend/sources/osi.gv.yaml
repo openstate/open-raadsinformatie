@@ -43,14 +43,6 @@ _entities: &entities
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
-  - &reprocess_meetings
-    <<: *entity_defaults
-    entity: reprocess_meetings
-    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
-    transformer: ocd_backend.transformers.database.database_item
-    enrichers:
-      - ocd_backend.enrichers.text_enricher.text_enricher
-
   - &reports
     <<: *entity_defaults
     entity: reports
@@ -88,7 +80,6 @@ osi.gv:
     - *organizations
     - *persons
     - *meetings
-    - *reprocess_meetings
     - *reports
     - entity: meetings
       #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor

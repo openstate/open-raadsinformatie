@@ -46,14 +46,6 @@ _entities: &entities
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
-  - &reprocess_meetings
-    <<: *entity_defaults
-    entity: reprocess_meetings
-    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
-    transformer: ocd_backend.transformers.database.database_item
-    enrichers:
-      - ocd_backend.enrichers.text_enricher.text_enricher
-
   - &reports
     <<: *entity_defaults
     entity: reports
@@ -151,8 +143,6 @@ ori.ibabs:
     - *committees
     - *persons
     - *meetings
-    - *reprocess_meetings
-
     - entity: reports
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
       transformer: ocd_backend.transformers.ibabs_report.report_item
@@ -531,7 +521,6 @@ ori.ibabs:
     - *committees
     - *persons
     - *meetings
-    - *reprocess_meetings
     - *reports
     # - *videotulen
     <<: *ibabs

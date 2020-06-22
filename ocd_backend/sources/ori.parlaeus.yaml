@@ -46,14 +46,6 @@ _entities: &entities
     enrichers:
       - ocd_backend.enrichers.text_enricher.text_enricher
 
-  - &reprocess_meetings
-    <<: *entity_defaults
-    entity: reprocess_meetings
-    extractor: ocd_backend.extractors.database.DatabaseMeetingsExtractor
-    transformer: ocd_backend.transformers.database.database_item
-    enrichers:
-      - ocd_backend.enrichers.text_enricher.text_enricher
-
 _parlaeus: &parlaeus
   index_name: "{key}"
   source_name: "{key!c}"
