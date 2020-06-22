@@ -175,3 +175,11 @@ ori.go:
     allmanak_id: 23087145
     cbs_id: GM1952
     <<: *go
+
+  # Added on 22-06-2020
+  groningen:
+    key: groningen
+    base_url: "https://gemeenteraad.groningen.nl/api"
+    allmanak_id: 24194
+    cbs_id: GM0014
+    <<: *go

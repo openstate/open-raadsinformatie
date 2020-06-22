@@ -71,13 +71,6 @@ ori.notubiz:
     notubiz_organization_id: 987
     <<: *notubiz
 
-  groningen:
-    key: groningen
-    allmanak_id: 24194
-    cbs_id: GM0014
-    notubiz_organization_id: 655
-    <<: *notubiz
-
   amsterdam:
     key: amsterdam
     allmanak_id: 25698
