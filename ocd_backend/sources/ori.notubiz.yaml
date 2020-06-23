@@ -476,3 +476,11 @@ ori.notubiz:
     cbs_id: GM1507
     notubiz_organization_id: 273
     <<: *notubiz
+
+  # Added on 23-06-2020
+  heumen:
+    key: heumen
+    allmanak_id: 28895
+    cbs_id: GM0252
+    notubiz_organization_id: 1644
+    <<: *notubiz
