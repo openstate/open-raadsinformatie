@@ -175,3 +175,39 @@ ori.go:
     allmanak_id: 24194
     cbs_id: GM0014
     <<: *go
+
+  # Added on 17-07-2020
+  alblasserdam:
+    key: alblasserdam
+    base_url: "https://raad.alblasserdam.nl/api"
+    allmanak_id: 29079
+    cbs_id: GM0482
+    <<: *go
+
+  hardinxveld-giessendam:
+    key: hardinxveld-giessendam
+    base_url: "http://raad.hardinxveld-giessendam.nl/api"
+    allmanak_id: 23504
+    cbs_id: GM0523
+    <<: *go
+
+  papendrecht:
+    key: papendrecht
+    base_url: "https://raad.papendrecht.nl/api"
+    allmanak_id: 35435
+    cbs_id: GM0590
+    <<: *go
+
+  hofvantwente:
+    key: hofvantwente
+    base_url: "https://gemeenteraad.hofvantwente.nl/api"
+    allmanak_id: 24670
+    cbs_id: GM1735
+    <<: *go
+
+  drechtsteden:
+    key: drechtsteden
+    base_url: "https://drechtraad.drechtsteden.nl/api"
+    allmanak_id: 24943500
+    # cbs_id: has no cbs_id
+    <<: *go

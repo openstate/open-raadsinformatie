@@ -484,3 +484,25 @@ ori.notubiz:
     cbs_id: GM0252
     notubiz_organization_id: 1644
     <<: *notubiz
+
+  # Added 17-07-2020
+  kapelle:
+    key: kapelle
+    allmanak_id: 26332
+    cbs_id: GM0678
+    notubiz_organization_id: 597
+    <<: *notubiz
+
+  alphen-chaam:
+    key: alphen-chaam
+    allmanak_id: 28359
+    cbs_id: GM1723
+    notubiz_organization_id: 2030
+    <<: *notubiz
+
+  altena:
+    key: altena
+    allmanak_id: 27465406
+    cbs_id: GM1959
+    notubiz_organization_id: 3423
+    <<: *notubiz
