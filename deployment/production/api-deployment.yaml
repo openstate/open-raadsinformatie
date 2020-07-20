@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: ori-api
-        image: ontola/ori_api:latest
+        image: ontola/ori_api:shallow_nesting
         imagePullPolicy: Always
         env:
         - name: API_DIR
@@ -31,6 +31,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: KAFKA_ADDRESS
+              name: config
+        - name: DELTA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              key: KAFKA_TOPIC
               name: config
         - name: KAFKA_USERNAME
           valueFrom:
