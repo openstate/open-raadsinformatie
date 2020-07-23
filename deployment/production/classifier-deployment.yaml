@@ -14,12 +14,27 @@ spec:
         app: classifier
     spec:
       containers:
-      - image: openstatefoundation/ori-theme-classifier:v1.0.0
+      - image: openstatefoundation/ori-theme-classifier:v1.0.1
         name: classifier
         ports:
         - containerPort: 5000
         resources:
           requests:
-            memory: 50M
+            memory: 120M
             cpu: 80m
+        env:
+        - name: POSTGRES_HOST
+          value: postgres:5432
+        - name: POSTGRES_DATABASE
+          value: ori
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: POSTGRES_PASSWORD
       restartPolicy: Always
