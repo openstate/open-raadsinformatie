@@ -603,3 +603,81 @@ ori.ibabs:
     allmanak_id: 35243
     cbs_id: GM1621
     <<: *ibabs
+
+  # Added on 15-09-2020
+  eersel:
+    key: eersel
+    ibabs_sitename: Eersel
+    allmanak_id: 25558
+    cbs_id: GM0770
+    <<: *ibabs
+
+  sint_anthonis:
+    key: sint_anthonis
+    ibabs_sitename: SintAnthonis
+    allmanak_id: 21660
+    cbs_id: GM1702
+    <<: *ibabs
+
+  sluis:
+    key: sluis
+    ibabs_sitename: Sluis
+    allmanak_id: 34543
+    cbs_id: GM1714
+    <<: *ibabs
+
+  elburg:
+    key: elburg
+    ibabs_sitename: Elburg
+    allmanak_id: 37170
+    cbs_id: GM0230
+    <<: *ibabs
+
+  beesel:
+    key: beesel
+    ibabs_sitename: Beesel
+    allmanak_id: 21559
+    cbs_id: GM0889
+    <<: *ibabs
+
+  reusel-de_mierden:
+    key: reusel-de_mierden
+    ibabs_sitename: ReuselDeMierden
+    allmanak_id: 32102
+    cbs_id: GM1667
+    <<: *ibabs
+
+  stadskanaal:
+    key: stadskanaal
+    ibabs_sitename: Stadskanaal
+    allmanak_id: 26139
+    cbs_id: GM0037
+    <<: *ibabs
+
+  berkelland:
+    key: berkelland
+    ibabs_sitename: Berkelland
+    allmanak_id: 36670
+    cbs_id: GM1859
+    <<: *ibabs
+
+  vlieland :
+    key: vlieland
+    ibabs_sitename: Vlieland
+    allmanak_id: 31502
+    cbs_id: GM0096
+    <<: *ibabs
+
+  terschelling:
+    key: terschelling
+    ibabs_sitename: Terschelling
+    allmanak_id: 21593
+    cbs_id: GM0093
+    <<: *ibabs
+
+  winterswijk:
+    key: winterswijk
+    ibabs_sitename: Winterswijk
+    allmanak_id: 26666
+    cbs_id: GM0294
+    <<: *ibabs
