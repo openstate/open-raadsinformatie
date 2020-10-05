@@ -506,32 +506,3 @@ ori.notubiz:
     cbs_id: GM1959
     notubiz_organization_id: 3423
     <<: *notubiz
-
-  # Added 15-09-2020
-  doesburg:
-    key: doesburg
-    allmanak_id: 35063
-    cbs_id: GM0221
-    notubiz_organization_id: 687
-    <<: *notubiz
-
-  deurne:
-    key: deurne
-    allmanak_id: 23937
-    cbs_id: GM0762
-    notubiz_organization_id: 2021
-    <<: *notubiz
-
-  dantumdriel:
-    key: dantumdriel
-    allmanak_id: 33564
-    cbs_id: GM1891
-    notubiz_organization_id: 1802
-    <<: *notubiz
-
-  heiloo:
-    key: heiloo
-    allmanak_id: 27630
-    cbs_id: GM0399
-    notubiz_organization_id: 1663
-    <<: *notubiz
