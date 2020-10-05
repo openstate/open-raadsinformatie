@@ -506,3 +506,76 @@ ori.notubiz:
     cbs_id: GM1959
     notubiz_organization_id: 3423
     <<: *notubiz
+
+  # Added 05-10-2020
+  westvoorne:
+    key: westvoorne
+    allmanak_id: 34694
+    cbs_id: GM0614
+    notubiz_organization_id: 1435
+    <<: *notubiz
+
+  barendrecht:
+    key: barendrecht
+    allmanak_id: 29877
+    cbs_id: GM0489
+    notubiz_organization_id: 791
+    <<: *notubiz
+
+  bergen:
+    key: bergen
+    source_name: "Bergen (L)"
+    allmanak_id: 21692
+    cbs_id: GM0893
+    notubiz_organization_id: 2062
+    <<: *notubiz
+
+  hoogeveen:
+    key: hoogeveen
+    allmanak_id: 37770
+    cbs_id: GM0118
+    notubiz_organization_id: 572
+    <<: *notubiz
+
+  lochem:
+    key: lochem
+    allmanak_id: 36828
+    cbs_id: GM0262
+    notubiz_organization_id: 1761
+    <<: *notubiz
+
+  neder-betuwe:
+    key: neder-betuwe
+    source_name: "Neder-Betuwe"
+    allmanak_id: 33600
+    cbs_id: GM1740
+    notubiz_organization_id: 1810
+    <<: *notubiz
+
+  oegstgeest:
+    key: oegstgeest
+    allmanak_id: 38899
+    cbs_id: GM0579
+    notubiz_organization_id: 1856
+    <<: *notubiz
+
+  helmond:
+    key: helmond
+    allmanak_id: 21849
+    cbs_id: GM0794
+    notubiz_organization_id: 1949
+    <<: *notubiz
+
+  goes:
+    key: goes
+    allmanak_id: 33275
+    cbs_id: GM0664
+    notubiz_organization_id: 276
+    <<: *notubiz
+
+  ijsselstein:
+    key: ijsselstein
+    allmanak_id: 38362
+    cbs_id: GM0353
+    notubiz_organization_id: 2542
+    <<: *notubiz
