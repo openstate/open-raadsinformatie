@@ -75,9 +75,8 @@ class DeltaLoader(BaseLoader):
             # See https://github.com/confluentinc/confluent-kafka-python#usage for a complete example of how to use
             # the kafka producer with status callbacks.
 
-        log.debug(f'DeltaLoader sending document ids to Kafka: {", ".join(log_identifiers)}')
-
         kafka_producer.flush()
+        log.debug(f'DeltaLoader sending document ids to Kafka: {", ".join(log_identifiers)}')
 
 
 def delivery_report(err, msg):
