@@ -211,3 +211,19 @@ ori.go:
     allmanak_id: 24943500
     # cbs_id: has no cbs_id
     <<: *go
+
+  # Added on 27-11-2020
+  bergen:
+    key: bergen
+    source_name: "Bergen (NH)"
+    base_url: "https://www.raadbergen-nh.nl/api"
+    allmanak_id: 41074
+    cbs_id: GM0373
+    <<: *go
+
+  schiermonnikoog:
+    key: schiermonnikoog
+    base_url: "https://bestuur.schiermonnikoog.nl/api"
+    allmanak_id: 23540
+    cbs_id: GM0088
+    <<: *go

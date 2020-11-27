@@ -579,3 +579,11 @@ ori.notubiz:
     cbs_id: GM0353
     notubiz_organization_id: 2542
     <<: *notubiz
+
+  # Added on 27-11-2020
+  brielle:
+    key: brielle
+    allmanak_id: 23644
+    cbs_id: GM0501
+    notubiz_organization_id: 1047
+    <<: *notubiz
