@@ -718,10 +718,8 @@ ori.ibabs:
     cbs_id: GM0060
     <<: *ibabs
 
-  t-diel:
-    key: t-diel
-    source_name: "T-Diel"
-    ibabs_sitename: Tytsjerksteradiel
+  tytsjerksteradiel:
+    key: tytsjerksteradiel
     allmanak_id: 31592
     cbs_id: GM0737
     <<: *ibabs
