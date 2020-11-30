@@ -213,8 +213,8 @@ ori.go:
     <<: *go
 
   # Added on 27-11-2020
-  bergen:
-    key: bergen
+  bergen_nh:
+    key: bergen_nh
     source_name: "Bergen (NH)"
     base_url: "https://www.raadbergen-nh.nl/api"
     allmanak_id: 41074
