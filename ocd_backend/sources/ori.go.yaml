@@ -227,3 +227,11 @@ ori.go:
     allmanak_id: 23540
     cbs_id: GM0088
     <<: *go
+
+  # Added on 23-12-2020
+  albrandswaard:
+    key: albrandswaard
+    base_url: "https://raad.albrandswaard.nl/api/"
+    allmanak_id: 35356
+    cbs_id: GM0613
+    <<: *go

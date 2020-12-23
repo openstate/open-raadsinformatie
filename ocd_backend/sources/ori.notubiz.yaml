@@ -587,3 +587,39 @@ ori.notubiz:
     cbs_id: GM0501
     notubiz_organization_id: 1047
     <<: *notubiz
+
+  # Added on 23-12-2020
+  weesp:
+    key: weesp
+    allmanak_id: 33836
+    cbs_id: GM0457
+    notubiz_organization_id: 1987
+    <<: *notubiz
+
+  rotterdam:
+    key: rotterdam
+    allmanak_id: 38936
+    cbs_id: GM0599
+    notubiz_organization_id: 726
+    <<: *notubiz
+
+  wijdemeren:
+    key: wijdemeren
+    allmanak_id: 22675
+    cbs_id: GM1696
+    notubiz_organization_id: 1243
+    <<: *notubiz
+
+  smallingerland:
+    key: smallingerland
+    allmanak_id: 21462
+    cbs_id: GM0090
+    notubiz_organization_id: 1764
+    <<: *notubiz
+
+  zundert:
+    key: zundert
+    allmanak_id: 36154
+    cbs_id: GM0879
+    notubiz_organization_id: 881
+    <<: *notubiz
