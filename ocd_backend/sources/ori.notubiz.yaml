@@ -623,3 +623,38 @@ ori.notubiz:
     cbs_id: GM0879
     notubiz_organization_id: 881
     <<: *notubiz
+
+  de_ronde_venen:
+    key: de_ronde_venen
+    allmanak_id: 27383
+    cbs_id: GM0736
+    notubiz_organization_id: 1524
+    <<: *notubiz
+
+  halderberge:
+    key: halderberge
+    allmanak_id: 30535
+    cbs_id: GM1655
+    notubiz_organization_id: 577
+    <<: *notubiz
+
+  nuenen:
+    key: nuenen
+    allmanak_id: 24805
+    cbs_id: GM0820
+    notubiz_organization_id: 1747
+    <<: *notubiz
+
+  schouwen_duiveland:
+    key: schouwen_duiveland
+    allmanak_id: 27798
+    cbs_id: GM1676
+    notubiz_organization_id: 989
+    <<: *notubiz
+
+  oldenzaal:
+    key: oldenzaal
+    allmanak_id: 32363
+    cbs_id: GM0173
+    notubiz_organization_id: 523
+    <<: *notubiz
