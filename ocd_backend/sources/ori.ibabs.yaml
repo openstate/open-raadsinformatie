@@ -750,3 +750,23 @@ ori.ibabs:
     allmanak_id: 36239
     cbs_id: GM1700
     <<: *ibabs
+
+  # Added on 2021-04-08
+  kerkrade:
+    key: kerkrade
+    allmanak_id: 40395
+    cbs_id: GM0928
+    <<: *ibabs
+
+  bernheze:
+    key: bernheze
+    allmanak_id: 33233
+    cbs_id: GM1721
+    <<: *ibabs
+
+  boxtel:
+    key: boxtel
+    ibabs_sitename: MijnGemeenteDichtbij
+    allmanak_id: 31691
+    cbs_id: GM0757
+    <<: *ibabs
