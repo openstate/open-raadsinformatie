@@ -68,3 +68,9 @@ osi.notubiz:
     allmanak_id: 14866
     notubiz_organization_id: 2163
     <<: *notubiz
+
+  zuid_holland:
+    key: zuid_holland
+    allmanak_id: 17466
+    notubiz_organization_id: 3868
+    <<: *notubiz
