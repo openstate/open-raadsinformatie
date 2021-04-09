@@ -45,9 +45,9 @@
 ## Devops - run redis
 
 - [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId)
-- connect to cluster with `gcloud` cli
-- `kubectl` get pod namespaces to see running pods
-- `sh` into `redis`
+- connect to cluster with `gcloud` cli. Visit gcloud cluster for command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`
+- `kubectl get -A pods | grep redis` to get the name for the redis pod.
+- `kubectl exec -it -n production ${name-of-redis-pod}` to open an interactive shell in the redis pod.
 - `redis-cli`
 - `keys _*` see all intervals¸ e.g. the base start date
 - `select 1` go to database 1, where the sources (municipalities) are. This is where you turn the sources on.
@@ -57,7 +57,7 @@
 ## Troubleshooting
 
 - Not enough available disk space can cause downtime. Elastic starts to have issues at 80% disk usage - it starts moving stuff to other instances. Fix this by making the disk larger and copying the contents.
-- When dealing with IBabs issues, use SoapUI. You need
+- When dealing with IBabs issues, use SoapUI.
 - When finding logs for a municipality, use the GCP querybuilder with `textPayload:municipality`
 
 ## Reverting a back-up
