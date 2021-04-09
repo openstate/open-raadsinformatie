@@ -17,7 +17,7 @@ Open Raadsinformatie is a collaborative effort of the [Open State Foundation](ht
 
 ## Installation and usage
 
-See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started.
+See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started. Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
 
 ## Supported Sources
 
@@ -42,18 +42,18 @@ Your griffie (municipality clerk) needs to formally agree that the data becomes 
 
 ## Contributing
 
-Please read through our [contributing guidelines](https://github.com/openstate/open-raadsinformatie/blob/master/CONTRIBUTING.rst). 
+Please read through our [contributing guidelines](https://github.com/openstate/open-raadsinformatie/blob/master/CONTRIBUTING.rst).
 Included are directions for opening issues, coding standards, and notes on development.
 
 ## Bugs and feature requests
 
-Have a bug or a feature request? Please first read through and search for existing and closed issues. If your problem 
+Have a bug or a feature request? Please first read through and search for existing and closed issues. If your problem
 or idea is not addressed yet, [please open a new issue](https://github.com/openstate/open-raadsinformatie/issues/new).
 
 ## Authors and contributors
 
-The Open Raadsinformatie API was originally based on the 
-[Open Cultuur Data API](https://github.com/openstate/open-cultuur-data/). 
+The Open Raadsinformatie API was originally based on the
+[Open Cultuur Data API](https://github.com/openstate/open-cultuur-data/).
 
 Authors and contributors of both projects are:
 

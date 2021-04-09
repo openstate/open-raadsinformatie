@@ -47,12 +47,19 @@
 - [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId)
 - connect to cluster with `gcloud` cli. Visit gcloud cluster for command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`
 - `kubectl get -A pods | grep redis` to get the name for the redis pod.
-- `kubectl exec -it -n production ${name-of-redis-pod}` to open an interactive shell in the redis pod.
-- `redis-cli`
-- `keys _*` see all intervals¸ e.g. the base start date
-- `select 1` go to database 1, where the sources (municipalities) are. This is where you turn the sources on.
-- `get ori.ibabs.aalsmeer` => see current status
-- `set "ori.ibabs.{key}"  "all daily monthly"` add municipality
+- `kubectl exec -it -n production ${name-of-redis-pod} redis-cli` to open the redis CLI.
+- `select 0` for generic settings and pipelines
+  - `keys _*` see all intervals¸ e.g. the base start date
+  - `set _all.start_date` set start date for a new run (e.g. when some specific run has to be done)
+- `select 1` for the sources (municipalities / provinces) settings
+  - `get ori.ibabs.aalsmeer` => see current status
+  - `set "ori.ibabs.{key}"  "all daily monthly"` add municipality
+
+## Starting a run
+
+- `kubectl get -A pods | grep backend`, pick one
+- `kubectl exec -it -n production ${name-of-pod} sh`
+- `python manage.py extract process all` (see manage.py for more options and commands)
 
 ## Troubleshooting
 
