@@ -53,7 +53,7 @@ _go: &go
   entities: *entities
   <<: *source_defaults
 
-ori.go:
+ori:
   goirle:
     key: goirle
     base_url: "https://raad.goirle.nl/api"
@@ -234,4 +234,12 @@ ori.go:
     base_url: "https://raad.albrandswaard.nl/api/"
     allmanak_id: 35356
     cbs_id: GM0613
+    <<: *go
+
+  # Added on 04-06-2021
+  hillegom:
+    key: hillegom
+    base_url: "https://raad.hillegom.nl/api/"
+    allmanak_id: 32323
+    cbs_id: GM0534
     <<: *go
