@@ -4,7 +4,7 @@
 
 - New municipalities are probably added to the issue tracker.
 - Identify supplier (Notubiz / go / etc)
-- Move to the relevant `ocd_backend/sources` file.
+- Open the relevant `ocd_backend/sources` file.
 - Duplicate bottom municipality
 - Set key (equal to shortname, dashes allowed)
 - Allamak code: https://allmanak.nl/cat/1/Gemeenten, search name, get ID from URL

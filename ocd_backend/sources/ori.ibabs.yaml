@@ -770,3 +770,45 @@ ori.ibabs:
     allmanak_id: 31691
     cbs_id: GM0757
     <<: *ibabs
+
+  leidschendam-voorburg:
+    key: leidschendam-voorburg
+    ibabs_sitename: Leidschendam
+    allmanak_id: 38521
+    cbs_id: GM1916
+    <<: *ibabs
+
+  heerenveen:
+    key: heerenveen
+    ibabs_sitename: Heerenveen
+    allmanak_id: 31453
+    cbs_id: GM0074
+    <<: *ibabs
+
+  brunssum:
+    key: brunssum
+    ibabs_sitename: brunssum
+    allmanak_id: 24566
+    cbs_id: GM0899
+    <<: *ibabs
+
+  westerveld:
+    key: westerveld
+    ibabs_sitename: westerveld
+    allmanak_id: 31991
+    cbs_id: GM1701
+    <<: *ibabs
+
+  gulpen-wittem:
+    key: gulpen-wittem
+    ibabs_sitename: GulpenWittem
+    allmanak_id: 34134
+    cbs_id: GM1729
+    <<: *ibabs
+
+  midden-delfland:
+    key: midden-delfland
+    ibabs_sitename: middendelfland
+    allmanak_id: 36436
+    cbs_id: GM1842
+    <<: *ibabs
