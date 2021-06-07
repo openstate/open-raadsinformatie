@@ -59,7 +59,7 @@
 
 ## Starting a run
 
-- `kubectl get -A pods | grep backend`, pick one
+- `kubectl get -A pods | grep backend`, pick a running one
 - `kubectl exec -it -n production ${name-of-pod} sh`
 - `python manage.py extract process all` (see manage.py for more options and commands)
 

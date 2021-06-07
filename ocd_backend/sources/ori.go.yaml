@@ -53,7 +53,7 @@ _go: &go
   entities: *entities
   <<: *source_defaults
 
-ori:
+ori.go:
   goirle:
     key: goirle
     base_url: "https://raad.goirle.nl/api"
