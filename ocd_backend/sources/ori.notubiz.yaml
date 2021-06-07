@@ -658,3 +658,26 @@ ori.notubiz:
     cbs_id: GM0173
     notubiz_organization_id: 523
     <<: *notubiz
+
+  # Added on 07-06-2021
+
+  brummen:
+    key: brummen
+    allmanak_id: 40941
+    cbs_id: GM0213
+    notubiz_organization_id: 999
+    <<: *notubiz
+
+  hoeksche_waard:
+    key: hoeksche_waard
+    allmanak_id: 27465424
+    cbs_id: GM1963
+    notubiz_organization_id: 3398
+    <<: *notubiz
+
+  berg_en_dal:
+    key: berg_en_dal
+    allmanak_id: 30943
+    cbs_id: GM1945
+    notubiz_organization_id: 2076
+    <<: *notubiz

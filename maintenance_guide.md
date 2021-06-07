@@ -14,8 +14,10 @@
 - The next step depends on supplier
 - Push to master, semaphore (currently at jurrian's account!) starts deploying. In this step, dependabot might want to update a lib.
 - sh to `redis` (see devops)
+- `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
-- sh to `backend-{id}`
+- `exit`
+- see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
 - start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
 - You can track the progress in the Google cloud logs.
 - Update the status per municipality (importing, finished) in the github issue tracker.
@@ -44,8 +46,8 @@
 
 ## Devops - run redis
 
-- [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId)
-- connect to cluster with `gcloud` cli. Visit gcloud cluster for command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`
+- The environment is [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId). Make sure you've installed the `gcloud` cli tool, and use `gcloud auth login` to get access to the `open-raadsinformatie` account.
+- connect to cluster with `gcloud` cli. Visit gcloud cluster, press `actions` and search for a `connect` command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`
 - `kubectl get -A pods | grep redis` to get the name for the redis pod.
 - `kubectl exec -it -n production ${name-of-redis-pod} redis-cli` to open the redis CLI.
 - `select 0` for generic settings and pipelines
