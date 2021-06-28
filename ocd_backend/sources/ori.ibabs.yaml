@@ -814,3 +814,26 @@ ori.ibabs:
     allmanak_id: 36436
     cbs_id: GM1842
     <<: *ibabs
+
+# Added on 28-06-2021
+
+  opmeer:
+    key: opmeer
+    ibabs_sitename: opmeer
+    allmanak_id: 26028
+    cbs_id: GM0432
+    <<: *ibabs
+
+  peel_en_maas:
+    key: peel_en_maas
+    ibabs_sitename: peelenmaas
+    allmanak_id: 21320
+    cbs_id: GM1894
+    <<: *ibabs
+
+  bunnik:
+    key: bunnik
+    ibabs_sitename: bunnik
+    allmanak_id: 32201
+    cbs_id: GM0312
+    <<: *ibabs
