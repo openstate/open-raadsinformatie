@@ -681,3 +681,40 @@ ori.notubiz:
     cbs_id: GM1945
     notubiz_organization_id: 2076
     <<: *notubiz
+
+  # Added on 28-06-2021
+
+  breda:
+    key: breda
+    allmanak_id: 34765
+    cbs_id: GM0758
+    notubiz_organization_id: 774
+    <<: *notubiz
+
+  baarle_nassau:
+    key: baarle_nassau
+    allmanak_id: 22221
+    cbs_id: GM0744
+    notubiz_organization_id: 483
+    <<: *notubiz
+
+  nissewaard:
+    key: nissewaard
+    allmanak_id: 129864
+    cbs_id: GM1930
+    notubiz_organization_id: 1480
+    <<: *notubiz
+
+  drechterland:
+    key: drechterland
+    allmanak_id: 28022
+    cbs_id: GM0498
+    notubiz_organization_id: 1657
+    <<: *notubiz
+
+  gilze_en_rijen:
+    key: gilze_en_rijen
+    allmanak_id: 30003
+    cbs_id: GM0784
+    notubiz_organization_id: 2075
+    <<: *notubiz
