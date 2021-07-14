@@ -837,3 +837,33 @@ ori.ibabs:
     allmanak_id: 32201
     cbs_id: GM0312
     <<: *ibabs
+
+# Added on 14-07-2021
+
+  westervoort:
+    key: westervoort
+    ibabs_sitename: Westervoort
+    allmanak_id: 23981
+    cbs_id: GM0293
+    <<: *ibabs
+
+  roerdalen:
+    key: roerdalen
+    ibabs_sitename: Roerdalen
+    allmanak_id: 31165
+    cbs_id: GM1669
+    <<: *ibabs
+
+  dronten:
+    key: dronten
+    ibabs_sitename: Dronten
+    allmanak_id: 26889
+    cbs_id: GM0303
+    <<: *ibabs
+
+  heerlen:
+    key: heerlen
+    ibabs_sitename: Heerlen
+    allmanak_id: 31783
+    cbs_id: GM0917
+    <<: *ibabs

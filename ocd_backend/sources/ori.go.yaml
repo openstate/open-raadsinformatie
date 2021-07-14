@@ -239,7 +239,29 @@ ori.go:
   # Added on 04-06-2021
   hillegom:
     key: hillegom
-    base_url: "https://raad.hillegom.nl/api/"
+    base_url: "https://gemeenteraad.hillegom.nl/api/v1"
     allmanak_id: 32323
     cbs_id: GM0534
+    <<: *go
+
+  # Added on 14-07-2021
+  huizen:
+    key: huizen
+    base_url: " https://ris.gemeenteraadhuizen.nl/api/v1/"
+    allmanak_id: 35806
+    cbs_id: GM0406
+    <<: *go
+
+  beuningen:
+    key: beuningen
+    base_url: "https://gemeentebestuur.beuningen.nl/api/v1"
+    allmanak_id: 27471
+    cbs_id: GM0209
+    <<: *go
+
+  heemstede:
+    key: heemstede
+    base_url: "https://gemeentebestuur.heemstede.nl/api/v1"
+    allmanak_id: 24295
+    cbs_id: GM0397
     <<: *go

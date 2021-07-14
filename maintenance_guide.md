@@ -13,10 +13,11 @@
 - Optionally set `municipality_prefix` if municipality has multiple suppliers per region.
 - The next step depends on supplier
 - Push to master, semaphore (currently at jurrian's account!) starts deploying. In this step, dependabot might want to update a lib.
-- sh to `redis` (see devops)
+- sh to `redis` (see [redis](#redis))
 - `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
 - `exit`
+- Make sure the image version running in GCLoud is the latest one containing the new municipalities. You can check the [backend deployment](https://console.cloud.google.com/kubernetes/deployment/europe-west4-a/ori-cluster/production/backend/yaml/edit?authuser=1&project=open-raadsinformatie-52162). The last number of the version should be the build number of semaphore. If this is not a match, you can manually set it in the deployment YAML file.
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
 - start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
 - You can track the progress in the Google cloud logs.
@@ -44,7 +45,7 @@
 
 - Bugs are reported to [Bugsnag](https://app.bugsnag.com/argu/ori/errors).
 
-## Devops - run redis
+## redis
 
 - The environment is [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId). Make sure you've installed the `gcloud` cli tool, and use `gcloud auth login` to get access to the `open-raadsinformatie` account.
 - connect to cluster with `gcloud` cli. Visit gcloud cluster, press `actions` and search for a `connect` command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`

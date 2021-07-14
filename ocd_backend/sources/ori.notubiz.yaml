@@ -718,3 +718,75 @@ ori.notubiz:
     cbs_id: GM0784
     notubiz_organization_id: 2075
     <<: *notubiz
+
+  # Added on 14-07-2021
+
+  waddinxveen:
+    key: waddinxveen
+    allmanak_id: 23854
+    cbs_id: GM0627
+    notubiz_organization_id: 1723
+    <<: *notubiz
+
+  stede_broec:
+    key: stede_broec
+    allmanak_id: 29758
+    cbs_id: GM0532
+    notubiz_organization_id: 1746
+    <<: *notubiz
+
+  pijnacker_nootdorp:
+    key: pijnacker_nootdorp
+    allmanak_id: 33077
+    cbs_id: GM1926
+    notubiz_organization_id: 1655
+    <<: *notubiz
+
+  best:
+    key: best
+    allmanak_id: 28932
+    cbs_id: GM0753
+    notubiz_organization_id: 1688
+    <<: *notubiz
+
+  delft:
+    key: delft
+    allmanak_id: 39076
+    cbs_id: GM0503
+    notubiz_organization_id: 550
+    <<: *notubiz
+
+  ermelo:
+    key: ermelo
+    allmanak_id: 22253
+    cbs_id: GM0233
+    notubiz_organization_id: 1550
+    <<: *notubiz
+
+  het_hogeland:
+    key: het_hogeland
+    allmanak_id: 27465418
+    cbs_id: GM1966
+    notubiz_organization_id: 3508
+    <<: *notubiz
+
+  blaricum:
+    key: blaricum
+    allmanak_id: 31318
+    cbs_id: GM0376
+    notubiz_organization_id: 2063
+    <<: *notubiz
+
+  eemnes:
+    key: eemnes
+    allmanak_id: 29645
+    cbs_id: GM0317
+    notubiz_organization_id: 2022
+    <<: *notubiz
+
+  laren:
+    key: laren
+    allmanak_id: 29164
+    cbs_id: GM0417
+    notubiz_organization_id: 2046
+    <<: *notubiz
