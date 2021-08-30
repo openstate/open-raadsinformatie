@@ -867,3 +867,61 @@ ori.ibabs:
     allmanak_id: 31783
     cbs_id: GM0917
     <<: *ibabs
+
+# Added on 30-08-2021
+
+  beekdaelen:
+    key: beekdaelen
+    ibabs_sitename: Beekdaelen
+    allmanak_id: 27465412
+    cbs_id: GM1954
+    <<: *ibabs
+
+  woensdrecht:
+    key: woensdrecht
+    ibabs_sitename: woensdrecht
+    allmanak_id: 32470
+    cbs_id: GM0873
+    <<: *ibabs
+
+  noordenveld:
+    key: noordenveld
+    ibabs_sitename: Noordenveld
+    allmanak_id: 25983
+    cbs_id: GM1699
+    <<: *ibabs
+
+  noardeast_fryslan:
+    key: noardeast_fryslan
+    ibabs_sitename: noardeastfryslan
+    allmanak_id: 27465436
+    cbs_id: GM1970
+    <<: *ibabs
+
+  vijfheerenlanden:
+    key: vijfheerenlanden
+    ibabs_sitename: Vijfheerenlanden
+    allmanak_id: 27465442
+    cbs_id: GM1961
+    <<: *ibabs
+
+  grave:
+    key: grave
+    ibabs_sitename: grave
+    allmanak_id: 34507
+    cbs_id: GM0786
+    <<: *ibabs
+
+  cuijk:
+    key: cuijk
+    ibabs_sitename: cuijk
+    allmanak_id: 25165
+    cbs_id: GM1684
+    <<: *ibabs
+
+  mill_en_st_hubert:
+    key: mill_en_st_hubert
+    ibabs_sitename: mill
+    allmanak_id: 23083
+    cbs_id: GM0815
+    <<: *ibabs
