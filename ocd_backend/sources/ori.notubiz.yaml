@@ -790,3 +790,12 @@ ori.notubiz:
     cbs_id: GM0417
     notubiz_organization_id: 2046
     <<: *notubiz
+
+  # Added on 30-08-2021
+
+  maasdriel:
+    key: maasdriel
+    allmanak_id: 40900
+    cbs_id: GM0263
+    notubiz_organization_id: 2962
+    <<: *notubiz
