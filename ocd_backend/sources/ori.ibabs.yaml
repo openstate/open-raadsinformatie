@@ -907,21 +907,21 @@ ori.ibabs:
 
   grave:
     key: grave
-    ibabs_sitename: grave
+    ibabs_sitename: CuijkGraveMill
     allmanak_id: 34507
     cbs_id: GM0786
     <<: *ibabs
 
   cuijk:
     key: cuijk
-    ibabs_sitename: cuijk
+    ibabs_sitename: CuijkGraveMill
     allmanak_id: 25165
     cbs_id: GM1684
     <<: *ibabs
 
   mill_en_st_hubert:
     key: mill_en_st_hubert
-    ibabs_sitename: mill
+    ibabs_sitename: CuijkGraveMill
     allmanak_id: 23083
     cbs_id: GM0815
     <<: *ibabs
