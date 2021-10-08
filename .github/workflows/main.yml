@@ -26,7 +26,7 @@ jobs:
       - name: Push docker images
         run: |
           docker push openstatefoundation/open-raadsinformatie-backend:latest
-          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$SEMAPHORE_BUILD_NUMBER
-          docker push openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$SEMAPHORE_BUILD_NUMBER
+          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
+          docker push openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
           docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:build-tmp
           docker push openstatefoundation/open-raadsinformatie-backend:build-tmp
