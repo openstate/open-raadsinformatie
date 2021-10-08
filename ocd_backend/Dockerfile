@@ -10,10 +10,10 @@ COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 RUN apk add --update \
   build-base git tzdata \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
-  inotify-tools libmagic \
-  && apk add librdkafka-dev --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community \
-  && apk add postgresql-dev gcc python3-dev musl-dev \
-  && pip install --upgrade pip \
+  inotify-tools libmagic
+RUN apk add --no-cache librdkafka-dev \
+  && apk add postgresql-dev gcc python3-dev musl-dev
+RUN pip install --upgrade pip \
   && pip install cython \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
