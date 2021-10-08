@@ -799,3 +799,33 @@ ori.notubiz:
     cbs_id: GM0263
     notubiz_organization_id: 2962
     <<: *notubiz
+
+  # Added on 08-10-2021
+
+  zuidplas:
+    key: zuidplas
+    allmanak_id: 30143
+    cbs_id: GM1892
+    notubiz_organization_id: 1589
+    <<: *notubiz
+
+  borsele:
+    key: borsele
+    allmanak_id: 23011
+    cbs_id: GM0654
+    notubiz_organization_id: 2941
+    <<: *notubiz
+
+  veendam:
+    key: veendam
+    allmanak_id: 29680
+    cbs_id: GM0047
+    notubiz_organization_id: 1732
+    <<: *notubiz
+
+  bunschoten:
+    key: bunschoten
+    allmanak_id: 28326
+    cbs_id: GM0047
+    notubiz_organization_id: 505
+    <<: *notubiz
