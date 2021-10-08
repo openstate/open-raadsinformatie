@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          sudo docker pull openstatefoundation/open-raadsinformatie-backend:build-tmp
+          sudo docker-compose build
+          sudo docker-compose -f docker-compose.yml -f docker-compose.test.yml -f /home/runner/docker-compose.semaphore.yml up --build -d
+          sleep 4 && docker ps -a
+          APP_VERSION=$(python -c "import version; import sys; sys.path.insert(0, '/opt/ori'); print(version.__version__)")
+      - name: Test & Lint
+        run: |
+          docker exec ori_backend_1 bin/run_tests.sh 2>&1
+          docker exec ori_backend_1 pylint ocd_backend -E -sy
+      - name: Push docker images
+        run: |
+          docker push openstatefoundation/open-raadsinformatie-backend:latest
+          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$SEMAPHORE_BUILD_NUMBER
+          docker push openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$SEMAPHORE_BUILD_NUMBER
+          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:build-tmp
+          docker push openstatefoundation/open-raadsinformatie-backend:build-tmp
