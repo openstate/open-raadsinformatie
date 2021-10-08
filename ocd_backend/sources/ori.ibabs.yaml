@@ -925,3 +925,33 @@ ori.ibabs:
     allmanak_id: 23083
     cbs_id: GM0815
     <<: *ibabs
+
+# Added on 08-10-2021
+
+  ooststellingwerf:
+    key: ooststellingwerf
+    ibabs_sitename: Ooststellingwerf
+    allmanak_id: 23566
+    cbs_id: GM0085
+    <<: *ibabs
+
+  weststellingwerf:
+    key: weststellingwerf
+    ibabs_sitename: Weststellingwerf
+    allmanak_id: 29037
+    cbs_id: GM0085
+    <<: *ibabs
+
+  westerkwartier:
+    key: westerkwartier
+    ibabs_sitename: Westerkwartier
+    allmanak_id: 27465454
+    cbs_id: GM1969
+    <<: *ibabs
+
+  simpelveld:
+    key: simpelveld
+    ibabs_sitename: simpelveld
+    allmanak_id: 28097
+    cbs_id: GM0965
+    <<: *ibabs
