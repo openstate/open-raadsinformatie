@@ -6,7 +6,7 @@ info:
   title: "Open Raadsinformatie API"
   version: [ ! APP VERSION HERE ! ]
   contact:
-    email: "jurrian@argu.co"
+    email: "joep@argu.co"
   license:
     name: "Creative Commons Attribution 4.0"
     url: "https://creativecommons.org/licenses/by/4.0/"

@@ -1,5 +1,5 @@
 FROM python:3.8-alpine
-MAINTAINER Jurrian Tromp <jurrian@argu.co>
+MAINTAINER Joep Meindertsma <joep@argu.co>
 
 COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 

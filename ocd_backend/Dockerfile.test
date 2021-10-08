@@ -1,5 +1,5 @@
 FROM openstatefoundation/open-raadsinformatie-backend
-MAINTAINER Jurrian Tromp <jurrian@argu.co>
+MAINTAINER Joep Meindertsma <joep@argu.co>
 
 # Change to root for installing
 USER root

@@ -19,7 +19,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: 'jurrian@argu.co'
+    email: 'joepg@argu.co'
     privateKeySecretRef:
       name: letsencrypt-prod
     http01: {}
