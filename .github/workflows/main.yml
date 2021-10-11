@@ -7,6 +7,10 @@ on:
     branches: [ master ]
   workflow_dispatch:
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,10 +27,30 @@ jobs:
         run: |
           docker exec ori_backend_1 bin/run_tests.sh 2>&1
           docker exec ori_backend_1 pylint ocd_backend -E -sy
-      - name: Push docker images
-        run: |
-          docker push openstatefoundation/open-raadsinformatie-backend:latest
-          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
-          docker push openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
-          docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:build-tmp
-          docker push openstatefoundation/open-raadsinformatie-backend:build-tmp
+      # - name: Push docker images
+      #   run: |
+      #     docker push openstatefoundation/open-raadsinformatie-backend:latest
+      #     docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
+      #     docker push openstatefoundation/open-raadsinformatie-backend:v$APP_VERSION.$GITHUB_RUN_ID
+      #     docker tag openstatefoundation/open-raadsinformatie-backend:latest openstatefoundation/open-raadsinformatie-backend:build-tmp
+      #     docker push openstatefoundation/open-raadsinformatie-backend:build-tmp
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:run-${{ github.run_number }}
+          labels: ${{ steps.meta.outputs.labels }}
