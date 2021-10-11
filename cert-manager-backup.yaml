@@ -1,0 +1,148 @@
+apiVersion: v1
+items:
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: ClusterIssuer
+  metadata:
+    creationTimestamp: "2019-06-11T12:03:29Z"
+    generation: 2
+    name: letsencrypt-prod
+    resourceVersion: "4420204"
+    uid: ed5aee33-8c40-11e9-a0dc-4201ac100005
+  spec:
+    acme:
+      email: jurrian@argu.co
+      http01: {}
+      privateKeySecretRef:
+        name: letsencrypt-prod
+      server: https://acme-v02.api.letsencrypt.org/directory
+  status:
+    acme:
+      uri: https://acme-v02.api.letsencrypt.org/acme/acct/59013461
+    conditions:
+    - lastTransitionTime: "2019-06-11T12:04:25Z"
+      message: The ACME account was registered with the ACME server
+      reason: ACMEAccountRegistered
+      status: "True"
+      type: Ready
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: ClusterIssuer
+  metadata:
+    creationTimestamp: "2019-08-07T11:43:42Z"
+    generation: 4
+    name: letsencrypt-staging
+    resourceVersion: "21979354"
+    uid: 9b486949-b908-11e9-ac9f-4201ac100006
+  spec:
+    acme:
+      email: jurrian@argu.co
+      http01: {}
+      privateKeySecretRef:
+        name: letsencrypt-staging
+      server: https://acme-v02.api.letsencrypt.org/directory
+  status:
+    acme:
+      uri: https://acme-v02.api.letsencrypt.org/acme/acct/62959956
+    conditions:
+    - lastTransitionTime: "2019-08-07T12:14:54Z"
+      message: The ACME account was registered with the ACME server
+      reason: ACMEAccountRegistered
+      status: "True"
+      type: Ready
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: Certificate
+  metadata:
+    creationTimestamp: "2021-10-08T10:49:09Z"
+    generation: 3
+    name: tls-certificate
+    namespace: production
+    ownerReferences:
+    - apiVersion: extensions/v1beta1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Ingress
+      name: ingress
+      uid: 96c37819-ee65-11e9-8576-4201ac100007
+    resourceVersion: "389886881"
+    uid: 1f37bb6d-40a6-4c6e-a1e0-94e68318d3cb
+  spec:
+    acme:
+      config:
+      - domains:
+        - api.openraadsinformatie.nl
+        - api.openstateninformatie.nl
+        - beta.openraadsinformatie.nl
+        - static.openraadsinformatie.nl
+        - id.openraadsinformatie.nl
+        - zoek.openraadsinformatie.nl
+        - zoek.openstateninformatie.nl
+        - docs.openraadsinformatie.nl
+        - ori.argu.co
+        - openbesluitvorming.nl
+        - www.openbesluitvorming.nl
+        - api.openbesluitvorming.nl
+        - id.openbesluitvorming.nl
+        - docs.openbesluitvorming.nl
+        http01:
+          ingressClass: nginx
+    dnsNames:
+    - api.openraadsinformatie.nl
+    - api.openstateninformatie.nl
+    - beta.openraadsinformatie.nl
+    - static.openraadsinformatie.nl
+    - id.openraadsinformatie.nl
+    - zoek.openraadsinformatie.nl
+    - zoek.openstateninformatie.nl
+    - docs.openraadsinformatie.nl
+    - ori.argu.co
+    - openbesluitvorming.nl
+    - www.openbesluitvorming.nl
+    - api.openbesluitvorming.nl
+    - id.openbesluitvorming.nl
+    - docs.openbesluitvorming.nl
+    issuerRef:
+      kind: ClusterIssuer
+      name: letsencrypt-prod
+    secretName: tls-certificate
+  status:
+    conditions:
+    - lastTransitionTime: "2021-10-08T10:50:19Z"
+      message: Certificate is up to date and has not expired
+      reason: Ready
+      status: "True"
+      type: Ready
+    notAfter: "2022-01-06T09:50:11Z"
+- apiVersion: certmanager.k8s.io/v1alpha1
+  kind: Certificate
+  metadata:
+    creationTimestamp: "2019-08-07T12:16:05Z"
+    generation: 25
+    name: tls-certificate
+    namespace: staging
+    resourceVersion: "389869068"
+    uid: 213b937b-b90d-11e9-ac9f-4201ac100006
+  spec:
+    acme:
+      config:
+      - domains:
+        - beta.openraadsinformatie.nl
+        http01:
+          ingressClass: nginx
+    commonName: beta.openraadsinformatie.nl
+    dnsNames:
+    - beta.openraadsinformatie.nl
+    issuerRef:
+      kind: ClusterIssuer
+      name: letsencrypt-staging
+    secretName: tls-certificate
+  status:
+    conditions:
+    - lastTransitionTime: "2019-08-07T12:16:27Z"
+      message: Certificate is up to date and has not expired
+      reason: Ready
+      status: "True"
+      type: Ready
+    notAfter: "2021-12-23T22:24:11Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

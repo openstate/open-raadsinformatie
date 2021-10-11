@@ -87,3 +87,7 @@
   - **loader** Responsible for writing data (e.g. elastic and linked-delta's)
   - **transformers** Responsible for mapping data
   - **enrichers** Extracting text from PDFs, adding locations, adding themes
+
+### HTTPS (SSL / TLS certificates)
+
+This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
