@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
@@ -15,138 +15,207 @@ spec:
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: search
-          servicePort: 80
+          service:
+            name: search
+            port:
+              number: 80
   - host: www.openbesluitvorming.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: api.openraadsinformatie.nl
     http:
       paths:
       - path: /v1/elastic/(.*)
+        pathType: Prefix
         backend:
-          serviceName: endpoints
-          servicePort: 8000
+          service:
+            name: endpoints
+            port:
+              number: 8000
       - path: /(v1/.*)
+        pathType: Prefix
         backend:
-          serviceName: api-serve
-          servicePort: 80
+          service:
+            name: api-serve
+            port:
+              number: 80
       - path: /v0/(.*)
+        pathType: Prefix
         backend:
-          serviceName: openstate
-          servicePort: 80
+          service:
+            name: openstate
+            port:
+              number: 80
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: api.openstateninformatie.nl
     http:
       paths:
       - path: /v1/elastic/(.*)
+        pathType: Prefix
         backend:
-          serviceName: endpoints
-          servicePort: 8000
+          service:
+            name: endpoints
+            port:
+              number: 8000
       - path: /(v1/.*)
+        pathType: Prefix
         backend:
-          serviceName: api-serve
-          servicePort: 80
+          service:
+            name: api-serve
+            port:
+              number: 80
       - path: /v0/(.*)
+        pathType: Prefix
         backend:
-          serviceName: openstate
-          servicePort: 80
+          service:
+            name: openstate
+            port:
+              number: 80
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: api.openbesluitvorming.nl
     http:
       paths:
       - path: /v1/elastic/(.*)
+        pathType: Prefix
         backend:
-          serviceName: endpoints
-          servicePort: 8000
+          service:
+            name: endpoints
+            port:
+              number: 8000
       - path: /(v1/.*)
+        pathType: Prefix
         backend:
-          serviceName: api-serve
-          servicePort: 80
+          service:
+            name: api-serve
+            port:
+              number: 80
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: zoek.openraadsinformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: search
-          servicePort: 80
+          service:
+            name: search
+            port:
+              number: 80
   - host: zoekv0.openraadsinformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: zoek.openstateninformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: id.openbesluitvorming.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: docs.openraadsinformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: docs.openstateninformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: docs.openbesluitvorming.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: id.openraadsinformatie.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: api-serve
-          servicePort: 80
+          service:
+            name: api-serve
+            port:
+              number: 80
   - host: ori.argu.co
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: nginx
-          servicePort: 80
+          service:
+            name: nginx
+            port:
+              number: 80
   - host: api.waaroverheid.nl
     http:
       paths:
       - path: /(.*)
+        pathType: Prefix
         backend:
-          serviceName: loclinkvis
-          servicePort: 8080
+          service:
+            name: loclinkvis
+            port:
+              number: 8080
   tls:
   - secretName: tls-certificate
