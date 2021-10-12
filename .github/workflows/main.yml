@@ -48,16 +48,8 @@ jobs:
 
       - name: Push docker images
         run: |
-          docker push ${{ env.FULL_IMAGE_NAME }}-backend:latest
-          docker tag ${{ env.FULL_IMAGE_NAME }}-backend:latest ${{ env.FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
-          docker push ${{ env.FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
-          docker tag ${{ env.FULL_IMAGE_NAME }}-backend:latest ${{ env.FULL_IMAGE_NAME }}-backend:build-tmp
-          docker push ${{ env.FULL_IMAGE_NAME }}-backend:build-tmp
-
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-      #   with:
-      #     context: .
-      #     push: true
-      #     tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:run-${{ github.run_number }}
-      #     labels: ${{ steps.meta.outputs.labels }}
+          docker push ${{ env.FULL_IMAGE_NAME }}:latest
+          docker tag ${{ env.FULL_IMAGE_NAME }}:latest ${{ env.FULL_IMAGE_NAME }}:run${{ github.run_number }}
+          docker push ${{ env.FULL_IMAGE_NAME }}:run${{ github.run_number }}
+          docker tag ${{ env.FULL_IMAGE_NAME }}:latest ${{ env.FULL_IMAGE_NAME }}:build-tmp
+          docker push ${{ env.FULL_IMAGE_NAME }}:build-tmp
