@@ -99,6 +99,13 @@ spec:
         backend:
           serviceName: nginx
           servicePort: 80
+  - host: id.openbesluitvorming.nl
+    http:
+      paths:
+      - path: /(.*)
+        backend:
+          serviceName: nginx
+          servicePort: 80
   - host: docs.openraadsinformatie.nl
     http:
       paths:
