@@ -12,7 +12,7 @@ env:
   # openstatefoundation/open-raadsinformatie
   IMAGE_NAME: ${{ github.repository }}
   # ghcr.io/openstatefoundation/open-raadsinformatie
-  FULL_IMAGE_NAME: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+  FULL_IMAGE_NAME: ghcr.io/${{ github.repository }}
 
 jobs:
   build:
