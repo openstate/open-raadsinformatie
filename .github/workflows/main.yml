@@ -44,15 +44,15 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ${{ FULL_IMAGE_NAME }}
+          images: ${{ env.FULL_IMAGE_NAME }}
 
       - name: Push docker images
         run: |
-          docker push ${{ FULL_IMAGE_NAME }}-backend:latest
-          docker tag ${{ FULL_IMAGE_NAME }}-backend:latest ${{ FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
-          docker push ${{ FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
-          docker tag ${{ FULL_IMAGE_NAME }}-backend:latest ${{ FULL_IMAGE_NAME }}-backend:build-tmp
-          docker push ${{ FULL_IMAGE_NAME }}-backend:build-tmp
+          docker push ${{ env.FULL_IMAGE_NAME }}-backend:latest
+          docker tag ${{ env.FULL_IMAGE_NAME }}-backend:latest ${{ env.FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
+          docker push ${{ env.FULL_IMAGE_NAME }}-backend:run${{ github.run_number }}
+          docker tag ${{ env.FULL_IMAGE_NAME }}-backend:latest ${{ env.FULL_IMAGE_NAME }}-backend:build-tmp
+          docker push ${{ env.FULL_IMAGE_NAME }}-backend:build-tmp
 
       # - name: Build and push Docker image
       #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
