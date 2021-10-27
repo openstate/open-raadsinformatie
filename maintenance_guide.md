@@ -1,5 +1,9 @@
 # Maintenance guide ORI
 
+- The environment is [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId).
+- Make sure you've installed the `gcloud` and `kubectl` cli tools, and use `gcloud auth login` to get access to the `open-raadsinformatie` account.
+- Connect to the cluster using `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`. If that fails, visit the cluster in google cloud console, press `actions` and search for a `connect` command.
+
 ## Adding municipalities
 
 - New municipalities are probably added to the issue tracker.
@@ -39,7 +43,7 @@
 
 ## Municipality Changing supplier
 
-- Go to redis (see devops), set source value to "archived" for the older one.
+- Go to redis (see devops), set source value to `archived` for the older one.
 
 ## Finding bugs
 
@@ -47,8 +51,6 @@
 
 ## redis
 
-- The environment is [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId). Make sure you've installed the `gcloud` cli tool, and use `gcloud auth login` to get access to the `open-raadsinformatie` account.
-- connect to cluster with `gcloud` cli. Visit gcloud cluster, press `actions` and search for a `connect` command similar to `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`
 - `kubectl get -A pods | grep redis` to get the name for the redis pod.
 - `kubectl exec -it -n production ${name-of-redis-pod} redis-cli` to open the redis CLI.
 - `select 0` for generic settings and pipelines
@@ -76,7 +78,7 @@
 - The snapshot schedule `postgres-weekly` is actually elastic
 - Go to disks, create disk, standard disk, source type -> snapshot2
 
-# Folder structure
+## Folder structure
 
 - **Deployments** for kubernetes files
 - **ocd_backend** contains most logic
@@ -91,3 +93,4 @@
 ### HTTPS (SSL / TLS certificates)
 
 This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
+This is running as a service in kubernetes.
