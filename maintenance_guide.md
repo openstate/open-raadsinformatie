@@ -55,7 +55,7 @@ You can get secrets using `kubectl get secret secrets -n production -o jsonpath=
 - `exit`
 - Make sure the image version running in GCLoud is the [latest one](https://github.com/openstate/open-raadsinformatie/pkgs/container/open-raadsinformatie/versions) containing the new municipalities. You can check the [backend deployment](https://console.cloud.google.com/kubernetes/deployment/europe-west4-a/ori-cluster/production/backend/yaml/edit?authuser=1&project=open-raadsinformatie-52162). The last number of the version should be the build number of . If this is not a match, you can manually set it in the deployment YAML file.
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
-- start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
+- start the extraction process for the new municipality `python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
 - You can track the progress in the Google cloud logs.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
@@ -127,3 +127,9 @@ You can get secrets using `kubectl get secret secrets -n production -o jsonpath=
 ### HTTPS (SSL / TLS certificates)
 
 This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
+
+## Inspecting SQL
+
+- Install PGAdmin
+- Get the `POSTGRES_USERNAME` and `POSTGRES_PASSWORD` credentials (see the [Secrets section](#secrets))
+- Create a tunnel using kubernetes `kubectl port-forward postgres-5cf95b5f67-44nhd 5432:5432 -n production`

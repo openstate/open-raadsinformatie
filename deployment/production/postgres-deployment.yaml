@@ -18,6 +18,9 @@ spec:
       containers:
       - image: postgres:11.3-alpine
         name: postgres
+        # # For debugging
+        # command: ["sh"]
+        # stdin: true
         env:
         - name: POSTGRES_DB
           value: ori
@@ -35,15 +38,19 @@ spec:
               key: POSTGRES_PASSWORD
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
-          name: postgresdata
+          name: postgresdata-clone
+        # - mountPath: /var/lib/postgresql/clone
+        #   name: postgresdata-clone
         resources:
           requests:
             memory: 4G
             cpu: 1
-      restartPolicy: Always
       volumes:
-      - name: postgresdata
+      - name: postgresdata-clone
         persistentVolumeClaim:
-          claimName: postgresdata
+          claimName: postgresdata-clone
+      # - name: postgresdata
+      #   persistentVolumeClaim:
+      #     claimName: postgresdata
       nodeSelector:
         cloud.google.com/gke-preemptible: "true"

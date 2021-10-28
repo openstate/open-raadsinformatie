@@ -1,17 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgresdata
+  name: postgresdata-clone
   namespace: production
 spec:
   storageClassName: ssd
+  dataSource:
+    name: postgresdata-clone
+    kind: PersistentVolumeClaim
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 300Gi
-allowVolumeExpansion: true
-  # dataSource:
-  #   name: my-snapshot
-  #   kind: VolumeSnapshot
-  #   apiGroup: snapshot.storage.k8s.io

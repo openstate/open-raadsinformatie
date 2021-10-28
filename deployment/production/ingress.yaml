@@ -187,6 +187,17 @@ spec:
             name: api-serve
             port:
               number: 80
+  # WARNING: This service is currently not described in the yaml files of this repo!
+  - host: id.openbesluitvorming.nl
+    http:
+      paths:
+      - path: /(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: ori-apex-rs-serve-1
+            port:
+              number: 80
   - host: ori.argu.co
     http:
       paths:
