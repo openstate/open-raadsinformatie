@@ -1,5 +1,41 @@
 # Maintenance guide ORI
 
+## Setting up
+
+- Spin up a Kubernetes cluster (we used google cloud for this)
+- Set up the necessary persistence layers
+- Install `kubectl` and `gcloud` on your local device
+- Sign in using `gcloud`
+- `kubectl apply` all the `deployment/production/*` files
+- Make sure all the domain names in the `ingress.yaml` are set up correctly
+- Run migrations to setup database (I assume `alembic` is used for this)
+- Set up the secrets (see below)
+
+## Secrets
+
+I encountered these in kubernetes:
+
+```sh
+# Still used:
+KAFKA_PASSWORD
+KAFKA_USERNAME
+POSTGRES_PASSWORD
+POSTGRES_USERNAME
+
+# Probably outdated:
+SEARCH_GLOSS_CLIENT_ID
+SEARCH_GLOSS_CLIENT_SECRET
+NEO4J_AUTH
+harderwijk.cwc_password
+harderwijk.cwc_username
+overbetuwe.cwc_password
+overbetuwe.cwc_username
+utrecht.cwc_password
+utrecht.cwc_username
+```
+
+You can get secrets using `kubectl get secret secrets -n production -o jsonpath='{.data.POSTGRES_USERNAME}' | base64 --decode`
+
 ## Adding municipalities
 
 - New municipalities are probably added to the issue tracker.
@@ -12,12 +48,12 @@
 - Optionally set `source_name` if municipality name can't be properly derived from shortname.
 - Optionally set `municipality_prefix` if municipality has multiple suppliers per region.
 - The next step depends on supplier, see below
-- Push to master, semaphore (currently at jurrian's account!) starts deploying. In this step, dependabot might want to update a lib.
+- Push and a Docker image is built (tests are run) and pushed to github container registry, which you can see at: `https://github.com/openstate/open-raadsinformatie/pkgs/container/open-raadsinformatie/versions`
 - sh to `redis` (see [redis](#redis))
 - `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
 - `exit`
-- Make sure the image version running in GCLoud is the latest one containing the new municipalities. You can check the [backend deployment](https://console.cloud.google.com/kubernetes/deployment/europe-west4-a/ori-cluster/production/backend/yaml/edit?authuser=1&project=open-raadsinformatie-52162). The last number of the version should be the build number of semaphore. If this is not a match, you can manually set it in the deployment YAML file.
+- Make sure the image version running in GCLoud is the [latest one](https://github.com/openstate/open-raadsinformatie/pkgs/container/open-raadsinformatie/versions) containing the new municipalities. You can check the [backend deployment](https://console.cloud.google.com/kubernetes/deployment/europe-west4-a/ori-cluster/production/backend/yaml/edit?authuser=1&project=open-raadsinformatie-52162). The last number of the version should be the build number of . If this is not a match, you can manually set it in the deployment YAML file.
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
 - start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
 - You can track the progress in the Google cloud logs.

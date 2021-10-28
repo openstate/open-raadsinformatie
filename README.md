@@ -8,16 +8,15 @@ Open Raadsinformatie is a collaborative effort of the [Open State Foundation](ht
 
 ## Important links
 
+ - [OpenBesluitvorming](http://zoek.openraadsinformatie.nl/) (full-text search GUI)
  - [Open Raadsinformatie homepage](http://www.openraadsinformatie.nl/)
  - [Official source code repository](https://github.com/openstate/open-raadsinformatie/)
  - [Issue tracker](https://github.com/openstate/open-raadsinformatie/issues)
- - [Search engine](http://zoek.openraadsinformatie.nl/)
- - [New search engine (beta)](https://ori.argu.co)
  - [Docs for V1 API](http://docs.openraadsinformatie.nl)
 
 ## Installation and usage
 
-See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started. Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
+Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
 
 ## Supported Sources
 
@@ -37,7 +36,7 @@ Your griffie (municipality clerk) needs to formally agree that the data becomes 
 
 ## Related repositories
 
-- [ori-search](https://github.com/ontola/ori-search/), the new search interface.
+- [openbesluitvorming](https://github.com/ontola/openbesluitvorming/), the new react search front-end.
 - [ori_api](https://github.com/ontola/ori_api/), the `id.` REST api.
 
 ## Contributing
