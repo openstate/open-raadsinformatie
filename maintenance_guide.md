@@ -90,7 +90,12 @@
   - **transformers** Responsible for mapping data
   - **enrichers** Extracting text from PDFs, adding locations, adding themes
 
-### HTTPS (SSL / TLS certificates)
+## HTTPS (SSL / TLS certificates)
 
 This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
 This is running as a service in kubernetes.
+
+## Deleting resources from Elastic
+
+- `kubectl exec elastic-0 -it -n production -- sh` get a shell in a running elastic container
+- Send an HTTP DELETE to the ID: `curl -X DELETE 0.0.0.0:9200/${index}/${type}/${id}`, e.g. `curl -X DELETE 0.0.0.0:9200/ori_vlaardingen_20190809125128/_doc/1234567`
