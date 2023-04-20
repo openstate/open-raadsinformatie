@@ -8,7 +8,7 @@ COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 # layer size. Third and fourth lines are lib dependencies and fifth line are
 # package dependencies
 RUN apk add --update \
-  build-base git tzdata \
+  build-base git tzdata curl jq \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic
 RUN apk add --no-cache librdkafka-dev \

@@ -14,8 +14,10 @@ from click.core import Command
 from click.decorators import _make_command
 
 from elasticsearch.exceptions import RequestError
+from elasticsearch.helpers import reindex
 
 from ocd_backend.es import elasticsearch as es
+from ocd_backend.es import setup_elasticsearch
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
@@ -292,6 +294,32 @@ def available_indices():
     return available
 
 
+@command('copy')
+@click.argument('source_index')
+@click.option('--target-index', default='ori_all')
+@click.option('--target-host', default='elastic2')
+def es_copy_data(source_index, target_index, target_host):
+    """
+    CCopy elasticsearch data from one index ot another.
+
+    :param source_index: The source index
+    :param target-index: The target index
+    :param target-host: The target host
+    """
+    es2 = setup_elasticsearch(target_host)
+    #reindex(es, source_index, target_index, target_client=es2)
+    es2.reindex(body={
+        'source': {
+            'remote': {
+                'host': 'http://elastic:9200'
+            },
+            'index': source_index
+        },
+        'dest': {
+            'index': target_index,
+        }
+    })
+
 @command('list_sources')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 def extract_list_sources(sources_config):
@@ -475,6 +503,7 @@ elasticsearch.add_command(es_put_mapping)
 elasticsearch.add_command(create_indexes)
 elasticsearch.add_command(delete_indexes)
 elasticsearch.add_command(available_indices)
+elasticsearch.add_command(es_copy_data)
 
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)

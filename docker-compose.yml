@@ -6,7 +6,7 @@ services:
       dockerfile: ocd_backend/Dockerfile
       cache_from:
         - openstatefoundation/open-raadsinformatie-backend:build-tmp
-    image: ghcr.io/openstate/open-raadsinformatie
+    # image: ghcr.io/openstate/open-raadsinformatie
     links:
       - redis:redis
       - elastic:elasticsearch
@@ -72,6 +72,7 @@ services:
       service: elastic
     environment:
       - cluster.name=docker-cluster2
+      - reindex.remote.whitelist=elastic:9200
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
     volumes:
