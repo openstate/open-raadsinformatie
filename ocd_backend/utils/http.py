@@ -312,5 +312,8 @@ class GCSCachingMixin(HttpRequestMixin):
         """Check if path exists and returns the blob. This action will retry
         using exponential back-off if it is raises an transient API error.
         """
-        bucket = self.get_bucket()
-        return bucket.get_blob(path)
+        if self.storage_client:
+            bucket = self.get_bucket()
+            return bucket.get_blob(path)
+        else:
+            return False
