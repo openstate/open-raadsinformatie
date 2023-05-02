@@ -9,6 +9,10 @@
   "mappings": {
     "dynamic_date_formats": ["yyyy-MM-dd'T'HH:mm:ss.SSSSSS", "strict_date_time", "strict_date_time_no_millis", "strict_date_optional_time"],
     "properties": {
+      "@context": {
+        "type": "object",
+        "enabled": false
+      },
       "text": {
         "type": "text"
       },
