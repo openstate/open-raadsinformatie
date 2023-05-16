@@ -67,12 +67,12 @@ services:
       - node.max_local_storage_nodes=20
       - bootstrap.memory_lock=false
       - reindex.remote.whitelist=c-open-raadsinformatie:9200
-  elastic2:
-    extends:
-      service: elastic
-    environment:
-      - cluster.name=docker-cluster2
-      - reindex.remote.whitelist=elastic:9200
+  # elastic2:
+  #   extends:
+  #     service: elastic
+  #   environment:
+  #     - cluster.name=docker-cluster2
+  #     - reindex.remote.whitelist=elastic:9200
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
     volumes:
