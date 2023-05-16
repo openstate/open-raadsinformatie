@@ -70,8 +70,8 @@ def province_organization_item(self, content_type, raw_item, canonical_iri, cach
     object_model.collection = self.source_definition['key']
     object_model.name = original_item['naam']
     object_model.description = original_item['omvatplaats']
-    object_model.homepage = original_item['contact']['internet']['value']
-    object_model.email = original_item['contact']['emailadres']['value']
+    object_model.homepage = original_item.get('contact', {}).get('internetadressen', [])[0].get('email')
+    object_model.email = original_item.get('contact', {}).get('emailadressen', [])[0].get('url')
     # object_model.contact_details = transform_contact_details(original_item['contact'])
 
     object_model.save()

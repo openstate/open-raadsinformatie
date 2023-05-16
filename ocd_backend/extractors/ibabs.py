@@ -6,6 +6,8 @@ from zeep.client import Client, Settings
 from zeep.exceptions import Error
 from zeep.helpers import serialize_object
 
+import iso8601
+
 from ocd_backend import settings
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
@@ -279,7 +281,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                     date_field = None
                     try:
-                        date_field = next(x for x in sorted(report_dict.keys(), key=len) if 'datum' in x.lower())
+                        date_field = next(x for x in sorted(report_dict.keys(), key=len) if (('datum' in x.lower()) or ('date' in x.lower())))
                     except StopIteration:
                         log.info(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: '
                                  f'{json.dumps(report_dict, default=str)}')
@@ -291,7 +293,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     except KeyError:
                         report_dict['datum'] = None
 
-                    if report_dict['datum'] and not start_date < report_dict['datum'].replace(tzinfo=None) < end_date:
+                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
                         # Skip report if date is outside date interval
                         continue
 

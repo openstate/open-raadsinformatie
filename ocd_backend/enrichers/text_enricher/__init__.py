@@ -13,6 +13,8 @@ from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
+
+from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.ggm_motion_text import GegevensmagazijnMotionText
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
 from ocd_backend.enrichers.text_enricher.tasks.waaroverheid import WaarOverheidEnricher
@@ -31,9 +33,12 @@ class TextEnricher(BaseEnricher):
     #: The registry of available sub-tasks that are responsible for the
     #: analysis of media items.
     available_tasks = {
-        'ggm_motion_text': GegevensmagazijnMotionText,
-        'theme_classifier': ThemeClassifier,
-        'waaroverheid': WaarOverheidEnricher,
+        # 'ggm_motion_text': GegevensmagazijnMotionText,
+        # 'theme_classifier': ThemeClassifier,
+        # 'waaroverheid': WaarOverheidEnricher,
+        'ggm_motion_text': VoidEnrichtmentTask,
+        'theme_classifier': VoidEnrichtmentTask,
+        'waaroverheid': VoidEnrichtmentTask,
     }
 
     def enrich_item(self, item):
