@@ -53,10 +53,10 @@ services:
       - xpack.monitoring.enabled=false
 
       # Enable CORS for all origins
-      - http.cors.enabled=true
-      - http.cors.allow-origin="*"
-      - http.cors.allow-headers=Content-Type,Content-Length,Authorization
-      - http.cors.allow-credentials=true
+      #- http.cors.enabled=true
+      #- http.cors.allow-origin="*"
+      #- http.cors.allow-headers=Content-Type,Content-Length,Authorization
+      #- http.cors.allow-credentials=true
 
       # Security (https://www.elastic.co/blog/found-elasticsearch-security)
       - rest.action.multi.allow_explicit_index=false
