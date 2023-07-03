@@ -293,7 +293,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     except KeyError:
                         report_dict['datum'] = None
 
-                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
+                    # datum can sometimes be 'V' -- unsure what it means
+                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and report_dict['datum'] != 'V' and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
                         # Skip report if date is outside date interval
                         continue
 
