@@ -12,6 +12,7 @@ services:
       - elastic:elasticsearch
     volumes:
       - oridata:/opt/ori/data
+      - .:/opt/ori
     depends_on:
       elastic:
         condition: service_healthy

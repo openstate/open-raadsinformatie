@@ -92,6 +92,9 @@ def party_item(self, content_type, raw_item, canonical_iri, cached_path, **kwarg
     }
 
     # When the Allmanak implements parties as entities, the canonical_iri should be used
+    log.info(original_item)
+    if not original_item.get('partij'):
+        original_item['partij'] = original_item['naam']
     object_model = Organization(original_item['partij'], **source_defaults)
     object_model.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                               source=self.source_definition['key'],
