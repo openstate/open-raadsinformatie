@@ -7,9 +7,8 @@ services:
         #      cache_from:
         #- openstatefoundation/open-raadsinformatie-backend:build-tmp
         #image: ghcr.io/openstate/open-raadsinformatie
-    links:
-      - redis:redis
-      - elastic:elasticsearch
+    networks:
+      - ori
     volumes:
       - oridata:/opt/ori/data
       - .:/opt/ori
@@ -21,6 +20,8 @@ services:
     mem_limit: 3g
   redis:
     image: "redis:${REDIS_VERSION}"
+    networks:
+      - ori
     volumes:
      - redisdata:/data
     sysctls:
@@ -36,7 +37,7 @@ services:
     cap_add:
       - IPC_LOCK
     networks:
-      #- ori
+      - ori
       - nginx-load-balancer
     volumes:
       - esdata:/usr/share/elasticsearch/data
@@ -79,6 +80,8 @@ services:
   #     - reindex.remote.whitelist=elastic:9200
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
+    networks:
+      - ori
     volumes:
       - pgdata:/var/lib/postgresql/data
 
