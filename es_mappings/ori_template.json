@@ -68,6 +68,10 @@
       "is_referenced_by": {
         "type": "keyword"
       },
+      "last_discussed_at" : {
+        "type" : "date",
+        "format" : "strict_date_time"
+      },
       "original_url": {
         "type": "keyword"
       },
