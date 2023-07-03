@@ -4,9 +4,9 @@ services:
     build:
       context: .
       dockerfile: ocd_backend/Dockerfile
-      cache_from:
-        - openstatefoundation/open-raadsinformatie-backend:build-tmp
-    # image: ghcr.io/openstate/open-raadsinformatie
+        #      cache_from:
+        #- openstatefoundation/open-raadsinformatie-backend:build-tmp
+        #image: ghcr.io/openstate/open-raadsinformatie
     links:
       - redis:redis
       - elastic:elasticsearch
@@ -35,6 +35,9 @@ services:
     mem_limit: 4g
     cap_add:
       - IPC_LOCK
+    networks:
+      #- ori
+      - nginx-load-balancer
     volumes:
       - esdata:/usr/share/elasticsearch/data
     healthcheck:
@@ -88,3 +91,10 @@ volumes:
     driver: local
   pgdata:
     driver: local
+
+networks:
+  ori:
+  nginx-load-balancer:
+    external:
+      name: docker_nginx-load-balancer
+
