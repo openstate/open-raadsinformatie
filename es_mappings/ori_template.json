@@ -70,7 +70,7 @@
       },
       "last_discussed_at" : {
         "type" : "date",
-        "format" : "strict_date_time"
+        "format" : "yyyy-MM-dd'T'HH:mm:ss.SSSSSS||strict_date_time||strict_date_time_no_millis||strict_date_optional_time"
       },
       "original_url": {
         "type": "keyword"
