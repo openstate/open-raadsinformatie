@@ -508,7 +508,7 @@ def extract_process(modus, source_path, sources_config):
             click.echo('[%s] Start extract for %s' % (source_name, source_name))
 
             selected_entities = []
-            for entity in available_source['entities']:
+            for entity in available_source.get('entities', []):
                 if not enabled_entities or entity.get('entity') in enabled_entities:
                     selected_entities.append(entity.get('entity'))
 
