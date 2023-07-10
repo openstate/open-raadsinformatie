@@ -7,6 +7,7 @@ import json
 import os
 import requests
 import sys
+from pprint import pprint
 
 import redis
 import click
@@ -414,6 +415,35 @@ def extract_start(source_id, subitem, entiteit, sources_config):
         click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
 
+@command('load_redis')
+@click.argument('modus')
+@click.option('--source_path', default='*')
+@click.option('--sources_config', default=SOURCES_CONFIG_FILE)
+def extract_load_redis(modus, source_path, sources_config):
+    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+
+    available_sources = load_sources_config(sources_config)
+    redis_sources = redis_client.keys(source_path)
+
+    sources = []
+    for redis_source in redis_sources:
+        if redis_source[0:1] == '_':
+            # Settings are underscored so we skip them
+            continue
+
+        source_value = redis_client.get(redis_source)
+        if source_value.startswith('disabled'):
+            # If value equals disabled we will not process the source
+            continue
+        elif modus in source_value:
+            sources.append(redis_source)
+    #pprint(available_sources)
+    for provider, municipalities in available_sources.items():
+        for m in municipalities.keys():
+            redis_source = "%s.%s" % (provider, m,)
+            redis_client.set(redis_source, modus)
+
+
 @command('process')
 @click.argument('modus')
 @click.option('--source_path', default='*')
@@ -508,6 +538,7 @@ elasticsearch.add_command(es_copy_data)
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)
 extract.add_command(extract_process)
+extract.add_command(extract_load_redis)
 
 
 if __name__ == '__main__':
