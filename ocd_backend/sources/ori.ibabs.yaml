@@ -955,3 +955,195 @@ ori.ibabs:
     allmanak_id: 28097
     cbs_id: GM0965
     <<: *ibabs
+
+  # Added on 18-07-2023
+  # Gemeente Waalre
+
+  waalre:
+    key: waalre
+    ibabs_sitename: waalre
+    allmanak_id: 35025
+    cbs_id: GM0866
+    <<: *ibabs
+
+  sittard_geleen:
+    key: sittard_geleen
+    ibabs_sitename: sittardgeleen
+    allmanak_id: 29280
+    cbs_id: GM1883
+    <<: *ibabs
+
+  nederweert:
+    key: nederweert
+    ibabs_sitename: nederweert
+    allmanak_id: 33458
+    cbs_id: GM0946
+    <<: *ibabs
+
+  heeze_leende:
+    key: heeze_leende
+    ibabs_sitename: heezeleende
+    allmanak_id: 39347
+    cbs_id: GM1658
+    <<: *ibabs
+
+  harlingen:
+    key: harlingen
+    ibabs_sitename: harlingen
+    allmanak_id: 37578
+    cbs_id: GM0072
+    <<: *ibabs
+
+  urk:
+    key: urk
+    ibabs_sitename: urk
+    allmanak_id: 33357
+    cbs_id: GM0184
+    <<: *ibabs
+
+  cranendonck:
+    key: cranendonck
+    ibabs_sitename: cranendonck
+    allmanak_id: 36285
+    cbs_id: GM1706
+    <<: *ibabs
+
+  waterland:
+    key: waterland
+    ibabs_sitename: waterland
+    allmanak_id: 32026
+    cbs_id: GM0852
+    <<: *ibabs
+
+  geldrop_mierlo:
+    key: geldrop_mierlo
+    ibabs_sitename: geldropmierlo
+    allmanak_id: 36388
+    cbs_id: GM1771
+    <<: *ibabs
+
+  geertruidenberg:
+    key: geertruidenberg
+    ibabs_sitename: geertruidenberg
+    allmanak_id: 37962
+    cbs_id: GM0779
+    <<: *ibabs
+
+  hattem:
+    key: hattem
+    ibabs_sitename: hattem
+    allmanak_id: 27765
+    cbs_id: GM0244
+    <<: *ibabs
+
+  beek:
+    key: beek
+    ibabs_sitename: beek
+    allmanak_id: 34989
+    cbs_id: GM0888
+    <<: *ibabs
+
+  venlo:
+    key: venlo
+    ibabs_sitename: venlo
+    allmanak_id: 25285
+    cbs_id: GM0983
+    <<: *ibabs
+
+  oostzaan:
+    key: oostzaan
+    ibabs_sitename: oostzaan
+    allmanak_id: 39007
+    cbs_id: GM0431
+    <<: *ibabs
+
+  oirschot:
+    key: oirschot
+    ibabs_sitename: oirschot
+    allmanak_id: 34584
+    cbs_id: GM0823
+    <<: *ibabs
+
+  maasgouw:
+    key: maasgouw
+    ibabs_sitename: maasgouw
+    allmanak_id: 39485
+    cbs_id: GM1641
+    <<: *ibabs
+
+  gorinchem:
+    key: gorinchem
+    ibabs_sitename: gorinchem
+    allmanak_id: 30894
+    cbs_id: GM0512
+    <<: *ibabs
+
+  stein:
+    key: stein
+    ibabs_sitename: stein
+    allmanak_id: 29239
+    cbs_id: GM0971
+    <<: *ibabs
+
+  achtkarspelen:
+    key: achtkarspelen
+    ibabs_sitename: achtkarspelen
+    allmanak_id: 35934
+    cbs_id: GM0059
+    <<: *ibabs
+
+  laarbeek:
+    key: laarbeek
+    ibabs_sitename: laarbeek
+    allmanak_id: 25516
+    cbs_id: GM1659
+    <<: *ibabs
+
+  coevorden:
+    key: coevorden
+    ibabs_sitename: coevorden
+    allmanak_id: 26491
+    cbs_id: GM0109
+    <<: *ibabs
+
+  opsterland:
+    key: opsterland
+    ibabs_sitename: opsterland
+    allmanak_id: 31946
+    cbs_id: GM0086
+    <<: *ibabs
+
+  bergen_op_zoom:
+    key: bergen_op_zoom
+    ibabs_sitename: bergenopzoom
+    allmanak_id: 30437
+    cbs_id: GM0748
+    <<: *ibabs
+
+  kaag_en_brasssem:
+    key: kaag_en_brasssem
+    ibabs_sitename: kaagenbraassem
+    allmanak_id: 27951
+    cbs_id: GM1884
+    <<: *ibabs
+
+  echt_susteren:
+    key: echt_susteren
+    ibabs_sitename: echtsusteren
+    allmanak_id: 25008
+    cbs_id: GM1711
+    <<: *ibabs
+
+  hoorn:
+    key: hoorn
+    ibabs_sitename: hoorn
+    allmanak_id: 24950
+    cbs_id: GM0405
+    <<: *ibabs
+
+  hoorn:
+    key: hoorn
+    ibabs_sitename: hoorn
+    allmanak_id: 24950
+    cbs_id: GM0405
+    <<: *ibabs
