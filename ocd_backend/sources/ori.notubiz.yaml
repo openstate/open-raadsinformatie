@@ -829,3 +829,61 @@ ori.notubiz:
     cbs_id: GM0047
     notubiz_organization_id: 505
     <<: *notubiz
+
+  # Added on 18-07-2023
+
+  west_maas_en_waal:
+    key: west_maas_en_waal
+    allmanak_id: 35895
+    cbs_id: GM0668
+    notubiz_organization_id: 1752
+    <<: *notubiz
+
+  renswoude:
+    key: renswoude
+    allmanak_id: 26860
+    cbs_id: GM0339
+    notubiz_organization_id: 1813
+    <<: *notubiz
+
+  middelburg:
+    key: middelburg
+    allmanak_id: 22048
+    cbs_id: GM0687
+    notubiz_organization_id: 603
+    <<: *notubiz
+
+  enkhuizen:
+    key: enkhuizen
+    allmanak_id: 33494
+    cbs_id: GM0388
+    notubiz_organization_id: 736
+    <<: *notubiz
+
+  landgraaf:
+    key: landgraaf
+    allmanak_id: 34171
+    cbs_id: GM0882
+    notubiz_organization_id: 918
+    <<: *notubiz
+
+  purmerend:
+    key: purmerend
+    allmanak_id: 38751
+    cbs_id: GM0439
+    notubiz_organization_id: 1118
+    <<: *notubiz
+
+  terneuzen:
+    key: terneuzen
+    allmanak_id: 23448
+    cbs_id: GM0715
+    notubiz_organization_id: 679
+    <<: *notubiz
+
+  sint_michielsgestel:
+    key: sint_michielsgestel
+    allmanak_id: 39441
+    cbs_id: GM0845
+    notubiz_organization_id: 536
+    <<: *notubiz
