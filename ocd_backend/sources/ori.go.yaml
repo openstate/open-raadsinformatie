@@ -265,3 +265,46 @@ ori.go:
     allmanak_id: 24295
     cbs_id: GM0397
     <<: *go
+
+  # Added on 18-07-2023
+  venlo:
+    key: venlo
+    base_url: "https://gemeenteraad.venlo.nl/api/v1/"
+    allmanak_id: 25285
+    cbs_id: GM0983
+    <<: *go
+
+  dinkelland:
+    key: dinkelland
+    base_url: "https://gemeenteraad.dinkelland.nl/api/v1/"
+    allmanak_id: 25432
+    cbs_id: GM1774
+    <<: *go
+
+  renkum:
+    key: renkum
+    base_url: "https://raad.renkum.nl/api/v1/"
+    allmanak_id: 30749
+    cbs_id: GM0274
+    <<: *go
+
+  ridderkerk:
+    key: ridderkerk
+    base_url: "https://raad.ridderkerk.nl/api/v1/"
+    allmanak_id: 40741
+    cbs_id: GM0597
+    <<: *go
+
+  sliedrecht:
+    key: sliedrecht
+    base_url: "https://raad.sliedrecht.nl/api/v1/"
+    allmanak_id: 29505
+    cbs_id: GM0610
+    <<: *go
+
+  tubbergen:
+    key: tubbergen
+    base_url: "https://bestuur.tubbergen.nl/api/v1/"
+    allmanak_id: 27560
+    cbs_id: GM0183
+    <<: *go
