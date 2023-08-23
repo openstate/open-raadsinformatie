@@ -11,7 +11,8 @@ services:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      - .:/opt/ori
+      # - .:/opt/ori
+      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
     depends_on:
       elastic:
         condition: service_healthy
@@ -46,6 +47,7 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+    restart: always
     environment:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       # Discovery

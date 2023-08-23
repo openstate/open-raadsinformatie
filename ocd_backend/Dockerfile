@@ -14,7 +14,7 @@ RUN apk add --update \
 RUN apk add --no-cache librdkafka-dev \
   && apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip install --upgrade pip \
-  && pip install cython \
+  && pip install cython==0.29.36 \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
   && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
