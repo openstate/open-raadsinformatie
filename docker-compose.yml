@@ -7,18 +7,42 @@ services:
         #      cache_from:
         #- openstatefoundation/open-raadsinformatie-backend:build-tmp
         #image: ghcr.io/openstate/open-raadsinformatie
+    environment:
+      - BUGSNAG_APIKEY="xxx"
     networks:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      # - .:/opt/ori
-      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
+      - .:/opt/ori
+        #- ./ocd_backend/sources:/opt/ori/ocd_backend/sources
     depends_on:
       elastic:
         condition: service_healthy
       postgres:
         condition: service_started
-    mem_limit: 3g
+    mem_limit: 1g
+  loader:
+    build:
+      context: .
+      dockerfile: ocd_backend/Dockerfile
+        #      cache_from:
+        #- openstatefoundation/open-raadsinformatie-backend:build-tmp
+        #image: ghcr.io/openstate/open-raadsinformatie
+    environment:
+      - BUGSNAG_APIKEY="xxx"
+    networks:
+      - ori
+    volumes:
+      - oridata:/opt/ori/data
+      - .:/opt/ori
+        #- ./ocd_backend/sources:/opt/ori/ocd_backend/sources
+    depends_on:
+      elastic:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    mem_limit: 1g
+    command: celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q loaders --concurrency=1 --without-gossip --quiet
   redis:
     image: "redis:${REDIS_VERSION}"
     networks:
@@ -27,14 +51,14 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
-    mem_limit: 4g
+    mem_limit: 1g
   elastic:
     image: elasticsearch:7.0.0
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 4g
+    mem_limit: 1g
     cap_add:
       - IPC_LOCK
     networks:
@@ -102,4 +126,3 @@ networks:
   nginx-load-balancer:
     external:
       name: docker_nginx-load-balancer
-
