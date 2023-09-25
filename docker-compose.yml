@@ -51,6 +51,7 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
+    command: ["redis-server", "--appendonly", "yes"]
     mem_limit: 1g
   elastic:
     image: elasticsearch:7.0.0
