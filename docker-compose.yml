@@ -8,19 +8,19 @@ services:
         #- openstatefoundation/open-raadsinformatie-backend:build-tmp
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
-      - BUGSNAG_APIKEY="xxx"
+      - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
     networks:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      - .:/opt/ori
-        #- ./ocd_backend/sources:/opt/ori/ocd_backend/sources
+      #- .:/opt/ori
+      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
     depends_on:
       elastic:
         condition: service_healthy
       postgres:
         condition: service_started
-    mem_limit: 1g
+    mem_limit: 4g
   loader:
     build:
       context: .
@@ -29,20 +29,20 @@ services:
         #- openstatefoundation/open-raadsinformatie-backend:build-tmp
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
-      - BUGSNAG_APIKEY="xxx"
+      - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
     networks:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      - .:/opt/ori
-        #- ./ocd_backend/sources:/opt/ori/ocd_backend/sources
+      #- .:/opt/ori
+      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
     depends_on:
       elastic:
         condition: service_healthy
       postgres:
         condition: service_started
-    mem_limit: 1g
     command: celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q loaders --concurrency=1 --without-gossip --quiet
+    mem_limit: 8g
   redis:
     image: "redis:${REDIS_VERSION}"
     networks:
@@ -52,14 +52,15 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     command: ["redis-server", "--appendonly", "yes"]
-    mem_limit: 1g
+    mem_limit: 16g
+    restart: always
   elastic:
     image: elasticsearch:7.0.0
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 1g
+    mem_limit: 16g
     cap_add:
       - IPC_LOCK
     networks:
@@ -74,7 +75,7 @@ services:
       retries: 5
     restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms16g -Xmx16g"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0
