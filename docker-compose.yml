@@ -51,7 +51,7 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
-    command: ["redis-server", "--appendonly", "yes"]
+    command: ["redis-server", "--appendonly", "no", "--save", "\"\""]
     mem_limit: 16g
     restart: always
   elastic:
