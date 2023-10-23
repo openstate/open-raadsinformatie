@@ -55,12 +55,12 @@ services:
     mem_limit: 16g
     restart: always
   elastic:
-    image: elasticsearch:7.0.0
+    image: elasticsearch:7.9.3
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 16g
+    #mem_limit: 16g
     cap_add:
       - IPC_LOCK
     networks:
@@ -98,7 +98,7 @@ services:
 
       # Other settings
       - node.max_local_storage_nodes=20
-      - bootstrap.memory_lock=false
+      - bootstrap.memory_lock=true
       - reindex.remote.whitelist=c-open-raadsinformatie:9200
   # elastic2:
   #   extends:
