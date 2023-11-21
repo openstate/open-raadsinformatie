@@ -20,7 +20,7 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
-    mem_limit: 4g
+    #mem_limit: 1g
   loader:
     build:
       context: .
@@ -42,7 +42,7 @@ services:
       postgres:
         condition: service_started
     command: celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q loaders --concurrency=1 --without-gossip --quiet
-    mem_limit: 8g
+    #mem_limit: 1g
   redis:
     image: "redis:${REDIS_VERSION}"
     networks:
@@ -52,7 +52,7 @@ services:
     sysctls:
      - net.core.somaxconn=65535
     command: ["redis-server", "--appendonly", "no", "--save", "\"\""]
-    mem_limit: 16g
+    #mem_limit: 1g
     restart: always
   elastic:
     image: elasticsearch:7.9.3
@@ -69,13 +69,13 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     healthcheck:
-      test: wget -q -O - http://127.0.0.1:9200/_cat/health
+      test: curl -s http://127.0.0.1:9200/_cat/health
       interval: 15s
       timeout: 10s
       retries: 5
     restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms16g -Xmx16g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0
@@ -83,7 +83,8 @@ services:
 
       # Disable xpack features
       - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
+      #- xpack.monitoring.enabled=false
+      - xpack.monitoring.collection.enabled=false
 
       # Enable CORS for all origins
       #- http.cors.enabled=true
@@ -93,8 +94,8 @@ services:
 
       # Security (https://www.elastic.co/blog/found-elasticsearch-security)
       - rest.action.multi.allow_explicit_index=false
-      - script.allowed_types=none
-      - script.allowed_contexts=none
+      #- script.allowed_types=none
+      - script.allowed_contexts=ingest
 
       # Other settings
       - node.max_local_storage_nodes=20

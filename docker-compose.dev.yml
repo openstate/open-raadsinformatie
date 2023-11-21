@@ -8,6 +8,9 @@ services:
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
+    mem_limit: 1g
+  loader:
+    mem_limit: 1g
   elastic:
     ports:
       - "9200:9200"
