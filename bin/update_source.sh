@@ -6,6 +6,6 @@ tail -n +2 sources.txt >sources.tmp
 MUNI=`head -1 sources.txt`
 if [ "$MUNI" != "" ];
 then
-  echo sudo docker exec ori_backend_1 ./manage.py extract process daily --source_path "*"$MUNI
+  sudo docker exec ori_backend_1 ./manage.py extract process daily --source_path "*"$MUNI
 fi
 cp sources.tmp sources.txt
