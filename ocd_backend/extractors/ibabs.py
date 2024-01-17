@@ -1,6 +1,8 @@
 import base64
 import re
 import json
+from collections import OrderedDict
+from hashlib import sha1
 
 from zeep.client import Client, Settings
 from zeep.exceptions import Error
@@ -48,6 +50,16 @@ class IBabsBaseExtractor(BaseExtractor):
                                  settings=soap_settings)
         except Error as e:
             log.error(f'Unable to instantiate iBabs client: {str(e)}')
+
+    def _make_hash(self, report_dict):
+        """
+        Make a hash value for a dict. This can be usedc to compare dicts to an
+        earlier stored hash vlue to see if things changed.
+        """
+        ordered_report_dict = OrderedDict(report_dict.items())
+        h = sha1()
+        h.update(json_encoder.encode(ordered_report_dict).encode('ascii'))
+        return h.hexdigest()
 
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
@@ -298,6 +310,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         # Skip report if date is outside date interval
                         continue
 
+                    log.info(self._make_hash(report_dict))
                     # identifier = item['id'][0]
                     yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path
                     yield_count += 1
