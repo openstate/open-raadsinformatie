@@ -1,10 +1,14 @@
 import math
 from datetime import datetime
+from collections import OrderedDict
+from hashlib import sha1
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
 from ocd_backend.log import get_source_logger
+from ocd_backend.models.model import PostgresDatabase
+from ocd_backend.models.postgres_models import ItemHash
 
 log = get_source_logger('extractor')
 
@@ -19,6 +23,33 @@ class BaseExtractor:
         :type source_definition: dict.
         """
         self.source_definition = source_definition
+        database = PostgresDatabase()
+        self.session = database.Session()
+
+    def _make_hash(self, report_dict):
+        """
+        Make a hash value for a dict. This can be usedc to compare dicts to an
+        earlier stored hash vlue to see if things changed.
+        """
+        ordered_report_dict = OrderedDict(report_dict.items())
+        h = sha1()
+        h.update(json_encoder.encode(ordered_report_dict).encode('ascii'))
+        return h.hexdigest()
+
+    def check_if_most_recent(self, provider, site_name, id, report_dict):
+        h = sha1()
+        h.update("%s|%s|%s" % (provider, site_name, id,))
+        item_id = h.hexhdigest()
+        new_hash = self._make_hash(report_dict)
+        old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
+        if old_item:
+            old_item.item_hash = new_hash
+            self.session.commit()
+            return (old_item.item_hash == new_hash)
+        else:
+            new_item = ItemHash(item_id=item_id, item_hash=new_hash)
+            self.session.commit()
+            return True
 
     def run(self):
         """Starts the extraction process.

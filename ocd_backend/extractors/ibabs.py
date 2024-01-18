@@ -54,30 +54,6 @@ class IBabsBaseExtractor(BaseExtractor):
         except Error as e:
             log.error(f'Unable to instantiate iBabs client: {str(e)}')
 
-        try:
-            self.redis_client = redis.StrictRedis(
-                host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
-        except Exception as e:
-            log.error(f'Unable to instantiate Redis client: {str(e)}')
-
-    def _make_hash(self, report_dict):
-        """
-        Make a hash value for a dict. This can be usedc to compare dicts to an
-        earlier stored hash vlue to see if things changed.
-        """
-        ordered_report_dict = OrderedDict(report_dict.items())
-        h = sha1()
-        h.update(json_encoder.encode(ordered_report_dict).encode('ascii'))
-        return h.hexdigest()
-
-    def check_if_most_recent(self, site_name, id, report_dict):
-        redis_key = "%s|%s" % (site_name, id,)
-        old_hash = self.redis_client.get(redis_key)
-        new_hash = self._make_hash(report_dict)
-        if old_hash != new_hash:
-            self.redis_client.set(redis_key, new_hash)
-        return (old_hash != new_hash)
-
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
     """
@@ -210,7 +186,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                         continue
 
                     meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
-                    if self.check_if_most_recent(self.source_definition['ibabs_sitename'], meeting['Id'], meeting_dict):
+                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], meeting['Id'], meeting_dict):
                         yield 'application/json', \
                               json.dumps(meeting_dict), \
                               None, \
@@ -330,8 +306,8 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         continue
 
                     log.info(self._make_hash(report_dict))
-                    is_newer = self.check_if_most_recent(
-                        self.source_definition['ibabs_sitename'], item['id'], report_dict)
+                    is_newer = not self.check_if_most_recent(
+                        'ibabs', self.source_definition['ibabs_sitename'], item['id'], report_dict)
                     # identifier = item['id'][0]
                     if is_newer:
                         yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path
