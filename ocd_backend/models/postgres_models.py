@@ -9,6 +9,13 @@ from sqlalchemy_utils.types import UUIDType
 Base = declarative_base()
 
 
+class ItemHash(Base):
+    __tablename__ = 'item_hash'
+
+    id = Column(BigInteger, Sequence('source_id_seq'), primary_key=True, index=True)
+    item_id = Column(String, nullable=False, index=True, unique=True)
+    item_hash = Column(String, nullable=False)
+
 class Source(Base):
     __tablename__ = 'source'
 
