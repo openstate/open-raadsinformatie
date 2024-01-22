@@ -7,17 +7,42 @@ services:
         #      cache_from:
         #- openstatefoundation/open-raadsinformatie-backend:build-tmp
         #image: ghcr.io/openstate/open-raadsinformatie
+    environment:
+      - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
     networks:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      - .:/opt/ori
+      #- .:/opt/ori
+      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
     depends_on:
       elastic:
         condition: service_healthy
       postgres:
         condition: service_started
-    mem_limit: 3g
+    #mem_limit: 1g
+  loader:
+    build:
+      context: .
+      dockerfile: ocd_backend/Dockerfile
+        #      cache_from:
+        #- openstatefoundation/open-raadsinformatie-backend:build-tmp
+        #image: ghcr.io/openstate/open-raadsinformatie
+    environment:
+      - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
+    networks:
+      - ori
+    volumes:
+      - oridata:/opt/ori/data
+      #- .:/opt/ori
+      - ./ocd_backend/sources:/opt/ori/ocd_backend/sources
+    depends_on:
+      elastic:
+        condition: service_healthy
+      postgres:
+        condition: service_started
+    command: celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q loaders --concurrency=1 --without-gossip --quiet
+    #mem_limit: 1g
   redis:
     image: "redis:${REDIS_VERSION}"
     networks:
@@ -26,14 +51,16 @@ services:
      - redisdata:/data
     sysctls:
      - net.core.somaxconn=65535
-    mem_limit: 4g
+    command: ["redis-server", "--appendonly", "no", "--save", "\"\""]
+    #mem_limit: 1g
+    restart: always
   elastic:
-    image: elasticsearch:7.0.0
+    image: elasticsearch:7.9.3
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    mem_limit: 4g
+    #mem_limit: 16g
     cap_add:
       - IPC_LOCK
     networks:
@@ -42,12 +69,13 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
     healthcheck:
-      test: wget -q -O - http://127.0.0.1:9200/_cat/health
+      test: curl -s http://127.0.0.1:9200/_cat/health
       interval: 15s
       timeout: 10s
       retries: 5
+    restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0
@@ -55,7 +83,8 @@ services:
 
       # Disable xpack features
       - xpack.security.enabled=false
-      - xpack.monitoring.enabled=false
+      #- xpack.monitoring.enabled=false
+      - xpack.monitoring.collection.enabled=false
 
       # Enable CORS for all origins
       #- http.cors.enabled=true
@@ -65,12 +94,12 @@ services:
 
       # Security (https://www.elastic.co/blog/found-elasticsearch-security)
       - rest.action.multi.allow_explicit_index=false
-      - script.allowed_types=none
-      - script.allowed_contexts=none
+      #- script.allowed_types=none
+      - script.allowed_contexts=ingest
 
       # Other settings
       - node.max_local_storage_nodes=20
-      - bootstrap.memory_lock=false
+      - bootstrap.memory_lock=true
       - reindex.remote.whitelist=c-open-raadsinformatie:9200
   # elastic2:
   #   extends:
@@ -100,4 +129,3 @@ networks:
   nginx-load-balancer:
     external:
       name: docker_nginx-load-balancer
-

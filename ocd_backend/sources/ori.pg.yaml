@@ -19,7 +19,7 @@ _entities: &entities
     transformer: ocd_backend.transformers.partijgedrag.motion_item
     dump_path: "./json/pg_motions.json"
 
-ori.pg:
+_ori.pg:
   key: partijgedrag
   source_name: "{key!c}"
   index_name: partijgedrag

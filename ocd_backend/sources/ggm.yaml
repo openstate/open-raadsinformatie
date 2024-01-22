@@ -13,7 +13,7 @@ _entity_defaults: &entity_defaults
     - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
-ggm.ggm:
+_ggm.ggm:
   tweedekamer:
     key: tweedekamer
     index_name: "{key}"
