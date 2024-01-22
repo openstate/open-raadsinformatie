@@ -1140,10 +1140,3 @@ ori.ibabs:
     allmanak_id: 24950
     cbs_id: GM0405
     <<: *ibabs
-
-  hoorn:
-    key: hoorn
-    ibabs_sitename: hoorn
-    allmanak_id: 24950
-    cbs_id: GM0405
-    <<: *ibabs
