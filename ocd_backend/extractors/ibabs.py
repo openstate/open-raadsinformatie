@@ -186,7 +186,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                         continue
 
                     meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
-                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], meeting['Id'], meeting_dict):
+                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'meeting', meeting['Id'], meeting_dict):
                         yield 'application/json', \
                               json.dumps(meeting_dict), \
                               None, \
@@ -307,7 +307,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                     log.info(self._make_hash(report_dict))
                     is_newer = not self.check_if_most_recent(
-                        'ibabs', self.source_definition['ibabs_sitename'], item['id'], report_dict)
+                        'ibabs', self.source_definition['ibabs_sitename'], 'report', item['id'], report_dict)
                     # identifier = item['id'][0]
                     if is_newer:
                         yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path

@@ -38,21 +38,23 @@ class BaseExtractor:
         h.update(json_encoder.encode(ordered_report_dict).encode('ascii'))
         return h.hexdigest()
 
-    def check_if_most_recent(self, provider, site_name, id, report_dict):
+    def check_if_most_recent(self, provider, site_name, item_type, id, report_dict):
         h = sha1()
-        hash_key = "%s|%s|%s" % (provider, site_name, id,)
+        hash_key = "%s|%s|%s|%s" % (provider, site_name, item_type, id,)
         h.update(hash_key.encode('ascii'))
         item_id = h.hexdigest()
         new_hash = self._make_hash(report_dict)
         old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
+        old_item_hash = old_item.item_hash
         if old_item:
             old_item.item_hash = new_hash
-        new_item = ItemHash(item_id=item_id, item_hash=new_hash)
-        self.session.add(new_item)
+        else:
+            new_item = ItemHash(item_id=item_id, item_hash=new_hash)
+            self.session.add(new_item)
         self.session.commit()
         self.session.flush()
         if old_item:
-            return (old_item.item_hash == new_hash)
+            return (old_item_hash == new_hash)
         else:
             return False
 
