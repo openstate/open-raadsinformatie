@@ -8,7 +8,9 @@ from dateutil.relativedelta import relativedelta
 
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.model import PostgresDatabase
+from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.models.postgres_models import ItemHash
+from ocd_backend.utils.misc import json_encoder
 
 log = get_source_logger('extractor')
 
@@ -23,7 +25,7 @@ class BaseExtractor:
         :type source_definition: dict.
         """
         self.source_definition = source_definition
-        database = PostgresDatabase()
+        database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
 
     def _make_hash(self, report_dict):
@@ -38,8 +40,9 @@ class BaseExtractor:
 
     def check_if_most_recent(self, provider, site_name, id, report_dict):
         h = sha1()
-        h.update("%s|%s|%s" % (provider, site_name, id,))
-        item_id = h.hexhdigest()
+        hash_key = "%s|%s|%s" % (provider, site_name, id,)
+        h.update(hash_key.encode('ascii'))
+        item_id = h.hexdigest()
         new_hash = self._make_hash(report_dict)
         old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
         if old_item:
