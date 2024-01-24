@@ -45,8 +45,9 @@ class BaseExtractor:
         item_id = h.hexdigest()
         new_hash = self._make_hash(report_dict)
         old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
-        old_item_hash = old_item.item_hash
+        old_item_hash = ''
         if old_item:
+            old_item_hash = old_item.item_hash
             old_item.item_hash = new_hash
         else:
             new_item = ItemHash(item_id=item_id, item_hash=new_hash)
