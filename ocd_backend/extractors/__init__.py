@@ -47,12 +47,14 @@ class BaseExtractor:
         old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
         if old_item:
             old_item.item_hash = new_hash
-            self.session.commit()
+        new_item = ItemHash(item_id=item_id, item_hash=new_hash)
+        self.session.add(new_item)
+        self.session.commit()
+        self.session.flush()
+        if old_item:
             return (old_item.item_hash == new_hash)
         else:
-            new_item = ItemHash(item_id=item_id, item_hash=new_hash)
-            self.session.commit()
-            return True
+            return False
 
     def run(self):
         """Starts the extraction process.
