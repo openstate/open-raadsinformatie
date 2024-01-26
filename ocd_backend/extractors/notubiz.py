@@ -164,7 +164,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
-                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting['id'], eeting_json):
+                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting['id'], meeting_json):
                     yield 'application/json', \
                           json.dumps(meeting_json), \
                           meeting_url, \

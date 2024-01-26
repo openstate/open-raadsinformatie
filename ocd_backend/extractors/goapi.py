@@ -62,11 +62,12 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
         total, static_json = self._request('dmus')
         for dmu in static_json:
-            yield 'application/json', \
-                  json.dumps(dmu), \
-                  urljoin(self.base_url, 'dmus'), \
-                  'gemeenteoplossingen/' + cached_path
-            committee_count += 1
+            if not self.check_if_most_recent('go', self.source_definition["key"], 'committee', dmu['id'], dmu):
+                yield 'application/json', \
+                      json.dumps(dmu), \
+                      urljoin(self.base_url, 'dmus'), \
+                      'gemeenteoplossingen/' + cached_path
+                committee_count += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} GO API committees.')
 
@@ -94,11 +95,12 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             total, static_json = self._request(url)
 
             for meeting in static_json:
-                yield 'application/json', \
-                      json.dumps(meeting), \
-                      None, \
-                      'gemeenteoplossingen/' + cached_path
-                meeting_count += 1
+                if not self.check_if_most_recent('go', self.source_definition["key"], 'meeting', meeting['id'], meeting):
+                    yield 'application/json', \
+                          json.dumps(meeting), \
+                          None, \
+                          'gemeenteoplossingen/' + cached_path
+                    meeting_count += 1
 
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API meetings.')
@@ -153,11 +155,12 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
             for doc in docs:
                 api_version = self.source_definition.get('api_version', 'v1')
                 base_url = '%s/%s' % (self.source_definition['base_url'], api_version,)
-                yield 'application/json', \
-                      json.dumps(doc), \
-                      '%s/documents/%i' % (base_url, doc['id']), \
-                      'gemeenteoplossingen/' + cached_path
-                meeting_count += 1
+                if not self.check_if_most_recent('go', self.source_definition["key"], 'document', doc['id'], doc):
+                    yield 'application/json', \
+                          json.dumps(doc), \
+                          '%s/documents/%i' % (base_url, doc['id']), \
+                          'gemeenteoplossingen/' + cached_path
+                    meeting_count += 1
 
             log.debug(f'[{self.source_definition["key"]}] Now processing documents from {start_date} to {end_date}')
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API documents.')
