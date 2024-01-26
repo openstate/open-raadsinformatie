@@ -45,7 +45,9 @@ class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
             meeting_data = resp.json()
             agenda = meeting_data['agenda']
             agenda['url'] = url
-            yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path
+
+            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'meeting', agenda, meeting['agid']):
+                yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path
 
 
 class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
@@ -60,7 +62,8 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
 
         for committee in response.get('list', []):
             committee['url'] = url
-            yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path
+            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'committee', committee, committee['cmid']):
+                yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path
 
 
 class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
@@ -75,4 +78,5 @@ class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
 
         for person in response.get('list', []):
             person['url'] = url
-            yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path
+            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'person', person, person['raid']):
+                yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path
