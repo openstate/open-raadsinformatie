@@ -33,9 +33,12 @@ class BaseExtractor:
         Make a hash value for a dict. This can be usedc to compare dicts to an
         earlier stored hash vlue to see if things changed.
         """
-        ordered_report_dict = OrderedDict(report_dict.items())
+        if isinstance(report_dict, dict):
+            obj = OrderedDict(report_dict.items())
+        else:
+            obj = report_dict
         h = sha1()
-        h.update(json_encoder.encode(ordered_report_dict).encode('ascii'))
+        h.update(json_encoder.encode(obj).encode('ascii'))
         return h.hexdigest()
 
     def check_if_most_recent(self, provider, site_name, item_type, id, report_dict):

@@ -44,12 +44,14 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
         if total != 1:
             log.error(f'[{self.source_definition["key"]}] Number of extracted municipalities is not equal to 1')
         else:
-            yield 'application/json', \
-                  json.dumps(static_json[0]), \
-                  path, \
-                  None,
-            log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak municipality.')
-
+            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'municipality', self.source_definition['allmanak_id'], static_json[0]):
+                yield 'application/json', \
+                      json.dumps(static_json[0]), \
+                      path, \
+                      None,
+                log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak municipality.')
+            else:
+                log.info(f'[{self.source_definition["key"]}] Skipped 1 Allmanak municipality.')
 
 class AllmanakProvinceExtractor(AllmanakBaseExtractor):
     """
@@ -64,11 +66,14 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
         if total != 1:
             log.error(f'[{self.source_definition["key"]}] Number of extracted provinces is not equal to 1')
         else:
-            yield 'application/json', \
-                  json.dumps(static_json[0]), \
-                  path, \
-                  None,
-            log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak province.')
+            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'province', self.source_definition['allmanak_id'], static_json[0]):
+                yield 'application/json', \
+                      json.dumps(static_json[0]), \
+                      path, \
+                      None,
+                log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak province.')
+            else:
+                log.info(f'[{self.source_definition["key"]}] Skipped 1 Allmanak province.')
 
 
 class AllmanakPartiesExtractor(AllmanakBaseExtractor):
@@ -82,14 +87,17 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if static_json[0]['zetels']:
-            total_parties = 0
-            for party in static_json[0]['zetels']:
-                yield 'application/json', \
-                      json.dumps(party), \
-                      path, \
-                      None
-                total_parties += 1
-            log.info(f'[{self.source_definition["key"]}] Extracted {total_parties} Allmanak parties.')
+            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'parties', self.source_definition['allmanak_id'], static_json[0]['zetels']):
+                total_parties = 0
+                for party in static_json[0]['zetels']:
+                    yield 'application/json', \
+                          json.dumps(party), \
+                          path, \
+                          None
+                    total_parties += 1
+                log.info(f'[{self.source_definition["key"]}] Extracted {total_parties} Allmanak parties.')
+            else:
+                log.info(f'[{self.source_definition["key"]}] Skipped Allmanak parties.')
         else:
             log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any parties for this source.')
 
@@ -107,15 +115,18 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if static_json[0]['functies']:
-            total_persons = 0
-            for row in static_json[0]['functies']:
-                if row['functie']:
-                    for person in row['functie']['medewerkers']:
-                        yield 'application/json', \
-                              json.dumps(person['persoon']), \
-                              path, \
-                              None
-                        total_persons += 1
-            log.info(f'[{self.source_definition["key"]}] Extracted {total_persons} Allmanak persons.')
+            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'persons', self.source_definition['allmanak_id'], static_json[0]['functies']):
+                total_persons = 0
+                for row in static_json[0]['functies']:
+                    if row['functie']:
+                        for person in row['functie']['medewerkers']:
+                            yield 'application/json', \
+                                  json.dumps(person['persoon']), \
+                                  path, \
+                                  None
+                            total_persons += 1
+                log.info(f'[{self.source_definition["key"]}] Extracted {total_persons} Allmanak persons.')
+            else:
+                log.info(f'[{self.source_definition["key"]}] Skipped Allmanak persons.')
         else:
             log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any persons for this source.')

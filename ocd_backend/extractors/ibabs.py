@@ -77,11 +77,12 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
             for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 if committee_designator in mt.Meetingtype.lower():
                     committee = serialize_object(mt, dict)
-                    yield 'application/json', \
-                          json.dumps(committee), \
-                          None, \
-                          'ibabs/' + cached_path
-                    total_count += 1
+                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'committee', committee['Id'], committee):
+                        yield 'application/json', \
+                              json.dumps(committee), \
+                              None, \
+                              'ibabs/' + cached_path
+                        total_count += 1
             log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees.')
         else:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
@@ -115,7 +116,8 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 if image:
                     profile['Picture'] = base64.encodestring(image).decode('ascii')
 
-                yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
+                if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'person', identifier, profile):
+                    yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
                 total_count += 1
 
             log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs persons')
@@ -438,7 +440,8 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
             # log.debug(processed)
             for result in processed:
-                yield 'application/json', json.dumps(result), None, None
+                if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'voting', result['meeting']['Id'], result):
+                    yield 'application/json', json.dumps(result), None, None
                 passed_vote_count += 1
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
