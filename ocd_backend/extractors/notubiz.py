@@ -69,12 +69,12 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
         committee_count = 0
         for committee in json.load(response.media_file)['gremia']:
-
-            yield 'application/json', \
-                  json.dumps(committee), \
-                  committee_url, \
-                  'notubiz/' + cached_path,
-            committee_count += 1
+            if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'committee', committee['id'], committee):
+                yield 'application/json', \
+                      json.dumps(committee), \
+                      committee_url, \
+                      'notubiz/' + cached_path,
+                committee_count += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} notubiz committees.')
 
@@ -164,11 +164,12 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
-                yield 'application/json', \
-                      json.dumps(meeting_json), \
-                      meeting_url, \
-                      'notubiz/' + cached_path,
-                meeting_count += 1
+                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting['id'], eeting_json):
+                    yield 'application/json', \
+                          json.dumps(meeting_json), \
+                          meeting_url, \
+                          'notubiz/' + cached_path,
+                    meeting_count += 1
 
             page += 1
 
