@@ -124,7 +124,10 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
 
         total_meetings = 0
         for item in super(GreenValleyMeetingsExtractor, self).run():
-            yield item[0], item[1], item[2], item[3]
-            total_meetings += 1
+            ot = ",".join(self.source_definition['greenvalley_objecttypes'])
+            mt = json.loads(item[1])
+            if not self.check_if_most_recent('gv', self.source_definition["key"], ot, item[1], mt['objectid']):
+                yield item[0], item[1], item[2], item[3]
+                total_meetings += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings')
