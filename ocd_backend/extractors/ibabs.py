@@ -279,12 +279,15 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 for item in results:
                     item['_ListName'] = result.ListName
                     item['_ReportName'] = result.ReportName
-                    extra_info_item = self.client.service.GetListEntry(
-                        Sitename=self.source_definition['ibabs_sitename'],
-                        ListId=l.Key,
-                        EntryId=item['id']
-                    )
-                    item['_Extra'] = list_entry_response_to_dict(extra_info_item)
+                    try:
+                        extra_info_item = self.client.service.GetListEntry(
+                            Sitename=self.source_definition['ibabs_sitename'],
+                            ListId=l.Key,
+                            EntryId=item['id']
+                        )
+                        item['_Extra'] = list_entry_response_to_dict(extra_info_item)
+                    except Exception as e:
+                        item['_Extra'] = {}
 
                     report_dict = serialize_object(item, dict)
 
