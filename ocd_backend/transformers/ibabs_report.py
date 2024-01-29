@@ -90,7 +90,7 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         report.result = ResultFailed
 
     report.attachment = list()
-    for document in original_item['_Extra']['Documents'] or []:
+    for document in original_item['_Extra'].get('Documents', []) or []:
         attachment_file = MediaObject(document['Id'],
                                       collection='attachment',
                                       **source_defaults)
