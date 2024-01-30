@@ -227,7 +227,11 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         total_yield_count = 0
         for l in selected_lists:
-            reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
+            try:
+                reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
+            except zeep.exceptions.Fault as e:
+                log.warning(f'[{self.source_definition["key"]}] Could not parse list report {l.Key} correctly!: {str(e)}')
+                continue
             report = reports[0]
             if len(reports) > 1:
                 try:
