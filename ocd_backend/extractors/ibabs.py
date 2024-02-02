@@ -259,6 +259,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 except Exception as e:  # most likely an XML parse problem
                     log.warning(f'[{self.source_definition["key"]}] Could not parse page {active_page_nr} correctly!: {str(e)}')
                     result = None
+                active_page_nr += 1
                 result_count = 0
 
                 cached_path = 'GetListReportDataSet/Sitename=%s/ListId=%s/ReportId=%s/ActivePageNr=%s/RecordsPerPage=%s' % (
@@ -330,7 +331,6 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     total_yield_count += 1
                     result_count += 1
                 total_count += result_count
-                active_page_nr += 1
             log.debug(f'[{self.source_definition["key"]}] Report: {l.Value} -- total {total_count}, yielded {total_yield_count}')
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {total_yield_count} ibabs reports within {start_date:%Y-%m-%d} and {end_date:%Y-%m-%d}')
