@@ -5,8 +5,9 @@ from collections import OrderedDict
 from hashlib import sha1
 
 import redis
+
 from zeep.client import Client, Settings
-from zeep.exceptions import Error
+from zeep.exceptions import Error, Fault
 from zeep.helpers import serialize_object
 
 import iso8601
@@ -210,7 +211,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         try:
             lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
         except Exception as e:
-            lists = [] 
+            lists = []
 
         if not lists or len(lists) < 1:
             log.info(f'[{self.source_definition["key"]}] No ibabs reports defined')
@@ -232,7 +233,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         for l in selected_lists:
             try:
                 reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
-            except zeep.exceptions.Fault as e:
+            except Fault as e:
                 log.warning(f'[{self.source_definition["key"]}] Could not parse list report {l.Key} correctly!: {str(e)}')
                 continue
             report = reports[0]
