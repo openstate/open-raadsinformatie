@@ -1,7 +1,7 @@
 import json
 from urllib import parse
 
-from requests.exceptions import HTTPError, RetryError
+from requests.exceptions import HTTPError, RetryError, ConnectionError
 
 from ocd_backend.exceptions import ItemAlreadyProcessed
 from ocd_backend.extractors import BaseExtractor
@@ -36,7 +36,7 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
 
         try:
             response.raise_for_status()
-        except HTTPError as e:
+        except (HTTPError, RetryError, ConnectionError) as e:
             log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
             return
 
@@ -104,13 +104,13 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     )
             try:
                 response = self.http_session.get(url)
-            except (HTTPError, RetryError) as e:
+            except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] {str(e)}: {parse.quote(url)}')
                 break
 
             try:
                 response.raise_for_status()
-            except HTTPError as e:
+            except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
                 break
 
@@ -142,7 +142,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     meetings_skipped += 1
                     log.debug(f'[{self.source_definition["key"]}] {str(e)}')
                     continue
-                except HTTPError as e:
+                except (HTTPError, RetryError, ConnectionError) as e:
                     error_json = e.response.json()
                     if error_json.get('message') == 'No rights to see this meeting':
                         log.info(f'[{self.source_definition["key"]}] No rights to view: {meeting_url}')
