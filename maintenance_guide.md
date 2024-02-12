@@ -99,3 +99,10 @@ This is running as a service in kubernetes.
 
 - `kubectl exec elastic-0 -it -n production -- sh` get a shell in a running elastic container
 - Send an HTTP DELETE to the ID: `curl -X DELETE 0.0.0.0:9200/${index}/${type}/${id}`, e.g. `curl -X DELETE 0.0.0.0:9200/ori_vlaardingen_20190809125128/_doc/1234567`
+
+## Script to list all sources (for excel sheets)
+
+Sometimes VNG wants a list of municipalities.
+You can use this:
+
+`cat ./ocd_backend/sources/ori.parlaeus.yaml | yq e '.["ori.parlaeus"][] | .key'`
