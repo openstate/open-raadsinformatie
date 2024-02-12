@@ -94,7 +94,7 @@ class HttpRequestMixin:
 
     def download_url(self, url, partial_fetch=False):
         log.debug('Fetching item %s' % (url,))
-        http_resp = self.http_session.get(url, stream=True, timeout=(60, 120), verify=False)
+        http_resp = self.http_session.get(url, stream=True, timeout=(5, 60, 120), verify=False)
         http_resp.raise_for_status()
 
         # Create a temporary file to store the media item, write the file
