@@ -596,12 +596,13 @@ ori.notubiz:
     notubiz_organization_id: 1987
     <<: *notubiz
 
-  rotterdam:
-    key: rotterdam
-    allmanak_id: 38936
-    cbs_id: GM0599
-    notubiz_organization_id: 726
-    <<: *notubiz
+  # Switched to ibabs
+  # rotterdam:
+  #   key: rotterdam
+  #   allmanak_id: 38936
+  #   cbs_id: GM0599
+  #   notubiz_organization_id: 726
+  #   <<: *notubiz
 
   wijdemeren:
     key: wijdemeren
