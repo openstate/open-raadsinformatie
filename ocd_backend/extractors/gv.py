@@ -41,7 +41,7 @@ class GreenValleyBaseExtractor(BaseExtractor, HttpRequestMixin):
             'key': self.key,
             'hash': self.hash,
         }
-        return self.http_session.get('{}&{}'.format(url, parse.urlencode(auth)), verify=False)
+        return self.http_session.get('{}&{}'.format(url, parse.urlencode(auth)), timeout=(3, 5), verify=False)
 
 
 class GreenValleyExtractor(GreenValleyBaseExtractor):

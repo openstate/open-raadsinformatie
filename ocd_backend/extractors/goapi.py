@@ -29,7 +29,7 @@ class GemeenteOplossingenBaseExtractor(BaseExtractor, HttpRequestMixin):
     def _request(self, path):
         log.debug(f'Now retrieving: {urljoin(self.base_url, path)}')
         resp = self.http_session.get(
-            urljoin(self.base_url, path), verify=False)
+            urljoin(self.base_url, path), timeout=(3, 5), verify=False)
 
         if resp.status_code == 200:
             static_json = json.loads(resp.content)

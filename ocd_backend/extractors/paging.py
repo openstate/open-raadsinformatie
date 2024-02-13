@@ -37,7 +37,7 @@ class PagingHTMLExtractor(StaticHtmlExtractor):
 
             # Retrieve the static content from the source
             try:
-                r = self.http_session.get(next_url, verify=False)
+                r = self.http_session.get(next_url, timeout=(3, 5), verify=False)
                 static_content = r.content
             except Exception:
                 static_content = ''
