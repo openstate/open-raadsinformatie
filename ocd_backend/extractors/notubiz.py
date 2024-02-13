@@ -31,7 +31,8 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
         self.bucket_name = 'notubiz'
 
         response = self.http_session.get(
-            "%s/organisations?%s" % (self.base_url, self.default_query_params)
+            "%s/organisations?%s" % (self.base_url, self.default_query_params),
+            timeout=(3, 5)
         )
 
         try:
@@ -103,7 +104,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         self.default_query_params,
                     )
             try:
-                response = self.http_session.get(url)
+                response = self.http_session.get(url, timeout=(3, 5))
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] {str(e)}: {parse.quote(url)}')
                 break
