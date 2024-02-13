@@ -3,7 +3,7 @@ _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
   wait_until_finished: false
-  es_prefix: osi
+  es_prefix: owi
   source_type: "waterschap"
   supplier: "ibabs"
 
@@ -15,12 +15,12 @@ _entity_defaults: &entity_defaults
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities
-  # Disabled this, because I'm not sure if we can do this for Waterschappen
-  # - &province
-  #   <<: *entity_defaults
-  #   entity: province
-  #   extractor: ocd_backend.extractors.allmanak.AllmanakProvinceExtractor
-  #   transformer: ocd_backend.transformers.allmanak_organization.province_organization_item
+  - &municipality
+    <<: *entity_defaults
+    classification: Water board
+    entity: municipality
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    transformer: ocd_backend.transformers.allmanak_organization.municipality_organization_item
 
   - &committees
     <<: *entity_defaults
