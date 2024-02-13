@@ -28,6 +28,10 @@ def municipality_organization_item(self, content_type, raw_item, canonical_iri, 
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
 
+    try:
+        classification = self.source_definition['classification']
+    except LookupError as e:
+        classification = 'Municipality'
     source_defaults = {
         'source': self.source_definition['key'],
         'supplier': 'allmanak',
@@ -37,7 +41,7 @@ def municipality_organization_item(self, content_type, raw_item, canonical_iri, 
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.classification = 'Municipality'
+    object_model.classification = classification
     object_model.collection = self.source_definition['key']
     object_model.name = ' '.join([self.source_definition.get('municipality_prefix', ''), original_item['naam']])
     object_model.description = original_item['omvatplaats']
@@ -56,6 +60,10 @@ def municipality_organization_item(self, content_type, raw_item, canonical_iri, 
 def province_organization_item(self, content_type, raw_item, canonical_iri, cached_path, **kwargs):
     original_item = self.deserialize_item(content_type, raw_item)
     self.source_definition = kwargs['source_definition']
+    try:
+        classification = self.source_definition['classification']
+    except LookupError as e:
+        classification = 'Province'
 
     source_defaults = {
         'source': self.source_definition['key'],
@@ -66,7 +74,7 @@ def province_organization_item(self, content_type, raw_item, canonical_iri, cach
     }
 
     object_model = TopLevelOrganization(original_item['systemid'], **source_defaults)
-    object_model.classification = 'Province'
+    object_model.classification = classification
     object_model.collection = self.source_definition['key']
     object_model.name = original_item['naam']
     object_model.description = original_item['omvatplaats']

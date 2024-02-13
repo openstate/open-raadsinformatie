@@ -1,0 +1,75 @@
+# All underscored root keys are excluded
+_defaults: &source_defaults
+  hidden: false
+  keep_index_on_update: true
+  wait_until_finished: false
+  es_prefix: owi
+  source_type: "waterschap"
+  supplier: "ibabs"
+
+_entity_defaults: &entity_defaults
+  id: "{index_name}_{entity}"
+  loaders:
+    - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
+    - ocd_backend.loaders.delta.delta_loader
+  cleanup: ocd_backend.tasks.cleanup_elasticsearch
+
+_entities: &entities
+  - &municipality
+    <<: *entity_defaults
+    classification: Water board
+    entity: municipality
+    extractor: ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor
+    transformer: ocd_backend.transformers.allmanak_organization.municipality_organization_item
+
+  - &committees
+    <<: *entity_defaults
+    entity: committees
+    extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
+    transformer: ocd_backend.transformers.ibabs_committee.committee_item
+
+  - &organizations
+    <<: *entity_defaults
+    entity: organizations
+    extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
+    transformer: ocd_backend.transformers.allmanak_organization.party_item
+
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
+    transformer: ocd_backend.transformers.ibabs_person.person_item
+
+  - &meetings
+    <<: *entity_defaults
+    entity: meetings
+    extractor: ocd_backend.extractors.ibabs.IBabsMeetingsExtractor
+    transformer: ocd_backend.transformers.ibabs_meeting.meeting_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+
+  - &reports
+    <<: *entity_defaults
+    entity: reports
+    extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+    transformer: ocd_backend.transformers.ibabs_report.report_item
+    enrichers:
+      - ocd_backend.enrichers.text_enricher.text_enricher
+    include: ".*"
+    exclude: (moties|amendementen)
+    pdf_max_pages: 0
+
+_ibabs: &ibabs
+  index_name: "{key}"
+  source_name: "{key!c}"
+  ibabs_sitename: "{key!c}"
+  allmanak_api_version: "v1"
+  entities: *entities
+  <<: *source_defaults
+
+owi.ibabs:
+  # Added 2024-01-22
+  aa_en_maas:
+    key: aa-en-maas
+    allmanak_id: 21099
+    <<: *ibabs

@@ -64,32 +64,32 @@ _gv: &gv
   entities: *entities
   <<: *source_defaults
 
-osi.gv:
-  zuid-holland:
-    key: zuid-holland
-    allmanak_id: 17466
-    greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
-    # greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
-    greenvalley_key: 51cc806d-3108-45c9-ade4-a18a6207a054
-    greenvalley_hash: 3600416d177d8526dfdf5c197c1a0bdb7dab714433ae43dd
-    greenvalley_username: openstate
-    greenvalley_extract_timeout: 5
-    <<: *gv
-    entities:
-    - *province
-    - *organizations
-    - *persons
-    - *meetings
-    - *reports
-    - entity: meetings
-      #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
-      extractor: ocd_backend.extractors.paging.PagingHTMLExtractor
-      transformer: ocd_backend.transformers.gedeputeerdestaten.gs_meeting_item
-      file_url: "https://www.zuid-holland.nl/overons/bestuur-zh/gedeputeerde-staten/besluiten/?ajax=true&pager_page=0"
-      item_xpath: "//div[contains(@class, \"rol-entry\")]"
-      item_id_xpath: ".//div[contains(@class, \"grid-title\")]/h2/a/@href"
-      next_page_xpath: "//a[contains(@class, \"volgende\")]/@href"
-      next_page_max_count: 1
-      enrichers:
-        - ocd_backend.enrichers.text_enricher.text_enricher
-      <<: *entity_defaults
+# osi.gv:
+#   zuid-holland:
+#     key: zuid-holland
+#     allmanak_id: 17466
+#     greenvalley_base_url: https://staten.zuid-holland.nl/CMSProxy/proxy
+#     # greenvalley_base_url: http://194.33.112.87/CMSProxy/proxy
+#     greenvalley_key: 51cc806d-3108-45c9-ade4-a18a6207a054
+#     greenvalley_hash: 3600416d177d8526dfdf5c197c1a0bdb7dab714433ae43dd
+#     greenvalley_username: openstate
+#     greenvalley_extract_timeout: 5
+#     <<: *gv
+#     entities:
+#     - *province
+#     - *organizations
+#     - *persons
+#     - *meetings
+#     - *reports
+#     - entity: meetings
+#       #extractor: ocd_backend.extractors.staticfile.StaticHtmlExtractor
+#       extractor: ocd_backend.extractors.paging.PagingHTMLExtractor
+#       transformer: ocd_backend.transformers.gedeputeerdestaten.gs_meeting_item
+#       file_url: "https://www.zuid-holland.nl/overons/bestuur-zh/gedeputeerde-staten/besluiten/?ajax=true&pager_page=0"
+#       item_xpath: "//div[contains(@class, \"rol-entry\")]"
+#       item_id_xpath: ".//div[contains(@class, \"grid-title\")]/h2/a/@href"
+#       next_page_xpath: "//a[contains(@class, \"volgende\")]/@href"
+#       next_page_max_count: 1
+#       enrichers:
+#         - ocd_backend.enrichers.text_enricher.text_enricher
+#       <<: *entity_defaults
