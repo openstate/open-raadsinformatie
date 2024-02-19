@@ -42,6 +42,9 @@ class BaseExtractor:
         return h.hexdigest()
 
     def check_if_most_recent(self, provider, site_name, item_type, id, report_dict):
+        should_force = self.source_definition.get('force', False)
+        if should_force:
+            return False
         h = sha1()
         hash_key = "%s|%s|%s|%s" % (provider, site_name, item_type, id,)
         h.update(hash_key.encode('ascii', 'replace'))
