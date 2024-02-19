@@ -1,5 +1,5 @@
 {
-  "index_patterns": ["ori_*", "osi_*", "ggm_*"],
+  "index_patterns": ["ori_*", "osi_*", "ggm_*", "owi_*"],
   "settings": {
     "index": {
       "number_of_shards": 1,
