@@ -1143,7 +1143,7 @@ ori.ibabs:
 
   rotterdam:
     key: rotterdam
-    ibabs_sitename: rotterdam
+    ibabs_sitename: rotterdamraad
     allmanak_id: 38936
     cbs_id: GM0599
     <<: *ibabs
