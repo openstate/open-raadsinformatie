@@ -1140,9 +1140,17 @@ ori.ibabs:
     allmanak_id: 24950
     cbs_id: GM0405
     <<: *ibabs
-# rotterdam:
-#key: rotterdam
-#ibabs_sitename: rotterdam
-#allmanak_id: 38936
-#cbs_id: GM0599
-#<<: *ibabs
+
+  rotterdam:
+    key: rotterdam
+    ibabs_sitename: rotterdamraad
+    allmanak_id: 38936
+    cbs_id: GM0599
+    <<: *ibabs
+
+  aalten:
+    key: aalten
+    ibabs_sitename: aalten
+    allmanak_id: 36483
+    cbs_id: GM0197
+    <<: *ibabs
