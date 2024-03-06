@@ -3,7 +3,47 @@
   "settings": {
     "index": {
       "number_of_shards": 1,
-      "number_of_replicas": 1
+      "number_of_replicas": 1,
+
+      "analysis": {
+                  "analyzer": {
+                      "default": {
+                        "type": "dutch"
+                      },
+                      "text_nl": {
+                          "type": "custom",
+                          "filter": [
+                              "asciifolding",
+                              "lowercase",
+                              "custom_word_delimiter"
+                          ],
+                          "tokenizer": "standard"
+                      },
+                      "fttext_nl": {
+                        "type": "custom",
+                        "filter": [
+                            "asciifolding",
+                            "lowercase",
+                            "custom_word_delimiter",
+                            "type_as_payload"
+                        ],
+                        "tokenizer": "standard"
+                      }
+                  },
+                  "filter": {
+                      "custom_word_delimiter": {
+                          "type": "word_delimiter",
+                          "split_on_numerics": false,
+                          "generate_number_parts": true,
+                          "preserve_original": true,
+                          "stem_english_possesive": false,
+                          "catenate_words": false,
+                          "catenate_numbers": true,
+                          "split_on_case_change": false,
+                          "generate_word_parts": true
+                      }
+                  }
+              }
     }
   },
   "mappings": {
@@ -82,7 +122,9 @@
         "type": "text"
       },
       "text": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets_payloads",
+        "analyzer": "fttext_nl"
       },
       "title": {
         "type": "text"
@@ -91,7 +133,9 @@
         "type": "text"
       },
       "description": {
-        "type": "text"
+        "type": "text",
+        "term_vector": "with_positions_offsets_payloads",
+        "analyzer": "fttext_nl"
       },
       "neighborhood_polygons": {
         "type": "geo_shape"
@@ -103,7 +147,9 @@
               "type" : "long"
             },
             "text" : {
-              "type" : "text"
+              "type": "text",
+              "term_vector": "with_positions_offsets_payloads",
+              "analyzer": "fttext_nl"
             }
           }
       },
