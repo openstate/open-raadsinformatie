@@ -297,9 +297,8 @@ def available_indices():
 
 @command('copy')
 @click.argument('source_index')
-@click.option('--target-index', default='ori_all')
-@click.option('--target-host', default='elastic2')
-def es_copy_data(source_index, target_index, target_host):
+@click.argument('target_index')
+def es_copy_data(source_index, target_index):
     """
     CCopy elasticsearch data from one index ot another.
 
@@ -307,13 +306,9 @@ def es_copy_data(source_index, target_index, target_host):
     :param target-index: The target index
     :param target-host: The target host
     """
-    es2 = setup_elasticsearch(target_host)
-    #reindex(es, source_index, target_index, target_client=es2)
-    es2.reindex(body={
+
+    es.reindex(body={
         'source': {
-            'remote': {
-                'host': 'http://elastic:9200'
-            },
             'index': source_index
         },
         'dest': {
