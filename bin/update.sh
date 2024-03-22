@@ -4,6 +4,7 @@ BINDIR=`dirname $FQPATH`
 TODAY=`date +%Y-%m-%d`
 YESTERDAY=`date -d yesterday +%Y-%m-%d`
 cd $BINDIR/..
+sudo docker exec ori_redis_1 redis-cli --scan --pattern 'pipeline_*' |sudo xargs docker exec ori_redis_1 redis-cli del
 sudo docker exec ori_redis_1 redis-cli -n 1 set _daily.start_date "$YESTERDAY"
 sudo docker exec ori_redis_1 redis-cli -n 1 set _daily.end_date "$TODAY"
 sudo docker exec ori_backend_1 ./manage.py extract load_redis 'all daily monthly'
