@@ -9,6 +9,8 @@ import redis
 from zeep.client import Client, Settings
 from zeep.exceptions import Error, Fault
 from zeep.helpers import serialize_object
+from zeep.cache import SqliteCache
+from zeep.transports import Transport
 
 import iso8601
 
@@ -48,10 +50,13 @@ class IBabsBaseExtractor(BaseExtractor):
             extra_http_headers={'User-Agent': settings.USER_AGENT},
         )
 
+        cache = SqliteCache(path='/tmp/sqlite.db', timeout=60)
+        transport = Transport(cache=cache)
+
         try:
             self.client = Client(ibabs_wsdl,
                                  port_name='BasicHttpsBinding_IPublic',
-                                 settings=soap_settings)
+                                 settings=soap_settings, transport=transport)
         except Error as e:
             log.error(f'Unable to instantiate iBabs client: {str(e)}')
 
