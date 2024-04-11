@@ -3,6 +3,7 @@ import re
 import json
 from collections import OrderedDict
 from hashlib import sha1
+from time import sleep
 
 import redis
 
@@ -108,6 +109,8 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
             for user in users.Users.iBabsUserBasic:
                 identifier = user['UniqueId']
 
+                sleep(1)
+
                 user_details = self.client.service.GetUser(
                     self.source_definition['ibabs_sitename'],
                     identifier
@@ -169,6 +172,8 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
             cached_path = 'GetMeetingsByDateRange/Sitename=%s/StartDate=%s/EndDate=%s' % (
                 self.source_definition['ibabs_sitename'], start_date, end_date)
+
+            sleep(1)
 
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['ibabs_sitename'],
@@ -236,6 +241,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         total_yield_count = 0
         for l in selected_lists:
+            sleep(1)
             try:
                 reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
             except Fault as e:
@@ -256,6 +262,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             total_count = 0
             yield_count = 0
             while (active_page_nr < max_pages) and (result_count == per_page):
+                sleep(1)
                 try:
                     result = self.client.service.GetListReportDataSet(
                         Sitename=self.source_definition['ibabs_sitename'],
@@ -293,6 +300,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 for item in results:
                     item['_ListName'] = result.ListName
                     item['_ReportName'] = result.ReportName
+                    sleep(1)
                     try:
                         extra_info_item = self.client.service.GetListEntry(
                             Sitename=self.source_definition['ibabs_sitename'],
@@ -382,6 +390,7 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
         passed_vote_count = 0
 
         for start_date, end_date in dates:
+            sleep(1)
             meetings = self.client.service.GetMeetingsByDateRange(
                 Sitename=self.source_definition['ibabs_sitename'],
                 StartDate=start_date,
@@ -424,6 +433,8 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                 params.iBabsKeyValue.append(kv2)
                 params.iBabsKeyValue.append(kv3)
 
+                sleep(1)
+
                 vote_meeting = self.client.service.GetMeetingWithOptions(
                     Sitename=self.source_definition['ibabs_sitename'],
                     MeetingId=meeting_dict['Id'],
@@ -436,6 +447,8 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
                     if mi['ListEntries'] is None:
                         continue
                     for le in mi['ListEntries']:
+                        sleep(1)
+
                         votes = self.client.service.GetListEntryVotes(
                             Sitename=self.source_definition['ibabs_sitename'],
                             EntryId=le['EntryId'])
