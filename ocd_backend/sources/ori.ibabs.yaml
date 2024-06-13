@@ -1154,3 +1154,40 @@ ori.ibabs:
     allmanak_id: 36483
     cbs_id: GM0197
     <<: *ibabs
+
+  # Added on 13-06-2024
+
+  duiven:
+    key: duiven
+    ibabs_sitename: duiven
+    allmanak_id: 26095
+    cbs_id: GM0226
+    <<: *ibabs
+
+  montfoort:
+    key: montfoort
+    ibabs_sitename: montfoort
+    allmanak_id: 36085
+    cbs_id: GM0335
+    <<: *ibabs
+
+  zevenaar:
+    key: zevenaar
+    ibabs_sitename: zevenaar
+    allmanak_id: 36525
+    cbs_id: GM0299
+    <<: *ibabs
+
+  bergeijk:
+    key: bergeijk
+    ibabs_sitename: gemeentebergeijk
+    allmanak_id: 21977
+    cbs_id: GM1724
+    <<: *ibabs
+
+  maashorst:
+    key: maashorst
+    ibabs_sitename: maashorst
+    allmanak_id: 28523626
+    cbs_id: GM1991
+    <<: *ibabs
