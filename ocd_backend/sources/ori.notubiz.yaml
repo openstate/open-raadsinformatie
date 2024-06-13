@@ -888,3 +888,12 @@ ori.notubiz:
     cbs_id: GM0845
     notubiz_organization_id: 536
     <<: *notubiz
+
+# Added on 13-06-2024
+
+  den_bosch:
+    key: den_bosch
+    allmanak_id: 40498
+    cbs_id: GM0796
+    notubiz_organization_id: 1581
+    <<: *notubiz
