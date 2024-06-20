@@ -322,6 +322,9 @@ POSTGRES_DATABASE = os.getenv('POSTGRES_DATABASE', 'ori')
 POSTGRES_USERNAME = os.getenv('POSTGRES_USERNAME', 'ori_postgres_user')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
 
+# Sentry DSN
+SENTRY_DSN = os.getenv('SENTRY_DSN')
+
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
 # defined per machine.
