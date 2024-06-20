@@ -1,6 +1,9 @@
-from celery import Celery
+import os
 
-from ocd_backend.settings import CELERY_CONFIG
+import sentry_sdk
+from celery import Celery, signals
+
+from ocd_backend.settings import CELERY_CONFIG, SENTRY_DSN
 
 celery_app = Celery('ocd_backend', include=[
     'ocd_backend.pipeline',
@@ -35,3 +38,11 @@ celery_app = Celery('ocd_backend', include=[
 ])
 
 celery_app.conf.update(**CELERY_CONFIG)
+
+#@signals.worker_init.connect
+@signals.celeryd_init.connect
+def init_sentry(**_kwargs):
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+        traces_sample_rate=1.0
+    )  # same as above
