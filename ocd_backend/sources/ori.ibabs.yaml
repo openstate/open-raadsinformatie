@@ -56,6 +56,7 @@ _entities: &entities
     regex: ".*"
     pdf_max_pages: 0
     max_pages: 1
+    per_page: 20
 
 #_cwc: &cwc
 #  - &videotulen
@@ -151,6 +152,8 @@ ori.ibabs:
       include: ".*"
       exclude: (moties|amendementen)
       pdf_max_pages: 0
+      max_pages: 1
+      per_page: 20
       <<: *entity_defaults
 
 #    - entity: motions

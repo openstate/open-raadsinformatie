@@ -9,7 +9,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
-      - SENTRY_DSN=https://2d8d1817cc4b793fefb6b36381c6f456@o4505233371103232.ingest.us.sentry.io/4505233377918976
+      - SENTRY_DSN=xxxx
     networks:
       - ori
     volumes:
@@ -31,7 +31,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
-      - SENTRY_DSN=https://2d8d1817cc4b793fefb6b36381c6f456@o4505233371103232.ingest.us.sentry.io/4505233377918976
+      - SENTRY_DSN=xxx
     networks:
       - ori
     volumes:
@@ -77,7 +77,7 @@ services:
       retries: 5
     restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms16g -Xmx16g"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0

@@ -58,6 +58,8 @@ _entities: &entities
     include: ".*"
     exclude: (moties|amendementen)
     pdf_max_pages: 0
+    max_pages: 1
+    per_page: 20
 
 _ibabs: &ibabs
   index_name: "{key}"
