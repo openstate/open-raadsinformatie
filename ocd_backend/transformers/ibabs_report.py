@@ -80,7 +80,7 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
             pass
 
     datum = original_item.get('datum')
-    if datum is not None and (datum not in ['V', 'R']):
+    if datum is not None and (datum not in ['V', 'R', 'B']):
         report.start_date = datum
         report.end_date = datum
 
