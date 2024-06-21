@@ -328,7 +328,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         report_dict['datum'] = None
 
                     # datum can sometimes be 'V' -- unsure what it means
-                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and (report_dict['datum'] not in ['B', 'G', 'V', 'R']) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
+                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and (report_dict['datum'] not in ['B', 'G', 'V', 'R', 'C']) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
                         # Skip report if date is outside date interval
                         continue
 
