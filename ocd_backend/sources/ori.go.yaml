@@ -221,12 +221,12 @@ ori.go:
     cbs_id: GM0373
     <<: *go
 
-  schiermonnikoog:
-    key: schiermonnikoog
-    base_url: "https://bestuur.schiermonnikoog.nl/api"
-    allmanak_id: 23540
-    cbs_id: GM0088
-    <<: *go
+  #schiermonnikoog:
+  #  key: schiermonnikoog
+  #  base_url: "https://bestuur.schiermonnikoog.nl/api"
+  #  allmanak_id: 23540
+  #  cbs_id: GM0088
+  #  <<: *go
 
   # Added on 23-12-2020
   albrandswaard:
