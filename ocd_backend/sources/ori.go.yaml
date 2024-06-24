@@ -205,12 +205,12 @@ ori.go:
     cbs_id: GM1735
     <<: *go
 
-  drechtsteden:
-    key: drechtsteden
-    base_url: "https://drechtraad.drechtsteden.nl/api"
-    allmanak_id: 24943500
-    # cbs_id: has no cbs_id
-    <<: *go
+  #drechtsteden:
+  #  key: drechtsteden
+  #  base_url: "https://drechtraad.drechtsteden.nl/api"
+  #  allmanak_id: 24943500
+  #  # cbs_id: has no cbs_id
+  #  <<: *go
 
   # Added on 27-11-2020
   bergen_nh:
