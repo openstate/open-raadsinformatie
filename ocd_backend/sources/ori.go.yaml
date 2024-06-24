@@ -160,13 +160,13 @@ ori.go:
     <<: *go
 
   # Added on 09-04-2020
-  midden-groningen:
-    key: midden-groningen
-    source_name: "Midden-Groningen"
-    base_url: "https://bestuur.midden-groningen.nl/api"
-    allmanak_id: 23087145
-    cbs_id: GM1952
-    <<: *go
+  #midden-groningen:
+  #  key: midden-groningen
+  #  source_name: "Midden-Groningen"
+  #  base_url: "https://bestuur.midden-groningen.nl/api"
+  #  allmanak_id: 23087145
+  #  cbs_id: GM1952
+  #  <<: *go
 
   # Added on 22-06-2020
   groningen:
