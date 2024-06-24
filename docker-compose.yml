@@ -9,7 +9,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
-      - SENTRY_DSN=xxxx
+      - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
     networks:
       - ori
     volumes:
@@ -31,7 +31,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - BUGSNAG_APIKEY="df52aa68d1fa14338e2a11886c0d1c36"
-      - SENTRY_DSN=xxx
+      - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
     networks:
       - ori
     volumes:

@@ -455,12 +455,12 @@ ori.notubiz:
     notubiz_organization_id: 1745
     <<: *notubiz
 
-  nijmegen:
-    key: nijmegen
-    allmanak_id: 33391
-    cbs_id: GM0268
-    notubiz_organization_id: 799
-    <<: *notubiz
+ # nijmegen:
+ #   key: nijmegen
+ #   allmanak_id: 33391
+ #   cbs_id: GM0268
+ #   notubiz_organization_id: 799
+ #   <<: *notubiz
 
   # Added on 05-03-2020
   nunspeet:
