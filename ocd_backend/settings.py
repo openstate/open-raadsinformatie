@@ -296,6 +296,9 @@ USER_AGENT = 'Open Raadsinformatie/%s.%s (+http://www.openraadsinformatie.nl/)' 
 # The endpoint for the iBabs API
 IBABS_WSDL = 'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
 
+# iBabs invalid date types
+IBABS_INVALID_REPORT_DATES = ['B', 'G', 'V', 'R', 'C', '1', 'I', 'T'] 
+
 # The endpoint for the CompanyWebcast API
 CWC_WSDL = 'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
 
