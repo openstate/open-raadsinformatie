@@ -98,12 +98,12 @@ ori.go:
     cbs_id: GM1509
     <<: *go
 
-  borne:
-    key: borne
-    base_url: "https://gemeenteraad.borne.nl/api"
-    allmanak_id: 25660
-    cbs_id: GM0147
-    <<: *go
+  #borne:
+  #  key: borne
+  #  base_url: "https://gemeenteraad.borne.nl/api"
+  #  allmanak_id: 25660
+  #  cbs_id: GM0147
+  #  <<: *go
 
   leiderdorp:
     key: leiderdorp
