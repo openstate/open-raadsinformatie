@@ -252,12 +252,12 @@ ori.go:
     cbs_id: GM0406
     <<: *go
 
-  beuningen:
-    key: beuningen
-    base_url: "https://gemeentebestuur.beuningen.nl/api/"
-    allmanak_id: 27471
-    cbs_id: GM0209
-    <<: *go
+  #beuningen:
+  #  key: beuningen
+  #  base_url: "https://gemeentebestuur.beuningen.nl/api/"
+  #  allmanak_id: 27471
+  #  cbs_id: GM0209
+  #  <<: *go
 
   heemstede:
     key: heemstede
