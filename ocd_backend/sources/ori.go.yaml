@@ -160,13 +160,13 @@ ori.go:
     <<: *go
 
   # Added on 09-04-2020
-  midden-groningen:
-    key: midden-groningen
-    source_name: "Midden-Groningen"
-    base_url: "https://bestuur.midden-groningen.nl/api"
-    allmanak_id: 23087145
-    cbs_id: GM1952
-    <<: *go
+  #midden-groningen:
+  #  key: midden-groningen
+  #  source_name: "Midden-Groningen"
+  #  base_url: "https://bestuur.midden-groningen.nl/api"
+  #  allmanak_id: 23087145
+  #  cbs_id: GM1952
+  #  <<: *go
 
   # Added on 22-06-2020
   groningen:
@@ -205,12 +205,12 @@ ori.go:
     cbs_id: GM1735
     <<: *go
 
-  drechtsteden:
-    key: drechtsteden
-    base_url: "https://drechtraad.drechtsteden.nl/api"
-    allmanak_id: 24943500
-    # cbs_id: has no cbs_id
-    <<: *go
+  #drechtsteden:
+  #  key: drechtsteden
+  #  base_url: "https://drechtraad.drechtsteden.nl/api"
+  #  allmanak_id: 24943500
+  #  # cbs_id: has no cbs_id
+  #  <<: *go
 
   # Added on 27-11-2020
   bergen_nh:
@@ -221,12 +221,12 @@ ori.go:
     cbs_id: GM0373
     <<: *go
 
-  schiermonnikoog:
-    key: schiermonnikoog
-    base_url: "https://bestuur.schiermonnikoog.nl/api"
-    allmanak_id: 23540
-    cbs_id: GM0088
-    <<: *go
+  #schiermonnikoog:
+  #  key: schiermonnikoog
+  #  base_url: "https://bestuur.schiermonnikoog.nl/api"
+  #  allmanak_id: 23540
+  #  cbs_id: GM0088
+  #  <<: *go
 
   # Added on 23-12-2020
   albrandswaard:
