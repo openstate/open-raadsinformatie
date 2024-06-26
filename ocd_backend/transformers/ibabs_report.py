@@ -104,7 +104,7 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         attachment_file.size_in_bytes = document['FileSize']
         attachment_file.name = document['DisplayName']
         attachment_file.is_referenced_by = report
-        if datum and (datum not in ['R', 'B']):
+        if datum and (datum not in settings.IBABS_INVALID_REPORT_DATES):
             attachment_file.last_discussed_at = datum
         report.attachment.append(attachment_file)
 
