@@ -854,12 +854,12 @@ ori.notubiz:
     notubiz_organization_id: 603
     <<: *notubiz
 
-  enkhuizen:
-    key: enkhuizen
-    allmanak_id: 33494
-    cbs_id: GM0388
-    notubiz_organization_id: 736
-    <<: *notubiz
+  #enkhuizen:
+  #  key: enkhuizen
+  #  allmanak_id: 33494
+  #  cbs_id: GM0388
+  #  notubiz_organization_id: 736
+  #  <<: *notubiz
 
   landgraaf:
     key: landgraaf
