@@ -209,12 +209,12 @@ ori.notubiz:
     notubiz_organization_id: 1696
     <<: *notubiz
 
-  soest:
-    key: soest
-    allmanak_id: 38312
-    cbs_id: GM0342
-    notubiz_organization_id: 1674
-    <<: *notubiz
+  #soest:
+  #  key: soest
+  #  allmanak_id: 38312
+  #  cbs_id: GM0342
+  #  notubiz_organization_id: 1674
+  #  <<: *notubiz
 
   noordwijk:
     key: noordwijk
