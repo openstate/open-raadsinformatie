@@ -20,7 +20,7 @@ from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, list_entry_response_to_dict, votes_to_dict)
-from ocd_backend.utils.misc import json_encoder
+from ocd_backend.utils.misc import json_encoder, is_valid_iso8601_date
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
 
@@ -328,7 +328,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         report_dict['datum'] = None
 
                     # datum can sometimes be 'V' -- unsure what it means
-                    if report_dict['datum'] and isinstance(report_dict['datum'], str) and (report_dict['datum'] not in settings.IBABS_INVALID_REPORT_DATES) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
+                    if is_valid_iso8601_date(report_dict['datum']) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
                         # Skip report if date is outside date interval
                         continue
 
