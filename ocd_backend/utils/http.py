@@ -94,7 +94,14 @@ class HttpRequestMixin:
 
     def download_url(self, url, partial_fetch=False):
         log.debug('Fetching item %s' % (url,))
-        http_resp = self.http_session.get(url, stream=True, timeout=(3, 5), verify=False)
+
+        # hacky solution to make the timeout for certain iBabs urls longer than for other
+        # providers, as big files tend to have longer response times in iBabs
+        if 'ibabs.eu' in url:
+            tm = 10
+        else:
+            tm = 5
+        http_resp = self.http_session.get(url, stream=True, timeout=(3, tm), verify=False)
         http_resp.raise_for_status()
 
         # Create a temporary file to store the media item, write the file
