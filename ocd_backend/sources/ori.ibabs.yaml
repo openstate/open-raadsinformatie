@@ -1194,3 +1194,18 @@ ori.ibabs:
     allmanak_id: 28523626
     cbs_id: GM1991
     <<: *ibabs
+
+  # Added on 03-07-2024
+
+  westland:
+    key: westland
+    ibabs_sitename: westland
+    allmanak_id: 36327
+    cbs_id: GM1783
+    <<: *ibabs
+  bronckhorst:
+    key: bronckhorst
+    ibabs_sitename: bronckhorst
+    allmanak_id: 36916
+    cbs_id: GM1876
+    <<: *ibabs
