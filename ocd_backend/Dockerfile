@@ -13,7 +13,7 @@ RUN apk add --update \
   inotify-tools libmagic
 RUN apk add --no-cache librdkafka-dev \
   && apk add postgresql-dev gcc python3-dev musl-dev
-RUN pip install --upgrade pip \
+RUN pip install --upgrade 'pip<24.1' \
   && pip install cython==0.29.36 \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \

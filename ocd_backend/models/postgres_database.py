@@ -129,6 +129,9 @@ class PostgresDatabase:
             resource = session.query(Resource).filter(Resource.ori_id == model_object.ori_identifier.partition(Ori.uri)[2]).one()
 
             # Delete properties that are about to be updated
+            # TODO: maybe put the predicates in a temporary table so we can
+            # perform a join on that table since that is faster
+            # sometimes 11 or more predicates
             predicates = serialized_properties.keys()
             session.query(Property).filter(Property.resource_id == resource.ori_id,
                                            Property.predicate.in_(predicates)
