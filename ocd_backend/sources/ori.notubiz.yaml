@@ -904,3 +904,35 @@ ori.notubiz:
     cbs_id: GM0772
     notubiz_organization_id: 686
     <<: *notubiz
+
+# Added on 03-07-2024
+  putten:
+    key: putten
+    allmanak_id: 37873
+    cbs_id: GM0273
+    notubiz_organization_id: 1704
+    <<: *notubiz
+  son_en_breugel:
+    key: son_en_breugel
+    allmanak_id: 31060
+    cbs_id: GM0848
+    notubiz_organization_id: 436
+    <<: *notubiz
+  sudwest_fryslan:
+    key: sudwest_fryslan
+    allmanak_id: 26708
+    cbs_id: GM1900
+    notubiz_organization_id: 1512 #not entirely sure about this! Inferred it from API requests
+    <<: *notubiz
+  hellendoorn:
+    key: hellendoorn
+    allmanak_id: 27513
+    cbs_id: GM0163
+    notubiz_organization_id: 2952
+    <<: *notubiz
+  voorne_aan_zee:
+    key: voorne_aan_zee
+    allmanak_id: 28857535
+    cbs_id: GM1992
+    notubiz_organization_id: 4236
+    <<: *notubiz

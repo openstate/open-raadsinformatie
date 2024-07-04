@@ -12,7 +12,7 @@
 - Duplicate bottom municipality
 - Set key (equal to shortname, dashes allowed)
 - Allamak code: https://allmanak.nl/cat/1/Gemeenten (https://allmanak.nl/cat/32/Waterschappen), search name, get ID from URL
-- For CBS code: https://www.cbs.nl/nl-nl/onze-diensten/methoden/classificaties/overig/gemeentelijke-indelingen-per-jaar/indeling%20per%20jaar/gemeentelijke-indeling-op-1-januari-2020
+- For CBS code: https://www.cbs.nl/nl-nl/onze-diensten/methoden/classificaties/overig/gemeentelijke-indelingen-per-jaar/indeling-per-jaar/gemeentelijke-indeling-op-1-januari-2024
 - Optionally set `source_name` if municipality name can't be properly derived from shortname.
 - Optionally set `municipality_prefix` if municipality has multiple suppliers per region.
 - The next step depends on supplier, see below
