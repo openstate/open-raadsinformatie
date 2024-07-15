@@ -111,11 +111,11 @@ services:
   #     - reindex.remote.whitelist=elastic:9200
   postgres:
     image: "postgres:${POSTGRES_VERSION}"
-    command: -c config_file=/etc/postgresql.conf
+    #command: -c config_file=/etc/postgresql.conf
     networks:
       - ori
     volumes:
-      - ./postgresql.conf:/etc/postgresql.conf
+    #  - ./postgresql.conf:/etc/postgresql.conf
       - pgdata:/var/lib/postgresql/data
 
 volumes:

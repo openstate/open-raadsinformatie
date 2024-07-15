@@ -86,7 +86,7 @@ class TextEnricher(BaseEnricher):
                     identifier,
                     date_modified,
                 )
-            except requests.HTTPError as e:
+            except (ConnectionError, requests.HTTPError) as e:
                 raise SkipEnrichment(e)
 
             item.content_type = resource.content_type
