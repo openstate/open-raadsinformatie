@@ -1210,3 +1210,11 @@ ori.ibabs:
     allmanak_id: 36916
     cbs_id: GM1876
     <<: *ibabs
+
+  # Added 2024-09-16
+  borger-odoorn:
+    key: borger-odoorn
+    ibabs_sitename: borgerodoorn
+    allmanak_id: 21806
+    cbs_id: gm1681
+    <<: *ibabs
