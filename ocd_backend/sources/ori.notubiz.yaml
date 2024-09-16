@@ -938,3 +938,23 @@ ori.notubiz:
     cbs_id: GM1992
     notubiz_organization_id: 4236
     <<: *notubiz
+
+# Added on 16-09-2024
+  haarlem:
+    key: haarlem
+    allmanak_id: 38688
+    cbs_id: GM0392
+    notubiz_organization_id: 544
+    <<: *notubiz
+  haaksbergen:
+    key: haaksbergen
+    allmanak_id: 32233
+    cbs_id: GM0158
+    notubiz_organization_id: 275
+    <<: *notubiz
+  tilburg:
+    key: tilburg
+    allmanak_id: 38194
+    cbs_id: GM0855
+    notubiz_organization_id: 1736
+    <<: *notubiz
