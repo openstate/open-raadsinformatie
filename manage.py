@@ -23,7 +23,7 @@ from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
 from ocd_backend.utils.misc import load_sources_config
-
+from ocd_backend.utils.monitor import get_recent_counts
 
 # NOTE: don't forget to change this value if you forked this repo and
 # renamed '/opt/oci'
@@ -521,6 +521,37 @@ def extract_process(modus, source_path, sources_config):
             click.echo('Source %s in redis does not exist in available sources' % source)
 
 
+@command('monthly_check')
+@click.option('--token')
+def es_monthly_check(token):
+    result = get_recent_counts()
+    #pprint(result)
+    lines = []
+    for idx, total in result.items():
+        if total < 20:
+            muni = ' '.join(idx.split('_')[1:-1])
+            lines.append(
+                "%s heeft %d documenten erbij in de afgelopen maand" % (muni, total,))
+    if len(lines) > 0:
+        # curl -L   -X POST   -H "Accept: application/vnd.github+json"   -H "Authorization: Bearer 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"
+        # -H "X-GitHub-Api-Version: 2022-11-28"   https://api.github.com/repos/openstate/open-raadsinformatie/issues
+        # -d '{"title":"Found a bug","body":"I'\''m having a problem with this.","assignees":["breyten"],"milestone":1,"labels":["bug"]}'
+        payload = {
+          "title":"Found a bug",
+          "body":"\n".join(lines),
+          "assignees":[
+            "breyten"],
+          "labels":["bug"]}
+        requests.post(
+            'https://api.github.com/repos/openstate/open-raadsinformatie/issues',
+            headers={
+                'X-GitHub-Api-Version': '2022-11-28',
+                'Accept': 'application/vnd.github+json',
+                'Authorization': 'Bearer ' + token
+            },
+            data=json.dumps(payload)
+        )
+
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
 elasticsearch.add_command(es_put_template)
@@ -529,6 +560,7 @@ elasticsearch.add_command(create_indexes)
 elasticsearch.add_command(delete_indexes)
 elasticsearch.add_command(available_indices)
 elasticsearch.add_command(es_copy_data)
+elasticsearch.add_command(es_monthly_check)
 
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)

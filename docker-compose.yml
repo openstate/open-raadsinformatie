@@ -14,7 +14,7 @@ services:
       - ori
     volumes:
       - oridata:/opt/ori/data
-      #- .:/opt/ori
+      - .:/opt/ori
       - ./ocd_backend:/opt/ori/ocd_backend
     depends_on:
       elastic:
