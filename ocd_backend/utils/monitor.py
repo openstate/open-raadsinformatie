@@ -18,7 +18,7 @@ def get_recent_counts():
                     {'term': {"@type": "MediaObject"}},
                     {'range': {
                         'last_discussed_at': {
-                            'gte': 'now-3000d'
+                            'gte': 'now-30d'
                         }
                     }}
                 ]

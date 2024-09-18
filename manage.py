@@ -539,7 +539,7 @@ def es_monthly_check(token):
           "assignees":[
             "breyten"],
           "labels":["bug"]}
-        requests.post(
+        resp = requests.post(
             'https://api.github.com/repos/openstate/open-raadsinformatie/issues',
             headers={
                 'X-GitHub-Api-Version': '2022-11-28',
@@ -548,6 +548,7 @@ def es_monthly_check(token):
             },
             data=json.dumps(payload)
         )
+        print(resp)
 
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
