@@ -27,13 +27,15 @@ def get_recent_counts():
         "aggs": {
           "index": {
             "terms": {
-                "field": "_index"
+                "field": "_index",
+                "size": 10000
             }
           }
         },
         "size": 0
     }
     resp = es.search(body=payload)
+    #print(resp)
     indices = get_indices()
     result = {i: 0 for i in indices}
     for b in resp.get('aggregations', {}).get('index', {}).get('buckets', []):

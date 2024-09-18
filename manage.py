@@ -529,12 +529,13 @@ def es_monthly_check(token):
     lines = []
     for idx, total in result.items():
         if total < 20:
-            muni = ' '.join(idx.split('_')[1:-1])
+            muni = ' '.join([i for i in idx.split('_')[1:-1] if i != 'fixed'])
             lines.append(
                 "%s heeft %d documenten erbij in de afgelopen maand" % (muni, total,))
+    #print(lines)
     if len(lines) > 0:
         payload = {
-          "title":"Found a bug",
+          "title":"Possible fetch problems this month ..."
           "body":"\n".join(lines),
           "assignees":[
             "breyten"],
