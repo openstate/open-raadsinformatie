@@ -216,12 +216,13 @@ ori.notubiz:
   #  notubiz_organization_id: 1674
   #  <<: *notubiz
 
-  noordwijk:
-    key: noordwijk
-    allmanak_id: 27985
-    cbs_id: GM0575
-    notubiz_organization_id: 574
-    <<: *notubiz
+  # switched to ibabs
+  # noordwijk:
+  #   key: noordwijk
+  #   allmanak_id: 27985
+  #   cbs_id: GM0575
+  #   notubiz_organization_id: 574
+  #   <<: *notubiz
 
   amersfoort:
     key: amersfoort
@@ -340,7 +341,7 @@ ori.notubiz:
   almere:
     key: almere
     allmanak_id: 28393
-    cbs_id: GM0441
+    cbs_id: GM0034
     notubiz_organization_id: 952
     <<: *notubiz
 
@@ -365,13 +366,14 @@ ori.notubiz:
     notubiz_organization_id: 1781
     <<: *notubiz
 
-  stichtse_vecht:
-    key: stichtse_vecht
-    source_name: "Stichtse Vecht"
-    allmanak_id: 34861
-    cbs_id: GM1904
-    notubiz_organization_id: 1770
-    <<: *notubiz
+  # Switched to GO
+  # stichtse_vecht:
+  #   key: stichtse_vecht
+  #   source_name: "Stichtse Vecht"
+  #   allmanak_id: 34861
+  #   cbs_id: GM1904
+  #   notubiz_organization_id: 1770
+  #   <<: *notubiz
 
   deventer:
     key: deventer
@@ -827,7 +829,7 @@ ori.notubiz:
   bunschoten:
     key: bunschoten
     allmanak_id: 28326
-    cbs_id: GM0047
+    cbs_id: GM0313
     notubiz_organization_id: 505
     <<: *notubiz
 
@@ -935,4 +937,24 @@ ori.notubiz:
     allmanak_id: 28857535
     cbs_id: GM1992
     notubiz_organization_id: 4236
+    <<: *notubiz
+
+# Added on 16-09-2024
+  haarlem:
+    key: haarlem
+    allmanak_id: 38688
+    cbs_id: GM0392
+    notubiz_organization_id: 544
+    <<: *notubiz
+  haaksbergen:
+    key: haaksbergen
+    allmanak_id: 32233
+    cbs_id: GM0158
+    notubiz_organization_id: 275
+    <<: *notubiz
+  tilburg:
+    key: tilburg
+    allmanak_id: 38194
+    cbs_id: GM0855
+    notubiz_organization_id: 1736
     <<: *notubiz

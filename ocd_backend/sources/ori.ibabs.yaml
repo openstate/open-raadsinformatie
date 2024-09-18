@@ -942,7 +942,7 @@ ori.ibabs:
     key: weststellingwerf
     ibabs_sitename: Weststellingwerf
     allmanak_id: 29037
-    cbs_id: GM0085
+    cbs_id: GM0098
     <<: *ibabs
 
   westerkwartier:
@@ -1046,12 +1046,13 @@ ori.ibabs:
     cbs_id: GM0888
     <<: *ibabs
 
-  venlo:
-    key: venlo
-    ibabs_sitename: venlo
-    allmanak_id: 25285
-    cbs_id: GM0983
-    <<: *ibabs
+  # Swithced to GO
+  # venlo:
+  #   key: venlo
+  #   ibabs_sitename: venlo
+  #   allmanak_id: 25285
+  #   cbs_id: GM0983
+  #   <<: *ibabs
 
   oostzaan:
     key: oostzaan
@@ -1208,4 +1209,12 @@ ori.ibabs:
     ibabs_sitename: bronckhorst
     allmanak_id: 36916
     cbs_id: GM1876
+    <<: *ibabs
+
+  # Added 2024-09-16
+  borger-odoorn:
+    key: borger-odoorn
+    ibabs_sitename: borgerodoorn
+    allmanak_id: 21806
+    cbs_id: gm1681
     <<: *ibabs

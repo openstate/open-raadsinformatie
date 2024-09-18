@@ -533,9 +533,6 @@ def es_monthly_check(token):
             lines.append(
                 "%s heeft %d documenten erbij in de afgelopen maand" % (muni, total,))
     if len(lines) > 0:
-        # curl -L   -X POST   -H "Accept: application/vnd.github+json"   -H "Authorization: Bearer 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"
-        # -H "X-GitHub-Api-Version: 2022-11-28"   https://api.github.com/repos/openstate/open-raadsinformatie/issues
-        # -d '{"title":"Found a bug","body":"I'\''m having a problem with this.","assignees":["breyten"],"milestone":1,"labels":["bug"]}'
         payload = {
           "title":"Found a bug",
           "body":"\n".join(lines),

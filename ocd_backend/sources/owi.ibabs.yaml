@@ -75,3 +75,12 @@ owi.ibabs:
     key: aa-en-maas
     allmanak_id: 21099
     <<: *ibabs
+  # Added 2024-09-16
+  de_dommel:
+    key: de_dommel
+    allmanak_id: 21124
+    <<: *ibabs
+  limburg:
+    key: limburg
+    allmanak_id: 21194
+    <<: *ibabs
