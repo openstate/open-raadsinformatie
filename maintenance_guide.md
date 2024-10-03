@@ -16,7 +16,8 @@
 - Optionally set `source_name` if municipality name can't be properly derived from shortname.
 - Optionally set `municipality_prefix` if municipality has multiple suppliers per region.
 - The next step depends on supplier, see below
-- Push to master, semaphore (currently at jurrian's account!) starts deploying. In this step, dependabot might want to update a lib.
+- Push to master
+- `ssh` to `wolf` (ask Breyten)
 - sh to `redis` (see [redis](#redis))
 - `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
@@ -105,4 +106,14 @@ This is running as a service in kubernetes.
 Sometimes VNG wants a list of municipalities.
 You can use this:
 
-`cat ./ocd_backend/sources/ori.parlaeus.yaml | yq e '.["ori.parlaeus"][] | .key'`
+`cat ./ocd_backend/sources/ori.parlaeus.yaml | yq e '.["ori.parlaeus"][] | [.key, .cbs_id] | @tsv'`
+
+`https://raw.githubusercontent.com/openstate/open-raadsinformatie/refs/heads/master/ocd_backend/sources/ori.go.yaml`
+
+replace `parlaeus` with all these: `["go", "notubiz", "parlaeus", "ibabs"]` to get all the suppliers.
+
+For example, to get the data for the "go" supplier:
+
+`cat ./ocd_backend/sources/ori.go.yaml | yq e '.["ori.go"][] | [.key, .cbs_id] | @tsv'`
+
+This will output the key and cbs_id for each municipality, separated by a tab character.
