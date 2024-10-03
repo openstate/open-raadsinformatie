@@ -103,17 +103,4 @@ This is running as a service in kubernetes.
 
 ## Script to list all sources (for excel sheets)
 
-Sometimes VNG wants a list of municipalities.
-You can use this:
-
-`cat ./ocd_backend/sources/ori.parlaeus.yaml | yq e '.["ori.parlaeus"][] | [.key, .cbs_id] | @tsv'`
-
-`https://raw.githubusercontent.com/openstate/open-raadsinformatie/refs/heads/master/ocd_backend/sources/ori.go.yaml`
-
-replace `parlaeus` with all these: `["go", "notubiz", "parlaeus", "ibabs"]` to get all the suppliers.
-
-For example, to get the data for the "go" supplier:
-
-`cat ./ocd_backend/sources/ori.go.yaml | yq e '.["ori.go"][] | [.key, .cbs_id] | @tsv'`
-
-This will output the key and cbs_id for each municipality, separated by a tab character.
+Sometimes VNG wants a list of municipalities. You can use `./fetch_municipalities.sh` to fetch the data for all suppliers and output it in a format suitable for Excel sheets.
