@@ -82,5 +82,6 @@ owi.ibabs:
     <<: *ibabs
   limburg:
     key: limburg
+    ibabs_sitename: waterschaplimburg
     allmanak_id: 21194
     <<: *ibabs
