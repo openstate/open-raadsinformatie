@@ -2,19 +2,17 @@
 Master: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinformatie/branches/master/shields_badge.svg)](https://semaphoreci.com/jurrian/open-raadsinformatie)
 Develop: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinformatie/branches/develop/shields_badge.svg)](https://semaphoreci.com/jurrian/open-raadsinformatie)
 
-Open Raadsinformatie (ORI) aims to collect and standardize governmental decision making data of Dutch municipalities.
-This includes Meetings, Agenda Items, Documents, Motions and more.
-Open Raadsinformatie is a collaborative effort of the [Open State Foundation](https://openstate.eu/), [Argu](https://argu.co) / [Ontola](https://ontola.io) and [VNG Realisatie](https://vngrealisatie.nl/).
+Open Raadsinformatie (ORI) aims to collect and standardize governmental decision making documents of Dutch municipalities (gemeenten, provincies, waterschappen).
+Open Raadsinformatie is a collaborative effort of the [Open State Foundation](https://openstate.eu/), [Ontola](https://ontola.io) and [VNG Realisatie](https://vngrealisatie.nl/).
 
 ## Important links
 
+ - [Docs for API](/API-docs.md)
+ - [Search engine](http://openbesluitvorming.nl/)
  - [Open Raadsinformatie homepage](http://www.openraadsinformatie.nl/)
  - [Official source code repository](https://github.com/openstate/open-raadsinformatie/)
  - [Issue tracker](https://github.com/openstate/open-raadsinformatie/issues)
- - [Search engine](http://zoek.openraadsinformatie.nl/)
- - [New search engine (beta)](https://ori.argu.co)
- - [Docs for V1 API](http://docs.openraadsinformatie.nl)
-
+ 
 ## Installation and usage
 
 See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started. Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
@@ -37,8 +35,7 @@ Your griffie (municipality clerk) needs to formally agree that the data becomes 
 
 ## Related repositories
 
-- [ori-search](https://github.com/ontola/ori-search/), the new search interface.
-- [ori_api](https://github.com/ontola/ori_api/), the `id.` REST api.
+- [openbesluitvorming](https://github.com/ontola/openbesluitvorming), the new search interface.
 
 ## Contributing
 
@@ -63,6 +60,7 @@ Authors and contributors of both projects are:
 * Sicco van Sas ([@siccovansas](https://twitter.com/siccovansas))
 * Jurrian Tromp ([@jurrian](https://github.com/jurrian), [@ontola](https://github.com/ontola))
 * Jorrit van Belzen ([@jorritb](https://github.com/jorritb), [@ontola](https://github.com/ontola))
+* Joep Meindertsma ([@joepio](https://github.com/jorritb))
 
 Contributors:
 
