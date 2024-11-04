@@ -1,0 +1,232 @@
+### ORI API Get Resource as N-Quads
+
+GET https://id.openraadsinformatie.nl/44477 HTTP/1.1
+content-type: application/n-quads
+
+### ORI API Get Resource as Turtle
+
+GET https://id.openraadsinformatie.nl/44477 HTTP/1.1
+content-type: text/turtle
+
+### Elastic get resource
+GET https://api.openraadsinformatie.nl/v1/elastic/ori_*/_search?q=_id:44477 HTTP/1.1
+
+### Elastic simple request
+GET https://api.openraadsinformatie.nl/v1/elastic/ori_*/_search?q=test HTTP/1.1
+
+### Elastic simple request with body
+POST https://api.openraadsinformatie.nl/v1/elastic/ori_*/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+    "simple_query_string": {
+      "fields": ["text", "title", "description", "name"],
+      "default_operator": "or",
+      "query": "zoek"
+    }
+  },
+  "size": 10,
+  "_source": {
+    "includes": [
+      "*"
+    ],
+    "excludes": []
+  },
+  "from": 0,
+  "sort": [
+    {
+      "_score": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+
+### Elastic with highlights
+
+POST https://api.openraadsinformatie.nl/v1/elastic/ori_*/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+    "simple_query_string": {
+      "fields": ["text", "title", "description", "name"],
+      "default_operator": "or",
+      "query": "politie"
+    }
+  },
+  "highlight": {
+    "pre_tags": [
+      "<mark>"
+    ],
+    "post_tags": [
+      "</mark>"
+    ],
+    "fields": {
+      "text": {},
+      "title": {},
+      "name": {},
+      "description": {}
+    },
+    "fragment_size": 100,
+    "number_of_fragments": 3
+  },
+  "size": 10,
+  "_source": {
+    "includes": [
+      "*"
+    ],
+    "excludes": []
+  },
+  "from": 0,
+  "sort": [
+    {
+      "_score": {
+        "order": "desc"
+      }
+    }
+  ]
+}
+
+
+### Elastic Filter Municipality using terms
+
+GET http://ori.argu.co/api/ori_*/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        [
+          {
+            "simple_query_string": {
+              "fields": [
+                "text",
+                "title",
+                "description",
+                "name"
+              ],
+              "default_operator": "or",
+              "query": "zoeken"
+            }
+          }
+        ],
+        {
+          "terms": {
+            "_index": [
+              "ori_alkmaar_20190507105200"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "size": 10
+}
+
+### Elastic single Municipality using index with wildcard in URL
+
+GET http://ori.argu.co/api/ori_amsterd*/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+      "simple_query_string": {
+      "fields": ["text", "title", "description", "name"],
+      "default_operator": "or",
+      "query": "Search only in amsterdam"
+    }
+  },
+  "size": 10
+}
+
+### Elastic filter by date
+
+POST https://api.openraadsinformatie.nl/v1/elastic/ori_meierijstad_20190809125117/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        [
+          {
+            "simple_query_string": {
+              "fields": [
+                "text",
+                "title",
+                "description",
+                "name"
+              ],
+              "default_operator": "or",
+              "query": "zoek"
+            }
+          }
+        ],
+        {
+          "range": {
+            "last_discussed_at": {
+              "gte": "2019-10-20",
+              "lte": "2019-10-25"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "size": 10,
+  "_source": {
+    "includes": [
+      "*"
+    ],
+    "excludes": []
+  },
+  "from": 0,
+  "sort": [
+    {
+      "_score": {
+        "order": "desc"
+      }
+    }
+  ],
+  "aggs": {
+    "tags": {
+      "terms": {
+        "field": "tags.http://www.w3.org/1999/02/22-rdf-syntax-ns#_0.https://argu.co/ns/meeting/tag.keyword",
+        "size": 500,
+        "order": {
+          "_count": "desc"
+        }
+      }
+    }
+  }
+}
+
+### List all indexes, see all document counts per municipality / province
+
+GET https://api.openraadsinformatie.nl/v1/elastic/_cat/indices?v HTTP/1.1
+content-type: application/json
+
+### Get all municipalities
+
+POST https://api.openraadsinformatie.nl/v1/elastic/ori_*/_search? HTTP/1.1
+content-type: application/json
+
+{
+  "size": 500,
+  "query": {
+      "bool": {
+          "must": {
+              "match_all": {}
+          },
+          "filter": {
+              "terms": {
+                  "classification": ["municipality", "province", "water"]
+              }
+          }
+      }
+  }
+}
