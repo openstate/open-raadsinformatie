@@ -1226,3 +1226,10 @@ ori.ibabs:
     allmanak_id: 36962
     cbs_id: GM0301
     <<: *ibabs
+
+  soest:
+    key: soest
+    ibabs_sitename: soest
+    allmanak_id: 38312
+    cbs_id: GM0342
+    <<: *ibabs
