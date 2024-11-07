@@ -535,7 +535,7 @@ def es_monthly_check(token):
     #print(lines)
     if len(lines) > 0:
         payload = {
-          "title":"Possible fetch problems this month ..."
+          "title":"Possible fetch problems this month ...",
           "body":"\n".join(lines),
           "assignees":[
             "breyten"],
