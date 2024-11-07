@@ -74,3 +74,9 @@ osi.notubiz:
     allmanak_id: 17466
     notubiz_organization_id: 3868
     <<: *notubiz
+
+  groningen:
+    key: groningen
+    allmanak_id: 15632
+    notubiz_organization_id: 1396
+    <<: *notubiz
