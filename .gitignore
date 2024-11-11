@@ -1,5 +1,7 @@
 local_settings.py
 local_sources.json
+sources.txt
+sources.tmp
 
 Vagrantfile
 
@@ -53,7 +55,7 @@ local_dumps/
 .idea
 *.swp
 *.swo
-.vscode
+.vscode/
 
 # logs
 *.log

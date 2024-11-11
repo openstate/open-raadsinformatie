@@ -1,0 +1,9 @@
+27 11,23 * * * sudo docker exec docker_c-certbot_1 certbot renew; cd /home/projects/nginx-load-balancer/docker && sudo ./reload.sh
+
+
+
+1 0 * * * cd /home/projects/open-raadsinformatie && docker-compose restart backend loader
+5 0 * * * cd /home/projects/open-raadsinformatie && ./bin/update.sh
+*/2 0-12 * * * cd /home/projects/open-raadsinformatie && ./bin/update_source.sh
+5 8 15 * * docker exec ori_backend_1 ./manage.py elasticsearch monthly_check --token=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y
+#23 14 * * * cd /home/breyten/load && ./start.sh
