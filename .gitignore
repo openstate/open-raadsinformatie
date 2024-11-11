@@ -1,5 +1,7 @@
 local_settings.py
 local_sources.json
+sources.txt
+sources.tmp
 
 Vagrantfile
 
