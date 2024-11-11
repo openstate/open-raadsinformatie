@@ -53,7 +53,7 @@ local_dumps/
 .idea
 *.swp
 *.swo
-.vscode
+.vscode/
 
 # logs
 *.log
