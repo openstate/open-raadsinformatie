@@ -11,7 +11,7 @@ from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
 from ocd_backend.utils.file_parsing import file_parser
-from ocd_backend.utils.http import GCSCachingMixin
+from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
@@ -63,25 +63,9 @@ class TextEnricher(BaseEnricher):
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
 
-        ori_enriched = GCSCachingMixin.factory('ori-enriched')
-        if ori_enriched.exists(identifier):
-            resource = ori_enriched.download_cache(identifier)
-            try:
-                item.text = json.load(resource.media_file)['data']
-
-                # Adding the same text again for Elastic nesting
-                item.text_pages = [
-                    {'text': text, 'page_number': i}
-                    for i, text in enumerate(item.text, start=1)
-                    if text
-                ]
-            except (ValueError, KeyError):
-                # No json could be decoded or data not found, pass and parse again
-                pass
-
         if not hasattr(item, 'text') or not item.text:
             try:
-                resource = GCSCachingMixin.factory('ori-static').fetch(
+                resource = HttpRequestSimple().fetch(
                     item.original_url,
                     identifier,
                     date_modified,
@@ -110,13 +94,6 @@ class TextEnricher(BaseEnricher):
                     for i, text in enumerate(item.text, start=1)
                     if text
                 ]
-
-                # Save the enriched version to the ori-enriched bucket
-                data = json.dumps({
-                    'data': item.text,
-                    'pages': len(item.text),
-                })
-                ori_enriched.upload(identifier, data, content_type='application/json')
 
         enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, str):

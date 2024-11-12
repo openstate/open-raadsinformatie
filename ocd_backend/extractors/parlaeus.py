@@ -2,12 +2,11 @@ import json
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.http import GCSCachingMixin
 
 log = get_source_logger('extractor')
 
 
-class ParlaeusMeetingsExtractor(BaseExtractor, GCSCachingMixin):
+class ParlaeusMeetingsExtractor(BaseExtractor):
     """
     A meetings extractor for the Parlaeus API.
     """

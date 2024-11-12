@@ -3,14 +3,12 @@ import json
 from ocd_backend.app import celery_app
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.http import GCSCachingMixin
 
 log = get_source_logger('ggm')
 ggm_base_url = 'https://gegevensmagazijn.tweedekamer.nl/'
 
 
-class GGMBaseExtractor(BaseExtractor, GCSCachingMixin):
-    bucket_name = 'ggm'
+class GGMBaseExtractor(BaseExtractor):
     request_url = None
 
     def __init__(self, source_definition):
@@ -27,10 +25,7 @@ class GGMBaseExtractor(BaseExtractor, GCSCachingMixin):
             full_url = '{}{}&$skip={}'.format(ggm_base_url, self.request_url, skip)
             _, _, odata_substring = full_url.rpartition(ggm_base_url)
 
-            if self.exists(odata_substring):
-                resource = self.download_cache(odata_substring)
-            else:
-                resource = self.download_url(full_url)
+            resource = self.download_url(full_url)
 
             response_json = json.load(resource.media_file)
             if resource and not resource.from_cache:

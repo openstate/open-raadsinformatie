@@ -6,14 +6,13 @@ from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
-from ocd_backend.utils.http import GCSCachingMixin
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.enrichers.media_enricher.tasks.image_metadata import ImageMetadata
 
 log = get_source_logger('enricher')
 
 
-class MediaEnricher(BaseEnricher, GCSCachingMixin):
+class MediaEnricher(BaseEnricher):
     """An enricher that is responsible for enriching external media
     (images, audio, video, etc.)
 
@@ -23,7 +22,6 @@ class MediaEnricher(BaseEnricher, GCSCachingMixin):
 
     #: The registry of available sub-tasks that are responsible for the
     #: analysis of media items.
-    bucket_name = 'ori-static'
 
     available_tasks = {
         'image_metadata': ImageMetadata,

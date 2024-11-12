@@ -6,12 +6,11 @@ from requests.exceptions import HTTPError, RetryError, ConnectionError
 from ocd_backend.exceptions import ItemAlreadyProcessed
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
-from ocd_backend.utils.http import GCSCachingMixin
 
 log = get_source_logger('extractor')
 
 
-class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
+class NotubizBaseExtractor(BaseExtractor):
     """
     A base extractor for the Notubiz API. This base extractor configures the base url
     to use for accessing the API and creates an 'organizations' dictionary that contains
@@ -26,9 +25,6 @@ class NotubizBaseExtractor(BaseExtractor, GCSCachingMixin):
 
     def __init__(self, *args, **kwargs):
         super(NotubizBaseExtractor, self).__init__(*args, **kwargs)
-
-        # Set the bucket name for Google Cloud Storage
-        self.bucket_name = 'notubiz'
 
         response = self.http_session.get(
             "%s/organisations?%s" % (self.base_url, self.default_query_params),
