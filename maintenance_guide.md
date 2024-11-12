@@ -1,8 +1,14 @@
 # Maintenance guide ORI
 
-- The environment is [running on google cloud](https://console.cloud.google.com/kubernetes/list?project=open-raadsinformatie-52162&authuser=1&folder&organizationId).
-- Make sure you've installed the `gcloud` and `kubectl` cli tools, and use `gcloud auth login` to get access to the `open-raadsinformatie` account.
-- Connect to the cluster using `gcloud container clusters get-credentials ori-cluster --zone europe-west4-a --project open-raadsinformatie-52162`. If that fails, visit the cluster in google cloud console, press `actions` and search for a `connect` command.
+- The environment is not running on Google Cloud anymore. All references to Google Cloud and Kubernetes must be removed (TBD)
+
+## Deploy
+- There is currently no automatic deploy
+- When deploying, on server:
+  - git pull
+  - sudo docker compose up -d
+  - Then restart containers if necessary
+    - sudo docker compose restart backend loader
 
 ## Adding municipalities
 
@@ -22,10 +28,9 @@
 - `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
 - `exit`
-- Make sure the image version running in GCLoud is the latest one containing the new municipalities. You can check the [backend deployment](https://console.cloud.google.com/kubernetes/deployment/europe-west4-a/ori-cluster/production/backend/yaml/edit?authuser=1&project=open-raadsinformatie-52162). The last number of the version should be the build number of semaphore. If this is not a match, you can manually set it in the deployment YAML file.
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
-- start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time. You can scale up the amount of workers for `backend` in Google, but it's probably not necessary.
-- You can track the progress in the Google cloud logs.
+- start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time.
+- You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
 ### Supplier specific: Notubiz
@@ -73,11 +78,6 @@
 - When dealing with IBabs issues, use SoapUI.
 - When finding logs for a municipality, use the GCP querybuilder with `textPayload:municipality`
 
-## Reverting a back-up
-
-- Go to GCP -> Kubernetes -> Snapshots
-- The snapshot schedule `postgres-weekly` is actually elastic
-- Go to disks, create disk, standard disk, source type -> snapshot2
 
 ## Folder structure
 

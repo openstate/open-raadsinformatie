@@ -61,6 +61,7 @@ Authors and contributors of both projects are:
 * Jurrian Tromp ([@jurrian](https://github.com/jurrian), [@ontola](https://github.com/ontola))
 * Jorrit van Belzen ([@jorritb](https://github.com/jorritb), [@ontola](https://github.com/ontola))
 * Joep Meindertsma ([@joepio](https://github.com/jorritb))
+* Rob van Dijk ([@robvandijk](https://github.com/robvandijk))
 
 Contributors:
 

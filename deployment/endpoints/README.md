@@ -1,3 +1,6 @@
+# OBSOLETE
+Google Cloud is not used anymore - this documentation and corresponding software will be removed TBD
+
 # Google Cloud Endpoints
 Using Google Cloud Endpoints makes it easy to develop, deploy, protect and monitor APIs.
 It provides access to the frontend service through the endpoints-service which can be found here:
