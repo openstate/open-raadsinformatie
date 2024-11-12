@@ -6,7 +6,7 @@
 - There is currently no automatic deploy
 - When deploying, on server:
   - git pull
-  - sudo docker compose up -d
+  - sudo docker compose --compatibility up --build -d
   - Then restart containers if necessary
     - sudo docker compose restart backend loader
 

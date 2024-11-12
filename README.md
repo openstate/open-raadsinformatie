@@ -22,6 +22,12 @@ The docker-compose.yml specifies an external `docker_nginx-load-balancer` networ
 Latest docker version uses "-" as separator when creating container names instead of "_". You can still get the old functionality by adding "--compatibility" to docker compose. So when using the latest Docker in development, use the following to start the containers:
 `docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 
+## Testing
+The next lines were copied from the Github workflow (which never ran) and still have to be tested:
+- `docker compose --compatibility -f docker-compose.yml -f docker-compose.test.yml up --build -d`
+- `docker exec ori_backend_1 bin/run_tests.sh 2>&1`
+- `docker exec ori_backend_1 pylint ocd_backend -E -sy`
+
 ## Supported Sources
 
 Data extraction support is available for the following source systems:
