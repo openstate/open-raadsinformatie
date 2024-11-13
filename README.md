@@ -23,7 +23,7 @@ Latest docker version uses "-" as separator when creating container names instea
 `docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 
 ## Testing
-The next lines were copied from the Github workflow (which never ran) and still have to be tested:
+The next lines were copied from the Github workflow (which never actually ran):
 - `docker compose --compatibility -f docker-compose.yml -f docker-compose.test.yml up --build -d`
 - `docker exec ori_backend_1 bin/run_tests.sh 2>&1`
 - `docker exec ori_backend_1 pylint ocd_backend -E -sy`

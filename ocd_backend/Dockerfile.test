@@ -4,8 +4,24 @@ MAINTAINER Joep Meindertsma <joep@argu.co>
 # Change to root for installing
 USER root
 
-RUN apk --update add nano
-
+# Install system requirements
+# Second line are used for image creation and uninstalled afterwards to reduce
+# layer size. Third and fourth lines are lib dependencies and fifth line are
+# package dependencies
+COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
+RUN apk add --update \
+  build-base git tzdata curl jq \
+  libxml2-dev libxslt-dev poppler-dev jpeg-dev \
+  inotify-tools libmagic nano
+RUN apk add --no-cache librdkafka-dev \
+  && apk add postgresql-dev gcc python3-dev musl-dev
+RUN pip install --upgrade 'pip<24.1' \
+  && pip install cython==0.29.36 \
+  && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
+  && pip uninstall -y cython \
+  && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
+  && echo "Europe/Amsterdam" > /etc/timezone \
+  && apk del build-base git tzdata
 # Install backend testing dependencies
 RUN pip install --no-warn-conflicts pylint==2.4.4 nose2==0.9.2 coverage==5.0.3
 
@@ -13,6 +29,14 @@ RUN pip install --no-warn-conflicts pylint==2.4.4 nose2==0.9.2 coverage==5.0.3
 COPY  .pylintrc /opt/ori/.pylintrc
 COPY tests/__init__.py  /opt/ori/tests/__init__.py
 COPY tests/ocd_backend /opt/ori/tests/ocd_backend
+
+# Copy all files, except for .dockerignore entries
+COPY json /opt/ori/json
+COPY bin /opt/ori/bin
+COPY manage.py /opt/ori/manage.py
+COPY es_mappings /opt/ori/es_mappings
+COPY ocd_backend /opt/ori/ocd_backend
+COPY version.py /opt/ori/ocd_backend/version.py
 COPY version.py /opt/ori/version.py
 
 RUN chown -R celery:celery tests
