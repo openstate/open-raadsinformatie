@@ -11,8 +11,7 @@ RUN apk add --update \
   build-base git tzdata curl jq \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic
-RUN apk add --no-cache librdkafka-dev \
-  && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip install --upgrade 'pip<24.1' \
   && pip install cython==0.29.36 \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \

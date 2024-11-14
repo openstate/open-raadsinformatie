@@ -10,7 +10,6 @@ _entity_defaults: &entity_defaults
   id: "{index_name}_{entity}"
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
-    - ocd_backend.loaders.delta.delta_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
 
 _entities: &entities

@@ -306,16 +306,6 @@ PDF_MAX_MEDIABOX_PIXELS = 5000000
 # Exceptions that when raised should be autoretried by celery
 AUTORETRY_EXCEPTIONS = []
 
-# Kafka settings for DeltaLoader
-KAFKA_HOST = os.getenv('KAFKA_HOST')
-KAFKA_PORT = os.getenv('KAFKA_PORT')
-KAFKA_USERNAME = os.getenv('KAFKA_USERNAME')
-KAFKA_PASSWORD = os.getenv('KAFKA_PASSWORD')
-KAFKA_SESSION_TIMEOUT = os.getenv('KAFKA_SESSION_TIMEOUT', 5000)
-KAFKA_MESSAGE_KEY = os.getenv('KAFKA_MESSAGE_KEY', 'ori_delta_message')
-KAFKA_TOPIC = os.getenv('KAFKA_TOPIC', 'ori-delta')
-KAFKA_MAX_MESSAGE_BYTES = 8388608
-
 # Postgres settings
 POSTGRES_HOST = '{}:{}'.format(os.getenv('POSTGRES_SERVICE_HOST', 'postgres'), os.getenv('POSTGRES_SERVICE_PORT', 5432))
 POSTGRES_DATABASE = os.getenv('POSTGRES_DATABASE', 'ori')

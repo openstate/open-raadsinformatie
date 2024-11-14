@@ -12,8 +12,6 @@ from ocd_backend.models.definitions import Opengov, Schema, Meeting as MeetingNS
 from ocd_backend.models.properties import StringProperty, URLProperty, FloatProperty, \
     Relation, OrderedRelation, DateTimeProperty
 from ocd_backend.models.misc import Uri
-from ocd_backend.loaders.delta import DeltaLoader
-
 
 class Meeting(MeetingNS, schema.Event):
     """An assembly of people for a particular purpose, especially for formal
@@ -66,7 +64,7 @@ class AgendaItem(MeetingNS, schema.Event):
     attendee = Relation(Schema, 'attendee')
     absentee = Relation(Schema, 'absentee')
     agenda = Relation(MeetingNS, 'agenda')
-    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt', ignore_for_loader=[DeltaLoader])
+    last_discussed_at = DateTimeProperty(MeetingNS, 'lastDiscussedAt')
 
 
 class Committee(MeetingNS, org.Organization):
