@@ -32,7 +32,7 @@ services:
   theme_classifier:
     image: "openstatefoundation/ori-theme-classifier:v1.0.0"
     ports:
-      - "80:5000"
+      - "8050:5000"
 
 volumes:
   pgadmindata:
