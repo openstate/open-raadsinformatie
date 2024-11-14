@@ -20,6 +20,8 @@ See this guide to [install the Open Raadsinformatie API](https://github.com/open
 Latest docker version uses "-" as separator when creating container names instead of "_". You can still get the old functionality by adding "--compatibility" to docker compose. So when using the latest Docker in development, use the following to start the containers:
 `docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 
+The Nginx container was installed separately in production. To mimic this in development, clone `https://github.com/openstate/nginx-load-balancer/`, follow the instructions in `INSTALL.txt` and start the container with `docker compose --compatibility up -d`
+
 ## Testing
 The next lines were copied from the Github workflow (which never actually ran):
 - `docker compose --compatibility -f docker-compose.yml -f docker-compose.test.yml up --build -d`

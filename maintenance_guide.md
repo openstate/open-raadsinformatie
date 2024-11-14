@@ -1,7 +1,5 @@
 # Maintenance guide ORI
 
-- The environment is not running on Google Cloud anymore. All references to Google Cloud and Kubernetes must be removed (TBD)
-
 ## Deploy
 - There is currently no automatic deploy
 - When deploying, on server:
@@ -26,7 +24,8 @@
 - `ssh` to `wolf` (ask Breyten)
 - sh to `redis` (see [redis](#redis))
 - `select 1` for setting individual municipalities
-- `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
+- `set "ori.{supplier}.{key}" "all daily monthly"` add municipality
+- `set _all.start_date` set start date for a new run (e.g. when some specific run has to be done)
 - `exit`
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
 - start the extraction process for the new municipality `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.weesp`. 
@@ -56,22 +55,6 @@ They will be set in a list for `celery`, which means that they will be processed
 
 - Bugs are reported to [Bugsnag](https://app.bugsnag.com/argu/ori/errors).
 
-## redis
-
-- `kubectl get -A pods | grep redis` to get the name for the redis pod.
-- `kubectl exec -it -n production ${name-of-redis-pod} redis-cli` to open the redis CLI.
-- `select 0` for generic settings and pipelines
-  - `keys _*` see all intervals¸ e.g. the base start date
-  - `set _all.start_date` set start date for a new run (e.g. when some specific run has to be done)
-- `select 1` for the sources (municipalities / provinces) settings
-  - `get ori.ibabs.aalsmeer` => see current status
-  - `set "ori.ibabs.{key}"  "all daily monthly"` add municipality
-
-## Starting a run
-
-- `kubectl get -A pods | grep backend`, pick a running one
-- `kubectl exec -it -n production ${name-of-pod} sh`
-- Import all municipalities (takes a couple of days): `python manage.py extract process all` (see manage.py for more options and commands)
 
 ## Troubleshooting
 
@@ -82,9 +65,8 @@ They will be set in a list for `celery`, which means that they will be processed
 
 ## Folder structure
 
-- **Deployments** for kubernetes files
 - **ocd_backend** contains most logic
-  - **bin** e.g. kubernetes deploy script
+  - **bin**
   - **models** Use OpenGov definitions
   - **sources** contain municipalities config
   - **extractor** Responsible for fetching data
@@ -95,11 +77,10 @@ They will be set in a list for `celery`, which means that they will be processed
 ## HTTPS (SSL / TLS certificates)
 
 This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
-This is running as a service in kubernetes.
 
 ## Deleting resources from Elastic
 
-- `kubectl exec elastic-0 -it -n production -- sh` get a shell in a running elastic container
+- `sudo docker exec -it ori_elastic_1 sh` get a shell in a running elastic container
 - Send an HTTP DELETE to the ID: `curl -X DELETE 0.0.0.0:9200/${index}/${type}/${id}`, e.g. `curl -X DELETE 0.0.0.0:9200/ori_vlaardingen_20190809125128/_doc/1234567`
 
 ## Script to list all sources (for excel sheets)
