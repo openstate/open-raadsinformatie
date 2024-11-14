@@ -17,8 +17,6 @@ Open Raadsinformatie is a collaborative effort of the [Open State Foundation](ht
 
 See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started. Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
 
-The docker-compose.yml specifies an external `docker_nginx-load-balancer` network. For local development use `docker network create docker_nginx-load-balancer` to create it.
-
 Latest docker version uses "-" as separator when creating container names instead of "_". You can still get the old functionality by adding "--compatibility" to docker compose. So when using the latest Docker in development, use the following to start the containers:
 `docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
 

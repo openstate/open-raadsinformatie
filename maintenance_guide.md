@@ -29,7 +29,8 @@
 - `set "ori.{supplier}.{key}"  "all daily monthly"` add municipality
 - `exit`
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
-- start the extraction process for the new municipality `/opt/ori $ python manage.py extract process all --source_path=ori.notubiz.weesp`. They will be set in a list for `celery`, which means that they will be processed in time.
+- start the extraction process for the new municipality `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.weesp`. 
+They will be set in a list for `celery`, which means that they will be processed in time.
 - You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
