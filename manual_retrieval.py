@@ -1,5 +1,9 @@
 #!usr/bin/env python
-
+# Sometimes it is necessary to manually get data from e.g. iBabs for troubleshooting. The problem is that iBabs only allows whitelisted
+# IP addresses to connect. In our case connections from wolf are allowed, so any query you want to execute should be proxied via wolf:
+# - In a terminal setup port forwarding: `ssh -gD 8090 wolf`
+# - To get data edit and run this script from Docker container `ori_backend_1`. This script uses the proxy via session.proxies.
+# - You can test the proxy setup by running e.g. `curl --proxy socks5://host.docker.internal:8090 https://www.nu.nl` in the container        
 
 from pprint import pprint
 from requests import Session

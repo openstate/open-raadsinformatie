@@ -41,7 +41,7 @@ They will be set in a list for `celery`, which means that they will be processed
 
 - For finding `ibabs_sitename`, google for `ibabs ${municipality_name}` and derive it from the URL
 - Duplicate
-- Exclcude / include are rarely required, but can be useful if one instance is shared across municipalitites
+- Exclude / include are rarely required, but can be useful if one instance is shared across municipalitites
 
 ### Supplier specific: GemeenteOplossingen
 
@@ -61,6 +61,11 @@ They will be set in a list for `celery`, which means that they will be processed
 - Not enough available disk space can cause downtime. Elastic starts to have issues at 80% disk usage - it starts moving stuff to other instances. Fix this by making the disk larger and copying the contents.
 - When dealing with IBabs issues, use SoapUI.
 - When finding logs for a municipality, use the GCP querybuilder with `textPayload:municipality`
+- If an error was made in a key when adding a new source, a new run may create a new index in Elastic. The old index, which is probably
+  still empty, can be removed, but the new index may not yet show up. To fix this make sure that the e.g. municipality is retrieved again:
+  - get the `item_id` for the municipality (e.g. using a `log` statement when retrieving in development)
+  - delete the row with this `item_id` from the `ItemHash` table
+  - rerun the import
 
 
 ## Folder structure
