@@ -1,6 +1,9 @@
 version: "2.2"
 services:
   backend:
+    build:
+      context: .
+      dockerfile: ocd_backend/Dockerfile.dev
     ports:
       - "81:5555"
     environment:
