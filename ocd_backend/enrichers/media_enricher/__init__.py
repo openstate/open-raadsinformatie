@@ -6,13 +6,14 @@ from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
+from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.enrichers.media_enricher.tasks.image_metadata import ImageMetadata
 
 log = get_source_logger('enricher')
 
 
-class MediaEnricher(BaseEnricher):
+class MediaEnricher(BaseEnricher, HttpRequestSimple):
     """An enricher that is responsible for enriching external media
     (images, audio, video, etc.)
 
@@ -43,15 +44,9 @@ class MediaEnricher(BaseEnricher):
             raise Exception('No identifier_url for item: %s', item)
 
         try:
-            date_modified = item.date_modified
-        except AttributeError:
-            date_modified = None
-
-        try:
             resource = self.fetch(
                 item.original_url,
-                identifier,
-                date_modified,
+                identifier
             )
         except requests.HTTPError as e:
             raise SkipEnrichment(e)

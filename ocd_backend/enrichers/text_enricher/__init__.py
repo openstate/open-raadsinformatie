@@ -56,19 +56,13 @@ class TextEnricher(BaseEnricher):
         except AttributeError:
             raise Exception('No identifier_url for item: %s', item)
 
-        try:
-            date_modified = item.date_modified
-        except AttributeError:
-            date_modified = None
-
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
 
         if not hasattr(item, 'text') or not item.text:
             try:
                 resource = HttpRequestSimple().fetch(
                     item.original_url,
-                    identifier,
-                    date_modified,
+                    identifier
                 )
             except (ConnectionError, requests.HTTPError) as e:
                 raise SkipEnrichment(e)
