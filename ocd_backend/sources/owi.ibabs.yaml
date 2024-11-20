@@ -77,6 +77,7 @@ owi.ibabs:
   # Added 2024-09-16
   de_dommel:
     key: de-dommel
+    ibabs_sitename: dedommel
     allmanak_id: 21124
     <<: *ibabs
   limburg:

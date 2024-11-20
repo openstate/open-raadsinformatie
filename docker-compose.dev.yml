@@ -13,6 +13,9 @@ services:
     command: /opt/ori/bin/backend.sh
     mem_limit: 1g
   loader:
+    build:
+      context: .
+      dockerfile: ocd_backend/Dockerfile.dev
     mem_limit: 1g
   elastic:
     ports:
