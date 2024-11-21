@@ -6,11 +6,12 @@ from requests.exceptions import HTTPError, RetryError, ConnectionError
 from ocd_backend.exceptions import ItemAlreadyProcessed
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('extractor')
 
 
-class NotubizBaseExtractor(BaseExtractor):
+class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
     """
     A base extractor for the Notubiz API. This base extractor configures the base url
     to use for accessing the API and creates an 'organizations' dictionary that contains
