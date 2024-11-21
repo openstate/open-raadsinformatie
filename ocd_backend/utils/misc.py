@@ -4,6 +4,7 @@ import importlib
 import re
 import json
 import codecs
+from hashlib import sha1
 from string import Formatter
 from urllib.parse import urlparse
 from functools import reduce
@@ -217,6 +218,14 @@ class DatetimeJSONEncoder(json.JSONEncoder):
 
 json_encoder = DatetimeJSONEncoder()
 
+class HashUtils:
+    def create_hash_key(self, provider, site_name, item_type, id):
+        h = sha1()
+        hash_key = "%s|%s|%s|%s" % (provider, site_name, item_type, id)
+        h.update(hash_key.encode('ascii', 'replace'))
+        return h.hexdigest()
+
+hash_utils = HashUtils()
 
 _punct_re = re.compile(r'[\t\r\n !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
 

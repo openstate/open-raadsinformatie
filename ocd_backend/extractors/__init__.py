@@ -10,7 +10,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models.model import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.models.postgres_models import ItemHash
-from ocd_backend.utils.misc import json_encoder
+from ocd_backend.utils.misc import hash_utils, json_encoder
 
 log = get_source_logger('extractor')
 
@@ -45,10 +45,7 @@ class BaseExtractor:
         should_force = (self.source_definition.get('force', '0') == '1')
         if should_force:
             return False
-        h = sha1()
-        hash_key = "%s|%s|%s|%s" % (provider, site_name, item_type, id,)
-        h.update(hash_key.encode('ascii', 'replace'))
-        item_id = h.hexdigest()
+        item_id = hash_utils.create_hash_key(provider, site_name, item_type, id)
         new_hash = self._make_hash(report_dict)
         # log.info(f"item_id for {item_type} {id}: {item_id}")
         # log.info(f"new_hash for {item_type} {id}: {new_hash}")
