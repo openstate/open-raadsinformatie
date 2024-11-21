@@ -6,6 +6,7 @@ from hashlib import sha1
 from time import sleep
 
 import redis
+from requests import Session
 
 from zeep.client import Client, Settings
 from zeep.exceptions import Error, Fault
@@ -52,7 +53,16 @@ class IBabsBaseExtractor(BaseExtractor):
         )
 
         cache = SqliteCache(path='/tmp/sqlite.db', timeout=60)
-        transport = Transport(cache=cache)
+
+        if settings.PROXY_HOST and settings.PROXY_PORT:
+            session = Session()
+            session.proxies = {
+                'http': f'socks5://{settings.PROXY_HOST}:{settings.PROXY_PORT}',
+                'https': f'socks5://{settings.PROXY_HOST}:{settings.PROXY_PORT}'
+            }
+            transport=Transport(session=session, cache=cache)
+        else:
+            transport = Transport(cache=cache)
 
         try:
             self.client = Client(ibabs_wsdl,

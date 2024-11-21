@@ -8,6 +8,9 @@ services:
       - "81:5555"
     environment:
       - "CLASSIFIER_HOST=localhost"
+      - RELEASE_STAGE=development
+      - PROXY_HOST=host.docker.internal
+      - PROXY_PORT=8090
     volumes:
       - .:/opt/ori
     command: /opt/ori/bin/backend.sh
@@ -16,6 +19,10 @@ services:
     build:
       context: .
       dockerfile: ocd_backend/Dockerfile.dev
+    environment:
+      - RELEASE_STAGE=development
+      - PROXY_HOST=host.docker.internal
+      - PROXY_PORT=8090
     mem_limit: 1g
   elastic:
     ports:

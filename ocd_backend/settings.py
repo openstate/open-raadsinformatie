@@ -20,7 +20,12 @@ MINOR_VERSION = __version_info__[1]
 
 BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
 
-RELEASE_STAGE = os.getenv('RELEASE_STAGE', 'development')
+BUGSNAG_RELEASE_STAGE = os.getenv('BUGSNAG_RELEASE_STAGE', 'development')
+RELEASE_STAGE = os.getenv('RELEASE_STAGE')
+
+# host.docker.internal:8090; start proxy with ssh -gD 8090 wolf
+PROXY_HOST = os.getenv('PROXY_HOST') if RELEASE_STAGE == 'development' else None
+PROXY_PORT = os.getenv('PROXY_PORT') if RELEASE_STAGE == 'development' else None
 
 REDIS_HOST = os.getenv('REDIS_SERVICE_HOST', "redis")
 REDIS_PORT = os.getenv('REDIS_SERVICE_PORT', 6379)
@@ -256,7 +261,7 @@ if BUGSNAG_APIKEY:
     bugsnag.configure(
         api_key=BUGSNAG_APIKEY,
         project_root=ROOT_PATH,
-        release_stage=RELEASE_STAGE,
+        release_stage=BUGSNAG_RELEASE_STAGE,
         app_version=APP_VERSION,
         asynchronous=False,
     )
