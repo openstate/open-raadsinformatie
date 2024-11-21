@@ -63,7 +63,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
             self.default_query_params
         )
         cached_path = 'gremia'
-        response = self.fetch(committee_url + self.application_token, cached_path, None)
+        response = self.fetch(committee_url + self.application_token, cached_path)
 
         committee_count = 0
         for committee in json.load(response.media_file)['gremia']:
@@ -133,7 +133,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 )
                 cached_path = "events/meetings/%i" % item['id']
                 try:
-                    resource = self.fetch(meeting_url + self.application_token, cached_path, item['last_modified'])
+                    resource = self.fetch(meeting_url + self.application_token, cached_path)
                     meeting_json = json.load(resource.media_file)['meeting']
                 except ItemAlreadyProcessed as e:
                     # This should no longer be triggered after the change to GCS caching
