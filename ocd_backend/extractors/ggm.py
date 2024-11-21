@@ -3,12 +3,13 @@ import json
 from ocd_backend.app import celery_app
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.http import HttpRequestMixin
 
 log = get_source_logger('ggm')
 ggm_base_url = 'https://gegevensmagazijn.tweedekamer.nl/'
 
 
-class GGMBaseExtractor(BaseExtractor):
+class GGMBaseExtractor(BaseExtractor, HttpRequestMixin):
     request_url = None
 
     def __init__(self, source_definition):
