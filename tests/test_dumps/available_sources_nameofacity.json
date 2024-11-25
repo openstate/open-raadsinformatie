@@ -1,0 +1,91 @@
+{
+  "ori.ibabs": {
+    "nameofacity": {
+      "key": "nameofacity",
+      "index_name": "nameofacity",
+      "source_name": "Nameofacity",
+      "ibabs_sitename": "Nameofacity",
+      "hidden": false,
+      "keep_index_on_update": true,
+      "wait_until_finished": false,
+      "source_type": "municipality",
+      "supplier": "ibabs",
+      "allmanak_api_version": "v1",
+      "allmanak_id": 28270,
+      "cbs_id": "GM0362",
+      "entities": [
+        {
+          "id": "nameofacity_municipality",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "municipality",
+          "extractor": "ocd_backend.extractors.allmanak.AllmanakMunicipalityExtractor",
+          "transformer": "ocd_backend.transformers.allmanak_organization.municipality_organization_item",
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ]
+        },
+        {
+          "id": "nameofacity_organizations",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "organizations",
+          "extractor": "ocd_backend.extractors.allmanak.AllmanakPartiesExtractor",
+          "transformer": "ocd_backend.transformers.allmanak_organization.party_item",
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ]
+        },
+        {
+          "id": "nameofacity_committees",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "committees",
+          "extractor": "ocd_backend.extractors.ibabs.IBabsCommitteesExtractor",
+          "transformer": "ocd_backend.transformers.ibabs_committee.committee_item",
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ]
+        },
+        {
+          "id": "nameofacity_persons",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "persons",
+          "extractor": "ocd_backend.extractors.ibabs.IbabsPersonsExtractor",
+          "transformer": "ocd_backend.transformers.ibabs_person.person_item",
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ]
+        },
+        {
+          "id": "nameofacity_meetings",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "meetings",
+          "extractor": "ocd_backend.extractors.ibabs.IBabsMeetingsExtractor",
+          "transformer": "ocd_backend.transformers.ibabs_meeting.meeting_item",
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ],
+          "enrichers": [
+            "ocd_backend.enrichers.text_enricher.text_enricher"
+          ]
+        },
+        {
+          "id": "nameofacity_reports",
+          "cleanup": "ocd_backend.tasks.cleanup_elasticsearch",
+          "entity": "reports",
+          "extractor": "ocd_backend.extractors.ibabs.IBabsReportsExtractor",
+          "transformer": "ocd_backend.transformers.ibabs_report.report_item",
+          "regex": ".*",
+          "pdf_max_pages": 0,
+          "max_pages": 1,
+          "per_page": 20,
+          "loaders": [
+            "ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader"
+          ],
+          "enrichers": [
+            "ocd_backend.enrichers.text_enricher.text_enricher"
+          ]
+        }
+      ]  
+    }
+  }
+}
+  
