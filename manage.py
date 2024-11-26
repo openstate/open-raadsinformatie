@@ -19,6 +19,9 @@ from elasticsearch.helpers import reindex
 
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.es import setup_elasticsearch
+from ocd_backend.models.postgres_database import PostgresDatabase
+from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Source
+from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
@@ -175,6 +178,10 @@ def extract():
 @cli.group()
 def dumps():
     """Create and load dumps of indices"""
+
+@cli.group()
+def developers():
+    """Utilities for developers"""
 
 
 @command('put_template')
@@ -551,6 +558,30 @@ def es_monthly_check(token):
         )
         print(resp)
 
+@command('purge_dbs')
+def developers_purge_dbs():
+    """
+    Purges the Postgres database and Elastic Search index.
+    Checks development env by testing environment variable.
+    """
+    RELEASE_STAGE = os.getenv('RELEASE_STAGE')
+    if RELEASE_STAGE != "development":
+        print("*** This should only be run in development ***")
+        return
+
+    database = PostgresDatabase(serializer=PostgresSerializer)
+    session = database.Session()
+    session.query(ItemHash).delete()
+    session.query(Source).delete()
+    session.query(Property).delete()
+    session.query(Resource).delete()
+    session.commit()
+
+    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+    redis_client.flushdb()
+
+    print("Postgres database and Elastic Search index have been purged")
+
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
 elasticsearch.add_command(es_put_template)
@@ -566,6 +597,7 @@ extract.add_command(extract_start)
 extract.add_command(extract_process)
 extract.add_command(extract_load_redis)
 
+developers.add_command(developers_purge_dbs)
 
 if __name__ == '__main__':
     cli()
