@@ -559,9 +559,10 @@ def es_monthly_check(token):
         print(resp)
 
 @command('purge_dbs')
-def developers_purge_dbs():
+@click.pass_context
+def developers_purge_dbs(ctx):
     """
-    Purges the Postgres database and Elastic Search index.
+    Purges the Postgres database, Redis and Elastic Search index.
     Checks development env by testing environment variable.
     """
     RELEASE_STAGE = os.getenv('RELEASE_STAGE')
@@ -569,6 +570,7 @@ def developers_purge_dbs():
         print("*** This should only be run in development ***")
         return
 
+    # Postgres
     database = PostgresDatabase(serializer=PostgresSerializer)
     session = database.Session()
     session.query(ItemHash).delete()
@@ -577,10 +579,16 @@ def developers_purge_dbs():
     session.query(Resource).delete()
     session.commit()
 
+    # Redis
     redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
     redis_client.flushdb()
 
-    print("Postgres database and Elastic Search index have been purged")
+    # Elastic Search
+    indices = ctx.invoke(available_indices)
+    for index in indices:
+        es.indices.delete(index=index)
+
+    print("Postgres database, Redis and Elastic Search index have been purged")
 
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
