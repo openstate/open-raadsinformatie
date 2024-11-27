@@ -155,14 +155,14 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 organization = self.organizations[self.source_definition['notubiz_organization_id']]
 
                 attributes = {}
-                for meeting in meeting_json['attributes']:
+                for meeting_attributes in meeting_json['attributes']:
                     try:
-                        attributes[organization['attributes'][meeting['id']]] = meeting['value']
+                        attributes[organization['attributes'][meeting_attributes['id']]] = meeting_attributes['value']
                     except KeyError:
                         pass
                 meeting_json['attributes'] = attributes
 
-                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting['id'], meeting_json):
+                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json):
                     yield 'application/json', \
                           json.dumps(meeting_json), \
                           meeting_url, \
