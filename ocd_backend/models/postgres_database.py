@@ -144,7 +144,7 @@ class PostgresDatabase:
                     # the `order` column
                     for order, item in enumerate(value_and_property_type[0], start=1):
                         new_property = (Property(predicate=predicate, order=order))
-                        setattr(new_property, self.map_column_type((item, value_and_property_type[1])), item)
+                        setattr(new_property, self.map_column_type((item, value_and_property_type[1]), predicate), item)
                         resource.properties.append(new_property)
                 else:
                     new_property = (Property(predicate=predicate))
@@ -155,7 +155,7 @@ class PostgresDatabase:
             session.close()
 
     @staticmethod
-    def map_column_type(value_and_property_type):
+    def map_column_type(value_and_property_type, list_predicate = None):
         """Maps the property type to a column."""
         value = value_and_property_type[0]
         property_type = value_and_property_type[1]
@@ -172,7 +172,18 @@ class PostgresDatabase:
             return 'prop_datetime'
         elif property_type is JsonProperty:
             return 'prop_json'
-        elif property_type in (ArrayProperty, Relation, OrderedRelation):
+        elif property_type is ArrayProperty:
+            # Arrays of text from pdfs may contain something like "223\n" which would result in prop_resource being
+            # returned (and a ForeignKeyViolation error on Resource or a link to a wrong Resource). Prevent this by
+            # returning prop_string for all entries in an Array of type http://schema.org/text
+            if list_predicate == 'http://schema.org/text':
+                return 'prop_string'
+            try:
+                int(value)
+                return 'prop_resource'
+            except (ValueError, TypeError):
+                return 'prop_string'
+        elif property_type in (Relation, OrderedRelation):
             try:
                 int(value)
                 return 'prop_resource'
