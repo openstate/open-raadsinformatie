@@ -571,22 +571,32 @@ def developers_purge_dbs(ctx):
         return
 
     # Postgres
-    database = PostgresDatabase(serializer=PostgresSerializer)
-    session = database.Session()
-    session.query(ItemHash).delete()
-    session.query(Source).delete()
-    session.query(Property).delete()
-    session.query(Resource).delete()
-    session.commit()
+    try:
+        database = PostgresDatabase(serializer=PostgresSerializer)
+        session = database.Session()
+        session.query(ItemHash).delete()
+        session.query(Source).delete()
+        session.query(Property).delete()
+        session.query(Resource).delete()
+        session.commit()
+    except Exception as e:
+        print(f'Error purging Postgres db: {e}')
 
     # Redis
-    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
-    redis_client.flushdb()
+    try:
+        redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+        redis_client.flushdb()
+    except Exception as e:
+        print(f'Error purging redis: {e}')
 
     # Elastic Search
-    indices = ctx.invoke(available_indices)
-    for index in indices:
-        es.indices.delete(index=index)
+    try:
+        indices = ctx.invoke(available_indices)
+        for index in indices:
+            es.indices.delete(index=index)
+    except Exception as e:
+        print(f'Error purging Elastic Search: {e}')
+
 
     print("Postgres database, Redis and Elastic Search index have been purged")
 
