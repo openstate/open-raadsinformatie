@@ -51,23 +51,23 @@ class PostgresDatabase:
         """
 
         session = self.Session()
-        new_id = self.engine.execute(Sequence('ori_id_seq'))
-        new_identifier = Uri(Ori, new_id)
 
         try:
             # If the resource already exists, create the source as a child of the resource
             resource = session.query(Source).filter(Source.iri == iri).one().resource
             resource.sources.append(Source(iri=iri))
             session.flush()
+            return Uri(Ori, resource.ori_id)
         except NoResultFound:
             # If the resource does not exist, create resource and source together
+            new_id = self.engine.execute(Sequence('ori_id_seq'))
+            new_identifier = Uri(Ori, new_id)
             resource = Resource(ori_id=new_id, iri=new_identifier, sources=[Source(iri=iri)])
             session.add(resource)
             session.commit()
+            return new_identifier
         finally:
             session.close()
-
-        return new_identifier
 
     def get_mergeable_resource_identifier(self, model_object, predicate, column, value):
         """
