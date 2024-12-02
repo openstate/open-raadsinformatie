@@ -169,7 +169,14 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                 meeting_types[o.Id] = o.Description
             return meeting_types
         else:
+            # We get here for responses like this:
+            # {
+            #   'Message': 'No public meetingtypes!',
+            #   'Status': 'ERR',
+            #   'Meetingtypes': None
+            # }
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
+            return {}
 
     def run(self):
         meeting_count = 0
@@ -216,6 +223,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                               'ibabs/' + cached_path,
                     else:
                         log.info('Skipped meeting %s because we have it already' % (meeting['Id'],))
+
                     meeting_count += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} meetings.')
@@ -255,8 +263,14 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             try:
                 reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
             except Fault as e:
+                # TODO keep a record of these misses
                 log.warning(f'[{self.source_definition["key"]}] Could not parse list report {l.Key} correctly!: {str(e)}')
                 continue
+            if reports == None:
+                # TODO keep a record of these misses
+                log.warning(f'[{self.source_definition["key"]}] Empty report list retrieved for list {l.Key}')
+                continue
+
             report = reports[0]
             if len(reports) > 1:
                 try:
