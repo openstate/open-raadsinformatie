@@ -290,7 +290,7 @@ ori.go:
   ridderkerk:
     key: ridderkerk
     base_url: "https://raad.ridderkerk.nl/api/"
-    api_version: "v2"
+    api_version: "v1"
     allmanak_id: 40741
     cbs_id: GM0597
     <<: *go
