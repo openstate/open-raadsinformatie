@@ -25,7 +25,8 @@
 - sh to `redis` (see [redis](#redis))
 - `select 1` for setting individual municipalities
 - `set "ori.{supplier}.{key}" "all daily monthly"` add municipality
-- `set _all.start_date` set start date for a new run (e.g. when some specific run has to be done)
+- `set _all.start_date` set start date for a new run (e.g. when some specific run has to be done - use 2010-01-01 for historic runs)
+- `set _all.end_date` to today (xxxx-xx-xx format)
 - `exit`
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
 - start the extraction process for the new municipality `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.weesp`. 
