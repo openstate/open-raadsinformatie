@@ -329,7 +329,7 @@ ori.go:
   oudewater:
     key: oudewater
     base_url: "https://gemeenteraad.oudewater.nl/api/"
-    api_version: "v2"
+    api_version: "v1"
     allmanak_id: 30578
     cbs_id: GM0589
     <<: *go
