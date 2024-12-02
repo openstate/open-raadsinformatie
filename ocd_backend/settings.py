@@ -24,8 +24,8 @@ BUGSNAG_RELEASE_STAGE = os.getenv('BUGSNAG_RELEASE_STAGE', 'development')
 RELEASE_STAGE = os.getenv('RELEASE_STAGE')
 
 # host.docker.internal:8090; start proxy with ssh -gD 8090 wolf
-PROXY_HOST = os.getenv('PROXY_HOST') if RELEASE_STAGE == 'development' or RELEASE_STAGE == 'testing' else None
-PROXY_PORT = os.getenv('PROXY_PORT') if RELEASE_STAGE == 'development' or RELEASE_STAGE == 'testing' else None
+PROXY_HOST = os.getenv('PROXY_HOST') if RELEASE_STAGE == 'development' else None
+PROXY_PORT = os.getenv('PROXY_PORT') if RELEASE_STAGE == 'development' else None
 
 REDIS_HOST = os.getenv('REDIS_SERVICE_HOST', "redis")
 REDIS_PORT = os.getenv('REDIS_SERVICE_PORT', 6379)
@@ -319,7 +319,12 @@ POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
 
 # Sentry DSN
 SENTRY_DSN = os.getenv('SENTRY_DSN')
-SENTRY_ENVIRONMENT = 'development' if RELEASE_STAGE == 'development' or RELEASE_STAGE == 'testing' else 'production'
+if RELEASE_STAGE == 'development':
+    SENTRY_ENVIRONMENT = 'development' 
+elif RELEASE_STAGE == 'testing':    
+    SENTRY_ENVIRONMENT = 'testing'
+else:
+    SENTRY_ENVIRONMENT = 'production'
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
