@@ -1004,12 +1004,13 @@ ori.ibabs:
     cbs_id: GM0184
     <<: *ibabs
 
-  cranendonck:
-    key: cranendonck
-    ibabs_sitename: cranendonck
-    allmanak_id: 36285
-    cbs_id: GM1706
-    <<: *ibabs
+  # 03-12-2024: Invalid site is returned
+  # cranendonck:
+  #   key: cranendonck
+  #   ibabs_sitename: cranendonck
+  #   allmanak_id: 36285
+  #   cbs_id: GM1706
+  #   <<: *ibabs
 
   waterland:
     key: waterland
