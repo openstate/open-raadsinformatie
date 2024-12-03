@@ -700,12 +700,13 @@ ori.ibabs:
     cbs_id: GM0762
     <<: *ibabs
 
-  dantumadiel:
-    key: dantumadiel
-    ibabs_sitename: Dantumadiel
-    allmanak_id: 33564
-    cbs_id: GM1891
-    <<: *ibabs
+  # 03-12-2024: Invalid site is returned
+  # dantumadiel:
+  #   key: dantumadiel
+  #   ibabs_sitename: Dantumadiel
+  #   allmanak_id: 33564
+  #   cbs_id: GM1891
+  #   <<: *ibabs
 
   heiloo:
     key: heiloo
