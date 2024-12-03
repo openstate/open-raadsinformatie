@@ -11,6 +11,7 @@ _entity_defaults: &entity_defaults
   loaders:
     - ocd_backend.loaders.elasticsearch.elasticsearch_upsert_loader
   cleanup: ocd_backend.tasks.cleanup_elasticsearch
+  finalizer: ocd_backend.tasks.finalizer
 
 _ggm.ggm:
   tweedekamer:

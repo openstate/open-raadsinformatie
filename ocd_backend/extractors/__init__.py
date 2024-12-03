@@ -6,6 +6,7 @@ from hashlib import sha1
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 
+from ocd_backend.hash_for_item import HashForItem
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.model import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
@@ -41,28 +42,27 @@ class BaseExtractor:
         h.update(json_encoder.encode(obj).encode('ascii', 'replace'))
         return h.hexdigest()
 
-    def check_if_most_recent(self, provider, site_name, item_type, id, report_dict):
+    def hash_for_item(self, provider, site_name, item_type, id, report_dict):
+        """
+        Determine hash value for report_dict.
+        Return the value (HashForItem object) if item has not been processed before or if force == 1
+        """
+        hash_key = hash_utils.create_hash_key(provider, site_name, item_type, id)
+        hash_value = self._make_hash(report_dict)
+        hash_for_item = HashForItem(hash_key, hash_value, provider, site_name, item_type, id)
+
         should_force = (self.source_definition.get('force', '0') == '1')
         if should_force:
+            return hash_for_item
+
+        old_item = self.session.query(ItemHash).filter(ItemHash.item_id == hash_key).first()
+        if not old_item:
+            return hash_for_item
+
+        if old_item.item_hash == hash_value:
             return False
-        item_id = hash_utils.create_hash_key(provider, site_name, item_type, id)
-        new_hash = self._make_hash(report_dict)
-        # log.info(f"item_id for {item_type} {id}: {item_id}")
-        # log.info(f"new_hash for {item_type} {id}: {new_hash}")
-        old_item = self.session.query(ItemHash).filter(ItemHash.item_id == item_id).first()
-        old_item_hash = ''
-        if old_item:
-            old_item_hash = old_item.item_hash
-            old_item.item_hash = new_hash
-        else:
-            new_item = ItemHash(item_id=item_id, item_hash=new_hash)
-            self.session.add(new_item)
-        self.session.commit()
-        self.session.flush()
-        if old_item:
-            return (old_item_hash == new_hash)
-        else:
-            return False
+
+        return hash_for_item
 
     def run(self):
         """Starts the extraction process.

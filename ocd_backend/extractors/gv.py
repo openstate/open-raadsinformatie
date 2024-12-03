@@ -126,8 +126,9 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
         for item in super(GreenValleyMeetingsExtractor, self).run():
             ot = ",".join(self.source_definition['greenvalley_objecttypes'])
             mt = json.loads(item[1])
-            if not self.check_if_most_recent('gv', self.source_definition["key"], ot, item[1], mt['objectid']):
-                yield item[0], item[1], item[2], item[3]
+            hash_for_item = self.hash_for_item('gv', self.source_definition["key"], ot, item[1], mt['objectid'])
+            if hash_for_item:
+                yield item[0], item[1], item[2], item[3], hash_for_item
                 total_meetings += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings')

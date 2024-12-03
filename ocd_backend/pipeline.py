@@ -74,6 +74,7 @@ def setup_pipeline(source_definition):
     pipeline_transformers = {}
     pipeline_enrichers = {}
     pipeline_loaders = {}
+    pipeline_finalizers = {}
 
     for pipeline in pipelines:
         if 'id' not in pipeline:
@@ -101,12 +102,20 @@ def setup_pipeline(source_definition):
             if cls:
                 pipeline_loaders[pipeline['id']].append(load_object(cls))
 
+        pipeline_finalizers[pipeline['id']] = load_object(
+            pipeline_definitions[pipeline['id']]['finalizer'])
+
     result = None
     for pipeline in pipelines:
         try:
             # The first extractor should be a generator instead of a task
             for item in pipeline_extractors[pipeline['id']](
                     source_definition=pipeline_definitions[pipeline['id']]).run():
+                if len(item) == 5:
+                    hash_for_item = item[-1]
+                    item = item[:-1]
+                else:
+                    hash_for_item = None
                 step_chain = list()
 
                 params['chain_id'] = uuid4().hex
@@ -144,6 +153,14 @@ def setup_pipeline(source_definition):
                             pipeline['id']],
                         **params))
                 step_chain.append(group(initialized_loaders))
+
+                # Finalizer
+                if pipeline_finalizers.get(pipeline['id']):
+                    step_chain.append(pipeline_finalizers[pipeline['id']].s(
+                        source_definition=pipeline_definitions[pipeline['id']],
+                        hash_for_item=hash_for_item,
+                        **params)
+                    )
 
                 result = chain(step_chain).delay()
         except KeyboardInterrupt:

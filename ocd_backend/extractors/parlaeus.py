@@ -46,8 +46,9 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
             agenda = meeting_data['agenda']
             agenda['url'] = url
 
-            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'meeting', agenda, meeting['agid']):
-                yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path
+            hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'meeting', agenda, meeting['agid'])
+            if hash_for_item:
+                yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path, hash_for_item
 
 
 class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
@@ -62,8 +63,9 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
 
         for committee in response.get('list', []):
             committee['url'] = url
-            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'committee', committee, committee['cmid']):
-                yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path
+            hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'committee', committee, committee['cmid'])
+            if hash_for_item:
+                yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path, hash_for_item
 
 
 class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
@@ -78,5 +80,6 @@ class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
 
         for person in response.get('list', []):
             person['url'] = url
-            if not self.check_if_most_recent('parlaeus', self.source_definition["key"], 'person', person, person['raid']):
-                yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path
+            hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'person', person, person['raid'])
+            if hash_for_item:
+                yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path, hash_for_item

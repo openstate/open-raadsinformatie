@@ -67,11 +67,13 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
 
         committee_count = 0
         for committee in json.load(response.media_file)['gremia']:
-            if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'committee', committee['id'], committee):
+            hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'committee', committee['id'], committee)
+            if hash_for_item:
                 yield 'application/json', \
                       json.dumps(committee), \
                       committee_url, \
-                      'notubiz/' + cached_path,
+                      'notubiz/' + cached_path, \
+                      hash_for_item
                 committee_count += 1
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} notubiz committees.')
@@ -162,11 +164,13 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
-                if not self.check_if_most_recent('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json):
+                hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json)
+                if hash_for_item:
                     yield 'application/json', \
                           json.dumps(meeting_json), \
                           meeting_url, \
-                          'notubiz/' + cached_path,
+                          'notubiz/' + cached_path, \
+                          hash_for_item
                     meeting_count += 1
 
             page += 1

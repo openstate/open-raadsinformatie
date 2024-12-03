@@ -44,11 +44,13 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
         if total != 1:
             log.error(f'[{self.source_definition["key"]}] Number of extracted municipalities is not equal to 1')
         else:
-            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'municipality', self.source_definition['allmanak_id'], static_json[0]):
+            hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'municipality', self.source_definition['allmanak_id'], static_json[0])
+            if hash_for_item:
                 yield 'application/json', \
                       json.dumps(static_json[0]), \
                       path, \
-                      None,
+                      None, \
+                      hash_for_item
                 log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak municipality.')
             else:
                 log.info(f'[{self.source_definition["key"]}] Skipped 1 Allmanak municipality.')
@@ -66,11 +68,13 @@ class AllmanakProvinceExtractor(AllmanakBaseExtractor):
         if total != 1:
             log.error(f'[{self.source_definition["key"]}] Number of extracted provinces is not equal to 1')
         else:
-            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'province', self.source_definition['allmanak_id'], static_json[0]):
+            hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'province', self.source_definition['allmanak_id'], static_json[0])
+            if hash_for_item:
                 yield 'application/json', \
                       json.dumps(static_json[0]), \
                       path, \
-                      None,
+                      None, \
+                      hash_for_item
                 log.info(f'[{self.source_definition["key"]}] Extracted 1 Allmanak province.')
             else:
                 log.info(f'[{self.source_definition["key"]}] Skipped 1 Allmanak province.')
@@ -87,13 +91,15 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if static_json[0]['zetels']:
-            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'parties', self.source_definition['allmanak_id'], static_json[0]['zetels']):
+            hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'parties', self.source_definition['allmanak_id'], static_json[0]['zetels'])
+            if hash_for_item:
                 total_parties = 0
                 for party in static_json[0]['zetels']:
                     yield 'application/json', \
                           json.dumps(party), \
                           path, \
-                          None
+                          None, \
+                          hash_for_item
                     total_parties += 1
                 log.info(f'[{self.source_definition["key"]}] Extracted {total_parties} Allmanak parties.')
             else:
@@ -115,7 +121,8 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if static_json[0]['functies']:
-            if not self.check_if_most_recent('allmanak', self.source_definition['allmanak_id'], 'persons', self.source_definition['allmanak_id'], static_json[0]['functies']):
+            hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'persons', self.source_definition['allmanak_id'], static_json[0]['functies'])
+            if hash_for_item:
                 total_persons = 0
                 for row in static_json[0]['functies']:
                     if row['functie']:
@@ -123,7 +130,8 @@ class AllmanakPersonsExtractor(AllmanakBaseExtractor):
                             yield 'application/json', \
                                   json.dumps(person['persoon']), \
                                   path, \
-                                  None
+                                  None, \
+                                  hash_for_item
                             total_persons += 1
                 log.info(f'[{self.source_definition["key"]}] Extracted {total_persons} Allmanak persons.')
             else:

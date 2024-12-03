@@ -42,7 +42,7 @@ class GGMBaseExtractor(BaseExtractor, HttpRequestMixin):
                     elif item.get('Verwijderd') is True:
                         log.warning('GGM extractor should do a remove request but is not yet implemented')
 
-                    yield 'application/json', json.dumps(item), full_url, 'ggm/' + odata_substring,
+                    yield 'application/json', json.dumps(item), full_url, 'ggm/' + odata_substring
 
                 log.debug(f'Processed skip value {skip}')
             else:

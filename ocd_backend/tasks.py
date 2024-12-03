@@ -2,6 +2,10 @@ from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.log import get_source_logger
+from ocd_backend.models.postgres_database import PostgresDatabase
+from ocd_backend.models.postgres_models import ItemHash
+from ocd_backend.models.serializers import PostgresSerializer
+from ocd_backend.utils.misc import iterate
 
 log = get_source_logger('ocd_backend.tasks')
 
@@ -76,6 +80,40 @@ class DummyCleanup(BaseCleanup):
         log.info(f'Finished run {run_identifier}')
 
 
+class Finalizer(celery_app.Task):
+    """
+    This task runs after the ETL steps are processed succesfully.
+    It stores a hash of the input values (of a Meeting, Report, Person etc) in the ItemHash table.
+    Each ETL pipeline starts by checking this table - if a record exists and the hash value is the
+    same, processing can be skipped.
+    """
+    def __init__(self):
+        database = PostgresDatabase(serializer=PostgresSerializer)
+        self.session = database.Session()
+
+    def start(self, *args, **kwargs):
+        self.hash_for_item = kwargs['hash_for_item']
+
+        if not self.hash_for_item:
+            return
+
+        self.set_processed()
+
+    def set_processed(self):
+        old_item = self.session.query(ItemHash).filter(ItemHash.item_id == self.hash_for_item.hash_key).first()
+
+        if old_item:
+            if old_item.item_hash != self.hash_for_item.hash_value: 
+                old_item.item_hash = self.hash_for_item.hash_value
+                self.session.commit()
+                self.session.flush()
+        else:
+            new_item = ItemHash(item_id=self.hash_for_item.hash_key, item_hash=self.hash_for_item.hash_value)
+            self.session.add(new_item)
+            self.session.commit()
+            self.session.flush()
+
+
 @celery_app.task(bind=True, base=CleanupElasticsearch, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def cleanup_elasticsearch(self, *args, **kwargs):
     return self.start(*args, **kwargs)
@@ -83,4 +121,8 @@ def cleanup_elasticsearch(self, *args, **kwargs):
 
 @celery_app.task(bind=True, base=DummyCleanup, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
 def dummy_cleanup(self, *args, **kwargs):
+    return self.start(*args, **kwargs)
+
+@celery_app.task(bind=True, base=Finalizer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
+def finalizer(self, *args, **kwargs):
     return self.start(*args, **kwargs)

@@ -94,11 +94,13 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
             for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 if committee_designator in mt.Meetingtype.lower():
                     committee = serialize_object(mt, dict)
-                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'committee', committee['Id'], committee):
+                    hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'committee', committee['Id'], committee)
+                    if hash_for_item:
                         yield 'application/json', \
                               json.dumps(committee), \
                               None, \
-                              'ibabs/' + cached_path
+                              'ibabs/' + cached_path, \
+                              hash_for_item
                         total_count += 1
             log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees.')
         else:
@@ -135,8 +137,9 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
                 if image:
                     profile['Picture'] = base64.encodestring(image).decode('ascii')
 
-                if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'person', identifier, profile):
-                    yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path
+                hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'person', identifier, profile)
+                if hash_for_item:
+                    yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path, hash_for_item
                 total_count += 1
 
             log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs persons')
@@ -216,11 +219,13 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                         continue
 
                     meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
-                    if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'meeting', meeting['Id'], meeting_dict):
+                    hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'meeting', meeting['Id'], meeting_dict)
+                    if hash_for_item:
                         yield 'application/json', \
                               json.dumps(meeting_dict), \
                               None, \
-                              'ibabs/' + cached_path,
+                              'ibabs/' + cached_path, \
+                              hash_for_item
                     else:
                         log.info('Skipped meeting %s because we have it already' % (meeting['Id'],))
 
@@ -357,11 +362,9 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         continue
 
                     log.info(self._make_hash(report_dict))
-                    is_newer = not self.check_if_most_recent(
-                        'ibabs', self.source_definition['ibabs_sitename'], 'report', item['id'], report_dict)
-                    # identifier = item['id'][0]
-                    if is_newer:
-                        yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path
+                    hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'report', item['id'], report_dict)
+                    if hash_for_item:
+                        yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path, hash_for_item
                     else:
                         log.info('Skipped %s because we already have that one in this version' % (item['id'],))
                     yield_count += 1
@@ -493,8 +496,9 @@ class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
 
             # log.debug(processed)
             for result in processed:
-                if not self.check_if_most_recent('ibabs', self.source_definition['ibabs_sitename'], 'voting', result['meeting']['Id'], result):
-                    yield 'application/json', json.dumps(result), None, None
+                hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'voting', result['meeting']['Id'], result)
+                if hash_for_item:
+                    yield 'application/json', json.dumps(result), None, None, hash_for_item
                 passed_vote_count += 1
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
