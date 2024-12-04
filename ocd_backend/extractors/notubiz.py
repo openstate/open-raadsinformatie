@@ -3,7 +3,6 @@ from urllib import parse
 
 from requests.exceptions import HTTPError, RetryError, ConnectionError
 
-from ocd_backend.exceptions import ItemAlreadyProcessed
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
@@ -66,6 +65,8 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
         response = self.fetch(committee_url + self.application_token, cached_path)
 
         committee_count = 0
+        committees_skipped = 0
+
         for committee in json.load(response.media_file)['gremia']:
             hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'committee', committee['id'], committee)
             if hash_for_item:
@@ -75,8 +76,11 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
                       'notubiz/' + cached_path, \
                       hash_for_item
                 committee_count += 1
+            else:
+                committees_skipped += 1
 
-        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} notubiz committees.')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} notubiz committees. '
+                 f'Also skipped {committees_skipped} notubiz committees')
 
 
 class NotubizMeetingsExtractor(NotubizBaseExtractor):
@@ -87,6 +91,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
     def run(self):
         meeting_count = 0
         meetings_skipped = 0
+        meetings_error = 0
 
         start_date, end_date = self.date_interval()
 
@@ -105,13 +110,15 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             try:
                 response = self.http_session.get(url, timeout=(3, 5))
             except (HTTPError, RetryError, ConnectionError) as e:
-                log.warning(f'[{self.source_definition["key"]}] {str(e)}: {parse.quote(url)}')
+                log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {parse.quote(url)}')
+                meetings_error += 1
                 break
 
             try:
                 response.raise_for_status()
             except (HTTPError, RetryError, ConnectionError) as e:
-                log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
+                log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {response.request.url}')
+                meetings_error += 1
                 break
 
             event_json = response.json()
@@ -137,20 +144,16 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 try:
                     resource = self.fetch(meeting_url + self.application_token, cached_path)
                     meeting_json = json.load(resource.media_file)['meeting']
-                except ItemAlreadyProcessed as e:
-                    # This should no longer be triggered after the change to GCS caching
-                    meetings_skipped += 1
-                    log.debug(f'[{self.source_definition["key"]}] {str(e)}')
-                    continue
                 except (HTTPError, RetryError, ConnectionError) as e:
                     error_json = e.response.json()
                     if error_json.get('message') == 'No rights to see this meeting':
                         log.info(f'[{self.source_definition["key"]}] No rights to view: {meeting_url}')
+                        meetings_skipped += 1
                         break
                     # Reraise all other HTTP errors
                     raise
                 except Exception as e:
-                    meetings_skipped += 1
+                    meetings_error += 1
                     log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
                     continue
 
@@ -172,6 +175,10 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                           'notubiz/' + cached_path, \
                           hash_for_item
                     meeting_count += 1
+                else:
+                    log.info('Skipped notubiz meeting(item) %s because we have it already' % (meeting_json['id']))
+                    meetings_skipped += 1
+
 
             page += 1
 
@@ -181,6 +188,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} notubiz meeting(items). '
                  f'Also skipped {meetings_skipped} meetings')
+        if meetings_error > 0:
+            log.info(f'[{self.source_definition["key"]}] Also {meetings_error} notubiz meeting(items) encountered an error. ')
 
 
 # class NotubizMeetingItemExtractor(NotubizBaseExtractor):

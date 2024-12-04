@@ -123,6 +123,8 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
         log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {self.start_date} to {self.end_date}')
 
         total_meetings = 0
+        meetings_skipped = 0
+
         for item in super(GreenValleyMeetingsExtractor, self).run():
             ot = ",".join(self.source_definition['greenvalley_objecttypes'])
             mt = json.loads(item[1])
@@ -130,5 +132,8 @@ class GreenValleyMeetingsExtractor(GreenValleyExtractor):
             if hash_for_item:
                 yield item[0], item[1], item[2], item[3], hash_for_item
                 total_meetings += 1
+            else:
+                meetings_skipped += 1
 
-        log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings')
+        log.info(f'[{self.source_definition["key"]}] Extracting total of {total_meetings} GreenValley meetings. '
+                 f'Also skipped {meetings_skipped} GreenValley meetings')

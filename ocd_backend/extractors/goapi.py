@@ -57,6 +57,7 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         committee_count = 0
+        committees_skipped = 0
 
         cached_path = strip_scheme(urljoin(self.base_url, 'dmus'))
 
@@ -70,8 +71,11 @@ class GemeenteOplossingenCommitteesExtractor(GemeenteOplossingenBaseExtractor):
                       'gemeenteoplossingen/' + cached_path, \
                       hash_for_item
                 committee_count += 1
+            else:
+                committees_skipped += 1
 
-        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} GO API committees.')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {committee_count} GO API committees. '
+                 f'Also skipped {committees_skipped} GO API committees')
 
 
 class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
@@ -81,6 +85,8 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
 
     def run(self):
         meeting_count = 0
+        meetings_skipped = 0
+
         for start_date, end_date in self.interval_generator():
             # v2 requires dates in YYYY-MM-DD format, instead of a unix timestamp
             if self.source_definition.get('api_version') == 'v2':
@@ -105,9 +111,12 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
                           'gemeenteoplossingen/' + cached_path, \
                           hash_for_item
                     meeting_count += 1
+                else:
+                    meetings_skipped += 1
 
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
-        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API meetings.')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API meetings. '
+                 f'Also skipped {meetings_skipped} GO API meetings')
 
 
 # class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor):
@@ -146,7 +155,9 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
     """
 
     def run(self):
-        meeting_count = 0
+        document_count = 0
+        documents_skipped = 0
+
         for start_date, end_date in self.interval_generator():
             url = 'documents?publicationDate_from=%s&publicationDate_to=%s&limit=50000' % (
                 start_date.isoformat(),
@@ -166,7 +177,10 @@ class GemeenteOplossingenDocumentsExtractor(GemeenteOplossingenBaseExtractor):
                           '%s/documents/%i' % (base_url, doc['id']), \
                           'gemeenteoplossingen/' + cached_path, \
                           hash_for_item
-                    meeting_count += 1
+                    document_count += 1
+                else:
+                    documents_skipped += 1
 
             log.debug(f'[{self.source_definition["key"]}] Now processing documents from {start_date} to {end_date}')
-        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API documents.')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {document_count} GO API documents. '
+                 f'Also skipped {documents_skipped} GO API documents')

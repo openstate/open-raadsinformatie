@@ -91,6 +91,8 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
 
         if meeting_types.Meetingtypes:
             total_count = 0
+            committees_skipped = 0
+
             for mt in meeting_types.Meetingtypes['iBabsMeetingtype']:
                 if committee_designator in mt.Meetingtype.lower():
                     committee = serialize_object(mt, dict)
@@ -102,7 +104,10 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                               'ibabs/' + cached_path, \
                               hash_for_item
                         total_count += 1
-            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees.')
+                    else:
+                        committees_skipped += 1
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs committees. '
+                     f'Also skipped {committees_skipped} ibabs committees')
         else:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
@@ -184,6 +189,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
     def run(self):
         meeting_count = 0
         meetings_skipped = 0
+
         for start_date, end_date in self.interval_generator():
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
 
@@ -227,12 +233,13 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                               None, \
                               'ibabs/' + cached_path, \
                               hash_for_item
+                        meeting_count += 1
                     else:
-                        log.info('Skipped meeting %s because we have it already' % (meeting['Id'],))
+                        log.info('Skipped ibabs meeting %s because we have it already' % (meeting['Id'],))
+                        meetings_skipped += 1
 
-                    meeting_count += 1
 
-        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} meetings.')
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} ibabs meetings.')
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):
