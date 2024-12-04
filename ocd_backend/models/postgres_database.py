@@ -8,9 +8,7 @@ from ocd_backend import settings
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.definitions import Ori
 from ocd_backend.models.misc import Uri
-from ocd_backend.models.postgres_models import Source, Resource, Property
-from ocd_backend.models.properties import StringProperty, URLProperty, IntegerProperty, FloatProperty, \
-    DateProperty, JsonProperty, DateTimeProperty, ArrayProperty, Relation, OrderedRelation
+from ocd_backend.models.postgres_models import Source, Resource
 
 log = get_source_logger('postgres_database')
 
@@ -109,74 +107,6 @@ class PostgresDatabase:
                         log.warning(f'Unable to update source, failed second time as well: {str(e)}')
 
 
-            serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
-
-            session = self.Session()
-            resource = session.query(Resource).filter(Resource.ori_id == model_object.ori_identifier.partition(Ori.uri)[2]).one()
-
-            # Delete properties that are about to be updated
-            # TODO: maybe put the predicates in a temporary table so we can
-            # perform a join on that table since that is faster
-            # sometimes 11 or more predicates
-            predicates = serialized_properties.keys()
-            session.query(Property).filter(Property.resource_id == resource.ori_id,
-                                           Property.predicate.in_(predicates)
-                                           ).delete(synchronize_session='fetch')
-
-            # Save new properties
-            for predicate, value_and_property_type in serialized_properties.items():
-                if isinstance(value_and_property_type[0], list):
-                    # Create each item as a separate Property with the same predicate, and save the order to
-                    # the `order` column
-                    for order, item in enumerate(value_and_property_type[0], start=1):
-                        new_property = (Property(predicate=predicate, order=order))
-                        setattr(new_property, self.map_column_type((item, value_and_property_type[1]), predicate), item)
-                        resource.properties.append(new_property)
-                else:
-                    new_property = (Property(predicate=predicate))
-                    setattr(new_property, self.map_column_type(value_and_property_type), value_and_property_type[0])
-                    resource.properties.append(new_property)
-
-            session.commit()
-            session.close()
-
-    @staticmethod
-    def map_column_type(value_and_property_type, list_predicate = None):
-        """Maps the property type to a column."""
-        value = value_and_property_type[0]
-        property_type = value_and_property_type[1]
-
-        if property_type == StringProperty:
-            return 'prop_string'
-        elif property_type is URLProperty:
-            return 'prop_url'
-        elif property_type is IntegerProperty:
-            return 'prop_integer'
-        elif property_type is FloatProperty:
-            return 'prop_float'
-        elif property_type in (DateProperty, DateTimeProperty):
-            return 'prop_datetime'
-        elif property_type is JsonProperty:
-            return 'prop_json'
-        elif property_type is ArrayProperty:
-            # Arrays of text from pdfs may contain something like "223\n" which would result in prop_resource being
-            # returned (and a ForeignKeyViolation error on Resource or a link to a wrong Resource). Prevent this by
-            # returning prop_string for all entries in an Array of type http://schema.org/text
-            if list_predicate == 'http://schema.org/text':
-                return 'prop_string'
-            try:
-                int(value)
-                return 'prop_resource'
-            except (ValueError, TypeError):
-                return 'prop_string'
-        elif property_type in (Relation, OrderedRelation):
-            try:
-                int(value)
-                return 'prop_resource'
-            except (ValueError, TypeError):
-                return 'prop_string'
-        else:
-            raise ValueError('Unable to map property of type "%s" to a column.' % property_type)
 
     def update_source(self, model_object):
         """Updates the canonical IRI or ID field of the Source of the corresponding model object.
