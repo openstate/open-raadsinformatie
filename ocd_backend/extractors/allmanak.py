@@ -106,35 +106,3 @@ class AllmanakPartiesExtractor(AllmanakBaseExtractor):
                 log.info(f'[{self.source_definition["key"]}] Skipped Allmanak parties.')
         else:
             log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any parties for this source.')
-
-
-class AllmanakPersonsExtractor(AllmanakBaseExtractor):
-    """
-    Extracts persons from the OpenState Allmanak.
-    """
-
-    def run(self):
-        path = self.base_url + 'overheidsorganisatie?systemid=eq.%s&select=naam,functies(functie:functieid' \
-                               '(naam,medewerkers(persoon:persoonid(systemid,naam,partij))))' \
-                               '&functies.functie.naam=eq.Raadslid' % self.source_definition['allmanak_id']
-
-        total, static_json = self._request(path)
-
-        if static_json[0]['functies']:
-            hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'persons', self.source_definition['allmanak_id'], static_json[0]['functies'])
-            if hash_for_item:
-                total_persons = 0
-                for row in static_json[0]['functies']:
-                    if row['functie']:
-                        for person in row['functie']['medewerkers']:
-                            yield 'application/json', \
-                                  json.dumps(person['persoon']), \
-                                  path, \
-                                  None, \
-                                  hash_for_item
-                            total_persons += 1
-                log.info(f'[{self.source_definition["key"]}] Extracted {total_persons} Allmanak persons.')
-            else:
-                log.info(f'[{self.source_definition["key"]}] Skipped Allmanak persons.')
-        else:
-            log.warning(f'[{self.source_definition["key"]}] Allmanak does not list any persons for this source.')

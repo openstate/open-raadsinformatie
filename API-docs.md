@@ -7,7 +7,7 @@ Currently, the API includes data from more than 300 municipalities and provinces
 As of March 2023, we only support the `Documents` class.
 These represent imported PDF(-like) resources and their plaintext representations.
 This is what >90% of our users want, and is >99% of the data that we have.
-Other classes (like meetings, agenda items, persons) are often still imported if they work, but we will not prioritize fixing these if there are import issues with them.
+Other classes (like meetings, agenda items) are often still imported if they work, but we will not prioritize fixing these if there are import issues with them.
 
 ## Elastic Endpoint
 

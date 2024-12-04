@@ -32,12 +32,6 @@ _entities: &entities
     extractor: ocd_backend.extractors.parlaeus.ParlaeusCommitteesExtractor
     transformer: ocd_backend.transformers.parlaeus_committee.committee_item
 
-  - &persons
-    <<: *entity_defaults
-    entity: persons
-    extractor: ocd_backend.extractors.parlaeus.ParlaeusPersonsExtractor
-    transformer: ocd_backend.transformers.parlaeus_person.person_item
-
   - &meetings
     <<: *entity_defaults
     entity: meetings
