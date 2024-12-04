@@ -220,6 +220,7 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
                     meeting_dict['Meetingtype'] = meeting_types[meeting_dict['MeetingtypeId']]
                     hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'meeting', meeting['Id'], meeting_dict)
+                    log.info(f'[{self.source_definition["key"]}] meeting {meeting["Id"]}, {hash_for_item != False}, {hash_for_item.hash_value if hash_for_item else "---"}')
                     if hash_for_item:
                         yield 'application/json', \
                               json.dumps(meeting_dict), \
