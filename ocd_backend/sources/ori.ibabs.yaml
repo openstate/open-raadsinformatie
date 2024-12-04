@@ -411,7 +411,7 @@ ori.ibabs:
   emmen:
     key: emmen
     allmanak_id: 22781
-    start_date: "2018-01-01" # Due to agreement with Frank te Winkel
+    # start_date: "2018-01-01" # Due to agreement with Frank te Winkel
     cbs_id: GM0114
     <<: *ibabs
 
