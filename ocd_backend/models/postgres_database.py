@@ -85,42 +85,6 @@ class PostgresDatabase:
             SharedAccess.release_lock(iri)
 
 
-    def get_mergeable_resource_identifier(self, model_object, predicate, column, value):
-        """
-        Queries the database to find the ORI identifier of the Resource linked to the Property with the given
-        predicate and value in the specified column.
-        """
-
-        definition = model_object.definition(predicate)
-
-        session = self.Session()
-        try:
-            query_result = session.query(Property).filter(Property.predicate == definition.absolute_uri())
-            if column == 'prop_resource':
-                query_result = query_result.filter(Property.prop_resource == value)
-            elif column == 'prop_string':
-                query_result = query_result.filter(Property.prop_string == value)
-            elif column == 'prop_datetime':
-                query_result = query_result.filter(Property.prop_datetime == value)
-            elif column == 'prop_integer':
-                query_result = query_result.filter(Property.prop_integer == value)
-            elif column == 'prop_float':
-                query_result = query_result.filter(Property.prop_float == value)
-            elif column == 'prop_url':
-                query_result = query_result.filter(Property.prop_url == value)
-            else:
-                raise ValueError('Invalid column type "%s" specified for merge_into' % column)
-            resource_property = query_result.one()
-            return resource_property.resource.iri
-        except MultipleResultsFound:
-            raise MultipleResultsFound('Multiple resources found for predicate "%s" with value "%s" in column "%s"' %
-                                       (predicate, value, column))
-        except NoResultFound:
-            raise NoResultFound('No resource found for predicate "%s" with value "%s" in column "%s"' %
-                                (predicate, value, column))
-        finally:
-            session.close()
-
     def save(self, model_object):
         if not model_object.source_iri:
             # If the item is an Individual, like EventConfirmed, we "save" it by setting an ORI identifier

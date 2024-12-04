@@ -92,18 +92,11 @@ class Model(object, metaclass=ModelMetaclass):
         return instance
 
     def __init__(self, source_id=None, source=None, supplier=None, collection=None,
-                 merge_into=None, cached_path=None, canonical_iri=None):
+                 cached_path=None, canonical_iri=None):
         # Set defaults
         self.skip_validation = None
         self.values = dict()
         self.enricher_task = self.enricher_task
-
-        if merge_into:
-            if not isinstance(merge_into, tuple) or len(merge_into) != 3:
-                raise ValueError('merge_into requires a tuple with 3 elements: (predicate, column, value)')
-            self.merge_into = merge_into
-        else:
-            self.merge_into = None
 
         self.canonical_id = source_id
         self.cached_path = cached_path
@@ -228,9 +221,6 @@ class Model(object, metaclass=ModelMetaclass):
             return
         self.saving_flag = True
 
-        if self.merge_into:
-            self._merge(*self.merge_into)
-
         try:
             self.db.save(self)  # pylint: disable=no-member
             # Recursive saving of related models
@@ -242,11 +232,3 @@ class Model(object, metaclass=ModelMetaclass):
             raise
         finally:
             self.saving_flag = False
-
-    def _merge(self, predicate, column, value):
-        """Tries to set the ORI identifier of an existing Resource on the model. It tries to find the Resource by
-        filtering on a Property with the given predicate and value in the specified column."""
-        try:
-            self.ori_identifier = self.db.get_mergeable_resource_identifier(self, predicate, column, value)
-        except (NoResultFound, MultipleResultsFound, ValueError) as e:
-            log.warning(f'Unable to merge: {str(e)}')
