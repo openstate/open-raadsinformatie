@@ -319,7 +319,6 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         # Skip report if date is outside date interval
                         continue
 
-                    log.info(self._make_hash(report_dict))
                     hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'report', item['id'], report_dict)
                     if hash_for_item:
                         yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path, hash_for_item

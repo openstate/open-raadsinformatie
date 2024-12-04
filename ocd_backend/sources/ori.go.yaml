@@ -225,7 +225,7 @@ ori.go:
   # Added on 23-12-2020
   albrandswaard:
     key: albrandswaard
-    base_url: "https://raad.albrandswaard.nl/api/"
+    base_url: "https://raad.albrandswaard.nl/api"
     allmanak_id: 35356
     cbs_id: GM0613
     <<: *go
@@ -233,7 +233,7 @@ ori.go:
   # Added on 04-06-2021
   hillegom:
     key: hillegom
-    base_url: "https://gemeenteraad.hillegom.nl/api/"
+    base_url: "https://gemeenteraad.hillegom.nl/api"
     allmanak_id: 32323
     cbs_id: GM0534
     <<: *go
@@ -241,21 +241,21 @@ ori.go:
   # Added on 14-07-2021
   huizen:
     key: huizen
-    base_url: " https://ris.gemeenteraadhuizen.nl/api/"
+    base_url: " https://ris.gemeenteraadhuizen.nl/api"
     allmanak_id: 35806
     cbs_id: GM0406
     <<: *go
 
   #beuningen:
   #  key: beuningen
-  #  base_url: "https://gemeentebestuur.beuningen.nl/api/"
+  #  base_url: "https://gemeentebestuur.beuningen.nl/api"
   #  allmanak_id: 27471
   #  cbs_id: GM0209
   #  <<: *go
 
   heemstede:
     key: heemstede
-    base_url: "https://gemeentebestuur.heemstede.nl/api/"
+    base_url: "https://gemeentebestuur.heemstede.nl/api"
     allmanak_id: 24295
     cbs_id: GM0397
     <<: *go
@@ -263,28 +263,28 @@ ori.go:
   # Added on 18-07-2023
   venlo:
     key: venlo
-    base_url: "https://gemeenteraad.venlo.nl/api/"
+    base_url: "https://gemeenteraad.venlo.nl/api"
     allmanak_id: 25285
     cbs_id: GM0983
     <<: *go
 
   dinkelland:
     key: dinkelland
-    base_url: "https://gemeenteraad.dinkelland.nl/api/"
+    base_url: "https://gemeenteraad.dinkelland.nl/api"
     allmanak_id: 25432
     cbs_id: GM1774
     <<: *go
 
   renkum:
     key: renkum
-    base_url: "https://raad.renkum.nl/api/"
+    base_url: "https://raad.renkum.nl/api"
     allmanak_id: 30749
     cbs_id: GM0274
     <<: *go
 
   ridderkerk:
     key: ridderkerk
-    base_url: "https://raad.ridderkerk.nl/api/"
+    base_url: "https://raad.ridderkerk.nl/api"
     api_version: "v1"
     allmanak_id: 40741
     cbs_id: GM0597
@@ -292,21 +292,21 @@ ori.go:
 
   sliedrecht:
     key: sliedrecht
-    base_url: "https://raad.sliedrecht.nl/api/"
+    base_url: "https://raad.sliedrecht.nl/api"
     allmanak_id: 29505
     cbs_id: GM0610
     <<: *go
 
   tubbergen:
     key: tubbergen
-    base_url: "https://bestuur.tubbergen.nl/api/"
+    base_url: "https://bestuur.tubbergen.nl/api"
     allmanak_id: 27560
     cbs_id: GM0183
     <<: *go
 
   woudenberg:
     key: woudenberg
-    base_url: "https://gemeentebestuur.woudenberg.nl/api/"
+    base_url: "https://gemeentebestuur.woudenberg.nl/api"
     api_version: "v1"
     allmanak_id: 22403
     cbs_id: GM0351
@@ -314,7 +314,7 @@ ori.go:
 
   veldhoven:
     key: veldhoven
-    base_url: "https://gemeenteraad.veldhoven.nl/api/"
+    base_url: "https://gemeenteraad.veldhoven.nl/api"
     api_version: "v1"
     allmanak_id: 30186
     cbs_id: GM0861
@@ -323,7 +323,7 @@ ori.go:
   # Added on 03-07-2024
   oudewater:
     key: oudewater
-    base_url: "https://gemeenteraad.oudewater.nl/api/"
+    base_url: "https://gemeenteraad.oudewater.nl/api"
     api_version: "v1"
     allmanak_id: 30578
     cbs_id: GM0589
