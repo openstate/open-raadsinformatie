@@ -1,3 +1,4 @@
+from ocd_backend.shared_access import SharedAccess
 from sqlalchemy import create_engine, Sequence
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -48,26 +49,41 @@ class PostgresDatabase:
     def generate_ori_identifier(self, iri):
         """
         Generates a Resource with an ORI identifier and adds the IRI as a Source if it does not already exist.
+        To avoid race conditions where multiple Source records are created for the same iri, use a lock.
         """
+  
+        SharedAccess.acquire_lock(iri)
 
         session = self.Session()
 
         try:
-            # If the resource already exists, create the source as a child of the resource
+            # If the resource already exists, return existing ori_id
             resource = session.query(Source).filter(Source.iri == iri).one().resource
-            resource.sources.append(Source(iri=iri))
-            session.flush()
             return Uri(Ori, resource.ori_id)
         except NoResultFound:
-            # If the resource does not exist, create resource and source together
+            # If the resource does not exist, create resource (and possibly source)
+            try:
+                source = session.query(Source).filter(Source.iri == iri).one()
+            except NoResultFound:
+                source = Source(iri=iri)
+            except MultipleResultsFound as e:
+                log.info(f"MultipleResultsFound for {iri} when getting source")
+                raise e
+
             new_id = self.engine.execute(Sequence('ori_id_seq'))
             new_identifier = Uri(Ori, new_id)
-            resource = Resource(ori_id=new_id, iri=new_identifier, sources=[Source(iri=iri)])
+            resource = Resource(ori_id=new_id, iri=new_identifier, sources=[source])
             session.add(resource)
             session.commit()
+            session.flush()
             return new_identifier
+        except MultipleResultsFound as e:
+            log.info(f"MultipleResultsFound for {iri} when getting resource")
+            raise e
         finally:
             session.close()
+            SharedAccess.release_lock(iri)
+
 
     def get_mergeable_resource_identifier(self, model_object, predicate, column, value):
         """
@@ -266,6 +282,8 @@ class PostgresDatabase:
                 pass
 
             # Scenario 1D
+            # To avoid race conditions where multiple Source records are created for the same iri, use a lock.
+            SharedAccess.acquire_lock(model_object.source_iri)
             try:
                 source = Source(resource=resource,
                                 iri=model_object.source_iri,
@@ -277,9 +295,11 @@ class PostgresDatabase:
                 return
             except Exception as e:
                 session.close()
-                log.error(f'{str(e)}: {model_object.ori_identifier} - {model_object.source_iri}')
+                log.error(f'Error creating Source record: {str(e)}: {model_object.ori_identifier} - {model_object.source_iri}')
                 # raise ValueError('No matching scenario 1 while updating Source for resource %s with IRI %s' %
                 #                  (model_object.ori_identifier, model_object.source_iri))
+            finally:
+                SharedAccess.release_lock(model_object.source_iri)
 
         # Scenario 2
         elif (hasattr(model_object, 'canonical_id') and model_object.canonical_id is not None) and not \
