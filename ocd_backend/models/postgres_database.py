@@ -137,7 +137,13 @@ class PostgresDatabase:
                 try:
                     self.update_source(model_object)
                 except ValueError as e:
-                    log.warning(f'Unable to update source: {str(e)}')
+                    # The 'No matching scenario 2 while updating Source for resource' error occurs now and then
+                    # due to race conditions. A simply retry here solves it.
+                    try:
+                        self.update_source(model_object)
+                    except ValueError as e:
+                        log.warning(f'Unable to update source, failed second time as well: {str(e)}')
+
 
             serialized_properties = self.serializer.deflate(model_object, props=True, rels=True)
 
@@ -310,9 +316,8 @@ class PostgresDatabase:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
                                                       Source.canonical_id == str(model_object.canonical_id),
-                                                      Source.canonical_iri == None).one()
+                                                      Source.canonical_iri == None).with_for_update().one()
                 # Nothing needs to be updated
-                session.close()
                 return
             except MultipleResultsFound:
                 raise ValueError('Multiple 2A/ID+X Source records found for resource %s with IRI %s' %
@@ -320,16 +325,17 @@ class PostgresDatabase:
             except NoResultFound:
                 # Continue to next scenario
                 pass
+            finally:
+                session.close()
 
             # Scenario 2B
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
                                                       Source.canonical_id == None,
-                                                      Source.canonical_iri == None).one()
+                                                      Source.canonical_iri == None).with_for_update().one()
                 source.canonical_id = str(model_object.canonical_id)
                 session.commit()
-                session.close()
                 return
             except MultipleResultsFound:
                 raise ValueError('Multiple 2B/X+X Source records found for resource %s with IRI %s' %
@@ -337,24 +343,25 @@ class PostgresDatabase:
             except NoResultFound:
                 # Continue to next scenario
                 pass
+            finally:
+                session.close()
 
             # Scenario 2C
             try:
                 source = session.query(Source).filter(Source.resource_ori_id == resource.ori_id,
                                                       Source.iri == model_object.source_iri,
                                                       Source.canonical_id == str(model_object.canonical_id),
-                                                      Source.canonical_iri != None).one()
+                                                      Source.canonical_iri != None).with_for_update().one()
                 # Nothing needs to be updated
-                session.close()
                 return
             except MultipleResultsFound:
                 # TODO - Decide how to handle this
-                session.close()
                 return
             except NoResultFound:
-                session.close()
                 raise ValueError('No matching scenario 2 while updating Source for resource %s with IRI %s' %
                                  (model_object.ori_identifier, model_object.source_iri))
+            finally:
+                session.close()
 
         else:
 
