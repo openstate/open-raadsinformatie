@@ -34,6 +34,12 @@ _entities: &entities
     extractor: ocd_backend.extractors.allmanak.AllmanakPartiesExtractor
     transformer: ocd_backend.transformers.allmanak_organization.party_item
 
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
+    transformer: ocd_backend.transformers.ibabs_person.person_item
+
   - &meetings
     <<: *entity_defaults
     entity: meetings

@@ -106,6 +106,49 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
         else:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
 
+class IbabsPersonsExtractor(IBabsBaseExtractor):
+    """
+    Extracts person profiles from the iBabs SOAP service.
+    """
+
+    def run(self):
+        users = self.client.service.GetUsers(
+            self.source_definition['ibabs_sitename']
+        )
+
+        if users.Users:
+            total_count = 0
+            for user in users.Users.iBabsUserBasic:
+                identifier = user['UniqueId']
+
+                sleep(1)
+
+                user_details = self.client.service.GetUser(
+                    self.source_definition['ibabs_sitename'],
+                    identifier
+                )
+
+                cached_path = 'GetUser/Sitename=%s/UserId=%s' % (
+                    self.source_definition['ibabs_sitename'], identifier)
+
+                profile = serialize_object(user_details.User.PublicProfile, dict)
+
+                image = user_details.User.PublicProfile.Picture
+                if image:
+                    profile['Picture'] = base64.encodestring(image).decode('ascii')
+
+                hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'person', identifier, profile)
+                if hash_for_item:
+                    yield 'application/json', json.dumps(profile), None, 'ibabs/' + cached_path, hash_for_item
+                total_count += 1
+
+            log.info(f'[{self.source_definition["key"]}] Extracted total of {total_count} ibabs persons')
+
+        elif users.Message == 'No users found!':
+            log.info(f'[{self.source_definition["key"]}] No ibabs persons were found')
+        else:
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {users.Message}')
+
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
     """

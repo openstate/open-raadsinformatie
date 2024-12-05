@@ -26,6 +26,12 @@ _ggm.ggm:
         enrichers:
           - ocd_backend.enrichers.text_enricher.text_enricher
       - <<: *entity_defaults
+        entity: persons
+        extractor: ocd_backend.extractors.ggm.GGMPersonExtractor
+        transformer: ocd_backend.transformers.ggm_person.person_item
+        enrichers:
+          - ocd_backend.enrichers.media_enricher.media_enricher
+      - <<: *entity_defaults
         entity: committee
         extractor: ocd_backend.extractors.ggm.GGMCommitteeExtractor
         transformer: ocd_backend.transformers.ggm_committee.committee_item

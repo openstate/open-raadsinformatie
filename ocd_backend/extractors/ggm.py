@@ -79,6 +79,14 @@ class GGMMeetingsExtractor(GGMBaseExtractor):
                      '&$format=application%2Fjson;odata.metadata=full'
 
 
+class GGMPersonExtractor(GGMBaseExtractor):
+    request_url = 'OData/v4/2.0/Persoon?&$expand=' \
+                  'PersoonContactinformatie,' \
+                  'CommissieZetelVastPersoon($expand=CommissieZetel($expand=Commissie)),' \
+                  'FractieZetelPersoon($expand=FractieZetel($expand=Fractie))' \
+                  '&$format=application%2Fjson;odata.metadata=full'
+
+
 class GGMCommitteeExtractor(GGMBaseExtractor):
     request_url = 'OData/v4/2.0/Commissie?$expand=' \
                   'CommissieZetel($expand=' \

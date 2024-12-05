@@ -67,3 +67,19 @@ class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
             if hash_for_item:
                 yield 'application/json', json.dumps(committee), None, 'parlaeus/' + cached_path, hash_for_item
 
+
+class ParlaeusPersonsExtractor(ParlaeusMeetingsExtractor):
+    """
+    Extracts persons from the Parlaeus API.
+    """
+
+    def run(self):
+        cached_path = 'person_list'
+        url = f'{self.base_url}?rid={self.rid}&fn=person_list'
+        response = self.get_response(url)
+
+        for person in response.get('list', []):
+            person['url'] = url
+            hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'person', person, person['raid'])
+            if hash_for_item:
+                yield 'application/json', json.dumps(person), None, 'parlaeus/' + cached_path, hash_for_item

@@ -32,6 +32,12 @@ _entities: &entities
     extractor: ocd_backend.extractors.ibabs.IBabsCommitteesExtractor
     transformer: ocd_backend.transformers.ibabs_committee.committee_item
 
+  - &persons
+    <<: *entity_defaults
+    entity: persons
+    extractor: ocd_backend.extractors.ibabs.IbabsPersonsExtractor
+    transformer: ocd_backend.transformers.ibabs_person.person_item
+
   - &meetings
     <<: *entity_defaults
     entity: meetings
@@ -115,6 +121,7 @@ ori.ibabs:
     - *municipality
     - *organizations
     - *committees
+    - *persons
     - *meetings
     - *reports
     # - *videotulen
@@ -135,6 +142,7 @@ ori.ibabs:
     - *municipality
     - *organizations
     - *committees
+    - *persons
     - *meetings
     - entity: reports
       extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
@@ -514,6 +522,7 @@ ori.ibabs:
     - *municipality
     - *organizations
     - *committees
+    - *persons
     - *meetings
     - *reports
     # - *videotulen
