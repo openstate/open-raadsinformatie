@@ -1,5 +1,3 @@
-import bugsnag
-
 from ocd_backend.app import celery_app
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
@@ -34,17 +32,14 @@ class BaseEnricher(celery_app.Task):
                 try:
                     self.enrich_item(model)
                 except SkipEnrichment as e:
-                    bugsnag.notify(e, severity="info")
-                    log.info(f'[{self.source_definition["key"]}] Skipping {self.__class__.__name__}, reason: {e}')
+                    log.info(f'[{self.source_definition["key"]}] Skipping enrichment, {self.__class__.__name__}, reason: {e}')
                 except IOError as e:
                     # In the case of an IOError, disk space or some other
                     # serious problem might occur.
-                    bugsnag.notify(e, severity="error")
-                    log.critical(e)
+                    log.critical(f'[{self.source_definition["key"]}] IOError occurred, {self.__class__.__name__}, reason: {e}')
                     raise
                 except Exception as e:
-                    bugsnag.notify(e, severity="warning")
-                    log.warning(f'[{self.source_definition["key"]}] Unexpected error: {self.__class__.__name__}, reason: {e}')
+                    log.warning(f'[{self.source_definition["key"]}] Unexpected error, {self.__class__.__name__}, reason: {e}')
                     raise
 
         return args

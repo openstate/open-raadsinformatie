@@ -52,11 +52,6 @@ They will be set in a list for `celery`, which means that they will be processed
 
 - Go to redis (see devops), set source value to `archived` for the older one.
 
-## Finding bugs
-
-- Bugs are reported to [Bugsnag](https://app.bugsnag.com/argu/ori/errors).
-
-
 ## Troubleshooting
 
 - Not enough available disk space can cause downtime. Elastic starts to have issues at 80% disk usage - it starts moving stuff to other instances. Fix this by making the disk larger and copying the contents.

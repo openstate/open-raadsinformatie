@@ -1,7 +1,5 @@
 import string
 
-import bugsnag
-
 from ocd_backend.enrichers.text_enricher.tasks import BaseEnrichmentTask
 
 
@@ -30,11 +28,6 @@ class GegevensmagazijnMotionText(BaseEnrichmentTask):
                 break
 
         if not header or not motion:
-            # bugsnag.notify(
-            #     Exception("Invalid motion, stop processing"),
-            #     severity="info",
-            #     meta_data={"text": text}
-            # )
             return
 
         lines = [x.strip() for x in lines]

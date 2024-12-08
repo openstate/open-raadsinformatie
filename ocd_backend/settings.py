@@ -3,7 +3,6 @@ import os
 import pickle
 import tempfile
 
-from bugsnag.handlers import BugsnagHandler
 from kombu import Exchange, Queue
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
@@ -18,9 +17,6 @@ APP_VERSION = __version__
 MAJOR_VERSION = __version_info__[0]
 MINOR_VERSION = __version_info__[1]
 
-BUGSNAG_APIKEY = os.getenv('BUGSNAG_APIKEY')
-
-BUGSNAG_RELEASE_STAGE = os.getenv('BUGSNAG_RELEASE_STAGE', 'development')
 RELEASE_STAGE = os.getenv('RELEASE_STAGE')
 
 # host.docker.internal:8090; start proxy with ssh -gD 8090 wolf
@@ -121,7 +117,7 @@ class StackdriverJsonFormatter(jsonlogger.JsonFormatter, object):
         return super(StackdriverJsonFormatter, self).process_log_record(log_record)
 
 
-default_handlers = ['default', 'bugsnag']
+default_handlers = ['default']
 
 LOGGING = {
     'version': 1,
@@ -156,10 +152,6 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'advanced',
             'filename': os.path.join(PROJECT_PATH, 'log', 'backend.log')
-        },
-        'bugsnag': {
-            'level': 'WARNING',
-            '()': BugsnagHandler,
         }
     },
     'loggers': {
@@ -253,20 +245,6 @@ if os.getenv('GCE_STACKDRIVER'):
         'formatter': 'stackdriver',
         'stream': 'ext://sys.stdout',
     }
-
-if BUGSNAG_APIKEY:
-    import bugsnag
-    from ocd_backend.utils.bugsnag_celery import connect_failure_handler
-
-    bugsnag.configure(
-        api_key=BUGSNAG_APIKEY,
-        project_root=ROOT_PATH,
-        release_stage=BUGSNAG_RELEASE_STAGE,
-        app_version=APP_VERSION,
-        asynchronous=False,
-    )
-
-    connect_failure_handler()
 
 # Configure python logging system with LOGGING dict
 logging.config.dictConfig(LOGGING)
