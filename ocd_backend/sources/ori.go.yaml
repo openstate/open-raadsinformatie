@@ -126,12 +126,14 @@ ori.go:
     cbs_id: GM1674
     <<: *go
 
-  beemster:
-    key: beemster
-    base_url: "https://gemeentebestuur.beemster.net/api"
-    allmanak_id: 31527
-    cbs_id: GM0370
-    <<: *go
+
+  # Disabled 09-12-2024 due to site not found
+  # beemster:
+  #   key: beemster
+  #   base_url: "https://gemeentebestuur.beemster.net/api"
+  #   allmanak_id: 31527
+  #   cbs_id: GM0370
+  #   <<: *go
 
   # Added on 28-03-2019
   bloemendaal:
