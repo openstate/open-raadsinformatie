@@ -858,12 +858,13 @@ ori.ibabs:
     cbs_id: GM1669
     <<: *ibabs
 
-  dronten:
-    key: dronten
-    ibabs_sitename: Dronten
-    allmanak_id: 26889
-    cbs_id: GM0303
-    <<: *ibabs
+  # Disabled 09-12-2024 due to "Invalid site!" error message
+  # dronten:
+  #   key: dronten
+  #   ibabs_sitename: Dronten
+  #   allmanak_id: 26889
+  #   cbs_id: GM0303
+  #   <<: *ibabs
 
   heerlen:
     key: heerlen
@@ -984,12 +985,13 @@ ori.ibabs:
     cbs_id: GM0946
     <<: *ibabs
 
-  heeze_leende:
-    key: heeze_leende
-    ibabs_sitename: heezeleende
-    allmanak_id: 39347
-    cbs_id: GM1658
-    <<: *ibabs
+  # Disabled 09-12-2024 due to "Invalid site!" error message
+  # heeze_leende:
+  #   key: heeze_leende
+  #   ibabs_sitename: heezeleende
+  #   allmanak_id: 39347
+  #   cbs_id: GM1658
+  #   <<: *ibabs
 
   harlingen:
     key: harlingen
@@ -1056,12 +1058,14 @@ ori.ibabs:
   #   cbs_id: GM0983
   #   <<: *ibabs
 
-  oostzaan:
-    key: oostzaan
-    ibabs_sitename: oostzaan
-    allmanak_id: 39007
-    cbs_id: GM0431
-    <<: *ibabs
+
+  # Disabled 09-12-2024 due to "Invalid site!" error message
+  # oostzaan:
+  #   key: oostzaan
+  #   ibabs_sitename: oostzaan
+  #   allmanak_id: 39007
+  #   cbs_id: GM0431
+  #   <<: *ibabs
 
   oirschot:
     key: oirschot

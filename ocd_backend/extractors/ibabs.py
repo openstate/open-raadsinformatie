@@ -252,6 +252,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
         try:
             lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
         except Exception as e:
+            log.warning(f'[{self.source_definition["key"]}] SOAP service error: {e}')
             lists = []
 
         if not lists or len(lists) < 1:
