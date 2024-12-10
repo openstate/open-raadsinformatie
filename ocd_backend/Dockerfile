@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.11-alpine
 MAINTAINER Joep Meindertsma <joep@argu.co>
 
 COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt

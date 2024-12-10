@@ -68,7 +68,7 @@ class PostgresDatabase:
                 log.info(f"MultipleResultsFound for {iri} when getting source")
                 raise e
 
-            new_id = self.engine.execute(Sequence('ori_id_seq'))
+            new_id = session.execute(Sequence('ori_id_seq'))
             new_identifier = Uri(Ori, new_id)
             resource = Resource(ori_id=new_id, iri=new_identifier, sources=[source])
             session.add(resource)
