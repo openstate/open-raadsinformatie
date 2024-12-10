@@ -140,7 +140,7 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
 
                 image = user_details.User.PublicProfile.Picture
                 if image:
-                    profile['Picture'] = base64.encodestring(image).decode('ascii')
+                    profile['Picture'] = base64.encodebytes(image).decode('ascii')
 
                 hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'person', identifier, profile)
                 if hash_for_item:
