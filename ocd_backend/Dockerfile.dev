@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.10-alpine
 MAINTAINER Joep Meindertsma <joep@argu.co>
 
 COPY ocd_backend/requirements.dev.txt /opt/ori/ocd_backend/requirements.txt
@@ -12,8 +12,8 @@ RUN apk add --update \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic
 RUN apk add postgresql-dev gcc python3-dev musl-dev
-RUN pip install --upgrade 'pip<24.1' \
-  && pip install cython==0.29.36 \
+RUN pip install --upgrade 'pip<24.3.1' \
+  && pip install cython==3.0.11 \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
   && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
@@ -43,4 +43,4 @@ VOLUME /opt/ori/data
 
 WORKDIR /opt/ori
 USER celery
-CMD celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q transformers,enrichers --concurrency=3 --without-gossip --quiet
+CMD celery --app=ocd_backend.app:celery_app --quiet worker --loglevel=info -Q transformers,enrichers --concurrency=3 --without-gossip

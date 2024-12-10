@@ -14,8 +14,8 @@ RUN apk add --update \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
   inotify-tools libmagic nano
 RUN apk add postgresql-dev gcc python3-dev musl-dev
-RUN pip install --upgrade 'pip<24.1' \
-  && pip install cython==0.29.36 \
+RUN pip install --upgrade 'pip<24.3.1' \
+  && pip install cython==3.0.11 \
   && pip install --no-cache-dir -r /opt/ori/ocd_backend/requirements.txt \
   && pip uninstall -y cython \
   && cp /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime \
