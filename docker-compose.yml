@@ -41,7 +41,7 @@ services:
         condition: service_healthy
       postgres:
         condition: service_started
-    command: celery --app=ocd_backend.app:celery_app worker --loglevel=info -Q loaders --concurrency=1 --without-gossip --quiet
+    command: celery --app=ocd_backend.app:celery_app --quiet worker --loglevel=info -Q loaders --concurrency=1 --without-gossip
     #mem_limit: 1g
   redis:
     image: "redis:${REDIS_VERSION}"

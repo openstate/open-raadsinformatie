@@ -12,7 +12,6 @@ from pprint import pprint
 import redis
 import click
 from click.core import Command
-from click.decorators import _make_command
 
 from elasticsearch.exceptions import RequestError
 from elasticsearch.helpers import reindex
@@ -31,22 +30,6 @@ from ocd_backend.utils.monitor import get_recent_counts
 # NOTE: don't forget to change this value if you forked this repo and
 # renamed '/opt/oci'
 sys.path.insert(0, '/opt/ori')
-
-
-def command(name=None, cls=None, **attrs):
-    """
-    Wrapper for click Commands, to replace the click.Command docstring with the
-    docstring of the wrapped method (i.e. the methods defined below). This is
-    done to support the autodoc in Sphinx, and the correct display of docstrings
-    """
-    if cls is None:
-        cls = Command
-
-    def decorator(f):
-        r = _make_command(f, name, attrs, cls)
-        r.__doc__ = f.__doc__
-        return r
-    return decorator
 
 
 def _create_path(path):
@@ -184,7 +167,7 @@ def developers():
     """Utilities for developers"""
 
 
-@command('put_template')
+@click.command('put_template')
 @click.option('--template_file', default='es_mappings/ori_template.json',
               type=click.File('rb'), help='Path to JSON file containing the template.')
 def es_put_template(template_file):
@@ -203,7 +186,7 @@ def es_put_template(template_file):
     es.indices.put_template('ori_template', template)
 
 
-@command('put_mapping')
+@click.command('put_mapping')
 @click.argument('index_name')
 @click.argument('mapping_file', type=click.File('rb'))
 def es_put_mapping(index_name, mapping_file):
@@ -222,7 +205,7 @@ def es_put_mapping(index_name, mapping_file):
     es.indices.put_mapping(index=index_name, body=mapping)
 
 
-@command('create_indexes')
+@click.command('create_indexes')
 @click.argument('mapping_dir', type=click.Path(exists=True, resolve_path=True))
 def create_indexes(mapping_dir):
     """
@@ -256,7 +239,7 @@ def create_indexes(mapping_dir):
             click.echo(error_msg)
 
 
-@command('delete_indexes')
+@click.command('delete_indexes')
 @click.option('--delete-template', is_flag=True, expose_value=True)
 def delete_indexes(delete_template):
     """
@@ -280,7 +263,7 @@ def delete_indexes(delete_template):
         es.indices.delete_template('ocd_template')
 
 
-@command('available_indices')
+@click.command('available_indices')
 def available_indices():
     """
     Shows a list of collections available at ``ELASTICSEARCH_HOST:ELASTICSEARCH_PORT``.
@@ -302,7 +285,7 @@ def available_indices():
     return available
 
 
-@command('copy')
+@click.command('copy')
 @click.argument('source_index')
 @click.argument('target_index')
 def es_copy_data(source_index, target_index):
@@ -323,7 +306,7 @@ def es_copy_data(source_index, target_index):
         }
     })
 
-@command('list_sources')
+@click.command('list_sources')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 def extract_list_sources(sources_config):
     """
@@ -347,7 +330,7 @@ def extract_list_sources(sources_config):
         click.echo(' - %s' % source)
 
 
-@command('start')
+@click.command('start')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 @click.argument('source_id')
 @click.option('--subitem', '-s', multiple=True)
@@ -417,7 +400,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
         click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
 
-@command('load_redis')
+@click.command('load_redis')
 @click.argument('modus')
 @click.option('--source_path', default='*')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
@@ -446,7 +429,7 @@ def extract_load_redis(modus, source_path, sources_config):
             redis_client.set(redis_source, modus)
 
 
-@command('process')
+@click.command('process')
 @click.argument('modus')
 @click.option('--source_path', default='*')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
@@ -528,7 +511,7 @@ def extract_process(modus, source_path, sources_config):
             click.echo('Source %s in redis does not exist in available sources' % source)
 
 
-@command('monthly_check')
+@click.command('monthly_check')
 @click.option('--token')
 def es_monthly_check(token):
     result = get_recent_counts()
@@ -558,7 +541,7 @@ def es_monthly_check(token):
         )
         print(resp)
 
-@command('purge_dbs')
+@click.command('purge_dbs')
 @click.pass_context
 def developers_purge_dbs(ctx):
     """

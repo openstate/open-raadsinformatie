@@ -1,0 +1,1 @@
+from ocd_backend.app import celery_app
