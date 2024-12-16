@@ -64,8 +64,12 @@ class TextEnricher(BaseEnricher):
                     item.original_url,
                     identifier
                 )
-            except (ConnectionError, requests.HTTPError) as e:
-                raise SkipEnrichment(e)
+            except (requests.HTTPError) as e:
+                # Notubiz seems to return a 400 if permission to access the url is denied
+                if e.response.status_code == 400:
+                    raise SkipEnrichment(e)
+                else:
+                    raise
 
             item.content_type = resource.content_type
             item.size_in_bytes = resource.file_size

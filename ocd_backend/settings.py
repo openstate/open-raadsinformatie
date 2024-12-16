@@ -3,6 +3,8 @@ import os
 import pickle
 import tempfile
 
+from urllib3.exceptions import MaxRetryError, ReadTimeoutError
+from requests import ConnectTimeout
 from kombu import Exchange, Queue
 from kombu.serialization import register
 from pythonjsonlogger import jsonlogger
@@ -287,7 +289,7 @@ PDF_TO_TEXT = 'pdftotext'
 PDF_MAX_MEDIABOX_PIXELS = 5000000
 
 # Exceptions that when raised should be autoretried by celery
-AUTORETRY_EXCEPTIONS = []
+AUTORETRY_EXCEPTIONS = [MaxRetryError, ReadTimeoutError, ConnectTimeout]
 AUTORETRY_RETRY_BACKOFF = 30
 AUTORETRY_MAX_RETRIES = 7
 AUTORETRY_RETRY_BACKOFF_MAX = 3600
