@@ -11,11 +11,13 @@ from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.misc import load_object, propagate_chain_get
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('pipeline')
 
 
-@celery_app.task(autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
+@celery_app.task(autoretry_for=AUTORETRY_EXCEPTIONS,
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def setup_pipeline(source_definition):
     log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")}')
 
