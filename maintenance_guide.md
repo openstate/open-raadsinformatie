@@ -34,6 +34,17 @@ They will be set in a list for `celery`, which means that they will be processed
 - You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
+### Celery
+Some useful commands to see queues (run from ori_backend_1):
+- celery -A ocd_backend.app status
+- celery -A ocd_backend.app inspect active
+- celery -A ocd_backend.app inspect stats
+- celery -A ocd_backend.app inspect active_queues
+To see number of tasks currently waiting:
+- sudo docker exec ori_redis_1 redis-cli llen $'loaders\x06\x163'
+To see details of e.g. first job:
+- sudo docker exec ori_redis_1 redis-cli lindex $'loaders\x06\x163' 0
+
 ### Supplier specific: Notubiz
 
 - Go to https://api.notubiz.nl/organisations
