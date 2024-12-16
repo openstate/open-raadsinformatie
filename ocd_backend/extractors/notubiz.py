@@ -35,7 +35,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
             response.raise_for_status()
         except (HTTPError, RetryError, ConnectionError) as e:
             log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
-            return
+            raise
 
         # Create a dictionary of Notubiz organizations. Some child classes need information
         # from this dictionary.
@@ -112,14 +112,14 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {parse.quote(url)}')
                 meetings_error += 1
-                break
+                raise
 
             try:
                 response.raise_for_status()
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {response.request.url}')
                 meetings_error += 1
-                break
+                raise
 
             event_json = response.json()
 

@@ -49,7 +49,11 @@ class MediaEnricher(BaseEnricher, HttpRequestSimple):
                 identifier
             )
         except requests.HTTPError as e:
-            raise SkipEnrichment(e)
+            # Notubiz seems to return a 400 if permission to access the url is denied
+            if e.response.status_code == 400:
+                raise SkipEnrichment(e)
+            else:
+                raise
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
         item.content_type = resource.content_type
