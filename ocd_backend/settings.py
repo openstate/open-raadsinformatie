@@ -288,6 +288,9 @@ PDF_MAX_MEDIABOX_PIXELS = 5000000
 
 # Exceptions that when raised should be autoretried by celery
 AUTORETRY_EXCEPTIONS = []
+AUTORETRY_RETRY_BACKOFF = 30
+AUTORETRY_MAX_RETRIES = 7
+AUTORETRY_RETRY_BACKOFF_MAX = 3600
 
 # Postgres settings
 POSTGRES_HOST = '{}:{}'.format(os.getenv('POSTGRES_SERVICE_HOST', 'postgres'), os.getenv('POSTGRES_SERVICE_PORT', 5432))

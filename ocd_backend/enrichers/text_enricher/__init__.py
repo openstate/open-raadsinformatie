@@ -9,7 +9,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS
+from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
@@ -100,6 +100,7 @@ class TextEnricher(BaseEnricher):
         item.db.save(item)
 
 
-@celery_app.task(bind=True, base=TextEnricher, autoretry_for=AUTORETRY_EXCEPTIONS, retry_backoff=True)
+@celery_app.task(bind=True, base=TextEnricher, autoretry_for=AUTORETRY_EXCEPTIONS,
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def text_enricher(self, *args, **kwargs):
     return self.start(*args, **kwargs)

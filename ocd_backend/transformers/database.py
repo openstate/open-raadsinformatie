@@ -8,6 +8,7 @@ from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.misc import load_object
 from ocd_backend.models.model import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('database_transformer')
 
@@ -165,7 +166,8 @@ class DatabaseTransformer(BaseTransformer):
         raise ValueError('No match found in model definitions for property with predicate "%s"' % _property['predicate'])
 
 
-@celery_app.task(bind=True, base=DatabaseTransformer, autoretry_for=settings.AUTORETRY_EXCEPTIONS, retry_backoff=True)
+@celery_app.task(bind=True, base=DatabaseTransformer, autoretry_for=AUTORETRY_EXCEPTIONS,
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def database_item(self, content_type, raw_item, entity, source_item, **kwargs):
     self.source_definition = kwargs['source_definition']
     resource, subresources = raw_item
