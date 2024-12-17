@@ -6,7 +6,6 @@ services:
       dockerfile: ocd_backend/Dockerfile.test
     environment:
       - RELEASE_STAGE=testing
-    image: "openstatefoundation/open-raadsinformatie-backend:${BRANCH_NAME-latest}-test"
   loader:
     environment:
       - RELEASE_STAGE=testing

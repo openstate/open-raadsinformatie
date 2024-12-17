@@ -55,6 +55,8 @@ The next lines were copied from the Github workflow (which never actually ran):
 - `docker compose --compatibility -f docker-compose.yml -f docker-compose.test.yml up --build -d`
 - `docker exec ori_backend_1 bin/run_tests.sh 2>&1`
 - `docker exec ori_backend_1 pylint ocd_backend -E -sy`
+To run a single test, e.g.
+- docker exec ori_backend_1 bin/run_tests.sh tests.ocd_backend.utils.test_pdf_storage
 
 
 ## Getting data in development
