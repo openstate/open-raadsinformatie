@@ -157,7 +157,12 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
                     continue
 
-                organization = self.organizations[self.source_definition['notubiz_organization_id']]
+                try:
+                    organization = self.organizations[self.source_definition['notubiz_organization_id']]
+                except KeyError as e:
+                    log.info(f"Organization {self.source_definition['notubiz_organization_id']} was not present in organizations, will be retrieved directly")
+                    organization = self.get_organization_directly()
+                    self.organizations[self.source_definition['notubiz_organization_id']] = organization
 
                 attributes = {}
                 for meeting_attributes in meeting_json['attributes']:
@@ -191,6 +196,46 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
         if meetings_error > 0:
             log.info(f'[{self.source_definition["key"]}] Also {meetings_error} notubiz meeting(items) encountered an error. ')
 
+
+    def get_organization_directly(self):
+            """
+            Some organizations are hidden and not returned by the /organisations request. If not returned, this method
+            uses another endpoint to retrieve the field_id <-> label definitions
+            """
+            organization = {'attributes': dict()}
+            organization_response = self.http_session.get(
+                "%s/organisations/%s/entity_type_settings?%s" % (self.base_url, self.source_definition['notubiz_organization_id'], self.default_query_params),
+                timeout=(3, 5)
+            )
+            try:
+                organization_response.raise_for_status()
+            except (HTTPError, RetryError, ConnectionError) as e:
+                log.warning(f'[{self.source_definition["key"]}] {str(e)}: {organization_response.request.url}')
+                raise
+
+            # Accumulate field_id and labels from all entries
+            entity_type_settings = organization_response.json().get('entity_type_settings', {})
+            for field_setting in entity_type_settings.get('organisation_folders_settings', {}).get('fields_settings', {}):
+                organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for field_setting in entity_type_settings.get('organisation_documents_settings', {}).get('fields_settings', {}):
+                organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for gremium_field_setting in entity_type_settings.get('events_settings', {}).get('gremium_field_settings', {}):
+                for field_setting in gremium_field_setting.get('fields_settings', {}):
+                    organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for gremium_field_setting in entity_type_settings.get('agenda_points_settings', {}).get('gremium_field_settings', {}):
+                for field_setting in gremium_field_setting.get('fields_settings', {}):
+                    organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for gremium_field_setting in entity_type_settings.get('resolutions_settings', {}).get('gremium_field_settings', {}):
+                for field_setting in gremium_field_setting.get('fields_settings', {}):
+                    organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for gremium_field_setting in entity_type_settings.get('resolution_agenda_points_settings', {}).get('gremium_field_settings', {}):
+                for field_setting in gremium_field_setting.get('fields_settings', {}):
+                    organization['attributes'][field_setting['field_id']] = field_setting['label']
+            for module_setting in entity_type_settings.get('module_settings', {}):
+                for field_setting in module_setting.get('fields_settings', {}):
+                    organization['attributes'][field_setting['field_id']] = field_setting['label']
+
+            return organization
 
 # class NotubizMeetingItemExtractor(NotubizBaseExtractor):
 #     def extractor(self, meeting_json):
