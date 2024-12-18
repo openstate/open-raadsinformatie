@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 
 from ocd_backend import settings
@@ -5,6 +6,9 @@ from ocd_backend.app import celery_app
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('parlaeus_meeting')
 
 @celery_app.task(bind=True, base=BaseTransformer, autoretry_for=AUTORETRY_EXCEPTIONS,
                  retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
@@ -77,7 +81,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                     supplier='allmanak',
                                                                     collection=self.source_definition['source_type'])
             attachment.identifier_url = 'parlaeus/agenda_item/%s' % document['dcid']
-            attachment.original_url = document['link']
+            log.info(f"RVD in parlaeus meeting, link is {document['link']}, cleaned link is {clean_link(document['link'])}")
+            attachment.original_url = clean_link(document['link'])
             attachment.name = document.get('title')
             attachment.last_discussed_at = meeting.start_date
             attachment.is_referenced_by = agenda_item
@@ -87,3 +92,17 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         meeting.agenda.append(agenda_item)
 
     return meeting
+
+def clean_link(link):
+    """
+    Some Parlaeus links are wrong and look like e.g.
+        https://maastricht.parlaeus.nlhttps://maastricht.parlaeus.nl/user/postin/action=select/start=20241111/end=20241124/ty=262
+    Check for this and remove superfluous https://maastricht.parlaeus.nl
+    """
+    if link == None:
+        return
+
+    if re.search("^https://([^.]*).parlaeus.nlhttps://([^.]*).parlaeus.nl", link):
+        return re.sub("^https://([^.]*).parlaeus.nl", "", link)
+
+    return link
