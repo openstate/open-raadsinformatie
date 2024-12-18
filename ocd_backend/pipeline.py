@@ -170,7 +170,7 @@ def setup_pipeline(source_definition):
             exit()
         except Exception as e:
             log.error(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
-                      f'{params["run_identifier"]} to "error":\n{str(e)}')
+                      f'{params["run_identifier"]} to "error" ({e.__class__.__name__}):\n{str(e)}')
 
             celery_app.backend.set(params['run_identifier'], 'error')
 
