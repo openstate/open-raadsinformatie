@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 from urllib import parse
@@ -65,11 +66,15 @@ class TextEnricher(BaseEnricher):
                     identifier
                 )
             except (requests.HTTPError) as e:
+                log.info(f"HTTPError occurred for fetch in enrich_item, error class is {e.__class__.__name__}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 if e.response.status_code == 400:
                     raise SkipEnrichment(e)
                 else:
                     raise
+            except:
+                log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+                raise
 
             item.content_type = resource.content_type
             item.size_in_bytes = resource.file_size
