@@ -46,6 +46,11 @@ To see number of tasks currently waiting:
 - sudo docker exec ori_redis_1 redis-cli llen $'loaders\x06\x163'
 To see details of e.g. first job:
 - sudo docker exec ori_redis_1 redis-cli lindex $'loaders\x06\x163' 0
+If a task failed with an exception and is queued to be retried it is placed in unacked:
+	sudo docker exec -it ori_redis_1 redis-cli hgetall unacked
+See also unacked_index (contains the time the task were added):
+	sudo docker exec -it ori_redis_1 redis-cli zrange unacked_index 0 -1 WITHSCORES
+
 
 ### Supplier specific: Notubiz
 
