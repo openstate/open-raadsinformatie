@@ -81,7 +81,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                     supplier='allmanak',
                                                                     collection=self.source_definition['source_type'])
             attachment.identifier_url = 'parlaeus/agenda_item/%s' % document['dcid']
-            log.info(f"RVD in parlaeus meeting, link is {document['link']}, cleaned link is {clean_link(document['link'])}")
             attachment.original_url = clean_link(document['link'])
             attachment.name = document.get('title')
             attachment.last_discussed_at = meeting.start_date
