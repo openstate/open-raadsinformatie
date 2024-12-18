@@ -38,6 +38,8 @@ They will be set in a list for `celery`, which means that they will be processed
 Some useful commands to see queues (run from ori_backend_1):
 - celery -A ocd_backend.app status
 - celery -A ocd_backend.app inspect active
+- celery -A ocd_backend.app inspect scheduled
+- celery -A ocd_backend.app inspect reserved
 - celery -A ocd_backend.app inspect stats
 - celery -A ocd_backend.app inspect active_queues
 To see number of tasks currently waiting:
