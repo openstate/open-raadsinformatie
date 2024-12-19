@@ -14,7 +14,6 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.transformers.allmanak_person',
     'ocd_backend.transformers.goapi_committee',
     'ocd_backend.transformers.goapi_meeting',
-    'ocd_backend.transformers.greenvalley',
     'ocd_backend.transformers.ibabs_committee',
     'ocd_backend.transformers.ibabs_meeting',
     'ocd_backend.transformers.ibabs_person',

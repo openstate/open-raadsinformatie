@@ -40,7 +40,6 @@ See also the Troubleshooting section in the maintenance_guide.
 Data extraction support is available for the following source systems:
 
 - [GO GemeenteOplossingen](https://www.gemeenteoplossingen.nl/)
-- [Visma Roxit / GreenValley](https://www.greenvalley.nl/)
 - [Notubiz](https://notubiz.nl/)
 - [iBabs](https://www.ibabs.eu/nl/)
 - [Parlaeus](https://parlaeus.nl/)
