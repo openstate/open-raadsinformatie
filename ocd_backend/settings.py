@@ -3,6 +3,7 @@ import os
 import pickle
 import tempfile
 
+from requests import exceptions
 from urllib3.exceptions import MaxRetryError, ReadTimeoutError
 from requests import ConnectTimeout
 from kombu import Exchange, Queue
@@ -284,12 +285,8 @@ IBABS_WSDL = 'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
 # The endpoint for the CompanyWebcast API
 CWC_WSDL = 'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
 
-# define the location of pdftotext
-PDF_TO_TEXT = 'pdftotext'
-PDF_MAX_MEDIABOX_PIXELS = 5000000
-
 # Exceptions that when raised should be autoretried by celery
-AUTORETRY_EXCEPTIONS = [MaxRetryError, ReadTimeoutError, ConnectTimeout]
+AUTORETRY_EXCEPTIONS = [MaxRetryError, ReadTimeoutError, ConnectTimeout, ConnectionError, exceptions.ConnectionError]
 AUTORETRY_RETRY_BACKOFF = 30
 AUTORETRY_MAX_RETRIES = 7
 AUTORETRY_RETRY_BACKOFF_MAX = 3600

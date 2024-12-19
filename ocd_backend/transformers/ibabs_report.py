@@ -58,12 +58,16 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
                                                         source=self.source_definition['key'],
                                                         supplier='allmanak',
                                                         collection=self.source_definition['source_type'])
-    name = original_item.get('_Extra', {}).get('Values', {}).get('Fractie(s)', None)
-    if name is not None:
-        report.creator = Organization(name,
-                                      collection='party',
-                                      **source_defaults)
-        report.creator.name = name
+    try:
+        name = original_item.get('_Extra', {}).get('Values', {}).get('Fractie(s)')
+        if name is not None:
+            report.creator = Organization(name,
+                                        collection='party',
+                                        **source_defaults)
+            report.creator.name = name
+    except AttributeError as e:
+        # "'NoneType' object has no attribute 'get'" when a dict entry is present but has value None
+        pass
 
     # Determine description field
     description_field = None
