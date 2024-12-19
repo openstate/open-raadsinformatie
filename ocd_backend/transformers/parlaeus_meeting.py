@@ -81,8 +81,11 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                     supplier='allmanak',
                                                                     collection=self.source_definition['source_type'])
             attachment.identifier_url = 'parlaeus/agenda_item/%s' % document['dcid']
-            attachment.original_url = clean_link(document['link'])
+            link = clean_link(document['link'])
+            attachment.original_url = link
             attachment.name = document.get('title')
+            if link.endswith('.pdf'):
+                attachment.file_name = link.rpartition('/')[2]
             attachment.last_discussed_at = meeting.start_date
             attachment.is_referenced_by = agenda_item
 

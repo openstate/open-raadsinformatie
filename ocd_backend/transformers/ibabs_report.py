@@ -116,6 +116,7 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         attachment_file.original_url = document['PublicDownloadURL']
         attachment_file.size_in_bytes = document['FileSize']
         attachment_file.name = document['DisplayName']
+        attachment_file.file_name = document['FileName']
         attachment_file.is_referenced_by = report
         if is_valid_iso8601_date(datum):
             attachment_file.last_discussed_at = datum
