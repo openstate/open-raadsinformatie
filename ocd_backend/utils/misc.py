@@ -17,6 +17,9 @@ from dateutil.parser import parse
 
 from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
+from ocd_backend.log import get_source_logger
+
+log = get_source_logger('misc')
 
 
 class ExtendedFormatter(Formatter):
@@ -222,6 +225,7 @@ class HashUtils:
     def create_hash_key(self, provider, site_name, item_type, id):
         h = sha1()
         hash_key = "%s|%s|%s|%s" % (provider, site_name, item_type, id)
+        log.info(f'hash_key is {hash_key}')
         h.update(hash_key.encode('ascii', 'replace'))
         return h.hexdigest()
 

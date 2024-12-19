@@ -10,10 +10,15 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
+from ocd_backend.models.postgres_database import PostgresDatabase
+from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
+from ocd_backend.utils.document_storage import DocumentStorage
+from ocd_backend.models.postgres_models import StoredDocument
+import magic
 
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
@@ -39,6 +44,10 @@ class TextEnricher(BaseEnricher):
         'waaroverheid': VoidEnrichtmentTask,
     }
 
+    def __init__(self):
+        database = PostgresDatabase(serializer=PostgresSerializer)
+        self.session = database.Session()
+
     def enrich_item(self, item):
         """Enriches the media objects referenced in a single item.
 
@@ -49,6 +58,7 @@ class TextEnricher(BaseEnricher):
         skipped, which means that we move on to the next task.
         """
 
+        log.info(f"RVD item in enrich_item is {item.get_short_identifier()} {vars(item)}")
         try:
             identifier = strip_scheme(item.identifier_url)
         except AttributeError:
@@ -85,6 +95,25 @@ class TextEnricher(BaseEnricher):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, max_pages=100)
 
+                document_storage = DocumentStorage(path, item.file_name, item.size_in_bytes, item.get_short_identifier())
+                # item.text_md = DocumentStorage.text_md()
+                # Store PDF for potential later re-use (in db and on disk)
+                # Notubiz send last_modified which is stored in date_modified (so NOT in last_discussed_at)
+                # Notubiz also sends version and file_size
+                # ibabs does not send a date, id
+                # ibabs does send FileSize, Id 
+
+                content_type = magic.from_file(path, mime=True)
+
+                stored_document = StoredDocument(resource_ori_id=item.get_short_identifier(), content_type=content_type, size = item.size_in_bytes)
+                self.session.add(stored_document)
+                self.session.commit()
+                self.session.flush()
+                log.info(f"stored_document: {stored_document.id}, {vars(stored_document)}")
+                    
+                asdfasfds()
+                DocumentStorage.full_name(434, item.get_short_identifier())
+
             temporary_file.close()
 
             if hasattr(item, 'text') and item.text:
@@ -94,6 +123,7 @@ class TextEnricher(BaseEnricher):
                     for i, text in enumerate(item.text, start=1)
                     if text
                 ]
+                # Save in stored_documents table
 
         enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, str):

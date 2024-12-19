@@ -8,6 +8,13 @@ from sqlalchemy_utils.types import UUIDType
 
 Base = declarative_base()
 
+class StoredDocument(Base):
+    __tablename__ = 'stored_documents'
+
+    id = Column(BigInteger, primary_key=True, nullable=False, autoincrement=True)
+    resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True, unique=True)
+    content_type = Column(String, nullable=False)
+    size = Column(BigInteger, nullable=False)
 
 class ItemHash(Base):
     __tablename__ = 'item_hash'

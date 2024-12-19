@@ -271,6 +271,13 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         start_date, end_date = self.date_interval()
 
+        # for l in selected_lists:
+        #     sleep(1)
+        #     try:
+        #         reports = self.client.service.GetListEntries(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
+        #     except Fault as e:
+        #         pass
+
         total_yield_count = 0
         for l in selected_lists:
             sleep(1)
