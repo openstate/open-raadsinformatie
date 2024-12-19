@@ -13,7 +13,6 @@ celery_app = Celery('ocd_backend', include=[
     'ocd_backend.extractors.ggm',
     'ocd_backend.transformers.allmanak_organization',
     'ocd_backend.transformers.allmanak_person',
-    'ocd_backend.transformers.gedeputeerdestaten',
     'ocd_backend.transformers.ggm_committee',
     'ocd_backend.transformers.ggm_meeting',
     'ocd_backend.transformers.ggm_person',
