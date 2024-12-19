@@ -100,6 +100,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
             attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['title']
+            version_def = get_version_definition(doc)
+            if version_def:
+                attachment.file_name = version_def.get('file_name')
             attachment.date_modified = doc['last_modified']
             attachment.is_referenced_by = agendaitem
             attachment.last_discussed_at = event.start_date
@@ -134,6 +137,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
         attachment.original_url = doc['url']
         attachment.name = doc['title']
+        version_def = get_version_definition(doc)
+        if version_def:
+            attachment.file_name = version_def.get('file_name')
         attachment.date_modified = doc['last_modified']
         attachment.is_referenced_by = event
         attachment.last_discussed_at = event.start_date
@@ -141,3 +147,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     event.save()
     return event
+
+def get_version_definition(doc):
+    return filter(lambda version_def: version_def['id'] == doc['version'], doc['versions'])[0]
