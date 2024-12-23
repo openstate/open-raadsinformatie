@@ -91,7 +91,7 @@ class HttpRequestMixin:
         # hacky solution to make the timeout for certain iBabs urls longer than for other
         # providers, as big files tend to have longer response times in iBabs
         if 'ibabs.eu' in url:
-            tm = 10
+            tm = 60
         else:
             tm = 5
         http_resp = self.http_session.get(url, stream=True, timeout=(3, tm), verify=False)
