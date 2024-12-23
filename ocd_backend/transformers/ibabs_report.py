@@ -79,8 +79,8 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         report.description = original_item[description_field]
     except KeyError:
         try:
-            report.description = original_item['_Extra']['Values']['Omschrijving']
-        except KeyError:
+            report.description = original_item.get('_Extra', {}).get('Values', {}).get('Omschrijving')
+        except AttributeError:
             pass
 
     datum = original_item.get('datum')
