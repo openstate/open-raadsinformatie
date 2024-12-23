@@ -6,7 +6,7 @@ from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import ItemHash
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.misc import iterate
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('ocd_backend.tasks')
 
@@ -116,17 +116,17 @@ class Finalizer(celery_app.Task):
 
 
 @celery_app.task(bind=True, base=CleanupElasticsearch, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def cleanup_elasticsearch(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 
 @celery_app.task(bind=True, base=DummyCleanup, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def dummy_cleanup(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 @celery_app.task(bind=True, base=Finalizer, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def finalizer(self, *args, **kwargs):
     return self.start(*args, **kwargs)

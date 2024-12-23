@@ -288,7 +288,7 @@ CWC_WSDL = 'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleW
 # Exceptions that when raised should be autoretried by celery
 AUTORETRY_EXCEPTIONS = [MaxRetryError, ReadTimeoutError, ConnectTimeout, ConnectionError, exceptions.ConnectionError]
 AUTORETRY_RETRY_BACKOFF = 30
-AUTORETRY_MAX_RETRIES = 7
+RETRY_MAX_RETRIES = 7
 AUTORETRY_RETRY_BACKOFF_MAX = 3600
 
 # Postgres settings

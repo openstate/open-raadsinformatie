@@ -10,7 +10,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
@@ -18,6 +18,7 @@ from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
 from ocd_backend.enrichers.text_enricher.tasks.waaroverheid import WaarOverheidEnricher
+from ocd_backend.utils.retry_utils import retry_task
 
 log = get_source_logger('enricher')
 
@@ -106,7 +107,7 @@ class TextEnricher(BaseEnricher):
         item.db.save(item)
 
 
-@celery_app.task(bind=True, base=TextEnricher, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+@celery_app.task(bind=True, base=TextEnricher, max_retries=RETRY_MAX_RETRIES)
+@retry_task
 def text_enricher(self, *args, **kwargs):
     return self.start(*args, **kwargs)
