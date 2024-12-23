@@ -10,15 +10,15 @@ from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.retry_utils import retry_task
 from ocd_backend.utils.misc import load_object, propagate_chain_get
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import RETRY_MAX_RETRIES
 
 log = get_source_logger('pipeline')
 
-
-@celery_app.task(autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
-def setup_pipeline(source_definition):
+@celery_app.task(bind=True, max_retries=RETRY_MAX_RETRIES)
+@retry_task
+def setup_pipeline(self, source_definition):
     log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")}')
 
     # index_name is an alias of the current version of the index
@@ -169,12 +169,12 @@ def setup_pipeline(source_definition):
             log.warning('KeyboardInterrupt received. Stopping the program.')
             exit()
         except Exception as e:
-            log.error(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
+            log.info(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
                       f'{params["run_identifier"]} to "error" ({e.__class__.__name__}):\n{str(e)}')
 
             celery_app.backend.set(params['run_identifier'], 'error')
 
-            # Reraise the exception so celery can autoretry
+            # Reraise the exception so celery can retry
             raise
 
     celery_app.backend.set(params['run_identifier'], 'done')

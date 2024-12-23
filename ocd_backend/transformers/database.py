@@ -8,7 +8,7 @@ from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.misc import load_object
 from ocd_backend.models.model import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('database_transformer')
 
@@ -167,7 +167,7 @@ class DatabaseTransformer(BaseTransformer):
 
 
 @celery_app.task(bind=True, base=DatabaseTransformer, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def database_item(self, content_type, raw_item, entity, source_item, **kwargs):
     self.source_definition = kwargs['source_definition']
     resource, subresources = raw_item

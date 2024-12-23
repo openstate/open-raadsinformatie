@@ -8,7 +8,7 @@ from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.serializers import JsonLDSerializer
 from ocd_backend.utils.misc import json_encoder
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('elasticsearch_loader')
 
@@ -81,18 +81,18 @@ class ElasticsearchUpsertLoader(ElasticsearchBaseLoader):
 
 
 @celery_app.task(bind=True, base=ElasticsearchLoader, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def elasticsearch_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 
 @celery_app.task(bind=True, base=ElasticsearchUpdateOnlyLoader, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def elasticsearch_update_only_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)
 
 
 @celery_app.task(bind=True, base=ElasticsearchUpsertLoader, autoretry_for=AUTORETRY_EXCEPTIONS,
-                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=AUTORETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
+                 retry_backoff=AUTORETRY_RETRY_BACKOFF, max_retries=RETRY_MAX_RETRIES, retry_backoff_max=AUTORETRY_RETRY_BACKOFF_MAX)
 def elasticsearch_upsert_loader(self, *args, **kwargs):
     return self.start(*args, **kwargs)
