@@ -18,9 +18,7 @@ class OriDocument():
         self.resource_ori_id = item.get_short_identifier()
         self.last_changed_at = self.get_last_changed_at(item)
         self.source, self.supplier = self.get_source_and_supplier(item)
-        # RVD TODO use pymupdf4llm for creation of markdown (and potentially also of normal text?)
         # RVD TODO use tesseract if no text was extracted
-        # RVD TODO make sure text_md is also indexed in ES
 
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
