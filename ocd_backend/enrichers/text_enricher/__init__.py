@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.utils.file_parsing import file_parser
+from ocd_backend.utils.file_parsing import file_parser, md_file_parser
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.utils.ori_document import OriDocument
@@ -96,6 +96,7 @@ class TextEnricher(BaseEnricher):
             if os.path.exists(temporary_file.name):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, max_pages=100)
+                item.md_text = md_file_parser(path, max_pages=100)
 
                 ori_document = OriDocument(path, item)
                 ori_document.store()
