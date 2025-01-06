@@ -1,5 +1,7 @@
 import magic
 import pdftotext
+import pymupdf
+import pymupdf4llm
 
 from ocd_backend.log import get_source_logger
 
@@ -32,3 +34,15 @@ def file_parser(fname, max_pages=None):
         #     # reraise everything
         #     raise
         pass
+
+def md_file_parser(fname, max_pages=None):
+    if magic.from_file(fname, mime=True) == 'application/pdf':
+        doc=pymupdf.open(fname)
+        hdr=pymupdf4llm.IdentifyHeaders(doc)
+        md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False)
+        md_text = [chunk['text'] for chunk in md_chunks]
+
+        return md_text
+    else:
+        pass
+
