@@ -18,7 +18,6 @@ from dateutil.parser import parse
 from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
 
-
 class ExtendedFormatter(Formatter):
     """An extended format string formatter
     Formatter with extended conversion symbol
