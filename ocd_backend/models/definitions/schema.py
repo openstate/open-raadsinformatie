@@ -23,6 +23,7 @@ class MediaObject(Schema, owl.Thing):
     date_modified = DateTimeProperty(Schema, 'dateModified')
     original_url = URLProperty(Schema, 'isBasedOn')
     text = ArrayProperty(Schema, 'text')
+    md_text = ArrayProperty(Schema, 'text')
     enriched_text = ArrayProperty(MeetingNS, 'enrichedText')
     text_pages = JsonProperty(MeetingNS, 'textPages')
     is_referenced_by = Relation(Dcterms, 'isReferencedBy')
