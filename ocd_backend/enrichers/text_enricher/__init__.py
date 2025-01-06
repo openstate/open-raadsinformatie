@@ -1,6 +1,5 @@
 import sys
 import os
-import json
 from urllib import parse
 from tempfile import NamedTemporaryFile
 
@@ -11,9 +10,13 @@ from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES
+from ocd_backend.models.postgres_database import PostgresDatabase
+from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.file_parsing import file_parser
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
+from ocd_backend.utils.ori_document import OriDocument
+from ocd_backend.models.postgres_models import StoredDocument
 
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
@@ -39,6 +42,10 @@ class TextEnricher(BaseEnricher):
         'theme_classifier': VoidEnrichtmentTask,
         'waaroverheid': VoidEnrichtmentTask,
     }
+
+    def __init__(self):
+        database = PostgresDatabase(serializer=PostgresSerializer)
+        self.session = database.Session()
 
     def enrich_item(self, item):
         """Enriches the media objects referenced in a single item.
@@ -81,15 +88,17 @@ class TextEnricher(BaseEnricher):
             item.size_in_bytes = resource.file_size
 
             # Make sure file_object is actually on the disk for pdf parsing
-            temporary_file = NamedTemporaryFile(delete=True)
+            # Pass delete=False, since we keep the file
+            temporary_file = NamedTemporaryFile(delete=False)
             temporary_file.write(resource.read())
-            temporary_file.seek(0, 0)
+            temporary_file.close()
 
             if os.path.exists(temporary_file.name):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, max_pages=100)
 
-            temporary_file.close()
+                ori_document = OriDocument(path, item)
+                ori_document.store()
 
             if hasattr(item, 'text') and item.text:
                 # Adding the same text again for Elastic nesting
