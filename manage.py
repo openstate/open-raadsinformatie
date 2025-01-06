@@ -20,7 +20,7 @@ from elasticsearch.helpers import reindex
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.es import setup_elasticsearch
 from ocd_backend.models.postgres_database import PostgresDatabase
-from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Source
+from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Source, StoredDocument
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
@@ -563,6 +563,7 @@ def developers_purge_dbs(ctx):
         session.query(ItemHash).delete()
         session.query(Source).delete()
         session.query(Property).delete()
+        session.query(StoredDocument).delete()
         session.query(Resource).delete()
         session.commit()
     except Exception as e:

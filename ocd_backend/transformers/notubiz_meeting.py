@@ -149,4 +149,4 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     return event
 
 def get_version_definition(doc):
-    return filter(lambda version_def: version_def['id'] == doc['version'], doc['versions'])[0]
+    return next(filter(lambda version_def: version_def['id'] == doc['version'], doc['versions']), None)
