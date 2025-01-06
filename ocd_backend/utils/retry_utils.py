@@ -15,6 +15,17 @@ def retry_task(fun):
     The tasks that appeared in Sentry most often have been replaced by this decorator.
     If there are more tasks that pollute Sentry, use this decorator and remove `autoretry_for`,
     `retry_backoff` and `retry_backoff_max` from the @celery_app.task decorator.
+    With a AUTORETRY_RETRY_BACKOFF=30 and number of retries = 9:
+        1: 60
+        2: 120
+        3: 240
+        4: 480
+        5: 960
+        6: 1920
+        7: 3840
+        8: 7680
+        9: 15360
+        Total: 30660 seconds
     """
     @wraps(fun)
     def handle_retry(self, *args, **kwargs):
