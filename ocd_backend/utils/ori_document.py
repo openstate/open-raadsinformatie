@@ -11,14 +11,14 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('document_storage')
 
 class OriDocument():
-    def __init__(self, temp_path, item):
+    def __init__(self, temp_path, item, ocr_used = False):
         self.temp_path = temp_path
         self.file_name = item.file_name
         self.file_size = item.size_in_bytes
         self.resource_ori_id = item.get_short_identifier()
         self.last_changed_at = self.get_last_changed_at(item)
         self.source, self.supplier = self.get_source_and_supplier(item)
-        # RVD TODO use tesseract if no text was extracted
+        self.ocr_used = ocr_used
 
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
@@ -31,7 +31,9 @@ class OriDocument():
     def store_in_db(self):
         self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
         if self.stored_document:
-            self.stored_document.last_changed_at=self.last_changed_at
+            self.stored_document.last_changed_at = self.last_changed_at
+            self.stored_document.file_size = self.file_size
+            self.stored_document.ocr_used = self.ocr_used
         else:
             content_type = magic.from_file(self.temp_path, mime=True)
             self.stored_document = StoredDocument(
@@ -41,9 +43,12 @@ class OriDocument():
                 supplier=self.supplier,
                 last_changed_at=self.last_changed_at,
                 content_type=content_type,
-                size=self.file_size
+                file_size=self.file_size,
+                ocr_used=self.ocr_used
             )
             self.session.add(self.stored_document)
+            # Flush session to set autoincrement id in self.stored_document before commit
+            self.session.flush()
 
     def store_on_disk(self):
         destination_path = self.full_name()

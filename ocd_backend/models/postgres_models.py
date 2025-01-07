@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Sequence, String, ForeignKey, DateTime, SmallInteger, BigInteger, Float, JSON, func, \
-    CheckConstraint, text
+    CheckConstraint, text, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -18,7 +18,8 @@ class StoredDocument(Base):
     supplier = Column(String(), nullable=False)
     last_changed_at = Column(DateTime(), nullable=True)
     content_type = Column(String, nullable=False)
-    size = Column(BigInteger, nullable=False)
+    file_size = Column(BigInteger, nullable=False)
+    ocr_used = Column(Boolean, nullable=False)
 
 class ItemHash(Base):
     __tablename__ = 'item_hash'
