@@ -24,8 +24,9 @@ class OriDocument():
         self.session = database.Session()
 
     def store(self):
-        self.store_in_db()
-        self.store_on_disk()
+        with self.session.begin():
+            self.store_in_db()
+            self.store_on_disk()
 
     def store_in_db(self):
         self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
@@ -43,8 +44,6 @@ class OriDocument():
                 size=self.file_size
             )
             self.session.add(self.stored_document)
-
-        self.session.commit()
 
     def store_on_disk(self):
         destination_path = self.full_name()
