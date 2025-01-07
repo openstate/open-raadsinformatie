@@ -24,6 +24,7 @@ requests[socks]==2.32.3
 sentry-sdk[celery]==2.19.2
 sqlalchemy==2.0.36
 sqlalchemy-utils==0.41.2
+tesserocr==2.7.1
 urllib3==2.2.3
 translitcodec==0.7.0
 zeep==4.3.1
