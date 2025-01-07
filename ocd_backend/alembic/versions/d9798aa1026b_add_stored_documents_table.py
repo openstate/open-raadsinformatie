@@ -26,7 +26,8 @@ def upgrade():
     sa.Column('supplier', sa.String(), nullable=False),
     sa.Column('last_changed_at', sa.DateTime(), nullable=True),
     sa.Column('content_type', sa.String(), nullable=False),
-    sa.Column('size', sa.BigInteger(), nullable=False),
+    sa.Column('file_size', sa.BigInteger(), nullable=False),
+    sa.Column('ocr_used', sa.Boolean(), nullable=False),
     sa.ForeignKeyConstraint(['resource_ori_id'], ['resource.ori_id'], ),
     )
 
