@@ -10,7 +10,8 @@ COPY ocd_backend/requirements.txt /opt/ori/ocd_backend/requirements.txt
 RUN apk add --update \
   build-base git tzdata curl jq \
   libxml2-dev libxslt-dev poppler-dev jpeg-dev \
-  inotify-tools libmagic nano
+  inotify-tools libmagic nano \
+  tesseract-ocr tesseract-ocr-dev leptonica-dev pkgconfig tesseract-ocr-data-nld
 RUN apk add postgresql-dev gcc python3-dev musl-dev
 RUN pip install --upgrade 'pip<24.3.1' \
   && pip install cython==3.0.11 \
@@ -21,6 +22,8 @@ RUN pip install --upgrade 'pip<24.3.1' \
   && apk del build-base git tzdata
 # Install backend testing dependencies
 RUN pip install --no-warn-conflicts pylint==2.4.4 nose2==0.9.2 coverage==5.0.3
+
+ENV TESSDATA_PREFIX='/usr/share/tessdata/'
 
 # Setup Celery
 # Trick to redirect logs to process 1 when running multiple processes
