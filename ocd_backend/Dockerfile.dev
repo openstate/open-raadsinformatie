@@ -23,8 +23,7 @@ RUN pip install --upgrade 'pip<24.3.1' \
 # Setup Celery
 # Trick to redirect logs to process 1 when running multiple processes
 RUN adduser -D -H celery \
-  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/data/cache /opt/ori/log \
-  && ln -sf /proc/1/fd/1 /opt/ori/log/stdout
+  && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/data/cache
 
 # Copy all files, except for .dockerignore entries
 COPY json /opt/ori/json
