@@ -95,8 +95,8 @@ class TextEnricher(BaseEnricher):
 
             if os.path.exists(temporary_file.name):
                 path = os.path.realpath(temporary_file.name)
-                item.text = file_parser(path, max_pages=100)
-                item.md_text = md_file_parser(path, max_pages=100)
+                item.text = file_parser(path, item.original_url, max_pages=100)
+                item.md_text = md_file_parser(path, item.original_url)
 
                 ori_document = OriDocument(path, item)
                 ori_document.store()
