@@ -144,17 +144,10 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            # Basic logging when not running in docker or stackdriver
             'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'basic',
-            'stream': 'ext://sys.stdout'
-        },
-        'file': {
-            'level': 'INFO',
             'class': 'logging.FileHandler',
             'formatter': 'advanced',
-            'filename': os.path.join(PROJECT_PATH, 'log', 'backend.log')
+            'filename': os.path.join(PROJECT_PATH, 'data', 'ori.log')
         }
     },
     'loggers': {
@@ -229,25 +222,6 @@ LOGGING = {
         'propagate': False
     },
 }
-
-if os.path.exists(os.path.join(PROJECT_PATH, 'log', 'stdout')):
-    # Set default handler to write to docker logs via /proc/1/fd/1 symlink
-    # (see Dockerfile)
-    LOGGING['handlers']['default'] = {
-        'level': 'DEBUG',
-        'class': 'logging.FileHandler',
-        'formatter': 'basic',
-        'filename': os.path.join(PROJECT_PATH, 'log', 'stdout')
-    }
-
-if os.getenv('GCE_STACKDRIVER'):
-    # Set default handler to format for Google Stackdriver logging
-    LOGGING['handlers']['default'] = {
-        'level': 'DEBUG',
-        'class': 'logging.StreamHandler',
-        'formatter': 'stackdriver',
-        'stream': 'ext://sys.stdout',
-    }
 
 # Configure python logging system with LOGGING dict
 logging.config.dictConfig(LOGGING)
