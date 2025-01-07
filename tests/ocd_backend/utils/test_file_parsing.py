@@ -21,3 +21,6 @@ class ParseResultIsEmptyTestCase(TestCase):
     def test_non_empty_page_among_multiple_empty_pages(self):
         self.md_text = ["---", "*%$##", "\nH\n", ""]
         self.assertFalse(parse_result_is_empty(self.md_text))
+
+    def test_None(self):
+        self.assertFalse(parse_result_is_empty(None))
