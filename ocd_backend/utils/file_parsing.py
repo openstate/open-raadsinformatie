@@ -9,7 +9,6 @@ from ocd_backend.log import get_source_logger
 
 log = get_source_logger('file_parser')
 
-
 def file_parser(fname, original_url, max_pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         with open(fname, "rb") as f:
@@ -51,18 +50,21 @@ def md_file_parser(fname, original_url):
     else:
         pass
 
+# When OCR is applied, font information is not retrieved so output is plain text instead of markdown.
+# Therefore we use page.get_text from pymupdf instead of using pymupdf4llm.
+# full=False was found to give ok results. No improvement was found with full=True and dpi values of
+# 150, 200, 300 and 500.
 def md_file_parser_using_ocr(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         doc=pymupdf.open(fname)
-        hdr=pymupdf4llm.IdentifyHeaders(doc)
 
         md_text = []
         for page in doc:
-            pixmap = page.get_pixmap(dpi=300)
-            doc = pymupdf.open("pdf", pixmap.pdfocr_tobytes(language='nld'))
-            md_text.append(pymupdf4llm.to_markdown(doc, hdr_info=hdr, show_progress=False))
+            text_page = page.get_textpage_ocr(flags=pymupdf.TEXTFLAGS_SEARCH, language='nld', full=False)
+            text = page.get_text(textpage=text_page)
+            md_text.append(text)
 
-        log.debug(f"Processed %i pages using OCR to markdown for {original_url}" % len(md_text))
+        log.debug(f"Processed %i pages using OCR for {original_url}" % len(md_text))
 
         return md_text
     else:
