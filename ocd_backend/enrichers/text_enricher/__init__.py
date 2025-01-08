@@ -63,13 +63,16 @@ class TextEnricher(BaseEnricher):
                     item.original_url,
                     identifier
                 )
-            except (requests.HTTPError) as e:
+            except requests.HTTPError as e:
                 log.info(f"HTTPError occurred for fetch in enrich_item, error class is {e.__class__.__name__}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 if e.response.status_code == 400:
                     raise SkipEnrichment(e)
                 else:
                     raise
+            except requests.exceptions.ConnectionError as e:
+                log.info(f"ConnectionError occurred for fetch in enrich_item, error class is {e.__class__.__name__}")
+                raise
             except:
                 log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise

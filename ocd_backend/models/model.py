@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
@@ -228,6 +229,7 @@ class Model(object, metaclass=ModelMetaclass):
                 if isinstance(value, Model):
                     value.save()
         except:
+            log.info(f"Generic error occurred for save in Model, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
             # Re-raise everything
             raise
         finally:
