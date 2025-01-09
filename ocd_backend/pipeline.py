@@ -67,115 +67,98 @@ def setup_pipeline(self, source_definition):
     celery_app.backend.set(params['run_identifier'], 'running')
     run_identifier_chains = '{}_chains'.format(params['run_identifier'])
 
-    # we can have multiple pipelines. but for compatibility and readability
-    # use the source definition if no specific pipelines have been defined
-    pipelines = source_definition.get('pipelines', None) or [source_definition]
+    pipeline = source_definition
 
-    pipeline_definitions = {}
-    pipeline_extractors = {}
-    pipeline_transformers = {}
-    pipeline_enrichers = {}
-    pipeline_loaders = {}
-    pipeline_finalizers = {}
+    if 'id' not in pipeline:
+        raise ConfigurationError("Each pipeline must have an id field.")
 
-    for pipeline in pipelines:
-        if 'id' not in pipeline:
-            raise ConfigurationError("Each pipeline must have an id field.")
+    pipeline_definition = deepcopy(source_definition)
+    pipeline_definition.update(pipeline)
 
-        # adjusted source definitions per pipeline. This way you can for
-        # example change the index on a pipeline basis
-        pipeline_definitions[pipeline['id']] = deepcopy(source_definition)
-        pipeline_definitions[pipeline['id']].update(pipeline)
+    # initialize the ETL classes, per pipeline
+    pipeline_extractor = load_object(
+        pipeline_definition['extractor'])
 
-        # initialize the ETL classes, per pipeline
-        pipeline_extractors[pipeline['id']] = load_object(
-            pipeline_definitions[pipeline['id']]['extractor'])
+    pipeline_transformer = load_object(
+        pipeline_definition['transformer'])
 
-        pipeline_transformers[pipeline['id']] = load_object(
-            pipeline_definitions[pipeline['id']]['transformer'])
+    pipeline_enricher = [
+        (load_object(enricher) or {}) for enricher in
+        pipeline_definition.get('enrichers', [])]
 
-        pipeline_enrichers[pipeline['id']] = [
-            (load_object(enricher) or {}) for enricher in
-            pipeline_definitions[pipeline['id']].get('enrichers', [])]
+    pipeline_loader = list()
+    for cls in pipeline_definition.get('loaders', None) or \
+            [pipeline_definition.get('loader', None)]:
+        if cls:
+            pipeline_loader.append(load_object(cls))
 
-        pipeline_loaders[pipeline['id']] = list()
-        for cls in pipeline_definitions[pipeline['id']].get('loaders', None) or \
-                [pipeline_definitions[pipeline['id']].get('loader', None)]:
-            if cls:
-                pipeline_loaders[pipeline['id']].append(load_object(cls))
+    pipeline_finalizer = load_object(
+        pipeline_definition['finalizer'])
 
-        pipeline_finalizers[pipeline['id']] = load_object(
-            pipeline_definitions[pipeline['id']]['finalizer'])
 
     result = None
-    for pipeline in pipelines:
-        try:
-            # The first extractor should be a generator instead of a task
-            for item in pipeline_extractors[pipeline['id']](
-                    source_definition=pipeline_definitions[pipeline['id']]).run():
-                if len(item) == 5:
-                    hash_for_item = item[-1]
-                    item = item[:-1]
-                else:
-                    hash_for_item = None
-                step_chain = list()
+    try:
+        # The first extractor should be a generator instead of a task
+        for item in pipeline_extractor(source_definition=pipeline_definition).run():
+            if len(item) == 5:
+                hash_for_item = item[-1]
+                item = item[:-1]
+            else:
+                hash_for_item = None
+            step_chain = list()
 
-                params['chain_id'] = uuid4().hex
-                params['start_time'] = datetime.now()
+            params['chain_id'] = uuid4().hex
+            params['start_time'] = datetime.now()
 
-                celery_app.backend.add_value_to_set(
-                    set_name=run_identifier_chains,
-                    value=params['chain_id'])
+            celery_app.backend.add_value_to_set(
+                set_name=run_identifier_chains,
+                value=params['chain_id'])
 
-                # Transformers
-                if pipeline_transformers.get(pipeline['id']):
-                    step_chain.append(pipeline_transformers[pipeline['id']].s(
-                        *item,
-                        source_definition=pipeline_definitions[pipeline['id']],
-                        **params)
-                    )
+            # Transformers
+            if pipeline_transformer:
+                step_chain.append(pipeline_transformer.s(
+                    *item,
+                    source_definition=pipeline_definition,
+                    **params)
+                )
 
-                # Enrichers
-                for enricher_task in pipeline_enrichers[
-                    pipeline['id']
-                ]:
-                    step_chain.append(enricher_task.s(
-                        source_definition=pipeline_definitions[
-                            pipeline['id']],
-                        **params
-                    )
-                    )
+            # Enrichers
+            for enricher_task in pipeline_enricher:
+                step_chain.append(enricher_task.s(
+                    source_definition=pipeline_definition,
+                    **params
+                )
+                )
 
-                # Loaders
-                # Multiple loaders to enable to save to different stores
-                initialized_loaders = []
-                for loader in pipeline_loaders[pipeline['id']]:
-                    initialized_loaders.append(loader.s(
-                        source_definition=pipeline_definitions[
-                            pipeline['id']],
-                        **params))
-                step_chain.append(group(initialized_loaders))
+            # Loaders
+            # Multiple loaders to enable to save to different stores
+            initialized_loaders = []
+            for loader in pipeline_loader:
+                initialized_loaders.append(loader.s(
+                    source_definition=pipeline_definition,
+                    **params))
+            step_chain.append(group(initialized_loaders))
 
-                # Finalizer
-                if pipeline_finalizers.get(pipeline['id']):
-                    step_chain.append(pipeline_finalizers[pipeline['id']].s(
-                        source_definition=pipeline_definitions[pipeline['id']],
-                        hash_for_item=hash_for_item,
-                        **params)
-                    )
+            # Finalizer
+            if pipeline_finalizer:
+                step_chain.append(pipeline_finalizer.s(
+                    source_definition=pipeline_definition,
+                    hash_for_item=hash_for_item,
+                    **params)
+                )
 
-                result = chain(step_chain).delay()
-        except KeyboardInterrupt:
-            log.warning('KeyboardInterrupt received. Stopping the program.')
-            exit()
-        except Exception as e:
-            log.info(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
-                      f'{params["run_identifier"]} to "error" ({e.__class__.__name__}):\n{str(e)}')
+            result = chain(step_chain).delay()
+    except KeyboardInterrupt:
+        log.warning('KeyboardInterrupt received. Stopping the program.')
+        exit()
+    except Exception as e:
+        log.info(f'[{source_definition["key"]}] Pipeline has failed. Setting status of run identifier '
+                    f'{params["run_identifier"]} to "error" ({e.__class__.__name__}):\n{str(e)}')
 
-            celery_app.backend.set(params['run_identifier'], 'error')
+        celery_app.backend.set(params['run_identifier'], 'error')
 
-            # Reraise the exception so celery can retry
-            raise
+        # Reraise the exception so celery can retry
+        raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
     log.info(f'[{source_definition["key"]}] Finished run with identifier {params["run_identifier"]}')
