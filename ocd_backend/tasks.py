@@ -19,7 +19,10 @@ class BaseCleanup(celery_app.Task):
         run_identifier_chains = '{}_chains'.format(run_identifier)
         self._remove_chain(run_identifier_chains, kwargs.get('chain_id'))
 
-        if self.backend.get_set_cardinality(run_identifier_chains) < 1 and self.backend.get(run_identifier) == 'done':
+        run_result = self.backend.get(run_identifier)
+        if isinstance(run_result, bytes):
+            run_result = run_result.decode()
+        if self.backend.get_set_cardinality(run_identifier_chains) < 1 and run_result == 'done':
             self.backend.remove(run_identifier_chains)
             self.run_finished(**kwargs)
         else:
