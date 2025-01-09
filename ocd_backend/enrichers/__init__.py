@@ -1,3 +1,5 @@
+from requests import exceptions
+
 from ocd_backend.app import celery_app
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
@@ -33,6 +35,9 @@ class BaseEnricher(celery_app.Task):
                     self.enrich_item(model)
                 except SkipEnrichment as e:
                     log.info(f'[{self.source_definition["key"]}] Skipping enrichment, {self.__class__.__name__}, reason: {e}')
+                except exceptions.ConnectionError as e:
+                    log.warning(f"[{self.source_definition["key"]}] ConnectionError occurred for enrich_item, reason: {e}")
+                    raise
                 except IOError as e:
                     # In the case of an IOError, disk space or some other
                     # serious problem might occur.
