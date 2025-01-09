@@ -36,7 +36,7 @@ class BaseEnricher(celery_app.Task):
                 except SkipEnrichment as e:
                     log.info(f'[{self.source_definition["key"]}] Skipping enrichment, {self.__class__.__name__}, reason: {e}')
                 except exceptions.ConnectionError as e:
-                    log.warning(f"[{self.source_definition["key"]}] ConnectionError occurred for enrich_item, reason: {e}")
+                    log.warning(f'[{self.source_definition["key"]}] ConnectionError occurred for enrich_item, reason: {e}')
                     raise
                 except IOError as e:
                     # In the case of an IOError, disk space or some other
