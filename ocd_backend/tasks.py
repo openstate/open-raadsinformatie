@@ -15,21 +15,27 @@ class BaseCleanup(celery_app.Task):
     ignore_result = True
 
     def start(self, *args, **kwargs):
+        source_run_identifier = kwargs.get('source_run_identifier')
         run_identifier = kwargs.get('run_identifier')
         run_identifier_chains = '{}_chains'.format(run_identifier)
+        self._remove_chain(source_run_identifier, kwargs.get('chain_id'))
         self._remove_chain(run_identifier_chains, kwargs.get('chain_id'))
 
         run_result = self.backend.get(run_identifier)
         if isinstance(run_result, bytes):
             run_result = run_result.decode()
-        if self.backend.get_set_cardinality(run_identifier_chains) < 1 and run_result == 'done':
+        if self.backend.get_set_cardinality(run_identifier_chains) < 1 and run_result != 'running':
+            # All tasks for an entity (e.g. meetings or committees) have finished
             self.backend.remove(run_identifier_chains)
-            self.run_finished(**kwargs)
         else:
             # If the extractor is still running, extend the lifetime of the
             # identifier
             self.backend.update_ttl(run_identifier, settings.CELERY_CONFIG
                                     .get('CELERY_TASK_RESULT_EXPIRES', 1800))
+
+        if self.backend.get_set_cardinality(source_run_identifier) < 1 and run_result != 'running':
+            # All tasks for a source (i.e. all meetings, committees etc.) have finished
+            self.run_finished(**kwargs)
 
     def _remove_chain(self, run_identifier, value):
         self.backend.remove_value_from_set(run_identifier, value)

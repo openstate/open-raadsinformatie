@@ -18,8 +18,8 @@ log = get_source_logger('pipeline')
 
 @celery_app.task(bind=True, max_retries=RETRY_MAX_RETRIES)
 @retry_task
-def setup_pipeline(self, source_definition):
-    log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")}')
+def setup_pipeline(self, source_definition, source_run_uuid):
+    log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")} with run uuid {source_run_uuid}')
 
     # index_name is an alias of the current version of the index
     index_alias = '{prefix}_{index_name}'.format(
@@ -56,6 +56,7 @@ def setup_pipeline(self, source_definition):
 
     # Parameters that are passed to each task in the chain
     params = {
+        'source_run_identifier': 'pipeline_{}'.format(source_run_uuid),
         'run_identifier': 'pipeline_{}'.format(uuid4().hex),
         'current_index_name': current_index_name,
         'new_index_name': new_index_name,
@@ -112,6 +113,10 @@ def setup_pipeline(self, source_definition):
 
             celery_app.backend.add_value_to_set(
                 set_name=run_identifier_chains,
+                value=params['chain_id'])
+
+            celery_app.backend.add_value_to_set(
+                set_name=params['source_run_identifier'],
                 value=params['chain_id'])
 
             # Transformers

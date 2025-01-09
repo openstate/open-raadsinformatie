@@ -8,6 +8,7 @@ import os
 import requests
 import sys
 from pprint import pprint
+from uuid import uuid4
 
 import redis
 import click
@@ -367,7 +368,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 
     # Check for old-style json sources
     if 'id' in source:
-        setup_pipeline.delay(source)
+        setup_pipeline.delay(source, uuid4().hex)
         return
 
     # New-style behaviour
@@ -387,6 +388,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
     # Processing each item
     for source_id, source in selected_sources.items():
         click.echo('[%s] Start extract for %s' % (source_id, source_id))
+        source_run_uuid = uuid4().hex
 
         selected_entities = []
         for item in source.get('entities'):
@@ -395,7 +397,7 @@ def extract_start(source_id, subitem, entiteit, sources_config):
 
                 new_source = deepcopy(source)
                 new_source.update(item)
-                setup_pipeline.delay(new_source)
+                setup_pipeline.delay(new_source, source_run_uuid)
 
         click.echo('[%s] Processed pipelines: %s' % (source_id, ', '.join(selected_entities)))
 
@@ -489,6 +491,7 @@ def extract_process(modus, source_path, sources_config):
         try:
             project, provider, source_name = source.split('.')
             available_source = available_sources['%s.%s' % (project, provider)][source_name]
+            source_run_uuid = uuid4().hex
 
             click.echo('[%s] Start extract for %s' % (source_name, source_name))
 
@@ -502,7 +505,7 @@ def extract_process(modus, source_path, sources_config):
                     new_source.update(deepcopy(available_source))
                     new_source.update(entity)
 
-                    setup_pipeline.delay(new_source)
+                    setup_pipeline.delay(new_source, source_run_uuid)
 
             click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
         except ValueError:
