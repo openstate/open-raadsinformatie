@@ -21,7 +21,7 @@ TO_INDEX_FILENAME='to_index.txt'
 INDEXED_FILENAME='indexed.log'
 START_DATE='2010-01-01'
 END_DATE=`date -d "-1 day" +%Y-%m-%d`
-INDEXING_TIME_LIMIT=10 # seconds TODO
+INDEXING_TIME_LIMIT=43200 # half a day in seconds
 
 FQPATH=`readlink -f $0`
 BINDIR=`dirname $FQPATH`
@@ -102,8 +102,6 @@ function warn_processing_time() {
     set_mail_sent $locked_source
 }
 
-TO_INDEX_FILE="$HOMEDIR/$TO_INDEX_FILENAME"
-
 LOCKED=$(check_locked)
 if [ "$LOCKED" = "$IS_LOCKED" ]; then
     echo "Indexing busy, not starting new source"
@@ -121,11 +119,12 @@ if [ "$LOCKED" = "$IS_LOCKED" ]; then
 fi
 
 # Get first entry from TO_INDEX_FILE
+TO_INDEX_FILE="$HOMEDIR/$TO_INDEX_FILENAME"
 SOURCE=`sed -i -e '1 w /dev/stdout' -e '1d' $TO_INDEX_FILE`
 if [ "$SOURCE" != "" ];
 then
-    set_lock "$SOURCE"
     clear_mail_sent
+    set_lock "$SOURCE"
     $SUDO docker exec ori_backend_1 ./manage.py extract process all \
         --source_path "*"$SOURCE \
         --start_date $START_DATE \
