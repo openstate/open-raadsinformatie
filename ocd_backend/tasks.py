@@ -1,3 +1,5 @@
+import redis
+
 from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch as es
@@ -5,8 +7,10 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import ItemHash
 from ocd_backend.models.serializers import PostgresSerializer
+from ocd_backend.utils.indexed_file import IndexedFile
 from ocd_backend.utils.misc import iterate
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import REDIS_HOST, REDIS_PORT
 
 log = get_source_logger('ocd_backend.tasks')
 
@@ -47,6 +51,8 @@ class BaseCleanup(celery_app.Task):
 
 
 class CleanupElasticsearch(BaseCleanup):
+    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+
     def run_finished(self, run_identifier, **kwargs):
         current_index_name = kwargs.get('current_index_name')
         new_index_name = kwargs.get('new_index_name')
@@ -82,8 +88,35 @@ class CleanupElasticsearch(BaseCleanup):
         if current_index_name != new_index_name:
             es.indices.delete(index=current_index_name)
 
+        self.signal_processing_finished(**kwargs)
+
         return result
 
+    """
+    If a lock_key was passed, empty it to signal that next source may be processed.
+    Only proceed if lock_key contains the current source.
+    """
+    def signal_processing_finished(self, **kwargs):
+        source = kwargs['source_definition']['key']
+
+        IndexedFile(kwargs.get('source_definition').get('indexed_filename')).signal_end(source)
+
+        lock_key = kwargs.get('source_definition').get('lock_key')
+        if lock_key is None:
+            return
+        lock_value = self.redis_client.get(lock_key)
+
+        if lock_value == source:
+            log.info(f"[{source}] Finished, releasing the lock")
+            self.redis_client.delete(lock_key)
+        elif lock_value is not None:
+            message = f"[{source}] the retrieved lock value is {lock_value}, different from source {source}, this should not happen"
+            log.warning(message)
+            raise Exception(message)
+        else:
+            message = f"[{source}] a lock_key was provided but the lock_value is None, this should not happen"
+            log.warning(message)
+            raise Exception(message)
 
 class DummyCleanup(BaseCleanup):
     def run_finished(self, run_identifier, **kwargs):
