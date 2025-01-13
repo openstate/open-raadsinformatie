@@ -302,13 +302,6 @@ ori.notubiz:
     notubiz_organization_id: 434
     <<: *notubiz
 
-  #culemborg:
-  #  key: culemborg
-  #  allmanak_id: 26183
-  #  cbs_id: GM0216
-  #  notubiz_organization_id: 1643
-  #  <<: *notubiz
-
   schagen:
     key: schagen
     allmanak_id: 28858
@@ -811,12 +804,12 @@ ori.notubiz:
     notubiz_organization_id: 603
     <<: *notubiz
 
-  #enkhuizen:
-  #  key: enkhuizen
-  #  allmanak_id: 33494
-  #  cbs_id: GM0388
-  #  notubiz_organization_id: 736
-  #  <<: *notubiz
+  enkhuizen:
+   key: enkhuizen
+   allmanak_id: 33494
+   cbs_id: GM0388
+   notubiz_organization_id: 735
+   <<: *notubiz
 
   landgraaf:
     key: landgraaf
@@ -914,4 +907,20 @@ ori.notubiz:
     allmanak_id: 38194
     cbs_id: GM0855
     notubiz_organization_id: 266
+    <<: *notubiz
+
+  # Added on 09-04-2020
+  midden-groningen:
+   key: midden-groningen
+   source_name: "Midden-Groningen"
+   notubiz_organization_id: 4275
+   allmanak_id: 23087145
+   cbs_id: GM1952
+   <<: *notubiz
+
+  veldhoven:
+    key: veldhoven
+    notubiz_organization_id: 528
+    allmanak_id: 30186
+    cbs_id: GM0861
     <<: *notubiz

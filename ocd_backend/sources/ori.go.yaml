@@ -98,12 +98,6 @@ ori.go:
     cbs_id: GM1509
     <<: *go
 
-  #borne:
-  #  key: borne
-  #  base_url: "https://gemeenteraad.borne.nl/api"
-  #  allmanak_id: 25660
-  #  cbs_id: GM0147
-  #  <<: *go
 
   leiderdorp:
     key: leiderdorp
@@ -126,14 +120,12 @@ ori.go:
     cbs_id: GM1674
     <<: *go
 
-
-  # Disabled 09-12-2024 due to site not found
-  # beemster:
-  #   key: beemster
-  #   base_url: "https://gemeentebestuur.beemster.net/api"
-  #   allmanak_id: 31527
-  #   cbs_id: GM0370
-  #   <<: *go
+  beemster:
+    key: beemster
+    base_url: "https://beemsterraadsinformatie.purmerend.nl/api"
+    allmanak_id: 31527
+    cbs_id: GM0370
+    <<: *go
 
   # Added on 28-03-2019
   bloemendaal:
@@ -161,14 +153,7 @@ ori.go:
     cbs_id: GM1960
     <<: *go
 
-  # Added on 09-04-2020
-  #midden-groningen:
-  #  key: midden-groningen
-  #  source_name: "Midden-Groningen"
-  #  base_url: "https://bestuur.midden-groningen.nl/api"
-  #  allmanak_id: 23087145
-  #  cbs_id: GM1952
-  #  <<: *go
+
 
   # Added on 22-06-2020
   groningen:
@@ -207,12 +192,12 @@ ori.go:
     cbs_id: GM1735
     <<: *go
 
-  #drechtsteden:
-  #  key: drechtsteden
-  #  base_url: "https://drechtraad.drechtsteden.nl/api"
-  #  allmanak_id: 24943500
-  #  # cbs_id: has no cbs_id
-  #  <<: *go
+  drechtsteden:
+   key: drechtsteden
+   base_url: "https://raad.dordrecht.nl/api"
+   allmanak_id: 24943500
+   # cbs_id: has no cbs_id
+   <<: *go
 
   # Added on 27-11-2020
   bergen_nh:
@@ -222,13 +207,6 @@ ori.go:
     allmanak_id: 41074
     cbs_id: GM0373
     <<: *go
-
-  #schiermonnikoog:
-  #  key: schiermonnikoog
-  #  base_url: "https://bestuur.schiermonnikoog.nl/api"
-  #  allmanak_id: 23540
-  #  cbs_id: GM0088
-  #  <<: *go
 
   # Added on 23-12-2020
   albrandswaard:
@@ -254,12 +232,6 @@ ori.go:
     cbs_id: GM0406
     <<: *go
 
-  #beuningen:
-  #  key: beuningen
-  #  base_url: "https://gemeentebestuur.beuningen.nl/api"
-  #  allmanak_id: 27471
-  #  cbs_id: GM0209
-  #  <<: *go
 
   heemstede:
     key: heemstede
@@ -320,15 +292,6 @@ ori.go:
     cbs_id: GM0351
     <<: *go
 
-  # Commented out on 13-01-2025 because `failed to resolve` for gemeenteraad.veldhoven.nl
-  # veldhoven:
-  #   key: veldhoven
-  #   base_url: "https://gemeenteraad.veldhoven.nl/api"
-  #   api_version: "v1"
-  #   allmanak_id: 30186
-  #   cbs_id: GM0861
-  #   <<: *go
-
   # Added on 03-07-2024
   oudewater:
     key: oudewater
@@ -336,4 +299,13 @@ ori.go:
     api_version: "v1"
     allmanak_id: 30578
     cbs_id: GM0589
+    <<: *go
+
+  # Disabled 09-12-2024 due to "Invalid site!" error message
+  dronten:
+    key: dronten
+    base_url: "https://gemeenteraad.dronten.nl/api/"
+    allmanak_id: 26889
+    api_version: "v1"
+    cbs_id: GM0303
     <<: *go

@@ -701,12 +701,12 @@ ori.ibabs:
     <<: *ibabs
 
   # 03-12-2024: Invalid site is returned
-  # dantumadiel:
-  #   key: dantumadiel
-  #   ibabs_sitename: Dantumadiel
-  #   allmanak_id: 33564
-  #   cbs_id: GM1891
-  #   <<: *ibabs
+  dantumadiel:
+    key: dantumadiel
+    ibabs_sitename: gemeentedantumadiel
+    allmanak_id: 33564
+    cbs_id: GM1891
+    <<: *ibabs
 
   heiloo:
     key: heiloo
@@ -858,13 +858,6 @@ ori.ibabs:
     cbs_id: GM1669
     <<: *ibabs
 
-  # Disabled 09-12-2024 due to "Invalid site!" error message
-  # dronten:
-  #   key: dronten
-  #   ibabs_sitename: Dronten
-  #   allmanak_id: 26889
-  #   cbs_id: GM0303
-  #   <<: *ibabs
 
   heerlen:
     key: heerlen
@@ -1229,4 +1222,33 @@ ori.ibabs:
     ibabs_sitename: soest
     allmanak_id: 38312
     cbs_id: GM0342
+    <<: *ibabs
+
+  ## Added on 13-01-2025
+  borne:
+    key: borne
+    ibabs_sitename: borne
+    allmanak_id: 25660
+    cbs_id: GM0147
+    <<: *ibabs
+
+  schiermonnikoog:
+    key: schiermonnikoog
+    ibabs_sitename: schiermonnikoog
+    allmanak_id: 23540
+    cbs_id: GM0088
+    <<: *ibabs
+
+  beuningen:
+    key: beuningen
+    ibabs_sitename: beuningen
+    allmanak_id: 27471
+    cbs_id: GM0209
+    <<: *ibabs
+
+  culemborg:
+    key: culemborg
+    ibabs_sitename: culemborg
+    allmanak_id: 26183
+    cbs_id: GM0216
     <<: *ibabs
