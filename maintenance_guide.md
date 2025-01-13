@@ -105,3 +105,8 @@ This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating c
 ## Script to list all sources (for excel sheets)
 
 Sometimes VNG wants a list of municipalities. You can use `./fetch_municipalities.sh` to fetch the data for all suppliers and output it in a format suitable for Excel sheets.
+
+# Full re-indexing
+A full re-indexing was started in January 2025 after solving a number of bugs and adding functionality to save downloaded
+documents and extract markdown. A to_index.txt file was created using
+`sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |awk '{print $(NF)}' > to_index.txt`

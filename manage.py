@@ -25,6 +25,7 @@ from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
+from ocd_backend.utils.indexed_file import IndexedFile
 from ocd_backend.utils.misc import load_sources_config
 from ocd_backend.utils.monitor import get_recent_counts
 
@@ -435,7 +436,11 @@ def extract_load_redis(modus, source_path, sources_config):
 @click.argument('modus')
 @click.option('--source_path', default='*')
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
-def extract_process(modus, source_path, sources_config):
+@click.option('--start_date', default=None)
+@click.option('--end_date', default=None)
+@click.option('--lock_key', default=None)
+@click.option('--indexed_filename', default=None)
+def extract_process(modus, source_path, sources_config, start_date, end_date, lock_key, indexed_filename):
     """
     Start extraction based on the flags in Redis.
     It uses the source_path in Redis db 1 to identify which municipalities should be extracted.
@@ -445,6 +450,10 @@ def extract_process(modus, source_path, sources_config):
     :param modus: the configuration to use for processing, starting with an underscore. i.e. _enabled, _archived, _disabled. Looks for configuration in redis like _custom.start_date
     :param source_path: path in redis to search, i.e. ori.ibabs.arnhem. Defaults to *
     :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
+    :param start_date: Use this start_date instead of the value defined in redis
+    :param end_date: Use this end_date instead of the value defined in redis
+    :param lock_key: If passed, this redis key contains the source that is currently being processed
+    :param indexed_filename: If passed, write start time and end time of processing to this file
     """
     redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
 
@@ -487,6 +496,15 @@ def extract_process(modus, source_path, sources_config):
         else:
             settings[name] = value
 
+    if start_date is not None:
+        settings['start_date'] = start_date
+    if end_date is not None:
+        settings['end_date'] = end_date
+    if lock_key is not None:
+        settings['lock_key'] = lock_key
+    if indexed_filename is not None:
+        settings['indexed_filename'] = indexed_filename
+
     for source in sources:
         try:
             project, provider, source_name = source.split('.')
@@ -494,6 +512,7 @@ def extract_process(modus, source_path, sources_config):
             source_run_uuid = uuid4().hex
 
             click.echo('[%s] Start extract for %s' % (source_name, source_name))
+            IndexedFile(settings.get('indexed_filename')).signal_start(source_name)
 
             selected_entities = []
             for entity in available_source.get('entities', []):
