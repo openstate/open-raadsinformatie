@@ -908,9 +908,10 @@ ori.notubiz:
     notubiz_organization_id: 275
     <<: *notubiz
   # Disabled on 16-12-2024: notubiz_organization_id is not correct
-  # tilburg:
-  #   key: tilburg
-  #   allmanak_id: 38194
-  #   cbs_id: GM0855
-  #   notubiz_organization_id: 1736
-  #   <<: *notubiz
+  # Re-enabled on 13-01-2025 with new organization id
+  tilburg:
+    key: tilburg
+    allmanak_id: 38194
+    cbs_id: GM0855
+    notubiz_organization_id: 266
+    <<: *notubiz
