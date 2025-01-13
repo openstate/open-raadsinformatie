@@ -209,21 +209,6 @@ ori.notubiz:
     notubiz_organization_id: 1696
     <<: *notubiz
 
-  #soest:
-  #  key: soest
-  #  allmanak_id: 38312
-  #  cbs_id: GM0342
-  #  notubiz_organization_id: 1674
-  #  <<: *notubiz
-
-  # switched to ibabs
-  # noordwijk:
-  #   key: noordwijk
-  #   allmanak_id: 27985
-  #   cbs_id: GM0575
-  #   notubiz_organization_id: 574
-  #   <<: *notubiz
-
   amersfoort:
     key: amersfoort
     allmanak_id: 35134
@@ -317,13 +302,6 @@ ori.notubiz:
     notubiz_organization_id: 434
     <<: *notubiz
 
-#  maastricht:
-#    key: maastricht
-#    allmanak_id: 32664
-#    cbs_id: GM0935
-#    notubiz_organization_id: 258
-#    <<: *notubiz
-
   #culemborg:
   #  key: culemborg
   #  allmanak_id: 26183
@@ -365,15 +343,6 @@ ori.notubiz:
     cbs_id: GM0531
     notubiz_organization_id: 1781
     <<: *notubiz
-
-  # Switched to GO
-  # stichtse_vecht:
-  #   key: stichtse_vecht
-  #   source_name: "Stichtse Vecht"
-  #   allmanak_id: 34861
-  #   cbs_id: GM1904
-  #   notubiz_organization_id: 1770
-  #   <<: *notubiz
 
   deventer:
     key: deventer
@@ -457,12 +426,6 @@ ori.notubiz:
     notubiz_organization_id: 1745
     <<: *notubiz
 
- # nijmegen:
- #   key: nijmegen
- #   allmanak_id: 33391
- #   cbs_id: GM0268
- #   notubiz_organization_id: 799
- #   <<: *notubiz
 
   # Added on 05-03-2020
   nunspeet:
@@ -597,14 +560,6 @@ ori.notubiz:
     cbs_id: GM0457
     notubiz_organization_id: 1987
     <<: *notubiz
-
-  # Switched to ibabs
-  # rotterdam:
-  #   key: rotterdam
-  #   allmanak_id: 38936
-  #   cbs_id: GM0599
-  #   notubiz_organization_id: 726
-  #   <<: *notubiz
 
   wijdemeren:
     key: wijdemeren

@@ -1050,15 +1050,6 @@ ori.ibabs:
     cbs_id: GM0888
     <<: *ibabs
 
-  # Swithced to GO
-  # venlo:
-  #   key: venlo
-  #   ibabs_sitename: venlo
-  #   allmanak_id: 25285
-  #   cbs_id: GM0983
-  #   <<: *ibabs
-
-
   # Disabled 09-12-2024 due to "Invalid site!" error message
   # oostzaan:
   #   key: oostzaan

@@ -72,17 +72,6 @@ ori.parlaeus:
     cbs_id: GM0200
     <<: *parlaeus
 
-  # Added on 18-02-2020
-  # Eindhoven switched to notubiz
-  # eindhoven:
-  #   key: eindhoven
-  #   source_name: "Eindhoven"
-  #   base_url: "https://eindhoven.parlaeus.nl/receive/opendata"
-  #   session_id: "38ab0fe1-fe6e-4900-bbf4-1d16bdb26449"
-  #   allmanak_id: 34435
-  #   cbs_id: GM0772
-  #   <<: *parlaeus
-
   maastricht:
     key: maastricht
     source_name: "Maastricht"
