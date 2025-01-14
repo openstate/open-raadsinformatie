@@ -979,12 +979,13 @@ ori.ibabs:
     <<: *ibabs
 
   # Disabled 09-12-2024 due to "Invalid site!" error message
-  # heeze_leende:
-  #   key: heeze_leende
-  #   ibabs_sitename: heezeleende
-  #   allmanak_id: 39347
-  #   cbs_id: GM1658
-  #   <<: *ibabs
+  # Temporarily enabled on 14-01-2025 to see if they still fail
+  heeze_leende:
+    key: heeze_leende
+    ibabs_sitename: heezeleende
+    allmanak_id: 39347
+    cbs_id: GM1658
+    <<: *ibabs
 
   harlingen:
     key: harlingen
@@ -1001,12 +1002,13 @@ ori.ibabs:
     <<: *ibabs
 
   # 03-12-2024: Invalid site is returned
-  # cranendonck:
-  #   key: cranendonck
-  #   ibabs_sitename: cranendonck
-  #   allmanak_id: 36285
-  #   cbs_id: GM1706
-  #   <<: *ibabs
+  # Temporarily enabled on 14-01-2025 to see if they still fail
+  cranendonck:
+    key: cranendonck
+    ibabs_sitename: cranendonck
+    allmanak_id: 36285
+    cbs_id: GM1706
+    <<: *ibabs
 
   waterland:
     key: waterland
@@ -1044,12 +1046,13 @@ ori.ibabs:
     <<: *ibabs
 
   # Disabled 09-12-2024 due to "Invalid site!" error message
-  # oostzaan:
-  #   key: oostzaan
-  #   ibabs_sitename: oostzaan
-  #   allmanak_id: 39007
-  #   cbs_id: GM0431
-  #   <<: *ibabs
+  # Temporarily enabled on 14-01-2025 to see if they still fail
+  oostzaan:
+    key: oostzaan
+    ibabs_sitename: oostzaan
+    allmanak_id: 39007
+    cbs_id: GM0431
+    <<: *ibabs
 
   oirschot:
     key: oirschot

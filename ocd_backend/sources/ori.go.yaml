@@ -301,7 +301,6 @@ ori.go:
     cbs_id: GM0589
     <<: *go
 
-  # Disabled 09-12-2024 due to "Invalid site!" error message
   dronten:
     key: dronten
     base_url: "https://gemeenteraad.dronten.nl/api/"
