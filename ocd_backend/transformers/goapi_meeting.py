@@ -154,6 +154,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
             attachment.identifier_url = doc['url']  # Trick to use the self url for enrichment
             attachment.original_url = doc['url']
             attachment.name = doc['note']
+            attachment.file_name = doc['note']
             attachment.is_referenced_by = agendaitem
             attachment.last_discussed_at = event.start_date
             agendaitem.attachment.append(attachment)
