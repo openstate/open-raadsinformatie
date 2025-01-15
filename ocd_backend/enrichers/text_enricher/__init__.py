@@ -47,7 +47,7 @@ class TextEnricher(BaseEnricher):
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
 
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         """Enriches the media objects referenced in a single item.
 
         First, a media item will be retrieved from the source, than the
@@ -104,7 +104,7 @@ class TextEnricher(BaseEnricher):
                     item.md_text = md_file_parser_using_ocr(path, item.original_url)
                     ocr_used = True
 
-                ori_document = OriDocument(path, item, ocr_used)
+                ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
                 ori_document.store()
 
             if hasattr(item, 'text') and item.text:
@@ -121,7 +121,7 @@ class TextEnricher(BaseEnricher):
 
         # The enricher tasks will executed in specified order
         for task in enrich_tasks:
-            self.available_tasks[task](self.source_definition).enrich_item(item)
+            self.available_tasks[task](self.source_definition).enrich_item(item, metadata)
 
         item.db.save(item)
 

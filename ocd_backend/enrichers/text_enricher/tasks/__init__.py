@@ -8,5 +8,5 @@ class BaseEnrichmentTask:
     def __init__(self, source_definition):
         self.source_definition = source_definition
 
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         raise NotImplementedError

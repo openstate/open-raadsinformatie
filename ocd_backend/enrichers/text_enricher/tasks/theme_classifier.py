@@ -12,7 +12,7 @@ log = get_source_logger('theme_classifier')
 
 
 class ThemeClassifier(BaseEnrichmentTask, HttpRequestMixin):
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         if not ORI_CLASSIFIER_HOST or not ORI_CLASSIFIER_PORT:
             # Skip classifier if no host is specified
             return

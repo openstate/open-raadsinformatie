@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import magic
@@ -11,14 +12,22 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('document_storage')
 
 class OriDocument():
-    def __init__(self, temp_path, item, ocr_used = False):
+    def __init__(self, temp_path, item, metadata, ocr_used = False):
         self.temp_path = temp_path
-        self.file_name = item.file_name
+        self.file_name = item.file_name if hasattr(item, 'file_name') else None
+        self.md_text = item.md_text
         self.file_size = item.size_in_bytes
         self.resource_ori_id = item.get_short_identifier()
         self.last_changed_at = self.get_last_changed_at(item)
         self.source, self.supplier = self.get_source_and_supplier(item)
         self.ocr_used = ocr_used
+        self.metadata = metadata
+
+        self.metadata['content_type'] = item.content_type
+        self.metadata['size'] = self.file_size
+        self.metadata['filename'] = self.file_name
+        self.metadata['last_changed_at'] = self.last_changed_at.isoformat() if self.last_changed_at else None
+        self.metadata['original_url'] = item.original_url if hasattr(item, 'original_url') else None
 
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
@@ -27,6 +36,8 @@ class OriDocument():
         with self.session.begin():
             self.store_in_db()
             self.store_on_disk()
+            self.store_markdown_on_disk()
+            self.store_metadata_on_disk()
 
     def store_in_db(self):
         self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
@@ -55,6 +66,21 @@ class OriDocument():
         os.makedirs(os.path.dirname(destination_path), exist_ok=True)
         shutil.move(self.temp_path, destination_path)
 
+    def store_markdown_on_disk(self):
+        if self.md_text is None:
+            return
+        
+        destination_path = self.full_markdown_name()
+        with open(destination_path, "w") as f:
+            for page in self.md_text:
+                f.write(f"{page}\n")
+
+    def store_metadata_on_disk(self):
+        destination_path = self.full_metadata_name()
+
+        with open(destination_path, "w") as f:
+            f.write(json.dumps(self.metadata, indent=2))
+
     def get_last_changed_at(self, item):
         """
         Notubiz returns a `last_modified` for documents, which gets stored in `date_modified`
@@ -81,5 +107,14 @@ class OriDocument():
         return f"{thousands_as_string[0:3]}/{thousands_as_string[3:6]}/{thousands_as_string[6:]}"
     
     def full_name(self):
-        extension = os.path.splitext(self.file_name)[1]
-        return f"{DATA_DIR_PATH}/{self._id_partitioned(self.stored_document.id)}/{self.resource_ori_id}{extension}"
+        extension = os.path.splitext(self.file_name)[1] if self.file_name else ""
+        return f"{self._base_name()}{extension}"
+    
+    def full_markdown_name(self):
+        return f"{self._base_name()}.md"
+    
+    def full_metadata_name(self):
+        return f"{self._base_name()}.metadata"
+
+    def _base_name(self):
+        return f"{DATA_DIR_PATH}/{self._id_partitioned(self.stored_document.id)}/{self.resource_ori_id}"
