@@ -42,7 +42,7 @@ class AllmanakMunicipalityExtractor(AllmanakBaseExtractor):
         total, static_json = self._request(path)
 
         if total != 1:
-            log.error(f'[{self.source_definition["key"]}] Number of extracted municipalities is not equal to 1')
+            log.error(f'[{self.source_definition["key"]}] Number of extracted municipalities is not equal to 1 (it is {total})')
         else:
             hash_for_item = self.hash_for_item('allmanak', self.source_definition['allmanak_id'], 'municipality', self.source_definition['allmanak_id'], static_json[0])
             if hash_for_item:

@@ -192,10 +192,10 @@ ori.go:
     cbs_id: GM1735
     <<: *go
 
-  drechtsteden:
-   key: drechtsteden
+  dordrecht:
+   key: dordrecht
    base_url: "https://raad.dordrecht.nl/api"
-   allmanak_id: 24943500
+   allmanak_id: 40563
    # cbs_id: has no cbs_id
    <<: *go
 
