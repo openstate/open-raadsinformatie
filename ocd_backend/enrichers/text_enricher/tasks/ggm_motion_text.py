@@ -4,7 +4,7 @@ from ocd_backend.enrichers.text_enricher.tasks import BaseEnrichmentTask
 
 
 class GegevensmagazijnMotionText(BaseEnrichmentTask):
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         if not hasattr(item, 'text'):
             return
 
