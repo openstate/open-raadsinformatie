@@ -18,7 +18,7 @@ class WaarOverheidEnricher(BaseEnrichmentTask, HttpRequestMixin):
     returns which districts, neighborhoods and annotations were mentioned."""
     loclinkvis_url = None
 
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         if not isinstance(item, schema.MediaObject):
             return
 
