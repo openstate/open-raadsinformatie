@@ -32,7 +32,13 @@ class BaseEnricher(celery_app.Task):
                     continue
 
                 try:
-                    self.enrich_item(model)
+                    metadata = {
+                        'key': self.source_definition["key"],
+                        'key_type': self.source_definition["source_type"],
+                        'key_name': self.source_definition["source_name"],
+                        'supplier': self.source_definition["supplier"]
+                    }
+                    self.enrich_item(model, metadata)
                 except SkipEnrichment as e:
                     log.info(f'[{self.source_definition["key"]}] Skipping enrichment, {self.__class__.__name__}, reason: {e}')
                 except exceptions.ConnectionError as e:
@@ -49,7 +55,7 @@ class BaseEnricher(celery_app.Task):
 
         return args
 
-    def enrich_item(self, item):
+    def enrich_item(self, item, metadata):
         """Enriches a single item.
 
         This method should be implemented by the class that inherits
