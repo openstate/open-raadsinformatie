@@ -1,5 +1,6 @@
 import logging.config
 import os
+import subprocess
 import pickle
 import tempfile
 
@@ -279,6 +280,12 @@ elif RELEASE_STAGE == 'testing':
     SENTRY_ENVIRONMENT = 'testing'
 else:
     SENTRY_ENVIRONMENT = 'production'
+
+def get_ocr_version():
+    tesseract_version = subprocess.check_output("apk info tesseract-ocr | head -n 1 | awk '{print $1}'", shell=True).decode().strip()
+    # See also requirements.txt
+    return f"tesserocr==2.7.1,{tesseract_version}"
+OCR_VERSION = get_ocr_version()
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be

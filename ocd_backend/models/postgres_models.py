@@ -12,14 +12,14 @@ class StoredDocument(Base):
     __tablename__ = 'stored_documents'
 
     id = Column(BigInteger, primary_key=True, nullable=False, autoincrement=True)
-    uuid = Column(UUIDType(), nullable=False, index=True)
+    uuid = Column(UUIDType, nullable=False, index=True)
     resource_ori_id = Column(BigInteger, ForeignKey("resource.ori_id"), nullable=False, index=True, unique=True)
-    source = Column(String(), nullable=False)
-    supplier = Column(String(), nullable=False)
-    last_changed_at = Column(DateTime(), nullable=True)
+    source = Column(String, nullable=False)
+    supplier = Column(String, nullable=False)
+    last_changed_at = Column(DateTime, nullable=True)
     content_type = Column(String, nullable=False)
     file_size = Column(BigInteger, nullable=False)
-    ocr_used = Column(Boolean, nullable=False)
+    ocr_used = Column(String, nullable=True)
 
 class ItemHash(Base):
     __tablename__ = 'item_hash'

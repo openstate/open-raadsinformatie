@@ -9,7 +9,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES
+from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty
@@ -97,12 +97,12 @@ class TextEnricher(BaseEnricher):
                 path = os.path.realpath(temporary_file.name)
                 item.text = file_parser(path, item.original_url, max_pages=100)
 
-                ocr_used = False
+                ocr_used = None
                 item.md_text = md_file_parser(path, item.original_url)
                 if parse_result_is_empty(item.md_text):
                     log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
                     item.md_text = md_file_parser_using_ocr(path, item.original_url)
-                    ocr_used = True
+                    ocr_used = OCR_VERSION
 
                 ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
                 ori_document.store()
