@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 log = get_source_logger('document_storage')
 
 class OriDocument():
-    def __init__(self, temp_path, item, metadata, ocr_used = False):
+    def __init__(self, temp_path, item, metadata, ocr_used = None):
         self.temp_path = temp_path
         self.file_name = item.file_name if hasattr(item, 'file_name') else None
         self.md_text = item.md_text
@@ -26,8 +26,9 @@ class OriDocument():
         self.metadata['content_type'] = item.content_type
         self.metadata['size'] = self.file_size
         self.metadata['filename'] = self.file_name
-        self.metadata['last_changed_at'] = self.last_changed_at.isoformat() if self.last_changed_at else None
-        self.metadata['original_url'] = item.original_url if hasattr(item, 'original_url') else None
+        self.metadata['last_changed_at'] = self.last_changed_at.isoformat() if self.last_changed_at else ''
+        self.metadata['original_url'] = item.original_url if hasattr(item, 'original_url') else ''
+        self.metadata['ocr_used'] = ocr_used if ocr_used else ''
 
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
