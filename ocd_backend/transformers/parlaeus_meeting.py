@@ -96,12 +96,14 @@ def clean_link(link):
     """
     Some Parlaeus links are wrong and look like e.g.
         https://maastricht.parlaeus.nlhttps://maastricht.parlaeus.nl/user/postin/action=select/start=20241111/end=20241124/ty=262
+    18-01-2025: different type of wrong link encountered:
+        https://maastricht.parlaeus.nlhttps://maastricht.qualigraf.nl/app/public/agenda/800aa0a800282a88028222a829402a1a
     Check for this and remove superfluous https://maastricht.parlaeus.nl
     """
     if link == None:
         return
 
-    if re.search("^https://([^.]*).parlaeus.nlhttps://([^.]*).parlaeus.nl", link):
-        return re.sub("^https://([^.]*).parlaeus.nl", "", link)
+    if re.search("^https://[^.]*.parlaeus.nlhttps://[^.]*.[^.]*.nl", link):
+        return re.sub("^https://[^.]*.parlaeus.nl", "", link)
 
     return link
