@@ -13,7 +13,7 @@ import pytz
 import iso8601
 # noinspection PyUnresolvedReferences
 import translitcodec  # used for encoding, search 'translit'
-from dateutil.parser import parse
+from dateutil.parser import parse, ParserError
 
 from ocd_backend.exceptions import MissingTemplateTag, InvalidDatetime
 from ocd_backend.settings import TIMEZONE
@@ -343,5 +343,18 @@ def is_valid_iso8601_date(s):
     try:
         iso8601.parse_date(s)
     except iso8601.iso8601.ParseError as e:
+        result = False
+    return result
+
+def is_valid_date(s):
+    if s is None:
+        return False
+    if not isinstance(s, str):
+        return False
+
+    result = True
+    try:
+        parse(s)
+    except ParserError as e:
         result = False
     return result
