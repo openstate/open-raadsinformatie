@@ -28,6 +28,7 @@ from ocd_backend.settings import SOURCES_CONFIG_FILE, \
 from ocd_backend.utils.indexed_file import IndexedFile
 from ocd_backend.utils.misc import load_sources_config
 from ocd_backend.utils.monitor import get_recent_counts
+from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty
 
 # NOTE: don't forget to change this value if you forked this repo and
 # renamed '/opt/oci'
@@ -606,6 +607,35 @@ def developers_purge_dbs(ctx):
 
     print("Postgres database, Redis and Elastic Search index have been purged")
 
+@click.command('process_pdfs')
+@click.option('--dir')
+def developers_process_pdfs(dir):
+    """
+    Processes all pdfs contained in dir
+    """
+    print(f"Processing all pdfs in directory {dir}", flush=True)
+
+    files = glob(f"{dir}/*.pdf")
+    print(f"Number of files: {len(files)}", flush=True)
+    for filename in files:
+        print(f"\nNow processing {filename}", flush=True)
+        ocr_used = None
+        md_text = md_file_parser(filename, filename)
+        if parse_result_is_empty(md_text):
+            print(f"Parse result is empty, now trying OCR", flush=True)
+            md_text = md_file_parser_using_ocr(filename, filename)
+            ocr_used = True
+
+        extension = '.txt' if ocr_used else '.md'
+        _, name = os.path.split(filename)
+        root, ext = os.path.splitext(filename)
+        result_file = f"{root}{extension}"
+
+        with open(result_file, 'w') as f:
+            for page in md_text:
+                f.write(f"{page}\n")
+            print(f"Result written to {root}{extension}", flush=True)
+
 # Register commands explicitly with groups, so we can easily use the docstring
 # wrapper
 elasticsearch.add_command(es_put_template)
@@ -622,6 +652,7 @@ extract.add_command(extract_process)
 extract.add_command(extract_load_redis)
 
 developers.add_command(developers_purge_dbs)
+developers.add_command(developers_process_pdfs)
 
 if __name__ == '__main__':
     cli()
