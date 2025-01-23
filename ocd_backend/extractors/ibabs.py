@@ -353,11 +353,11 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                     report_dict = serialize_object(item, dict)
 
                     report_dict['datum'] = self.likely_date(report_dict)
+                    # There used to be a comparison of report_dict['datum'] with start_date and end_date of run.
+                    # The point is that report_dict['datum'] is not really well defined and may be
+                    # in the past for Reports just added to iBabs. Therefore the comparison was removed - if the report
+                    # has already been retrieved before, it will be filtered out due to the hash_for_item check
                     # datum can sometimes be 'V' -- unsure what it means
-                    if is_valid_iso8601_date(report_dict['datum']) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
-                        # Skip report if date is outside date interval
-                        continue
-
                     hash_for_item = self.hash_for_item('ibabs', self.source_definition['ibabs_sitename'], 'report', item['id'], report_dict)
                     if hash_for_item:
                         yield 'application/json', json_encoder.encode(report_dict), None, 'ibabs/' + cached_path, hash_for_item
