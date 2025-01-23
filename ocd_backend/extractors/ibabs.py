@@ -4,6 +4,7 @@ import json
 from collections import OrderedDict
 from hashlib import sha1
 from time import sleep
+from datetime import datetime
 
 import redis
 from requests import Session
@@ -21,7 +22,7 @@ from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.ibabs import (
     meeting_to_dict, list_entry_response_to_dict, votes_to_dict)
-from ocd_backend.utils.misc import json_encoder, is_valid_iso8601_date
+from ocd_backend.utils.misc import is_valid_date, json_encoder, is_valid_iso8601_date, str_to_datetime
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
 
@@ -351,20 +352,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
                     report_dict = serialize_object(item, dict)
 
-                    date_field = None
-                    try:
-                        date_field = next(x for x in sorted(report_dict.keys(), key=len) if (('datum' in x.lower()) or ('date' in x.lower())))
-                    except StopIteration:
-                        log.info(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: '
-                                 f'{json.dumps(report_dict, default=str)}')
-
-                    try:
-                        report_dict['datum'] = report_dict[date_field][0]
-                    except (IndexError, TypeError):
-                        report_dict['datum'] = report_dict[date_field]
-                    except KeyError:
-                        report_dict['datum'] = None
-
+                    report_dict['datum'] = self.likely_date(report_dict)
                     # datum can sometimes be 'V' -- unsure what it means
                     if is_valid_iso8601_date(report_dict['datum']) and not start_date < iso8601.parse_date(report_dict['datum']).replace(tzinfo=None) < end_date:
                         # Skip report if date is outside date interval
@@ -383,6 +371,72 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {total_yield_count} ibabs reports within {start_date:%Y-%m-%d} and {end_date:%Y-%m-%d}')
 
+    def likely_date(self, report_dict):
+        # Usually the date is contained in `registrationdate` in iso8601 format.
+        # If not, try to get one of the other known date locations
+        date = self.try_date_by_name(report_dict, 'registrationdate')
+        if date:
+            return date
+
+        try:
+            date_field = next(x for x in sorted(report_dict.keys(), key=len) if (('datum' in x.lower()) or ('date' in x.lower())))
+        except StopIteration:
+            date_field = None
+            log.info(f'[{self.source_definition["key"]}] Unable to determine date field. Original item: '
+                        f'{json.dumps(report_dict, default=str)}')
+
+
+        date = self.try_date_by_name(report_dict, date_field)
+        if date:
+            return date
+
+        date = self.try_extra_values_date(report_dict, 'Datum ontvangst')
+        if date:
+            return date
+
+        # registrationdate may sometimes be a string containing MM/DD/YYYY
+        registrationdate = report_dict.get('registrationdate')
+        if isinstance(registrationdate, str):
+            match = re.search("\s+(\d\d)/(\d\d)/(\d\d\d\d)", registrationdate)
+            if match:
+                try:
+                    date = datetime(int(match[3]), int(match[1]), int(match[2])).isoformat()
+                except:
+                    date = None
+        if is_valid_iso8601_date(date):
+            return date
+
+        # Finally trye use the Datum afdoening field
+        date = self.try_extra_values_date(report_dict, 'Datum afdoening')
+        return date
+
+    def try_date_by_name(self, report_dict, name):
+        if name is None:
+            return None
+
+        try:
+            date = report_dict[name][0]
+        except (IndexError, TypeError):
+            date = report_dict[name]
+        except KeyError:
+            date = None
+
+        if is_valid_iso8601_date(date):
+            return date
+        if isinstance(date, datetime):
+            return date.isoformat()
+
+        return None
+
+    def try_extra_values_date(self, report_dict, name):
+        date = report_dict.get('_Extra', {}).get('Values', {}).get(name) # format Apr 16 2024 12:00AM
+        if not is_valid_iso8601_date(date) and is_valid_date(date):
+            date = str_to_datetime(date).isoformat()
+
+        if is_valid_iso8601_date(date):
+            return date
+
+        return None
 
 class IBabsVotesMeetingsExtractor(IBabsBaseExtractor):
     """
