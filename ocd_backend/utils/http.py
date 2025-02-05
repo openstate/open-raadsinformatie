@@ -93,7 +93,7 @@ class HttpRequestMixin:
         if 'ibabs.eu' in url:
             tm = 60
         else:
-            tm = 5
+            tm = 15
         http_resp = self.http_session.get(url, stream=True, timeout=(3, tm), verify=False)
         http_resp.raise_for_status()
 

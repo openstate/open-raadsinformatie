@@ -28,7 +28,7 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
 
         response = self.http_session.get(
             "%s/organisations?%s" % (self.base_url, self.default_query_params),
-            timeout=(3, 5)
+            timeout=(3, 15)
         )
 
         try:
@@ -108,7 +108,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         self.default_query_params,
                     )
             try:
-                response = self.http_session.get(url, timeout=(3, 5))
+                response = self.http_session.get(url, timeout=(3, 15))
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {parse.quote(url)}')
                 meetings_error += 1
@@ -205,7 +205,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             organization = {'attributes': dict()}
             organization_response = self.http_session.get(
                 "%s/organisations/%s/entity_type_settings?%s" % (self.base_url, self.source_definition['notubiz_organization_id'], self.default_query_params),
-                timeout=(3, 5)
+                timeout=(3, 15)
             )
             try:
                 organization_response.raise_for_status()

@@ -18,7 +18,7 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
         self.rid = self.source_definition['session_id']
 
     def get_response(self, url):
-        response = self.http_session.get(url, timeout=(3, 5)).json()
+        response = self.http_session.get(url, timeout=(3, 15)).json()
         if response['status'] != 200:
             log.error(f'[{self.source_definition["key"]}] Parlaeus request error: {response["message"]}')
         return response
@@ -39,7 +39,7 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
                 self.base_url,
                 meeting['agid'],
             )
-            resp = self.http_session.get(url + '&rid=%s' % self.rid, timeout=(3, 5))
+            resp = self.http_session.get(url + '&rid=%s' % self.rid, timeout=(3, 15))
             resp.raise_for_status()
 
             meeting_data = resp.json()
