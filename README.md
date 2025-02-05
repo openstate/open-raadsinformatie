@@ -37,6 +37,8 @@ indefinitely, add the following to `/etc/logrotate.d/orilog`:
         copytruncate
     }
 
+In development Flower provides insight in the queues of Celery. You can access the Flower dashboard via `http://localhost:81/workers`.
+
 ## Import a municipality in development:
 The following commands build and start the Docker containers, empty the PostgreSQL and Redis databases and Elastic Search index
 for a fresh start and then import a municipality for a certain date range.
