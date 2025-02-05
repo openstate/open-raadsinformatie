@@ -37,6 +37,17 @@ indefinitely, add the following to `/etc/logrotate.d/orilog`:
         copytruncate
     }
 
+## Import a municipality in development:
+The following commands build and start the Docker containers, empty the PostgreSQL and Redis databases and Elastic Search index
+for a fresh start and then import a municipality for a certain date range.
+Change the `start_date`, `end_date` and `source_path` as desired.
+- docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d
+- docker exec ori_backend_1 bin/purge_dbs.sh
+- docker exec ori_redis_1 redis-cli -n 1 set _all.start_date "2025-01-14"
+- docker exec ori_redis_1 redis-cli -n 1 set _all.end_date "2025-01-15"
+- docker exec ori_backend_1 ./manage.py extract load_redis 'all daily monthly'
+- docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.haarlem
+
 ## Testing
 The next lines were copied from the Github workflow (which never actually ran):
 - `docker compose --compatibility -f docker-compose.yml -f docker-compose.test.yml up --build -d`
