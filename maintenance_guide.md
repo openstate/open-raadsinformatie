@@ -29,7 +29,7 @@
 - `set _all.end_date` to today (xxxx-xx-xx format)
 - `exit`
 - see [#starting-a-run](#starting-a-run) below to sh into `backend-${id}`
-- start the extraction process for the new municipality `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.weesp`. 
+- start the extraction process for the new municipality `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.weesp`.
 They will be set in a list for `celery`, which means that they will be processed in time.
 - You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
@@ -58,7 +58,7 @@ See also unacked_index (contains the time the task were added):
 
 ### Supplier specific: Ibabs
 
-- For finding `ibabs_sitename`, google for `ibabs ${municipality_name}` and derive it from the URL
+- For finding `ibabs_sitename`, google for `ibabs ${municipality_name}` and derive it from the URL (e.g. `urk.bestuurlijkeinformatie.nl` => `urk`)
 - Duplicate
 - Exclude / include are rarely required, but can be useful if one instance is shared across municipalitites
 

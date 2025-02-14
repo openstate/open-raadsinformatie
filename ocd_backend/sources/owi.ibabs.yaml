@@ -86,3 +86,14 @@ owi.ibabs:
     ibabs_sitename: waterschaplimburg
     allmanak_id: 21194
     <<: *ibabs
+  # Added 2025-02-14
+  zuiderzeeland:
+    key: zuiderzeeland
+    ibabs_sitename: zuiderzeeland
+    allmanak_id: 45778
+    <<: *ibabs
+  hollandse_delta:
+    key: hollandse_delta
+    ibabs_sitename: wshd
+    allmanak_id: 27192110
+    <<: *ibabs
