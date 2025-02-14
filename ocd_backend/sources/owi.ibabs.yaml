@@ -97,3 +97,8 @@ owi.ibabs:
     ibabs_sitename: wshd
     allmanak_id: 27192110
     <<: *ibabs
+  hoogheemraadschap_van_delfland:
+    key: hoogheemraadschap_van_delfland
+    ibabs_sitename: delfland
+    allmanak_id: 21123
+    <<: *ibabs
