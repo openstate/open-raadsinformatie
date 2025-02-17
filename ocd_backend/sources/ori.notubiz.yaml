@@ -260,12 +260,13 @@ ori.notubiz:
     notubiz_organization_id: 1273
     <<: *notubiz
 
-  moerdijk:
-    key: moerdijk
-    allmanak_id: 30656
-    cbs_id: GM1709
-    notubiz_organization_id: 659
-    <<: *notubiz
+  # Moved to iBabs
+  # moerdijk:
+  #   key: moerdijk
+  #   allmanak_id: 30656
+  #   cbs_id: GM1709
+  #   notubiz_organization_id: 659
+  #   <<: *notubiz
 
   dongen:
     key: dongen
