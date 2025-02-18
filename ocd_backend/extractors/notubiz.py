@@ -173,6 +173,22 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
+                # agenda_items may have module_items that in turn may contain documents
+                for agenda_item in meeting_json.get('agenda_items', []):
+                    agenda_item['module_item_contents'] = []
+                    for module_item in agenda_item.get("module_items", []):
+                        try:
+                            module_item_url = "https://%s?%s" % (
+                                module_item['self'],
+                                self.default_query_params
+                            )
+                            resource = self.fetch(module_item_url + self.application_token, None)
+                            module_item_json = json.load(resource.media_file)['item']
+                            agenda_item['module_item_contents'].append(module_item_json)
+                        except Exception as e:
+                            log.warning(f'[{self.source_definition["key"]}] error retrieving module item {str(e)}: {parse.quote(url)}')
+                            raise
+
                 hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json)
                 if hash_for_item:
                     yield 'application/json', \
