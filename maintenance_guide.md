@@ -110,3 +110,8 @@ Sometimes VNG wants a list of municipalities. You can use `./fetch_municipalitie
 A full re-indexing was started in January 2025 after solving a number of bugs and adding functionality to save downloaded
 documents and extract markdown. A to_index.txt file was created using
 `sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |awk '{print $(NF)}' > to_index.txt`
+
+`sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |grep '\.go ' |awk '{print $(NF)}' > to_index_go.txt`
+`sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |grep '\.notubiz ' |awk '{print $(NF)}' > to_index_notubiz.txt`
+`sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |grep '\.ibabs ' |awk '{print $(NF)}' > to_index_ibabs.txt`
+`sudo docker exec ori_backend_1 ./manage.py extract list_sources |tail -n +2 |grep ' -s ' |grep '\.parlaeus ' |awk '{print $(NF)}' > to_index_parlaeus.txt`
