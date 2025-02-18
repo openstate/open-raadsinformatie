@@ -41,17 +41,23 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
             title_field = field
             break
 
-    for field in keys:
-        id_for_field = '%sIds' % field
-        if id_for_field in original_item and title_field is None:
-            title_field = field
-            break
-
     if title_field is None:
-        log.error(f'[{self.source_definition["key"]}] Unable to determine title field. Original item: '
+        for field in keys:
+            id_for_field = '%sIds' % field
+            if id_for_field in original_item:
+                title_field = field
+                break
+
+    if title_field is not None:
+        report_name = original_item[title_field]
+    else:
+        report_name = original_item.get('_Extra', {}).get('Values', {}).get('Titel')
+
+    if report_name is None:
+        log.warning(f'[{self.source_definition["key"]}] Unable to determine title field. Original item: '
                   f'{json.dumps(original_item, default=str)}')
     else:
-        report.name = original_item[title_field]
+        report.name = report_name
 
     report.classification = original_item.get('_ReportName')
     report.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
