@@ -87,26 +87,29 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
         agendaitem.attachment = []
         for doc in item.get('documents', []):
-            attachment = MediaObject(doc['id'],
-                                     source=self.source_definition['key'],
-                                     supplier='notubiz',
-                                     collection='attachment')
-            attachment.canonical_iri = 'https://' + doc['self'] + '?format=json&version=1.10.8'
-            attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                    source=self.source_definition['key'],
-                                                                    supplier='allmanak',
-                                                                    collection=self.source_definition['source_type'])
-
-            attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
-            attachment.original_url = doc['url']
-            attachment.name = doc['title']
-            version_def = get_version_definition(doc)
-            if version_def:
-                attachment.file_name = version_def.get('file_name')
-            attachment.date_modified = doc['last_modified']
-            attachment.is_referenced_by = agendaitem
-            attachment.last_discussed_at = event.start_date
+            attachment = create_media_object(self, doc, agendaitem, event.start_date)
             agendaitem.attachment.append(attachment)
+
+        for module_item_contents in item.get('module_item_contents', []):
+            for doc in module_item_contents.get('attachments', {}).get('document', []):
+                attachment = create_media_object(self, doc, agendaitem, event.start_date)
+                agendaitem.attachment.append(attachment)
+
+            module_item_attributes = module_item_contents.get('attributes', [])
+            module_item_main_document = [doc for doc in module_item_attributes if doc["datatype"] == "document" or doc["label"] == "Hoofddocument"]
+            if len(module_item_main_document) == 0:
+                message = f'[{self.source_definition["key"]}] no main document for module_item {module_item_contents["id"]}'
+                log.warning(message)
+                raise Exception(message)
+            elif len(module_item_main_document) > 1:
+                message = f'[{self.source_definition["key"]}] multiple main documents found for module_item {module_item_contents["id"]}'
+                log.warning(message)
+                raise Exception(message)
+            module_item_main_document = module_item_main_document[0]
+            for value in module_item_main_document.get('values', []):
+                doc = value.get('document', {})
+                attachment = create_media_object(self, doc, agendaitem, event.start_date)
+                agendaitem.attachment.append(attachment)
 
         event.agenda.append(agendaitem)
 
@@ -124,25 +127,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     event.attachment = []
     for doc in original_item.get('documents', []):
-        attachment = MediaObject(doc['id'],
-                                 source=self.source_definition['key'],
-                                 supplier='notubiz',
-                                 collection='attachment')
-        attachment.canonical_iri = 'https://' + doc['url'] + '?format=json&version=1.10.8'
-        attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                source=self.source_definition['key'],
-                                                                supplier='allmanak',
-                                                                collection=self.source_definition['source_type'])
-
-        attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
-        attachment.original_url = doc['url']
-        attachment.name = doc['title']
-        version_def = get_version_definition(doc)
-        if version_def:
-            attachment.file_name = version_def.get('file_name')
-        attachment.date_modified = doc['last_modified']
-        attachment.is_referenced_by = event
-        attachment.last_discussed_at = event.start_date
+        attachment = create_media_object(self, doc, event, event.start_date)
         event.attachment.append(attachment)
 
     event.save()
@@ -150,3 +135,28 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
 def get_version_definition(doc):
     return next(filter(lambda version_def: version_def['id'] == doc['version'], doc['versions']), None)
+
+def create_media_object(self, doc, is_referenced_by, start_date):
+    attachment = MediaObject(doc['id'],
+                             source=self.source_definition['key'],
+                             supplier='notubiz',
+                             collection='attachment')
+    attachment.canonical_iri = 'https://' + doc['self'] + '?format=json&version=1.17.0'
+    attachment.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                            source=self.source_definition['key'],
+                                                            supplier='allmanak',
+                                                            collection=self.source_definition['source_type'])
+
+    attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
+    attachment.original_url = doc['url']
+    attachment.name = doc['title']
+
+    version_def = get_version_definition(doc)
+    if version_def:
+        attachment.file_name = version_def.get('file_name')
+    attachment.date_modified = doc['last_modified']
+
+    attachment.is_referenced_by = is_referenced_by
+    attachment.last_discussed_at = start_date
+
+    return attachment
