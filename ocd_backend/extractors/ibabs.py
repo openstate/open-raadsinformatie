@@ -279,7 +279,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 reports = self.client.service.GetListReports(Sitename=self.source_definition['ibabs_sitename'], ListId=l.Key)
             except Fault as e:
                 # TODO keep a record of these misses
-                log.warning(f'[{self.source_definition["key"]}] Could not parse list report {l.Key} correctly!: {str(e)}')
+                log.error(f'[{self.source_definition["key"]}] Could not parse list report {l.Key} correctly!: {str(e)}')
                 continue
             if reports == None:
                 # TODO keep a record of these misses
@@ -308,7 +308,7 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                         ListId=l.Key, ReportId=report.Key,
                         ActivePageNr=active_page_nr, RecordsPerPage=per_page)
                 except Exception as e:  # most likely an XML parse problem
-                    log.warning(f'[{self.source_definition["key"]}] Could not parse page {active_page_nr} correctly!: {str(e)}')
+                    log.error(f'[{self.source_definition["key"]}] Could not parse page {active_page_nr} correctly!: {str(e)}')
                     result = None
                 active_page_nr += 1
                 result_count = 0
@@ -319,14 +319,17 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
                 if result is not None:
                     try:
                         results = serialize_object([value.results for value in result.Data.diffgram[0].DocumentElement[0]], list)
-                    except AttributeError:
+                    except AttributeError as e:
+                        log.info(f'[{self.source_definition["key"]}] AttributeError when accessing diffgram for report: {str(e)}')
                         # Fallback for when document is not parsed properly
                         # noinspection PyProtectedMember
                         try:
                             results = [value['results'] for value in result.Data._value_1._value_1]
-                        except AttributeError:
+                        except AttributeError as e:
+                            log.info(f'[{self.source_definition["key"]}] AttributeError when accessing _value_1 for report: {str(e)}')
                             results = None
-                    except IndexError:
+                    except IndexError as e:
+                        log.info(f'[{self.source_definition["key"]}] IndexError when accessing diffgram for report: {str(e)}')
                         results = None
                 else:
                     results = None
