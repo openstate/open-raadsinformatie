@@ -28,8 +28,7 @@ indefinitely, add the following to `/etc/logrotate.d/orilog`:
     /var/lib/docker/volumes/ori_oridata/_data/ori.log
     {
         rotate 30
-        daily
-        maxsize 100M
+        size 50M
         missingok
         notifempty
         compress
