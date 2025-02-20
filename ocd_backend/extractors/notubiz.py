@@ -156,7 +156,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 except Exception as e:
                     meetings_error += 1
                     log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
-                    continue
+                    raise
 
                 try:
                     organization = self.organizations[self.source_definition['notubiz_organization_id']]
