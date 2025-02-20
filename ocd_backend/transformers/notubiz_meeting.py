@@ -57,9 +57,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     event.agenda = []
     for item in original_item.get('agenda_items', []):
-        if not item['order']:
-            continue
-
         # If it's a 'label' type skip the item for now, since it only gives little information about what is to come
         if item['type'] == 'label':
             continue
@@ -80,8 +77,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                 agendaitem.name = item['type_data']['attributes'][1]['value']
             except (KeyError, IndexError):
                 pass
-        agendaitem.position = original_item['order']
-        agendaitem.parent = event
+        agendaitem.position = item.get('order', '1')
+        agendaitem.parent = determine_parent(item, event)
         agendaitem.start_date = event.start_date
         agendaitem.last_discussed_at = event.start_date
 
@@ -113,9 +110,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
         event.agenda.append(agendaitem)
 
-    # object_model['last_modified'] = iso8601.parse_date(
-    #    original_item['last_modified'])
-
     if 'canceled' in original_item and original_item['canceled']:
         log.info(r'Found a Notubiz event with status EventCancelled: {str(event.values)}')
         event.status = EventCancelled
@@ -132,6 +126,16 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
     event.save()
     return event
+
+def determine_parent(item, event):
+    parent_dict = item.get('parent')
+    if parent_dict == None:
+        return event
+    parent_id = parent_dict['id']
+
+    # parent agenda_items are processed first, so we should find the parent
+    parent = [agendaitem for agendaitem in event.agenda if agendaitem.canonical_id == parent_id][0]
+    return parent
 
 def get_version_definition(doc):
     return next(filter(lambda version_def: version_def['id'] == doc['version'], doc['versions']), None)
