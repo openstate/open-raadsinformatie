@@ -173,8 +173,15 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         pass
                 meeting_json['attributes'] = attributes
 
+                # agenda_items may themselves contain agenda_items, recursively add them
+                main_agenda_items = meeting_json.get('agenda_items', [])
+                all_child_agenda_items = []
+                for agenda_item in main_agenda_items:
+                    self.add_child_agenda_items(agenda_item, all_child_agenda_items)
+                meeting_json['agenda_items'] = main_agenda_items + all_child_agenda_items
+
                 # agenda_items may have module_items that in turn may contain documents
-                for agenda_item in meeting_json.get('agenda_items', []):
+                for agenda_item in meeting_json['agenda_items']:
                     agenda_item['module_item_contents'] = []
                     for module_item in agenda_item.get("module_items", []):
                         try:
@@ -213,6 +220,10 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
         if meetings_error > 0:
             log.info(f'[{self.source_definition["key"]}] Also {meetings_error} notubiz meeting(items) encountered an error. ')
 
+    def add_child_agenda_items(self, agenda_item, all_child_agenda_items):
+        for child_agenda_item in agenda_item.get('agenda_items', []):
+            all_child_agenda_items.append(child_agenda_item)
+            self.add_child_agenda_items(child_agenda_item, all_child_agenda_items)
 
     def get_organization_directly(self):
             """
