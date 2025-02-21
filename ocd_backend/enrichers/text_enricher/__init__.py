@@ -16,7 +16,6 @@ from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.utils.ori_document import OriDocument
-from ocd_backend.models.postgres_models import StoredDocument
 
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
@@ -50,7 +49,7 @@ class TextEnricher(BaseEnricher):
     def enrich_item(self, item, metadata):
         """Enriches the media objects referenced in a single item.
 
-        First, a media item will be retrieved from the source, than the
+        First, a media item will be retrieved from the source, then the
         registered and configured tasks will run. In case fetching the
         item fails, enrichment of the media item will be skipped. In case
         a specific media enrichment task fails, only that task is
