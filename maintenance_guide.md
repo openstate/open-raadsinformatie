@@ -53,6 +53,21 @@ If a task failed with an exception and is queued to be retried it is placed in u
 See also unacked_index (contains the time the task were added):
 	sudo docker exec -it ori_redis_1 redis-cli zrange unacked_index 0 -1 WITHSCORES
 
+### Alembic
+From the ocd_backend/alembic directory in ori_backend_1:
+
+To create a new migration script with the message “Add new table”. The script is saved in the alembic/versions directory
+  - `alembic revision -m "Add new table"`
+
+To upgrade the database to the latest revision, applying all pending migrations.
+  - `alembic upgrade head`
+
+To roll back the last applied migration. For example, to roll back the last migration, you would run alembic downgrade -1
+  - `alembic downgrade -1`
+
+To view history of migrations:
+  - `alembic history (must be run from ocd_backend/alembic directory)`
+
 ### Supplier specific: Notubiz
 
 - Go to https://api.notubiz.nl/organisations
