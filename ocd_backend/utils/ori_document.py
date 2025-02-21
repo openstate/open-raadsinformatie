@@ -3,6 +3,7 @@ import os
 import shutil
 import magic
 import uuid
+import datetime
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import StoredDocument
 from ocd_backend.models.serializers import PostgresSerializer
@@ -42,10 +43,12 @@ class OriDocument():
 
     def store_in_db(self):
         self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
+        time_now = datetime.datetime.now(tz=datetime.timezone.utc)
         if self.stored_document:
             self.stored_document.last_changed_at = self.last_changed_at
             self.stored_document.file_size = self.file_size
             self.stored_document.ocr_used = self.ocr_used
+            self.stored_document.updated_at = time_now
         else:
             content_type = magic.from_file(self.temp_path, mime=True)
             self.stored_document = StoredDocument(
@@ -56,7 +59,9 @@ class OriDocument():
                 last_changed_at=self.last_changed_at,
                 content_type=content_type,
                 file_size=self.file_size,
-                ocr_used=self.ocr_used
+                ocr_used=self.ocr_used,
+                created_at=time_now,
+                updated_at=time_now
             )
             self.session.add(self.stored_document)
             # Flush session to set autoincrement id in self.stored_document before commit
