@@ -54,6 +54,9 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
         report_name = original_item.get('_Extra', {}).get('Values', {}).get('Titel')
 
     if report_name is None:
+        report_name = original_item.get('_ReportName')
+
+    if report_name is None:
         log.warning(f'[{self.source_definition["key"]}] Unable to determine title field. Original item: '
                   f'{json.dumps(original_item, default=str)}')
     else:
