@@ -279,7 +279,7 @@ if RELEASE_STAGE == 'development':
 elif RELEASE_STAGE == 'testing':    
     SENTRY_ENVIRONMENT = 'testing'
 else:
-    SENTRY_ENVIRONMENT = 'production'
+    SENTRY_ENVIRONMENT = 'production2' # RVD CHANGE BACK TO PRODUCTION WHEN NEW SERVER BECOMES MAIN SERVER
 
 def get_ocr_version():
     tesseract_version = subprocess.check_output("apk info tesseract-ocr | head -n 1 | awk '{print $1}'", shell=True).decode().strip()
