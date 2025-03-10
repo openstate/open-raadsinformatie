@@ -22,6 +22,8 @@ Latest docker version uses "-" as separator when creating container names instea
 
 The Nginx container was installed separately in production. To mimic this in development, clone `https://github.com/openstate/nginx-load-balancer/`, follow the instructions in `INSTALL.txt` and start the container with `docker compose --compatibility up -d`
 
+After first time installation on a server, run `ocd_backend/setup.sh` to create the database.
+
 The log file was made persistent and is located in Docker volume `ori_oridata`. To prevent this file from growing
 indefinitely, add the following to `/etc/logrotate.d/orilog`:
 
