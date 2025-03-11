@@ -64,47 +64,52 @@ class TextEnricher(BaseEnricher):
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
 
         if not hasattr(item, 'text') or not item.text:
+            resource = None
             try:
                 resource = HttpRequestSimple().fetch(
                     item.original_url,
                     identifier
                 )
             except requests.HTTPError as e:
-                log.info(f"HTTPError occurred for fetch in enrich_item, error class is {e.__class__.__name__}")
+                log.info(f"HTTPError occurred for fetch in enrich_item, error is {e}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 if e.response.status_code == 400:
                     raise SkipEnrichment(e)
                 else:
                     raise
             except requests.exceptions.ConnectionError as e:
-                log.info(f"ConnectionError occurred for fetch in enrich_item, error class is {e.__class__.__name__}")
+                log.info(f"ConnectionError occurred for fetch in enrich_item, error is {e}")
                 raise
+            except requests.exceptions.TooManyRedirects as e:
+                log.info(f"TooManyRedirects occurred for fetch in enrich_item, error is {e}")
+                # configuration error on supplier side, cannot do much here
             except:
                 log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
 
-            item.content_type = resource.content_type
-            item.size_in_bytes = resource.file_size
+            if resource is not None:
+                item.content_type = resource.content_type
+                item.size_in_bytes = resource.file_size
 
-            # Make sure file_object is actually on the disk for pdf parsing
-            # Pass delete=False, since we keep the file
-            temporary_file = NamedTemporaryFile(delete=False)
-            temporary_file.write(resource.read())
-            temporary_file.close()
+                # Make sure file_object is actually on the disk for pdf parsing
+                # Pass delete=False, since we keep the file
+                temporary_file = NamedTemporaryFile(delete=False)
+                temporary_file.write(resource.read())
+                temporary_file.close()
 
-            if os.path.exists(temporary_file.name):
-                path = os.path.realpath(temporary_file.name)
-                item.text = file_parser(path, item.original_url, max_pages=100)
+                if os.path.exists(temporary_file.name):
+                    path = os.path.realpath(temporary_file.name)
+                    item.text = file_parser(path, item.original_url, max_pages=100)
 
-                ocr_used = None
-                item.md_text = md_file_parser(path, item.original_url)
-                if parse_result_is_empty(item.md_text):
-                    log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
-                    item.md_text = md_file_parser_using_ocr(path, item.original_url)
-                    ocr_used = OCR_VERSION
+                    ocr_used = None
+                    item.md_text = md_file_parser(path, item.original_url)
+                    if parse_result_is_empty(item.md_text):
+                        log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
+                        item.md_text = md_file_parser_using_ocr(path, item.original_url)
+                        ocr_used = OCR_VERSION
 
-                ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
-                ori_document.store()
+                    ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
+                    ori_document.store()
 
             if hasattr(item, 'text') and item.text:
                 # Adding the same text again for Elastic nesting
