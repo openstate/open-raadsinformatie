@@ -50,13 +50,18 @@ cd $HOMEDIR
 # Create maintenance file when desired using `touch maintenance.txt`
 # -----------------------------------------------------------------------------------
 if test -f "$HOMEDIR/$MAINTENANCE_FILE"; then
-    echo "Maintenance, bailing out"
+    echo_to_log "Maintenance, bailing out"
     exit
 fi
 
 # -----------------------------------------------------------------------------------
 # Function definitions
 # -----------------------------------------------------------------------------------
+function echo_to_log() {
+    local message=$1
+    echo -e "\n$(date): $(message)"
+}
+
 function get_locked_source() {
     echo $($SUDO docker exec ori_redis_1 sh -c "redis-cli -n 1 get $LOCK_KEY")
 }
@@ -103,7 +108,7 @@ function warn_processing_time() {
 
     mail_was_sent=$(mail_sent $locked_source)
     if [ "$mail_was_sent" = "yes" ]; then
-        echo "Mail has already been sent"
+        echo_to_log "Mail has already been sent"
         return
     fi
 
@@ -132,15 +137,15 @@ function warn_processing_time() {
 # -----------------------------------------------------------------------------------
 LOCKED=$(check_locked)
 if [ "$LOCKED" = "$IS_LOCKED" ]; then
-    echo "Indexing busy, not starting new source"
+    echo_to_log "Indexing busy, not starting new source"
 
     # Send warning if indexing doesn't seem to finish within time limit set
     DATE_STARTED=$(get_time_lock_claimed)
     DATE_NOW=$(date +"%s")
     DATE_DIFF=$(($DATE_NOW-$DATE_STARTED))
-    echo "date started $DATE_STARTED $DATE_NOW $DATE_DIFF"
+    echo_to_log "date started $DATE_STARTED $DATE_NOW $DATE_DIFF"
     if [ $DATE_DIFF -gt $INDEXING_TIME_LIMIT ]; then
-        echo "TOO long ago, SEND MAIL"
+        echo_to_log "TOO long ago, SEND MAIL"
         warn_processing_time $DATE_DIFF
     fi
     exit
