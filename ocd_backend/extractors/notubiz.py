@@ -193,7 +193,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                             module_item_json = json.load(resource.media_file)['item']
                             agenda_item['module_item_contents'].append(module_item_json)
                         except Exception as e:
-                            log.warning(f'[{self.source_definition["key"]}] error retrieving module item {str(e)}: {parse.quote(url)}')
+                            log.warning(f'[{self.source_definition["key"]}] generic error when retrieving module item {str(e)}, {e.__class__.__name__}: {parse.quote(url)}')
                             raise
 
                 hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json)
