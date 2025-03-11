@@ -32,14 +32,28 @@ def retry_task(fun):
         try:
             return fun(self, *args, **kwargs)
         except tuple(AUTORETRY_EXCEPTIONS) as e:
-            try:
-                log.info(f'Retry attempt n = {self.request.retries} for error ({e.__class__.__name__}):\n{str(e)}')
-                countdown = get_exponential_backoff_interval(
-                    factor=AUTORETRY_RETRY_BACKOFF,
-                    retries=self.request.retries,
-                    maximum=AUTORETRY_RETRY_BACKOFF_MAX)
-                raise self.retry(countdown=countdown)
-            except self.MaxRetriesExceededError:
-                log.error(f'Maximum number of retries reached for error ({e.__class__.__name__}):\n{str(e)}')
-                raise
+            if is_retryable_error(e):
+                try:
+                    log.info(f'Retry attempt n = {self.request.retries} for error ({e.__class__.__name__}):\n{str(e)}')
+                    countdown = get_exponential_backoff_interval(
+                        factor=AUTORETRY_RETRY_BACKOFF,
+                        retries=self.request.retries,
+                        maximum=AUTORETRY_RETRY_BACKOFF_MAX)
+                    raise self.retry(countdown=countdown)
+                except self.MaxRetriesExceededError:
+                    log.error(f'Maximum number of retries reached for error ({e.__class__.__name__}):\n{str(e)}')
+                    raise
+
     return handle_retry
+
+def is_retryable_error(error):
+    error_string = str(error)
+    retryable = True
+
+    if 'too many 500 error responses' in error_string:
+        retryable = False
+
+    if not retryable:
+        log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
+    
+    return retryable
