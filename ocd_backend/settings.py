@@ -261,7 +261,7 @@ IBABS_WSDL = 'https://wcf.ibabs.eu/api/Public.svc?singleWsdl'
 CWC_WSDL = 'https://services.companywebcast.com/meta/1.2/metaservice.svc?singleWsdl'
 
 # Exceptions that when raised should be autoretried by celery
-AUTORETRY_EXCEPTIONS = [MaxRetryError, ReadTimeoutError, ConnectTimeout, ConnectionError, exceptions.ConnectionError]
+AUTORETRY_EXCEPTIONS = [MaxRetryError, exceptions.RetryError, ReadTimeoutError, ConnectTimeout, ConnectionError, exceptions.ConnectionError]
 AUTORETRY_RETRY_BACKOFF = 30
 RETRY_MAX_RETRIES = 6 # 9 RVD temporarily set lower to speed up overall reindexing
 AUTORETRY_RETRY_BACKOFF_MAX = 15360
