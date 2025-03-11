@@ -93,20 +93,19 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                 agendaitem.attachment.append(attachment)
 
             module_item_attributes = module_item_contents.get('attributes', [])
-            module_item_main_document = [doc for doc in module_item_attributes if doc["datatype"] == "document" or doc["label"] == "Hoofddocument"]
-            if len(module_item_main_document) == 0:
+            module_item_main_documents = [doc for doc in module_item_attributes if doc["datatype"] == "document" or doc["label"] == "Hoofddocument"]
+            if len(module_item_main_documents) == 0:
+                # This is ok, a main document is not always present
                 message = f'[{self.source_definition["key"]}] no main document for module_item {module_item_contents["id"]}'
-                log.warning(message)
-                raise Exception(message)
-            elif len(module_item_main_document) > 1:
+                log.info(message)
+            elif len(module_item_main_documents) > 1:
                 message = f'[{self.source_definition["key"]}] multiple main documents found for module_item {module_item_contents["id"]}'
-                log.warning(message)
-                raise Exception(message)
-            module_item_main_document = module_item_main_document[0]
-            for value in module_item_main_document.get('values', []):
-                doc = value.get('document', {})
-                attachment = create_media_object(self, doc, agendaitem, event.start_date)
-                agendaitem.attachment.append(attachment)
+                log.info(message)
+            for module_item_main_document in module_item_main_documents:
+                for value in module_item_main_document.get('values', []):
+                    doc = value.get('document', {})
+                    attachment = create_media_object(self, doc, agendaitem, event.start_date)
+                    agendaitem.attachment.append(attachment)
 
         event.agenda.append(agendaitem)
 
