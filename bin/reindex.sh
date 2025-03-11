@@ -59,12 +59,14 @@ fi
 # -----------------------------------------------------------------------------------
 function echo_to_log() {
     local message=$1
-    echo -e "\n$(date): $message"
+    echo "$(date): $message"
 }
+echo -e "\n"
 
 function get_locked_source() {
     echo $($SUDO docker exec ori_redis_1 sh -c "redis-cli -n 1 get $LOCK_KEY")
 }
+echo_to_log $(get_locked_source)
 
 function check_locked() {
     local locked_source=$(get_locked_source)
