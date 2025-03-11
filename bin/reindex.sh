@@ -59,7 +59,7 @@ fi
 # -----------------------------------------------------------------------------------
 function echo_to_log() {
     local message=$1
-    echo -e "\n$(date): $(message)"
+    echo -e "\n$(date): $message"
 }
 
 function get_locked_source() {
