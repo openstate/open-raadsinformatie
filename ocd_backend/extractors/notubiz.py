@@ -6,6 +6,7 @@ from requests.exceptions import HTTPError, RetryError, ConnectionError
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
+from ocd_backend.utils.retry_utils import is_retryable_error
 
 log = get_source_logger('extractor')
 
@@ -36,7 +37,8 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
             response.raise_for_status()
         except (HTTPError, RetryError, ConnectionError) as e:
             log.warning(f'[{self.source_definition["key"]}] {str(e)}: {response.request.url}')
-            raise
+            if is_retryable_error(e):
+                raise
 
         # Create a dictionary of Notubiz organizations. Some child classes need information
         # from this dictionary.
@@ -113,14 +115,16 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {parse.quote(url)}')
                 meetings_error += 1
-                raise
+                if is_retryable_error(e):
+                    raise
 
             try:
                 response.raise_for_status()
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] error retrieving notubiz meeting {str(e)}: {response.request.url}')
                 meetings_error += 1
-                raise
+                if is_retryable_error(e):
+                    raise
 
             event_json = response.json()
 
@@ -152,11 +156,13 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                         meetings_skipped += 1
                         break
                     # Reraise all other HTTP errors
-                    raise
+                    if is_retryable_error(e):
+                        raise
                 except Exception as e:
                     meetings_error += 1
                     log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
-                    raise
+                    if is_retryable_error(e):
+                        raise
 
                 try:
                     organization = self.organizations[self.source_definition['notubiz_organization_id']]
@@ -194,7 +200,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                             agenda_item['module_item_contents'].append(module_item_json)
                         except Exception as e:
                             log.warning(f'[{self.source_definition["key"]}] generic error when retrieving module item {str(e)}, {e.__class__.__name__}: {parse.quote(url)}')
-                            raise
+                            if is_retryable_error(e):
+                                raise
 
                 hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json)
                 if hash_for_item:
@@ -239,7 +246,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 organization_response.raise_for_status()
             except (HTTPError, RetryError, ConnectionError) as e:
                 log.warning(f'[{self.source_definition["key"]}] {str(e)}: {organization_response.request.url}')
-                raise
+                if is_retryable_error(e):
+                    raise
 
             # Accumulate field_id and labels from all entries
             entity_type_settings = organization_response.json().get('entity_type_settings', {})
