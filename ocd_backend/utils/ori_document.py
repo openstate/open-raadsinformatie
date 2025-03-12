@@ -36,13 +36,52 @@ class OriDocument():
 
     def store(self):
         with self.session.begin():
+            self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
+            if self.exists_and_not_changed():
+                log.info(f"Document exists and has not changed - not storing {self.resource_ori_id} {self.metadata['original_url']}")
+                return
             self.store_in_db()
             self.store_on_disk()
             self.store_markdown_on_disk()
             self.store_metadata_on_disk()
 
+    def exists_and_not_changed(self):
+        if not self.stored_document:
+            return False
+
+        # Check whether database values changed
+        if self.stored_document.last_changed_at != self.last_changed_at or \
+            self.stored_document.file_size != self.file_size or \
+            self.stored_document.ocr_used != self.ocr_used or \
+            self.stored_document.file_size != self.file_size:
+            return False
+
+        # Check whether markdown values changed
+        text_array = self.md_text if self.md_text is not None else []
+        md_text = ''.join([f"{page}\n" for page in text_array])
+        if self.file_contents_changed(self.full_markdown_name(), md_text):
+            return False
+
+        # Check whether metadata values changed
+        metadata = json.dumps(self.metadata, indent=2)
+        if self.file_contents_changed(self.full_metadata_name(), metadata):
+            return False
+
+        return True
+
+    def file_contents_changed(self, filename, new_contents):
+        if not os.path.exists(filename):
+            changed = new_contents is not None
+            return changed
+
+        with open(filename, "r") as f:
+            contents = f.read()
+            if new_contents != contents:
+                return True
+
+        return False
+
     def store_in_db(self):
-        self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
         time_now = datetime.datetime.now(tz=datetime.timezone.utc)
         if self.stored_document:
             self.stored_document.last_changed_at = self.last_changed_at
@@ -76,26 +115,24 @@ class OriDocument():
         if self.md_text is None:
             return
         
-        destination_path = self.full_markdown_name()
-        with open(destination_path, "w") as f:
+        with open(self.full_markdown_name(), "w") as f:
             for page in self.md_text:
                 f.write(f"{page}\n")
 
     def store_metadata_on_disk(self):
-        destination_path = self.full_metadata_name()
-
-        with open(destination_path, "w") as f:
+        with open(self.full_metadata_name(), "w") as f:
             f.write(json.dumps(self.metadata, indent=2))
 
     def get_last_changed_at(self, item):
         """
         Notubiz returns a `last_modified` for documents, which gets stored in `date_modified`
         For other suppliers use the `last_discussed_at` (which is the best we can do here)
+        Convert to UCT and remove tzinfo so that this date can be compared to date stored in database in exists_and_not_changed()
         """
         if hasattr(item, 'date_modified'):
-            return item.date_modified
+            return item.date_modified.astimezone(datetime.timezone.utc).replace(tzinfo=None)
         elif hasattr(item, 'last_discussed_at'):
-            return item.last_discussed_at
+            return item.last_discussed_at.astimezone(datetime.timezone.utc).replace(tzinfo=None)
         else:
             return None
 

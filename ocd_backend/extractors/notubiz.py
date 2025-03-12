@@ -203,7 +203,8 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                             if is_retryable_error(e):
                                 raise
 
-                hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], meeting_json)
+                value_to_be_hashed = meeting_json['last_modified']
+                hash_for_item = self.hash_for_item('notubiz', self.source_definition['notubiz_organization_id'], 'meeting', meeting_json['id'], value_to_be_hashed)
                 if hash_for_item:
                     yield 'application/json', \
                           json.dumps(meeting_json), \
