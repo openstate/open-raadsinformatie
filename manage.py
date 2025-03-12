@@ -591,10 +591,16 @@ def developers_purge_dbs(ctx):
 
     # Redis
     try:
+        redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=0, decode_responses=True)
+        redis_client.flushdb()
+    except Exception as e:
+        print(f'Error purging redis database 0: {e}')
+
+    try:
         redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
         redis_client.flushdb()
     except Exception as e:
-        print(f'Error purging redis: {e}')
+        print(f'Error purging redis database 1: {e}')
 
     # Elastic Search
     try:
