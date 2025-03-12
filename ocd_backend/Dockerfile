@@ -44,4 +44,4 @@ VOLUME /opt/ori/data
 
 WORKDIR /opt/ori
 USER celery
-CMD celery --app=ocd_backend.app:celery_app --quiet worker --loglevel=info -Q transformers,enrichers --concurrency=10 --without-gossip
+CMD celery --app=ocd_backend.app:celery_app --quiet worker --loglevel=info -Q transformers,enrichers --concurrency=12 --without-gossip
