@@ -73,7 +73,8 @@ class TextEnricher(BaseEnricher):
             except requests.HTTPError as e:
                 log.info(f"HTTPError occurred for fetch in enrich_item, error is {e}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
-                if e.response.status_code == 400:
+                # GO returns a 404 if document not found
+                if e.response.status_code == 400 or e.response.status_code == 404:
                     raise SkipEnrichment(e)
                 else:
                     raise
