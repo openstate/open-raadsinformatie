@@ -41,7 +41,8 @@ def md_file_parser(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         doc=pymupdf.open(fname)
         hdr=pymupdf4llm.IdentifyHeaders(doc)
-        md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False)
+        # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
+        md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
         md_text = [chunk['text'] for chunk in md_chunks]
 
         log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
