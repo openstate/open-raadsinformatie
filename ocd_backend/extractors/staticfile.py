@@ -203,7 +203,7 @@ class StaticJSONDumpExtractor(BaseExtractor):
 
         try:
             with progressbar(
-                    gzip.open(dump_path, 'rb'), label='Loading %s' % dump_path
+                    gzip.open(dump_path, 'rb'), label=f'Loading {dump_path}'
             ) as data:
                 for line in data:
                     yield 'application/json', line.strip()

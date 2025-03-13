@@ -38,7 +38,7 @@ class PostgresDatabase:
                 raise NoResultFound
             return Uri(Ori, resource.ori_id)
         except MultipleResultsFound:
-            raise MultipleResultsFound('Multiple resources found for IRI %s' % iri)
+            raise MultipleResultsFound(f'Multiple resources found for IRI {iri}')
         except NoResultFound:
             return self.generate_ori_identifier(iri=iri)
         finally:
