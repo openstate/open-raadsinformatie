@@ -24,7 +24,7 @@ def file_parser(fname, original_url, max_pages=None):
                 log.warning(f"Error from pdftotext for {original_url}: {e}")
                 raise e
 
-            log.debug(f"Processed %i pages to text for {original_url}" % i)
+            log.debug(f"Processed {i} pages to text for {original_url}")
             return result_pages
     else:
         # This code path is disabled until the Tika service is fixed (see issue 178)
@@ -44,7 +44,7 @@ def md_file_parser(fname, original_url):
         md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False)
         md_text = [chunk['text'] for chunk in md_chunks]
 
-        log.debug(f"Processed %i pages to markdown for {original_url}" % len(md_text))
+        log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
 
         return md_text
     else:
@@ -64,7 +64,7 @@ def md_file_parser_using_ocr(fname, original_url):
             text = page.get_text(textpage=text_page)
             md_text.append(text)
 
-        log.debug(f"Processed %i pages using OCR for {original_url}" % len(md_text))
+        log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
 
         return md_text
     else:

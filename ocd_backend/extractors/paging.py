@@ -33,7 +33,7 @@ class PagingHTMLExtractor(StaticHtmlExtractor):
         next_url = self.file_url
         next_page_count = 0
         while next_url is not None:
-            log.info('Getting %s' % (next_url,))
+            log.info(f'Getting {next_url}')
 
             # Retrieve the static content from the source
             try:
