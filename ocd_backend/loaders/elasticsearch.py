@@ -30,7 +30,12 @@ class ElasticsearchBaseLoader(BaseLoader):
             self.add_metadata(model, doc == model)
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
-            self.process(model, model_body)
+            try:
+                self.process(model, model_body)
+            except Exception as e:
+                log.info(f"ERROR when uploading {model.get_short_identifier()} to ES: {e}")
+                log.info(f"Length model_body: {len(model_body)}")
+                raise e
             log_identifiers.append(model.get_short_identifier())
 
         log.debug(f'{self.__name__} indexing document id: {", ".join(log_identifiers)}')
