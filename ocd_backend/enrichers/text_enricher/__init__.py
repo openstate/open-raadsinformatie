@@ -74,7 +74,7 @@ class TextEnricher(BaseEnricher):
                 log.info(f"HTTPError occurred for fetch in enrich_item, error is {e}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 # GO returns a 404 if document not found
-                if e.response.status_code == 400 or e.response.status_code == 404:
+                if e.response.status_code >= 400 and e.response.status_code <= 410:
                     raise SkipEnrichment(e)
                 else:
                     raise
@@ -84,6 +84,9 @@ class TextEnricher(BaseEnricher):
             except requests.exceptions.TooManyRedirects as e:
                 log.info(f"TooManyRedirects occurred for fetch in enrich_item, error is {e}")
                 # configuration error on supplier side, cannot do much here
+            except requests.exceptions.MissingSchema as e:
+                log.info(f"MissingSchema occurred for fetch in enrich_item, error is {e}")
+                # sometimes a "/tmp/..." url is encountered                
             except:
                 log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
