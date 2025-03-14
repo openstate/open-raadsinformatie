@@ -52,6 +52,8 @@ def is_retryable_error(error):
 
     if 'too many 500 error responses' in error_string:
         retryable = False
+    if 'NameResolutionError' in error_string:
+        retryable = False
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
