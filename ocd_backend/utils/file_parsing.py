@@ -22,7 +22,10 @@ def file_parser(fname, original_url, max_pages=None):
                         break
             except pdftotext.Error as e:
                 log.warning(f"Error from pdftotext for {original_url}: {e}")
-                raise e
+                if 'poppler error creating document' in str(e):
+                    pass # unreadable pdf
+                else:
+                    raise e
 
             log.debug(f"Processed {i} pages to text for {original_url}")
             return result_pages
