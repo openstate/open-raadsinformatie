@@ -20,7 +20,7 @@ from ocd_backend.utils.ori_document import OriDocument
 from ocd_backend.enrichers.text_enricher.tasks.void import VoidEnrichtmentTask
 from ocd_backend.enrichers.text_enricher.tasks.theme_classifier import ThemeClassifier
 from ocd_backend.enrichers.text_enricher.tasks.waaroverheid import WaarOverheidEnricher
-from ocd_backend.utils.retry_utils import retry_task
+from ocd_backend.utils.retry_utils import is_retryable_error, retry_task
 
 log = get_source_logger('enricher')
 
@@ -80,7 +80,10 @@ class TextEnricher(BaseEnricher):
                     raise
             except requests.exceptions.ConnectionError as e:
                 log.info(f"ConnectionError occurred for fetch in enrich_item, error is {e}")
-                raise
+                if is_retryable_error(e):
+                    raise
+                else:
+                    raise SkipEnrichment(e)
             except requests.exceptions.TooManyRedirects as e:
                 log.info(f"TooManyRedirects occurred for fetch in enrich_item, error is {e}")
                 # configuration error on supplier side, cannot do much here
