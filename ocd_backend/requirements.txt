@@ -10,7 +10,7 @@ kombu==5.4.2
 # msgpack-python==0.4.2
 nose2==0.15.1
 pymupdf==1.25.1
-pdftotext==2.1.4
+pdftotext==3.0.0
 pymupdf4llm @ git+https://github.com/openstate/pymupdfRAG.git@2d25598#subdirectory=pymupdf4llm
 Pillow==9.3.0
 psycopg2==2.9.10
