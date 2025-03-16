@@ -74,15 +74,15 @@ def make_temp_pdf_fname():
 
 def md_file_parser(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
-        doc=pymupdf.open(fname)
-        hdr=pymupdf4llm.IdentifyHeaders(doc)
-        # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
-        md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
-        md_text = [chunk['text'] for chunk in md_chunks]
+        with pymupdf.open(fname) as doc:
+            hdr=pymupdf4llm.IdentifyHeaders(doc)
+            # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
+            md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
+            md_text = [chunk['text'] for chunk in md_chunks]
 
-        log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
+            log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
 
-        return md_text
+            return md_text
     else:
         pass
 
@@ -92,17 +92,16 @@ def md_file_parser(fname, original_url):
 # 150, 200, 300 and 500.
 def md_file_parser_using_ocr(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
-        doc=pymupdf.open(fname)
+        with pymupdf.open(fname) as doc:
+            md_text = []
+            for page in doc:
+                text_page = page.get_textpage_ocr(flags=pymupdf.TEXTFLAGS_SEARCH, language='nld', full=False)
+                text = page.get_text(textpage=text_page)
+                md_text.append(text)
 
-        md_text = []
-        for page in doc:
-            text_page = page.get_textpage_ocr(flags=pymupdf.TEXTFLAGS_SEARCH, language='nld', full=False)
-            text = page.get_text(textpage=text_page)
-            md_text.append(text)
+            log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
 
-        log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
-
-        return md_text
+            return md_text
     else:
         pass
 
