@@ -12,7 +12,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty
+from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty, rewrite_problematic_pdfs
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.utils.ori_document import OriDocument
@@ -109,10 +109,11 @@ class TextEnricher(BaseEnricher):
                     item.text = file_parser(path, item.original_url, max_pages=100)
 
                     ocr_used = None
-                    item.md_text = md_file_parser(path, item.original_url)
+                    md_path = rewrite_problematic_pdfs(path, item.original_url)
+                    item.md_text = md_file_parser(md_path, item.original_url)
                     if parse_result_is_empty(item.md_text):
                         log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
-                        item.md_text = md_file_parser_using_ocr(path, item.original_url)
+                        item.md_text = md_file_parser_using_ocr(md_path, item.original_url)
                         ocr_used = OCR_VERSION
 
                     ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
