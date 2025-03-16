@@ -1,4 +1,7 @@
+import os
 import re
+from tempfile import gettempdir
+import uuid
 
 import magic
 import pdftotext
@@ -39,6 +42,35 @@ def file_parser(fname, original_url, max_pages=None):
         #     # reraise everything
         #     raise
         pass
+
+def contains_too_many_images(fname, original_url):
+    with pymupdf.open(fname) as doc:
+        for page in doc.pages():
+            number_of_images = len(page.get_images())
+            if number_of_images > 50:
+                log.info(f"PDF for {original_url} contains many image objects on a page ({number_of_images}), will be rewritten")
+                return True
+
+    return False
+
+# Some PDFs were found to have 30k image objects in the dict on a single page (not real images).
+# Due to inefficient looping these files are impossible to process (takes days).
+# The quickest solution is to rewrite those files first using pymupdf.
+def rewrite_problematic_pdfs(fname, original_url):
+    if magic.from_file(fname, mime=True) != 'application/pdf':
+        return fname
+
+    if contains_too_many_images(fname, original_url):
+        with pymupdf.open(fname) as doc:
+            new_fname = make_temp_pdf_fname()
+            doc.save(new_fname, garbage=3, clean=True)
+            return new_fname
+
+    return fname
+
+def make_temp_pdf_fname():
+    name = os.path.join(gettempdir(), str(uuid.uuid1()))
+    return f"{name}.pdf"
 
 def md_file_parser(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
