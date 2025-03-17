@@ -11,7 +11,7 @@ kombu==5.4.2
 nose2==0.15.1
 pymupdf==1.25.1
 pdftotext==3.0.0
-pymupdf4llm @ git+https://github.com/openstate/pymupdfRAG.git@ffdcec6#subdirectory=pymupdf4llm
+pymupdf4llm @ git+https://github.com/openstate/pymupdfRAG.git@85d0f57#subdirectory=pymupdf4llm
 Pillow==9.3.0
 psycopg2==2.9.10
 PyLD==2.0.4
