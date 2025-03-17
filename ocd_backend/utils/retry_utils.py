@@ -54,7 +54,7 @@ def is_retryable_error(error):
         retryable = False
     if 'NameResolutionError' in error_string:
         retryable = False
-    if 'azavista.com' in error_string and ('ConnectTimeoutError' in error_string or 'Connection refused' in error_string):
+    if ('itinnovationday.nl' in error_string or 'azavista.com' in error_string) and ('ConnectTimeoutError' in error_string or 'Connection refused' in error_string):
         retryable = False
     if 'www.mantelzorgpleinalmere.nl' in error_string and 'SSLV3_ALERT_HANDSHAKE_FAILURE' in error_string:
         retryable = False
