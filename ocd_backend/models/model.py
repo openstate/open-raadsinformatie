@@ -230,6 +230,7 @@ class Model(object, metaclass=ModelMetaclass):
                     value.save()
         except:
             log.info(f"Generic error occurred for save in Model, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+            log.info(vars(self))
             # Re-raise everything
             raise
         finally:
