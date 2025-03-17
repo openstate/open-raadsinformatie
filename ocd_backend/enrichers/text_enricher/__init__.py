@@ -96,6 +96,9 @@ class TextEnricher(BaseEnricher):
                     raise
                 else:
                     raise SkipEnrichment(e)
+            except requests.exceptions.InvalidURL as e:
+                log.info(f"InvalidURL occurred for fetch in enrich_item, error is {e}")
+                # cannot do much about this...
             except:
                 log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
