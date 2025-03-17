@@ -89,7 +89,13 @@ class TextEnricher(BaseEnricher):
                 # configuration error on supplier side, cannot do much here
             except requests.exceptions.MissingSchema as e:
                 log.info(f"MissingSchema occurred for fetch in enrich_item, error is {e}")
-                # sometimes a "/tmp/..." url is encountered                
+                # sometimes a "/tmp/..." url is encountered
+            except requests.exceptions.RetryError as e:
+                log.info(f"RetryError occurred for fetch in enrich_item, error is {e}")
+                if is_retryable_error(e):
+                    raise
+                else:
+                    raise SkipEnrichment(e)
             except:
                 log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
