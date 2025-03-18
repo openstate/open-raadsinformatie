@@ -13,7 +13,7 @@ services:
       - PROXY_PORT=8090
     volumes:
       - .:/opt/ori
-    command: /opt/ori/bin/backend.sh
+    command: /opt/ori/bin/start_backend.dev.sh
     mem_limit: 1g
   loader:
     build:

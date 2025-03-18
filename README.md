@@ -25,7 +25,20 @@ The Nginx container was installed separately in production. To mimic this in dev
 After first time installation on a server, run `ocd_backend/setup.sh` to create the database.
 
 The log file was made persistent and is located in Docker volume `ori_oridata`. To prevent this file from growing
-indefinitely, `RotatingFileHandler` is used to rotate it (50MB max, 30 in total).
+indefinitely, add the following to `/etc/logrotate.d/orilog`:
+```
+/var/lib/docker/volumes/ori_oridata/_data/ori.log
+{
+    rotate 100
+    size 50M
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+}
+```
+You can test it using `sudo logrotate -d /etc/logrotate.d/orilog`
 
 In development Flower provides insight in the queues of Celery. You can access the Flower dashboard via `http://localhost:81/workers`.
 

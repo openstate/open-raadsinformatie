@@ -162,10 +162,10 @@ if [ "$SOURCE" != "" ];
 then
     clear_mail_sent
     set_lock "$SOURCE"
-    $SUDO docker exec ori_backend_1 ./manage.py extract process all \
-        --source_path "*"$SOURCE \
+    $SUDO docker exec ori_backend_1 sh -c "./manage.py extract process all \
+        --source_path \"*\"$SOURCE \
         --start_date $START_DATE \
         --end_date $END_DATE \
         --lock_key $LOCK_KEY \
-        --indexed_filename "$INDEXED_FILENAME"
+        --indexed_filename \"$INDEXED_FILENAME\" >> /opt/ori/data/ori.log 2>&1"
 fi
