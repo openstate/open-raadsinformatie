@@ -146,11 +146,8 @@ LOGGING = {
     'handlers': {
         'default': {
             'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'formatter': 'advanced',
-            'filename': os.path.join(PROJECT_PATH, 'data', 'ori.log'),
-            'maxBytes': 52428800,
-            'backupCount': 30
+            'class': 'logging.StreamHandler',
+            'formatter': 'advanced'
         }
     },
     'loggers': {
