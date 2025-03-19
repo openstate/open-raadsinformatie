@@ -117,13 +117,20 @@ class TextEnricher(BaseEnricher):
                     path = os.path.realpath(temporary_file.name)
                     item.text = file_parser(path, item.original_url, max_pages=100)
 
-                    ocr_used = None
-                    md_path = rewrite_problematic_pdfs(path, item.original_url)
-                    item.md_text = md_file_parser(md_path, item.original_url)
-                    if parse_result_is_empty(item.md_text):
-                        log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
-                        item.md_text = md_file_parser_using_ocr(md_path, item.original_url)
-                        ocr_used = OCR_VERSION
+                    try:
+                        ocr_used = None
+                        md_path = rewrite_problematic_pdfs(path, item.original_url)
+                        item.md_text = md_file_parser(md_path, item.original_url)
+                        if parse_result_is_empty(item.md_text):
+                            log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
+                            item.md_text = md_file_parser_using_ocr(md_path, item.original_url)
+                            ocr_used = OCR_VERSION
+                    except ValueError as e:
+                        log.info(f"ValueError occurred when parsing PDF in  enrich_item, error is {e}")
+                        if is_retryable_error(e):
+                            raise
+                        else:
+                            raise SkipEnrichment(e)
 
                     ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
                     ori_document.store()
