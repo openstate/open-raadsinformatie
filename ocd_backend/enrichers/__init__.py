@@ -1,3 +1,4 @@
+import sys
 from requests import exceptions
 
 from ocd_backend.app import celery_app
@@ -49,8 +50,8 @@ class BaseEnricher(celery_app.Task):
                     # serious problem might occur.
                     log.critical(f'[{self.source_definition["key"]}] IOError occurred, {self.__class__.__name__}, reason: {e}')
                     raise
-                except Exception as e:
-                    log.warning(f'[{self.source_definition["key"]}] Unexpected error, {self.__class__.__name__}, reason: {e}')
+                except:
+                    log.warning(f'[{self.source_definition["key"]}] Unexpected error, {self.__class__.__name__}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}')
                     raise
 
         return args
