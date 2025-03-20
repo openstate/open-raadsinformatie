@@ -150,19 +150,28 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                     resource = self.fetch(meeting_url + self.application_token, cached_path)
                     meeting_json = json.load(resource.media_file)['meeting']
                 except (HTTPError, RetryError, ConnectionError) as e:
-                    error_json = e.response.json()
-                    if error_json.get('message') == 'No rights to see this meeting':
-                        log.info(f'[{self.source_definition["key"]}] No rights to view: {meeting_url}')
-                        meetings_skipped += 1
-                        break
+                    log.info(f'[{self.source_definition["key"]}] error occurred: {e.__class__.__name__} {str(e)}: {meeting_url}')
+                    try:
+                        error_json = e.response.json()
+                        if error_json.get('message') == 'No rights to see this meeting':
+                            log.info(f'[{self.source_definition["key"]}] No rights to view: {meeting_url}')
+                            meetings_skipped += 1
+                            break
+                    except Exception as e_inside:
+                        log.info(f'[{self.source_definition["key"]}] exception when accessing json {e_inside.__class__.__name__} {str(e_inside)}: {meeting_url}')
+
                     # Reraise all other HTTP errors
                     if is_retryable_error(e):
                         raise
+                    else:
+                        break
                 except Exception as e:
                     meetings_error += 1
                     log.warning(f'[{self.source_definition["key"]}] {str(e)}: {meeting_url}')
                     if is_retryable_error(e):
                         raise
+                    else:
+                        break
 
                 try:
                     organization = self.organizations[self.source_definition['notubiz_organization_id']]
