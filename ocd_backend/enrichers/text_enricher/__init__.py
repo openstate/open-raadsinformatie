@@ -121,10 +121,11 @@ class TextEnricher(BaseEnricher):
                         ocr_used = None
                         new_path = make_temp_pdf_fname()
                         md_path = rewrite_problematic_pdfs(path, new_path, item.original_url)
-                        item.md_text = md_file_parser(md_path, item.original_url)
+                        if md_path is not None:
+                            item.md_text = md_file_parser(md_path, item.original_url)
                         if parse_result_is_empty(item.md_text):
                             log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
-                            item.md_text = md_file_parser_using_ocr(md_path, item.original_url)
+                            item.md_text = md_file_parser_using_ocr(path, item.original_url)
                             ocr_used = OCR_VERSION
                     except ValueError as e:
                         log.info(f"ValueError occurred when parsing PDF in  enrich_item, error is {e}")
