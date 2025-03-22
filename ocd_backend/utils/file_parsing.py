@@ -78,6 +78,8 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
             sorted_keys = sorted(number_of_images_all_pages.keys(), reverse=True)
             for page_no in sorted_keys:
                 doc.delete_page(page_no)
+            if doc.page_count == 0:
+                return
             doc.saveIncr()
 
     return new_name
