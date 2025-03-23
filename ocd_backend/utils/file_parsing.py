@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 from tempfile import gettempdir
 import uuid
 
@@ -63,28 +64,32 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
     if not rewrite:
         return fname
     
-    with pymupdf.open(fname) as doc:
-        doc.save(new_name, garbage=3, clean=True)
+    try:
+        with pymupdf.open(fname) as doc:
+            doc.save(new_name, garbage=3, clean=True)
 
-    # Sometimes rewriting the PDF does not significantly reduce the number of images, potentially leading to
-    # millions of objects in `img_bboxes` in pymupdf and hanging PDF conversions.
-    # Prevent this by now simply deleting those pages with too many images
-    with pymupdf.open(new_name) as doc: 
-        number_of_images_all_pages = {}
-        for index, page in enumerate(doc.pages()):
-            number_of_images = len(page.get_images())
-            if number_of_images > 100:
-                number_of_images_all_pages[index] = number_of_images
-        if len(number_of_images_all_pages) > 0:
-            log.info(f"Rewritten PDF for {original_url} still contains many image objects on a page ({number_of_images_all_pages}), deleting those pages now")
-            sorted_keys = sorted(number_of_images_all_pages.keys(), reverse=True)
-            for page_no in sorted_keys:
-                doc.delete_page(page_no)
-            if doc.page_count == 0:
-                return
-            doc.saveIncr()
-
-    return new_name
+        # Sometimes rewriting the PDF does not significantly reduce the number of images, potentially leading to
+        # millions of objects in `img_bboxes` in pymupdf and hanging PDF conversions.
+        # Prevent this by now simply deleting those pages with too many images
+        with pymupdf.open(new_name) as doc: 
+            number_of_images_all_pages = {}
+            for index, page in enumerate(doc.pages()):
+                number_of_images = len(page.get_images())
+                if number_of_images > 100:
+                    number_of_images_all_pages[index] = number_of_images
+            if len(number_of_images_all_pages) > 0:
+                log.info(f"Rewritten PDF for {original_url} still contains many image objects on a page ({number_of_images_all_pages}), deleting those pages now")
+                sorted_keys = sorted(number_of_images_all_pages.keys(), reverse=True)
+                for page_no in sorted_keys:
+                    doc.delete_page(page_no)
+                if doc.page_count == 0:
+                    return
+                doc.saveIncr()
+        return new_name
+    except:
+        log.info(f"Generic error occurred when rewriting pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+    
+    return
 
 def make_temp_pdf_fname():
     name = os.path.join(gettempdir(), str(uuid.uuid1()))
