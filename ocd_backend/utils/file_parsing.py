@@ -11,6 +11,8 @@ import pymupdf4llm
 from ocd_backend.log import get_source_logger
 
 log = get_source_logger('file_parser')
+pymupdf.TOOLS.mupdf_display_errors(False)
+pymupdf.TOOLS.mupdf_display_warnings(False)
 
 def file_parser(fname, original_url, max_pages=None):
     if magic.from_file(fname, mime=True) == 'application/pdf':
