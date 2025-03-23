@@ -71,7 +71,7 @@ class TextEnricher(BaseEnricher):
                     identifier
                 )
             except requests.HTTPError as e:
-                log.info(f"HTTPError occurred for fetch in enrich_item, error is {e}")
+                log.info(f"HTTPError occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 # GO returns a 404 if document not found
                 if e.response.status_code >= 400 and e.response.status_code <= 410:
@@ -79,28 +79,28 @@ class TextEnricher(BaseEnricher):
                 else:
                     raise
             except requests.exceptions.ConnectionError as e:
-                log.info(f"ConnectionError occurred for fetch in enrich_item, error is {e}")
+                log.info(f"ConnectionError occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 if is_retryable_error(e):
                     raise
                 else:
                     raise SkipEnrichment(e)
             except requests.exceptions.TooManyRedirects as e:
-                log.info(f"TooManyRedirects occurred for fetch in enrich_item, error is {e}")
+                log.info(f"TooManyRedirects occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # configuration error on supplier side, cannot do much here
             except requests.exceptions.MissingSchema as e:
-                log.info(f"MissingSchema occurred for fetch in enrich_item, error is {e}")
+                log.info(f"MissingSchema occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # sometimes a "/tmp/..." url is encountered
             except requests.exceptions.RetryError as e:
-                log.info(f"RetryError occurred for fetch in enrich_item, error is {e}")
+                log.info(f"RetryError occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 if is_retryable_error(e):
                     raise
                 else:
                     raise SkipEnrichment(e)
             except requests.exceptions.InvalidURL as e:
-                log.info(f"InvalidURL occurred for fetch in enrich_item, error is {e}")
+                log.info(f"InvalidURL occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # cannot do much about this...
             except:
-                log.info(f"Generic error occurred for fetch in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+                log.info(f"Generic error occurred for fetch {item.original_url} in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
 
             if resource is not None:

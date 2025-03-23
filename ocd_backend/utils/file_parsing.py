@@ -94,8 +94,13 @@ def md_file_parser(fname, original_url):
     if magic.from_file(fname, mime=True) == 'application/pdf':
         with pymupdf.open(fname) as doc:
             hdr=pymupdf4llm.IdentifyHeaders(doc)
-            # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
-            md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
+            try:
+                # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
+                md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
+            except ValueError as e:
+                log.info(f'ValueError when calling ymupdf4llm.to_markdown for {original_url}, reason: {e}')
+                return
+
             md_text = [chunk['text'] for chunk in md_chunks]
 
             log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
@@ -118,7 +123,7 @@ def md_file_parser_using_ocr(fname, original_url):
                     text = page.get_text(textpage=text_page)
                     md_text.append(text)
                 except ValueError as e:
-                    log.info(f'ValueError when attempting ocr for page, reason: {e}')
+                    log.info(f'ValueError when calling page.get_textpage_ocr for {original_url}, reason: {e}')
                     # just skip page
             log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
 
