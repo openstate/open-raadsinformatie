@@ -113,10 +113,13 @@ def md_file_parser_using_ocr(fname, original_url):
         with pymupdf.open(fname) as doc:
             md_text = []
             for page in doc:
-                text_page = page.get_textpage_ocr(flags=pymupdf.TEXTFLAGS_SEARCH, language='nld', full=False)
-                text = page.get_text(textpage=text_page)
-                md_text.append(text)
-
+                try:
+                    text_page = page.get_textpage_ocr(flags=pymupdf.TEXTFLAGS_SEARCH, language='nld', full=False)
+                    text = page.get_text(textpage=text_page)
+                    md_text.append(text)
+                except ValueError as e:
+                    log.info(f'ValueError when attempting ocr for page, reason: {e}')
+                    # just skip page
             log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
 
             return md_text
