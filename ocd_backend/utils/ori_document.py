@@ -115,12 +115,12 @@ class OriDocument():
         if self.md_text is None:
             return
         
-        with open(self.full_markdown_name(), "w") as f:
+        with open(self.full_markdown_name(), "w", errors="surrogatepass") as f:
             for page in self.md_text:
                 f.write(f"{page}\n")
 
     def store_metadata_on_disk(self):
-        with open(self.full_metadata_name(), "w") as f:
+        with open(self.full_metadata_name(), "w", errors="surrogatepass") as f:
             f.write(json.dumps(self.metadata, indent=2))
 
     def get_last_changed_at(self, item):
