@@ -58,8 +58,6 @@ def is_retryable_error(error):
         retryable = False
     if 'www.mantelzorgpleinalmere.nl' in error_string and 'SSLV3_ALERT_HANDSHAKE_FAILURE' in error_string:
         retryable = False
-    if 'ValueError' in error_string and 'bad image data' in error_string: # from PyMuPDF
-        retryable = False
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
