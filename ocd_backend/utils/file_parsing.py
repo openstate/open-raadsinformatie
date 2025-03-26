@@ -103,7 +103,10 @@ def md_file_parser(fname, original_url):
                 # Without the image_size_limit=0.1 a page with many very small images cannot be processed due to O(n*n) complexity
                 md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
             except ValueError as e:
-                log.info(f'ValueError when calling ymupdf4llm.to_markdown for {original_url}, reason: {e}')
+                log.info(f'ValueError when calling pymupdf4llm.to_markdown for {original_url}, reason: {e}')
+                return
+            except IndexError as e:
+                log.info(f'IndexError when calling pymupdf4llm.to_markdown for {original_url}, reason: {e}')
                 return
 
             md_text = [chunk['text'] for chunk in md_chunks]
