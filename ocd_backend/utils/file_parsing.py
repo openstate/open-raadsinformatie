@@ -53,17 +53,21 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
     if magic.from_file(fname, mime=True) != 'application/pdf':
         return fname
 
-    rewrite = False
-    with pymupdf.open(fname) as doc: 
-        for page in doc.pages():
-            number_of_images = len(page.get_images())
-            if number_of_images > 100:
-                log.info(f"PDF for {original_url} contains many image objects on a page ({number_of_images}), will be rewritten")
-                rewrite = True
-                break
-    if not rewrite:
-        return fname
-    
+    try:
+        rewrite = False
+        with pymupdf.open(fname) as doc: 
+            for page in doc.pages():
+                number_of_images = len(page.get_images())
+                if number_of_images > 100:
+                    log.info(f"PDF for {original_url} contains many image objects on a page ({number_of_images}), will be rewritten")
+                    rewrite = True
+                    break
+        if not rewrite:
+            return fname
+    except:
+        log.info(f"Generic error occurred when checking number of pages in pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+        return
+        
     try:
         with pymupdf.open(fname) as doc:
             doc.save(new_name, garbage=3, clean=True)
