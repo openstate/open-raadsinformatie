@@ -51,7 +51,6 @@ If a task failed with an exception and is queued to be retried it is placed in u
 See also unacked_index (contains the time the task were added):
 	sudo docker exec -it ori_redis_1 redis-cli zrange unacked_index 0 -1 WITHSCORES
 
-
 ### Supplier specific: Notubiz
 
 - Go to https://api.notubiz.nl/organisations
@@ -80,7 +79,6 @@ See also unacked_index (contains the time the task were added):
   - get the `item_id` for the municipality (e.g. using a `log` statement when retrieving in development)
   - delete the row with this `item_id` from the `ItemHash` table
   - rerun the import
-
 
 ## Folder structure
 

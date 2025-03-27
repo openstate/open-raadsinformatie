@@ -118,12 +118,12 @@ ori.ibabs:
     allmanak_id: 26937
     cbs_id: GM1734
     entities:
-    - *municipality
-    - *organizations
-    - *committees
-    - *persons
-    - *meetings
-    - *reports
+      - *municipality
+      - *organizations
+      - *committees
+      - *persons
+      - *meetings
+      - *reports
     # - *videotulen
     <<: *ibabs
 
@@ -139,98 +139,98 @@ ori.ibabs:
     cbs_id: GM0344
     <<: *ibabs
     entities:
-    - *municipality
-    - *organizations
-    - *committees
-    - *persons
-    - *meetings
-    - entity: reports
-      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-      transformer: ocd_backend.transformers.ibabs_report.report_item
-      enrichers:
-        - ocd_backend.enrichers.text_enricher.text_enricher
-      include: ".*"
-      exclude: (moties|amendementen)
-      pdf_max_pages: 0
-      max_pages: 1
-      per_page: 20
-      <<: *entity_defaults
+      - *municipality
+      - *organizations
+      - *committees
+      - *persons
+      - *meetings
+      - entity: reports
+        extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+        transformer: ocd_backend.transformers.ibabs_report.report_item
+        enrichers:
+          - ocd_backend.enrichers.text_enricher.text_enricher
+        include: ".*"
+        exclude: (moties|amendementen)
+        pdf_max_pages: 0
+        max_pages: 1
+        per_page: 20
+        <<: *entity_defaults
 
-#    - entity: motions
-#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-#      transformer: ocd_backend.transformers.ibabs_motion.motion_itm
-#      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
-#      include: moties
-#      pdf_max_pages: 20
-#      per_page: 100
-#      fields:
-#        Moties:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#        Amendementen:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#      <<: *entity_defaults
+  #    - entity: motions
+  #      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  #      transformer: ocd_backend.transformers.ibabs_motion.motion_itm
+  #      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpsertLoader
+  #      include: moties
+  #      pdf_max_pages: 20
+  #      per_page: 100
+  #      fields:
+  #        Moties:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #        Amendementen:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #      <<: *entity_defaults
 
-#    - entity: amendments
-#      classification: Amendementen
-#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-#      transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
-#      include: amendementen
-#      pdf_max_pages: 20
-#      per_page: 100
-#      fields:
-#        Amendementen:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#        Moties:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#      <<: *entity_defaults
+  #    - entity: amendments
+  #      classification: Amendementen
+  #      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  #      transformer: ocd_backend.transformers.ibabs_motion.IBabsMotionItem
+  #      include: amendementen
+  #      pdf_max_pages: 20
+  #      per_page: 100
+  #      fields:
+  #        Amendementen:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #        Moties:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #      <<: *entity_defaults
 
-#    - entity: vote_events
-#      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
-#      transformer: ocd_backend.transformers.ibabs_motion.IBabsVoteEventItem
-#      include: (moties|amendementen)
-#      pdf_max_pages: 20
-#      per_page: 100
-#      fields:
-#        Moties:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#        Amendementen:
-#          name: onderwerp
-#          description: status
-#          start_date: datum
-#      <<: *entity_defaults
+  #    - entity: vote_events
+  #      extractor: ocd_backend.extractors.ibabs.IBabsReportsExtractor
+  #      transformer: ocd_backend.transformers.ibabs_motion.IBabsVoteEventItem
+  #      include: (moties|amendementen)
+  #      pdf_max_pages: 20
+  #      per_page: 100
+  #      fields:
+  #        Moties:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #        Amendementen:
+  #          name: onderwerp
+  #          description: status
+  #          start_date: datum
+  #      <<: *entity_defaults
 
-#    - entity: voting_rounds
-#      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
-#      transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
-#      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpdateOnlyLoader
-#      reverse_chronological: false
-#      max_processed_meetings: 0
-#      # start_date: '2018-02-01T00:00:00'
-#      # end_date: '2018-03-21T00:00:00'
-#      <<: *entity_defaults
+  #    - entity: voting_rounds
+  #      extractor: ocd_backend.extractors.ibabs.IBabsVotesMeetingsExtractor
+  #      transformer: ocd_backend.transformers.voting_round.IBabsVotingRoundItem
+  #      loader: ocd_backend.loaders.elasticsearch.ElasticsearchUpdateOnlyLoader
+  #      reverse_chronological: false
+  #      max_processed_meetings: 0
+  #      # start_date: '2018-02-01T00:00:00'
+  #      # end_date: '2018-03-21T00:00:00'
+  #      <<: *entity_defaults
 
-    # - entity: meeting_attendees
-    #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor
-    #   transformer: ocd_backend.transformers.attendance.AttendanceForEventItem
-    #   frontend_type: events
-    #   frontend_args:
-    #     classification: Agenda
-    #     sort: start_date
-    #     order: desc
-    #     size: 100
-    #   <<: *entity_defaults
+  # - entity: meeting_attendees
+  #   extractor: ocd_backend.extractors.api.FrontendAPIExtractor
+  #   transformer: ocd_backend.transformers.attendance.AttendanceForEventItem
+  #   frontend_type: events
+  #   frontend_args:
+  #     classification: Agenda
+  #     sort: start_date
+  #     order: desc
+  #     size: 100
+  #   <<: *entity_defaults
 
-    # - *videotulen
+  # - *videotulen
 
   # Added on 17-11-2017
   barneveld:
@@ -519,12 +519,12 @@ ori.ibabs:
     allmanak_id: 32835
     cbs_id: GM0243
     entities:
-    - *municipality
-    - *organizations
-    - *committees
-    - *persons
-    - *meetings
-    - *reports
+      - *municipality
+      - *organizations
+      - *committees
+      - *persons
+      - *meetings
+      - *reports
     # - *videotulen
     <<: *ibabs
 
@@ -664,7 +664,7 @@ ori.ibabs:
     cbs_id: GM1859
     <<: *ibabs
 
-  vlieland :
+  vlieland:
     key: vlieland
     ibabs_sitename: Vlieland
     allmanak_id: 31502
@@ -819,7 +819,7 @@ ori.ibabs:
     cbs_id: GM1842
     <<: *ibabs
 
-# Added on 28-06-2021
+  # Added on 28-06-2021
 
   opmeer:
     key: opmeer
@@ -842,7 +842,7 @@ ori.ibabs:
     cbs_id: GM0312
     <<: *ibabs
 
-# Added on 14-07-2021
+  # Added on 14-07-2021
 
   westervoort:
     key: westervoort
@@ -858,7 +858,6 @@ ori.ibabs:
     cbs_id: GM1669
     <<: *ibabs
 
-
   heerlen:
     key: heerlen
     ibabs_sitename: Heerlen
@@ -866,7 +865,7 @@ ori.ibabs:
     cbs_id: GM0917
     <<: *ibabs
 
-# Added on 30-08-2021
+  # Added on 30-08-2021
 
   beekdaelen:
     key: beekdaelen
@@ -924,7 +923,7 @@ ori.ibabs:
     cbs_id: GM0815
     <<: *ibabs
 
-# Added on 08-10-2021
+  # Added on 08-10-2021
 
   ooststellingwerf:
     key: ooststellingwerf
@@ -1265,4 +1264,19 @@ ori.ibabs:
     ibabs_sitename: moerdijk
     allmanak_id: 30656
     cbs_id: GM1709
+    <<: *ibabs
+
+  ## Added 2025-03-27
+  dijk_en_waard:
+    key: dijk_en_waard
+    ibabs_sitename: dijkenwaard
+    allmanak_id: 28523619
+    cbs_id: GM1980
+    <<: *ibabs
+
+  assen:
+    key: assen
+    ibabs_sitename: assen
+    allmanak_id: 23236
+    cbs_id: GM0106
     <<: *ibabs
