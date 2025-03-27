@@ -102,3 +102,14 @@ owi.ibabs:
     ibabs_sitename: delfland
     allmanak_id: 21123
     <<: *ibabs
+  # Added 2025-03-27
+  brabantse_delta:
+    key: brabantse_delta
+    ibabs_sitename: brabantsedelta
+    allmanak_id: 21113
+    <<: *ibabs
+  hoogheemraadschap_hollands_noorderkwartier:
+    key: hoogheemraadschap_hollands_noorderkwartier
+    ibabs_sitename: hhnk
+    allmanak_id: 21145
+    <<: *ibabs
