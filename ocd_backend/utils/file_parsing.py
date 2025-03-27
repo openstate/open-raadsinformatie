@@ -100,7 +100,10 @@ def make_temp_pdf_fname():
     return f"{name}.pdf"
 
 def md_file_parser(fname, original_url):
-    if magic.from_file(fname, mime=True) == 'application/pdf':
+    if magic.from_file(fname, mime=True) != 'application/pdf':
+        return
+
+    try:
         with pymupdf.open(fname) as doc:
             hdr=pymupdf4llm.IdentifyHeaders(doc)
             try:
@@ -118,15 +121,18 @@ def md_file_parser(fname, original_url):
             log.debug(f"Processed {len(md_text)} pages to markdown for {original_url}")
 
             return md_text
-    else:
-        pass
+    except:
+        log.info(f"Generic error occurred when opening pdf in md_file_parser for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
 
 # When OCR is applied, font information is not retrieved so output is plain text instead of markdown.
 # Therefore we use page.get_text from pymupdf instead of using pymupdf4llm.
 # full=False was found to give ok results. No improvement was found with full=True and dpi values of
 # 150, 200, 300 and 500.
 def md_file_parser_using_ocr(fname, original_url):
-    if magic.from_file(fname, mime=True) == 'application/pdf':
+    if magic.from_file(fname, mime=True) != 'application/pdf':
+        return
+
+    try:
         with pymupdf.open(fname) as doc:
             md_text = []
             for page in doc:
@@ -140,8 +146,9 @@ def md_file_parser_using_ocr(fname, original_url):
             log.debug(f"Processed {len(md_text)} pages using OCR for {original_url}")
 
             return md_text
-    else:
-        pass
+    except:
+        log.info(f"Generic error occurred when opening pdf in md_file_parser_using_ocr for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+        return []
 
 def parse_result_is_empty(md_text):
     if md_text is None:
