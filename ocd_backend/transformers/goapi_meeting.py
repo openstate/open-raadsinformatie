@@ -71,10 +71,11 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     # Some meetings are missing a name because some municipalities do not always fill the description field.
     # In this case we create the name from the name of the commission and the start date of the meeting.
     # See issue #124.
-    if original_item['description'] == '':
+    description = original_item.get('description', '').strip()
+    if description == '':
         event.name = 'Vergadering - %s - %s' % (original_item['dmu']['name'], event.start_date)
     else:
-        event.name = original_item['description']
+        event.name = description
 
     event.classification = ['Agenda']
     event.description = original_item['description']
