@@ -63,3 +63,9 @@ owi.notubiz:
     allmanak_id: 21134
     notubiz_organization_id: 535
     <<: *notubiz
+  ## Added on 2025-03-27
+  waterschap_amstel_gooi_en_vecht:
+    key: waterschap_amstel_gooi_en_vecht
+    allmanak_id: 21102
+    notubiz_organization_id: 1707
+    <<: *ibabs
