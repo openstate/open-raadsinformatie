@@ -18,6 +18,14 @@
 # If you want this script not to pick up the next source after the current one finishes, do a
 #       touch maintenance.txt
 #
+# PRACTICAL CONSIDERATIONS:
+# - Whenever an uncaught error is raised the lock will not be released. This allows for fixing errors
+#   in an early stage and getting as close to 100% coverage as possible
+# - When an error has been fixed:
+#   - deploy
+#   - add the source to the top of to_index_XYZ.txt again
+#   - delete the redis lock: `sudo docker exec ori_redis_1 sh -c "redis-cli -n 1 del ori_lock_key_XYZ"`
+# - The source will again be processed
 SUDO="sudo " # In development substitute with empty string
 MAINTENANCE_FILE="maintenance.txt"
 IS_LOCKED="ori_is_locked"
