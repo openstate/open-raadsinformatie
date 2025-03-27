@@ -121,7 +121,6 @@ osi.ibabs:
     key: limburg
     allmanak_id: 16071
     <<: *ibabs
-
 #    _fields_limburg: &fields_limburg
 #      fields:
 #        Moties:

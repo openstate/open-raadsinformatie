@@ -80,3 +80,9 @@ osi.notubiz:
     allmanak_id: 15632
     notubiz_organization_id: 1396
     <<: *notubiz
+
+  friesland:
+    key: fryslan
+    allmanak_id: 15184
+    notubiz_organization_id: 822
+    <<: *notubiz
