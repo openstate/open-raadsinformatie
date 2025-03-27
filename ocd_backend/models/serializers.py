@@ -71,8 +71,8 @@ class BaseSerializer:
                 except MissingProperty:
                     raise
             elif definition.required and not model_object.skip_validation:
-                raise RequiredProperty("Property '{}' is required for {}".format(
-                    name, model_object.compact_uri()))
+                raise RequiredProperty("Property '{}' is required for {}, values so far: {}".format(
+                    name, model_object.compact_uri(), props_list))
         return props_list
 
     def serialize(self, model_object):
