@@ -27,6 +27,7 @@
 #   - delete the redis lock: `sudo docker exec ori_redis_1 sh -c "redis-cli -n 1 del ori_lock_key_XYZ"`
 # - The source will again be processed
 SUDO="sudo " # In development substitute with empty string
+source ~/.bash_aliases
 MAINTENANCE_FILE="maintenance.txt"
 IS_LOCKED="ori_is_locked"
 
@@ -42,6 +43,7 @@ TO_INDEX_FILENAME="to_index${SUPPLIER_SUFFIX}.txt"
 LOCK_KEY="ori_lock_key${SUPPLIER_SUFFIX}"
 LOCK_TIME_KEY="ori_lock_time_key${SUPPLIER_SUFFIX}"
 MAIL_SENT_KEY="ori_mail_sent${SUPPLIER_SUFFIX}"
+MAINTENANCE_MAIL_FILENAME="maintenance${SUPPLIER_SUFFIX}_sent.txt"
 
 INDEXED_FILENAME="indexed${SUPPLIER_SUFFIX}.log"
 START_DATE='2010-01-01'
@@ -52,15 +54,6 @@ FQPATH=`readlink -f $0`
 BINDIR=`dirname $FQPATH`
 HOMEDIR=`dirname $BINDIR`
 cd $HOMEDIR
-
-# -----------------------------------------------------------------------------------
-# Stop further processing if maintenance file is detected
-# Create maintenance file when desired using `touch maintenance.txt`
-# -----------------------------------------------------------------------------------
-if test -f "$HOMEDIR/$MAINTENANCE_FILE"; then
-    echo_to_log "Maintenance, bailing out"
-    exit
-fi
 
 # -----------------------------------------------------------------------------------
 # Function definitions
@@ -141,6 +134,30 @@ function warn_processing_time() {
     set_mail_sent $locked_source
 }
 
+function warn_suspended_due_to_maintenance() {
+    if test -f "$HOMEDIR/$MAINTENANCE_MAIL_FILENAME"; then
+        return
+    fi
+
+    EMAIL_TO="developers@openstate.eu"
+    FROM_EMAIL="developers@openstate.eu"
+    FROM_NAME="Openraadsinformatie Indexing"
+    SUBJECT="Previous processing for $SUPPLIER_SUFFIX has finished but maintenance file encountered"
+
+    bodyHTML="<p>If all processing has finished you can update the sources.</p>"
+
+    maildata='{"personalizations": [{"to": [{"email": "'${EMAIL_TO}'"}]}],"from": {"email": "'${FROM_EMAIL}'",
+	    "name": "'${FROM_NAME}'"},"subject": "'${SUBJECT}'","content": [{"type": "text/html", "value": "'${bodyHTML}'"}]}'
+
+    curl --request POST \
+    --url https://api.sendgrid.com/v3/mail/send \
+    --header 'Authorization: Bearer '$SENDGRID_API_KEY \
+    --header 'Content-Type: application/json' \
+    --data "$maildata"
+
+    touch "$HOMEDIR/$MAINTENANCE_MAIL_FILENAME"
+}
+
 # -----------------------------------------------------------------------------------
 # Check if previous source is still being processed. If so, bail out. Send warning
 # if processing takes too long.
@@ -158,6 +175,16 @@ if [ "$LOCKED" = "$IS_LOCKED" ]; then
         echo_to_log "TOO long ago, SEND MAIL"
         warn_processing_time $DATE_DIFF
     fi
+    exit
+fi
+
+# -----------------------------------------------------------------------------------
+# Stop further processing if maintenance file is detected
+# Create maintenance file when desired using `touch maintenance.txt`
+# -----------------------------------------------------------------------------------
+if test -f "$HOMEDIR/$MAINTENANCE_FILE"; then
+    echo_to_log "Maintenance, bailing out"
+    warn_suspended_due_to_maintenance
     exit
 fi
 
