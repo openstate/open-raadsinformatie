@@ -48,7 +48,7 @@ MAINTENANCE_MAIL_FILENAME="maintenance${SUPPLIER_SUFFIX}_sent.txt"
 INDEXED_FILENAME="indexed${SUPPLIER_SUFFIX}.log"
 START_DATE='2010-01-01'
 END_DATE=`date -d "-1 day" +%Y-%m-%d`
-INDEXING_TIME_LIMIT=43200 # half a day in seconds
+INDEXING_TIME_LIMIT=86400 # a day in seconds
 
 FQPATH=`readlink -f $0`
 BINDIR=`dirname $FQPATH`

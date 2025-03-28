@@ -46,7 +46,7 @@ def retry_task(fun):
 
     return handle_retry
 
-def is_retryable_error(error):
+def is_retryable_error(error, url = None):
     error_string = str(error)
     retryable = True
 
@@ -58,6 +58,8 @@ def is_retryable_error(error):
         ('ConnectTimeoutError' in error_string or 'Connection refused' in error_string):
         retryable = False
     if 'www.mantelzorgpleinalmere.nl' in error_string and 'SSLV3_ALERT_HANDSHAKE_FAILURE' in error_string:
+        retryable = False
+    if 'Read timed out' in error_string and url is not None and 'api.notubiz.nl/document/7357190/2' in url:
         retryable = False
 
     if not retryable:

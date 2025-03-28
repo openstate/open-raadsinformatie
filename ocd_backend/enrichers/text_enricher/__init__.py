@@ -80,7 +80,7 @@ class TextEnricher(BaseEnricher):
                     raise
             except requests.exceptions.ConnectionError as e:
                 log.info(f"ConnectionError occurred for fetch {item.original_url} in enrich_item, error is {e}")
-                if is_retryable_error(e):
+                if is_retryable_error(e, item.original_url):
                     raise
                 else:
                     raise SkipEnrichment(e)
