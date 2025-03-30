@@ -39,7 +39,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                               supplier='allmanak',
                                               collection=self.source_definition['source_type'])
 
-    if original_item.get('gremium', {}).get('id'):
+    # 'gremium' may be null in json
+    gremium = original_item.get('gremium', {}) or {}
+    if gremium.get('id'):
         event.committee = Organization(original_item['gremium']['id'],
                                        source=self.source_definition['key'],
                                        supplier='notubiz',
