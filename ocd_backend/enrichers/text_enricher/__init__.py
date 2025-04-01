@@ -4,6 +4,7 @@ from urllib import parse
 from tempfile import NamedTemporaryFile
 
 import requests
+import sqlalchemy as sa
 
 from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
@@ -130,7 +131,15 @@ class TextEnricher(BaseEnricher):
                         ocr_used = OCR_VERSION
 
                     ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
-                    ori_document.store()
+                    try:
+                        ori_document.store()
+                    except sa.exc.IntegrityError as e:
+                        log.info(f"IntegrityError in TextEnricher when saving stored_document: {str(e)}")
+                        if "UniqueViolation" in str(e):
+                            # A race condition occurs when a meeting has the same document twice - try again
+                            ori_document.store()
+                        else:
+                            raise e
 
             if hasattr(item, 'text') and item.text:
                 # Adding the same text again for Elastic nesting
