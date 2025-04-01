@@ -68,4 +68,4 @@ owi.notubiz:
     key: waterschap_amstel_gooi_en_vecht
     allmanak_id: 21102
     notubiz_organization_id: 1707
-    <<: *ibabs
+    <<: *notubiz
