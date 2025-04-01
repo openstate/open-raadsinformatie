@@ -4,6 +4,7 @@ import shutil
 import magic
 import uuid
 import datetime
+import sqlalchemy as sa
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import StoredDocument
 from ocd_backend.models.serializers import PostgresSerializer
@@ -35,15 +36,20 @@ class OriDocument():
         self.session = database.Session()
 
     def store(self):
-        with self.session.begin():
-            self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
-            if self.exists_and_not_changed():
-                log.info(f"Document exists and has not changed - not storing {self.resource_ori_id} {self.metadata['original_url']}")
-                return
-            self.store_in_db()
-            self.store_on_disk()
-            self.store_markdown_on_disk()
-            self.store_metadata_on_disk()
+        try:
+            with self.session.begin():
+                self.stored_document = self.session.query(StoredDocument).filter(StoredDocument.resource_ori_id == self.resource_ori_id).first()
+                if self.exists_and_not_changed():
+                    log.info(f"Document exists and has not changed - not storing {self.resource_ori_id} {self.metadata['original_url']}")
+                    return
+                self.store_in_db()
+                self.store_on_disk()
+                self.store_markdown_on_disk()
+                self.store_metadata_on_disk()
+        except sa.exc.IntegrityError as e:
+            log.info(f"IntegrityError in OriDocument when saving stored_document: {str(e)}")
+            self.session.rollback()
+            raise e
 
     def exists_and_not_changed(self):
         if not self.stored_document:
