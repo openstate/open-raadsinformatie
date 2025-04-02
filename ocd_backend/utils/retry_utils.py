@@ -59,8 +59,9 @@ def is_retryable_error(error, url = None):
         retryable = False
     if 'www.mantelzorgpleinalmere.nl' in error_string and 'SSLV3_ALERT_HANDSHAKE_FAILURE' in error_string:
         retryable = False
-    if 'Read timed out' in error_string and url is not None and ('api.notubiz.nl/document/7357190/2' in url or \
-                                                                 ('.raadsinformatie.nl' in url and 'module_filter' in url)):
+    if 'Read timed out' in error_string and url is not None and 'api.notubiz.nl/document/7357190/2' in url:
+        retryable = False
+    if 'Read timed out' in error_string and '.raadsinformatie.nl' in error_string and 'module_filter' in error_string:
         retryable = False
 
     if not retryable:
