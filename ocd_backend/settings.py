@@ -24,8 +24,8 @@ MINOR_VERSION = __version_info__[1]
 RELEASE_STAGE = os.getenv('RELEASE_STAGE')
 
 # host.docker.internal:8090; start proxy with ssh -gD 8090 wolf
-PROXY_HOST = os.getenv('PROXY_HOST') if RELEASE_STAGE == 'development' else None
-PROXY_PORT = os.getenv('PROXY_PORT') if RELEASE_STAGE == 'development' else None
+PROXY_HOST = os.getenv('PROXY_HOST')
+PROXY_PORT = os.getenv('PROXY_PORT')
 
 REDIS_HOST = os.getenv('REDIS_SERVICE_HOST', "redis")
 REDIS_PORT = os.getenv('REDIS_SERVICE_PORT', 6379)
