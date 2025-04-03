@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script will reindex all sources listed in $TO_INDEX_FILENAME, and can be run for
-# each supplier separately.
+# each supplier separately. The sources in $TO_INDEX_FILENAME can be prepared using
+#   sudo docker exec ori_backend_1 ./manage.py extract list_sources --sources_config ./ocd_backend/sources/ori.notubiz.yaml |tail -n +2 |grep ' -s '|sed 's/ - //' |sed 's/ -s /./' >sources_notubiz.txt
+#
 # Use
 #   bin/reindex
 # without any parameters to process all sources sequentially.
