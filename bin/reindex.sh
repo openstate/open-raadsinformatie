@@ -198,7 +198,7 @@ then
     clear_mail_sent
     set_lock "$SOURCE"
     $SUDO docker exec ori_backend_1 sh -c "./manage.py extract process all \
-        --source_path \"*\"$SOURCE \
+        --source_path $SOURCE \
         --start_date $START_DATE \
         --end_date $END_DATE \
         --lock_key $LOCK_KEY \
