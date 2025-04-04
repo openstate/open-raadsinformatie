@@ -105,6 +105,8 @@ class CleanupElasticsearch(BaseCleanup):
         if lock_key is None:
             return
         lock_value = self.redis_client.get(lock_key)
+        if lock_value is not None:
+            _, _, lock_value = lock_value.split('.')
 
         if lock_value == source:
             log.info(f"[{source}] Finished, releasing the lock")
