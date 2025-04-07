@@ -1,5 +1,6 @@
 import sys
 import os
+from urllib3.exceptions import LocationParseError
 from urllib import parse
 from tempfile import NamedTemporaryFile
 
@@ -88,9 +89,11 @@ class TextEnricher(BaseEnricher):
             except requests.exceptions.TooManyRedirects as e:
                 log.info(f"TooManyRedirects occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # configuration error on supplier side, cannot do much here
+                raise SkipEnrichment(e)
             except requests.exceptions.MissingSchema as e:
                 log.info(f"MissingSchema occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # sometimes a "/tmp/..." url is encountered
+                raise SkipEnrichment(e)
             except requests.exceptions.RetryError as e:
                 log.info(f"RetryError occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 if is_retryable_error(e):
@@ -99,7 +102,11 @@ class TextEnricher(BaseEnricher):
                     raise SkipEnrichment(e)
             except requests.exceptions.InvalidURL as e:
                 log.info(f"InvalidURL occurred for fetch {item.original_url} in enrich_item, error is {e}")
-                # cannot do much about this...
+                raise SkipEnrichment(e)
+            except LocationParseError as e:
+                log.info(f"LocationParseError occurred for fetch {item.original_url} in enrich_item, error is {e}")
+                # Typically a non-valid URL
+                raise SkipEnrichment(e)
             except:
                 log.info(f"Generic error occurred for fetch {item.original_url} in enrich_item, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
                 raise
