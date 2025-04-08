@@ -31,7 +31,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                          collection=self.source_definition['source_type'])
     meeting.organization = meeting.has_organization_name
 
-    meeting.name = original_item.get('title', '---niet ingevuld---')
+    meeting.name = original_item.get('title')
+    if not meeting.name:
+        meeting.name = '---niet ingevuld---'
     meeting.description = original_item.get('description')
     meeting.location = original_item.get('location')
     meeting.chair = original_item.get('chairman')
@@ -66,7 +68,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                                                                  collection=self.source_definition['source_type'])
 
         agenda_item.parent = meeting
-        agenda_item.name = item.get('title', '---niet ingevuld---')
+        agenda_item.name = item.get('title')
+        if not agenda_item.name:
+            agenda_item.name = "---niet ingevuld---"
         agenda_item.start_date = meeting.start_date
         agenda_item.last_discussed_at = meeting.start_date
 
@@ -83,7 +87,9 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
             attachment.identifier_url = 'parlaeus/agenda_item/%s' % document['dcid']
             link = clean_link(document['link'])
             attachment.original_url = link
-            attachment.name = document.get('title', '---niet ingevuld---')
+            attachment.name = document.get('title')
+            if not attachment.name:
+                attachment.name = '---niet ingevuld---'
             if link.endswith('.pdf'):
                 attachment.file_name = link.rpartition('/')[2]
             attachment.last_discussed_at = meeting.start_date
