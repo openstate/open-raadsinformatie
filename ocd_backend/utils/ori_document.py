@@ -80,7 +80,7 @@ class OriDocument():
             changed = new_contents is not None
             return changed
 
-        with open(filename, "r") as f:
+        with open(filename, "r", errors="surrogatepass") as f:
             contents = f.read()
             if new_contents != contents:
                 return True
