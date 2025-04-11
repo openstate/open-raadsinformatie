@@ -67,6 +67,8 @@ def is_retryable_error(error, url = None):
         retryable = False
     if 'EOF occurred in violation of protocol' in error_string and 'bestuursakkoord.s-hertogenbosch.nl' in error_string:
         retryable = False
+    if 'Connection to www.deventerondernemersevent.nl timed out' in error_string:
+        retryable = False
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
