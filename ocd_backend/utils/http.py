@@ -125,6 +125,8 @@ class HttpRequestMixin:
         if not content_length and not partial_fetch:
             media_file.seek(0, 2)
             content_length = media_file.tell()
+        if not content_length:
+            content_length = 0
 
         media_file.seek(0, 0)
 
