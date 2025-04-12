@@ -18,7 +18,7 @@ class OriDocument():
         self.temp_path = temp_path
         self.file_name = item.file_name if hasattr(item, 'file_name') else None
         self.md_text = item.md_text
-        self.file_size = item.size_in_bytes
+        self.file_size = item.size_in_bytes or 0
         self.resource_ori_id = item.get_short_identifier()
         self.last_changed_at = self.get_last_changed_at(item)
         self.source, self.supplier = self.get_source_and_supplier(item)
