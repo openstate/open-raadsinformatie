@@ -116,7 +116,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
                     attachment.identifier_url = 'ibabs/agenda_item/%s' % document['Id']
                     attachment.original_url = document['PublicDownloadURL']
-                    attachment.size_in_bytes = document['FileSize']
+                    attachment.size_in_bytes = document['FileSize'] or 0
                     attachment.name = document['DisplayName']
                     attachment.file_name = document['FileName']
                     attachment.is_referenced_by = agenda_item
@@ -175,7 +175,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
 
             attachment.identifier_url = 'ibabs/meeting/%s' % document['Id']
             attachment.original_url = document['PublicDownloadURL']
-            attachment.size_in_bytes = document['FileSize']
+            attachment.size_in_bytes = document['FileSize'] or 0
             attachment.name = document['DisplayName']
             attachment.file_name = document['FileName']
             attachment.is_referenced_by = item

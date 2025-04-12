@@ -113,7 +113,7 @@ class TextEnricher(BaseEnricher):
 
             if resource is not None:
                 item.content_type = resource.content_type
-                item.size_in_bytes = resource.file_size
+                item.size_in_bytes = resource.file_size or 0
 
                 # Make sure file_object is actually on the disk for pdf parsing
                 # Pass delete=False, since we keep the file
