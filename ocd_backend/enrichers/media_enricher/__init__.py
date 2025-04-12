@@ -57,7 +57,7 @@ class MediaEnricher(BaseEnricher, HttpRequestSimple):
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
         item.content_type = resource.content_type
-        item.size_in_bytes = resource.file_size
+        item.size_in_bytes = resource.file_size or 0
 
         enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, str):
