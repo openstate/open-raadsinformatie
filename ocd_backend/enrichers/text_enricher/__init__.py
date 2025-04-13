@@ -72,7 +72,7 @@ class TextEnricher(BaseEnricher):
                     item.original_url,
                     identifier
                 )
-            except requests.HTTPError as e:
+            except requests.exceptions.HTTPError as e:
                 log.info(f"HTTPError occurred for fetch {item.original_url} in enrich_item, error is {e}")
                 # Notubiz seems to return a 400 if permission to access the url is denied
                 # GO returns a 404 if document not found
