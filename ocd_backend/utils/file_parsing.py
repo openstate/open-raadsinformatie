@@ -87,8 +87,9 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
                 for page_no in sorted_keys:
                     doc.delete_page(page_no)
                 if doc.page_count == 0:
-                    return
-                doc.saveIncr()
+                    new_name = None
+                else:
+                    doc.saveIncr()
         return new_name
     except:
         log.info(f"Generic error occurred when rewriting pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
