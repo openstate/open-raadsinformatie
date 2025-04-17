@@ -67,7 +67,10 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
     except:
         log.info(f"Generic error occurred when checking number of pages in pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
         return
-        
+
+    if pdf_black_listed(original_url):
+        return
+            
     try:
         with pymupdf.open(fname) as doc:
             doc.save(new_name, garbage=3, clean=True)
@@ -95,6 +98,15 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
         log.info(f"Generic error occurred when rewriting pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
     
     return
+
+# Some pdfs lead to a Celery `WorkerLostError: Worker exited prematurely`, it is unknown why. Avoid them.
+def pdf_black_listed(original_url):
+    if original_url in [
+        'https://api1.ibabs.eu/publicdownload.aspx?site=Assen&id=1f8f7469-6bad-4ccf-9a30-387b759210a2' # assen
+    ]:
+        return True
+    else:
+        return False
 
 def make_temp_pdf_fname():
     name = os.path.join(gettempdir(), str(uuid.uuid1()))
