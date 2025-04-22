@@ -73,6 +73,8 @@ def is_retryable_error(error, url = None):
         retryable = False
     if 'Connection to www.ggdhartvoorbrabantjaarverslag.nl timed out' in error_string:
         retryable = False
+    if 'ConnectTimeoutError' in error_string and '217.149.64.42' in error_string:
+        retryable = False
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
