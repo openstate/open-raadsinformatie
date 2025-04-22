@@ -74,6 +74,7 @@ services:
       interval: 15s
       timeout: 10s
       retries: 5
+      start_period: 30s
     restart: always
     environment:
       - "ES_JAVA_OPTS=-Xms16g -Xmx16g"
