@@ -95,7 +95,7 @@ owi.ibabs:
   hollandse_delta:
     key: hollandse_delta
     ibabs_sitename: wshd
-    allmanak_id: 27192110
+    allmanak_id: 21146
     <<: *ibabs
   hoogheemraadschap_van_delfland:
     key: hoogheemraadschap_van_delfland
