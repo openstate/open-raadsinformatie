@@ -79,6 +79,11 @@ class BaseSerializer:
                 for name2, definition2 in model_object.definitions(props=props, rels=rels):
                     value2 = model_object.values.get(name2, None)
                     log.info(f"Name, value: {name2}, {value2}")
+                    if name2 == "parent":
+                        for name3, definition3 in value2.definitions(props=props, rels=rels):
+                            value3 = value2.values.get(name3, None)
+                            log.info(f"Parent Name, value: {name3}, {value3}")
+
                 raise RequiredProperty(message)
         return props_list
 
