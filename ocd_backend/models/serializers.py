@@ -10,7 +10,9 @@ from ocd_backend.models.properties import StringProperty, URLProperty, \
     ArrayProperty, JsonProperty, Relation, OrderedRelation, NestedProperty
 from ocd_backend.utils.misc import iterate
 from ocd_backend.models.misc import Uri, Url
+from ocd_backend.log import get_source_logger
 
+log = get_source_logger('serializers')
 
 def get_serializer_class(format=None):
     """Convenience function returns serializer or raises SerializerNotFound."""
@@ -71,8 +73,11 @@ class BaseSerializer:
                 except MissingProperty:
                     raise
             elif definition.required and not model_object.skip_validation:
-                raise RequiredProperty("Property '{}' is required for {}, values so far: {}".format(
-                    name, model_object.compact_uri(), props_list))
+                message = "Property '{}' is required for {}, values so far: {}".format(
+                    name, model_object.compact_uri(), props_list)
+                log.info(message)
+                log.info(model_object.definitions)
+                raise RequiredProperty(message)
         return props_list
 
     def serialize(self, model_object):
