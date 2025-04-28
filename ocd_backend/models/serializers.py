@@ -73,10 +73,12 @@ class BaseSerializer:
                 except MissingProperty:
                     raise
             elif definition.required and not model_object.skip_validation:
-                message = "Property '{}' is required for {}, values so far: {}".format(
-                    name, model_object.compact_uri(), props_list)
+                message = "Property '{}' is required for {}".format(name, model_object.compact_uri())
                 log.info(message)
-                log.info(model_object.definitions())
+                log.info("Existing properties:")
+                for name2, definition2 in model_object.definitions(props=props, rels=rels):
+                    value2 = model_object.values.get(name2, None)
+                    log.info(f"Name, value: {name2}, {value2}")
                 raise RequiredProperty(message)
         return props_list
 
