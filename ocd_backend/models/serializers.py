@@ -76,7 +76,7 @@ class BaseSerializer:
                 message = "Property '{}' is required for {}, values so far: {}".format(
                     name, model_object.compact_uri(), props_list)
                 log.info(message)
-                log.info(model_object.definitions)
+                log.info(model_object.definitions())
                 raise RequiredProperty(message)
         return props_list
 
