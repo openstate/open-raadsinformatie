@@ -23,11 +23,20 @@
 # PRACTICAL CONSIDERATIONS:
 # - Whenever an uncaught error is raised the lock will not be released. This allows for fixing errors
 #   in an early stage and getting as close to 100% coverage as possible
-# - When an error has been fixed:
-#   - deploy
-#   - add the source to the top of to_index_XYZ.txt again
+# - When an error has been fixed for a source:
+#   - if there are still other sources running:
+#       - touch maintenance.txt
+#       - pkill -9 celery
+#       - sudo docker exec ori_redis_1 redis-cli --scan --pattern '*' |sudo xargs docker exec ori_redis_1 redis-cli del
+#       - to check: sudo docker exec -it ori_redis_1 redis-cli keys \*
+#       - add the source that was still running on top of to_index_ABC.txt again
+#       - delete the redis lock: `sudo docker exec ori_redis_1 sh -c "redis-cli -n 1 del ori_lock_key_ABC"`
+#   - add the source to the top of to_index_XYZ.txt again (sudo docker exec ori_redis_1 sh -c "redis-cli -n 1 get ori_lock_key_XYZ")
 #   - delete the redis lock: `sudo docker exec ori_redis_1 sh -c "redis-cli -n 1 del ori_lock_key_XYZ"`
-# - The source will again be processed
+#   - git pull
+#   - sudo docker compose --compatibility up --build -d
+#   - rm maintenance.txt
+# - The source (and other sources) will again be processed
 SUDO="sudo " # In development substitute with empty string
 source ~/.bash_aliases
 MAINTENANCE_FILE="maintenance.txt"
