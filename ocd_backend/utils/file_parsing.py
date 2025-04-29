@@ -28,7 +28,8 @@ def file_parser(fname, original_url, max_pages=None):
                         break
             except pdftotext.Error as e:
                 log.warning(f"Error from pdftotext for {original_url}: {e}")
-                if 'poppler error creating document' in str(e) or 'poppler error creating page' in str(e):
+                if 'poppler error creating document' in str(e) or 'poppler error creating page' in str(e) or \
+                    'failed to unlock document' in str(e):
                     pass # unreadable pdf
                 else:
                     raise e
