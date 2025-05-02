@@ -63,7 +63,7 @@ def is_retryable_error(error, url = None):
         retryable = False
     if 'Read timed out' in error_string and '.raadsinformatie.nl' in error_string and 'module_filter' in error_string:
         retryable = False
-    if 'Read timed out' in error_string and 'leiden.notubiz.nl' in error_string and 'module_filter' in error_string:
+    if 'Read timed out' in error_string and '.notubiz.nl' in error_string and 'module_filter' in error_string:
         retryable = False
     if 'Read timed out' in error_string and 'www.gelderland.nl' in error_string:
         retryable = False
