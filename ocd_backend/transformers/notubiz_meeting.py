@@ -1,3 +1,4 @@
+import re
 from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
@@ -153,7 +154,7 @@ def create_media_object(self, doc, is_referenced_by, start_date):
                                                             collection=self.source_definition['source_type'])
 
     attachment.identifier_url = doc['self']  # Trick to use the self url for enrichment
-    attachment.original_url = doc['url']
+    attachment.original_url = clean_link(doc['url'])
     attachment.name = doc['title']
 
     version_def = get_version_definition(doc)
@@ -165,3 +166,17 @@ def create_media_object(self, doc, is_referenced_by, start_date):
     attachment.last_discussed_at = start_date
 
     return attachment
+
+def clean_link(link):
+    """
+    Some Notubiz links are wrong and look like e.g.
+        httphttp://purmerend.nl/sites/home/files/BIS/2012/januari/11a_voorblad_klachtenregeling_raad_en_griffie_r_.pdf
+    Check for this and remove superfluous http
+    """
+    if link == None:
+        return
+
+    if re.search("^httphttp://", link):
+        return re.sub("^http", "", link)
+
+    return link
