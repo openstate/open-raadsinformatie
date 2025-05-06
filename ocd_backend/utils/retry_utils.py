@@ -80,6 +80,9 @@ def is_retryable_error(error, url = None):
     if 'www.ouderenombudsman.nl' in error_string or 'www.nctb.nl' in error_string or 'www.vng.abfsoftware.nl' in error_string or \
         'festival.bestuurskunde.nl' in error_string:
         retryable = False
+    if 'veenendaalsekrant.nl' in error_string or '.mijnstem.nl' in error_string:
+        retryable = False
+
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
