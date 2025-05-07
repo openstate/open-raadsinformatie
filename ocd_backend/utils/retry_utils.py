@@ -2,7 +2,7 @@ from celery.utils.time import get_exponential_backoff_interval
 from functools import wraps
 
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX, RETRY_MAX_RETRIES
 
 log = get_source_logger('retry_task')
 
@@ -46,7 +46,7 @@ def retry_task(fun):
 
     return handle_retry
 
-def is_retryable_error(error, url = None):
+def is_retryable_error(error, url = None, retries_sofar = None):
     error_string = str(error)
     retryable = True
 
@@ -83,8 +83,39 @@ def is_retryable_error(error, url = None):
     if 'veenendaalsekrant.nl' in error_string or '.mijnstem.nl' in error_string:
         retryable = False
 
+    # If maximum number of retries has been reached see if we should stop retrying
+    if retryable and retries_sofar == RETRY_MAX_RETRIES:
+        if stop_retrying(error):
+            retryable = False
 
     if not retryable:
         log.info(f'Non-retryable error caught ({error.__class__.__name__}):\n{error_string}')
     
     return retryable
+
+# Frequently urls are returned that are not pointing to active sites anymore. Some of those urls were added
+# to `is_retryable_error` above. This method is a more general approach:
+#   - if the error implies a connection error
+#   - and if it is not a call to one of the suppliers
+#   - -> then stop retrying, otherwise keep on retrying
+def stop_retrying(error):
+    error_string = str(error)
+
+    connection_error = \
+        'ConnectTimeoutError' in error_string or \
+        'Connection refused' in error_string or \
+        'NameResolutionError' in error_string
+
+    is_a_supplier_call = \
+        '.ibabs.eu' in error_string or \
+        '.notubiz.nl' in error_string or \
+        '.parlaeus.nl' in error_string or \
+        '.qualigraf.nl' in error_string or \
+        'raad.' in error_string or \
+        'raadsinformatie.' in error_string or \
+        '/api/' in error_string
+
+    if connection_error and not is_a_supplier_call:
+        return True
+
+    return
