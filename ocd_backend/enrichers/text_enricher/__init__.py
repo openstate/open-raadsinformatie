@@ -82,7 +82,7 @@ class TextEnricher(BaseEnricher):
                     raise
             except requests.exceptions.ConnectionError as e:
                 log.info(f"ConnectionError occurred for fetch {item.original_url} in enrich_item, error is {e}")
-                if is_retryable_error(e, item.original_url):
+                if is_retryable_error(e, item.original_url, self.request.retries):
                     raise
                 else:
                     raise SkipEnrichment(e)
@@ -96,7 +96,7 @@ class TextEnricher(BaseEnricher):
                 raise SkipEnrichment(e)
             except requests.exceptions.RetryError as e:
                 log.info(f"RetryError occurred for fetch {item.original_url} in enrich_item, error is {e}")
-                if is_retryable_error(e):
+                if is_retryable_error(e, None, self.request.retries):
                     raise
                 else:
                     raise SkipEnrichment(e)
