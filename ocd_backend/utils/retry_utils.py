@@ -106,7 +106,8 @@ def stop_retrying(error):
         'Connection refused' in error_string or \
         'NameResolutionError' in error_string or \
         'Network unreachable' in error_string or \
-        'Host is unreachable' in error_string
+        'Host is unreachable' in error_string or \
+        'SSLError' in error_string
 
     is_a_supplier_call = \
         '.ibabs.eu' in error_string or \
