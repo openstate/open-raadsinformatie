@@ -109,7 +109,7 @@ def stop_retrying(error):
         'Host is unreachable' in error_string or \
         'SSLError' in error_string
 
-    is_a_supplier_call = \
+    is_a_retryable_supplier_call = \
         '.ibabs.eu' in error_string or \
         '.notubiz.nl' in error_string or \
         '.parlaeus.nl' in error_string or \
@@ -117,8 +117,11 @@ def stop_retrying(error):
         'raad.' in error_string or \
         'raadsinformatie.' in error_string or \
         '/api/' in error_string
+    if is_a_retryable_supplier_call:
+        if 'email.notubiz.nl' in error_string:
+            is_a_retryable_supplier_call = False
 
-    if connection_error and not is_a_supplier_call:
+    if connection_error and not is_a_retryable_supplier_call:
         return True
 
     return
