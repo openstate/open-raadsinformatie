@@ -133,9 +133,13 @@ class TextEnricher(BaseEnricher):
                     else:
                         item.md_text = ''
                     if parse_result_is_empty(item.md_text):
-                        log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
-                        item.md_text = md_file_parser_using_ocr(path, item.original_url)
-                        ocr_used = OCR_VERSION
+                        if self.exclude_from_ocr(item.original_url):
+                            log.info(f"Parse result is empty for {item.original_url}, skipping file because excluded from OCR")
+                            item.md_text = ''
+                        else:
+                            log.info(f"Parse result is empty for {item.original_url}, now trying OCR")
+                            item.md_text = md_file_parser_using_ocr(path, item.original_url)
+                            ocr_used = OCR_VERSION
 
                     ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
                     try:
@@ -166,6 +170,12 @@ class TextEnricher(BaseEnricher):
 
         item.db.save(item)
 
+    # Some files lead to an OOM every time they are processed. Exclude them
+    def exclude_from_ocr(self, url):
+        if url == 'https://api1.ibabs.eu/publicdownload.aspx?site=Leidschendam&id=4e8b8ff5-e156-4843-b0e7-fc45bf0df68a':
+            return True
+
+        return
 
 @celery_app.task(bind=True, base=TextEnricher, max_retries=RETRY_MAX_RETRIES)
 @retry_task
