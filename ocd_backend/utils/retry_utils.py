@@ -84,6 +84,8 @@ def is_retryable_error(error, url = None, retries_sofar = None):
         retryable = False
     if 'ReadTimeoutError' in error_string and 'da91a75e-f516-4633-809b-39141b875d87' in error_string:
         retryable = False
+    if '4en5meizaanstad.nl' in error_string or 'artzaanstad.nl' in error_string:
+        retryable = False
 
     # If maximum number of retries has been reached see if we should stop retrying
     if retryable and retries_sofar == RETRY_MAX_RETRIES:
