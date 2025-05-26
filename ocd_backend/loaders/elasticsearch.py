@@ -23,6 +23,10 @@ class ElasticsearchBaseLoader(BaseLoader):
         return super(ElasticsearchBaseLoader, self).start(*args, **kwargs)
 
     def load_item(self, doc):
+        if doc is None:
+            log.debug(f'{self.__name__} doc==None received, probably due to a non-retryable error in enricher')
+            return
+
         log_identifiers = []
 
         # Recursively index associated models like attachments
