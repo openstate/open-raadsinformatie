@@ -2,6 +2,7 @@ import json
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
+from elasticsearch import TransportError
 from ocd_backend.es import elasticsearch
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.loaders import BaseLoader
@@ -36,11 +37,20 @@ class ElasticsearchBaseLoader(BaseLoader):
 
             try:
                 self.process(model, model_body)
+                log_identifiers.append(model.get_short_identifier())
+            except TransportError as e:
+                log.info(f"TransportError when uploading {model.get_short_identifier()} to ES: {e}")
+                log.info(f"Length model_body: {len(model_body)}")
+                if e.status_code == 413:
+                    # Body is too large (> 100MB). This typically happens when pdf consists mainly of
+                    # complicated kadaster maps; the output contains mostly spaces and newlines and can be ignored
+                    pass
+                else:
+                    raise e
             except Exception as e:
                 log.info(f"ERROR when uploading {model.get_short_identifier()} to ES: {e}")
                 log.info(f"Length model_body: {len(model_body)}")
                 raise e
-            log_identifiers.append(model.get_short_identifier())
 
         log.debug(f'{self.__name__} indexing document id: {", ".join(log_identifiers)}')
 
