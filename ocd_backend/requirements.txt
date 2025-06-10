@@ -18,7 +18,7 @@ python-json-logger==2.0.7
 python-magic==0.4.27
 pyyaml==6.0.2
 rdflib==7.1.1
-requests==2.32.3
+requests==2.32.4
 sentry-sdk[celery]==2.19.2
 sqlalchemy==2.0.36
 sqlalchemy-utils==0.41.2
