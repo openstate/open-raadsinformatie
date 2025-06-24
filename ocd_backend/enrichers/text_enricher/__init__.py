@@ -14,7 +14,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.utils.file_parsing import file_parser, make_temp_pdf_fname, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty, rewrite_problematic_pdfs
+from ocd_backend.utils.file_parsing import file_parser, make_temp_pdf_fname, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty, rewrite_problematic_pdfs, force_ocr
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.utils.ori_document import OriDocument
@@ -125,13 +125,18 @@ class TextEnricher(BaseEnricher):
                     path = os.path.realpath(temporary_file.name)
                     item.text = file_parser(path, item.original_url, max_pages=100)
 
-                    ocr_used = None
-                    new_path = make_temp_pdf_fname()
-                    md_path = rewrite_problematic_pdfs(path, new_path, item.original_url)
-                    if md_path is not None:
-                        item.md_text = md_file_parser(md_path, item.original_url)
+                    # Now get the markdown using pymupdf4llm. If there are pages with many bboxes, force OCR otherwise
+                    # process will hang for many hours
+                    item.md_text = ''
+                    if force_ocr(path, item.original_url):
+                        log.info(f"Many bboxes for {item.original_url}, forcing use of OCR")
                     else:
-                        item.md_text = ''
+                        new_path = make_temp_pdf_fname()
+                        md_path = rewrite_problematic_pdfs(path, new_path, item.original_url)
+                        if md_path is not None:
+                            item.md_text = md_file_parser(md_path, item.original_url)
+
+                    ocr_used = None
                     if parse_result_is_empty(item.md_text):
                         if self.exclude_from_ocr(item.original_url):
                             log.info(f"Parse result is empty for {item.original_url}, skipping file because excluded from OCR")

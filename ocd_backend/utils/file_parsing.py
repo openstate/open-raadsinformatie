@@ -7,6 +7,7 @@ import uuid
 import magic
 import pdftotext
 import pymupdf
+from pymupdf import mupdf
 import pymupdf4llm
 
 from ocd_backend.log import get_source_logger
@@ -99,6 +100,30 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
         log.info(f"Generic error occurred when rewriting pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
     
     return
+
+# Some PDFs were found to have tens of thousands of bboxes.
+# Due to inefficient looping these files are impossible to process (takes days).
+# If a pdf has a page with many bboxes force usage of OCR
+def force_ocr(fname, original_url):
+    textflags = ( # definition taken from pymupdf4llm
+        0
+        | mupdf.FZ_STEXT_CLIP
+        | mupdf.FZ_STEXT_ACCURATE_BBOXES
+        # | mupdf.FZ_STEXT_IGNORE_ACTUALTEXT
+        | 32768  # mupdf.FZ_STEXT_COLLECT_STYLES
+    )
+
+    try:
+        with pymupdf.open(fname) as doc: 
+            for page in doc.pages():
+                textpage = page.get_textpage(flags=textflags, clip=page.rect)
+                blocks = textpage.extractDICT()["blocks"]
+                if len(blocks) > 150:
+                    return True
+    except:
+        log.info(f"Generic error occurred when getting number of bboxes in pdf for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+
+    return False
 
 # Some pdfs lead to a Celery `WorkerLostError: Worker exited prematurely`, it is unknown why. Avoid them.
 def pdf_black_listed(original_url):
