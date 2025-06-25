@@ -150,10 +150,10 @@ def md_file_parser(fname, original_url):
                 md_chunks = pymupdf4llm.to_markdown(fname, hdr_info=hdr, page_chunks=True, show_progress=False, image_size_limit=0.1)
             except ValueError as e:
                 log.info(f'ValueError when calling pymupdf4llm.to_markdown for {original_url}, reason: {e}')
-                return
+                return ""
             except IndexError as e:
                 log.info(f'IndexError when calling pymupdf4llm.to_markdown for {original_url}, reason: {e}')
-                return
+                return ""
 
             md_text = [chunk['text'] for chunk in md_chunks]
 
@@ -162,6 +162,8 @@ def md_file_parser(fname, original_url):
             return md_text
     except:
         log.info(f"Generic error occurred when opening pdf in md_file_parser for {original_url}, error class is {sys.exc_info()[0]}, {sys.exc_info()[1]}")
+
+    return ""
 
 # When OCR is applied, font information is not retrieved so output is plain text instead of markdown.
 # Therefore we use page.get_text from pymupdf instead of using pymupdf4llm.
