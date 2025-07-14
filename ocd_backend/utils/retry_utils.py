@@ -86,8 +86,12 @@ def is_retryable_error(error, url = None, retries_sofar = None):
         retryable = False
     if '4en5meizaanstad.nl' in error_string or 'artzaanstad.nl' in error_string:
         retryable = False
-    if 'site=Westland' in error_string and 'id=6cec5020-48b0-49da-85e4-f795cb558654' in error_string:
-        retryable = False # api1.ibabs.eu - request times out after 1 minute
+    if 'site=Westland' in error_string and (
+        'id=6cec5020-48b0-49da-85e4-f795cb558654' in error_string or
+        'id=a3b277a1-ae67-4f73-b951-b51f20321e59' in error_string or
+        'id=f562ba7b-27fc-483a-a4a4-bb355cbda9f4' in error_string or
+        'id=646bd88b-5f57-4b78-8b3d-d03c32fd79dc' in error_string):
+        retryable = False # api1.ibabs.eu - Westland has some documents for which requests time out after 1 minute
 
     # If maximum number of retries has been reached see if we should stop retrying
     if retryable and retries_sofar == RETRY_MAX_RETRIES:
