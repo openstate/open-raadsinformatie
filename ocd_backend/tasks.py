@@ -1,4 +1,5 @@
 import redis
+import re
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -108,7 +109,7 @@ class CleanupElasticsearch(BaseCleanup):
         if lock_value is not None:
             _, _, lock_value = lock_value.split('.')
 
-        if lock_value == source:
+        if self.sanitizeName(lock_value) == self.sanitizeName(source):
             log.info(f"[{source}] Finished, releasing the lock")
             self.redis_client.delete(lock_key)
         elif lock_value is not None:
@@ -119,6 +120,9 @@ class CleanupElasticsearch(BaseCleanup):
             message = f"[{source}] a lock_key was provided but the lock_value is None, this should not happen"
             log.warning(message)
             raise Exception(message)
+
+    def sanitizeName(self, name):
+        return re.sub(r'[\s_-]', '', name)
 
 class DummyCleanup(BaseCleanup):
     def run_finished(self, run_identifier, **kwargs):
