@@ -4,6 +4,7 @@ from urllib import parse
 from requests.exceptions import HTTPError, RetryError, ConnectionError
 
 from ocd_backend.extractors import BaseExtractor
+from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.retry_utils import is_retryable_error
@@ -234,6 +235,16 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} notubiz meeting(items). '
                  f'Also skipped {meetings_skipped} meetings')
+        if meeting_count == 0:
+            # If no meetings at all are found, we need to add a dummy entry. The current setup only releases the
+            # lock during reindexing after all items are processed, via the `cleanup`. Adding a dummy entry ensures
+            # the lock will be released.
+            yield 'application/json', \
+                    '{}', \
+                    self.base_url, \
+                    'notubiz/', \
+                    DUMMY_ITEM_HASH
+
         if meetings_error > 0:
             log.info(f'[{self.source_definition["key"]}] Also {meetings_error} notubiz meeting(items) encountered an error. ')
 

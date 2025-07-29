@@ -9,3 +9,5 @@ class HashForItem:
 
     def __repr__(self):
         return f"HashForItem('{self.hash_key}', '{self.hash_value}', '{self.provider}', '{self.site_name}', '{self.item_type}', '{self.item_id}')"
+
+DUMMY_ITEM_HASH = HashForItem("a dummy key", "a dummy value", "a dummy provider", "a dummy site", "a dummy item type", -1)

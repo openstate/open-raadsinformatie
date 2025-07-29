@@ -6,6 +6,7 @@ from hashlib import sha1
 from time import sleep
 from datetime import datetime
 
+from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 import redis
 from requests import Session
 
@@ -241,6 +242,16 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
 
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} ibabs meetings.')
+        if meeting_count == 0:
+            # If no meetings at all are found, we need to add a dummy entry. The current setup only releases the
+            # lock during reindexing after all items are processed, via the `cleanup`. Adding a dummy entry ensures
+            # the lock will be released.
+            yield 'application/json', \
+                    '{}', \
+                    None, \
+                    'ibabs/', \
+                    DUMMY_ITEM_HASH
+
 
 
 class IBabsReportsExtractor(IBabsBaseExtractor):

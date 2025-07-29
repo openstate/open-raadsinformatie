@@ -9,6 +9,7 @@ from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
+from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.retry_utils import retry_task
 from ocd_backend.utils.misc import load_object, propagate_chain_get
@@ -119,21 +120,22 @@ def setup_pipeline(self, source_definition, source_run_uuid):
                 set_name=params['source_run_identifier'],
                 value=params['chain_id'])
 
-            # Transformers
-            if pipeline_transformer:
-                step_chain.append(pipeline_transformer.s(
-                    *item,
-                    source_definition=pipeline_definition,
-                    **params)
-                )
+            if hash_for_item != DUMMY_ITEM_HASH:
+                # Transformers
+                if pipeline_transformer:
+                    step_chain.append(pipeline_transformer.s(
+                        *item,
+                        source_definition=pipeline_definition,
+                        **params)
+                    )
 
-            # Enrichers
-            for enricher_task in pipeline_enricher:
-                step_chain.append(enricher_task.s(
-                    source_definition=pipeline_definition,
-                    **params
-                )
-                )
+                # Enrichers
+                for enricher_task in pipeline_enricher:
+                    step_chain.append(enricher_task.s(
+                        source_definition=pipeline_definition,
+                        **params
+                    )
+                    )
 
             # Loaders
             # Multiple loaders to enable to save to different stores
@@ -145,7 +147,7 @@ def setup_pipeline(self, source_definition, source_run_uuid):
             step_chain.append(group(initialized_loaders))
 
             # Finalizer
-            if pipeline_finalizer:
+            if pipeline_finalizer and hash_for_item != DUMMY_ITEM_HASH:
                 step_chain.append(pipeline_finalizer.s(
                     source_definition=pipeline_definition,
                     hash_for_item=hash_for_item,
