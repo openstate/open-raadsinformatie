@@ -303,7 +303,7 @@ ori.go:
 
   dronten:
     key: dronten
-    base_url: "https://gemeenteraad.dronten.nl/api/"
+    base_url: "https://gemeenteraad.dronten.nl/api"
     allmanak_id: 26889
     api_version: "v1"
     cbs_id: GM0303
