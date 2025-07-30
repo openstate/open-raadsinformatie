@@ -3,6 +3,7 @@ from datetime import datetime
 from urllib.parse import urljoin
 
 from ocd_backend.extractors import BaseExtractor
+from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
 from ocd_backend.utils.misc import strip_scheme
@@ -117,6 +118,15 @@ class GemeenteOplossingenMeetingsExtractor(GemeenteOplossingenBaseExtractor):
             log.debug(f'[{self.source_definition["key"]}] Now processing meetings from {start_date} to {end_date}')
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} GO API meetings. '
                  f'Also skipped {meetings_skipped} GO API meetings')
+        if meeting_count == 0:
+            # If no meetings at all are found, we need to add a dummy entry. The current setup only releases the
+            # lock during reindexing after all items are processed, via the `cleanup`. Adding a dummy entry ensures
+            # the lock will be released.
+            yield 'application/json', \
+                    '{}', \
+                    None, \
+                    'gemeenteoplossingen/', \
+                    DUMMY_ITEM_HASH
 
 
 # class GemeenteOplossingenMeetingItemsExtractor(GemeenteOplossingenBaseExtractor):
