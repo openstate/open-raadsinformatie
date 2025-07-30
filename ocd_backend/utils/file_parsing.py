@@ -105,6 +105,10 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
 # Due to inefficient looping these files are impossible to process (takes days).
 # If a pdf has a page with many bboxes force usage of OCR
 def force_ocr(fname, original_url):
+    # Large file impossible to process otherwise
+    if original_url == 'https://api.notubiz.nl/document/15349436/2':
+        return  True
+
     textflags = ( # definition taken from pymupdf4llm
         0
         | mupdf.FZ_STEXT_CLIP

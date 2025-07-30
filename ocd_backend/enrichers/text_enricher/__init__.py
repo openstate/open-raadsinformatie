@@ -129,7 +129,7 @@ class TextEnricher(BaseEnricher):
                     # process will hang for many hours
                     item.md_text = ''
                     if force_ocr(path, item.original_url):
-                        log.info(f"Many bboxes for {item.original_url}, forcing use of OCR")
+                        log.info(f"Many bboxes for {item.original_url} or exceptional case, forcing use of OCR")
                     else:
                         new_path = make_temp_pdf_fname()
                         md_path = rewrite_problematic_pdfs(path, new_path, item.original_url)
