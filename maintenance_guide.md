@@ -110,7 +110,18 @@ To view history of migrations:
 
 ## HTTPS (SSL / TLS certificates)
 
-This project uses [`cert-manager`](https://cert-manager.io/docs/) for creating certificates.
+This project uses the [`Open State nginx load balancer`](https://github.com/openstate/nginx-load-balancer/) for managing certificates. The instructions in that project are based on the DNS being managed by TransIP. For `open-raadsinformatie`
+the DNS is managed elsewhere, so we need to use the manual method:
+```
+  - sudo docker exec -it docker-c-certbot-1 sh
+  - certbot certonly -m developers@openstate.eu --manual --agree-tos --preferred-challenges http -d api.openraadsinformatie.nl
+```
+This will give instructions to write a file into `.well-known/acme-challenge`, which can be done using:
+```
+  - sudo docker exec -it docker-c-nginx-load-balancer-1 sh
+  - cd /usr/share/nginx/html/.well-known/acme-challenge
+  - create file with contents as instructed
+```
 
 ## Deleting resources from Elastic
 
