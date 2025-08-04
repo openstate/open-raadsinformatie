@@ -107,9 +107,7 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
 def force_ocr(fname, original_url):
     # Large files impossible to process otherwise, seems to be caused by lots of strike-through text
     force_ocr_for = [
-        'https://api.notubiz.nl/document/15349436/2',
-        'https://raad.sliedrecht.nl/api/v1/meetings/940/documents/11924',
-        'https://raad.sliedrecht.nl/api/v1/meetings/943/documents/11924'
+        'https://api.notubiz.nl/document/15349436/2'
     ]
     if original_url in force_ocr_for:
         return  True
@@ -134,11 +132,19 @@ def force_ocr(fname, original_url):
 
     return False
 
-# Some pdfs lead to a Celery `WorkerLostError: Worker exited prematurely`, it is unknown why. Avoid them.
 def pdf_black_listed(original_url):
-    if original_url in [
-        'https://api1.ibabs.eu/publicdownload.aspx?site=Assen&id=1f8f7469-6bad-4ccf-9a30-387b759210a2' # assen
-    ]:
+    # Some pdfs lead to a Celery `WorkerLostError: Worker exited prematurely`, it is unknown why, avoid them.
+    worker_lost_pdfs = [
+        'https://api1.ibabs.eu/publicdownload.aspx?site=Assen&id=1f8f7469-6bad-4ccf-9a30-387b759210a2'
+    ]
+
+    # Some pdfs take days of processing (until killed), avoid them.
+    indefinite_processing_time_pdfs = [
+        'https://raad.sliedrecht.nl/api/v1/meetings/940/documents/11924',
+        'https://raad.sliedrecht.nl/api/v1/meetings/943/documents/11924'
+    ]
+
+    if original_url in worker_lost_pdfs or original_url in indefinite_processing_time_pdfs:
         return True
     else:
         return False
