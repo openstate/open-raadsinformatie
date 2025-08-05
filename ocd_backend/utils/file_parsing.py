@@ -105,9 +105,11 @@ def rewrite_problematic_pdfs(fname, new_name, original_url):
 # Due to inefficient looping these files are impossible to process (takes days).
 # If a pdf has a page with many bboxes force usage of OCR
 def force_ocr(fname, original_url):
-    # Large files impossible to process otherwise, seems to be caused by lots of strike-through text
+    # Large files impossible to process otherwise, e.g. caused by lots of strike-through text
     force_ocr_for = [
-        'https://api.notubiz.nl/document/15349436/2'
+        'https://api.notubiz.nl/document/15349436/2',
+        'https://raad.sliedrecht.nl/api/v1/meetings/940/documents/11924',
+        'https://raad.sliedrecht.nl/api/v1/meetings/943/documents/11924'
     ]
     if original_url in force_ocr_for:
         return  True
