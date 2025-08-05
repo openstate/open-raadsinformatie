@@ -175,9 +175,19 @@ class TextEnricher(BaseEnricher):
 
         item.db.save(item)
 
-    # Some files lead to an OOM every time they are processed. Exclude them
     def exclude_from_ocr(self, url):
-        if url == 'https://api1.ibabs.eu/publicdownload.aspx?site=Leidschendam&id=4e8b8ff5-e156-4843-b0e7-fc45bf0df68a':
+        # Some files lead to an OOM every time they are processed. Exclude them
+        oom_pdfs = [
+            'https://api1.ibabs.eu/publicdownload.aspx?site=Leidschendam&id=4e8b8ff5-e156-4843-b0e7-fc45bf0df68a'
+        ]
+
+        # Some pdfs take days of processing (until killed), avoid them.
+        indefinite_processing_time_pdfs = [
+            'https://raad.sliedrecht.nl/api/v1/meetings/940/documents/11924',
+            'https://raad.sliedrecht.nl/api/v1/meetings/943/documents/11924'
+        ]
+
+        if url in oom_pdfs or url in indefinite_processing_time_pdfs:
             return True
 
         return
