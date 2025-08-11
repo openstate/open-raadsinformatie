@@ -1,6 +1,7 @@
 import json
 
 from ocd_backend.extractors import BaseExtractor
+from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 from ocd_backend.log import get_source_logger
 from ocd_backend.utils.http import HttpRequestMixin
 
@@ -24,6 +25,8 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
         return response
 
     def run(self):
+        meeting_count = 0
+        meetings_skipped = 0
         start_date, end_date = self.date_interval()
         url = f'{self.base_url}?rid={self.rid}&fn=agenda_list&since={start_date:%Y%m%d}&until={end_date:%Y%m%d}'
         response = self.get_response(url)
@@ -48,8 +51,26 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
 
             hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'meeting', meeting['agid'], agenda)
             if hash_for_item:
-                yield 'application/json', json.dumps(agenda), url, 'parlaeus/' + cached_path, hash_for_item
+                yield 'application/json',  \
+                    json.dumps(agenda), \
+                    url, \
+                    'parlaeus/' + cached_path, \
+                    hash_for_item
+                meeting_count += 1
+            else:
+                meetings_skipped += 1
 
+        log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} Parlaeus meetings. '
+                 f'Also skipped {meetings_skipped} Parlaeus meetings')
+        if meeting_count == 0:
+            # If no meetings at all are found, we need to add a dummy entry. The current setup only releases the
+            # lock during reindexing after all items are processed, via the `cleanup`. Adding a dummy entry ensures
+            # the lock will be released.
+            yield 'application/json',  \
+                {}, \
+                None, \
+                'parlaeus/', \
+                DUMMY_ITEM_HASH
 
 class ParlaeusCommitteesExtractor(ParlaeusMeetingsExtractor):
     """
