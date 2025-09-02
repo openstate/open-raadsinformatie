@@ -24,10 +24,10 @@ The Nginx container was installed separately in production. To mimic this in dev
 
 After first time installation on a server, run `ocd_backend/setup.sh` to create the database.
 
-The log file was made persistent and is located in Docker volume `ori_oridata`. To prevent this file from growing
+The log file was made persistent and is located in /data. To prevent this file from growing
 indefinitely, add the following to `/etc/logrotate.d/orilog`:
 ```
-/var/lib/docker/volumes/ori_oridata/_data/ori.log
+/data/ori.log
 {
     rotate 100
     size 50M

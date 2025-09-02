@@ -12,7 +12,7 @@ services:
     networks:
       - ori
     volumes:
-      - oridata:/opt/ori/data
+      - /data:/opt/ori/data
       - .:/opt/ori
       - ./ocd_backend:/opt/ori/ocd_backend
     depends_on:
@@ -34,7 +34,7 @@ services:
     networks:
       - ori
     volumes:
-      - oridata:/opt/ori/data
+      - /data:/opt/ori/data
       #- .:/opt/ori
       - ./ocd_backend:/opt/ori/ocd_backend
     depends_on:
@@ -122,8 +122,6 @@ volumes:
   esdata:
     driver: local
   redisdata:
-    driver: local
-  oridata:
     driver: local
   pgdata:
     driver: local
