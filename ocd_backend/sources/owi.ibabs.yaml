@@ -113,3 +113,9 @@ owi.ibabs:
     ibabs_sitename: hhnk
     allmanak_id: 21145
     <<: *ibabs
+  # Added 2025-09-03
+  vechtstromen:
+    key: vechtstromen
+    ibabs_sitename: vechtstromen
+    allmanak_id: 0661
+    <<: *ibabs
