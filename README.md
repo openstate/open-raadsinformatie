@@ -1,6 +1,4 @@
 # Open Raadsinformatie API
-Master: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinformatie/branches/master/shields_badge.svg)](https://semaphoreci.com/jurrian/open-raadsinformatie)
-Develop: [![Build Status](https://semaphoreci.com/api/v1/jurrian/open-raadsinformatie/branches/develop/shields_badge.svg)](https://semaphoreci.com/jurrian/open-raadsinformatie)
 
 Open Raadsinformatie (ORI) aims to collect and standardize governmental decision making documents of Dutch municipalities (gemeenten, provincies, waterschappen).
 Open Raadsinformatie is a collaborative effort of the [Open State Foundation](https://openstate.eu/), [Ontola](https://ontola.io) and [VNG Realisatie](https://vngrealisatie.nl/).
@@ -15,14 +13,21 @@ Open Raadsinformatie is a collaborative effort of the [Open State Foundation](ht
  
 ## Installation and usage
 
-See this guide to [install the Open Raadsinformatie API](https://github.com/openstate/open-raadsinformatie/blob/master/docs/installation.rst) using Docker, Vagrant or manually. There are also a few usage commands to get you started. Check out the [maintenance guide](maintenance_guide.md) for info on how to manage this project in production.
+Clone the git repository:
+- `git clone https://github.com/openstate/open-raadsinformatie.git`
+- `cd open-raadsinformatie/`
+- In development:
+    - `sudo docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
+- In production:
+    - `sudo docker compose --compatibility -f docker-compose.yml up --build -d`
+- After first time installation on a server, run `ocd_backend/setup.sh` to create the database.
 
-Latest docker version uses "-" as separator when creating container names instead of "_". You can still get the old functionality by adding "--compatibility" to docker compose. So when using the latest Docker in development, use the following to start the containers:
-`docker compose --compatibility -f docker-compose.yml -f docker-compose.dev.yml up --build -d`
+
+Latest docker version uses "-" as separator when creating container names instead of "_". You can still get the old functionality by adding "--compatibility" to docker compose. So when using the latest Docker add `--compatibility`.
+
+Check out the [maintenance guide](maintenance_guide.md) for more info on how to manage this project in production.
 
 The Nginx container was installed separately in production. To mimic this in development, clone `https://github.com/openstate/nginx-load-balancer/`, follow the instructions in `INSTALL.txt` and start the container with `docker compose --compatibility up -d`
-
-After first time installation on a server, run `ocd_backend/setup.sh` to create the database.
 
 The log file was made persistent and is located in /data. To prevent this file from growing
 indefinitely, add the following to `/etc/logrotate.d/orilog`:
@@ -41,6 +46,19 @@ indefinitely, add the following to `/etc/logrotate.d/orilog`:
 You can test it using `sudo logrotate -d /etc/logrotate.d/orilog`
 
 In development Flower provides insight in the queues of Celery. You can access the Flower dashboard via `http://localhost:81/workers`.
+
+## Storage
+
+Using HDDs for the Elasticsearch index was found to be too slow for the production database. In september 2025 we switched to
+a server having 2 SSDs (3.5TB/RAID 1) and 2HDDs (14.6T/RAID 1). The mounts are as follows:
+
+- `/`: SSDs
+- `/data`: HDDs
+
+The Docker volumes, containing the Elasticsearch index and the PostgreSQL database, are placed on the SSDs.
+The `backend` and `loader` Docker containers, which before also used a Docker volume, were connected to `/data`, the HDDs,
+for mass storage of the PDFs.
+
 
 ## Import a municipality in development:
 The following commands build and start the Docker containers, empty the PostgreSQL and Redis databases and Elastic Search index
