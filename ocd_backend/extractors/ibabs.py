@@ -72,7 +72,10 @@ class IBabsBaseExtractor(BaseExtractor):
                                  settings=soap_settings, transport=transport)
         except Error as e:
             log.error(f'Unable to instantiate iBabs client: {str(e)}')
+            raise e
 
+    def no_access_error(self, message):
+        return "has no access" in message
 
 class IBabsCommitteesExtractor(IBabsBaseExtractor):
     """
@@ -112,6 +115,8 @@ class IBabsCommitteesExtractor(IBabsBaseExtractor):
                      f'Also skipped {committees_skipped} ibabs committees')
         else:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
+            if self.no_access_error(meeting_types.Message):
+                raise Exception(f"no access to iBabs committees for {self.source_definition['ibabs_sitename']}")
 
 class IbabsPersonsExtractor(IBabsBaseExtractor):
     """
@@ -155,6 +160,9 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
             log.info(f'[{self.source_definition["key"]}] No ibabs persons were found')
         else:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {users.Message}')
+            if self.no_access_error(users.Message):
+                raise Exception(f"no access to iBabs persons for {self.source_definition['ibabs_sitename']}")
+
 
 
 class IBabsMeetingsExtractor(IBabsBaseExtractor):
@@ -186,6 +194,9 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
             #   'Meetingtypes': None
             # }
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {meeting_types.Message}')
+            if self.no_access_error(meeting_types.Message):
+                raise Exception(f"no access to iBabs meeting types for {self.source_definition['ibabs_sitename']}")
+
             return {}
 
     def run(self):
@@ -239,6 +250,9 @@ class IBabsMeetingsExtractor(IBabsBaseExtractor):
                     else:
                         log.info('Skipped ibabs meeting %s because we have it already' % (meeting['Id'],))
                         meetings_skipped += 1
+            else:
+                if self.no_access_error(meetings.Message):
+                    raise Exception(f"no access to iBabs meetings for {self.source_definition['ibabs_sitename']}")
 
 
         log.info(f'[{self.source_definition["key"]}] Extracted total of {meeting_count} ibabs meetings. Also skipped {meetings_skipped} ibabs meetings.')
@@ -265,6 +279,9 @@ class IBabsReportsExtractor(IBabsBaseExtractor):
             lists = self.client.service.GetLists(Sitename=self.source_definition['ibabs_sitename'])
         except Exception as e:
             log.warning(f'[{self.source_definition["key"]}] SOAP service error: {e}')
+            if self.no_access_error(str(e)):
+                raise Exception(f"no access to iBabs reports for {self.source_definition['ibabs_sitename']}")
+
             lists = []
 
         if not lists or len(lists) < 1:
