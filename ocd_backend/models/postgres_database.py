@@ -12,18 +12,17 @@ from ocd_backend.models.postgres_models import Source, Resource
 
 log = get_source_logger('postgres_database')
 
-
 class PostgresDatabase:
+    connection_string = 'postgresql://%s:%s@%s/%s' % (
+                                settings.POSTGRES_USERNAME,
+                                settings.POSTGRES_PASSWORD,
+                                settings.POSTGRES_HOST,
+                                settings.POSTGRES_DATABASE)
+    engine = create_engine(connection_string, poolclass=StaticPool)
+    Session = sessionmaker(bind=engine)
 
     def __init__(self, serializer):
         self.serializer = serializer
-        self.connection_string = 'postgresql://%s:%s@%s/%s' % (
-                                    settings.POSTGRES_USERNAME,
-                                    settings.POSTGRES_PASSWORD,
-                                    settings.POSTGRES_HOST,
-                                    settings.POSTGRES_DATABASE)
-        self.engine = create_engine(self.connection_string, poolclass=StaticPool)
-        self.Session = sessionmaker(bind=self.engine)
 
     def get_ori_identifier(self, iri):
         """
