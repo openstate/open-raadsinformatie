@@ -47,6 +47,32 @@ You can test it using `sudo logrotate -d /etc/logrotate.d/orilog`
 
 In development Flower provides insight in the queues of Celery. You can access the Flower dashboard via `http://localhost:81/workers`.
 
+### Enabling ssl
+
+The DNS for `openraadsinformatie.nl` is not maintained by us in TransIP but by Ontola. Enabling SSL therefore works differently than
+described in `https://github.com/openstate/nginx-load-balancer/blob/master/INSTALL_HTTPS.txt`.
+
+- Start requesting certificate
+    - `sudo docker exec -it docker-c-certbot-1 sh`
+    - `certbot certonly -m developers@openstate.eu --manual --agree-tos --preferred-challenges http -vvv -d api.openraadsinformatie.nl`
+- While the above command is hanging on `Press Enter to Continue` do the following to setup the challenge
+    - `sudo docker exec -it docker-c-nginx-load-balancer-1 sh`
+    - `mkdir -p /usr/share/nginx/html/.well-known/acme-challenge`
+    - In this directory create the file with contents as described by the `certbot` output.
+- For the challenge to succeed, port 80 needs to be accessible and serving the right content. So in the `nginx-load-balancer` project
+edit the file `default.conf` and in the server block for `api.openraadsinformatie.nl`:
+    - Comment out the line `return 301 ...`
+    - Add the following:
+
+            location ^~ /.well-known/acme-challenge/ {
+               root /usr/share/nginx/html/;
+            }
+
+    - `sudo docker exec docker-c-nginx-load-balancer-1 nginx -t`
+    - `sudo docker exec docker-c-nginx-load-balancer-1 nginx -s reload`
+- In the terminal hanging on `Press Enter to Continue` press Enter. The certificate will be downloaded to `/etc/letsencrypt/live`.
+- Finally, undo the above changes to `default.conf`, add the new SSL certificate in the right server block and test/restart nginx.
+
 ## Storage
 
 Using HDDs for the Elasticsearch index was found to be too slow for the production database. In september 2025 we switched to
