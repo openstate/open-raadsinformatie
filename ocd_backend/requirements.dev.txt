@@ -12,7 +12,7 @@ nose2==0.15.1
 pymupdf @ git+https://github.com/openstate/PyMuPDF.git@366458a
 pdftotext==3.0.0
 pymupdf4llm==0.0.24
-Pillow==9.3.0
+Pillow==10.3.0
 psycopg2==2.9.10
 PyLD==2.0.4
 python-dateutil==2.9.0
