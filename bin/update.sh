@@ -2,7 +2,7 @@
 FQPATH=`readlink -f $0`
 BINDIR=`dirname $FQPATH`
 TODAY=`date +%Y-%m-%d`
-DAY_BEFORE_YESTERDAY=`date -d "-4 day" +%Y-%m-%d` # 4 to catch documents since last reindex; change back to 2 after a few days
+DAY_BEFORE_YESTERDAY=`date -d "-2 day" +%Y-%m-%d`
 cd $BINDIR/..
 sudo docker exec ori_redis_1 redis-cli --scan --pattern 'pipeline_*' |sudo xargs docker exec ori_redis_1 redis-cli del
 sudo docker exec ori_redis_1 redis-cli -n 1 set _daily.start_date "$DAY_BEFORE_YESTERDAY"
