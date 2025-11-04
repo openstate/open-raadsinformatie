@@ -4,12 +4,13 @@ import shutil
 import magic
 import uuid
 import datetime
+from ocd_backend.settings import DATA_DIR_PATH
 import sqlalchemy as sa
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import StoredDocument
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.settings import DATA_DIR_PATH
 from ocd_backend.log import get_source_logger
+from utils.pdf_naming import PdfNaming
 
 log = get_source_logger('document_storage')
 
@@ -148,17 +149,12 @@ class OriDocument():
             return components[-4], components[-3]
         else:
             log.info(f"Error: no source_iri present for item {item.original_url}")
-
-    @classmethod
-    def _id_partitioned(cls, id):
-        thousands = id//1000
-        thousands_as_string = str(thousands).zfill(9)
-        return f"{thousands_as_string[0:3]}/{thousands_as_string[3:6]}/{thousands_as_string[6:]}"
+            return None, None
     
     def full_name(self):
         extension = os.path.splitext(self.file_name)[1] if self.file_name else ""
         return f"{self._base_name()}{extension}"
-    
+
     def full_markdown_name(self):
         return f"{self._base_name()}.md"
     
@@ -166,4 +162,4 @@ class OriDocument():
         return f"{self._base_name()}.metadata"
 
     def _base_name(self):
-        return f"{DATA_DIR_PATH}/{self._id_partitioned(self.stored_document.id)}/{self.resource_ori_id}"
+        return PdfNaming._base_name_cls(DATA_DIR_PATH, PdfNaming._id_partitioned(self.stored_document.id), self.resource_ori_id)

@@ -1,5 +1,11 @@
 version: "2.2"
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ocd_frontend/Dockerfile.dev
+    ports:
+      - "5000:5000"
   backend:
     build:
       context: .
@@ -11,8 +17,6 @@ services:
       - RELEASE_STAGE=development
       - PROXY_HOST=host.docker.internal
       - PROXY_PORT=8090
-    volumes:
-      - .:/opt/ori
     command: /opt/ori/bin/start_backend.dev.sh
     mem_limit: 1g
   loader:
@@ -27,6 +31,8 @@ services:
   elastic:
     ports:
       - "9200:9200"
+    environment:
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
   postgres:
     ports:
       - "5432:5432"

@@ -21,7 +21,7 @@ RUN pip install --upgrade 'pip<24.3.1' \
   && echo "Europe/Amsterdam" > /etc/timezone \
   && apk del build-base git tzdata
 # Install backend testing dependencies
-RUN pip install --no-warn-conflicts pylint==2.4.4 nose2==0.9.2 coverage==5.0.3
+RUN pip install --no-warn-conflicts pylint==2.17.7 nose2==0.9.2 coverage==5.0.3
 
 ENV TESSDATA_PREFIX='/usr/share/tessdata/'
 
@@ -37,13 +37,7 @@ COPY tests/__init__.py  /opt/ori/tests/__init__.py
 COPY tests/ocd_backend /opt/ori/tests/ocd_backend
 
 # Copy all files, except for .dockerignore entries
-COPY json /opt/ori/json
-COPY bin /opt/ori/bin
-COPY manage.py /opt/ori/manage.py
-COPY es_mappings /opt/ori/es_mappings
-COPY ocd_backend /opt/ori/ocd_backend
 COPY version.py /opt/ori/ocd_backend/version.py
-COPY version.py /opt/ori/version.py
 
 RUN chown -R 1000:1000 /opt/ori /var/run/celery
 
