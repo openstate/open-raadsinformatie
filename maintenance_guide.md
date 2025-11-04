@@ -21,7 +21,7 @@
 - Optionally set `municipality_prefix` if municipality has multiple suppliers per region.
 - The next step depends on supplier, see below
 - Push to master
-- `ssh` to `wolf` (ask Breyten)
+- `ssh` to `ori-octopus` (ask Breyten)
 - Either manually sh into `ori_redis_1` (see [redis](#redis)):
   - `select 1` for setting individual municipalities
   - `set "ori.{supplier}.{key}" "all daily monthly"` add municipality (ori/owi/osi)

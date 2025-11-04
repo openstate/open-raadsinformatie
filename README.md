@@ -113,7 +113,7 @@ See also the Troubleshooting section in the maintenance_guide.
 To get data from iBabs in development you need to use a proxy:
 - edit `/etc/hosts` and add a line linking your IP address to `host.docker.internal`, e.g.:
     `192.168.121.174 host.docker.internal`
-- start proxy with `ssh -gD 8090  wolf`
+- start proxy with `ssh -gD 8090  ori-octopus`
 - `PROXY_HOST` and `PROXY_PORT` are always set in development (`docker-compose-dev.yml`)
 
 ## Supported Sources

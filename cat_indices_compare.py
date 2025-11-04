@@ -4,6 +4,8 @@
 #       - add a line "rob ALL=(root) NOPASSWD: /usr/bin/docker" 
 #   - ssh canis 'sudo docker exec -t ori_elastic_1 curl "localhost:9200/_cat/indices?bytes=mb&s=index"' > cat_indices_canis.txt
 #   - ssh wolf 'sudo docker exec -t ori_elastic_1 curl "localhost:9200/_cat/indices?bytes=mb&s=index"' > cat_indices_wolf.txt
+# This script was used during re-indexing from old server `wolf` to new server `canis`.
+# `canis` was found to be too slow due to HDD drives, after which a switch to `ori-octopus` was made (uses SSDs).
 
 class CatIndicesCompare:
     def compare(self):

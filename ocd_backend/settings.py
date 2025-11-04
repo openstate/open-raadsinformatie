@@ -23,7 +23,7 @@ MINOR_VERSION = __version_info__[1]
 
 RELEASE_STAGE = os.getenv('RELEASE_STAGE')
 
-# host.docker.internal:8090; start proxy with ssh -gD 8090 wolf
+# host.docker.internal:8090; start proxy with ssh -gD 8090 ori-octopus
 PROXY_HOST = os.getenv('PROXY_HOST')
 PROXY_PORT = os.getenv('PROXY_PORT')
 
