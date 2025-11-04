@@ -29,19 +29,9 @@ RUN adduser -D -H celery \
   && mkdir -p /var/run/celery /opt/ori/data/static /opt/ori/data/cache
 
 # Copy all files, except for .dockerignore entries
-COPY json /opt/ori/json
-COPY bin /opt/ori/bin
-COPY manage.py /opt/ori/manage.py
-COPY es_mappings /opt/ori/es_mappings
-COPY ocd_backend /opt/ori/ocd_backend
 COPY version.py /opt/ori/ocd_backend/version.py
-COPY version.py /opt/ori/version.py
 
 RUN chown -R 1000:1000 /opt/ori /var/run/celery
-
-# Specify the volume last
-# https://docs.docker.com/engine/reference/builder/#notes-about-specifying-volumes
-VOLUME /opt/ori/data
 
 WORKDIR /opt/ori
 USER celery

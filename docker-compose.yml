@@ -1,5 +1,19 @@
 version: "2.2"
 services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ocd_frontend/Dockerfile
+    networks:
+      - nginx-load-balancer
+      - ori
+    volumes:
+      - /data:/opt/ori/data
+      - .:/opt/ori
+    depends_on:
+      postgres:
+        condition: service_started
+    restart: always
   backend:
     build:
       context: .
@@ -35,8 +49,7 @@ services:
       - ori
     volumes:
       - /data:/opt/ori/data
-      #- .:/opt/ori
-      - ./ocd_backend:/opt/ori/ocd_backend
+      - .:/opt/ori
     depends_on:
       elastic:
         condition: service_healthy
