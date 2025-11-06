@@ -1,6 +1,6 @@
 from utils.pdf_naming import PdfNaming
 from flask import (
-    send_from_directory, abort
+    send_from_directory, abort, make_response
 )
 
 def get_format_from_request(request):
@@ -19,5 +19,9 @@ def resolve_send_file(request, db, canonical_id):
         return abort(404)
 
     relative_path = fullpath.replace('/opt/ori/data/', '')
-    return send_from_directory('/opt/ori/data', relative_path, as_attachment=True, mimetype=content_type, download_name=filename)
+    response = make_response(
+        send_from_directory('/opt/ori/data', relative_path, as_attachment=True, mimetype=content_type, download_name=filename)
+    )
+    response.headers['X-Accel-Redirect'] = f"/file_repository/{relative_path}"
+    return response
     
