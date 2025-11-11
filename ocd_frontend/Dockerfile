@@ -22,4 +22,4 @@ RUN pip install --upgrade 'pip<24.3.1' \
 WORKDIR /opt/ori
 
 ENV FLASK_APP=ocd_frontend/frontend.py
-CMD uwsgi --socket 0.0.0.0:5000 --touch-reload=uwsgi-touch-reload --processes 8 -w frontend:app
+CMD uwsgi --socket 0.0.0.0:5000 --touch-reload=uwsgi-touch-reload --processes 8 -w ocd_frontend.frontend:app

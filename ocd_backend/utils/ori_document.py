@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import stat
 import magic
 import uuid
 import datetime
@@ -117,16 +118,20 @@ class OriDocument():
         destination_path = self.full_name()
         os.makedirs(os.path.dirname(destination_path), exist_ok=True)
         shutil.move(self.temp_path, destination_path)
+        # umask 644 required for nginx
+        os.chmod(destination_path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH )
 
     def store_markdown_on_disk(self):
         if self.md_text is None:
             return
         
+        # umask 644 by default
         with open(self.full_markdown_name(), "w", errors="surrogatepass") as f:
             for page in self.md_text:
                 f.write(f"{page}\n")
 
     def store_metadata_on_disk(self):
+        # umask 644 by default
         with open(self.full_metadata_name(), "w", errors="surrogatepass") as f:
             f.write(json.dumps(self.metadata, indent=2))
 

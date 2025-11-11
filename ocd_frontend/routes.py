@@ -13,7 +13,7 @@ def index():
     return abort(404)
 
 @app.route("/v1/resolve/ibabs/<item_type>/<uuid>")
-def resolve_ibabs(_item_type, uuid):
+def resolve_ibabs(item_type, uuid):
     return resolve_send_file(request, db, uuid)
 
 @app.route("/v1/resolve/api.notubiz.nl/document/<int:canonical_id>")
@@ -26,9 +26,9 @@ def resolve_parlaeus(document_id):
 
 @app.route("/v1/resolve/<path:path>/api/v1/meetings/<int:meeting_id>/documents/<int:document_id>")
 @app.route("/v1/resolve/<path:path>/api//v1/meetings/<int:meeting_id>/documents/<int:document_id>", merge_slashes=False)
-def resolve_go(_path, _meeting_id, document_id):
+def resolve_go(path, meeting_id, document_id):
     return resolve_send_file(request, db, document_id)
 
 @app.route('/v1/<path:path>')
-def catch_all(_path):
+def catch_all(path):
     return abort(404)
