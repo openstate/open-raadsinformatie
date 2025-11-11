@@ -117,5 +117,5 @@ owi.ibabs:
   vechtstromen:
     key: vechtstromen
     ibabs_sitename: vechtstromen
-    allmanak_id: 0661
+    allmanak_id: 118745
     <<: *ibabs
