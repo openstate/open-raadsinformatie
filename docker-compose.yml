@@ -90,7 +90,7 @@ services:
       start_period: 30s
     restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms16g -Xmx16g"
+      - "ES_JAVA_OPTS=-Xms31g -Xmx31g"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0
