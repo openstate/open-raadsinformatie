@@ -16,7 +16,7 @@ from utils.pdf_naming import PdfNaming
 log = get_source_logger('document_storage')
 
 class OriDocument():
-    def __init__(self, temp_path, item, metadata, ocr_used = None):
+    def __init__(self, temp_path, item, metadata, ocr_used = None, markdown_used = None):
         self.temp_path = temp_path
         self.file_name = item.file_name if hasattr(item, 'file_name') else None
         self.md_text = item.md_text
@@ -25,6 +25,7 @@ class OriDocument():
         self.last_changed_at = self.get_last_changed_at(item)
         self.source, self.supplier = self.get_source_and_supplier(item)
         self.ocr_used = ocr_used
+        self.markdown_used = markdown_used
         self.metadata = metadata
 
         self.metadata['content_type'] = item.content_type
@@ -33,6 +34,7 @@ class OriDocument():
         self.metadata['last_changed_at'] = self.last_changed_at.isoformat() if self.last_changed_at else ''
         self.metadata['original_url'] = item.original_url if hasattr(item, 'original_url') else ''
         self.metadata['ocr_used'] = ocr_used if ocr_used else ''
+        self.metadata['markdown_used'] = markdown_used if markdown_used else ''
 
         database = PostgresDatabase(serializer=PostgresSerializer)
         self.session = database.Session()
@@ -61,6 +63,7 @@ class OriDocument():
         if self.stored_document.last_changed_at != self.last_changed_at or \
             self.stored_document.file_size != self.file_size or \
             self.stored_document.ocr_used != self.ocr_used or \
+            (self.stored_document.markdown_used and self.stored_document.markdown_used != self.markdown_used) or \
             self.stored_document.file_size != self.file_size:
             return False
 
@@ -95,6 +98,7 @@ class OriDocument():
             self.stored_document.last_changed_at = self.last_changed_at
             self.stored_document.file_size = self.file_size
             self.stored_document.ocr_used = self.ocr_used
+            self.stored_document.markdown_used = self.markdown_used
             self.stored_document.updated_at = time_now
         else:
             content_type = magic.from_file(self.temp_path, mime=True)
@@ -107,6 +111,7 @@ class OriDocument():
                 content_type=content_type,
                 file_size=self.file_size,
                 ocr_used=self.ocr_used,
+                markdown_used=self.markdown_used,
                 created_at=time_now,
                 updated_at=time_now
             )

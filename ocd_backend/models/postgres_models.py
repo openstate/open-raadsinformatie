@@ -20,6 +20,7 @@ class StoredDocument(Base):
     content_type = Column(String, nullable=False)
     file_size = Column(BigInteger, nullable=False)
     ocr_used = Column(String, nullable=True)
+    markdown_used = Column(String, nullable=True)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
 

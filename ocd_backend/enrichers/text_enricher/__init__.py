@@ -11,7 +11,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION
+from ocd_backend.settings import RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION, MARKDOWN_VERSION
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.file_parsing import file_parser, make_temp_pdf_fname, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty, rewrite_problematic_pdfs, force_ocr
@@ -146,7 +146,7 @@ class TextEnricher(BaseEnricher):
                             item.md_text = md_file_parser_using_ocr(path, item.original_url)
                             ocr_used = OCR_VERSION
 
-                    ori_document = OriDocument(path, item, ocr_used=ocr_used, metadata=metadata)
+                    ori_document = OriDocument(path, item, ocr_used=ocr_used, markdown_used=MARKDOWN_VERSION, metadata=metadata)
                     try:
                         ori_document.store()
                     except sa.exc.IntegrityError as e:
