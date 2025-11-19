@@ -257,11 +257,11 @@ ori.ibabs:
     cbs_id: GM0202
     <<: *ibabs
 
-  heemskerk:
-    key: heemskerk
-    allmanak_id: 23365
-    cbs_id: GM0396
-    <<: *ibabs
+  # heemskerk:
+  #   key: heemskerk
+  #   allmanak_id: 23365
+  #   cbs_id: GM0396
+  #   <<: *ibabs
 
   oosterhout:
     key: oosterhout
