@@ -36,6 +36,16 @@ They will be set in a list for `celery`, which means that they will be processed
 - You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
+### Switching municipality to other supplier
+Configure and start a run that retrieves all data since 2010-01-01:
+- Either delete old index or remove alias from existing index to keep the index:
+  - e.g. `curl -XDELETE "http://172.20.0.2:9200/ori_heemskerk_20250506181303/_aliases/ori_heemskerk"`
+- `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.start_date "2010-01-01"`
+- `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.end_date "2025-11-20"`
+- Make sure the new key containing the new supplier is configured:
+  - `sudo docker exec ori_redis_1 redis-cli -n 1 set ori.notubiz.heemskerk "all daily monthly"`
+- `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.heemskerk`
+
 ### Celery
 Some useful commands to see queues (run from ori_backend_1):
 - celery -A ocd_backend.app status

@@ -12,9 +12,7 @@ def get_format_from_request(request):
 
     return format
 
-def resolve_send_file(request, db, canonical_id):
-    format = get_format_from_request(request)
-    content_type, filename, fullpath = db.get_fullpath_from_canonical_id(canonical_id, format)
+def _handle_send_file(content_type, filename, fullpath):
     if not fullpath:
         return abort(404)
 
@@ -25,3 +23,20 @@ def resolve_send_file(request, db, canonical_id):
     response.headers['X-Accel-Redirect'] = f"/file_repository/{relative_path}"
     return response
     
+
+def resolve_send_file(request, db, canonical_id):
+    format = get_format_from_request(request)
+    content_type, filename, fullpath = db.get_fullpath_from_canonical_id(canonical_id, format)
+    return _handle_send_file(content_type, filename, fullpath)
+    
+
+def resolve_send_file_iri(request, db, canonical_iri):
+    format = get_format_from_request(request)
+    content_type, filename, fullpath = db.get_fullpath_from_canonical_iri(canonical_iri, format)
+    return _handle_send_file(content_type, filename, fullpath)
+
+
+def resolve_send_file_iri_like(request, db, canonical_iri):
+    format = get_format_from_request(request)
+    content_type, filename, fullpath = db.get_fullpath_from_canonical_iri_like(canonical_iri, format)
+    return _handle_send_file(content_type, filename, fullpath)
