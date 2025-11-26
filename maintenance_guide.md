@@ -36,15 +36,73 @@ They will be set in a list for `celery`, which means that they will be processed
 - You can track the progress in the logs under /var/lib/docker/containers for ori_backend_1 and ori_loader_1.
 - Update the status per municipality (importing, finished) in the github issue tracker.
 
-### Switching municipality to other supplier
+### Switching municipality to another supplier
 Configure and start a run that retrieves all data since 2010-01-01:
 - Either delete old index or remove alias from existing index to keep the index:
   - e.g. `curl -XDELETE "http://172.20.0.2:9200/ori_heemskerk_20250506181303/_aliases/ori_heemskerk"`
-- `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.start_date "2010-01-01"`
-- `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.end_date "2025-11-20"`
-- Make sure the new key containing the new supplier is configured:
-  - `sudo docker exec ori_redis_1 redis-cli -n 1 set ori.notubiz.heemskerk "all daily monthly"`
-- `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.heemskerk`
+- Make sure the new index will be found by OpenBesluitvorming.nl. See point `1` and `2` under `Fix indices` below.
+- Now start the indexing: 
+  - `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.start_date "2010-01-01"`
+  - `sudo docker exec ori_redis_1 redis-cli -n 1 set _all.end_date "2025-11-20"`
+  - Make sure the new key containing the new supplier is configured:
+    - `sudo docker exec ori_redis_1 redis-cli -n 1 set ori.notubiz.heemskerk "all daily monthly"`
+  - `sudo docker exec ori_backend_1 ./manage.py extract process all --source_path=ori.notubiz.heemskerk`
+- Make sure the old index is not found anymore by OpenBesluitvorming.nl. If you have deleted the old index you're all set.
+Otherwise, see point `3` under `Fix indices` below.
+
+#### Fix indices
+When switching a municipality to another supplier the following must be taken care of in order to return
+the new index to OpenBesluitvorming.nl.
+
+1. OpenBesluitvorming.nl uses the following to retrieve the list of municipalities:
+```
+curl https://api.openraadsinformatie.nl/v1/elastic/_search?pretty -H 'Content-type: application/json' -d '{
+  "size": 500,
+  "query": {
+    "bool": {
+      "must": {
+        "match_all": {}
+      },
+      "filter": {
+        "bool": {
+          "should": [
+            { "match": { "classification": "municipality" } },
+            { "match": { "classification": "province" } },
+            { "match": { "classification": "water" } }
+          ],
+          "minimum_should_match": 1
+        }
+      }
+    }
+  }
+}'
+```
+So we need to make sure there is a doc in the new index that has `classification` set to "municipality", "province" or "water".
+
+2. Such records are created when `AllmanakMunicipalityExtractor.run` yields. Due to the `hash_for_item` check it normally
+does not yield after first-time creation. So we must delete the entry from the `item_hash` table. First get the `item_id`. Example:
+```
+  - sudo docker exec -it ori_backend_1 sh
+    - python
+    - from ocd_backend.utils.misc import hash_utils
+    - hash_key = hash_utils.create_hash_key('allmanak', 23365, 'municipality', 23365)
+```
+
+Then delete the row:
+```
+  - sudo docker exec -it ori_postgres_1 psql -U postgres
+    - \c ori
+    - delete from item_hash where item_id='<hash_key>';
+```
+
+Now the run can be started
+
+3. Important: the old index is also still found by OpenBesluitvorming.nl. From the output of the Elasticsearch above find the `id` of the
+document with the classification for the old index. Delete it using (example):
+`curl -XDELETE "https://api.openraadsinformatie.nl/v1/elastic/ori_heemskerk_20250506181303/_doc/4054973"`
+
+
+
 
 ### Celery
 Some useful commands to see queues (run from ori_backend_1):
