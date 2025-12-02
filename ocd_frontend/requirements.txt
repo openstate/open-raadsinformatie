@@ -6,4 +6,4 @@ sqlalchemy-utils==0.41.2
 
 # Dependencies needed by the packages above
 Jinja2==3.1.6
-Werkzeug==2.3.7
+Werkzeug==3.1.4
