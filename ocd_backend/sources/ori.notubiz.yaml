@@ -925,3 +925,11 @@ ori.notubiz:
     allmanak_id: 23365
     cbs_id: GM0396
     <<: *notubiz
+
+  # Added on 2026-01-20
+  venray:
+    key: venray
+    notubiz_organization_id: 1587
+    allmanak_id: 39557
+    cbs_id: GM0984
+    <<: *notubiz

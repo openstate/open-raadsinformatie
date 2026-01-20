@@ -69,6 +69,10 @@ In the future, we hope to use the [VNG Open Raadsinformatie spec](https://github
 - HierOverheid (in progress) (contact: Alex Olieman)
 - Your app here? [Let us know](mailto:joep@ontola.io)!
 
+### I just want all the data
+
+Check out the [fetch_documents.py](fetch_documents.py) script.
+
 ### I have feedback / a different question
 
 For technical questions, please create an issue in the aforementioned Github repos.
