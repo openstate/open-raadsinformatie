@@ -933,3 +933,10 @@ ori.notubiz:
     allmanak_id: 39557
     cbs_id: GM0984
     <<: *notubiz
+
+  someren:
+    key: someren
+    notubiz_organization_id: 2043
+    allmanak_id: 21622
+    cbs_id: GM0847
+    <<: *notubiz
