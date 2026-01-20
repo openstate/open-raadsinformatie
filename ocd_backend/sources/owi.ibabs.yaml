@@ -119,3 +119,9 @@ owi.ibabs:
     ibabs_sitename: vechtstromen
     allmanak_id: 118745
     <<: *ibabs
+  # Added 2026-01-20
+  hunze_en_aa:
+    key: hunze-en-aa
+    ibabs_sitename: aaenhunze
+    allmanak_id: 21151
+    <<: *ibabs
