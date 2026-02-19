@@ -19,7 +19,6 @@ class NotubizBaseExtractor(BaseExtractor, HttpRequestMixin):
     information needed by child classes.
     """
     base_url = 'https://api.notubiz.nl'
-    application_token = '&application_token=11ef5846eaf0242ec4e0bea441379d699a77f703d'
     default_query_params = 'format=json&version=1.17.0'
     connect_timeout = 3
 
