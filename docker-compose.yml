@@ -82,6 +82,7 @@ services:
       - nginx-load-balancer
     volumes:
       - esdata:/usr/share/elasticsearch/data
+      - ./backups/elasticsearch:/opt/elasticsearch/backups
     healthcheck:
       test: curl -s http://127.0.0.1:9200/_cat/health
       interval: 15s
@@ -116,6 +117,7 @@ services:
       - node.max_local_storage_nodes=20
       - bootstrap.memory_lock=true
       - reindex.remote.whitelist=c-open-raadsinformatie:9200
+      - path.repo=/opt/elasticsearch/backups
   # elastic2:
   #   extends:
   #     service: elastic
