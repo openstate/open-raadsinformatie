@@ -135,10 +135,16 @@ class IbabsPersonsExtractor(IBabsBaseExtractor):
 
                 sleep(1)
 
-                user_details = self.client.service.GetUser(
-                    self.source_definition['ibabs_sitename'],
-                    identifier
-                )
+                try:
+                    user_details = self.client.service.GetUser(
+                        self.source_definition['ibabs_sitename'],
+                        identifier
+                    )
+                except Exception as e:
+                    log.warning(f'[{self.source_definition["key"]}] SOAP service error: {e}')
+                    if "Unknown fault occured" in str(e):
+                        log.warning("This error message may be associated with a 403 response from iBabs")
+                    continue
 
                 cached_path = 'GetUser/Sitename=%s/UserId=%s' % (
                     self.source_definition['ibabs_sitename'], identifier)
