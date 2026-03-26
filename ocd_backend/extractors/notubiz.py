@@ -65,7 +65,7 @@ class NotubizCommitteesExtractor(NotubizBaseExtractor):
             self.default_query_params
         )
         cached_path = 'gremia'
-        response = self.fetch(committee_url + self.application_token, cached_path)
+        response = self.fetch(committee_url, cached_path)
 
         committee_count = 0
         committees_skipped = 0
@@ -147,7 +147,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                 )
                 cached_path = "events/meetings/%i" % item['id']
                 try:
-                    resource = self.fetch(meeting_url + self.application_token, cached_path)
+                    resource = self.fetch(meeting_url, cached_path)
                     meeting_json = json.load(resource.media_file)['meeting']
                 except (HTTPError, RetryError, ConnectionError) as e:
                     log.info(f'[{self.source_definition["key"]}] error occurred: {e.__class__.__name__} {str(e)}: {meeting_url}')
@@ -204,7 +204,7 @@ class NotubizMeetingsExtractor(NotubizBaseExtractor):
                                 module_item['self'],
                                 self.default_query_params
                             )
-                            resource = self.fetch(module_item_url + self.application_token, None)
+                            resource = self.fetch(module_item_url, None)
                             module_item_json = json.load(resource.media_file)['item']
                             agenda_item['module_item_contents'].append(module_item_json)
                         except Exception as e:
