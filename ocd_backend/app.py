@@ -33,10 +33,10 @@ celery_app = Celery('ocd_backend', include=[
 celery_app.conf.update(**CELERY_CONFIG)
 
 #@signals.worker_init.connect
-@signals.celeryd_init.connect
-def init_sentry(**_kwargs):
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        traces_sample_rate=1.0,
-        environment=SENTRY_ENVIRONMENT
-    )  # same as above
+# @signals.celeryd_init.connect
+# def init_sentry(**_kwargs):
+#     sentry_sdk.init(
+#         dsn=SENTRY_DSN,
+#         traces_sample_rate=1.0,
+#         environment=SENTRY_ENVIRONMENT
+#     )  # same as above
