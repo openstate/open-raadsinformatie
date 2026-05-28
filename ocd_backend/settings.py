@@ -22,6 +22,7 @@ MAJOR_VERSION = __version_info__[0]
 MINOR_VERSION = __version_info__[1]
 
 RELEASE_STAGE = os.getenv('RELEASE_STAGE')
+LEAN_JUST_AGENDAS = True
 
 # host.docker.internal:8090; start proxy with ssh -gD 8090 ori-octopus
 PROXY_HOST = os.getenv('PROXY_HOST')

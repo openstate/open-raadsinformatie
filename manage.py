@@ -24,7 +24,7 @@ from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Sou
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.pipeline import setup_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
-    DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT
+    DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT, LEAN_JUST_AGENDAS
 from ocd_backend.utils.indexed_file import IndexedFile
 from ocd_backend.utils.misc import load_sources_config
 from ocd_backend.utils.monitor import get_recent_counts
@@ -518,7 +518,11 @@ def extract_process(modus, source_path, sources_config, start_date, end_date, lo
             selected_entities = []
             for entity in available_source.get('entities', []):
                 if not enabled_entities or entity.get('entity') in enabled_entities:
-                    selected_entities.append(entity.get('entity'))
+                    entity_name = entity.get('entity')
+                    if LEAN_JUST_AGENDAS and entity_name != 'meetings':
+                        click.echo('[%s] Skipping entity %s, only interested in agenda' % (source_name, entity_name))
+                        continue
+                    selected_entities.append(entity_name)
 
                     # Redis settings are overruled by source definitions, for some sources a start_date must be enforced
                     new_source = deepcopy(settings)
