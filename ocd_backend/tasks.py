@@ -10,7 +10,7 @@ from ocd_backend.models.postgres_models import ItemHash
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.indexed_file import IndexedFile
 from ocd_backend.utils.misc import iterate
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 from ocd_backend.settings import REDIS_HOST, REDIS_PORT
 
 log = get_source_logger('ocd_backend.tasks')
@@ -149,6 +149,9 @@ class Finalizer(celery_app.Task):
         self.set_processed()
 
     def set_processed(self):
+        if NO_SAVING:
+            return
+
         old_item = self.session.query(ItemHash).filter(ItemHash.item_id == self.hash_for_item.hash_key).first()
 
         if old_item:

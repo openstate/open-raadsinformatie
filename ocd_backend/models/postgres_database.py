@@ -69,10 +69,11 @@ class PostgresDatabase:
 
             new_id = session.execute(Sequence('ori_id_seq'))
             new_identifier = Uri(Ori, new_id)
-            resource = Resource(ori_id=new_id, iri=new_identifier, sources=[source])
-            session.add(resource)
-            session.commit()
-            session.flush()
+            if not settings.NO_SAVING:
+              resource = Resource(ori_id=new_id, iri=new_identifier, sources=[source])
+              session.add(resource)
+              session.commit()
+              session.flush()
             return new_identifier
         except MultipleResultsFound as e:
             log.info(f"MultipleResultsFound for {iri} when getting resource")
@@ -152,8 +153,9 @@ class PostgresDatabase:
                                                       Source.canonical_id == str(model_object.canonical_id),
                                                       Source.canonical_iri == None).one()
                 source.canonical_iri = model_object.canonical_iri
-                session.commit()
-                session.close()
+                if not settings.NO_SAVING:
+                    session.commit()
+                    session.close()
                 return
             except MultipleResultsFound:
                 raise ValueError('Multiple 1B/ID+X Source records found for resource %s with IRI %s' %
@@ -170,8 +172,9 @@ class PostgresDatabase:
                                                       Source.canonical_iri == None).one()
                 source.canonical_id = str(model_object.canonical_id)
                 source.canonical_iri = model_object.canonical_iri
-                session.commit()
-                session.close()
+                if not settings.NO_SAVING:
+                    session.commit()
+                    session.close()
                 return
             except MultipleResultsFound:
                 raise ValueError('Multiple 1C/X+X Source records found for resource %s with IRI %s' %
@@ -188,9 +191,10 @@ class PostgresDatabase:
                                 iri=model_object.source_iri,
                                 canonical_id=str(model_object.canonical_id),
                                 canonical_iri=model_object.canonical_iri)
-                session.add(source)
-                session.commit()
-                session.close()
+                if not settings.NO_SAVING:
+                    session.add(source)
+                    session.commit()
+                    session.close()
                 return
             except Exception as e:
                 session.close()
@@ -228,7 +232,8 @@ class PostgresDatabase:
                                                       Source.canonical_id == None,
                                                       Source.canonical_iri == None).with_for_update().one()
                 source.canonical_id = str(model_object.canonical_id)
-                session.commit()
+                if not settings.NO_SAVING:
+                    session.commit()
                 return
             except MultipleResultsFound:
                 raise ValueError('Multiple 2B/X+X Source records found for resource %s with IRI %s' %
