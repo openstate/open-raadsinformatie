@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 
+from ocd_backend.settings import NO_SAVING
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 from ocd_backend.models.definitions import Mapping, Ori
@@ -218,6 +219,9 @@ class Model(object, metaclass=ModelMetaclass):
         return rels.values()
 
     def save(self):
+        if NO_SAVING:
+            return
+
         if self.saving_flag:
             return
         self.saving_flag = True

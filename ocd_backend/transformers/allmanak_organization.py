@@ -3,7 +3,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('organizations')
 
@@ -54,7 +54,8 @@ def municipality_organization_item(self, content_type, raw_item, canonical_iri, 
         pass
     # object_model.contact_details = transform_contact_details(original_item['contact'])
 
-    object_model.save()
+    if not NO_SAVING:
+        object_model.save()
     return object_model
 
 
@@ -85,7 +86,8 @@ def province_organization_item(self, content_type, raw_item, canonical_iri, cach
     object_model.email = original_item.get('contact', {}).get('emailadressen', [])[0].get('url')
     # object_model.contact_details = transform_contact_details(original_item['contact'])
 
-    object_model.save()
+    if not NO_SAVING:
+        object_model.save()
     return object_model
 
 
@@ -120,5 +122,6 @@ def party_item(self, content_type, raw_item, canonical_iri, cached_path, **kwarg
                                                           supplier='allmanak',
                                                           collection=self.source_definition['source_type'])
 
-    object_model.save()
+    if not NO_SAVING:
+        object_model.save()
     return object_model

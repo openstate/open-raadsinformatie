@@ -6,7 +6,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.misc import is_valid_iso8601_date
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('ibabs_report')
 
@@ -122,5 +122,6 @@ def report_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
             attachment_file.last_discussed_at = datum
         report.attachment.append(attachment_file)
 
-    report.save()
+    if not NO_SAVING:
+        report.save()
     return report

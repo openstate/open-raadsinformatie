@@ -3,7 +3,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('ibabs_committee')
 
@@ -41,5 +41,6 @@ def committee_item(self, content_type, raw_item, canonical_iri, cached_path, **k
                                                        supplier='allmanak',
                                                        collection=self.source_definition['source_type'])
 
-    committee.save()
+    if not NO_SAVING:
+        committee.save()
     return committee

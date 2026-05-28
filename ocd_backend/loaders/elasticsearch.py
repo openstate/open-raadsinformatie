@@ -9,7 +9,7 @@ from ocd_backend.loaders import BaseLoader
 from ocd_backend.log import get_source_logger
 from ocd_backend.models.serializers import JsonLDSerializer
 from ocd_backend.utils.misc import json_encoder
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('elasticsearch_loader')
 
@@ -36,7 +36,8 @@ class ElasticsearchBaseLoader(BaseLoader):
             model_body = json_encoder.encode(JsonLDSerializer(loader_class=self).serialize(model))
 
             try:
-                self.process(model, model_body)
+                if not NO_SAVING:
+                    self.process(model, model_body)
                 log_identifiers.append(model.get_short_identifier())
             except TransportError as e:
                 log.info(f"TransportError when uploading {model.get_short_identifier()} to ES: {e}")

@@ -5,7 +5,8 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import RESOLVER_BASE_URL, AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, \
+  AUTORETRY_RETRY_BACKOFF_MAX, NO_SAVING
 from ocd_backend.utils.http import HttpRequestSimple
 from ocd_backend.utils.misc import strip_scheme
 from ocd_backend.enrichers.media_enricher.tasks.image_metadata import ImageMetadata
@@ -71,7 +72,8 @@ class MediaEnricher(BaseEnricher, HttpRequestSimple):
 
         resource.media_file.close()
 
-        item.db.save(item)
+        if not NO_SAVING:
+            item.db.save(item)
 
 
 @celery_app.task(bind=True, base=MediaEnricher, autoretry_for=AUTORETRY_EXCEPTIONS, 

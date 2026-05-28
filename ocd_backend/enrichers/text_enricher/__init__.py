@@ -11,7 +11,7 @@ from ocd_backend.app import celery_app
 from ocd_backend.enrichers import BaseEnricher
 from ocd_backend.exceptions import SkipEnrichment
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import LEAN_JUST_AGENDAS, RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION, MARKDOWN_VERSION
+from ocd_backend.settings import LEAN_JUST_AGENDAS, NO_SAVING, RESOLVER_BASE_URL, RETRY_MAX_RETRIES, OCR_VERSION, MARKDOWN_VERSION
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.utils.file_parsing import file_parser, make_temp_pdf_fname, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty, rewrite_problematic_pdfs, force_ocr
@@ -176,7 +176,8 @@ class TextEnricher(BaseEnricher):
         for task in enrich_tasks:
             self.available_tasks[task](self.source_definition).enrich_item(item, metadata)
 
-        item.db.save(item)
+        if not NO_SAVING:
+            item.db.save(item)
 
     def exclude_from_ocr(self, url):
         # Some files lead to an OOM every time they are processed. Exclude them

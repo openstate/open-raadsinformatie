@@ -6,7 +6,7 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.ibabs import translate_position
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
 log = get_source_logger('ibabs_meeting')
 
@@ -182,5 +182,6 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
             attachment.last_discussed_at = item.start_date
             item.attachment.append(attachment)
 
-    item.save()
+    if not NO_SAVING:
+        item.save()
     return item

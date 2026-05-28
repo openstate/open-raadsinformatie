@@ -4,7 +4,7 @@ from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
-from ocd_backend.settings import RESOLVER_BASE_URL
+from ocd_backend.settings import NO_SAVING, RESOLVER_BASE_URL
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 
@@ -103,5 +103,6 @@ def person_item(self, content_type, raw_item, canonical_iri, cached_path, **kwar
 
         person.member_of.append(party_member)
 
-    person.save()
+    if not NO_SAVING:
+        person.save()
     return person
