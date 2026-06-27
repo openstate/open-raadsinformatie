@@ -22,11 +22,11 @@ from ocd_backend.es import setup_elasticsearch
 from ocd_backend.models.postgres_database import PostgresDatabase
 from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Source, StoredDocument
 from ocd_backend.models.serializers import PostgresSerializer
-from ocd_backend.pipeline import setup_pipeline
+from ocd_backend.pipeline import setup_pipeline, setup_synced_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
     DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT, LEAN_JUST_AGENDAS
 from ocd_backend.utils.indexed_file import IndexedFile
-from ocd_backend.utils.misc import load_sources_config
+from utils.sources import load_sources_config
 from ocd_backend.utils.monitor import get_recent_counts
 from ocd_backend.utils.file_parsing import file_parser, md_file_parser, md_file_parser_using_ocr, parse_result_is_empty
 
@@ -537,6 +537,58 @@ def extract_process(modus, source_path, sources_config, start_date, end_date, lo
         except KeyError:
             click.echo('Source %s in redis does not exist in available sources' % source)
 
+@click.command('synced_process')
+@click.argument('modus')
+@click.option('--sources_config', default=SOURCES_CONFIG_FILE)
+@click.option('--start_date', default=None)
+@click.option('--end_date', default=None)
+def extract_synced_process(modus, sources_config, start_date, end_date):
+    """
+    Start extraction based on the flags in Redis.
+    It uses the source_path in Redis db 1 to identify which municipalities should be extracted.
+    A municipality can be set using 'SET ori.ibabs.arnhem enabled'.
+    Currently, possible values are: enabled, disabled and archived.
+
+    :param modus: the configuration to use for processing, starting with an underscore. i.e. _enabled, _archived, _disabled. Looks for configuration in redis like _custom.start_date
+    :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
+    :param start_date: Use this start_date instead of the value defined in redis
+    :param end_date: Use this end_date instead of the value defined in redis
+    """
+    redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+
+    available_sources = load_sources_config(sources_config)
+    lock_key = "ori_lock_key_all"
+    maintenance_file = 'maintenance.txt'
+    sources = []
+    for key, h in available_sources.items():
+        for source in h:
+            sources.append(f"{key}.{source}")
+
+    settings_path = '_%s.*' % modus
+    setting_keys = redis_client.keys(settings_path)
+    if not setting_keys:
+        click.echo('No settings found in redis for %s' % settings_path)
+        return
+
+    settings = {}
+    enabled_entities = []
+    for key in setting_keys:
+        _, _, name = key.rpartition('.')
+        value = redis_client.get(key)
+        if name == 'entities':
+            enabled_entities = value.split(' ')
+        else:
+            settings[name] = value
+
+    if start_date is not None:
+        settings['start_date'] = start_date
+    if end_date is not None:
+        settings['end_date'] = end_date
+    if lock_key is not None:
+        settings['lock_key'] = lock_key
+
+    setup_synced_pipeline.delay(sources, available_sources, lock_key, maintenance_file, settings, enabled_entities)
+    click.echo(f'Started synced pipeline for {len(sources)} sources')
 
 @click.command('monthly_check')
 @click.option('--token')
@@ -659,6 +711,7 @@ elasticsearch.add_command(es_monthly_check)
 extract.add_command(extract_list_sources)
 extract.add_command(extract_start)
 extract.add_command(extract_process)
+extract.add_command(extract_synced_process)
 extract.add_command(extract_load_redis)
 
 developers.add_command(developers_purge_dbs)

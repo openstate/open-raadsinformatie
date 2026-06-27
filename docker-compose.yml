@@ -23,6 +23,8 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
+      - PROXY_HOST=172.17.0.1
+      - PROXY_PORT=8090
     networks:
       - ori
     volumes:
@@ -45,6 +47,8 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
+      - PROXY_HOST=172.17.0.1
+      - PROXY_PORT=8090
     networks:
       - ori
     volumes:
@@ -91,7 +95,8 @@ services:
       start_period: 30s
     restart: always
     environment:
-      - "ES_JAVA_OPTS=-Xms31g -Xmx31g"
+      # This used to be 32GB but scaling down for now
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
       # Discovery
       - network.host=127.0.0.1
       - http.host=0.0.0.0

@@ -1,4 +1,5 @@
 import iso8601
+from datetime import datetime
 
 from ocd_backend import settings
 from ocd_backend.app import celery_app
@@ -6,7 +7,8 @@ from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.ibabs import translate_position
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, LEAN_JUST_AGENDAS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.utils.misc import meeting_date_modified
 
 log = get_source_logger('ibabs_meeting')
 
@@ -31,6 +33,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         meeting = original_item
 
     item = Meeting(meeting['Id'], **source_defaults)
+    item.date_modified = meeting_date_modified()
     item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                       source=self.source_definition['key'],
                                                       supplier='allmanak',
@@ -126,32 +129,38 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
                 item.agenda.append(agenda_item)
 
     item.invitee = list()
-    if meeting['Invitees'] and 'iBabsUserBasic' in meeting['Invitees']:
-        for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
-            invitee_item = Person(invitee['UniqueId'],
-                                  source=self.source_definition['key'],
-                                  supplier='ibabs',
-                                  collection='person')
-            invitee_item.name = invitee['Name']
-            invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                      source=self.source_definition['key'],
-                                                                      supplier='allmanak',
-                                                                      collection=self.source_definition['source_type'])
-            item.invitee.append(invitee_item)
+    if LEAN_JUST_AGENDAS:
+        log.info(f'[{self.source_definition["key"]}] Skipping invitees for ibabs meeting, is too slow for agenda-mode')
+    else:
+        if meeting['Invitees'] and 'iBabsUserBasic' in meeting['Invitees']:
+            for invitee in meeting['Invitees']['iBabsUserBasic'] or []:
+                invitee_item = Person(invitee['UniqueId'],
+                                      source=self.source_definition['key'],
+                                      supplier='ibabs',
+                                      collection='person')
+                invitee_item.name = invitee['Name']
+                invitee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                          source=self.source_definition['key'],
+                                                                          supplier='allmanak',
+                                                                          collection=self.source_definition['source_type'])
+                item.invitee.append(invitee_item)
 
     item.attendee = list()
-    if meeting['Attendees'] and 'iBabsUserBasic' in meeting['Attendees']:
-        for attendee in meeting['Attendees']['iBabsUserBasic'] or []:
-            attendee_item = Person(attendee['UniqueId'],
-                                   source=self.source_definition['key'],
-                                   supplier='ibabs',
-                                   collection='person')
-            attendee_item.name = attendee['Name']
-            attendee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
-                                                                       source=self.source_definition['key'],
-                                                                       supplier='allmanak',
-                                                                       collection=self.source_definition['source_type'])
-            item.attendee.append(attendee_item)
+    if LEAN_JUST_AGENDAS:
+        log.info(f'[{self.source_definition["key"]}] Skipping attendees for ibabs meeting, is too slow for agenda-mode')
+    else:
+        if meeting['Attendees'] and 'iBabsUserBasic' in meeting['Attendees']:
+            for attendee in meeting['Attendees']['iBabsUserBasic'] or []:
+                attendee_item = Person(attendee['UniqueId'],
+                                      source=self.source_definition['key'],
+                                      supplier='ibabs',
+                                      collection='person')
+                attendee_item.name = attendee['Name']
+                attendee_item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
+                                                                          source=self.source_definition['key'],
+                                                                          supplier='allmanak',
+                                                                          collection=self.source_definition['source_type'])
+                item.attendee.append(attendee_item)
 
     # Double check because sometimes 'EndTime' is in meeting but it is set to None
     if 'EndTime' in meeting and meeting['EndTime']:

@@ -1,6 +1,7 @@
 # Frontend for Open Raadsinformatie API
 
-Although it is called `frontend` it is only serving files using `Flask`.
+Although it is called `frontend` it's main task is serving files using `Flask`.
+Added later is the route /indices which returns information about the indices, names of sources and CBS codes.
 
 ## nginx
 

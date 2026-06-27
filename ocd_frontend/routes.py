@@ -1,5 +1,5 @@
 from ocd_frontend.models.postgres_database import FrontendPostgresDatabase
-from ocd_frontend.utils.route_utils import resolve_send_file, resolve_send_file_iri, resolve_send_file_iri_like
+from ocd_frontend.utils.route_utils import get_indices, resolve_send_file, resolve_send_file_iri, resolve_send_file_iri_like
 from . import app
 
 from flask import (
@@ -38,3 +38,8 @@ def resolve_go(path, meeting_id, document_id):
 @app.route('/v1/<path:path>')
 def catch_all(path):
     return abort(404)
+
+@app.route('/indices')
+def indices():
+    indices = get_indices()
+    return indices

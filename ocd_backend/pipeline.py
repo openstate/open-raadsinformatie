@@ -2,6 +2,8 @@ from copy import deepcopy
 from datetime import datetime
 from uuid import uuid4
 
+import os
+
 from celery import chain, group
 from elasticsearch.exceptions import NotFoundError
 
@@ -11,9 +13,10 @@ from ocd_backend.es import elasticsearch as es
 from ocd_backend.exceptions import ConfigurationError
 from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.pipeline_utils import PipelineUtils
 from ocd_backend.utils.retry_utils import retry_task
 from ocd_backend.utils.misc import load_object, propagate_chain_get
-from ocd_backend.settings import RETRY_MAX_RETRIES
+from ocd_backend.settings import LEAN_JUST_AGENDAS, RETRY_MAX_RETRIES
 
 log = get_source_logger('pipeline')
 
@@ -174,3 +177,56 @@ def setup_pipeline(self, source_definition, source_run_uuid):
         # Wait for last task chain to end before continuing
         log.info(f'[{source_definition["key"]}] Waiting for last chain to finish')
         propagate_chain_get(result)
+
+
+@celery_app.task(bind=True)
+def setup_synced_pipeline(self, sources, available_sources, lock_key, maintenance_file, settings, enabled_entities):
+    log.debug(f'Starting synced pipeline for {len(sources)} sources')
+    pipeline_utils = PipelineUtils()
+
+    if pipeline_utils.is_maintenance(maintenance_file):
+        log.info(f"...bailing out because maintenance file {maintenance_file} detected")
+        return
+
+    # Requeue if locked
+    if pipeline_utils.is_locked(lock_key):
+        log.debug("...sleeping/returning")
+        if len(sources) > 0:
+          setup_synced_pipeline.apply_async(args=[sources, available_sources, lock_key, maintenance_file, settings, enabled_entities], countdown=5)
+        return
+
+    source = sources.pop(0)
+    pipeline_utils.claim_lock(lock_key, source)
+    try:
+        project, provider, source_name = source.split('.')
+        available_source = available_sources['%s.%s' % (project, provider)][source_name]
+        pipeline_utils.update_lock(lock_key, source, f"{project}.{provider}.{available_source['key']}")
+        source_run_uuid = uuid4().hex
+
+        log.info(f'[{source_name}] Start extract for {source_name}')
+
+        selected_entities = []
+        for entity in available_source.get('entities', []):
+            if not enabled_entities or entity.get('entity') in enabled_entities:
+                entity_name = entity.get('entity')
+                if LEAN_JUST_AGENDAS and entity_name != 'meetings':
+                    log.info(f'[{source_name}] Skipping entity {entity_name}, only interested in agenda')
+                    continue
+                selected_entities.append(entity_name)
+
+                # Redis settings are overruled by source definitions, for some sources a start_date must be enforced
+                new_source = deepcopy(settings)
+                new_source.update(deepcopy(available_source))
+                new_source.update(entity)
+
+                setup_pipeline.delay(new_source, source_run_uuid)
+
+        log.info(f'[{source_name}] Started pipelines: {", ".join(selected_entities)}')
+        if len(sources) > 0:
+          setup_synced_pipeline.apply_async(args=[sources, available_sources, lock_key, maintenance_file, settings, enabled_entities], countdown=5)
+    except ValueError as e:
+        log.error(f'Invalid source format {source} in redis')
+        raise e
+    except KeyError as e:
+        log.error(f'Source {source} in redis does not exist in available sources')
+        raise e

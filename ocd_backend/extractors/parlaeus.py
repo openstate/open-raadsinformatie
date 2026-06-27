@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlsplit
 
 from ocd_backend.extractors import BaseExtractor
 from ocd_backend.hash_for_item import DUMMY_ITEM_HASH
@@ -16,7 +17,11 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
     def __init__(self, *args, **kwargs):
         super(ParlaeusMeetingsExtractor, self).__init__(*args, **kwargs)
         self.base_url = self.source_definition['base_url']
+        self.hostname = self._domain_name_from_base_url()
         self.rid = self.source_definition['session_id']
+
+    def _domain_name_from_base_url(self):
+        return urlsplit(self.base_url).hostname
 
     def get_response(self, url):
         response = self.http_session.get(url, timeout=(3, 15)).json()
@@ -47,7 +52,7 @@ class ParlaeusMeetingsExtractor(BaseExtractor, HttpRequestMixin):
 
             meeting_data = resp.json()
             agenda = meeting_data['agenda']
-            agenda['url'] = url
+            agenda['url'] = f"https://{self.hostname}/app/public/agenda/{meeting['agid']}"
 
             hash_for_item = self.hash_for_item('parlaeus', self.source_definition["key"], 'meeting', meeting['agid'], agenda)
             if hash_for_item:

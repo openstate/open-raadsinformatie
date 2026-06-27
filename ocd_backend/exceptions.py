@@ -31,10 +31,6 @@ class SkipEnrichment(Exception):
     there is a valid reason for skipping the enrichemnt."""
 
 
-class MissingTemplateTag(KeyError):
-    """Thrown when a template tag is missing in the configuration"""
-
-
 class InvalidDatetime(ValueError):
     pass
 

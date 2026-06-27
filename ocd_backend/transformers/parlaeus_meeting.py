@@ -7,6 +7,7 @@ from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
 from ocd_backend.log import get_source_logger
+from ocd_backend.utils.misc import meeting_date_modified
 
 log = get_source_logger('parlaeus_meeting')
 
@@ -25,6 +26,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     }
 
     meeting = Meeting(original_item['agid'], **source_defaults)
+    meeting.url = original_item['url']
+    meeting.date_modified = meeting_date_modified()
     meeting.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                          source=self.source_definition['key'],
                                                          supplier='allmanak',

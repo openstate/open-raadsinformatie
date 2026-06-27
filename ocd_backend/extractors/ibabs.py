@@ -57,12 +57,13 @@ class IBabsBaseExtractor(BaseExtractor):
         cache = SqliteCache(path='/tmp/sqlite.db', timeout=60)
 
         if settings.PROXY_HOST and settings.PROXY_PORT:
+            log.info(f"PROXY_HOST set, so setting up proxy for iBabs: {settings.PROXY_HOST}:{settings.PROXY_PORT}")
             session = Session()
             session.proxies = {
                 'http': f'socks5://{settings.PROXY_HOST}:{settings.PROXY_PORT}',
                 'https': f'socks5://{settings.PROXY_HOST}:{settings.PROXY_PORT}'
             }
-            transport=Transport(session=session, cache=cache)
+            transport=Transport(session=session, cache=cache, timeout=10, operation_timeout=(10, 60))
         else:
             transport = Transport(cache=cache)
 

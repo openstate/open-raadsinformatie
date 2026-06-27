@@ -2,7 +2,8 @@ from celery.utils.time import get_exponential_backoff_interval
 from functools import wraps
 
 from ocd_backend.log import get_source_logger
-from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX, RETRY_MAX_RETRIES
+from ocd_backend.settings import AUTORETRY_EXCEPTIONS, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX, LEAN_JUST_AGENDAS, RETRY_MAX_RETRIES
+from ocd_backend.utils.pipeline_utils import PipelineUtils
 
 log = get_source_logger('retry_task')
 
@@ -42,9 +43,23 @@ def retry_task(fun):
                     raise self.retry(countdown=countdown)
                 except self.MaxRetriesExceededError:
                     log.error(f'Maximum number of retries reached for error ({e.__class__.__name__}):\n{str(e)}')
+                    remove_lock(*args)
                     raise
+            else:
+                remove_lock(*args)
+        except Exception as e:
+            log.info(f'Non-autoretry error caught ({e.__class__.__name__}):\n{str(e)}')
+            remove_lock(*args)
+            raise
 
     return handle_retry
+
+def remove_lock(*args):
+    if len(args) > 0 and isinstance(args[0], dict) and 'lock_key' in args[0]:
+      lock_key = args[0]['lock_key']
+      p = PipelineUtils()
+      log.debug(f'Error raised and lock_key passed: releasing lock {p.lock_value(lock_key)} for key {lock_key}')
+      p.release_lock(lock_key)
 
 def is_retryable_error(error, url = None, retries_sofar = None):
     error_string = str(error)

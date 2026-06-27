@@ -1,10 +1,13 @@
 import re
+from datetime import datetime
+
 from ocd_backend import settings
 from ocd_backend.app import celery_app
 from ocd_backend.log import get_source_logger
 from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
+from ocd_backend.utils.misc import meeting_date_modified
 
 log = get_source_logger('notubiz_meeting')
 
@@ -24,6 +27,8 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
     }
 
     event = Meeting(original_item['id'], **source_defaults)
+    event.url = original_item['url']
+    event.date_modified = meeting_date_modified()
     event.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                        source=self.source_definition['key'],
                                                        supplier='allmanak',

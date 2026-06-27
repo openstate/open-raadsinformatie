@@ -17,9 +17,10 @@ log = get_source_logger('document_storage')
 
 class OriDocument():
     def __init__(self, temp_path, item, metadata, ocr_used = None, markdown_used = None):
+        # When LEAN_JUST_AGENDAS=True, temp_path will be None
         self.temp_path = temp_path
         self.file_name = item.file_name if hasattr(item, 'file_name') else None
-        self.md_text = item.md_text
+        self.md_text = item.md_text if hasattr(item, 'md_text') else None
         self.file_size = item.size_in_bytes or 0
         self.resource_ori_id = item.get_short_identifier()
         self.last_changed_at = self.get_last_changed_at(item)
@@ -28,7 +29,7 @@ class OriDocument():
         self.markdown_used = markdown_used
         self.metadata = metadata
 
-        self.metadata['content_type'] = item.content_type
+        self.metadata['content_type'] = item.content_type or ''
         self.metadata['size'] = self.file_size
         self.metadata['filename'] = self.file_name
         self.metadata['last_changed_at'] = self.last_changed_at.isoformat() if self.last_changed_at else ''
@@ -47,8 +48,9 @@ class OriDocument():
                     log.info(f"Document exists and has not changed - not storing {self.resource_ori_id} {self.metadata['original_url']}")
                     return
                 self.store_in_db()
-                self.store_on_disk()
-                self.store_markdown_on_disk()
+                if self.temp_path:
+                  self.store_on_disk()
+                  self.store_markdown_on_disk()
                 self.store_metadata_on_disk()
         except sa.exc.IntegrityError as e:
             log.info(f"IntegrityError in OriDocument when saving stored_document: {str(e)}")
@@ -101,7 +103,7 @@ class OriDocument():
             self.stored_document.markdown_used = self.markdown_used
             self.stored_document.updated_at = time_now
         else:
-            content_type = magic.from_file(self.temp_path, mime=True)
+            content_type = magic.from_file(self.temp_path, mime=True) if self.temp_path else ''
             self.stored_document = StoredDocument(
                 uuid=uuid.uuid1(),
                 resource_ori_id=self.resource_ori_id,
@@ -137,14 +139,16 @@ class OriDocument():
 
     def store_metadata_on_disk(self):
         # umask 644 by default
-        with open(self.full_metadata_name(), "w", errors="surrogatepass") as f:
+        name = self.full_metadata_name()
+        os.makedirs(os.path.dirname(name), exist_ok=True)
+        with open(name, "w", errors="surrogatepass") as f:
             f.write(json.dumps(self.metadata, indent=2))
 
     def get_last_changed_at(self, item):
         """
         Notubiz returns a `last_modified` for documents, which gets stored in `date_modified`
         For other suppliers use the `last_discussed_at` (which is the best we can do here)
-        Convert to UCT and remove tzinfo so that this date can be compared to date stored in database in exists_and_not_changed()
+        Convert to UTC and remove tzinfo so that this date can be compared to date stored in database in exists_and_not_changed()
         """
         if hasattr(item, 'date_modified'):
             return item.date_modified.astimezone(datetime.timezone.utc).replace(tzinfo=None)

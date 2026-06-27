@@ -65,7 +65,13 @@ class TextEnricher(BaseEnricher):
 
         item.url = '%s/%s' % (RESOLVER_BASE_URL, parse.quote(identifier))
 
-        if not hasattr(item, 'text') or not item.text:
+        path = None
+        ocr_used = None
+        markdown_used = None
+        if LEAN_JUST_AGENDAS:
+            item.content_type = ''
+            item.size_in_bytes = 0
+        elif not hasattr(item, 'text') or not item.text:
             resource = None
             try:
                 resource = HttpRequestSimple().fetch(
@@ -114,10 +120,8 @@ class TextEnricher(BaseEnricher):
             if resource is not None:
                 item.content_type = resource.content_type
                 item.size_in_bytes = resource.file_size
-                if LEAN_JUST_AGENDAS:
-                    resource = None
 
-            if resource is not None:
+                markdown_used=MARKDOWN_VERSION
                 # Make sure file_object is actually on the disk for pdf parsing
                 # Pass delete=False, since we keep the file
                 temporary_file = NamedTemporaryFile(delete=False)
@@ -149,24 +153,24 @@ class TextEnricher(BaseEnricher):
                             item.md_text = md_file_parser_using_ocr(path, item.original_url)
                             ocr_used = OCR_VERSION
 
-                    ori_document = OriDocument(path, item, ocr_used=ocr_used, markdown_used=MARKDOWN_VERSION, metadata=metadata)
-                    try:
-                        ori_document.store()
-                    except sa.exc.IntegrityError as e:
-                        log.info(f"IntegrityError in TextEnricher when saving stored_document: {str(e)}")
-                        if "UniqueViolation" in str(e):
-                            # A race condition occurs when a meeting has the same document twice - try again
-                            ori_document.store()
-                        else:
-                            raise e
+        ori_document = OriDocument(path, item, ocr_used=ocr_used, markdown_used=markdown_used, metadata=metadata)
+        try:
+            ori_document.store()
+        except sa.exc.IntegrityError as e:
+            log.info(f"IntegrityError in TextEnricher when saving stored_document: {str(e)}")
+            if "UniqueViolation" in str(e):
+                # A race condition occurs when a meeting has the same document twice - try again
+                ori_document.store()
+            else:
+                raise e
 
-            if hasattr(item, 'text') and item.text:
-                # Adding the same text again for Elastic nesting
-                item.text_pages = [
-                    {'text': text, 'page_number': i}
-                    for i, text in enumerate(item.text, start=1)
-                    if text
-                ]
+        if hasattr(item, 'text') and item.text:
+            # Adding the same text again for Elastic nesting
+            item.text_pages = [
+                {'text': text, 'page_number': i}
+                for i, text in enumerate(item.text, start=1)
+                if text
+            ]
 
         enrich_tasks = item.enricher_task
         if isinstance(enrich_tasks, str):

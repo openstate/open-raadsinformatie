@@ -61,11 +61,17 @@ DATA_DIR_PATH = os.path.join(PROJECT_PATH, 'data')
 TEMP_DIR_PATH = '/tmp'
 tempfile.tempdir = TEMP_DIR_PATH
 
+# The path of the JSON file containing the sources config
+SOURCES_CONFIG_FILE = os.path.join(ROOT_PATH, '../ocd_backend/sources/*')
+
 # Postgres settings
 POSTGRES_HOST = '{}:{}'.format(os.getenv('POSTGRES_SERVICE_HOST', 'postgres'), os.getenv('POSTGRES_SERVICE_PORT', 5432))
 POSTGRES_DATABASE = os.getenv('POSTGRES_DATABASE', 'ori')
 POSTGRES_USERNAME = os.getenv('POSTGRES_USERNAME', 'ori_postgres_user')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
+
+ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_SERVICE_HOST', 'elastic')
+ELASTICSEARCH_PORT = os.getenv('ELASTICSEARCH_SERVICE_PORT', 9200)
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
