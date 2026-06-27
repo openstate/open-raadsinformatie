@@ -35,7 +35,7 @@ class Meeting(MeetingNS, schema.Event):
     replaces = Relation(MeetingNS, 'replaces')
     replaced_by = Relation(MeetingNS, 'replaced_by')
     url = URLProperty(Schema, 'url')
-    date_modified = DateTimeProperty(MeetingNS, 'dateModified')
+    date_modified = DateTimeProperty(Schema, 'dateModified')
 
 
 class Report(MeetingNS, schema.Event, schema.CreativeWork):
