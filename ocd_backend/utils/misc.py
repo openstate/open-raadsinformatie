@@ -186,9 +186,9 @@ def str_to_datetime(date_str):
     raise InvalidDatetime("Cannot convert '%s' to datetime", date_str)
 
 
-def meeting_date_modified():
-    date_modified = datetime.datetime.now()
-    return date_modified.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+def meeting_last_stored():
+    last_stored = datetime.datetime.now()
+    return last_stored.astimezone(datetime.timezone.utc).replace(tzinfo=None)
 
 
 def localize_datetime(date):

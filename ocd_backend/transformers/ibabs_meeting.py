@@ -8,7 +8,7 @@ from ocd_backend.models import *
 from ocd_backend.transformers import BaseTransformer
 from ocd_backend.utils.ibabs import translate_position
 from ocd_backend.settings import AUTORETRY_EXCEPTIONS, LEAN_JUST_AGENDAS, NO_SAVING, RETRY_MAX_RETRIES, AUTORETRY_RETRY_BACKOFF, AUTORETRY_RETRY_BACKOFF_MAX
-from ocd_backend.utils.misc import meeting_date_modified
+from ocd_backend.utils.misc import meeting_last_stored
 
 log = get_source_logger('ibabs_meeting')
 
@@ -33,7 +33,7 @@ def meeting_item(self, content_type, raw_item, canonical_iri, cached_path, **kwa
         meeting = original_item
 
     item = Meeting(meeting['Id'], **source_defaults)
-    item.date_modified = meeting_date_modified()
+    item.last_stored = meeting_last_stored()
     item.has_organization_name = TopLevelOrganization(self.source_definition['allmanak_id'],
                                                       source=self.source_definition['key'],
                                                       supplier='allmanak',
