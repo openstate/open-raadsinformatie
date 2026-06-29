@@ -1,11 +1,24 @@
+from ocd_frontend import settings
 from ocd_frontend.models.postgres_database import FrontendPostgresDatabase
-from ocd_frontend.utils.route_utils import get_indices, resolve_send_file, resolve_send_file_iri, resolve_send_file_iri_like
+from ocd_frontend.utils.route_utils import add_spotlight, get_indices, get_spotlights, remove_spotlight, resolve_send_file, resolve_send_file_iri, resolve_send_file_iri_like
 from . import app
 
+from functools import wraps
 from flask import (
-    request, abort
+    request, abort, jsonify
 )
 db = FrontendPostgresDatabase()
+
+def admin_access_required(fun):
+    @wraps(fun)
+    def admin_access_required_impl(*args, **kwargs):
+        authorization = request.headers.get('authorization')
+        authorized = authorization in settings.AUTHORIZED_APPS if authorization else False
+        if (not authorized):
+            return "not authorized", 403
+        return fun(*args, **kwargs)
+
+    return admin_access_required_impl
 
 @app.route("/v1")
 def index():
@@ -43,3 +56,24 @@ def catch_all(path):
 def indices():
     indices = get_indices()
     return indices
+
+@app.route('/spotlight', methods=['GET', 'POST', 'DELETE'])
+@admin_access_required
+def spotlight():
+  if request.method == "POST":
+    cbs_code = request.values.get('cbs_code')
+    try:
+      add_spotlight(cbs_code)
+      return jsonify({"success": True})
+    except Exception as e:
+      return jsonify({"success": False, "error": str(e)})
+  elif request.method == "DELETE":
+    cbs_code = request.values.get('cbs_code')
+    try:
+      remove_spotlight(cbs_code)
+      return jsonify({"success": True})
+    except Exception as e:
+      return jsonify({"success": False, "error": str(e)})
+  elif request.method == "GET":
+    spotlights = get_spotlights()
+    return jsonify(spotlights)

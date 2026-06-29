@@ -1,3 +1,6 @@
+import os
+import json
+
 from utils.pdf_naming import PdfNaming
 from flask import (
     send_from_directory, abort, make_response, current_app
@@ -7,6 +10,7 @@ from utils.sources import load_sources_config
 from elasticsearch import Elasticsearch
 
 elasticsearch = Elasticsearch([{'host': ELASTICSEARCH_HOST, 'port': ELASTICSEARCH_PORT, 'timeout': 600}])
+SPOTLIGHTS_FILE = 'data/spotlights.json'
 
 def get_format_from_request(request):
     format = PdfNaming.FORMAT_ORIGINAL
@@ -85,3 +89,37 @@ def get_indices():
                 current_app.logger.error(f"No index found for {alias}")
 
     return indices
+
+def get_spotlights():
+  if not os.path.exists(SPOTLIGHTS_FILE):
+    return {}
+
+  with open(SPOTLIGHTS_FILE) as f:
+    spotlights = json.load(f)
+    return spotlights
+
+
+def write_spotlights(spotlights):
+  with open(SPOTLIGHTS_FILE, 'w') as f:
+    json.dump(spotlights, f)
+
+
+def add_spotlight(cbs_code):
+  indices_info = get_indices()
+
+  source = next(filter(lambda h: h['CBScode'] == cbs_code, indices_info.values()), None)
+  if not source:
+    raise Exception(f"Source with cbs code {cbs_code} does not exist")
+
+  spotlights = get_spotlights()
+  spotlights[cbs_code] = source
+  write_spotlights(spotlights)
+
+
+def remove_spotlight(cbs_code):
+  spotlights = get_spotlights()
+  if cbs_code in spotlights:
+    spotlights.pop(cbs_code)
+    write_spotlights(spotlights)
+  else:
+    raise Exception(f"Source with cbs code {cbs_code} was not spotlighted")

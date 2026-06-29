@@ -3,6 +3,7 @@ local_sources.json
 sources.txt
 sources.tmp
 to_index*.txt
+spotlights.json
 
 Vagrantfile
 
