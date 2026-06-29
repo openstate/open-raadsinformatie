@@ -96,7 +96,7 @@ For normal usage:
 
 When LEAN_JUST_AGENDAS==True:
 ```
-1 7 * * * cd /home/projects/open-raadsinformatie && ./bin/update.sh
+1 7 * * * cd /home/projects/open-raadsinformatie && ./bin/update_agenda.sh
 ```
 
 ## Storage
