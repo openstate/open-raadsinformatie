@@ -73,6 +73,32 @@ edit the file `default.conf` and in the server block for `api.openraadsinformati
 - In the terminal hanging on `Press Enter to Continue` press Enter. The certificate will be downloaded to `/etc/letsencrypt/live`.
 - Finally, undo the above changes to `default.conf`, add the new SSL certificate in the right server block and test/restart nginx.
 
+### cron
+For normal usage:
+```
+# Let's Encrypt
+27 11,23 * * * sudo docker exec docker-c-certbot-1 certbot renew; cd /home/projects/nginx-load-balancer/docker && sudo ./reload.sh
+
+5 0 * * * cd /home/projects/open-raadsinformatie && ./bin/update.sh
+*/2 0-17 * * * cd /home/projects/open-raadsinformatie && ./bin/update_source.sh
+
+# Used during reindexing all data:
+#* * * * * cd /home/projects/open-raadsinformatie && ./bin/reindex.sh notubiz >> reindex_notubiz.log 2>&1
+# * * * * * cd /home/projects/open-raadsinformatie && ./bin/reindex.sh parlaeus >> reindex_parlaeus.log 2>&1
+# * * * * * cd /home/projects/open-raadsinformatie && ./bin/reindex.sh go >> reindex_go.log 2>&1
+#* * * * * cd /home/projects/open-raadsinformatie && ./bin/reindex.sh ibabs >> reindex_ibabs.log 2>&1
+#* * * * * cd /home/projects/open-raadsinformatie && ./bin/monitor_celery.sh >> monitor_celery.log 2>&1
+
+# Backups
+15 16 * * * /home/projects/open-raadsinformatie/bin/backup-es.sh
+30 15 * * * (cd /home/projects/open-raadsinformatie && sudo bin/backup-pg.sh)
+```
+
+When LEAN_JUST_AGENDAS==True:
+```
+1 7 * * * cd /home/projects/open-raadsinformatie && ./bin/update.sh
+```
+
 ## Storage
 
 Using HDDs for the Elasticsearch index was found to be too slow for the production database. In september 2025 we switched to

@@ -566,26 +566,27 @@ def extract_synced_process(modus, sources_config, start_date, end_date):
 
     settings_path = '_%s.*' % modus
     setting_keys = redis_client.keys(settings_path)
-    if not setting_keys:
-        click.echo('No settings found in redis for %s' % settings_path)
-        return
-
     settings = {}
     enabled_entities = []
-    for key in setting_keys:
-        _, _, name = key.rpartition('.')
-        value = redis_client.get(key)
-        if name == 'entities':
-            enabled_entities = value.split(' ')
-        else:
-            settings[name] = value
+
+    if setting_keys:
+        for key in setting_keys:
+            _, _, name = key.rpartition('.')
+            value = redis_client.get(key)
+            if name == 'entities':
+                enabled_entities = value.split(' ')
+            else:
+                settings[name] = value
 
     if start_date is not None:
         settings['start_date'] = start_date
     if end_date is not None:
         settings['end_date'] = end_date
-    if lock_key is not None:
-        settings['lock_key'] = lock_key
+    settings['lock_key'] = lock_key
+
+    if not settings['start_date'] or not settings['end_date']:
+        click.echo(f"No start_date ({settings['start_date']}) and/or end_date ({settings['end_date']}) provided")
+        return
 
     setup_synced_pipeline.delay(sources, available_sources, lock_key, maintenance_file, settings, enabled_entities)
     click.echo(f'Started synced pipeline for {len(sources)} sources')
