@@ -579,6 +579,10 @@ def extract_synced_process(modus, sources_config, start_date, end_date, spotligh
             if do_include:
                 sources.append(f"{key}.{source}")
 
+    if len(sources) == 0 and spotlight:
+        click.echo(f'Spotlight run but no spotlighted sources present - aborting')
+        return
+
     settings_path = '_%s.*' % modus
     setting_keys = redis_client.keys(settings_path)
     settings = {}
