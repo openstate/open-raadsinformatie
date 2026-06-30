@@ -24,7 +24,7 @@ from ocd_backend.models.postgres_models import ItemHash, Property, Resource, Sou
 from ocd_backend.models.serializers import PostgresSerializer
 from ocd_backend.pipeline import setup_pipeline, setup_synced_pipeline
 from ocd_backend.settings import SOURCES_CONFIG_FILE, \
-    DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT, LEAN_JUST_AGENDAS
+    DEFAULT_INDEX_PREFIX, DUMPS_DIR, REDIS_HOST, REDIS_PORT, LEAN_JUST_AGENDAS, SPOTLIGHTS_FILE
 from ocd_backend.utils.indexed_file import IndexedFile
 from utils.sources import load_sources_config
 from ocd_backend.utils.monitor import get_recent_counts
@@ -542,7 +542,8 @@ def extract_process(modus, source_path, sources_config, start_date, end_date, lo
 @click.option('--sources_config', default=SOURCES_CONFIG_FILE)
 @click.option('--start_date', default=None)
 @click.option('--end_date', default=None)
-def extract_synced_process(modus, sources_config, start_date, end_date):
+@click.option('--spotlight', is_flag=True)
+def extract_synced_process(modus, sources_config, start_date, end_date, spotlight):
     """
     Start extraction based on the flags in Redis.
     It uses the source_path in Redis db 1 to identify which municipalities should be extracted.
@@ -553,8 +554,16 @@ def extract_synced_process(modus, sources_config, start_date, end_date):
     :param sources_config: Path to file containing pipeline definitions. Defaults to the value of ``settings.SOURCES_CONFIG_FILE``
     :param start_date: Use this start_date instead of the value defined in redis
     :param end_date: Use this end_date instead of the value defined in redis
+    :param spotlight (flag): when True, only process sources for which the CBS code is contained in the SPOTLIGHTS_FILE
     """
     redis_client = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=1, decode_responses=True)
+
+    spotlighted = []
+    if spotlight:
+        if os.path.exists(SPOTLIGHTS_FILE):
+            with open(SPOTLIGHTS_FILE) as f:
+                spotlights = json.load(f)
+                spotlighted = list(spotlights.keys())
 
     available_sources = load_sources_config(sources_config)
     lock_key = "ori_lock_key_all"
@@ -562,7 +571,13 @@ def extract_synced_process(modus, sources_config, start_date, end_date):
     sources = []
     for key, h in available_sources.items():
         for source in h:
-            sources.append(f"{key}.{source}")
+            do_include = True
+            if spotlight:
+                cbs_id = h[source].get('cbs_id', None)
+                if not cbs_id or cbs_id not in spotlighted:
+                    do_include = False
+            if do_include:
+                sources.append(f"{key}.{source}")
 
     settings_path = '_%s.*' % modus
     setting_keys = redis_client.keys(settings_path)
