@@ -26,7 +26,7 @@ LEAN_JUST_AGENDAS = True
 NO_SAVING = False # Set to True in local_settings.py to stop saving to database and Elasticsearch; useful in dev for troubleshooting
 SPOTLIGHTS_FILE = 'data/spotlights.json'
 
-# host.docker.internal:8090; start proxy with ssh -gD 8090 ori-octopus
+# Proxy for iBabs
 PROXY_HOST = os.getenv('PROXY_HOST')
 PROXY_PORT = os.getenv('PROXY_PORT')
 

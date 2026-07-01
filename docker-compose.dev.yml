@@ -15,7 +15,7 @@ services:
     environment:
       - "CLASSIFIER_HOST=localhost"
       - RELEASE_STAGE=development
-      - PROXY_HOST=host.docker.internal
+      - PROXY_HOST=172.17.0.1
       - PROXY_PORT=8090
     command: /opt/ori/bin/start_backend.dev.sh
     mem_limit: 1g
@@ -25,7 +25,7 @@ services:
       dockerfile: ocd_backend/Dockerfile.dev
     environment:
       - RELEASE_STAGE=development
-      - PROXY_HOST=host.docker.internal
+      - PROXY_HOST=172.17.0.1
       - PROXY_PORT=8090
     mem_limit: 1g
   elastic:

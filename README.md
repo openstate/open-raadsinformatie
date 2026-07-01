@@ -138,11 +138,9 @@ To run a single test, e.g.
 See script manual_retrieval.py (WIP)
 See also the Troubleshooting section in the maintenance_guide.
 
-To get data from iBabs in development you need to use a proxy:
-- edit `/etc/hosts` and add a line linking your IP address to `host.docker.internal`, e.g.:
-    `192.168.121.174 host.docker.internal`
-- start proxy with `ssh -gD 8090  ori-octopus`
-- `PROXY_HOST` and `PROXY_PORT` are always set in development (`docker-compose-dev.yml`)
+To get data from iBabs the IP needs to be whitelisted so in development (and depending on the setup also
+in production) you need to use a proxy:
+- start proxy with `ssh -gD 8090  <whitelisted-machine>`
 
 ## Supported Sources
 
