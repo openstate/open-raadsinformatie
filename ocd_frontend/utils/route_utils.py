@@ -81,7 +81,7 @@ def get_indices():
                     "alias": alias,
                     "type": source_type,
                     "Gemeentenaam": source_definition["source_name"],
-                    "CBScode": source_definition.get("cbs_id", ''),
+                    "CBScode": source_definition.get("cbs_id", '').upper(),
                     "key": source_definition['key'],
                     "supplier": supplier
                 }

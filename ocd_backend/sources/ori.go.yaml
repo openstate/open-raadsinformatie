@@ -196,7 +196,7 @@ ori.go:
    key: dordrecht
    base_url: "https://raad.dordrecht.nl/api"
    allmanak_id: 40563
-   # cbs_id: has no cbs_id
+   cbs_id: GM0505
    <<: *go
 
   # Added on 27-11-2020
