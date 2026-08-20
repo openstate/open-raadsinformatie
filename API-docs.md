@@ -1,5 +1,23 @@
 # OpenBesluitvorming / Open Raadsinformatie / Open Stateninformatie API docs
 
+> **⚠️ Deprecated — this API shuts down on 1 November 2026.**
+>
+> Open Raadsinformatie (ORI) Classic has been superseded by
+> [OpenBesluitvorming](https://openbesluitvorming.nl). This API is deprecated as of
+> 21 August 2026 and will be switched off on **1 November 2026**.
+>
+> - **Replacement:** https://openbesluitvorming.nl — search interface plus a
+>   documented REST API with bulk export and incremental synchronisation.
+> - **Migration guide:** https://openbesluitvorming.nl/docs/migration-guide
+> - **API reference:** https://openbesluitvorming.nl/docs/api
+> - **Blocked on something?** Open an issue on
+>   [ontola/openbesluitvorming](https://github.com/ontola/openbesluitvorming/issues),
+>   or mail sander.bakker@vng.nl.
+>
+> Until 1 November the existing endpoints keep working unchanged. After that date
+> this repository is archived and stays readable, and the data remains available
+> through OpenBesluitvorming.
+
 OpenBesluitvorming aims to make governmental decision making more transparent
 by aggregating and standardizing meeting & decision data.
 Currently, the API includes data from more than 300 municipalities and provinces.
