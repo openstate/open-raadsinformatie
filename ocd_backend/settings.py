@@ -277,6 +277,7 @@ POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'ori_postgres_password')
 
 # Sentry DSN
 SENTRY_DSN = os.getenv('SENTRY_DSN')
+SENTRY_DSN_LEAN = os.getenv('SENTRY_DSN_LEAN')
 if RELEASE_STAGE == 'development':
     SENTRY_ENVIRONMENT = 'development' 
 elif RELEASE_STAGE == 'testing':    

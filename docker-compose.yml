@@ -23,6 +23,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
+      - SENTRY_DSN_LEAN=https://5271b9fbc03930df0d37b17fe2f36b47@o4505233371103232.ingest.us.sentry.io/4512011459166208
       - PROXY_HOST=172.17.0.1
       - PROXY_PORT=8090
     networks:
@@ -47,6 +48,7 @@ services:
         #image: ghcr.io/openstate/open-raadsinformatie
     environment:
       - SENTRY_DSN=https://6476b737f5e580063d37a6f186355850@o4505233371103232.ingest.us.sentry.io/4507464171061248
+      - SENTRY_DSN_LEAN=https://5271b9fbc03930df0d37b17fe2f36b47@o4505233371103232.ingest.us.sentry.io/4512011459166208
       - PROXY_HOST=172.17.0.1
       - PROXY_PORT=8090
     networks:

@@ -3,7 +3,7 @@ import os
 import sentry_sdk
 from celery import Celery, signals
 
-from ocd_backend.settings import CELERY_CONFIG, SENTRY_DSN, SENTRY_ENVIRONMENT
+from ocd_backend.settings import CELERY_CONFIG, LEAN_JUST_AGENDAS, SENTRY_DSN, SENTRY_DSN_LEAN, SENTRY_ENVIRONMENT
 
 celery_app = Celery('ocd_backend', include=[
     'ocd_backend.pipeline',
@@ -32,11 +32,13 @@ celery_app = Celery('ocd_backend', include=[
 
 celery_app.conf.update(**CELERY_CONFIG)
 
-#@signals.worker_init.connect
-# @signals.celeryd_init.connect
-# def init_sentry(**_kwargs):
-#     sentry_sdk.init(
-#         dsn=SENTRY_DSN,
-#         traces_sample_rate=1.0,
-#         environment=SENTRY_ENVIRONMENT
-#     )  # same as above
+@signals.worker_init.connect
+@signals.celeryd_init.connect
+def init_sentry(**_kwargs):
+    dsn = SENTRY_DSN_LEAN if LEAN_JUST_AGENDAS else SENTRY_DSN
+
+    sentry_sdk.init(
+        dsn=dsn,
+        traces_sample_rate=1.0,
+        environment=SENTRY_ENVIRONMENT
+    )  # same as above
