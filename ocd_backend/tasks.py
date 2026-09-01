@@ -82,12 +82,16 @@ class CleanupElasticsearch(BaseCleanup):
             ]
         }
 
-        # Set alias to new index
-        es.indices.update_aliases(body=actions)
+        try:
+            # Set alias to new index
+            es.indices.update_aliases(body=actions)
 
-        # Remove old index
-        if current_index_name != new_index_name:
-            es.indices.delete(index=current_index_name)
+            # Remove old index
+            if current_index_name != new_index_name:
+                es.indices.delete(index=current_index_name)
+        except Exception as e:
+            log.error(f"Exception caught when updating aliases in CleanupElasticsearch ({current_index_name} to {new_index_name}, alias={alias}): {e}")
+
 
         self.signal_processing_finished(**kwargs)
 
