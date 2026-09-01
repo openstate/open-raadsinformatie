@@ -289,7 +289,7 @@ def get_ocr_version():
     # See also requirements.txt
     return f"tesserocr==2.7.1,{tesseract_version}"
 OCR_VERSION = get_ocr_version()
-MARKDOWN_VERSION = f"openstate/PyMuPDF@366458a-pymupdf4llm==0.0.24"
+MARKDOWN_VERSION = f"PyMuPDF==1.27.2.3-pymupdf4llm==0.3.4"
 
 # Allow any settings to be defined in local_settings.py which should be
 # ignored in your version control system allowing for settings to be
