@@ -3,6 +3,7 @@ _defaults: &source_defaults
   hidden: false
   keep_index_on_update: true
   wait_until_finished: false
+  blocked_from_api: false
   source_type: "municipality"
   supplier: "notubiz"
 
@@ -268,11 +269,13 @@ ori.notubiz:
   #   notubiz_organization_id: 659
   #   <<: *notubiz
 
+  # dongen returns 404 since August 2026
   dongen:
     key: dongen
     allmanak_id: 35200
     cbs_id: GM0766
     notubiz_organization_id: 503
+    blocked_from_api: true
     <<: *notubiz
 
   schiedam:

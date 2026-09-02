@@ -167,8 +167,10 @@ def setup_pipeline(self, source_definition, source_run_uuid):
 
         celery_app.backend.set(params['run_identifier'], 'error')
 
-        # Reraise the exception so celery can retry
-        raise
+        blocked_from_api = source_definition.get('blocked_from_api')
+        if not blocked_from_api:
+            # Reraise the exception so celery can retry
+            raise
 
     celery_app.backend.set(params['run_identifier'], 'done')
     log.info(f'[{source_definition["key"]}] Finished run with identifier {params["run_identifier"]}')
