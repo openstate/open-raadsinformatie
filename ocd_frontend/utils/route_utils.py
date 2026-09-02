@@ -77,7 +77,7 @@ def get_indices():
 
             alias = f"{es_prefix}_{source_definition['index_name']}"
             if es_results.get(alias):
-                indices[es_results[alias]] = {
+                index_info = {
                     "alias": alias,
                     "type": source_type,
                     "Gemeentenaam": source_definition["source_name"],
@@ -85,6 +85,9 @@ def get_indices():
                     "key": source_definition['key'],
                     "supplier": supplier
                 }
+                if supplier == 'ibabs':
+                   index_info['ibabs_sitename'] = source_definition['ibabs_sitename']
+                indices[es_results[alias]] = index_info
             else:
                 current_app.logger.error(f"No index found for {alias}")
 
