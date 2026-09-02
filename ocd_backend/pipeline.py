@@ -22,7 +22,7 @@ log = get_source_logger('pipeline')
 
 @celery_app.task(bind=True, max_retries=RETRY_MAX_RETRIES)
 @retry_task
-def setup_pipeline(self, source_definition, source_run_uuid):
+def setup_pipeline(self, source_definition, source_run_uuid, lock_key=None):
     log.debug(f'[{source_definition["key"]}] Starting pipeline for source: {source_definition.get("id")} with run uuid {source_run_uuid}')
 
     # index_name is an alias of the current version of the index
@@ -168,7 +168,11 @@ def setup_pipeline(self, source_definition, source_run_uuid):
         celery_app.backend.set(params['run_identifier'], 'error')
 
         blocked_from_api = source_definition.get('blocked_from_api')
-        if not blocked_from_api:
+        if blocked_from_api:
+            if lock_key:
+                pipeline_utils = PipelineUtils()
+                pipeline_utils.release_lock(lock_key)
+        else:
             # Reraise the exception so celery can retry
             raise
 
@@ -221,7 +225,7 @@ def setup_synced_pipeline(self, sources, available_sources, lock_key, maintenanc
                 new_source.update(deepcopy(available_source))
                 new_source.update(entity)
 
-                setup_pipeline.delay(new_source, source_run_uuid)
+                setup_pipeline.delay(new_source, source_run_uuid, lock_key)
 
         log.info(f'[{source_name}] Started pipelines: {", ".join(selected_entities)}')
         if len(sources) > 0:

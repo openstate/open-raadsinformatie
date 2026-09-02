@@ -529,7 +529,7 @@ def extract_process(modus, source_path, sources_config, start_date, end_date, lo
                     new_source.update(deepcopy(available_source))
                     new_source.update(entity)
 
-                    setup_pipeline.delay(new_source, source_run_uuid)
+                    setup_pipeline.delay(new_source, source_run_uuid, lock_key)
 
             click.echo('[%s] Started pipelines: %s' % (source_name, ', '.join(selected_entities)))
         except ValueError:
